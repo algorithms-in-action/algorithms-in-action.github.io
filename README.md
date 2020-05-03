@@ -31,3 +31,24 @@ If you use other code editors, such as WebStorm, you can follow this [doc](https
 `cd aia` enter into the project directory, run `npm start`. This will start a web server on your computer.
 If it doesn't automatically open a web browser tab, go to http://localhost:3000 to see the
 project.
+
+### Test the Program
+Currently, we use [Jest](https://jestjs.io/docs/en/getting-started) as the testing framework to test React application. [Create-React-App](https://create-react-app.dev/) is already use and ships with Jest.
+
+#### Writing Tests
+
+Follow [Jest official doc](https://jestjs.io/docs/en/using-matchers) to see examples and APIs.
+
+#### Running Tests
+
+Check out [Create-React-App Running Tests](https://create-react-app.dev/docs/running-tests/#docsNav) for detailed information.
+
+Run Jest:
+> `npm test`
+
+It will launch in [watch mode](https://jestjs.io/docs/en/cli.html#--watch). Every time you save a file, it will re-run the tests. Note that, by default, Jest will only run the tests related to files changed since the last commit. 
+
+Coverage Reporting:
+> `npm test -- --coverage`
+
+It will run tests and generate a [coverage report](https://medium.com/@krishankantsinghal/how-to-read-test-coverage-report-generated-using-jest-c2d1cb70da8b). Note that the `coverageThreshold` can be configured in `package.json`.
