@@ -1,0 +1,23 @@
+.LineExplanation {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+.LineExplanation-Title {
+    text-align: left;
+    width: 100%;
+    background-color: white;
+    font-size: calc(4px + 2vmin);
+    color: grey;
+    resize: none;
+}
+
+.LineExplanation-TextArea {
+    text-align: left;
+    width: 100%;
+    background-color: white;
+    font-size: calc(4px + 2vmin);
+    color: #333333;
+    resize: none;
+}
