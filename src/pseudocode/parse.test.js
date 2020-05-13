@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
-import parse from './PseudocodeLoader';
+import parse from './parse';
 
 test('empty pseudocode', () => {
-  expect(parse('')).toEqual({});
+  expect(parse('')).toEqual({
+    run: [{ bookmark: undefined, code: '', explanation: undefined }],
+  });
 });
 
 test('single basic procedure', () => {
