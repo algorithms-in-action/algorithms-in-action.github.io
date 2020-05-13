@@ -2,9 +2,11 @@
 const PROCEDURE_MARKER = 'procedure';
 const DEFAULT_PROCEDURE = 'run';
 
-// const lineRegex = /([^$]*)(?:\$([^(]+))? *(?:\(\*(.*)\*\))/;
-const lineRegex = /([^$]*)/;
-
+const lineRegex = /([^$]*)(?:\$([^ ]+))?(?: *\(\*(.*)\*\))?/;
+// Regex in detail:
+// Pseudocode fragment, string of non-$ characters: ([^$]*)
+// Optional bookmark, string of non-space characters with leading $: (?:\$([^ ]+))?
+// Optional comment:
 /*
  Takes a line of pseudocode file and returns the name of the procedure
  declared in it, if any.
@@ -12,7 +14,7 @@ const lineRegex = /([^$]*)/;
  Returns false if the line is not a procedure declaration.
  */
 function extractProcedureName(line) {
-  const procRegex = RegExp(`^ *${PROCEDURE_MARKER} +([-_A-Za-z]+)`);
+  const procRegex = RegExp(`^ *${PROCEDURE_MARKER} +([-_A-Za-z0-9]+)`);
   const matches = line.match(procRegex);
   if (matches && matches[1]) {
     return matches[1];
@@ -34,9 +36,9 @@ export default function parse(rawPseudocode) {
       currentProcedureName = procedureName;
     }
     const lineObj = {
-      code: matches[1],
+      code: matches[1].trimRight(),
       bookmark: matches[2],
-      explanation: matches[3],
+      explanation: matches[3] ? matches[3].trim() : undefined,
     };
     procedures[currentProcedureName].push(lineObj);
   }
