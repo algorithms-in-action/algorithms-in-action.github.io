@@ -6,51 +6,51 @@ test('empty pseudocode', () => {
 });
 
 test('single basic procedure', () => {
-  expect(parse(`
-  procedure BinaryTreeSearch(needle):
-    doSomething
-    doSomethingElse`)).toEqual({
+  expect(parse(`procedure BinaryTreeSearch(needle):
+  doSomething
+  doSomethingElse`)).toEqual({
     BinaryTreeSearch: [
-      { code: 'doSomething' },
-      { code: 'doSomethingElse' },
+      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
+      { code: '  doSomething', bookmark: undefined, explanation: undefined },
+      { code: '  doSomethingElse', bookmark: undefined, explanation: undefined },
     ],
   });
 });
 
 test('single procedure with bookmarks', () => {
-  expect(parse(`
-  procedure BinaryTreeSearch(needle):
-    doSomething $something
-    doSomethingElse    $somethingElse`)).toEqual({
+  expect(parse(`procedure BinaryTreeSearch(needle):
+  doSomething $something
+  doSomethingElse    $somethingElse`)).toEqual({
     BinaryTreeSearch: [
-      { code: 'doSomething', bookmark: 'something' },
-      { code: 'doSomethingElse', bookmark: 'somethingElse' },
+      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
+      { code: '  doSomething', bookmark: 'something', explanation: undefined },
+      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: undefined },
     ],
   });
 });
 
 test('single procedure with explanation', () => {
-  expect(parse(`
-  procedure BinaryTreeSearch(needle):
-    doSomething $something (* abc *)
-    doSomethingElse    $somethingElse    (* def *)`)).toEqual({
+  expect(parse(`procedure BinaryTreeSearch(needle):
+  doSomething $something (* abc *)
+  doSomethingElse    $somethingElse    (* def *)`)).toEqual({
     BinaryTreeSearch: [
-      { code: 'doSomething', bookmark: 'something', explanation: 'abc' },
-      { code: 'doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
+      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
+      { code: '  doSomething', bookmark: 'something', explanation: 'abc' },
+      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
     ],
   });
 });
 
 test('multi-line explanation', () => {
-  expect(parse(`
-  procedure BinaryTreeSearch(needle):
-    doSomething $something (* abc 
-      def
-      ghi *)
-    doSomethingElse    $somethingElse`)).toEqual({
+  expect(parse(`procedure BinaryTreeSearch(needle):
+  doSomething $something (* abc 
+    def
+    ghi *)
+  doSomethingElse    $somethingElse`)).toEqual({
     BinaryTreeSearch: [
-      { code: 'doSomething', bookmark: 'something', explanation: 'abc def ghi' },
-      { code: 'doSomethingElse', bookmark: 'somethingElse' },
+      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
+      { code: '  doSomething', bookmark: 'something', explanation: 'abc def ghi' },
+      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: undefined },
     ],
   });
 });
