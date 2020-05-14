@@ -21,7 +21,7 @@ test:
   script: 
     - echo "Testing..."
     - npm install
-    - CI=true npm test -- --coverage
+    - CI=true npm test -- --coverage --watchAll
   only:
     - master                    # Execute jobs when a new commit is pushed to master branch
     - branches                  
