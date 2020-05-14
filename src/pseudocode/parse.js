@@ -78,7 +78,9 @@ export default function parse(rawPseudocode) {
       bookmark: matches[2],
       explanation: matches[3] ? matches[3].trim() : undefined,
     };
-    procedures[currentProcedureName].push(lineObj);
+    if (lineObj.code !== '') {
+      procedures[currentProcedureName].push(lineObj);
+    }
   }
   if (procedures[DEFAULT_PROCEDURE].length === 0) {
     delete procedures[DEFAULT_PROCEDURE];
