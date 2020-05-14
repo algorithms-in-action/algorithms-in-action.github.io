@@ -2,9 +2,7 @@
 import parse from './parse';
 
 test('empty pseudocode', () => {
-  expect(parse('')).toEqual({
-    run: [{ bookmark: undefined, code: '', explanation: undefined }],
-  });
+  expect(parse('')).toEqual({});
 });
 
 test('single basic procedure', () => {
