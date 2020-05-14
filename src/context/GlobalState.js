@@ -12,7 +12,9 @@ const initialState = {
 export const GlobalContext = createContext(initialState);
 
 // Provider components
+// eslint-disable-next-line react/prop-types
 export const GlobalProvider = ({ children }) => {
+  // eslint-disable-next-line no-unused-vars
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   return (
