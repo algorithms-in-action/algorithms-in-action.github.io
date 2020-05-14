@@ -1,27 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.scss';
+import Header from './components/Header';
+import { GlobalProvider } from './context/GlobalState';
+import RightPanel from './components/RightPanel';
+import LeftPanel from './components/LeftPanel';
+import MidPanel from './components/MidPanel';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          <code>src/App.js</code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GlobalProvider>
+      <div className="container">
+        <Header />
+        <div className="panel">
+          <div className="leftPanel">
+            <LeftPanel />
+          </div>
+          <div className="midPanel">
+            <MidPanel />
+          </div>
+          <div className="rightPanel">
+            <RightPanel />
+          </div>
+        </div>
+      </div>
+    </GlobalProvider>
   );
 }
 
