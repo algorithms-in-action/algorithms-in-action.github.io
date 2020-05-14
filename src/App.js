@@ -1,6 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import parsePseudocode from './pseudocode/parse';
+import algorithms from './algorithms';
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
           <code>src/App.js</code>
           and save to reload.
         </p>
+        This is a short example to show correct parsing of the pseudocode
+        <br />
+        { JSON.stringify(parsePseudocode(algorithms.binaryTreeSearch.pseudocode)) }
         <a
           className="App-link"
           href="https://reactjs.org"
