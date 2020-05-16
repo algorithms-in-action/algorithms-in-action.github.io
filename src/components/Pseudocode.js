@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import LineExplanation from './LineExplanation';
 
 function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
@@ -8,6 +9,7 @@ function Pseudocode() {
     <div className="textArea">
       PseudoCode:
       {algorithm.text}
+      <LineExplanation />
     </div>
   );
 }

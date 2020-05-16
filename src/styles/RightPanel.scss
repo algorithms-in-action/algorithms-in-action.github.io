@@ -1,3 +1,4 @@
+$bgColor: #FEFEFE;
 $buttonBgCol: #FFFFFF;
 $buttonDefCol: #909090;
 $buttonHighlightCol: #1D9CE3;
@@ -7,7 +8,7 @@ $buttonHighlightCol: #1D9CE3;
   min-height: 100% !important;
   display: flex;
   flex-direction: column;
-  background-color: yellowgreen;
+  background-color: $bgColor;
   
   .codeExplanationButton {
     background-color: $buttonBgCol;
@@ -15,6 +16,7 @@ $buttonHighlightCol: #1D9CE3;
     flex-direction: row;
     justify-content: center;
     height: 45px;
+    border-bottom: 1px solid #d4d4d4;
 
     button {
       background-color: Transparent;
@@ -48,7 +50,10 @@ $buttonHighlightCol: #1D9CE3;
 
   .lineExplanation {
     // height: 20%;
-    height: 300px;
+    margin-top: 40px;
+    padding: 16px 0 0 0;
+    border-top: 1px solid #d4d4d4;
+    height: 200px;
     justify-content: flex-end;
   }
 }
