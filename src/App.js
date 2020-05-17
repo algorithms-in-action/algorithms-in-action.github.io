@@ -1,14 +1,29 @@
 import React from 'react';
-import './App.css';
-import PseudocodePanel from './PseudocodePanel/PseudocodePanel';
+import './styles/App.scss';
+import Header from './components/Header';
+import { GlobalProvider } from './context/GlobalState';
+import RightPanel from './components/RightPanel';
+import LeftPanel from './components/LeftPanel';
+import MidPanel from './components/MidPanel';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <PseudocodePanel className="App-PseudocodePanel" />
-      </header>
-    </div>
+    <GlobalProvider>
+      <div className="container">
+        <Header />
+        <div className="panel">
+          <div className="leftPanel">
+            <LeftPanel />
+          </div>
+          <div className="midPanel">
+            <MidPanel />
+          </div>
+          <div className="rightPanel">
+            <RightPanel />
+          </div>
+        </div>
+      </div>
+    </GlobalProvider>
   );
 }
 

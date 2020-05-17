@@ -1,0 +1,59 @@
+$bgColor: #FEFEFE;
+$buttonBgCol: #FFFFFF;
+$buttonDefCol: #909090;
+$buttonHighlightCol: #1D9CE3;
+
+
+.rightPanelContainer {
+  min-height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  background-color: $bgColor;
+  
+  .codeExplanationButton {
+    background-color: $buttonBgCol;
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    height: 45px;
+    border-bottom: 1px solid #d4d4d4;
+
+    button {
+      background-color: Transparent;
+      background-repeat:no-repeat;
+      border: none;
+      cursor:pointer;
+      overflow: hidden;
+      outline:none;
+      padding: 16px;
+      font-size: 0.8em;
+      color: $buttonDefCol;
+      font-weight: 600;
+      width: 100%;
+
+    }
+
+    .active {
+      background-color: $buttonHighlightCol;
+      color: white;
+    }
+
+
+  }
+
+  .textArea {
+    padding: 16px;
+    overflow-y: scroll;
+    flex: 1;
+
+  }
+
+  .lineExplanation {
+    // height: 20%;
+    margin-top: 40px;
+    padding: 16px 0 0 0;
+    border-top: 1px solid #d4d4d4;
+    height: 200px;
+    justify-content: flex-end;
+  }
+}
