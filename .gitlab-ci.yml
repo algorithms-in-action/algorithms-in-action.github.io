@@ -21,9 +21,9 @@ test:
   script: 
     - echo "Testing..."
     - npm install
-    - CI=true npm test -- --coverage --watchAll
+    - CI=true npm test -- --coverage
+    - echo "Finish testing..."
   only:
-    - master                    # Execute jobs when a new commit is pushed to master branch
     - branches                  
     - merge_requests            # Execute jobs in merge request context
 
@@ -33,12 +33,12 @@ build:
     - echo "Building..."
     - npm install
     - npm run build
+    - echo "Finish building..."
   artifacts:
     expire_in: 1 hour
     paths:
       - build/
   only:
-    - master                    # Execute jobs when a new commit is pushed to master branch
     - branches                  
     - merge_requests            # Execute jobs in merge request context
 
@@ -48,7 +48,7 @@ deploy:
     - echo "Deploying..."
     - echo -n "$SSH_KEY" | base64 -d -w 0 > keyfile
     - chmod 700 keyfile
-    - scp -i keyfile -r build/* aia@aia.cis.unimelb.edu.au:/var/www/html
+    - scp -i keyfile -r build/* aia@$APPS_DOMAIN:/var/www/html
   environment:
     name: deploy
     url: http://$APPS_DOMAIN
