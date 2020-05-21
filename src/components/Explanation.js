@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import ReactMarkDown from 'react-markdown';
 import { GlobalContext } from '../context/GlobalState';
 
 function Explanation() {
@@ -6,8 +7,7 @@ function Explanation() {
 
   return (
     <div className="textArea">
-      Explanation:
-      {algorithm.text}
+      <ReactMarkDown source={algorithm.text} />
     </div>
   );
 }
