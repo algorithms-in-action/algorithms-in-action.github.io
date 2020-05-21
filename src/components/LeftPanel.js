@@ -8,12 +8,12 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { GlobalContext } from '../context/GlobalState';
-import '../styles/LeftPanel.css';
+import '../styles/LeftPanel.scss';
 
 
 function LeftPanel() {
   const { dispatch } = useContext(GlobalContext);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(true);
   const [open2, setOpen2] = React.useState(true);
 

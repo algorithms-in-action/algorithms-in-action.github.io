@@ -3,7 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import TestRenderer from 'react-test-renderer';
-import { render, fireEvent, cleanup } from '@testing-library/react';
+import {
+  render, fireEvent, cleanup, screen,
+} from '@testing-library/react';
 import App from './App';
 import Header from './components/Header';
 
@@ -17,8 +19,22 @@ describe('<App />', () => {
   });
 });
 
+describe('<App />', () => {
+  afterEach(cleanup);
+  it('dropdown box can work well', () => {
+    const { getByText } = render(<App />);
+    // Assert that KMP does not appear.
+    const Kmp = screen.queryByText('Knutt-Morris-Pratt');
+    expect(Kmp).toBeNull();
+    // Click the button of 'Dynamic Programming' to unfold the dropdown list.
+    fireEvent.click(getByText(/Dynamic Programming/));
+    // Assert that KMP appear.
+    expect(getByText(/Knutt-Morris-Pratt/i)).toBeInTheDocument();
+  });
+});
+
 // To test the header should render a top level div.
-describe('<lefPanel />', () => {
+describe('<Header />', () => {
   it('should render a top level div', () => {
     const renderer = new ShallowRenderer();
     renderer.render(<Header />);
