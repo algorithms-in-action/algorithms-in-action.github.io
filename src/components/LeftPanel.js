@@ -64,7 +64,7 @@ function LeftPanel() {
           <List component="div" disablePadding>
             <ListItem button onClick={() => { dispatch({ type: 'BST' }); }}>
               <ListItemText
-                primary="Binary Search Trees"
+                primary="Binary Search Tree"
                 disableTypography
                 className="algorithm-list-sub"
               />
