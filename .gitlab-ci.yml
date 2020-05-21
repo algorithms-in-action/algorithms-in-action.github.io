@@ -1,0 +1,56 @@
+variables:
+  NODE_VERSION: v12.16.3
+  APPS_DOMAIN: aia.cis.unimelb.edu.au
+
+stages:
+  - test
+  - build
+  - deploy
+
+before_script:
+    - wget -q https://nodejs.org/download/release/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz
+    - tar xf node-${NODE_VERSION}-linux-x64.tar.xz 
+    - export PATH=`pwd`/node-${NODE_VERSION}-linux-x64/bin:$PATH
+
+cache:
+  paths:
+    - node_modules/
+    
+test:
+  stage: test
+  script: 
+    - echo "Testing..."
+    - npm install
+    - CI=true npm test -- --coverage
+    - echo "Finish testing..."
+  only:
+    - branches                  
+    - merge_requests            # Execute jobs in merge request context
+
+build:
+  stage: build
+  script: 
+    - echo "Building..."
+    - npm install
+    - npm run build
+    - echo "Finish building..."
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build/
+  only:
+    - branches                  
+    - merge_requests            # Execute jobs in merge request context
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying..."
+    - echo -n "$SSH_KEY" | base64 -d -w 0 > keyfile
+    - chmod 700 keyfile
+    - scp -i keyfile -r build/* aia@$APPS_DOMAIN:/var/www/html
+  environment:
+    name: deploy
+    url: http://$APPS_DOMAIN
+  only:
+    - master
