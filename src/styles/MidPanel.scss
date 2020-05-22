@@ -1,0 +1,12 @@
+$bgColor: #1efeeb;
+$buttonBgCol: #FFFFFF;
+$buttonDefCol: #909090;
+$buttonHighlightCol: #1D9CE3;
+
+
+.midPanelContainer {
+  min-height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  background-color: $bgColor;
+}
