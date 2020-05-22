@@ -45,7 +45,7 @@ class MidPanel extends React.Component {
         <button type="button" value="test" onClick={this.test}>
           Explanation
         </button>
-        <div>
+        <div className="graph">
           {
           this.a && this.a.render()
         }
