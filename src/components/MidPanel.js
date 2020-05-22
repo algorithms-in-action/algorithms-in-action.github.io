@@ -34,7 +34,10 @@ class MidPanel extends React.Component {
     console.log(this.a);
     this.a.layoutTree(5);
     // this.a.visit[]
-    // this.a.visit([5, null]);
+    this.a.visit(5, null);
+    this.a.visit(3, 5);
+    this.a.visit(4, 3);
+
     // const { className } = this.props;
     // let a = new GraphTracer("key", this.root, "Test graph");
 
