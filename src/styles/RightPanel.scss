@@ -4,6 +4,9 @@ $buttonDefCol: #909090;
 $buttonHighlightCol: #1D9CE3;
 $codeExplanationButtonHeight: 40px;
 $borderCol: #D4D4D4;
+@mixin textPadding {
+  padding: 12px 8px 24px 12px;
+}
 
 .codeExplanationButton {
   background-color: $buttonBgCol;
@@ -41,8 +44,7 @@ $borderCol: #D4D4D4;
 
   .textArea {
     flex: 1 1 1px; /* Important */
-    padding-bottom: 20px;
-    padding: 12px 8px 24px 12px;
+    @include textPadding;
     overflow-y: scroll;
     
   }
@@ -51,6 +53,7 @@ $borderCol: #D4D4D4;
     padding: 16px;
     height: 15%;
     border-top: 1px solid $borderCol;
+    @include textPadding;
 
   }
 

@@ -9,7 +9,7 @@ $borderCol: #D4D4D4;
   flex: 1;
   height: 100%;
   
-  .midPanelHead {
+  .midPanelHeader {
     height: $midHeaderHeight;
     border-bottom: 1px solid $borderCol;
     display: flex;
@@ -42,15 +42,28 @@ $borderCol: #D4D4D4;
 
   }
 
+   /* Animation Goes Here */
   .midPanelBody {
-    background-color: blue;
-    flex: 1;
-
+    flex: 1 1 1px; /* Important */
+   
   }
 
-  .midPanelTail {
-    background-color: orange;
+
+  .midPanelFooter {
     height: 35%;
+
+    .controlPanel {
+      height: 40px;
+      border-top: 1px solid $borderCol;
+      border-bottom: 1px solid $borderCol;
+      
+    }
+
+    .paramaterPanel {
+      
+    }
+
+
   }
 
 

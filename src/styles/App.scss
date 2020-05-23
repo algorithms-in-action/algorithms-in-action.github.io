@@ -1,6 +1,7 @@
 $bgColor: #FEFEFE;
 $minContainerWidth: 1000px;
 $headerHeight: 50px;
+$borderCol: #D4D4D4;
 
 * {
   box-sizing: border-box;
@@ -33,8 +34,8 @@ html, body {
   
       .midPanel {
         flex: 1;
-        border-left: 1px solid #d4d4d4;
-        border-right: 1px solid #d4d4d4;
+        border-left: 1px solid $borderCol;
+        border-right: 1px solid $borderCol;
       }
   
       .rightPanel {
