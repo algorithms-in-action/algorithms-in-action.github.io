@@ -1,7 +1,6 @@
 $bgColor: #FEFEFE;
-$midMinWidth: 500px;
-$leftMinWidth: 230px;
-$rightMinWidth: 550px;
+$minContainerWidth: 1000px;
+$headerHeight: 50px;
 
 * {
   box-sizing: border-box;
@@ -14,35 +13,36 @@ html, body {
   font-family: Roboto, 'sans-serif';
   position: relative;
   width: 100%;
-  height: 100%;
+  min-width: $minContainerWidth;
 
   .container {
-    min-height: 100%;
     height: 100vh;
-
+    display: flex;
+    flex-direction: column;
 
     .panel {
       display: flex;
       flex-direction: row;
-      height: 100%;
-      
+      flex: 1;
 
       .leftPanel {
-        max-width: $leftMinWidth;
-        min-width: $leftMinWidth;
-        border-right: 1px solid #d4d4d4;
+        width: 15%; 
+        display: flex;
+        flex-direction: column;
       }
   
       .midPanel {
         flex: 1;
-        min-width: $midMinWidth;
+        border-left: 1px solid #d4d4d4;
         border-right: 1px solid #d4d4d4;
       }
   
       .rightPanel {
-        min-width: $rightMinWidth;
-        max-width: $rightMinWidth;
-  
+        width: 26%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
       }
       
     }

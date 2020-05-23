@@ -27,91 +27,98 @@ function LeftPanel() {
     setOpen2(!open2);
   };
 
+  const isInputUnderline = true;
+
   return (
-    <div>
-      <Input className="search-input" placeholder="Search..." />
-      <List>
+    <>
+      <Input
+        className="search-input"
+        placeholder="Search..."
+        disableUnderline={isInputUnderline}
+      />
 
-        <ListItem button onClick={handleClick1} className="algorithm-list-bg">
-          <ListItemText
-            primary="Dynamic Programming"
-            disableTypography
-            className="algorithm-list-main"
-          />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button onClick={() => { dispatch({ type: 'KMP' }); }}>
-              <ListItemText
-                primary="Knutt-Morris-Pratt's String Search"
-                disableTypography
-                className="algorithm-list-sub"
-              />
-            </ListItem>
-          </List>
-        </Collapse>
+      <div className="itemListContainer">
+        <List>
+          <ListItem button onClick={handleClick1} className="algorithm-list-bg">
+            <ListItemText
+              primary="Dynamic Programming"
+              disableTypography
+              className="algorithm-list-main"
+            />
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button onClick={() => { dispatch({ type: 'KMP' }); }}>
+                <ListItemText
+                  primary="Knutt-Morris-Pratt's String Search"
+                  disableTypography
+                  className="algorithm-list-sub"
+                />
+              </ListItem>
+            </List>
+          </Collapse>
 
-        <ListItem button onClick={handleClick2} className="algorithm-list-bg">
-          <ListItemText
-            primary="Graphs"
-            disableTypography
-            className="algorithm-list-main"
-          />
-          {open1 ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open1} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem button onClick={() => { dispatch({ type: 'BST' }); }}>
-              <ListItemText
-                primary="Binary Search Tree"
-                disableTypography
-                className="algorithm-list-sub"
-              />
-            </ListItem>
-            <ListItem button onClick={() => { dispatch({ type: 'TS' }); }}>
-              <ListItemText
-                primary="Transitive closure"
-                disableTypography
-                className="algorithm-list-sub"
-              />
-            </ListItem>
-          </List>
-        </Collapse>
+          <ListItem button onClick={handleClick2} className="algorithm-list-bg">
+            <ListItemText
+              primary="Graphs"
+              disableTypography
+              className="algorithm-list-main"
+            />
+            {open1 ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={open1} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button onClick={() => { dispatch({ type: 'BST' }); }}>
+                <ListItemText
+                  primary="Binary Search Tree"
+                  disableTypography
+                  className="algorithm-list-sub"
+                />
+              </ListItem>
+              <ListItem button onClick={() => { dispatch({ type: 'TS' }); }}>
+                <ListItemText
+                  primary="Transitive closure"
+                  disableTypography
+                  className="algorithm-list-sub"
+                />
+              </ListItem>
+            </List>
+          </Collapse>
 
-        <ListItem button onClick={handleClick3} className="algorithm-list-bg">
-          <ListItemText
-            primary="Sorting"
-            disableTypography
-            className="algorithm-list-main"
-          />
-          {open2 ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open2} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              onClick={() => { dispatch({ type: 'QS' }); }}
-            >
-              <ListItemText
-                primary="Quick Sort"
-                disableTypography
-                className="algorithm-list-sub"
-              />
-            </ListItem>
-            <ListItem button onClick={() => { dispatch({ type: 'HS' }); }}>
-              <ListItemText
-                primary="Heap Sort"
-                disableTypography
-                className="algorithm-list-sub"
-              />
-            </ListItem>
-          </List>
-        </Collapse>
-
-      </List>
-      <Divider />
-    </div>
+          <ListItem button onClick={handleClick3} className="algorithm-list-bg">
+            <ListItemText
+              primary="Sorting"
+              disableTypography
+              className="algorithm-list-main"
+            />
+            {open2 ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={open2} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem
+                button
+                onClick={() => { dispatch({ type: 'QS' }); }}
+              >
+                <ListItemText
+                  primary="Quick Sort"
+                  disableTypography
+                  className="algorithm-list-sub"
+                />
+              </ListItem>
+              <ListItem button onClick={() => { dispatch({ type: 'HS' }); }}>
+                <ListItemText
+                  primary="Heap Sort"
+                  disableTypography
+                  className="algorithm-list-sub"
+                />
+              </ListItem>
+            </List>
+          </Collapse>
+        </List>
+        <Divider />
+      </div>
+    </>
   );
 }
 

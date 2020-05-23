@@ -6,9 +6,11 @@ function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
 
   return (
-    <div className="textArea">
-      PseudoCode:
-      {algorithm.text}
+    <div className="textAreaContainer">
+      <div className="textArea">
+        {algorithm.text}
+        this is pseudocode
+      </div>
       <LineExplanation />
     </div>
   );
