@@ -2,6 +2,7 @@ $midHeaderHeight: 40px;
 $headerColor: #4D4D4D;
 $quizButCol: #DEDEDE;
 $borderCol: #D4D4D4;
+$fontCol: #343434;
 
 .midPanelContainer {
   display: flex;
@@ -51,20 +52,19 @@ $borderCol: #D4D4D4;
 
   .midPanelFooter {
     height: 35%;
+    font-size: 0.8em;
+    color: $fontCol;
 
     .controlPanel {
       height: 40px;
       border-top: 1px solid $borderCol;
       border-bottom: 1px solid $borderCol;
+      padding: 16px;
       
     }
 
-    .paramaterPanel {
-      
+    .parameterPanel {
+      padding: 16px;
     }
-
-
   }
-
-
 }

@@ -4,6 +4,8 @@ $buttonDefCol: #909090;
 $buttonHighlightCol: #1D9CE3;
 $codeExplanationButtonHeight: 40px;
 $borderCol: #D4D4D4;
+$fontCol: #343434;
+
 @mixin textPadding {
   padding: 12px 8px 24px 12px;
 }
@@ -41,6 +43,7 @@ $borderCol: #D4D4D4;
   flex-direction: column;
   max-height: 100%;
   font-size: 0.9em;
+  color: $fontCol;
 
   .textArea {
     flex: 1 1 1px; /* Important */

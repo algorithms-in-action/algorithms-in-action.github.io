@@ -16,9 +16,7 @@ function MidPanel() {
           Play button, Next button
         </div>
         <div className="parameterPanel">
-          ADD: [];
-          DELETE: [];
-          SEARCH: [];
+          ADD: []; DELETE: [];SEARCH: [];
         </div>
       </div>
     </div>
