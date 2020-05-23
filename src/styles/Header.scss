@@ -1,0 +1,72 @@
+$bgColor: #001F39;
+$titleColor: #E0E0E0;
+$buttonColor: #E7E7E7;
+$buttonHighlightColor: #009EE9;
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.header {
+  background-color: $bgColor;
+  font-family: Roboto, 'sans-serif';
+  font-style: normal;
+  height: 50px;
+  display: flex;
+  flex-basis: auto;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  
+  .headerTitle {
+    display: flex;
+    flex-direction: row;
+    margin-left: 30px;
+    justify-content: space-between;
+    cursor: pointer;
+    align-items: center;
+
+    img {
+      margin-right: 16px; 
+      width: 36px;
+      height: 36px;
+    }
+  
+    h1 {
+      color: $titleColor;
+      font-size: 0.8em;
+      font-weight: 500;
+    }
+
+  }
+
+  .navButton {
+    display:flex;
+    justify-content: space-between;
+    margin-right: 30px;
+    align-self: stretch;
+     
+    button {
+      color: $buttonColor;
+      font-size: 0.8em;
+      font-weight: 500;
+      background-color: Transparent;
+      background-repeat: no-repeat;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+      outline: none;
+      height: 100%;
+      padding-top: 4px;
+      border-bottom: 4px solid transparent;
+      margin-left: 16px;
+    }
+
+    button:hover {
+      border-bottom: 4px solid $buttonHighlightColor;
+    }
+
+  }
+}

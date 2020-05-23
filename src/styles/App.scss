@@ -1,0 +1,58 @@
+$bgColor: #FEFEFE;
+$minContainerWidth: 1000px;
+$headerHeight: 50px;
+$borderCol: #D4D4D4;
+
+* {
+  box-sizing: border-box;
+} 
+
+html, body { 
+  margin:0; 
+  padding: 0;
+  background-color: $bgColor;
+  font-family: Roboto, 'sans-serif';
+  position: relative;
+  width: 100%;
+  min-width: $minContainerWidth;
+
+  .container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid $borderCol;
+
+    .panel {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+
+      .leftPanel {
+        width: 15%; 
+        display: flex;
+        flex-direction: column;
+      }
+  
+      .midPanel {
+        flex: 1;
+        border-left: 1px solid $borderCol;
+        border-right: 1px solid $borderCol;
+      }
+  
+      .rightPanel {
+        width: 26%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+      }
+      
+    }
+    
+  }
+
+}
+
+
+
+

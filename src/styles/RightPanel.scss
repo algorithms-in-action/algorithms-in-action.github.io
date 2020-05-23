@@ -1,0 +1,65 @@
+$bgColor: #FEFEFE;
+$buttonBgCol: #FFFFFF;
+$buttonDefCol: #909090;
+$buttonHighlightCol: #1D9CE3;
+$codeExplanationButtonHeight: 40px;
+$borderCol: #D4D4D4;
+$fontCol: #343434;
+
+@mixin textPadding {
+  padding: 12px 8px 24px 12px;
+}
+
+.codeExplanationButton {
+  background-color: $buttonBgCol;
+  display: flex; 
+  flex-direction: row;
+  justify-content: center;
+  border-bottom: 1px solid $borderCol;
+  height: $codeExplanationButtonHeight;
+
+  button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    font-size: 0.75em;
+    color: $buttonDefCol;
+    font-weight: 600;
+    width: 100%;
+  }
+
+  .active {
+    background-color: $buttonHighlightCol;
+    color: white;
+  }
+}
+
+.textAreaContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  font-size: 0.9em;
+  color: $fontCol;
+
+  .textArea {
+    flex: 1 1 1px; /* Important */
+    @include textPadding;
+    overflow-y: scroll;
+    
+  }
+
+  .lineExplanation {
+    padding: 16px;
+    height: 15%;
+    border-top: 1px solid $borderCol;
+    @include textPadding;
+
+  }
+
+}
+
+
