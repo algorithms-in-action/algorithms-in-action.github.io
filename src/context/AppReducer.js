@@ -1,10 +1,11 @@
 import algorithms from '../algorithms';
-import { findFirstBookmarkInProcedure, nextBookmark } from '../pseudocode/utils';
+import { findFirstBookmarkInProcedure } from '../pseudocode/utils';
 
 // Types of action that can occur, and an example of their use
 export const GlobalActions = {
-  // {type: types.LOAD_ALGORITHM, name: 'binaryTreeSearch'}
+  // {type: GlobalActions.LOAD_ALGORITHM, name: 'binaryTreeSearch'}
   LOAD_ALGORITHM: 'LOAD_ALGORITHM',
+  // {type: GlobalActions.NEXT_LINE}
   NEXT_LINE: 'NEXT_LINE',
 };
 
@@ -17,15 +18,17 @@ const reducer = (state, action) => {
       // (e.g. insert and search)
       const procedurePseudocode = data.pseudocode[Object.keys(data.pseudocode)[0]];
       return {
-        name: algorithms[action.name].name,
-        explanation: algorithms[action.name].explanation,
+        name: data.name,
+        explanation: data.explanation,
         pseudocode: procedurePseudocode,
+        generator: data.run(),
         bookmark: findFirstBookmarkInProcedure(procedurePseudocode),
       };
     case GlobalActions.NEXT_LINE:
+      const result = state.generator.next();
       return {
         ...state,
-        bookmark: nextBookmark(state.pseudocode, state.bookmark),
+        bookmark: result.value,
       };
     default: return state;
   }

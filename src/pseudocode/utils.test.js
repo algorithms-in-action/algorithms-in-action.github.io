@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { findBookmarkInProcedure, findFirstBookmarkInProcedure, nextBookmark } from './utils';
+import { findBookmarkInProcedure, findFirstBookmarkInProcedure } from './utils';
 
 const testPseudocode = {
   P: [
@@ -24,12 +24,4 @@ test('find bookmark on later line', () => {
 
 test('find first bookmark', () => {
   expect(findFirstBookmarkInProcedure(testPseudocode.P)).toEqual('start');
-});
-
-test('immediate next bookmark', () => {
-  expect(nextBookmark(testPseudocode.P, 'somethingElse')).toEqual('b4');
-});
-
-test('separated next bookmark', () => {
-  expect(nextBookmark(testPseudocode.P, 'start')).toEqual('somethingElse');
 });
