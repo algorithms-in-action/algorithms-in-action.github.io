@@ -17,17 +17,21 @@ export default {
   'quicksort': {
     name: 'Quick Sort',
     explanation: 'A Quick Sort works by sorting quickly.',
+    pseudocode: {},
   },
   'heapsort': {
     name: 'Heap Sort',
     explanation: 'A Heap Sort works by sorting heaps.',
+    pseudocode: {},
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
     explanation: 'There\'s a good chance I got the spelling of the name of this algorithm wrong.',
+    pseudocode: {},
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
     explanation: 'This is some kind of graph algorithm that looks cool and does something useful.',
+    pseudocode: {},
   },
 };

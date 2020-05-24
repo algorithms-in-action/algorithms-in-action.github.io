@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
+import NextLineButton from './NextLineButton';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
@@ -15,7 +16,7 @@ function MidPanel() {
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">
-          Play button, Next button
+          <NextLineButton />
         </div>
         <div className="parameterPanel">
           ADD: []; DELETE: [];SEARCH: [];

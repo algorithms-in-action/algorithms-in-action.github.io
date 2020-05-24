@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import LineExplanation from './LineExplanation';
+import { findBookmarkInProcedure } from '../pseudocode/utils';
 
 function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
@@ -8,8 +9,12 @@ function Pseudocode() {
   return (
     <div className="textAreaContainer">
       <div className="textArea">
-        {algorithm.text}
-        this is pseudocode
+        At bookmark:
+        {algorithm.bookmark}
+        <br />
+        Current pseudocode line:
+        <br />
+        <tt>{findBookmarkInProcedure(algorithm.pseudocode, algorithm.bookmark).code}</tt>
       </div>
       <LineExplanation />
     </div>
