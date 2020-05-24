@@ -1,5 +1,4 @@
 import algorithms from '../algorithms';
-import { findFirstBookmarkInProcedure } from '../pseudocode/utils';
 
 // Types of action that can occur, and an example of their use
 export const GlobalActions = {
@@ -17,18 +16,18 @@ const reducer = (state, action) => {
       // It will need to be changed when we properly support multiple procedures
       // (e.g. insert and search)
       const procedurePseudocode = data.pseudocode[Object.keys(data.pseudocode)[0]];
+      const algorithmGenerator = data.run();
       return {
         name: data.name,
         explanation: data.explanation,
         pseudocode: procedurePseudocode,
-        generator: data.run(),
-        bookmark: findFirstBookmarkInProcedure(procedurePseudocode),
+        generator: algorithmGenerator,
+        bookmark: algorithmGenerator.next().value, // Run it until the first yield
       };
     case GlobalActions.NEXT_LINE:
-      const result = state.generator.next();
       return {
         ...state,
-        bookmark: result.value,
+        bookmark: state.generator.next().value,
       };
     default: return state;
   }

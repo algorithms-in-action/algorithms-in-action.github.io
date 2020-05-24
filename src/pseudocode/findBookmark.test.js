@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { findBookmarkInProcedure, findFirstBookmarkInProcedure } from './utils';
+import findBookmark from './findBookmark';
 
 const testPseudocode = {
   P: [
@@ -11,17 +11,17 @@ const testPseudocode = {
 };
 
 test('find bookmark on first line', () => {
-  expect(findBookmarkInProcedure(testPseudocode.P, 'start')).toEqual(
+  expect(findBookmark(testPseudocode.P, 'start')).toEqual(
     { code: 'procedure BinaryTreeSearch(needle):', bookmark: 'start', explanation: undefined },
   );
 });
 
 test('find bookmark on later line', () => {
-  expect(findBookmarkInProcedure(testPseudocode.P, 'somethingElse')).toEqual(
+  expect(findBookmark(testPseudocode.P, 'somethingElse')).toEqual(
     { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
   );
 });
 
 test('find first bookmark', () => {
-  expect(findFirstBookmarkInProcedure(testPseudocode.P)).toEqual('start');
+  expect(findFirstBookmark(testPseudocode.P)).toEqual('start');
 });
