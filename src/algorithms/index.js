@@ -13,4 +13,21 @@ import binaryTreeSearch from './binaryTreeSearch';
 
 export default {
   'binaryTreeSearch': binaryTreeSearch,
+  // The entries below are not fully-written yet, they are for testing only
+  'quicksort': {
+    name: 'Quick Sort',
+    explanation: 'A Quick Sort works by sorting quickly.',
+  },
+  'heapsort': {
+    name: 'Heap Sort',
+    explanation: 'A Heap Sort works by sorting heaps.',
+  },
+  'kmp': {
+    name: 'Knuth-Morris-Pratt',
+    explanation: 'There\'s a good chance I got the spelling of the name of this algorithm wrong.',
+  },
+  'transitiveClosure': {
+    name: 'Transitive Closure',
+    explanation: 'This is some kind of graph algorithm that looks cool and does something useful.',
+  },
 };
