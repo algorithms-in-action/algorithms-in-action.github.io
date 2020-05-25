@@ -17,21 +17,25 @@ export default {
   'quicksort': {
     name: 'Quick Sort',
     explanation: 'A Quick Sort works by sorting quickly.',
-    pseudocode: {},
+    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+    * run() { yield ''; },
   },
   'heapsort': {
     name: 'Heap Sort',
     explanation: 'A Heap Sort works by sorting heaps.',
-    pseudocode: {},
+    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+    * run() { yield ''; },
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
     explanation: 'There\'s a good chance I got the spelling of the name of this algorithm wrong.',
-    pseudocode: {},
+    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+    * run() { yield ''; },
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
     explanation: 'This is some kind of graph algorithm that looks cool and does something useful.',
-    pseudocode: {},
+    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+    * run() { yield ''; },
   },
 };

@@ -21,7 +21,3 @@ test('find bookmark on later line', () => {
     { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
   );
 });
-
-test('find first bookmark', () => {
-  expect(findFirstBookmark(testPseudocode.P)).toEqual('start');
-});
