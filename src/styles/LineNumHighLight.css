@@ -1,0 +1,33 @@
+.line-light {
+    width    : 100%;
+    height   : 400px;
+    overflow: scroll;
+    padding: 0px;
+}
+.line-light p {
+    text-align: left;
+    cursor    : pointer;
+    margin: 0px;
+    white-space:nowrap;
+}
+.line-light p span:first-child {
+    display         : inline-block;
+    padding-right   : 25px;
+    padding-left    : 20px;
+    background-color: rgba(238, 231, 231,0.8);
+    width           : 10px;
+    padding         : 10px 10;
+}
+
+.line-light p span:nth-child(2) {
+    padding-left: 10px;
+}
+
+.active{
+    background-color:rgb(172, 239, 241);
+}
+
+.textArea-pseudocode{
+    padding: 0px;
+    flex: 1;
+  }

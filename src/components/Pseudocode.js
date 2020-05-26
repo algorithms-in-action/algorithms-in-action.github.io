@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+/* eslint-disable linebreak-style */
+import React from 'react';
 import LineExplanation from './LineExplanation';
+import LineNumHighLight from './LineNumHighLight';
 
 function Pseudocode() {
-  const { algorithm } = useContext(GlobalContext);
-
   return (
-    <div className="textArea">
-      PseudoCode:
-      {algorithm.text}
+    <div className="textArea-pseudocode">
+      <LineNumHighLight />
       <LineExplanation />
     </div>
   );
