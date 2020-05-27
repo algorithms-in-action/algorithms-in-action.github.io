@@ -1,4 +1,5 @@
 import algorithms from '../algorithms';
+import GraphTracer from '../components/Graph/GraphTracer';
 
 const DEFAULT_ALGORITHM = 'binaryTreeSearch';
 
@@ -14,6 +15,11 @@ export const GlobalActions = {
     // (e.g. insert and search)
     const procedurePseudocode = data.pseudocode[Object.keys(data.pseudocode)[0]];
     const algorithmGenerator = data.run();
+
+    const tree = new GraphTracer('key', null, 'Test graph');
+    tree.set(data.nodes);
+    tree.layoutTree(data.root);
+
     return {
       id: params.name,
       name: data.name,
@@ -21,13 +27,27 @@ export const GlobalActions = {
       pseudocode: procedurePseudocode,
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
+      graph: tree,
     };
   },
   // No expected params
-  NEXT_LINE: (state) => ({
-    ...state,
-    bookmark: state.generator.next().value,
-  }),
+  NEXT_LINE: (state) => {
+    // console.log('last state');
+    // console.log(state);
+    // console.log(state.graph);
+    // console.log(state.bookmark);
+    const { current, parent } = state.bookmark;
+    // console.log(`current: ${current}`);
+    // console.log(`parent: ${parent}`);
+    if (!(current === null && parent === null)) {
+      state.graph.visit(current, parent);
+    }
+
+    return ({
+      ...state,
+      bookmark: state.generator.next().value,
+    });
+  },
 };
 
 export function dispatcher(state, setState) {

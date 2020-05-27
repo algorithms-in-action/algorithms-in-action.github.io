@@ -5,11 +5,12 @@ import findBookmark from '../pseudocode/findBookmark';
 
 function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
+  // console.log(algorithm);
   return (
     <div className="textAreaContainer">
       <div className="textArea">
         At bookmark:
-        {algorithm.bookmark}
+        {algorithm.bookmark.step}
         <br />
         Current pseudocode line:
         <br />

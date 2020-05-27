@@ -3,6 +3,7 @@ $headerColor: #4D4D4D;
 $quizButCol: #DEDEDE;
 $borderCol: #D4D4D4;
 $fontCol: #343434;
+$buttonDefCol: #909090;
 
 .midPanelContainer {
   display: flex;
@@ -46,7 +47,19 @@ $fontCol: #343434;
    /* Animation Goes Here */
   .midPanelBody {
     flex: 1 1 1px; /* Important */
-   
+    // min-height: 700px;
+    // top: 0;
+    // left: 0;
+    // background-color: $buttonDefCol;
+    justify-self: center;
+    // color: $color-font;
+    // padding: 4px 6px;
+    // font-size: $font-size-large;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
   }
 
 
