@@ -12,7 +12,7 @@ function Explanation() {
   return (
     <div className="textArea">
       <ReactMarkDown
-        source={algorithm.text}
+        source={algorithm.explanation}
         escapeHtml={false}
         renderers={{ code: CodeBlock }}
         plugins={[toc]}
