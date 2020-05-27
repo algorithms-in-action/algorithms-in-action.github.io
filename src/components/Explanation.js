@@ -8,8 +8,7 @@ function Explanation() {
   return (
     <div className="textAreaContainer">
       <div className="textArea">
-        {algorithm.text}
-        this is explanation
+        {algorithm.explanation}
       </div>
     </div>
   );

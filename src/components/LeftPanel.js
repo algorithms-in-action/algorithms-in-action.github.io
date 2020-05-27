@@ -8,6 +8,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { GlobalContext } from '../context/GlobalState';
+import { GlobalActions } from '../context/actions';
 import '../styles/LeftPanel.scss';
 
 
@@ -49,9 +50,9 @@ function LeftPanel() {
           </ListItem>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button onClick={() => { dispatch({ type: 'KMP' }); }}>
+              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'kmp' }); }}>
                 <ListItemText
-                  primary="Knutt-Morris-Pratt's String Search"
+                  primary="Knuth-Morris-Pratt's String Search"
                   disableTypography
                   className="algorithm-list-sub"
                 />
@@ -69,14 +70,14 @@ function LeftPanel() {
           </ListItem>
           <Collapse in={open1} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button onClick={() => { dispatch({ type: 'BST' }); }}>
+              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeSearch' }); }}>
                 <ListItemText
                   primary="Binary Search Tree"
                   disableTypography
                   className="algorithm-list-sub"
                 />
               </ListItem>
-              <ListItem button onClick={() => { dispatch({ type: 'TS' }); }}>
+              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'transitiveClosure' }); }}>
                 <ListItemText
                   primary="Transitive closure"
                   disableTypography
@@ -98,7 +99,7 @@ function LeftPanel() {
             <List component="div" disablePadding>
               <ListItem
                 button
-                onClick={() => { dispatch({ type: 'QS' }); }}
+                onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'quicksort' }); }}
               >
                 <ListItemText
                   primary="Quick Sort"
@@ -106,7 +107,7 @@ function LeftPanel() {
                   className="algorithm-list-sub"
                 />
               </ListItem>
-              <ListItem button onClick={() => { dispatch({ type: 'HS' }); }}>
+              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'heapsort' }); }}>
                 <ListItemText
                   primary="Heap Sort"
                   disableTypography
