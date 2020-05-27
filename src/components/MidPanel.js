@@ -1,61 +1,29 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
-import GraphTracer from './Graph/GraphTracer';
+import NextLineButton from './NextLineButton';
 
-class MidPanel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.a = new GraphTracer("key", this.root, "Test graph");
-    this.a.set([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]);
-    this.reset();
-  }
-
-  reset() {
-    this.root = null;
-    this.objects = {};
-  }
-
-  test() {
-    // this.root = new GraphTracer("key", this.root, "asdsa");
-  }
-
-  render() {
-    console.log(this.a);
-    this.a.layoutTree(5);
-    // this.a.visit[]
-    this.a.visit(5, null);
-    this.a.visit(3, 5);
-    this.a.visit(4, 3);
-
-    // const { className } = this.props;
-    // let a = new GraphTracer("key", this.root, "Test graph");
-
-    // a.visit([3, 5]);
-    return (
-      <div className="midPanelContainer">
-        dasdsa
-        <button type="button" value="test" onClick={this.test}>
-          Explanation
-        </button>
-        <div className="graph">
-          {
-          this.a && this.a.render()
-        }
+function MidPanel() {
+  const { algorithm } = useContext(GlobalContext);
+  return (
+    <div className="midPanelContainer">
+      <div className="midPanelHeader">
+        <div className="algorithmTitle">{algorithm.name}</div>
+        <button type="button" className="quizButton">Quiz</button>
+      </div>
+      <div className="midPanelBody">
+        {/* Animation Goes here */}
+      </div>
+      <div className="midPanelFooter">
+        <div className="controlPanel">
+          <NextLineButton />
+        </div>
+        <div className="parameterPanel">
+          ADD: []; DELETE: [];SEARCH: [];
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 
