@@ -2,11 +2,10 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'BST': return {
       name: 'Binary Search Trees',
-      text: '# In computer science, binary search trees (BST),sometimes called ordered or sorted binary trees, are a particular type of container: a data structure that stores "items" (such as numbers, names etc.) in memory. \n'
-      + '## They allow fast lookup, addition and removal of items, and can be used to implement either dynamic sets of items, or lookup tables that allow finding an item by its key (e.g., finding the phone number of a person by name). \n'
-      + '* Binary search trees keep their keys in sorted order, so that lookup and other operations can use the principle of binary search: when looking for a key in a tree (or a place to insert a new key), they traverse the tree from root to leaf, making comparisons to keys stored in the nodes of the tree and deciding, on the basis of the comparison, to continue searching in the left or right subtrees. \n'
-      + '* On average, this means that each comparison allows the operations to skip about half of the tree, so that each lookup, insertion or deletion takes time proportional to the logarithm of the number of items stored in the tree. \n'
-      + '* This is much better than the linear time required to find items by key in an (unsorted) array, but slower than the corresponding operations on hash tables. Several variants of the binary search tree have been studied in computer science; this article deals primarily with the basic type, making references to more advanced types when appropriate. \n',
+      text: '## Binary Search Trees \n'
+            + '<blockquote> A binary search tree (bst) is a basic tree data structure that supports a simple searching algorithm. For each node in the binary search tree, with key k, all nodes in its left subtree have keys smaller than k, while all nodes in its right subtree have keys larger than k. Where duplicate keys are allowed in the tree, they usually go into the right subtree by convention. </blockquote> \n\n'
+            + '<blockquote> The binary search tree is built up by adding items one at a time. Since the average path length in a tree of n items is log n, the average case complexity of building a bst is O(n log n). Similarly, the average case for a search for m items in a tree of n items is O(m log n), that is O(log n) per item. </blockquote> \n\n'
+            + '<blockquote> The biggest problem with the binary search tree is that its behavior degenerates when there is order in the input data. In the worst case, sorted or reverse sorted data items yield a linear tree, or "stick", the complexity of building the tree is O(n^2), and the complexity of a search for a single item is O(n). </blockquote>',
     };
     case 'QS': return { name: 'Quick Sort', text: 'Quick Sort' };
     case 'KMP': return { name: 'KMP', text: 'KMP' };
