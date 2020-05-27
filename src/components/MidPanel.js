@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
+import BSTParameter from './parameters/BSTParameter';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
@@ -18,7 +19,7 @@ function MidPanel() {
           Play button, Next button
         </div>
         <div className="parameterPanel">
-          ADD: []; DELETE: [];SEARCH: [];
+          <BSTParameter />
         </div>
       </div>
     </div>

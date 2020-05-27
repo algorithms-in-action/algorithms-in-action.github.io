@@ -3,6 +3,12 @@ $headerColor: #4D4D4D;
 $quizButCol: #DEDEDE;
 $borderCol: #D4D4D4;
 $fontCol: #343434;
+$sidePad: 24px;
+$submitCol: #DEDEDE;
+$submitHighlightCol: #0065AE;
+$paramLog: #EFEEF0;
+$warningCol: #DC0707;
+$successCol: #40980B;
 
 .midPanelContainer {
   display: flex;
@@ -18,13 +24,13 @@ $fontCol: #343434;
     
     .algorithmTitle {
       font-size: 0.92em;
-      margin: auto 24px;
+      margin: auto $sidePad;
       color: $headerColor;
       font-weight: 400;
     }
 
     .quizButton {
-      margin: auto 24px;
+      margin: auto $sidePad;
       font-size: 0.8em;
       background-color: Transparent;
       background-repeat:no-repeat;
@@ -49,22 +55,108 @@ $fontCol: #343434;
    
   }
 
-
   .midPanelFooter {
-    height: 35%;
+    height: 28%;
     font-size: 0.8em;
     color: $fontCol;
+    overflow-y: scroll;
+    border-top: 1px solid $borderCol;
 
     .controlPanel {
       height: 40px;
-      border-top: 1px solid $borderCol;
       border-bottom: 1px solid $borderCol;
-      padding: 16px;
+      padding: auto $sidePad;
       
     }
 
     .parameterPanel {
-      padding: 16px;
+      padding: 16px $sidePad 16px $sidePad;
+
+      .logContainer {
+        background-color: $paramLog;
+        padding: 8px 16px;
+        border-radius: 4px;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 16px auto 0px auto;
+        
+
+        .logTag {
+          color: $successCol;
+          text-transform: uppercase;
+          font-weight: 500;
+          font-size: 1em;
+          margin-right: 12px;
+        }
+
+        .logText {
+          font-size: 1.03em;
+          font-weight: 300;
+          color: $fontCol;
+        }
+
+      }
+
+
+      .BSTForm {
+        color: $fontCol;
+        font-size: 1.05em;
+        display: flex;
+        
+        .form {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          margin: 0px 8px;
+
+          div {
+            margin-bottom: 8px;
+          }
+
+          .inputText {
+            height: 28px;
+            width: 100%;
+            outline: none;
+            font-size: 0.85em;
+            color: $fontCol;
+            border: 1px solid $borderCol;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            padding: 0px 4px;
+          }
+
+          .inputSubmit {
+            background-color: $submitCol;
+            cursor: pointer;
+            border-radius: 16px;
+            border: none;
+            padding: 6px 12px;
+            outline: none;
+            font-size: 0.81em;
+            margin: 0px 20%;
+
+          }
+
+          input[type=submit]:active {
+            background-color: $submitHighlightCol;
+          }
+          
+        }
+
+        .insertionForm {
+          @extend .form;
+        }
+
+        .searchForm {
+          @extend .form;
+
+        }
+        .deletionForm {
+          @extend .form;
+        }
+
+      }
     }
   }
 }
