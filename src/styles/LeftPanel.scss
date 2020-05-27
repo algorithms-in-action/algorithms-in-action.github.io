@@ -1,0 +1,39 @@
+$searchHeight: 40px;
+$topicFontCol: #4D4D4D;
+$itemFontCol: #565656;
+$topicBgCol: #EAEAEA;
+$borderCol: #D4D4D4;
+
+.algorithm-list-bg{
+    background-color: $topicBgCol !important;
+}
+.algorithm-list-main{
+    color: $topicFontCol;
+    font-size: 0.75em;
+    font-weight: 400;
+}
+.algorithm-list-sub{
+    padding-left: 12px;
+    color: $itemFontCol;
+    font-weight: 300;
+    font-size: 0.75em;
+}
+.MuiList-padding{
+    padding: 0px !important;
+}
+
+.search-input{
+    padding: 16px 16px 16px 16px;
+    font-size: 0.8em !important;
+    width: 100%;
+    height: $searchHeight;
+    border-bottom: 1px solid $borderCol;
+}
+
+.itemListContainer {
+    overflow-y: scroll;
+    flex: 1 1 1px; /* Important */
+
+}
+
+
