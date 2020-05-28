@@ -7,7 +7,11 @@ describe('LOAD_ALGORITHM action', () => {
     expect(loadedState).toMatchObject({
       id: 'binaryTreeSearch',
       name: 'Binary Tree Search',
-      bookmark: 'start',
+      bookmark: {
+        current: null,
+        parent: null,
+        step: 'start',
+      },
     });
   });
 });
