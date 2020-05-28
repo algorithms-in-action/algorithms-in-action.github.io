@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
+import findBookmark from '../pseudocode/findBookmark';
 
 function LineExplanation() {
+  const { algorithm } = useContext(GlobalContext);
   return (
     <div className="lineExplanation">
-      This is an example of line explanation.
+      <tt>{findBookmark(algorithm.pseudocode, algorithm.bookmark).explanation}</tt>
     </div>
   );
 }
