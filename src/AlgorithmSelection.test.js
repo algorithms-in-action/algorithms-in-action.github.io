@@ -11,6 +11,19 @@ import Header from './components/Header';
 
 describe('<App />', () => {
   afterEach(cleanup);
+  it('Context value is updated by child component', () => {
+    const { getByText } = render(<App />);
+    // initial data in the explanation panel.
+    expect(getByText(/A binary search tree/i).textContent).toBe(' A binary search tree (bst) is a basic tree data structure that supports a simple searching algorithm. For each node in the binary search tree, with key k, all nodes in its left subtree have keys smaller than k, while all nodes in its right subtree have keys larger than k. Where duplicate keys are allowed in the tree, they usually go into the right subtree by convention. ');
+    // click the button of "Quick Sort".
+    fireEvent.click(getByText('Quick Sort'));
+    // Data changed in the explanation panel.
+    expect(getByText(/A Quick Sort/i).textContent).toBe('A Quick Sort works by sorting quickly.');
+  });
+});
+
+describe('<App />', () => {
+  afterEach(cleanup);
   it('dropdown box can work well', () => {
     const { getByText } = render(<App />);
     // Assert that KMP does not appear.
