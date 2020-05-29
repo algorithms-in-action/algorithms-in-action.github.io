@@ -102,6 +102,7 @@ function LeftPanel() {
       <Input
         className="search-input"
         placeholder="Search..."
+        data-testid="search-input"
         disableUnderline={isInputUnderline}
         onChange={searchAlgorithm}
       />
@@ -114,7 +115,7 @@ function LeftPanel() {
                 {
                 algorithmList.map((el) => {
                   return (
-                    <div>
+                    <div key={el.id}>
                       <ListItem button onClick={() => handleClick(el.id)} className="algorithm-list-bg">
                         <ListItemText
                           primary={el.name}
@@ -127,7 +128,7 @@ function LeftPanel() {
                         {
                          el.subAlgorithm.map((item) => {
                            return (
-                             <List component="div" disablePadding>
+                             <List component="div" disablePadding key={item.name}>
                                <ListItem
                                  button
                                  onClick={() => {
@@ -155,7 +156,7 @@ function LeftPanel() {
               <div>
                 {displaySearch.map((item) => {
                   return (
-                    <List component="div" disablePadding>
+                    <List component="div" disablePadding key={item}>
                       <ListItem
                         button
                         onClick={() => {
