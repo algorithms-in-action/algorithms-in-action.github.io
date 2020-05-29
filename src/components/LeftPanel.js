@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable arrow-body-style */
 import React, { useContext } from 'react';
 import List from '@material-ui/core/List';
 // import Divider from '@material-ui/core/Divider';
@@ -17,27 +19,27 @@ function LeftPanel() {
   const [openDynamic, setOpenDynamic] = React.useState(false);
   const [openGraph, setOpenGraph] = React.useState(true);
   const [openSorting, setOpenSorting] = React.useState(true);
+  const [displaySearch, setDisplaySearch] = React.useState(null);
 
 
-  const handleClick = (el) => {
-    if (el === 1) {
+  const handleClick = (itemId) => {
+    if (itemId === 1) {
       setOpenDynamic(!openDynamic);
-    } else if (el === 2) {
+    } else if (itemId === 2) {
       setOpenGraph(!openGraph);
-    } else if (el === 3) {
+    } else if (itemId === 3) {
       setOpenSorting(!openSorting);
     }
   };
   const isInputUnderline = true;
 
-  // Search Input Component
-  const searchAlgorithm = (e) => {
-    // eslint-disable-next-line no-console
-    // console.log(e.target.value);
-    if (e.target.value === 'Knuth-Morris-Pratt \'s String Search') {
-      console.log('xxx');
-    }
-  };
+  const algorithmListName = [
+    { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
+    { name: 'Binary Search Tree', onClickEvent: 'binaryTreeSearch' },
+    { name: 'Transitive closure', onClickEvent: 'transitiveClosure' },
+    { name: 'Quick Sort', onClickEvent: 'quicksort' },
+    { name: 'Heap Sort', onClickEvent: 'heapsort' },
+  ];
 
   const algorithmList = [{
     id: 1,
@@ -83,6 +85,18 @@ function LeftPanel() {
   },
   ];
 
+  // Search Input Component
+  const searchAlgorithm = (e) => {
+    const inputContent = e.target.value.trim().toLowerCase();
+    let algorithmListChosen = null;
+    if (inputContent.length > 0) {
+      algorithmListChosen = algorithmListName.filter((i) => {
+        return i.name.toLowerCase().match(inputContent);
+      });
+    }
+    setDisplaySearch(algorithmListChosen);
+  };
+
   return (
     <>
       <Input
@@ -92,48 +106,74 @@ function LeftPanel() {
         onChange={searchAlgorithm}
       />
       <div className="itemListContainer">
-        <List>
-          {
-            // eslint-disable-next-line arrow-body-style
-            algorithmList.map((el) => {
-              return (
-                <div>
-                  <ListItem button onClick={() => handleClick(el.id)} className="algorithm-list-bg">
-                    <ListItemText
-                      primary={el.name}
-                      disableTypography
-                      className={el.className}
-                    />
-                    {el.openStatus ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={el.openStatus} timeout="auto" unmountOnExit>
-                    {
-                     // eslint-disable-next-line arrow-body-style
-                     el.subAlgorithm.map((item) => {
-                       return (
-                         <List component="div" disablePadding>
-                           <ListItem
-                             button
-                             onClick={() => {
-                               dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
-                             }}
-                           >
-                             <ListItemText
-                               primary={item.name}
-                               disableTypography
-                               className={item.className}
-                             />
-                           </ListItem>
-                         </List>
-                       );
-                     })
-                  }
-                  </Collapse>
-                </div>
-              );
-            })
-          }
-        </List>
+
+        {
+          (displaySearch === null)
+            ? (
+              <List>
+                {
+                algorithmList.map((el) => {
+                  return (
+                    <div>
+                      <ListItem button onClick={() => handleClick(el.id)} className="algorithm-list-bg">
+                        <ListItemText
+                          primary={el.name}
+                          disableTypography
+                          className={el.className}
+                        />
+                        {el.openStatus ? <ExpandLess /> : <ExpandMore />}
+                      </ListItem>
+                      <Collapse in={el.openStatus} timeout="auto" unmountOnExit>
+                        {
+                         el.subAlgorithm.map((item) => {
+                           return (
+                             <List component="div" disablePadding>
+                               <ListItem
+                                 button
+                                 onClick={() => {
+                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
+                                 }}
+                               >
+                                 <ListItemText
+                                   primary={item.name}
+                                   disableTypography
+                                   className={item.className}
+                                 />
+                               </ListItem>
+                             </List>
+                           );
+                         })
+                      }
+                      </Collapse>
+                    </div>
+                  );
+                })
+                }
+              </List>
+            )
+            : (
+              <div>
+                {displaySearch.map((item) => {
+                  return (
+                    <List component="div" disablePadding>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
+                        }}
+                      >
+                        <ListItemText
+                          primary={item.name}
+                          disableTypography
+                          className="algorithm-list-sub"
+                        />
+                      </ListItem>
+                    </List>
+                  );
+                })}
+              </div>
+            )
+        }
 
       </div>
 
