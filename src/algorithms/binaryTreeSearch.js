@@ -68,19 +68,5 @@ procedure BinaryTreeSearch(Tree, Item):  $start
                                                   }
                                                 }
       yield { step: '8', current, parent };
-
-      // yield 'start'; const item = 2;
-      // yield '1';     let ptr = tree;
-      // yield '2';     while (ptr) {
-      // yield '3';       if (ptr[0] === item) {
-      // yield '4';         return;
-      //                  }
-      // yield '5';       if (item < ptr[0]) {
-      // yield '6';         ptr = ptr[1];
-      //                  } else {
-      // yield '7';         ptr = ptr[2];
-      //                  }
-      //                }
-      // yield '8';
   },
 };

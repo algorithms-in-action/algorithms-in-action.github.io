@@ -237,12 +237,9 @@ class GraphTracer extends Tracer {
   }
 
   visitOrLeave(visit, target, source = null, weight) {
-    console.log(`target: ${target}`);
-    console.log(`source: ${source}`);
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
-    console.log(`node: ${node}`);
     if (weight !== undefined) node.weight = weight;
     node.visitedCount += visit ? 1 : -1;
     if (this.logTracer) {
