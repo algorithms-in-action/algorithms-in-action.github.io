@@ -19,6 +19,7 @@ export const GlobalActions = {
       id: params.name,
       name: data.name,
       explanation: data.explanation,
+      param: data.param,
       pseudocode: procedurePseudocode,
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
