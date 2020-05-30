@@ -98,6 +98,9 @@ function LeftPanel() {
     setDisplaySearch(algorithmListChosen);
   };
 
+  // if the search input field is empty, Display the main list.
+  // if the search input field has the value, Display the search list.
+
   return (
     <>
       <Input
