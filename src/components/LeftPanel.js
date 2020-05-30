@@ -23,34 +23,28 @@ function LeftPanel() {
 
 
   // create a state for all list item
-  const itemList = [];
-  AlgorithmCategoryList.forEach((cat) => itemList.push(
-    {
-      name: cat.category,
-      id: cat.num,
-      status: true,
-    },
-  ));
+  // const itemList = [];
+  // AlgorithmCategoryList.forEach((cat) => itemList.push(
+  //   {
+  //     name: cat.category,
+  //     id: cat.num,
+  //     status: true,
+  //   },
+  // ));
 
   const [itemListState, setItemListState] = useState(AlgorithmCategoryList);
 
   const handleClick = (itemId) => {
-    setOpenSorting(!openSorting);
+    // setOpenSorting(!openSorting);
 
     console.log('BEFORE', itemListState);
+
     const itemIndex = itemListState.findIndex((x) => x.num === itemId);
     itemListState[itemIndex].status = !itemListState[itemIndex].status;
     setItemListState(itemListState);
+
     console.log('AFTER', itemListState);
   };
-
-  // const algorithmSearchList = [
-  //   { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
-  //   { name: 'Binary Search Tree', onClickEvent: 'binarySearchTree' },
-  //   { name: 'Transitive closure', onClickEvent: 'transitiveClosure' },
-  //   { name: 'Quick Sort', onClickEvent: 'quickSort' },
-  //   { name: 'Heap Sort', onClickEvent: 'heapSort' },
-  // ];
 
   // Search Function Component
   const searchAlgorithm = (e) => {
@@ -94,7 +88,6 @@ function LeftPanel() {
                           disableTypography
                           className="algorithm-list-main"
                         />
-                        {console.log('HELLO', itemListState)}
                         {itemListState.find((x) => x.num === el.num).status ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
                       <Collapse in={openSorting} timeout="auto" unmountOnExit>
