@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
-import BSTParameter from './parameters/BSTParameter';
+import NextLineButton from './NextLineButton';
+import Param from './parameters';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
@@ -16,10 +17,10 @@ function MidPanel() {
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">
-          Play button, Next button
+          <NextLineButton />
         </div>
         <div className="parameterPanel">
-          <BSTParameter />
+          <Param.BSTParam />
         </div>
       </div>
     </div>
