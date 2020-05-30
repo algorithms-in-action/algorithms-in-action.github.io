@@ -2,10 +2,37 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
 import NextLineButton from './NextLineButton';
-import { BSTParam } from './parameters';
+import * as Param from './parameters';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
+
+  const RenderParamComponent = (id) => {
+    let component;
+
+    switch (id) {
+      case 'binarySearchTree':
+        component = <Param.BSTParam />;
+        break;
+      case 'quicksort':
+        component = <Param.QuicksortParam />;
+        break;
+      case 'heapsort':
+        component = <Param.HeapsortParam />;
+        break;
+      case 'transitiveClosure':
+        component = <Param.TransitiveClosureParam />;
+        break;
+      case 'kmp':
+        component = <Param.KMPParam />;
+        break;
+      default:
+        break;
+    }
+
+    return component;
+  };
+
   return (
     <div className="midPanelContainer">
       <div className="midPanelHeader">
@@ -20,7 +47,7 @@ function MidPanel() {
           <NextLineButton />
         </div>
         <div className="parameterPanel">
-          <BSTParam />
+          { RenderParamComponent(algorithm.id) }
         </div>
       </div>
     </div>

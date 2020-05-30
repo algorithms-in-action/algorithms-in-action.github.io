@@ -1,11 +1,6 @@
 /* eslint quote-props: 0 */
-import {
-  QuicksortExp,
-  HeapsortExp,
-  KMPExp,
-  TransitiveClosureExp,
-} from './explanations';
-
+import * as Explanation from './explanations';
+import BinarySearchTree from './BinarySearchTree';
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
@@ -15,33 +10,80 @@ import {
  { pseudocode: String, explanation: String, run: Function }
  */
 
-import binaryTreeSearch from './binaryTreeSearch';
-
-export default {
-  'binaryTreeSearch': binaryTreeSearch,
-  // The entries below are not fully-written yet, they are for testing only
-  'quicksort': {
-    name: 'Quick Sort',
-    explanation: QuicksortExp,
-    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-    * run() { yield ''; },
+// Very Important: The key must be unique!
+const algorithms = {
+  'binarySearchTree': {
+    name: 'Binary Search Tree',
+    category: 'Graphs',
+    explanation: Explanation.BSTExp,
+    controller: BinarySearchTree,
   },
-  'heapsort': {
+  'quickSort': {
+    name: 'Quick Sort',
+    category: 'Sorting',
+    explanation: Explanation.QuicksortExp,
+    controller: {
+      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+      * run() { yield ''; },
+    },
+  },
+  'heapSort': {
     name: 'Heap Sort',
-    explanation: HeapsortExp,
-    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-    * run() { yield ''; },
+    category: 'Sorting',
+    explanation: Explanation.HeapsortExp,
+    controller: {
+      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+      * run() { yield ''; },
+    },
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
-    explanation: KMPExp,
-    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-    * run() { yield ''; },
+    category: 'Dynamic Programming',
+    explanation: Explanation.KMPExp,
+    controller: {
+      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+      * run() { yield ''; },
+    },
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
-    explanation: TransitiveClosureExp,
-    pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-    * run() { yield ''; },
+    category: 'Graphs',
+    explanation: Explanation.TransitiveClosureExp,
+    controller: {
+      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
+      * run() { yield ''; },
+    },
   },
 };
+
+// This function generates a list of algorithms classed by categories
+const generateAlgorithmCategoryList = () => {
+  const alCatList = [];
+  let categoryNum = 1;
+
+  // Get all the categories
+  for (const [key, value] of Object.entries(algorithms)) {
+    if (!alCatList.some((al) => al.category === value.category)) {
+      alCatList.push({
+        category: value.category,
+        num: categoryNum,
+        list: [],
+      });
+      categoryNum += 1;
+    }
+  }
+
+  // For every category, get all the algorithms
+  for (const [key, value] of Object.entries(algorithms)) {
+    const algo = alCatList.find((al) => al.category === value.category);
+    algo.list.push({
+      name: value.name,
+      id: key,
+    });
+  }
+
+  return alCatList;
+};
+
+export default algorithms;
+export const AlgorithmCategoryList = generateAlgorithmCategoryList();

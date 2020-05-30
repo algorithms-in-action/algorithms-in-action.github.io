@@ -2,7 +2,6 @@
 /* eslint-disable arrow-body-style */
 import React, { useContext } from 'react';
 import List from '@material-ui/core/List';
-// import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Input } from '@material-ui/core';
@@ -12,6 +11,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import { GlobalContext } from '../context/GlobalState';
 import { GlobalActions } from '../context/actions';
 import '../styles/LeftPanel.scss';
+import { AlgorithmCategoryList } from '../algorithms';
 
 
 function LeftPanel() {
@@ -20,6 +20,7 @@ function LeftPanel() {
   const [openGraph, setOpenGraph] = React.useState(true);
   const [openSorting, setOpenSorting] = React.useState(true);
   const [displaySearch, setDisplaySearch] = React.useState(null);
+  const expandList = useRef(null);
 
   // Realize the function of dropdown list.
   const handleClick = (itemId) => {
@@ -32,14 +33,16 @@ function LeftPanel() {
     }
   };
 
-  // The Search List.
-  const algorithmListName = [
+  const algorithmSearchList = [
     { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
-    { name: 'Binary Search Tree', onClickEvent: 'binaryTreeSearch' },
+    { name: 'Binary Search Tree', onClickEvent: 'binarySearchTree' },
     { name: 'Transitive closure', onClickEvent: 'transitiveClosure' },
-    { name: 'Quick Sort', onClickEvent: 'quicksort' },
-    { name: 'Heap Sort', onClickEvent: 'heapsort' },
+    { name: 'Quick Sort', onClickEvent: 'quickSort' },
+    { name: 'Heap Sort', onClickEvent: 'heapSort' },
   ];
+
+  
+
 
   // The Main list in the left panel.
   const algorithmList = [{
@@ -60,7 +63,7 @@ function LeftPanel() {
     subAlgorithm: [{
       name: 'Binary Search Tree',
       className: 'algorithm-list-sub',
-      onClickEvent: 'binaryTreeSearch',
+      onClickEvent: 'binarySearchTree',
     }, {
       name: 'Transitive closure',
       className: 'algorithm-list-sub',
@@ -76,22 +79,26 @@ function LeftPanel() {
     subAlgorithm: [{
       name: 'Quick Sort',
       className: 'algorithm-list-sub',
-      onClickEvent: 'quicksort',
+      onClickEvent: 'quickSort',
     }, {
       name: 'Heap Sort',
       className: 'algorithm-list-sub',
-      onClickEvent: 'heapsort',
+      onClickEvent: 'heapSort',
 
     }],
   },
   ];
+
+  // console.log(AlgorithmCategoryList);
+
+
 
   // Search Function Component
   const searchAlgorithm = (e) => {
     const inputContent = e.target.value.trim().toLowerCase();
     let algorithmListChosen = null;
     if (inputContent.length > 0) {
-      algorithmListChosen = algorithmListName.filter((i) => {
+      algorithmListChosen = algorithmSearchList.filter((i) => {
         return i.name.toLowerCase().match(inputContent);
       });
     }

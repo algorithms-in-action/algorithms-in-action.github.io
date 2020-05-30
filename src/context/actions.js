@@ -1,19 +1,19 @@
 import algorithms from '../algorithms';
 
-const DEFAULT_ALGORITHM = 'binaryTreeSearch';
+const DEFAULT_ALGORITHM = 'binarySearchTree';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
 export const GlobalActions = {
-  // { name: 'binaryTreeSearch'}
+
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
-    const procedurePseudocode = data.pseudocode[Object.keys(data.pseudocode)[0]];
-    const algorithmGenerator = data.run();
+    const procedurePseudocode = data.controller.pseudocode[Object.keys(data.controller.pseudocode)[0]];
+    const algorithmGenerator = data.controller.run();
     return {
       id: params.name,
       name: data.name,
