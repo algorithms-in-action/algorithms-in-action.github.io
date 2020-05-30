@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 
-function BSTParameter() {
+function BSTParam() {
   const [insertionVal, setInsertionVal] = useState('');
   const [searchVal, setSearchVal] = useState('');
   const [deletionVal, setDeletionVal] = useState('');
@@ -152,4 +152,4 @@ function BSTParameter() {
   );
 }
 
-export default BSTParameter;
+export default BSTParam;

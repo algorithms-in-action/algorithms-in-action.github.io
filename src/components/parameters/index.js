@@ -1,11 +1,5 @@
-const BSTParamPth = require('./BSTParam.js');
-const HeapsortParamPth = require('./HeapsortParam.js');
-const QuicksortParamPth = require('./QuicksortParam.js');
-const KMPParamPth = require('./KMPParam.js');
-const TransitiveClosureParamPth = require('./TransitiveClosureParam.js');
-
-export const HeapsortParam = BSTParamPth;
-export const BSTParam = HeapsortParamPth;
-export const QuicksortParam = QuicksortParamPth;
-export const KMPParam = KMPParamPth;
-export const TransitiveClosureParam = TransitiveClosureParamPth;
+export { default as HeapsortParam } from './HeapsortParam';
+export { default as BSTParam } from './BSTParam';
+export { default as QuicksortParam } from './QuicksortParam';
+export { default as KMPParam } from './KMPParam';
+export { default as TransitiveClosureParam } from './TransitiveClosureParam';
