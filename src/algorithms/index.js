@@ -62,11 +62,13 @@ const generateAlgorithmCategoryList = () => {
   let categoryNum = 1;
 
   // Get all the categories
+  // eslint-disable-next-line no-unused-vars
   for (const [key, value] of Object.entries(algorithms)) {
     if (!alCatList.some((al) => al.category === value.category)) {
       alCatList.push({
         category: value.category,
         num: categoryNum,
+        status: true,
         list: [],
       });
       categoryNum += 1;

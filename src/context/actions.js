@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import algorithms from '../algorithms';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';

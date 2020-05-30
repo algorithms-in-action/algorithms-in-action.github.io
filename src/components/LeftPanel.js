@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable arrow-body-style */
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -16,22 +16,31 @@ import { AlgorithmCategoryList } from '../algorithms';
 
 function LeftPanel() {
   const { dispatch } = useContext(GlobalContext);
-  const [openDynamic, setOpenDynamic] = React.useState(false);
-  const [openGraph, setOpenGraph] = React.useState(true);
-  const [openSorting, setOpenSorting] = React.useState(true);
-  const [displaySearch, setDisplaySearch] = React.useState(null);
-  const expandList = useRef(null);
+  const [openDynamic, setOpenDynamic] = useState(false);
+  const [openGraph, setOpenGraph] = useState(true);
+  const [openSorting, setOpenSorting] = useState(true);
+  const [displaySearch, setDisplaySearch] = useState(null);
 
-  // Realize the function of dropdown list.
+
+  // create a state for all list item
+  const itemList = [];
+  AlgorithmCategoryList.forEach((cat) => itemList.push(
+    {
+      name: cat.category,
+      id: cat.num,
+      status: true,
+    },
+  ));
+  const [itemListState, setItemListState] = useState(itemList);
+
   const handleClick = (itemId) => {
-    if (itemId === 1) {
-      setOpenDynamic(!openDynamic);
-    } else if (itemId === 2) {
-      setOpenGraph(!openGraph);
-    } else if (itemId === 3) {
-      setOpenSorting(!openSorting);
-    }
+    // console.log('BEFORE', itemListState);
+    // const itemIndex = itemListState.findIndex((x) => x.id === itemId);
+    // itemListState[itemIndex].status = !itemListState[itemIndex].status;
+    // setItemListState(itemListState);
+    // console.log('AFTER', itemListState);
   };
+
 
   const algorithmSearchList = [
     { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
@@ -40,9 +49,6 @@ function LeftPanel() {
     { name: 'Quick Sort', onClickEvent: 'quickSort' },
     { name: 'Heap Sort', onClickEvent: 'heapSort' },
   ];
-
-  
-
 
   // The Main list in the left panel.
   const algorithmList = [{
@@ -90,9 +96,6 @@ function LeftPanel() {
   ];
 
   // console.log(AlgorithmCategoryList);
-
-
-
   // Search Function Component
   const searchAlgorithm = (e) => {
     const inputContent = e.target.value.trim().toLowerCase();
@@ -126,32 +129,32 @@ function LeftPanel() {
             ? (
               <List>
                 {
-                algorithmList.map((el) => {
+                AlgorithmCategoryList.map((el) => {
                   return (
-                    <div key={el.id}>
+                    <div key={el.num}>
                       <ListItem button onClick={() => handleClick(el.id)} className="algorithm-list-bg">
                         <ListItemText
-                          primary={el.name}
+                          primary={el.category}
                           disableTypography
-                          className={el.className}
+                          className="algorithm-list-main"
                         />
-                        {el.openStatus ? <ExpandLess /> : <ExpandMore />}
+                        {el.status ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      <Collapse in={el.openStatus} timeout="auto" unmountOnExit>
+                      <Collapse in={el.status} timeout="auto" unmountOnExit>
                         {
-                         el.subAlgorithm.map((item) => {
+                         el.list.map((item) => {
                            return (
                              <List component="div" disablePadding key={item.name}>
                                <ListItem
                                  button
                                  onClick={() => {
-                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
+                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.id });
                                  }}
                                >
                                  <ListItemText
                                    primary={item.name}
                                    disableTypography
-                                   className={item.className}
+                                   className="algorithm-list-sub"
                                  />
                                </ListItem>
                              </List>
