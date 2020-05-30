@@ -9,6 +9,16 @@ import {
 import App from './App';
 import Header from './components/Header';
 
+
+test('Check if the input value is correct', () => {
+  const utils = render(<App />);
+  const input = utils.getByTestId('search-input').firstChild;
+  fireEvent.change(input, { target: { value: 'quick' } });
+  expect(input.value).toBe('quick');
+  expect(screen.getByText(/Quick Sort/i).textContent).toBe('Quick Sort');
+});
+
+
 describe('<App />', () => {
   afterEach(cleanup);
   it('Context value is updated by child component', () => {

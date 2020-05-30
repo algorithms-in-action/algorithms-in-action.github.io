@@ -21,7 +21,7 @@ function LeftPanel() {
   const [openSorting, setOpenSorting] = React.useState(true);
   const [displaySearch, setDisplaySearch] = React.useState(null);
 
-
+  // Realize the function of dropdown list.
   const handleClick = (itemId) => {
     if (itemId === 1) {
       setOpenDynamic(!openDynamic);
@@ -31,8 +31,8 @@ function LeftPanel() {
       setOpenSorting(!openSorting);
     }
   };
-  const isInputUnderline = true;
 
+  // The Search List.
   const algorithmListName = [
     { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
     { name: 'Binary Search Tree', onClickEvent: 'binaryTreeSearch' },
@@ -41,6 +41,7 @@ function LeftPanel() {
     { name: 'Heap Sort', onClickEvent: 'heapsort' },
   ];
 
+  // The Main list in the left panel.
   const algorithmList = [{
     id: 1,
     name: 'Dynamic Programming',
@@ -85,7 +86,7 @@ function LeftPanel() {
   },
   ];
 
-  // Search Input Component
+  // Search Function Component
   const searchAlgorithm = (e) => {
     const inputContent = e.target.value.trim().toLowerCase();
     let algorithmListChosen = null;
@@ -103,7 +104,6 @@ function LeftPanel() {
         className="search-input"
         placeholder="Search..."
         data-testid="search-input"
-        disableUnderline={isInputUnderline}
         onChange={searchAlgorithm}
       />
       <div className="itemListContainer">
