@@ -1,6 +1,6 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../pseudocode/parse';
-import bstExplanation from './bstExplanation.md';
+import { BSTExp } from './explanations';
 
 export default {
   name: 'Binary Tree Search',
@@ -21,7 +21,7 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
 `),
 
-  explanation: bstExplanation,
+  explanation: BSTExp,
 
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
