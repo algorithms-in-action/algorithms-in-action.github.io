@@ -101,12 +101,15 @@ function LeftPanel() {
   // if the search input field is empty, Display the main list.
   // if the search input field has the value, Display the search list.
 
+  const isDisableUnderline = true;
+
   return (
     <>
       <Input
         className="search-input"
         placeholder="Search..."
         data-testid="search-input"
+        disableUnderline={isDisableUnderline}
         onChange={searchAlgorithm}
       />
       <div className="itemListContainer">
