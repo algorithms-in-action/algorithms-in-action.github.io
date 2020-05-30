@@ -18,7 +18,7 @@ a {
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  min-width: 100%;
+  width: 100%;
   
   .headerTitle {
     display: flex;
@@ -69,7 +69,4 @@ a {
     }
 
   }
-
-
-  
 }
