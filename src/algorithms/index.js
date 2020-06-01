@@ -74,9 +74,8 @@ const generateAlgorithmCategoryList = () => {
     if (!alCatList.some((al) => al.category === value.category)) {
       alCatList.push({
         category: value.category,
-        num: categoryNum,
-        status: true,
-        list: [],
+        id: categoryNum,
+        algorithms: [],
       });
       categoryNum += 1;
     }
@@ -85,9 +84,9 @@ const generateAlgorithmCategoryList = () => {
   // For every category, get all the algorithms
   for (const [key, value] of Object.entries(algorithms)) {
     const algo = alCatList.find((al) => al.category === value.category);
-    algo.list.push({
+    algo.algorithms.push({
       name: value.name,
-      id: key,
+      shorthand: key,
     });
   }
 
@@ -103,8 +102,8 @@ const generateAlgorithmList = () => {
   for (const [key, value] of Object.entries(algorithms)) {
     alList.push({
       name: value.name,
-      id: key,
-      num: alNum,
+      shorthand: key,
+      id: alNum,
     });
     alNum += 1;
   }

@@ -17,14 +17,12 @@ import { AlgorithmCategoryList, AlgorithmList } from '../algorithms';
 function LeftPanel() {
   const itemListState = AlgorithmCategoryList;
   const { dispatch } = useContext(GlobalContext);
-  // const [openDynamic, setOpenDynamic] = useState(false);
-  // const [openGraph, setOpenGraph] = useState(true);
-  // const [openSorting, setOpenSorting] = useState(true);
   const [displaySearch, setDisplaySearch] = useState(null);
-  const [openStatus, setOpenStatus] = useState([true, true, true]);
+  const [openStatus, setOpenStatus] = useState(AlgorithmCategoryList.map((obj) => true));
 
+  // Handle items when clicked
   const handleClick = (itemId) => {
-    const itemIndex = itemListState.findIndex((x) => x.num === itemId);
+    const itemIndex = itemListState.findIndex((cat) => cat.id === itemId);
     setOpenStatus(
       openStatus.map((item, index) => {
         return (
@@ -67,30 +65,30 @@ function LeftPanel() {
             ? (
               <List>
                 {
-                itemListState.map((el) => {
+                itemListState.map((cat) => {
                   return (
-                    <div key={el.num}>
-                      <ListItem button onClick={() => handleClick(el.num)} className="algorithm-list-bg">
+                    <div key={cat.id}>
+                      <ListItem button onClick={() => handleClick(cat.id)} className="algorithm-list-bg">
                         <ListItemText
-                          primary={el.category}
+                          primary={cat.category}
                           disableTypography
                           className="algorithm-list-main"
                         />
-                        {itemListState.find((x) => x.num === el.num).status ? <ExpandLess /> : <ExpandMore />}
+                        {openStatus[cat.id] ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      <Collapse in={openStatus[el.num]} timeout="auto" unmountOnExit>
+                      <Collapse in={openStatus[cat.id]} timeout="auto" unmountOnExit>
                         {
-                         el.list.map((item) => {
+                         cat.algorithms.map((algo) => {
                            return (
-                             <List component="div" disablePadding key={item.name}>
+                             <List component="div" disablePadding key={algo.name}>
                                <ListItem
                                  button
                                  onClick={() => {
-                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.id });
+                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
                                  }}
                                >
                                  <ListItemText
-                                   primary={item.name}
+                                   primary={algo.name}
                                    disableTypography
                                    className="algorithm-list-sub"
                                  />
@@ -108,17 +106,17 @@ function LeftPanel() {
             )
             : (
               <div>
-                {displaySearch.map((item) => {
+                {displaySearch.map((algo) => {
                   return (
-                    <List component="div" disablePadding key={item}>
+                    <List component="div" disablePadding key={algo}>
                       <ListItem
                         button
                         onClick={() => {
-                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.id });
+                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
                         }}
                       >
                         <ListItemText
-                          primary={item.name}
+                          primary={algo.name}
                           disableTypography
                           className="algorithm-list-sub"
                         />
