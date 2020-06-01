@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-/* eslint-disable arrow-body-style */
 import React, { useContext, useState } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,7 +11,6 @@ import { GlobalContext } from '../context/GlobalState';
 import { GlobalActions } from '../context/actions';
 import '../styles/LeftPanel.scss';
 import { AlgorithmCategoryList, AlgorithmList } from '../algorithms';
-
 
 function LeftPanel() {
   const itemListState = AlgorithmCategoryList;

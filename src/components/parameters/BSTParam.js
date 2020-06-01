@@ -29,15 +29,15 @@ function BSTParam() {
     if (success) {
       setLogTagText('success!');
       setLogTagCol(successCol);
-      setLogText(`Input for ${type} algorithm is valid. {${val}}`);
+      setLogText(`Input for ${type} algorithm is valid.`);
     } else {
-      setLogTagText('warning!');
+      setLogTagText('failure!');
       setLogTagCol(warningCol);
       let warningText = `Input for ${type} algorithm is not valid. `;
       if (type === INSERTION) {
-        warningText += 'E.g. {0,1,2,3,4}';
+        warningText += 'Example: 0,1,2,3,4';
       } else {
-        warningText += 'E.g. {12}';
+        warningText += 'Example: 16';
       }
 
       setLogText(warningText);
@@ -93,6 +93,7 @@ function BSTParam() {
               className="inputText"
               type="text"
               value={insertionVal}
+              data-testid="insertionText"
               onChange={(e) => setInsertionVal(e.target.value)}
             />
           </label>
@@ -100,6 +101,7 @@ function BSTParam() {
             className="inputSubmit"
             type="submit"
             value="Run Insertion"
+            data-testid="insertionSubmit"
           />
         </form>
 
@@ -111,6 +113,7 @@ function BSTParam() {
               className="inputText"
               type="text"
               value={searchVal}
+              data-testid="searchText"
               onChange={(e) => setSearchVal(e.target.value)}
             />
           </label>
@@ -118,6 +121,7 @@ function BSTParam() {
             className="inputSubmit"
             type="submit"
             value="Run Search"
+            data-testid="searchSubmit"
           />
         </form>
 
@@ -129,6 +133,7 @@ function BSTParam() {
               className="inputText"
               type="text"
               value={deletionVal}
+              data-testid="deletionText"
               onChange={(e) => setDeletionVal(e.target.value)}
             />
           </label>
@@ -136,6 +141,7 @@ function BSTParam() {
             className="inputSubmit"
             type="submit"
             value="Run Deletion"
+            data-testid="deletionSubmit"
           />
         </form>
       </div>
@@ -143,7 +149,13 @@ function BSTParam() {
       {logText
         ? (
           <div className="logContainer">
-            <span className="logTag" style={{ color: logTagCol }}>{ logTagText }</span>
+            <span
+              className="logTag"
+              data-testid="logTag"
+              style={{ color: logTagCol }}
+            >
+              { logTagText }
+            </span>
             <span className="logText">{ logText }</span>
           </div>
         )
