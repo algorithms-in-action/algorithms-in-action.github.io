@@ -15,35 +15,23 @@ import { AlgorithmCategoryList, AlgorithmList } from '../algorithms';
 
 
 function LeftPanel() {
+  const itemListState = AlgorithmCategoryList;
   const { dispatch } = useContext(GlobalContext);
   // const [openDynamic, setOpenDynamic] = useState(false);
   // const [openGraph, setOpenGraph] = useState(true);
-  const [openSorting, setOpenSorting] = useState(true);
+  // const [openSorting, setOpenSorting] = useState(true);
   const [displaySearch, setDisplaySearch] = useState(null);
-
-
-  // create a state for all list item
-  // const itemList = [];
-  // AlgorithmCategoryList.forEach((cat) => itemList.push(
-  //   {
-  //     name: cat.category,
-  //     id: cat.num,
-  //     status: true,
-  //   },
-  // ));
-
-  const [itemListState, setItemListState] = useState(AlgorithmCategoryList);
+  const [openStatus, setOpenStatus] = useState([true, true, true]);
 
   const handleClick = (itemId) => {
-    // setOpenSorting(!openSorting);
-
-    console.log('BEFORE', itemListState);
-
     const itemIndex = itemListState.findIndex((x) => x.num === itemId);
-    itemListState[itemIndex].status = !itemListState[itemIndex].status;
-    setItemListState(itemListState);
-
-    console.log('AFTER', itemListState);
+    setOpenStatus(
+      openStatus.map((item, index) => {
+        return (
+          (index === itemIndex) ? !item : item
+        );
+      }),
+    );
   };
 
   // Search Function Component
@@ -90,7 +78,7 @@ function LeftPanel() {
                         />
                         {itemListState.find((x) => x.num === el.num).status ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
-                      <Collapse in={openSorting} timeout="auto" unmountOnExit>
+                      <Collapse in={openStatus[el.num]} timeout="auto" unmountOnExit>
                         {
                          el.list.map((item) => {
                            return (

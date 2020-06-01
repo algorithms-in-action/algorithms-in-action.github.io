@@ -23,9 +23,7 @@ describe('<BSTParam />', () => {
     const wrapper = shallow(<Param.BSTParam />);
     wrapper.find('input.inputText').forEach((node) => {
       node.simulate('change', { target: { value: '12345' } });
-      console.log(node.value);
       expect(node.value).toEqual('12345');
     });
   });
-
 });
