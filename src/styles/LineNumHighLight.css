@@ -10,6 +10,11 @@
     margin: 0px;
     white-space:nowrap;
 }
+
+.line-light p span {
+    white-space: pre;
+}
+
 .line-light p span:first-child {
     display         : inline-block;
     padding-right   : 25px;
