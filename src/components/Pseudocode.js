@@ -8,15 +8,7 @@ function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
   return (
     <div className="textAreaContainer">
-      <div className="textArea">
-        At bookmark:
-        {algorithm.bookmark}
-        <br />
-        Current pseudocode line:
-        <br />
-        <tt>{findBookmark(algorithm.pseudocode, algorithm.bookmark).code}</tt>
-        <LineNumHighLight />
-      </div>
+      <LineNumHighLight />
       <LineExplanation />
     </div>
   );
