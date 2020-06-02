@@ -29,7 +29,9 @@ function CodeExplanation() {
           Pseudocode
         </button>
       </div>
-      {isExplanation ? <Explanation /> : <Pseudocode />}
+      <div className="textAreaContainer">
+        {isExplanation ? <Explanation /> : <Pseudocode />}
+      </div>
     </>
   );
 }
