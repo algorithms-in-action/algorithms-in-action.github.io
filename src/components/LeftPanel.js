@@ -1,6 +1,8 @@
+/* eslint-disable max-len */
+/* eslint-disable arrow-body-style */
 import React, { useContext } from 'react';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
+// import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Input } from '@material-ui/core';
@@ -14,111 +16,174 @@ import '../styles/LeftPanel.scss';
 
 function LeftPanel() {
   const { dispatch } = useContext(GlobalContext);
-  const [open, setOpen] = React.useState(false);
-  const [open1, setOpen1] = React.useState(true);
-  const [open2, setOpen2] = React.useState(true);
+  const [openDynamic, setOpenDynamic] = React.useState(false);
+  const [openGraph, setOpenGraph] = React.useState(true);
+  const [openSorting, setOpenSorting] = React.useState(true);
+  const [displaySearch, setDisplaySearch] = React.useState(null);
 
-  const handleClick1 = () => {
-    setOpen(!open);
-  };
-  const handleClick2 = () => {
-    setOpen1(!open1);
-  };
-  const handleClick3 = () => {
-    setOpen2(!open2);
+  // Realize the function of dropdown list.
+  const handleClick = (itemId) => {
+    if (itemId === 1) {
+      setOpenDynamic(!openDynamic);
+    } else if (itemId === 2) {
+      setOpenGraph(!openGraph);
+    } else if (itemId === 3) {
+      setOpenSorting(!openSorting);
+    }
   };
 
-  const isInputUnderline = true;
+  // The Search List.
+  const algorithmListName = [
+    { name: 'Knuth-Morris-Pratt \'s String Search', onClickEvent: 'kmp' },
+    { name: 'Binary Search Tree', onClickEvent: 'binaryTreeSearch' },
+    { name: 'Transitive closure', onClickEvent: 'transitiveClosure' },
+    { name: 'Quick Sort', onClickEvent: 'quicksort' },
+    { name: 'Heap Sort', onClickEvent: 'heapsort' },
+  ];
+
+  // The Main list in the left panel.
+  const algorithmList = [{
+    id: 1,
+    name: 'Dynamic Programming',
+    className: 'algorithm-list-main',
+    openStatus: openDynamic,
+    subAlgorithm: [{
+      name: 'Knuth-Morris-Pratt \'s String Search',
+      className: 'algorithm-list-sub',
+      onClickEvent: 'kmp',
+    }],
+  }, {
+    id: 2,
+    name: 'Graphs',
+    className: 'algorithm-list-main',
+    openStatus: openGraph,
+    subAlgorithm: [{
+      name: 'Binary Search Tree',
+      className: 'algorithm-list-sub',
+      onClickEvent: 'binaryTreeSearch',
+    }, {
+      name: 'Transitive closure',
+      className: 'algorithm-list-sub',
+      onClickEvent: 'transitiveClosure',
+
+    }],
+  },
+  {
+    id: 3,
+    name: 'Sorting',
+    className: 'algorithm-list-main',
+    openStatus: openSorting,
+    subAlgorithm: [{
+      name: 'Quick Sort',
+      className: 'algorithm-list-sub',
+      onClickEvent: 'quicksort',
+    }, {
+      name: 'Heap Sort',
+      className: 'algorithm-list-sub',
+      onClickEvent: 'heapsort',
+
+    }],
+  },
+  ];
+
+  // Search Function Component
+  const searchAlgorithm = (e) => {
+    const inputContent = e.target.value.trim().toLowerCase();
+    let algorithmListChosen = null;
+    if (inputContent.length > 0) {
+      algorithmListChosen = algorithmListName.filter((i) => {
+        return i.name.toLowerCase().match(inputContent);
+      });
+    }
+    setDisplaySearch(algorithmListChosen);
+  };
+
+  // if the search input field is empty, Display the main list.
+  // if the search input field has the value, Display the search list.
+
+  const isDisableUnderline = true;
 
   return (
     <>
       <Input
         className="search-input"
         placeholder="Search..."
-        disableUnderline={isInputUnderline}
+        data-testid="search-input"
+        disableUnderline={isDisableUnderline}
+        onChange={searchAlgorithm}
       />
-
       <div className="itemListContainer">
-        <List>
-          <ListItem button onClick={handleClick1} className="algorithm-list-bg">
-            <ListItemText
-              primary="Dynamic Programming"
-              disableTypography
-              className="algorithm-list-main"
-            />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'kmp' }); }}>
-                <ListItemText
-                  primary="Knuth-Morris-Pratt's String Search"
-                  disableTypography
-                  className="algorithm-list-sub"
-                />
-              </ListItem>
-            </List>
-          </Collapse>
 
-          <ListItem button onClick={handleClick2} className="algorithm-list-bg">
-            <ListItemText
-              primary="Graphs"
-              disableTypography
-              className="algorithm-list-main"
-            />
-            {open1 ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={open1} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeSearch' }); }}>
-                <ListItemText
-                  primary="Binary Search Tree"
-                  disableTypography
-                  className="algorithm-list-sub"
-                />
-              </ListItem>
-              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'transitiveClosure' }); }}>
-                <ListItemText
-                  primary="Transitive closure"
-                  disableTypography
-                  className="algorithm-list-sub"
-                />
-              </ListItem>
-            </List>
-          </Collapse>
+        {
+          (displaySearch === null)
+            ? (
+              <List>
+                {
+                algorithmList.map((el) => {
+                  return (
+                    <div key={el.id}>
+                      <ListItem button onClick={() => handleClick(el.id)} className="algorithm-list-bg">
+                        <ListItemText
+                          primary={el.name}
+                          disableTypography
+                          className={el.className}
+                        />
+                        {el.openStatus ? <ExpandLess /> : <ExpandMore />}
+                      </ListItem>
+                      <Collapse in={el.openStatus} timeout="auto" unmountOnExit>
+                        {
+                         el.subAlgorithm.map((item) => {
+                           return (
+                             <List component="div" disablePadding key={item.name}>
+                               <ListItem
+                                 button
+                                 onClick={() => {
+                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
+                                 }}
+                               >
+                                 <ListItemText
+                                   primary={item.name}
+                                   disableTypography
+                                   className={item.className}
+                                 />
+                               </ListItem>
+                             </List>
+                           );
+                         })
+                      }
+                      </Collapse>
+                    </div>
+                  );
+                })
+                }
+              </List>
+            )
+            : (
+              <div>
+                {displaySearch.map((item) => {
+                  return (
+                    <List component="div" disablePadding key={item}>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: item.onClickEvent });
+                        }}
+                      >
+                        <ListItemText
+                          primary={item.name}
+                          disableTypography
+                          className="algorithm-list-sub"
+                        />
+                      </ListItem>
+                    </List>
+                  );
+                })}
+              </div>
+            )
+        }
 
-          <ListItem button onClick={handleClick3} className="algorithm-list-bg">
-            <ListItemText
-              primary="Sorting"
-              disableTypography
-              className="algorithm-list-main"
-            />
-            {open2 ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={open2} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem
-                button
-                onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'quicksort' }); }}
-              >
-                <ListItemText
-                  primary="Quick Sort"
-                  disableTypography
-                  className="algorithm-list-sub"
-                />
-              </ListItem>
-              <ListItem button onClick={() => { dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'heapsort' }); }}>
-                <ListItemText
-                  primary="Heap Sort"
-                  disableTypography
-                  className="algorithm-list-sub"
-                />
-              </ListItem>
-            </List>
-          </Collapse>
-        </List>
-        <Divider />
       </div>
+
     </>
   );
 }

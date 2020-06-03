@@ -1,4 +1,10 @@
 /* eslint quote-props: 0 */
+import {
+  QuicksortExp,
+  HeapsortExp,
+  KMPExp,
+  TransitiveClosureExp,
+} from './explanations';
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -16,25 +22,25 @@ export default {
   // The entries below are not fully-written yet, they are for testing only
   'quicksort': {
     name: 'Quick Sort',
-    explanation: 'A Quick Sort works by sorting quickly.',
+    explanation: QuicksortExp,
     pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
     * run() { yield ''; },
   },
   'heapsort': {
     name: 'Heap Sort',
-    explanation: 'A Heap Sort works by sorting heaps.',
+    explanation: HeapsortExp,
     pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
     * run() { yield ''; },
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
-    explanation: 'There\'s a good chance I got the spelling of the name of this algorithm wrong.',
+    explanation: KMPExp,
     pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
     * run() { yield ''; },
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
-    explanation: 'This is some kind of graph algorithm that looks cool and does something useful.',
+    explanation: TransitiveClosureExp,
     pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
     * run() { yield ''; },
   },

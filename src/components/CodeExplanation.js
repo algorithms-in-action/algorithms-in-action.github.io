@@ -1,4 +1,6 @@
+/* eslint-disable import/no-named-as-default-member */
 import React from 'react';
+// eslint-disable-next-line import/no-named-as-default
 import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 
@@ -27,7 +29,9 @@ function CodeExplanation() {
           Pseudocode
         </button>
       </div>
-      {isExplanation ? <Explanation /> : <Pseudocode />}
+      <div className="textAreaContainer">
+        {isExplanation ? <Explanation /> : <Pseudocode />}
+      </div>
     </>
   );
 }
