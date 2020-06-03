@@ -1,0 +1,23 @@
+.nextLineButton {
+    display: inline-block;
+    padding: 7px 16px;
+    font-size: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;   
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #1D9CE3;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px #999;
+  }
+  
+  .nextLineButton:hover {background-color: #1D9CE3}
+  
+  .nextLineButton:active {
+    background-color: #1D9CE3;
+    box-shadow: 0 3px #666;
+    transform: translateY(4px);
+  }
