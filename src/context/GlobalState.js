@@ -14,17 +14,24 @@ import { dispatcher, initialState } from './actions';
 
 // Create context
 export const GlobalContext = createContext();
+// only call this function once
+const init = initialState();
 
 // Provider components
 // eslint-disable-next-line react/prop-types
 export const GlobalProvider = ({ children }) => {
-  const [state, setState] = useState(initialState());
+  const [state, setState] = useState(init);
   // Think of this as partial function application to get state & setState in scope
   // for later calls from elsewhere in the app.
   const dispatch = dispatcher(state, setState);
 
+  const globalState = {
+    algorithm: state,
+    dispatch,
+  };
+
   return (
-    <GlobalContext.Provider value={{ algorithm: state, dispatch }}>
+    <GlobalContext.Provider value={globalState}>
       {children}
     </GlobalContext.Provider>
   );

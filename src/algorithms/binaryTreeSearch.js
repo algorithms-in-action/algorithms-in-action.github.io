@@ -2,6 +2,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../pseudocode/parse';
+import GraphTracer from '../components/Graph/GraphTracer';
 
 export default {
   name: 'Binary Tree Search',
@@ -36,6 +37,11 @@ procedure BinaryTreeSearch(Tree, Item):  $start
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
   ],
   root: 5,
+  graph: new GraphTracer('key', null, 'Test graph'),
+  init() {
+    this.graph.set(this.nodes);
+    this.graph.layoutTree(this.root);
+  },
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
   // the pseudocode the execution is up to.
