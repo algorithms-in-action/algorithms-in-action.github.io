@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 // eslint-disable-next-line import/named
 import { GlobalContext } from '../context/GlobalState';
 import { GlobalActions } from '../context/actions';
+import '../styles/NextLineButton.scss';
+
 
 function NextLineButton() {
   const { dispatch } = useContext(GlobalContext);
