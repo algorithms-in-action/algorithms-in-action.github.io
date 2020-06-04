@@ -16,17 +16,16 @@ function LeftPanel() {
   const itemListState = AlgorithmCategoryList;
   const { dispatch } = useContext(GlobalContext);
   const [displaySearch, setDisplaySearch] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [openStatus, setOpenStatus] = useState(AlgorithmCategoryList.map((obj) => true));
 
   // Handle items when clicked
   const handleClick = (itemId) => {
     const itemIndex = itemListState.findIndex((cat) => cat.id === itemId);
     setOpenStatus(
-      openStatus.map((item, index) => {
-        return (
-          (index === itemIndex) ? !item : item
-        );
-      }),
+      openStatus.map((item, index) => (
+        (index === itemIndex) ? !item : item
+      )),
     );
   };
 
@@ -35,9 +34,7 @@ function LeftPanel() {
     const inputContent = e.target.value.trim().toLowerCase();
     let algorithmListChosen = null;
     if (inputContent.length > 0) {
-      algorithmListChosen = AlgorithmList.filter((i) => {
-        return i.name.toLowerCase().match(inputContent);
-      });
+      algorithmListChosen = AlgorithmList.filter((i) => i.name.toLowerCase().match(inputContent));
     }
     setDisplaySearch(algorithmListChosen);
   };
@@ -63,65 +60,59 @@ function LeftPanel() {
             ? (
               <List>
                 {
-                itemListState.map((cat) => {
-                  return (
-                    <div key={cat.id}>
-                      <ListItem button onClick={() => handleClick(cat.id)} className="algorithm-list-bg">
-                        <ListItemText
-                          primary={cat.category}
-                          disableTypography
-                          className="algorithm-list-main"
-                        />
-                        {openStatus[cat.id] ? <ExpandLess /> : <ExpandMore />}
-                      </ListItem>
-                      <Collapse in={openStatus[cat.id]} timeout="auto" unmountOnExit>
-                        {
-                         cat.algorithms.map((algo) => {
-                           return (
-                             <List component="div" disablePadding key={algo.name}>
-                               <ListItem
-                                 button
-                                 onClick={() => {
-                                   dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
-                                 }}
-                               >
-                                 <ListItemText
-                                   primary={algo.name}
-                                   disableTypography
-                                   className="algorithm-list-sub"
-                                 />
-                               </ListItem>
-                             </List>
-                           );
-                         })
+                itemListState.map((cat) => (
+                  <div key={cat.id}>
+                    <ListItem button onClick={() => handleClick(cat.id)} className="algorithm-list-bg">
+                      <ListItemText
+                        primary={cat.category}
+                        disableTypography
+                        className="algorithm-list-main"
+                      />
+                      {openStatus[cat.id] ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={openStatus[cat.id]} timeout="auto" unmountOnExit>
+                      {
+                         cat.algorithms.map((algo) => (
+                           <List component="div" disablePadding key={algo.name}>
+                             <ListItem
+                               button
+                               onClick={() => {
+                                 dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
+                               }}
+                             >
+                               <ListItemText
+                                 primary={algo.name}
+                                 disableTypography
+                                 className="algorithm-list-sub"
+                               />
+                             </ListItem>
+                           </List>
+                         ))
                       }
-                      </Collapse>
-                    </div>
-                  );
-                })
+                    </Collapse>
+                  </div>
+                ))
                 }
               </List>
             )
             : (
               <div>
-                {displaySearch.map((algo) => {
-                  return (
-                    <List component="div" disablePadding key={algo}>
-                      <ListItem
-                        button
-                        onClick={() => {
-                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
-                        }}
-                      >
-                        <ListItemText
-                          primary={algo.name}
-                          disableTypography
-                          className="algorithm-list-sub"
-                        />
-                      </ListItem>
-                    </List>
-                  );
-                })}
+                {displaySearch.map((algo) => (
+                  <List component="div" disablePadding key={algo}>
+                    <ListItem
+                      button
+                      onClick={() => {
+                        dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
+                      }}
+                    >
+                      <ListItemText
+                        primary={algo.name}
+                        disableTypography
+                        className="algorithm-list-sub"
+                      />
+                    </ListItem>
+                  </List>
+                ))}
               </div>
             )
         }
