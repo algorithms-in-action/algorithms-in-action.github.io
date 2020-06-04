@@ -5,16 +5,8 @@ import { GlobalContext } from '../context/GlobalState';
 import findLineNum from '../pseudocode/findLineNum';
 import '../styles/LineNumHighLight.css';
 
-const LineNumHighLight = () => {
-  const { algorithm } = useContext(GlobalContext);
-  const lineOfCode = [];
-  for (const line of algorithm.pseudocode) {
-    lineOfCode.push(line.code);
-  }
-
-  /* render data */
-  const paintCodeLine = (lineOfCode1) => {
-    const currentIndex = findLineNum(algorithm.pseudocode, algorithm.bookmark);
+export const Global = {
+  PAINT_CODELINE: (lineOfCode1, currentIndex) => {
     const codeLines = [];
     for (let i = 0; i < lineOfCode1.length; i += 1) {
       codeLines.push(
@@ -31,14 +23,26 @@ const LineNumHighLight = () => {
       );
     }
     return codeLines;
-  };
+  },
+};
+
+const LineNumHighLight = () => {
+  const { algorithm } = useContext(GlobalContext);
+  const lineOfCode = [];
+  for (const line of algorithm.pseudocode) {
+    lineOfCode.push(line.code);
+  }
+  const currentIndex = findLineNum(algorithm.pseudocode, algorithm.bookmark);
+
+  /* render data */
 
   return (
     <div className="line-light">
       <div className="code-container">
-        {paintCodeLine(lineOfCode)}
+        {Global.PAINT_CODELINE(lineOfCode, currentIndex)}
       </div>
     </div>
   );
 };
+
 export default LineNumHighLight;
