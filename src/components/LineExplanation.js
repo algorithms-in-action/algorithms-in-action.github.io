@@ -6,7 +6,7 @@ function LineExplanation() {
   const { algorithm } = useContext(GlobalContext);
   return (
     <div className="lineExplanation">
-      <tt>{findBookmark(algorithm.pseudocode, algorithm.bookmark).explanation}</tt>
+      {findBookmark(algorithm.pseudocode, algorithm.bookmark).explanation}
     </div>
   );
 }
