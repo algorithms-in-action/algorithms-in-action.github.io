@@ -2,25 +2,26 @@
 import React, { useContext } from 'react';
 // eslint-disable-next-line import/named
 import { GlobalContext } from '../context/GlobalState';
-import findLineNum from '../pseudocode/findLineNum';
 import '../styles/LineNumHighLight.css';
 
 export const Global = {
-  PAINT_CODELINE: (lineOfCode1, currentIndex) => {
+  PAINT_CODELINE: (lineOfCode, currentBookmark) => {
     const codeLines = [];
-    for (let i = 0; i < lineOfCode1.length; i += 1) {
+    let i = 0;
+    for (const [key, value] of Object.entries(lineOfCode)) {
       codeLines.push(
         <p
           key={i}
           // eslint-disable-next-line react/destructuring-assignment
-          className={currentIndex === i ? 'active' : ''}
+          className={currentBookmark === value ? 'active' : ''}
           index={i}
           role="presentation"
         >
           <span>{i + 1}</span>
-          <span>{lineOfCode1[i]}</span>
+          <span>{key}</span>
         </p>,
       );
+      i += 1;
     }
     return codeLines;
   },
@@ -28,18 +29,18 @@ export const Global = {
 
 const LineNumHighLight = () => {
   const { algorithm } = useContext(GlobalContext);
-  const lineOfCode = [];
+  const lineOfCode = {};
   for (const line of algorithm.pseudocode) {
-    lineOfCode.push(line.code);
+    lineOfCode[line.code] = line.bookmark;
   }
-  const currentIndex = findLineNum(algorithm.pseudocode, algorithm.bookmark);
+  const currentBookmark = algorithm.bookmark;
 
   /* render data */
 
   return (
     <div className="line-light">
       <div className="code-container">
-        {Global.PAINT_CODELINE(lineOfCode, currentIndex)}
+        {Global.PAINT_CODELINE(lineOfCode, currentBookmark)}
       </div>
     </div>
   );

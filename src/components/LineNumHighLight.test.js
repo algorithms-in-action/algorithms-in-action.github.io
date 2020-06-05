@@ -1,16 +1,17 @@
+/* eslint-disable quote-props */
 /* eslint-disable no-undef */
 import React from 'react';
 import { Global } from './LineNumHighLight';
 
 
-const codeLines1 = ['procedure BinaryTreeSearch(needle):', 'doSomething', 'doSomethingElse',
-  'moreStuff'];
-const currentIndex = 1;
+const codeLines1 = {
+  'procedure BinaryTreeSearch(needle):': '1', 'doSomething': '2', 'doSomethingElse': '3', 'moreStuff': '4'};
+const currentBookMark= '2';
 
 
 describe('LineNumHighLight', () => {
   it('Check paintCodeLine', () => {
-    const paintCodeLine = Global.PAINT_CODELINE(codeLines1, currentIndex);
+    const paintCodeLine = Global.PAINT_CODELINE(codeLines1, currentBookMark);
     expect(paintCodeLine).toContainEqual(
       <p
         key={1}
