@@ -38,6 +38,7 @@ procedure BinaryTreeSearch(Tree, Item):  $start
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
   ],
   root: 5,
+  target: 2,
   graph: new GraphTracer('key', null, 'Test graph'),
   init() {
     this.graph.set(this.nodes);
@@ -55,25 +56,28 @@ procedure BinaryTreeSearch(Tree, Item):  $start
       let current = null;
       let parent = null;
       
-      yield { step: 'start', current, parent }; current = tree[0];
-                                                parent = null;
-                                                const item = 2;
-      yield { step: '1', current, parent };     let ptr = tree;
-                                                parent = current;
-      yield { step: '2', current, parent };     while (ptr) {
-      yield { step: '3', current, parent };       if (ptr[0] === item) {
-      yield { step: '4', current, parent };         return;
-                                                  }
-      yield { step: '5', current, parent };       if (item < ptr[0]) {
-                                                    parent = current;
-                                                    current = ptr[1][0];
-      yield { step: '6', current, parent };         ptr = ptr[1];
-                                                  } else {
-                                                    parent = current;
-                                                    current = ptr[2][0];
-      yield { step: '7', current, parent };         ptr = ptr[2];
-                                                  }
-                                                }
-      yield { step: '8', current, parent };
+      yield { step: 'start' };  current = tree[0];
+                                parent = null;
+                                const item = this.target;
+      yield { step: '1' };      let ptr = tree;
+                                parent = current;
+                                this.graph.visit(current, parent);
+      yield { step: '2' };      while (ptr) {
+      yield { step: '3' };        if (ptr[0] === item) {
+      yield { step: '4' };          return;
+                                  }
+      yield { step: '5' };        if (item < ptr[0]) {
+                                    parent = current;
+                                    current = ptr[1][0];
+                                    this.graph.visit(current, parent);
+      yield { step: '6' };          ptr = ptr[1];
+                                  } else {
+                                    parent = current;
+                                    current = ptr[2][0];
+                                    this.graph.visit(current, parent);
+      yield { step: '7' };          ptr = ptr[2];
+                                  }
+                                }
+      yield { step: '8' };
   },
 };
