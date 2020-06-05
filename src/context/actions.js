@@ -2,6 +2,7 @@ import algorithms from '../algorithms';
 // import GraphTracer from '../components/Graph/GraphTracer';
 
 const DEFAULT_ALGORITHM = 'binaryTreeSearch';
+// const DEFAULT_ALGORITHM = 'binaryTreeInsertion';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
@@ -36,15 +37,16 @@ export const GlobalActions = {
   // No expected params
   NEXT_LINE: (state) => {
     const { current, parent } = state.bookmark;
+
     // visualize on the tree: from the parent node, visit current node
     if (!(current === null && parent === null)) {
       state.graph.visit(current, parent);
     }
 
-    return ({
+    return {
       ...state,
       bookmark: state.generator.next().value,
-    });
+    };
   },
 };
 

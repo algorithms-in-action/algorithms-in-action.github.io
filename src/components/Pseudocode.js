@@ -5,7 +5,6 @@ import findBookmark from '../pseudocode/findBookmark';
 
 function Pseudocode() {
   const { algorithm } = useContext(GlobalContext);
-  // console.log(algorithm);
   return (
     <div className="textAreaContainer">
       <div className="textArea">
