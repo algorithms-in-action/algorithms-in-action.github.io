@@ -10,14 +10,14 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   while (Ptr Not Null)          $2            (* Continue searching until we go past a leaf to Null *)
     if(Ptr->Key == Item)        $3            (* Compare to see if keys match *)
       return FOUND              $4            (* Keys match, item has been found in tree *)
-    else
+    else                        $a
       if(DataItem < Ptr->Key)   $5            (* Compare data item and the data pointed by the search pointer *)
         Ptr = Ptr->lchild       $6            (* Item key is less, so should follow the left child on search path. *)
-      else                                    (* Item key is greater or equal to data pointed by the search pointer. *)
+      else                      $b            (* Item key is greater or equal to data pointed by the search pointer. *)
         Ptr = Ptr->rchild       $7            (* Item key is greater or equal, so should follow the right child on search path *)
-      end if
-    end if
-  end while
+      end if                    $c
+    end if                      $d
+  end while                     $e
   return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
 `),
 
