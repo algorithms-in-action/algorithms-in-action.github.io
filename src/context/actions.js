@@ -30,6 +30,7 @@ export const GlobalActions = {
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
       graph,
+      T: data.T,
     };
   },
   // No expected params

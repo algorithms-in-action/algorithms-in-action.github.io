@@ -32,6 +32,7 @@ function MidPanel() {
         <div className="parameterPanel">
           ADD: []; DELETE: [];SEARCH: [];
         </div>
+        <div className="parameterPanel">Insert nodes: [5, 8, 10, 3, 1, 6, 9, 7, 2, 0, 4]</div>
       </div>
     </div>
   );
