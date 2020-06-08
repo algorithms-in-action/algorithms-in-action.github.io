@@ -30,13 +30,22 @@ export const GlobalActions = {
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
       graph,
+      finished: false,
     };
   },
   // No expected params
-  NEXT_LINE: (state) => ({
-    ...state,
-    bookmark: state.generator.next().value,
-  }),
+  NEXT_LINE: (state) => {
+    if (state.finished) {
+      return state;
+    }
+    const result = state.generator.next();
+    return {
+      ...state,
+      // If we just finished the algorithm, leave the bookmark on the last line
+      bookmark: result.done ? state.bookmark : result.value,
+      finished: result.done,
+    };
+  },
 };
 
 export function dispatcher(state, setState) {
