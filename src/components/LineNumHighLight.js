@@ -13,7 +13,7 @@ export const Global = {
         <p
           key={i}
           // eslint-disable-next-line react/destructuring-assignment
-          className={currentBookmark === value ? 'active' : ''}
+          className={currentBookmark.step === value ? 'active' : ''}
           index={i}
           role="presentation"
         >

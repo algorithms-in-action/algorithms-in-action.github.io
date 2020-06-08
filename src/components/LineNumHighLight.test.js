@@ -5,8 +5,9 @@ import { Global } from './LineNumHighLight';
 
 
 const codeLines1 = {
-  'procedure BinaryTreeSearch(needle):': '1', 'doSomething': '2', 'doSomethingElse': '3', 'moreStuff': '4'};
-const currentBookMark= '2';
+  'procedure BinaryTreeSearch(needle):': '1', 'doSomething': '2', 'doSomethingElse': '3', 'moreStuff': '4',
+};
+const currentBookMark = { step: '2' };
 
 
 describe('LineNumHighLight', () => {
