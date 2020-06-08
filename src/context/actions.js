@@ -1,7 +1,6 @@
 import algorithms from '../algorithms';
 
 const DEFAULT_ALGORITHM = 'binaryTreeSearch';
-// const DEFAULT_ALGORITHM = 'binaryTreeInsertion';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the

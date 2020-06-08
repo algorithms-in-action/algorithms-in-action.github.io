@@ -27,10 +27,9 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   explanation: BSTExp,
   T: {},
   elements: [5, 8, 10, 3, 1, 6, 9, 7, 2, 0, 4],  // elements to be inserted
-  graph: new GraphTracer('key', null, 'Test graph'),
+  graph: new GraphTracer('key', null, 'Test Insertion Graph'),
   init() {
-    // this.graph.addNode(this.root);
-    // this.graph.layoutTree(this.root, true);
+    // currently do nothing
   },
   bstInsert(root, element, parent) {
     this.graph.visit(root, parent);
@@ -71,21 +70,5 @@ procedure BinaryTreeSearch(Tree, Item):  $start
                                 for (let i = 1; i < this.elements.length; i++) {
       yield { step: 'start' };    this.bstInsert(root, this.elements[i]); // insert ith element
                                 }
-      // yield { step: '1', current, parent };     let ptr = tree;
-      // yield { step: '2', current, parent };     while (ptr) {
-      // yield { step: '3', current, parent };       if (ptr[0] === item) {
-      // yield { step: '4', current, parent };         return;
-      //                                             }
-      // yield { step: '5', current, parent };       if (item < ptr[0]) {
-      //                                               parent = current;
-      //                                               current = ptr[1][0];
-      // yield { step: '6', current, parent };         ptr = ptr[1];
-      //                                             } else {
-      //                                               parent = current;
-      //                                               current = ptr[2][0];
-      // yield { step: '7', current, parent };         ptr = ptr[2];
-      //                                             }
-      //                                           }
-      // yield { step: '8', current, parent };
   },
 };
