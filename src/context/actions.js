@@ -9,25 +9,43 @@ export const GlobalActions = {
   // { name: 'binaryTreeSearch'}
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
+    const {
+      pseudocode, name, explanation, graph,
+    } = data;
+
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
-    const procedurePseudocode = data.pseudocode[Object.keys(data.pseudocode)[0]];
+    const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
     const algorithmGenerator = data.run();
+
+    // instantiate a graph object
+    data.init();
+
     return {
       id: params.name,
-      name: data.name,
-      explanation: data.explanation,
+      name,
+      explanation,
       pseudocode: procedurePseudocode,
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
+      graph,
+      finished: false,
     };
   },
   // No expected params
-  NEXT_LINE: (state) => ({
-    ...state,
-    bookmark: state.generator.next().value,
-  }),
+  NEXT_LINE: (state) => {
+    if (state.finished) {
+      return state;
+    }
+    const result = state.generator.next();
+    return {
+      ...state,
+      // If we just finished the algorithm, leave the bookmark on the last line
+      bookmark: result.done ? state.bookmark : result.value,
+      finished: result.done,
+    };
+  },
 };
 
 export function dispatcher(state, setState) {

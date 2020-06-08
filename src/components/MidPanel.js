@@ -5,6 +5,7 @@ import NextLineButton from './NextLineButton';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
+
   return (
     <div className="midPanelContainer">
       <div className="midPanelHeader">
@@ -13,6 +14,7 @@ function MidPanel() {
       </div>
       <div className="midPanelBody">
         {/* Animation Goes here */}
+        {algorithm.graph.render()}
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">
@@ -25,5 +27,6 @@ function MidPanel() {
     </div>
   );
 }
+
 
 export default MidPanel;
