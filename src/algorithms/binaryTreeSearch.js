@@ -39,7 +39,7 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   ],
   root: 5,
   target: 2,
-  graph: new GraphTracer('key', null, 'Test graph'),
+  graph: new GraphTracer('key', null, 'Searching for Item = 2'),
   init() {
     this.graph.set(this.nodes);
     this.graph.layoutTree(this.root);
@@ -69,13 +69,13 @@ procedure BinaryTreeSearch(Tree, Item):  $start
       yield { step: '5' };        if (item < ptr[0]) {
                                     parent = current;
                                     current = ptr[1][0];
+        yield { step: '6' };        ptr = ptr[1];
                                     this.graph.visit(current, parent);
-      yield { step: '6' };          ptr = ptr[1];
                                   } else {
                                     parent = current;
                                     current = ptr[2][0];
+        yield { step: '7' };        ptr = ptr[2];
                                     this.graph.visit(current, parent);
-      yield { step: '7' };          ptr = ptr[2];
                                   }
                                 }
       yield { step: '8' };
