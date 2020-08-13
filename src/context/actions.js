@@ -25,22 +25,42 @@ export const GlobalActions = {
       id: params.name,
       name,
       explanation,
+      graph,
       pseudocode: procedurePseudocode,
       chunks: chunker.chunks,
       bookmark: chunker.chunks[0].bookmark,
       currentChunk: 0,
-      graph,
     };
   },
 
   // No expected params
   NEXT_LINE: (state) => {
-    console.log(state.chunks);
+    if (state.currentChunk === state.chunks.length - 1) {
+      // We have reached the end, do nothing
+      return state;
+    }
     state.chunks[state.currentChunk + 1].mutator();
     return {
       ...state,
       bookmark: state.chunks[state.currentChunk + 1].bookmark,
       currentChunk: state.currentChunk + 1,
+    };
+  },
+
+  // No expected params
+  PREV_LINE: (state) => {
+    if (state.currentChunk === 0) {
+      // Can't go past first chunk
+      return state;
+    }
+    // How do we reset the graph state?
+    for (let i = 0; i < state.currentChunk; i += 1) {
+      state.chunks[i].mutator();
+    }
+    return {
+      ...state,
+      bookmark: state.chunks[state.currentChunk - 1].bookmark,
+      currentChunk: state.currentChunk - 1,
     };
   },
 };
