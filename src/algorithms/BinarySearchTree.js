@@ -6,7 +6,6 @@ import GraphTracer from '../components/Graph/GraphTracer';
 import { BSTExp } from './explanations';
 
 export default {
-  name: 'Binary Tree Search',
   pseudocode: parse(`
 procedure BinaryTreeSearch(Tree, Item):  $start
   Ptr = Root;                   $1            (* Set search pointer Ptr to root *)

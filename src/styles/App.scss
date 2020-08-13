@@ -1,5 +1,5 @@
 $bgColor: #FEFEFE;
-$minContainerWidth: 1000px;
+$minContainerWidth: 1250px;
 $headerHeight: 50px;
 $borderCol: #D4D4D4;
 
@@ -14,10 +14,11 @@ html, body {
   font-family: Roboto, 'sans-serif';
   position: relative;
   width: 100%;
-  min-width: $minContainerWidth;
+  
 
   .container {
     height: 100vh;
+    min-width: $minContainerWidth;
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid $borderCol;
@@ -31,6 +32,9 @@ html, body {
         width: 15%; 
         display: flex;
         flex-direction: column;
+        min-width: 200px;
+        border-left: 1px solid $borderCol;
+
       }
   
       .midPanel {
@@ -44,6 +48,9 @@ html, body {
         display: flex;
         flex-direction: column;
         height: 100%;
+        min-width: 400px;
+        border-right: 1px solid $borderCol;
+
 
       }
       

@@ -1,31 +1,34 @@
+/* eslint-disable max-len */
 import algorithms from '../algorithms';
 
-const DEFAULT_ALGORITHM = 'binaryTreeSearch';
+const DEFAULT_ALGORITHM = 'binarySearchTree';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
 export const GlobalActions = {
-  // { name: 'binaryTreeSearch'}
+
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      pseudocode, name, explanation, graph,
+      param, controller, name, explanation,
     } = data;
+    const { pseudocode, graph } = controller;
 
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
     const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
-    const algorithmGenerator = data.run();
+    const algorithmGenerator = controller.run();
 
     // instantiate a graph object
-    data.init();
+    controller.init();
 
     return {
       id: params.name,
       name,
       explanation,
+      param,
       pseudocode: procedurePseudocode,
       generator: algorithmGenerator,
       bookmark: algorithmGenerator.next().value, // Run it until the first yield

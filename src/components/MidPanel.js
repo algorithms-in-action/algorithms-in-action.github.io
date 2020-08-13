@@ -30,9 +30,8 @@ function MidPanel() {
           </button>
         </div>
         <div className="parameterPanel">
-          ADD: []; DELETE: [];SEARCH: [];
+          { algorithm.param }
         </div>
-        <div className="parameterPanel">Insert nodes: [5, 8, 10, 3, 1, 6, 9, 7, 2, 0, 4]</div>
       </div>
     </div>
   );

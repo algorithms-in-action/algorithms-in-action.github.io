@@ -3,7 +3,7 @@ import { GlobalActions } from './actions';
 
 describe('LOAD_ALGORITHM action', () => {
   it('loads an algorithm', () => {
-    const loadedState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
+    const loadedState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binarySearchTree' });
     expect(loadedState).toMatchObject({
       id: 'binaryTreeSearch',
       name: 'Binary Tree Search',
