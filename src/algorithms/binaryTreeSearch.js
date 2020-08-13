@@ -24,60 +24,59 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
 `),
   explanation: BSTExp,
-  nodes: [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  ],
-  root: 5,
-  target: 2,
   graph: new GraphTracer('key', null, 'Searching for Item = 2'),
-  init() {
-    this.graph.set(this.nodes);
-    this.graph.layoutTree(this.root);
-  },
-  // This next line is special syntax for a generator. It's just a function that uses `yield` to
-  // return control to the caller regularly. It yields a bookmark so the caller knows where in
-  // the pseudocode the execution is up to.
-  * run() {
-      // const tree = [5, [3, [1], [4]], [8, [6], [10]]];
-      const tree = [5, 
-        [3, [1, [0], [2]], [4]],
-        [8, [6, [7]], [10, [9]]]
-      ];
-      let current = null;
-      let parent = null;
-      
-      yield { step: 'start' };  current = tree[0];
-                                parent = null;
-                                const item = this.target;
-      yield { step: '1' };      let ptr = tree;
-                                parent = current;
-                                this.graph.visit(current, parent);
-      yield { step: '2' };      while (ptr) {
-      yield { step: '3' };        if (ptr[0] === item) {
-      yield { step: '4' };          return;
-                                  }
-      yield { step: '5' };        if (item < ptr[0]) {
-                                    parent = current;
-                                    current = ptr[1][0];
-        yield { step: '6' };        ptr = ptr[1];
-                                    this.graph.visit(current, parent);
-                                  } else {
-                                    parent = current;
-                                    current = ptr[2][0];
-        yield { step: '7' };        ptr = ptr[2];
-                                    this.graph.visit(current, parent);
-                                  }
-                                }
-      yield { step: '8' };
+  run(chunker) {
+    const tree = [5,
+      [3, [1, [0], [2]], [4]],
+      [8, [6, [7]], [10, [9]]]
+    ];
+    const nodes = [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    ];
+    const root = 5;
+    const item = 2;
+    chunker.add('start', (g) => {
+      g.set(nodes);
+      g.layoutTree(root);
+    }, [this.graph]);
+
+    let current = tree[0];
+    let parent = null;
+    chunker.add('1');
+
+    let ptr = tree;
+    parent = current;
+    chunker.add('2', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
+
+    while (ptr) {
+      chunker.add('3');
+      if (ptr[0] === item) {
+        chunker.add('4');
+        return;
+      }
+      chunker.add('5');
+
+      if (item < ptr[0]) {
+        parent = current;
+        current = ptr[1][0];
+        ptr = ptr[1];
+        chunker.add('6', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
+      } else {
+        parent = current;
+        current = ptr[2][0];
+        ptr = ptr[2];
+        chunker.add('7', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
+      }
+    }
   },
 };

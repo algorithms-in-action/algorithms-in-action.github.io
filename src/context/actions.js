@@ -1,4 +1,5 @@
 import algorithms from '../algorithms';
+import Chunker from './chunker';
 
 const DEFAULT_ALGORITHM = 'binaryTreeSearch';
 
@@ -8,42 +9,38 @@ const DEFAULT_ALGORITHM = 'binaryTreeSearch';
 export const GlobalActions = {
   // { name: 'binaryTreeSearch'}
   LOAD_ALGORITHM: (state, params) => {
-    const data = algorithms[params.name];
     const {
-      pseudocode, name, explanation, graph,
-    } = data;
+      name, pseudocode, explanation, graph,
+    } = algorithms[params.name];
 
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
-    const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
-    const algorithmGenerator = data.run();
-
-    // instantiate a graph object
-    data.init();
+    const procedurePseudocode = Object.values(pseudocode)[0];
+    const chunker = new Chunker();
+    algorithms[params.name].run(chunker);
+    chunker.chunks[0].mutator();
 
     return {
       id: params.name,
       name,
       explanation,
       pseudocode: procedurePseudocode,
-      generator: algorithmGenerator,
-      bookmark: algorithmGenerator.next().value, // Run it until the first yield
+      chunks: chunker.chunks,
+      bookmark: chunker.chunks[0].bookmark,
+      currentChunk: 0,
       graph,
-      finished: false,
     };
   },
+
   // No expected params
   NEXT_LINE: (state) => {
-    if (state.finished) {
-      return state;
-    }
-    const result = state.generator.next();
+    console.log(state.chunks);
+    state.chunks[state.currentChunk + 1].mutator();
     return {
       ...state,
-      // If we just finished the algorithm, leave the bookmark on the last line
-      bookmark: result.done ? state.bookmark : result.value,
-      finished: result.done,
+      bookmark: state.chunks[state.currentChunk + 1].bookmark,
+      currentChunk: state.currentChunk + 1,
     };
   },
 };
