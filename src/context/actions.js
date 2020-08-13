@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
 
-const DEFAULT_ALGORITHM = 'binarySearchTree';
+const DEFAULT_ALGORITHM = 'binaryTreeInsertion';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
 export const GlobalActions = {
 
-  LOAD_ALGORITHM: (state, params) => {
+  LOAD_ALGORITHM: (state, params, nodes, target) => {
     const data = algorithms[params.name];
     const {
       param, controller, name, explanation,
@@ -22,7 +22,7 @@ export const GlobalActions = {
     const algorithmGenerator = controller.run();
 
     // instantiate a graph object
-    controller.init();
+    controller.init(nodes, target);
 
     return {
       id: params.name,
@@ -52,11 +52,11 @@ export const GlobalActions = {
 };
 
 export function dispatcher(state, setState) {
-  return (action, params) => {
-    setState(action(state, params));
+  return (action, params, nodes, target) => {
+    setState(action(state, params, nodes, target));
   };
 }
 
 export function initialState() {
-  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM });
+  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM }, [0], undefined);
 }

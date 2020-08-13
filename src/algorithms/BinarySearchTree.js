@@ -39,9 +39,12 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   root: 5,
   target: 2,
   graph: new GraphTracer('key', null, 'Searching for Item = 2'),
-  init() {
+  init(nodes, target) {
+    // TODO: transform [1,2,3] to 2D array
+    this.nodes = nodes;
+    this.target = target;
     this.graph.set(this.nodes);
-    this.graph.layoutTree(this.root);
+    this.graph.layoutTree(this.nodes[0]);
   },
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in

@@ -29,10 +29,11 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
 `),
   explanation: BSTExp,
   T: {},
-  elements: [5, 8, 10, 3, 1, 6, 9, 7, 2, 0, 4],  // elements to be inserted
+  elements: [],  // elements to be inserted [5,8,10,3,1,6,9,7,2,0,4]
   graph: new GraphTracer('key', null, 'Test Insertion Graph'),
-  init() {
-    // currently do nothing
+  init(nodes) {
+    // set data dynamically
+    this.elements = nodes;
   },
   bstInsert(root, element, parent) {
     this.graph.visit(root, parent);
@@ -66,7 +67,7 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
   * run() {
       const root = this.elements[0];  // take first element as root
       this.T[root] = {};
-      
+
       const tree = {};
       let parent;
       tree[root] = {};

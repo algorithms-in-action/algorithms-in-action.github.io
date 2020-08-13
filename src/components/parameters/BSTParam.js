@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { GlobalActions } from '../../context/actions';
+import { GlobalContext } from '../../context/GlobalState';
 
 function BSTParam() {
   const [insertionVal, setInsertionVal] = useState('');
@@ -11,6 +13,8 @@ function BSTParam() {
   const [logTagCol, setLogTagCol] = useState('');
   const [logTagText, setLogTagText] = useState('');
   const [logText, setLogText] = useState('');
+
+  const { dispatch } = useContext(GlobalContext);
 
   const commaSeparatedNumberListValidCheck = (t) => {
     const regex = /^[0-9]+(,[0-9]+)*$/g;
@@ -53,8 +57,14 @@ function BSTParam() {
     switch (evtName) {
       case INSERTION:
         if (commaSeparatedNumberListValidCheck(evtVal)) {
+          // this conversion to integer will not work
+          // because the default value was set as string
           setInsertionVal(evtVal.split`,`.map((x) => +x));
           updateParamStatus(INSERTION, insertionVal, true);
+
+          const nodes = insertionVal.split(',').map((x) => parseInt(x, 10));
+          // run insertion animation
+          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeInsertion' }, nodes);
         } else {
           updateParamStatus(INSERTION, insertionVal, false);
         }
@@ -64,6 +74,12 @@ function BSTParam() {
         if (singleNumberValidCheck(evtVal)) {
           setSearchVal(parseInt(evtVal, 10));
           updateParamStatus(SEARCH, searchVal, true);
+
+          const target = parseInt(searchVal, 10);
+          // console.log(insertionVal);
+          // const nodes = insertionVal.split(',').map((x) => parseInt(x, 10));
+          // run insertion animation
+          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, insertionVal, target);
         } else {
           updateParamStatus(SEARCH, searchVal, false);
         }
