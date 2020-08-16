@@ -4,11 +4,13 @@ import { GlobalActions } from '../context/actions';
 import '../styles/NextLineButton.scss';
 
 function PlayButton() {
-  const { dispatch } = useContext(GlobalContext);
+  const { dispatch, algorithm } = useContext(GlobalContext);
 
   const AutomaticExecution = () => {
     const interval = setInterval(() => {
-      dispatch(GlobalActions.NEXT_LINE);
+      if (!algorithm.finished) {
+        dispatch(GlobalActions.NEXT_LINE);
+      }
     }, 100);
     return () => clearInterval(interval);
   };
