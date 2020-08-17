@@ -57,8 +57,6 @@ function BSTParam() {
     switch (evtName) {
       case INSERTION:
         if (commaSeparatedNumberListValidCheck(evtVal)) {
-          // this conversion to integer will not work
-          // because the default value was set as string
           setInsertionVal(evtVal.split`,`.map((x) => +x));
           updateParamStatus(INSERTION, insertionVal, true);
 
@@ -76,9 +74,7 @@ function BSTParam() {
           updateParamStatus(SEARCH, searchVal, true);
 
           const target = parseInt(searchVal, 10);
-          // console.log(insertionVal);
-          // const nodes = insertionVal.split(',').map((x) => parseInt(x, 10));
-          // run insertion animation
+          // run search animation
           dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, insertionVal, target);
         } else {
           updateParamStatus(SEARCH, searchVal, false);

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 // import { GlobalActions } from './actions';
 
-// this dummy test just for passing Jest test
+// this dummy test just to pass the Jest test
 describe('my beverage', () => {
   test('is delicious', () => {
     expect(true).toBeTruthy();
