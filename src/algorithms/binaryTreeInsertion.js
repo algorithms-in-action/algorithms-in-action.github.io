@@ -28,87 +28,94 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
   end if                                $end
 `),
   explanation: BSTExp,
-  T: {},
   elements: [],  // elements to be inserted [5,8,10,3,1,6,9,7,2,0,4]
-  graph: new GraphTracer('key', null, 'Test Insertion Graph'),
+  graph: new GraphTracer('key', 1, 'Test Insertion Graph'),
+  tree: {},
+  reset() {
+    // this.graph = null;
+    this.graph = new GraphTracer('key2', 2, 'Test Insertion Graph');
+    this.elements = [];
+    this.tree = {};
+  },
   init(nodes) {
     // set data dynamically
+    // console.log(this.elements);
     this.elements = nodes;
+    // console.log(this.elements);
   },
-  bstInsert(root, element, parent) {
-    this.graph.visit(root, parent);
-    const treeNode = this.T[root];
+  // bstInsert(root, element, parent) {
+  //   this.graph.visit(root, parent);
+  //   const treeNode = this.T[root];
 
-    let propName = '';
-    if (element < root) {
-      propName = 'left';
-    } else if (element > root) {
-      propName = 'right';
-    }
+  //   let propName = '';
+  //   if (element < root) {
+  //     propName = 'left';
+  //   } else if (element > root) {
+  //     propName = 'right';
+  //   }
 
-    if (propName !== '') {
-      if (!(propName in treeNode)) {
-        // insert as left child of root
-        treeNode[propName] = element;
-        this.T[element] = {};
-        this.graph.addNode(element);
-        this.graph.addEdge(root, element);
-        this.graph.select(element, root);
-        this.graph.deselect(element, root);
-      } else {
-        this.bstInsert(treeNode[propName], element, root);
-      }
-    }
-    this.graph.leave(root, parent);
-  },
+  //   if (propName !== '') {
+  //     if (!(propName in treeNode)) {
+  //       // insert as left child of root
+  //       treeNode[propName] = element;
+  //       this.T[element] = {};
+  //       this.graph.addNode(element);
+  //       this.graph.addEdge(root, element);
+  //       this.graph.select(element, root);
+  //       this.graph.deselect(element, root);
+  //     } else {
+  //       this.bstInsert(treeNode[propName], element, root);
+  //     }
+  //   }
+  //   this.graph.leave(root, parent);
+  // },
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
   // the pseudocode the execution is up to.
   * run() {
       const root = this.elements[0];  // take first element as root
-      this.T[root] = {};
 
-      const tree = {};
       let parent;
-      tree[root] = {};
+      if (root) {
+        this.tree[root] = { root: true };
+      }
       
       yield { step: 'start' };  this.graph.addNode(root);
                                 this.graph.layoutTree(root, true);
 
                                 for (let i = 1; i < this.elements.length; i++) {
                                   const element = this.elements[i];
-      // yield { step: i };          this.bstInsert(root, this.elements[i]); // insert ith element
                                   
-      yield { step: '1' };        let ptr = tree;
+      yield { step: '1' };        let ptr = this.tree;
                                   parent = root;
                                   
       yield { step: '2' };        while (ptr) {
       yield { step: '4' };          if (element < parent) {
-                                      if (tree[parent].left) {
+                                      if (this.tree[parent].left !== undefined) {
                                         // if has left child
-                                        parent = tree[parent].left;
-      yield { step: '5' };              ptr = tree[parent];
+                                        parent = this.tree[parent].left;
+      yield { step: '5' };              ptr = this.tree[parent];
                                       } else {
-      yield { step: '8' };                tree[parent].left = element;
-                                        tree[element] = {};
+      yield { step: '8' };                this.tree[parent].left = element;
+                                        this.tree[element] = {};
                                         this.graph.addNode(element);
                                         this.graph.addEdge(parent, element);
                                         break;
                                       }
                                     } else if (element > parent) {
-                                      if (tree[parent].right) {
+                                      if (this.tree[parent].right !== undefined) {
                                         // if has right child
-                                        parent = tree[parent].right;
-      yield { step: '6' };                ptr = tree[parent];
+                                        parent = this.tree[parent].right;
+      yield { step: '6' };                ptr = this.tree[parent];
                                     } else {
-      yield { step: '9' };                tree[parent].right = element;
-                                        tree[element] = {};
+      yield { step: '9' };                this.tree[parent].right = element;
+                                        this.tree[element] = {};
                                         this.graph.addNode(element);
                                         this.graph.addEdge(parent, element);
                                         break;
                                       }
                                     }
-                                  }                                 
+                                  } 
       yield { step: 'end' };                          }
   },
 };

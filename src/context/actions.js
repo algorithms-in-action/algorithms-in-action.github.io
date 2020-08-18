@@ -13,16 +13,21 @@ export const GlobalActions = {
     const {
       param, controller, name, explanation,
     } = data;
-    const { pseudocode, graph } = controller;
+    const {
+      pseudocode, graph, tree,
+    } = controller;
 
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
     const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
-    const algorithmGenerator = controller.run();
 
     // instantiate a graph object
+    // controller.reset();
+    // console.log(nodes);
     controller.init(nodes, target);
+
+    const algorithmGenerator = controller.run();
 
     return {
       id: params.name,
@@ -34,6 +39,8 @@ export const GlobalActions = {
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
       graph,
       finished: false,
+      tree,
+      // reset,
     };
   },
   // No expected params
@@ -49,6 +56,18 @@ export const GlobalActions = {
       finished: result.done,
     };
   },
+  // // No expected params
+  // RESET: (state) => {
+  //   console.log(state);
+  //   state.reset();
+  //   console.log(state);
+  //   // // console.log(state.graph);
+  //   return {
+  //     ...state,
+  //     // graph: new GraphTracer('key', 1, 'Test Insertion Graph'),
+  //     // tree: {},
+  //   };
+  // },
 };
 
 export function dispatcher(state, setState) {
@@ -58,5 +77,5 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
-  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM }, [0], undefined);
+  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM }, [], undefined);
 }

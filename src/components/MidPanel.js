@@ -5,6 +5,7 @@ import NextLineButton from './NextLineButton';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
+  console.log(algorithm);
 
   return (
     <div className="midPanelContainer">

@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
@@ -39,6 +40,7 @@ class GraphTracer extends Tracer {
   set(array2d = []) {
     this.nodes = [];
     this.edges = [];
+    // console.log(array2d);
     for (let i = 0; i < array2d.length; i++) {
       this.addNode(i);
       for (let j = 0; j < array2d.length; j++) {
@@ -46,6 +48,25 @@ class GraphTracer extends Tracer {
         if (value) {
           this.addEdge(i, j, this.isWeighted ? value : null);
         }
+      }
+    }
+    this.layout();
+    super.set();
+  }
+
+  mySet(tree) {
+    this.nodes = [];
+    this.edges = [];
+
+    for (const [node, children] of Object.entries(tree)) {
+      // Note: node is a string
+      // '+node' implicitly convert string to number
+      this.addNode(+node);
+      if (children.hasOwnProperty('left')) {
+        this.addEdge(+node, children.left);
+      }
+      if (children.hasOwnProperty('right')) {
+        this.addEdge(+node, children.right);
       }
     }
     this.layout();

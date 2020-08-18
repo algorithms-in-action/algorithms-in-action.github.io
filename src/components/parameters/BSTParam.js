@@ -14,7 +14,7 @@ function BSTParam() {
   const [logTagText, setLogTagText] = useState('');
   const [logText, setLogText] = useState('');
 
-  const { dispatch } = useContext(GlobalContext);
+  const { algorithm, dispatch } = useContext(GlobalContext);
 
   const commaSeparatedNumberListValidCheck = (t) => {
     const regex = /^[0-9]+(,[0-9]+)*$/g;
@@ -60,8 +60,11 @@ function BSTParam() {
           setInsertionVal(evtVal.split`,`.map((x) => +x));
           updateParamStatus(INSERTION, insertionVal, true);
 
-          const nodes = insertionVal.split(',').map((x) => parseInt(x, 10));
+          const nodes = typeof insertionVal === 'string'
+            ? insertionVal.split(',').map((x) => parseInt(x, 10))
+            : insertionVal;
           // run insertion animation
+          // dispatch(GlobalActions.RESET);
           dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeInsertion' }, nodes);
         } else {
           updateParamStatus(INSERTION, insertionVal, false);
@@ -74,8 +77,23 @@ function BSTParam() {
           updateParamStatus(SEARCH, searchVal, true);
 
           const target = parseInt(searchVal, 10);
+          // console.log(algorithm.tree);
           // run search animation
-          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, insertionVal, target);
+          // const temp = {
+          //   0: {},
+          //   1: { right: 2, left: 0 },
+          //   2: {},
+          //   3: { left: 1, right: 4 },
+          //   4: {},
+          //   5: { root: true, right: 8, left: 3 },
+          //   6: { right: 7 },
+          //   7: {},
+          //   8: { right: 10, left: 6 },
+          //   9: {},
+          //   10: { left: 9 },
+          // };
+          console.log(algorithm.tree);
+          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
         } else {
           updateParamStatus(SEARCH, searchVal, false);
         }
