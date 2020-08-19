@@ -9,10 +9,8 @@ const DEFAULT_TARGET = '2';
 function BSTParam() {
   const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
   const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
-  const [deletionVal, setDeletionVal] = useState('');
   const INSERTION = 'insertion';
   const SEARCH = 'search';
-  const DELETION = 'deletion';
   const [logTagCol, setLogTagCol] = useState('');
   const [logTagText, setLogTagText] = useState('');
   const [logText, setLogText] = useState('');
@@ -80,19 +78,16 @@ function BSTParam() {
 
           const target = parseInt(searchVal, 10);
           // run search animation
-          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
+          console.log(algorithm.tree);
+          if (Object.keys(algorithm.tree).length) {
+            dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
+          } else {
+            console.error('empty tree');
+          }
         } else {
           updateParamStatus(SEARCH, searchVal, false);
         }
 
-        break;
-      case DELETION:
-        if (singleNumberValidCheck(evtVal)) {
-          setDeletionVal(parseInt(evtVal, 10));
-          updateParamStatus(DELETION, deletionVal, true);
-        } else {
-          updateParamStatus(DELETION, deletionVal, false);
-        }
         break;
       default:
         break;
