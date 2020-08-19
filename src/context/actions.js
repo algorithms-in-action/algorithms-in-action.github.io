@@ -13,21 +13,26 @@ export const GlobalActions = {
     const {
       param, controller, name, explanation,
     } = data;
-    const {
-      pseudocode, graph, tree,
-    } = controller;
+    const { pseudocode } = controller;
+    let { graph, tree } = controller;
 
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
     const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
 
-    // instantiate a graph object
-    // controller.reset();
-    // console.log(nodes);
-    controller.init(nodes, target);
+    // clear previous graph
+    if (controller.reset) {
+      controller.reset();
+    }
 
+    // instantiate a graph object
+    // since the data flow is unidirectional (from binaryAlgorithm.js to action.js),
+    // we need to override the old graph and old tree before turning to a state
+    const { graph: newGraph, tree: newTree } = controller.init(nodes, target);
     const algorithmGenerator = controller.run();
+    graph = newGraph;
+    tree = newTree;
 
     return {
       id: params.name,
@@ -39,8 +44,7 @@ export const GlobalActions = {
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
       graph,
       finished: false,
-      tree,
-      // reset,
+      tree, // store a tree in the state because we want to search that particular tree after insertion
     };
   },
   // No expected params
@@ -56,18 +60,6 @@ export const GlobalActions = {
       finished: result.done,
     };
   },
-  // // No expected params
-  // RESET: (state) => {
-  //   console.log(state);
-  //   state.reset();
-  //   console.log(state);
-  //   // // console.log(state.graph);
-  //   return {
-  //     ...state,
-  //     // graph: new GraphTracer('key', 1, 'Test Insertion Graph'),
-  //     // tree: {},
-  //   };
-  // },
 };
 
 export function dispatcher(state, setState) {

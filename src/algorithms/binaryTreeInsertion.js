@@ -28,47 +28,28 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
   end if                                $end
 `),
   explanation: BSTExp,
-  elements: [],  // elements to be inserted [5,8,10,3,1,6,9,7,2,0,4]
-  graph: new GraphTracer('key', 1, 'Test Insertion Graph'),
+  elements: [],  // elements to be inserted, e.g. [5,8,10,3,1,6,9,7,2,0,4]
+  graph: new GraphTracer('key1', null, 'BST - Insertion'),
   tree: {},
   reset() {
-    // this.graph = null;
-    this.graph = new GraphTracer('key2', 2, 'Test Insertion Graph');
+    // reset the graph
+    this.graph = new GraphTracer('key2', null, 'BST - Insertion');
     this.elements = [];
     this.tree = {};
   },
+  /**
+   * 
+   * @param {array} nodes array of numbers
+   * @return the new graph and tree
+   */
   init(nodes) {
     // set data dynamically
-    // console.log(this.elements);
     this.elements = nodes;
-    // console.log(this.elements);
+    return { 
+      graph: this.graph, 
+      tree: this.tree 
+    };
   },
-  // bstInsert(root, element, parent) {
-  //   this.graph.visit(root, parent);
-  //   const treeNode = this.T[root];
-
-  //   let propName = '';
-  //   if (element < root) {
-  //     propName = 'left';
-  //   } else if (element > root) {
-  //     propName = 'right';
-  //   }
-
-  //   if (propName !== '') {
-  //     if (!(propName in treeNode)) {
-  //       // insert as left child of root
-  //       treeNode[propName] = element;
-  //       this.T[element] = {};
-  //       this.graph.addNode(element);
-  //       this.graph.addEdge(root, element);
-  //       this.graph.select(element, root);
-  //       this.graph.deselect(element, root);
-  //     } else {
-  //       this.bstInsert(treeNode[propName], element, root);
-  //     }
-  //   }
-  //   this.graph.leave(root, parent);
-  // },
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
   // the pseudocode the execution is up to.
@@ -79,7 +60,7 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
       if (root) {
         this.tree[root] = { root: true };
       }
-      
+
       yield { step: 'start' };  this.graph.addNode(root);
                                 this.graph.layoutTree(root, true);
 

@@ -37,10 +37,14 @@ class GraphTracer extends Tracer {
     this.logTracer = null;
   }
 
+  /**
+   * This is the original function provided by Tracer.js,
+   * but the arguments need a 2D array.
+   * @param {array} array2d 2D array of nodes
+   */
   set(array2d = []) {
     this.nodes = [];
     this.edges = [];
-    // console.log(array2d);
     for (let i = 0; i < array2d.length; i++) {
       this.addNode(i);
       for (let j = 0; j < array2d.length; j++) {
@@ -54,7 +58,11 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
-  mySet(tree) {
+  /**
+   * add nodes and edges using the provided data
+   * @param {object} tree a tree object
+   */
+  setTree(tree) {
     this.nodes = [];
     this.edges = [];
 

@@ -54,18 +54,31 @@ procedure BinaryTreeSearch(Tree, Item):  $start
           // };
   root: -1,
   target: -1,
-  graph: new GraphTracer('key', null, 'Searching for Item = 2'),
+  graph: new GraphTracer('key1', null, 'BST - Search'),
+  reset() {
+    // reset the graph
+    this.graph = new GraphTracer('key2', null, 'BST - Search');
+    this.tree = {};
+  },
+  /**
+   * populate the graph object using provided data
+   * @param {object} tree a tree object
+   * @param {number} target the item needs to be searched
+   * @return the new graph and tree
+   */
   init(tree, target) {
     this.tree = tree;
-    console.log(this.tree);
-    // const nodes2D = this.transform(tree);
-    // this.nodes = nodes2D;
-    // console.log(this.nodes);
     this.target = target;
-    this.graph.mySet(tree);
+    this.graph.setTree(tree);
     this.setRoot(tree);
     this.graph.layoutTree(this.root);
+
+    return { graph: this.graph, tree: this.tree };
   },
+  /**
+   * find and set the root node in a tree
+   * @param {object} tree a tree object
+   */
   setRoot(tree) {
     for (const [node, children] of Object.entries(tree)) {
       // set root node
@@ -73,33 +86,6 @@ procedure BinaryTreeSearch(Tree, Item):  $start
         this.root = +node;
       }
     }
-  },
-  /**
-   * transform a tree to a 2D array
-   * @param {object} tree something like {0: {}, 1: {right: 2, left: 0}, ...}
-   * @return 2D array of nodes
-   */
-  transform(tree) {
-    const nodes = [];
-    const len = Object.entries(tree).length;
-    for (const [node, children] of Object.entries(tree)) {
-      const row = [];
-      // set root node
-      if (children.hasOwnProperty('root')) {
-        this.root = +node;
-      }
-      const r = children.hasOwnProperty('right') ? children.right : -1;
-      const l = children.hasOwnProperty('left') ? children.left : -1;
-      for (let i = 0; i < len; i += 1) {
-        if (i === r || i === l) {
-          row.push(1);
-        } else {
-          row.push(0);
-        }
-      }
-      nodes.push(row);
-    }
-    return nodes;
   },
   // This next line is special syntax for a generator. It's just a function that uses `yield` to
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
