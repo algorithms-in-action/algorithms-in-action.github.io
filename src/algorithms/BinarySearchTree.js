@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable comma-dangle */
 /* eslint-disable no-trailing-spaces */
@@ -91,59 +92,40 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   // return control to the caller regularly. It yields a bookmark so the caller knows where in
   // the pseudocode the execution is up to.
   * run() {
-      // const tree = [5, 
-      //   [3, [1, [0], [2]], [4]],
-      //   [8, [6, [7]], [10, [9]]]
-      // ];
       let current = null;
       let parent = null;
 
       yield { step: 'start' };  current = this.root;
-                                parent = null;
                                 const item = this.target;
-      yield { step: '1' };      let ptr = this.root;
-                                parent = current;
+      yield { step: '1' };      let ptr = this.tree;  
+                                parent = current;       
                                 this.graph.visit(current, parent);
-      yield { step: '2' };      while (ptr !== undefined) {
-      yield { step: '3' };        if (ptr === item) {
+      yield { step: '2' };      while (ptr) {
+      yield { step: '3' };        if (current === item) {
       yield { step: '4' };          return;
                                   }
-      yield { step: '5' };        if (item < ptr) {
-                                    parent = current;
-                                    current = this.tree[ptr].left;
-        yield { step: '6' };        ptr = this.tree[ptr].left;
-                                    this.graph.visit(current, parent);
+      yield { step: '5' };        if (item < current) {
+                                    if (this.tree[current].left !== undefined) {
+                                      // if has left child
+                                      parent = current;
+                                      current = this.tree[current].left;
+      yield { step: '6' };            ptr = this.tree[current];
+                                      this.graph.visit(current, parent);
+                                    } else {
+                                      break;
+                                    }
                                   } else {
-                                    parent = current;
-                                    current = this.tree[ptr].right;
-        yield { step: '7' };        ptr = this.tree[ptr].right;
-                                    this.graph.visit(current, parent);
+                                    if (this.tree[current].right !== undefined) {
+                                      // if has right child
+                                      parent = current;
+                                      current = this.tree[current].right;
+      yield { step: '7' };            ptr = this.tree[current].right;
+                                      this.graph.visit(current, parent);
+                                    } else {
+                                      break;
+                                    }
                                   }
                                 }
-      yield { step: '8' };
-      
-      // yield { step: 'start' };  current = tree[0];
-      //                           parent = null;
-      //                           const item = this.target;
-      // yield { step: '1' };      let ptr = tree;
-      //                           parent = current;
-      //                           this.graph.visit(current, parent);
-      // yield { step: '2' };      while (ptr) {
-      // yield { step: '3' };        if (ptr[0] === item) {
-      // yield { step: '4' };          return;
-      //                             }
-      // yield { step: '5' };        if (item < ptr[0]) {
-      //                               parent = current;
-      //                               current = ptr[1][0];
-      //   yield { step: '6' };        ptr = ptr[1];
-      //                               this.graph.visit(current, parent);
-      //                             } else {
-      //                               parent = current;
-      //                               current = ptr[2][0];
-      //   yield { step: '7' };        ptr = ptr[2];
-      //                               this.graph.visit(current, parent);
-      //                             }
-      //                           }
-      // yield { step: '8' };
+      yield { step: '8' }; 
   },
 };
