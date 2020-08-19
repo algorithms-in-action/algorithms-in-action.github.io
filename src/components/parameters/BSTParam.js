@@ -143,26 +143,6 @@ function BSTParam() {
             data-testid="searchSubmit"
           />
         </form>
-
-        <form className="deletionForm" onSubmit={handleSubmit}>
-          <label>
-            <div>Deletion</div>
-            <input
-              name={DELETION}
-              className="inputText"
-              type="text"
-              value={deletionVal}
-              data-testid="deletionText"
-              onChange={(e) => setDeletionVal(e.target.value)}
-            />
-          </label>
-          <input
-            className="inputSubmit"
-            type="submit"
-            value="Run Deletion"
-            data-testid="deletionSubmit"
-          />
-        </form>
       </div>
 
       {logText
