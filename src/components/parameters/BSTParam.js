@@ -3,9 +3,12 @@ import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 
+const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
+const DEFAULT_TARGET = '2';
+
 function BSTParam() {
-  const [insertionVal, setInsertionVal] = useState('');
-  const [searchVal, setSearchVal] = useState('');
+  const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
+  const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
   const [deletionVal, setDeletionVal] = useState('');
   const INSERTION = 'insertion';
   const SEARCH = 'search';
@@ -107,6 +110,7 @@ function BSTParam() {
               className="inputText"
               type="text"
               value={insertionVal}
+              placeholder="5,8,10,3,1,6,9,7,2,0,4"
               data-testid="insertionText"
               onChange={(e) => setInsertionVal(e.target.value)}
             />
@@ -126,6 +130,7 @@ function BSTParam() {
               name={SEARCH}
               className="inputText"
               type="text"
+              placeholder="5,8,10,3,1,6,9,7,2,0,4"
               value={searchVal}
               data-testid="searchText"
               onChange={(e) => setSearchVal(e.target.value)}
