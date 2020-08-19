@@ -2,7 +2,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../pseudocode/parse';
-import GraphTracer from '../components/Graph/GraphTracer';
+import GraphTracer from '../components/DataStructures/Graph/GraphTracer';
 import { BSTExp } from './explanations';
 
 export default {

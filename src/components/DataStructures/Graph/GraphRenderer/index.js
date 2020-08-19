@@ -12,8 +12,8 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import React from 'react';
-import Renderer from '../Renderer/index';
-import { classes, distance } from '../util';
+import Renderer from '../../common/Renderer/index';
+import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 
 class GraphRenderer extends Renderer {

@@ -10,8 +10,8 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
-import Tracer from './Tracer';
-import { distance } from './util';
+import Tracer from '../common/Tracer';
+import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 
 class GraphTracer extends Tracer {
