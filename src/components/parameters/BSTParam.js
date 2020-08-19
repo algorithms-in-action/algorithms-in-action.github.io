@@ -11,6 +11,7 @@ function BSTParam() {
   const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
   const INSERTION = 'insertion';
   const SEARCH = 'search';
+  const EXCEPTION = 'exception';
   const [logTagCol, setLogTagCol] = useState('');
   const [logTagText, setLogTagText] = useState('');
   const [logText, setLogText] = useState('');
@@ -38,11 +39,17 @@ function BSTParam() {
     } else {
       setLogTagText('failure!');
       setLogTagCol(warningCol);
-      let warningText = `Input for ${type} algorithm is not valid. `;
-      if (type === INSERTION) {
-        warningText += 'Example: 0,1,2,3,4';
+
+      let warningText = '';
+      if (type === EXCEPTION) {
+        warningText = 'Please insert nodes first.';
       } else {
-        warningText += 'Example: 16';
+        warningText += `Input for ${type} algorithm is not valid. `;
+        if (type === INSERTION) {
+          warningText += 'Example: 0,1,2,3,4';
+        } else {
+          warningText += 'Example: 16';
+        }
       }
 
       setLogText(warningText);
@@ -74,15 +81,15 @@ function BSTParam() {
       case SEARCH:
         if (singleNumberValidCheck(evtVal)) {
           setSearchVal(parseInt(evtVal, 10));
-          updateParamStatus(SEARCH, searchVal, true);
 
           const target = parseInt(searchVal, 10);
-          // run search animation
-          console.log(algorithm.tree);
+          // make sure the tree is not empty
           if (Object.keys(algorithm.tree).length) {
+            // run search animation
             dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
+            updateParamStatus(SEARCH, searchVal, true);
           } else {
-            console.error('empty tree');
+            updateParamStatus(EXCEPTION, searchVal, false);
           }
         } else {
           updateParamStatus(SEARCH, searchVal, false);
