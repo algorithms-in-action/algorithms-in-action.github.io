@@ -9,6 +9,12 @@ export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+let speed;
+
+export function setTime(value) {
+  speed = value * 1000;
+}
+
 function PlayButton() {
   const { dispatch, algorithm } = useContext(GlobalContext);
 
@@ -20,7 +26,7 @@ function PlayButton() {
   const AutomaticExecution = () => {
     if (!algorithm.finished) {
       dispatch(GlobalActions.NEXT_LINE);
-      sleep(100).then(() => {
+      sleep(speed).then(() => {
         fireEvent.click(document.getElementById('PlayButton'));
       });
     }
