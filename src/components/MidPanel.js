@@ -13,8 +13,7 @@ function MidPanel() {
         <button type="button" className="quizButton">Quiz</button>
       </div>
       <div className="midPanelBody">
-        {/* Animation Goes here */}
-        {algorithm.graph.render()}
+        {algorithm.chunker.getVisualisers()[0].render()}
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">

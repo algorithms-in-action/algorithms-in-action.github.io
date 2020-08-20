@@ -24,7 +24,16 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
 `),
   explanation: BSTExp,
-  graph: new GraphTracer('key', null, 'Searching for Item = 2'),
+
+  initVisualisers() {
+    return {
+      graph: {
+        instance: new GraphTracer('key', null, 'Seaching for Item = 2'),
+        order: 0
+      }
+    };
+  },
+
   run(chunker) {
     const tree = [5,
       [3, [1, [0], [2]], [4]],
@@ -45,19 +54,20 @@ procedure BinaryTreeSearch(Tree, Item):  $start
     ];
     const root = 5;
     const item = 2;
-    chunker.add('start', (g) => {
-      g.set(nodes);
-      g.layoutTree(root);
-    }, [this.graph]);
+
+    chunker.add('start', (vis) => {
+      vis.graph.set(nodes);
+      vis.graph.layoutTree(root);
+    });
 
     let current = tree[0];
     let parent = null;
-    chunker.add('1');
 
+    chunker.add('1', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
     let ptr = tree;
     parent = current;
-    chunker.add('2', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
 
+    chunker.add('2');
     while (ptr) {
       chunker.add('3');
       if (ptr[0] === item) {
@@ -70,12 +80,12 @@ procedure BinaryTreeSearch(Tree, Item):  $start
         parent = current;
         current = ptr[1][0];
         ptr = ptr[1];
-        chunker.add('6', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
+        chunker.add('6', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
       } else {
         parent = current;
         current = ptr[2][0];
         ptr = ptr[2];
-        chunker.add('7', (g, c, p) => g.visit(c, p), [this.graph, current, parent]);
+        chunker.add('7', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
       }
     }
   },
