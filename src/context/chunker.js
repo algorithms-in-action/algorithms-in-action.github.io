@@ -38,16 +38,31 @@ export default class {
       .map((o) => o.instance);
   }
 
+  doChunk(index) {
+    this.chunks[index].mutator(Object.fromEntries(Object.entries(this.visualisers)
+      .map(([k, v]) => [k, v.instance])));
+  }
+
   next() {
     if (this.currentChunk === null) {
       this.visualisers = this.init();
       this.currentChunk = 0;
     }
-    this.chunks[this.currentChunk].mutator(Object.fromEntries(Object.entries(this.visualisers)
-      .map(([k, v]) => [k, v.instance])));
-    this.currentChunk += 1;
+    if (this.currentChunk < this.chunks.length - 1) {
+      this.doChunk(this.currentChunk);
+      this.currentChunk += 1;
+    }
     return this.chunks[this.currentChunk].bookmark;
   }
 
-  prev() { }
+  prev() {
+    if (this.currentChunk > 1) {
+      this.visualisers = this.init();
+      for (let i = 0; i < this.currentChunk - 1; i += 1) {
+        this.doChunk(i);
+      }
+      this.currentChunk -= 1;
+    }
+    return this.chunks[this.currentChunk].bookmark;
+  }
 }
