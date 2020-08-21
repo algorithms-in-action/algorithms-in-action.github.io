@@ -36,29 +36,29 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.logTracer = null;
   }
-    
-    /**
-     * add nodes and edges using the provided data
-     * @param {object} tree a tree object
-     */
-    setTree(tree) {
-        this.nodes = [];
-        this.edges = [];
-        
-        for (const [node, children] of Object.entries(tree)) {
-            // Note: node is a string
-            // '+node' implicitly convert string to number
-            this.addNode(+node);
-            if (children.hasOwnProperty('left')) {
-                this.addEdge(+node, children.left);
-            }
-            if (children.hasOwnProperty('right')) {
-                this.addEdge(+node, children.right);
-            }
-        }
-        this.layout();
-        super.set();
+
+  /**
+   * add nodes and edges using the provided data
+   * @param {object} tree a tree object
+   */
+  setTree(tree) {
+    this.nodes = [];
+    this.edges = [];
+
+    for (const [node, children] of Object.entries(tree)) {
+      // Note: node is a string
+      // '+node' implicitly convert string to number
+      this.addNode(+node);
+      if (children.hasOwnProperty('left')) {
+        this.addEdge(+node, children.left);
+      }
+      if (children.hasOwnProperty('right')) {
+        this.addEdge(+node, children.right);
+      }
     }
+    this.layout();
+    super.set();
+  }
 
   /**
    * This is the original function provided by Tracer.js,
@@ -126,8 +126,9 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
+    value = (value === undefined ? id : value);
     this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
