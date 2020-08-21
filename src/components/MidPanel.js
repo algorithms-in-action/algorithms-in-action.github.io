@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
 import NextLineButton from './NextLineButton';
+import PrevLineButton from './PrevLineButton';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
@@ -18,6 +19,7 @@ function MidPanel() {
       <div className="midPanelFooter">
         <div className="controlPanel">
           <NextLineButton />
+          <PrevLineButton />
         </div>
         <div className="parameterPanel">
           ADD: []; DELETE: [];SEARCH: [];

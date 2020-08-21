@@ -13,9 +13,9 @@ function NextLineButton() {
       <button
         type="button"
         className="nextLineButton"
-        onClick={() => dispatch(GlobalActions.NEXT_LINE)}
+        onClick={() => dispatch(GlobalActions.PREV_LINE)}
       >
-        Next Line
+        Prev Line
       </button>
     </div>
   );
