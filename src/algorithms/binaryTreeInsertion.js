@@ -8,7 +8,6 @@ import GraphTracer from '../components/Graph/GraphTracer';
 import { BSTExp } from './explanations';
 
 export default {
-  name: 'Binary Tree Insertion',
   pseudocode: parse(`
 procedure BinaryTreeInsertion(Tree, DataItem):  $start
   Ptr = Parent = Root;                  $1            (* Set search pointer Ptr to root *)

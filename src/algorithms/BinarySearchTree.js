@@ -119,7 +119,7 @@ procedure BinaryTreeSearch(Tree, Item):  $start
                                       // if has right child
                                       parent = current;
                                       current = this.tree[current].right;
-      yield { step: '7' };            ptr = this.tree[current].right;
+      yield { step: '7' };            ptr = this.tree[current];
                                       this.graph.visit(current, parent);
                                     } else {
                                       break;

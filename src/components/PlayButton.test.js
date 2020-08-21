@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useContext } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { GlobalContext } from '../context/GlobalState';
