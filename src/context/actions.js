@@ -19,14 +19,14 @@ export const GlobalActions = {
     const procedurePseudocode = Object.values(pseudocode)[0];
     const chunker = new Chunker(initVisualisers);
     run(chunker);
-    const bookmark = chunker.next();
+    const bookmarkInfo = chunker.next();
     return {
       id: params.name,
       name,
       explanation,
       pseudocode: procedurePseudocode,
       visualisers: chunker.visualisers,
-      bookmark,
+      ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
     };
   },
@@ -34,13 +34,13 @@ export const GlobalActions = {
   // No expected params
   NEXT_LINE: (state) => ({
     ...state,
-    bookmark: state.chunker.next(),
+    ...state.chunker.next(),
   }),
 
   // No expected params
   PREV_LINE: (state) => ({
     ...state,
-    bookmark: state.chunker.prev(),
+    ...state.chunker.prev(),
   }),
 };
 

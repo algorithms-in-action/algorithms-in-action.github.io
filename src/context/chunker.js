@@ -52,7 +52,10 @@ export default class {
       this.doChunk(this.currentChunk);
       this.currentChunk += 1;
     }
-    return this.chunks[this.currentChunk].bookmark;
+    return {
+      bookmark: this.chunks[this.currentChunk].bookmark,
+      finished: this.currentChunk < this.chunks.length - 1,
+    };
   }
 
   prev() {
@@ -63,6 +66,9 @@ export default class {
       }
       this.currentChunk -= 1;
     }
-    return this.chunks[this.currentChunk].bookmark;
+    return {
+      bookmark: this.chunks[this.currentChunk].bookmark,
+      finished: false,
+    };
   }
 }
