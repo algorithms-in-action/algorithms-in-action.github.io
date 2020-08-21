@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
@@ -35,7 +36,35 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.logTracer = null;
   }
+    
+    /**
+     * add nodes and edges using the provided data
+     * @param {object} tree a tree object
+     */
+    setTree(tree) {
+        this.nodes = [];
+        this.edges = [];
+        
+        for (const [node, children] of Object.entries(tree)) {
+            // Note: node is a string
+            // '+node' implicitly convert string to number
+            this.addNode(+node);
+            if (children.hasOwnProperty('left')) {
+                this.addEdge(+node, children.left);
+            }
+            if (children.hasOwnProperty('right')) {
+                this.addEdge(+node, children.right);
+            }
+        }
+        this.layout();
+        super.set();
+    }
 
+  /**
+   * This is the original function provided by Tracer.js,
+   * but the arguments need a 2D array.
+   * @param {array} array2d 2D array of nodes
+   */
   set(array2d = [], values = []) {
     this.nodes = [];
     this.edges = [];
