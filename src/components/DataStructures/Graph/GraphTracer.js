@@ -36,11 +36,11 @@ class GraphTracer extends Tracer {
     this.logTracer = null;
   }
 
-  set(array2d = []) {
+  set(array2d = [], values = []) {
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i);
+      this.addNode(i, values[i] ? values[i] : i);
       for (let j = 0; j < array2d.length; j++) {
         const value = array2d[i][j];
         if (value) {
@@ -60,15 +60,15 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
-    this.nodes.push({ id, weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
-  updateNode(id, weight, x, y, visitedCount, selectedCount) {
+  updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { weight, x, y, visitedCount, selectedCount };
+    const update = { value, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
