@@ -97,65 +97,51 @@ function BSTParam() {
   return (
     <>
       <div className="BSTForm">
+
         <form className="insertionForm" onSubmit={handleSubmit}>
-          <label>
-            <div>Insertion</div>
+          <div className="outerInput">
+            <label>
+              <input
+                name={INSERTION}
+                className="inputText"
+                type="text"
+                value={insertionVal}
+                data-testid="insertionText"
+                placeholder="4,2,3,1,2,3,4,5"
+                onChange={(e) => setInsertionVal(e.target.value)}
+              />
+            </label>
             <input
-              name={INSERTION}
-              className="inputText"
-              type="text"
-              value={insertionVal}
-              data-testid="insertionText"
-              onChange={(e) => setInsertionVal(e.target.value)}
+              className="inputSubmit"
+              type="submit"
+              value="Insert"
+              data-testid="insertionSubmit"
             />
-          </label>
-          <input
-            className="inputSubmit"
-            type="submit"
-            value="Run Insertion"
-            data-testid="insertionSubmit"
-          />
+          </div>
         </form>
 
         <form className="searchForm" onSubmit={handleSubmit}>
-          <label>
-            <div>Search</div>
+          <div className="outerInput">
+            <label>
+              <input
+                name={SEARCH}
+                className="inputText"
+                type="text"
+                value={searchVal}
+                data-testid="searchText"
+                placeholder="17"
+                onChange={(e) => setSearchVal(e.target.value)}
+              />
+            </label>
             <input
-              name={SEARCH}
-              className="inputText"
-              type="text"
-              value={searchVal}
-              data-testid="searchText"
-              onChange={(e) => setSearchVal(e.target.value)}
+              className="inputSubmit"
+              type="submit"
+              value="Search"
+              data-testid="searchSubmit"
             />
-          </label>
-          <input
-            className="inputSubmit"
-            type="submit"
-            value="Run Search"
-            data-testid="searchSubmit"
-          />
+          </div>
         </form>
 
-        <form className="deletionForm" onSubmit={handleSubmit}>
-          <label>
-            <div>Deletion</div>
-            <input
-              name={DELETION}
-              className="inputText"
-              type="text"
-              value={deletionVal}
-              data-testid="deletionText"
-              onChange={(e) => setDeletionVal(e.target.value)}
-            />
-          </label>
-          <input
-            className="inputSubmit"
-            type="submit"
-            value="Run Deletion"
-            data-testid="deletionSubmit"
-          />
-        </form>
       </div>
 
       {logText
