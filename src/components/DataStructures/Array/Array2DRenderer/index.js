@@ -19,7 +19,7 @@
 /* eslint-disable object-curly-newline */
 
 import React from 'react';
-import Array1DRenderer from '../Array1DRenderer/index';
+// import Array1DRenderer from '../Array1DRenderer/index';
 import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
@@ -35,7 +35,8 @@ class Array2DRenderer extends Renderer {
   renderData() {
     const { data } = this.props.data;
 
-    const isArray1D = this instanceof Array1DRenderer;
+    const isArray1D = true;
+    // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
     return (

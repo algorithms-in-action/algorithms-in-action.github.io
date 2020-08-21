@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import Array2DTracer from './Array2DRenderer';
+import Array2DTracer from './Array2DTracer';
 import Array1DRenderer from './Array1DRenderer/index';
 
 class Array1DTracer extends Array2DTracer {
