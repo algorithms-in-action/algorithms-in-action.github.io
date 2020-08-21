@@ -126,7 +126,7 @@ $loadBtnCol: #FFFFFF;
 
         
         .insertionForm {
-          width: 44%;
+          width: 62%;
 
           .outerInput {
             border: 1px solid $inputBorder;
@@ -142,7 +142,6 @@ $loadBtnCol: #FFFFFF;
               border: none;
               @include border-radii(4px,0,0,4px);
               padding: 0px 8px;
-              background-color: orange;
 
             }
 
@@ -154,16 +153,13 @@ $loadBtnCol: #FFFFFF;
             .inputSubmit {
               background-color: $submitCol;
               cursor: pointer;
-              @include border-radii(0,1px,1px,0);
-              border: none;
-              outline: none;
+              @include border-radii(0,3px,3px,0);
+              border: none;     
               font-size: 1.05em;
               height: 36px;
               color: $loadBtnCol;
               padding: 0 8px;
               width: 25%;
-
-
             }
 
             input[type=submit]:active {
@@ -176,14 +172,12 @@ $loadBtnCol: #FFFFFF;
 
 
         .searchForm {
-          width: 44%;
+          width: 36%;
 
           .outerInput {
             border: 1px solid $inputBorder;
             border-radius: 4px;
             width: 100%;
-            display: flex;
-            // justify-content: space-between;
               
             .inputText {
               height: 36px;
@@ -193,12 +187,7 @@ $loadBtnCol: #FFFFFF;
               border: none;
               @include border-radii(4px,0,0,4px);
               padding: 0px 6px;
-
-              max-width: 100%;
-              min-width: 100%;
-              width: 100%;
-              flex: 1;
-              background-color: orange;
+              width: 60%;
             }
 
             ::placeholder { 
@@ -209,14 +198,12 @@ $loadBtnCol: #FFFFFF;
             .inputSubmit {
               background-color: $submitCol;
               cursor: pointer;
-              @include border-radii(0,1px,1px,0);
-              border: none;
-              outline: none;
+              @include border-radii(0,3px,3px,0);
+              border: none;     
               font-size: 1.05em;
               height: 36px;
               color: $loadBtnCol;
-              width: 25%;
-              max-width: 90px;
+              width: 40%;
 
             }
             input[type=submit]:active {

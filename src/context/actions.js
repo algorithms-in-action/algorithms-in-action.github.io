@@ -13,16 +13,26 @@ export const GlobalActions = {
     const {
       param, controller, name, explanation,
     } = data;
-    const { pseudocode, graph } = controller;
+    const { pseudocode } = controller;
+    let { graph, tree } = controller;
 
     // This line just picks an arbitrary procedure from the pseudocode to show
     // It will need to be changed when we properly support multiple procedures
     // (e.g. insert and search)
     const procedurePseudocode = pseudocode[Object.keys(pseudocode)[0]];
-    const algorithmGenerator = controller.run();
+
+    // clear previous graph
+    if (controller.reset) {
+      controller.reset();
+    }
 
     // instantiate a graph object
-    controller.init(nodes, target);
+    // since the data flow is unidirectional (from binaryAlgorithm.js to action.js),
+    // we need to override the old graph and old tree before turning to a state
+    const { graph: newGraph, tree: newTree } = controller.init(nodes, target);
+    const algorithmGenerator = controller.run();
+    graph = newGraph;
+    tree = newTree;
 
     return {
       id: params.name,
@@ -34,6 +44,7 @@ export const GlobalActions = {
       bookmark: algorithmGenerator.next().value, // Run it until the first yield
       graph,
       finished: false,
+      tree, // store a tree in the state because we want to search that particular tree after insertion
     };
   },
   // No expected params
@@ -58,5 +69,5 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
-  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM }, [0], undefined);
+  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM }, [], undefined);
 }

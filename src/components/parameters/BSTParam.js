@@ -3,18 +3,20 @@ import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 
+const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
+const DEFAULT_TARGET = '2';
+
 function BSTParam() {
-  const [insertionVal, setInsertionVal] = useState('');
-  const [searchVal, setSearchVal] = useState('');
-  const [deletionVal, setDeletionVal] = useState('');
+  const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
+  const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
   const INSERTION = 'insertion';
   const SEARCH = 'search';
-  const DELETION = 'deletion';
+  const EXCEPTION = 'exception';
   const [logTagCol, setLogTagCol] = useState('');
   const [logTagText, setLogTagText] = useState('');
   const [logText, setLogText] = useState('');
 
-  const { dispatch } = useContext(GlobalContext);
+  const { algorithm, dispatch } = useContext(GlobalContext);
 
   const commaSeparatedNumberListValidCheck = (t) => {
     const regex = /^[0-9]+(,[0-9]+)*$/g;
@@ -31,17 +33,23 @@ function BSTParam() {
     const successCol = '#40980B';
 
     if (success) {
-      setLogTagText('success!');
+      setLogTagText(`${type} success!`);
       setLogTagCol(successCol);
       setLogText(`Input for ${type} algorithm is valid.`);
     } else {
-      setLogTagText('failure!');
+      setLogTagText(`${type} failure!`);
       setLogTagCol(warningCol);
-      let warningText = `Input for ${type} algorithm is not valid. `;
-      if (type === INSERTION) {
-        warningText += 'Example: 0,1,2,3,4';
+
+      let warningText = '';
+      if (type === EXCEPTION) {
+        warningText = 'Please insert nodes first.';
       } else {
-        warningText += 'Example: 16';
+        warningText += `Input for ${type} algorithm is not valid. `;
+        if (type === INSERTION) {
+          warningText += 'Example: 0,1,2,3,4';
+        } else {
+          warningText += 'Example: 16';
+        }
       }
 
       setLogText(warningText);
@@ -60,7 +68,9 @@ function BSTParam() {
           setInsertionVal(evtVal.split`,`.map((x) => +x));
           updateParamStatus(INSERTION, insertionVal, true);
 
-          const nodes = insertionVal.split(',').map((x) => parseInt(x, 10));
+          const nodes = typeof insertionVal === 'string'
+            ? insertionVal.split(',').map((x) => parseInt(x, 10))
+            : insertionVal;
           // run insertion animation
           dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeInsertion' }, nodes);
         } else {
@@ -71,23 +81,20 @@ function BSTParam() {
       case SEARCH:
         if (singleNumberValidCheck(evtVal)) {
           setSearchVal(parseInt(evtVal, 10));
-          updateParamStatus(SEARCH, searchVal, true);
 
           const target = parseInt(searchVal, 10);
-          // run search animation
-          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, insertionVal, target);
+          // make sure the tree is not empty
+          if (Object.keys(algorithm.tree).length) {
+            // run search animation
+            dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
+            updateParamStatus(SEARCH, searchVal, true);
+          } else {
+            updateParamStatus(EXCEPTION, searchVal, false);
+          }
         } else {
           updateParamStatus(SEARCH, searchVal, false);
         }
 
-        break;
-      case DELETION:
-        if (singleNumberValidCheck(evtVal)) {
-          setDeletionVal(parseInt(evtVal, 10));
-          updateParamStatus(DELETION, deletionVal, true);
-        } else {
-          updateParamStatus(DELETION, deletionVal, false);
-        }
         break;
       default:
         break;
@@ -107,7 +114,7 @@ function BSTParam() {
                 type="text"
                 value={insertionVal}
                 data-testid="insertionText"
-                placeholder="4,2,3,1,2,3,4,5"
+                placeholder="e.g. 4,2,3,1,2,3,4,5"
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
@@ -129,11 +136,12 @@ function BSTParam() {
                 type="text"
                 value={searchVal}
                 data-testid="searchText"
-                placeholder="17"
+                placeholder="e.g. 17"
                 onChange={(e) => setSearchVal(e.target.value)}
               />
             </label>
             <input
+
               className="inputSubmit"
               type="submit"
               value="Search"
@@ -141,7 +149,6 @@ function BSTParam() {
             />
           </div>
         </form>
-
       </div>
 
       {logText
