@@ -13,12 +13,14 @@
       display: table-cell;
       text-align: center;
       min-width: 28px;
-      background-color: $theme-normal;
+      // background-color: $theme-light;
+      background-color: "#fff";
       border: 1px solid $theme-light;
       padding: 0 4px;
 
       .value {
         font-size: 12px;
+        // color: $color-font;
       }
 
       &.selected {
