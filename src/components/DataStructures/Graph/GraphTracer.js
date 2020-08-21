@@ -52,6 +52,43 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
+  setHeap(nodes) {
+    this.nodes = [];
+    this.edges = [];
+    // 1 is the id of the first element of the array
+    for (let i = 1; i <= nodes.length; i++) {
+      this.addNode(i, nodes[i - 1]);
+      // left child
+      if ((2 * i) <= nodes.length) {
+        this.addEdge(i, 2 * i);
+      }
+      // right child
+      if (((2 * i) + 1) <= nodes.length) {
+        this.addEdge(i, (2 * i) + 1);
+      }
+    }
+
+    // set the root node, 1 is the id of the first element of the array
+    this.layoutTree(1);
+    this.directed(false);
+    this.layout();
+    super.set();
+  }
+
+  swapNodes(nodeId1, nodeId2) {
+    let newRoot = this.root;
+    if (nodeId1 === this.root) newRoot = nodeId2;
+    else if (nodeId2 === this.root) newRoot = nodeId1;
+
+    this.edges.forEach(edge => {
+      if (edge.source === nodeId1) edge.source = nodeId2;
+      else if (edge.source === nodeId2) edge.source = nodeId1;
+      if (edge.target === nodeId1) edge.target = nodeId2;
+      else if (edge.target === nodeId2) edge.target = nodeId1;
+    });
+    this.layoutTree(newRoot);
+  }
+
   directed(isDirected = true) {
     this.isDirected = isDirected;
   }
@@ -169,6 +206,7 @@ class GraphTracer extends Tracer {
   }
 
   layoutTree(root = 0, sorted = false) {
+    this.root = root;
     this.callLayout = { method: this.layoutTree, args: arguments };
     const rect = this.getRect();
 
