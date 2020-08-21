@@ -3,7 +3,28 @@ $headerColor: #4D4D4D;
 $quizButCol: #DEDEDE;
 $borderCol: #D4D4D4;
 $fontCol: #343434;
-$buttonDefCol: #909090;
+$sidePad: 24px;
+$submitCol: #0065AE;
+$submitHighlightCol: #0065AE;
+$paramLog: #EFEEF0;
+$warningCol: #DC0707;
+$successCol: #40980B;
+$loadBtnCol: #FFFFFF;
+
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
 
 .midPanelContainer {
   display: flex;
@@ -19,13 +40,13 @@ $buttonDefCol: #909090;
     
     .algorithmTitle {
       font-size: 0.92em;
-      margin: auto 24px;
+      margin: auto $sidePad;
       color: $headerColor;
       font-weight: 400;
     }
 
     .quizButton {
-      margin: auto 24px;
+      margin: auto $sidePad;
       font-size: 0.8em;
       background-color: Transparent;
       background-repeat:no-repeat;
@@ -46,40 +67,154 @@ $buttonDefCol: #909090;
 
    /* Animation Goes Here */
   .midPanelBody {
-    flex: 1 1 1px; /* Important */
-    // min-height: 700px;
-    // top: 0;
-    // left: 0;
-    // background-color: $buttonDefCol;
-    justify-self: center;
-    // color: $color-font;
-    // padding: 4px 6px;
-    // font-size: $font-size-large;
-    flex: 1;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    flex: 1 1 1px; /* Important */
     min-height: 0;
   }
 
-
   .midPanelFooter {
-    height: 35%;
+    height: 28%;
     font-size: 0.8em;
     color: $fontCol;
+    overflow-y: scroll;
+    border-top: 1px solid $borderCol;
 
     .controlPanel {
       height: 40px;
-      border-top: 1px solid $borderCol;
       border-bottom: 1px solid $borderCol;
-      padding: 16px;
-      display: flex;
-      flex-direction: row-reverse;
-      align-items: center;
+      padding: auto $sidePad;
     }
 
     .parameterPanel {
-      padding: 16px;
+      padding: 16px $sidePad 16px $sidePad;
+
+      .logContainer {
+        background-color: $paramLog;
+        padding: 8px 16px;
+        border-radius: 4px;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 16px auto 0px auto;
+        
+
+        .logTag {
+          color: $successCol;
+          text-transform: uppercase;
+          font-weight: 500;
+          font-size: 1em;
+          margin-right: 12px;
+        }
+
+        .logText {
+          font-size: 1.03em;
+          font-weight: 300;
+          color: $fontCol;
+        }
+
+      }
+
+
+      .BSTForm {
+        color: $fontCol;
+        font-size: 1.05em;
+        display: flex;
+        justify-content: space-between;
+
+        $inputBorder: #2A2A2A;
+        $inputText: #2B2B2B;
+
+        
+        .insertionForm {
+          width: 62%;
+
+          .outerInput {
+            border: 1px solid $inputBorder;
+            border-radius: 4px;
+            width: 100%;
+
+            .inputText {
+              height: 36px;
+              width: 75%;
+              outline: none;
+              font-size: 1.05em;
+              color: $fontCol;
+              border: none;
+              @include border-radii(4px,0,0,4px);
+              padding: 0px 8px;
+
+            }
+
+            ::placeholder { 
+              color: $inputText;
+              opacity: 0.7;
+            }
+
+            .inputSubmit {
+              background-color: $submitCol;
+              cursor: pointer;
+              @include border-radii(0,3px,3px,0);
+              border: none;     
+              font-size: 1.05em;
+              height: 36px;
+              color: $loadBtnCol;
+              padding: 0 8px;
+              width: 25%;
+            }
+
+            input[type=submit]:active {
+              background-color: $submitHighlightCol;
+            }
+
+          }
+          
+        }
+
+
+        .searchForm {
+          width: 36%;
+
+          .outerInput {
+            border: 1px solid $inputBorder;
+            border-radius: 4px;
+            width: 100%;
+              
+            .inputText {
+              height: 36px;
+              outline: none;
+              font-size: 1.05em;
+              color: $fontCol;
+              border: none;
+              @include border-radii(4px,0,0,4px);
+              padding: 0px 6px;
+              width: 60%;
+            }
+
+            ::placeholder { 
+              color: $inputText;
+              opacity: 0.7;
+            }
+
+            .inputSubmit {
+              background-color: $submitCol;
+              cursor: pointer;
+              @include border-radii(0,3px,3px,0);
+              border: none;     
+              font-size: 1.05em;
+              height: 36px;
+              color: $loadBtnCol;
+              width: 40%;
+
+            }
+            input[type=submit]:active {
+              background-color: $submitHighlightCol;
+            }
+
+          }
+
+        }
+
+      }
     }
   }
 }

@@ -15,7 +15,7 @@ function MidPanel() {
       </div>
       <div className="midPanelBody">
         {/* Animation Goes here */}
-        {algorithm.graph.render()}
+        {algorithm.graph && algorithm.graph.render()}
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">
@@ -23,7 +23,7 @@ function MidPanel() {
           <NextLineButton />
         </div>
         <div className="parameterPanel">
-          ADD: []; DELETE: [];SEARCH: [];
+          { algorithm.param }
         </div>
       </div>
     </div>

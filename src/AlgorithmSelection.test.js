@@ -19,12 +19,9 @@ describe('<App />', () => {
   afterEach(cleanup);
   it('dropdown box can work well', () => {
     const { getByText } = render(<App />);
-    // Assert that KMP does not appear.
-    const Kmp = screen.queryByText('Knuth-Morris-Pratt');
-    expect(Kmp).toBeNull();
     // Click the button of 'Dynamic Programming' to unfold the dropdown list.
-    fireEvent.click(getByText(/Dynamic Programming/));
+    fireEvent.click(getByText(/Sorting/));
     // Assert that KMP appear.
-    expect(getByText(/Knuth-Morris-Pratt/i)).toBeInTheDocument();
+    expect(getByText(/Quick Sort/i)).toBeInTheDocument();
   });
 });
