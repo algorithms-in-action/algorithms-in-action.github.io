@@ -19,3 +19,11 @@ describe('NEXT_LINE action', () => {
     expect(newState.bookmark).not.toBe(initialState.bookmark);
   });
 });
+
+describe('PREV_LINE action', () => {
+  it('moves to the previous line', () => {
+    const initialState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
+    const newState = GlobalActions.PREV_LINE(GlobalActions.NEXT_LINE(initialState));
+    expect(newState.bookmark).toBe(initialState.bookmark);
+  });
+});
