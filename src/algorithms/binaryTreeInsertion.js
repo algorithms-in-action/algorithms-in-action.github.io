@@ -27,75 +27,78 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
   end if                                $end
 `),
   explanation: BSTExp,
-  elements: [],  // elements to be inserted, e.g. [5,8,10,3,1,6,9,7,2,0,4]
-  graph: new GraphTracer('key1', null, 'BST - Insertion'),
-  tree: {},
-  reset() {
-    // reset the graph
-    this.graph = new GraphTracer('key2', null, 'BST - Insertion');
-    this.elements = [];
-    this.tree = {};
-  },
-  /**
-   * 
-   * @param {array} nodes array of numbers
-   * @return the new graph and tree
-   */
-  init(nodes) {
-    // set data dynamically
-    this.elements = nodes;
-    return { 
-      graph: this.graph, 
-      tree: this.tree 
+
+  initVisualisers() {
+    return {
+      graph: {
+        instance: new GraphTracer('bst', null, 'BST'),
+        order: 0
+      }
     };
   },
-  // This next line is special syntax for a generator. It's just a function that uses `yield` to
-  // return control to the caller regularly. It yields a bookmark so the caller knows where in
-  // the pseudocode the execution is up to.
-  * run() {
-      const root = this.elements[0];  // take first element as root
 
-      let parent;
-      if (root) {
-        this.tree[root] = { root: true };
+  run(chunker, { nodes }) {
+    let parent;
+    const tree = {};
+    const root = nodes[0];
+
+    if (root) {
+      tree[root] = { root: true };
+    }
+
+    chunker.add('start');   
+    if (nodes.length === 0) return;
+
+    chunker.add('1', (vis, r, t) => {
+      vis.graph.setRoot(r);   
+      vis.graph.addNode(r);
+      vis.graph.layoutTree(r, true);
+      vis.graph.setTree(t);
+    }, [root, tree]);
+
+    for (let i = 1; i < nodes.length; i++) {
+      const element = nodes[i];
+
+      chunker.add('1');
+      let ptr = tree;
+      parent = root;
+
+      chunker.add('2');
+      while (ptr) {
+        chunker.add('4');
+        if (element < parent) {
+          if (tree[parent].left !== undefined) {
+            // if current node has left child
+            chunker.add('5');
+            parent = tree[parent].left;
+            ptr = tree[parent];
+          } else {
+            tree[parent].left = element;
+            tree[element] = {};
+            chunker.add('8', (vis, e, p) => {
+              vis.graph.addNode(e);
+              vis.graph.addEdge(p, e);
+            }, [element, parent]);
+            break;
+          } 
+        } else if (element > parent) {
+          if (tree[parent].right !== undefined) {
+            // if current node has right child
+            chunker.add('6');
+            parent = tree[parent].right;
+            ptr = tree[parent];
+          } else {
+            tree[parent].right = element;
+            tree[element] = {};
+            chunker.add('9', (vis, e, p) => {
+              vis.graph.addNode(e);
+              vis.graph.addEdge(p, e);
+            }, [element, parent]);
+            break;
+          }
+        }
       }
-
-      yield { step: 'start' };  this.graph.addNode(root);
-                                this.graph.layoutTree(root, true);
-
-                                for (let i = 1; i < this.elements.length; i++) {
-                                  const element = this.elements[i];
-                                  
-      yield { step: '1' };        let ptr = this.tree;
-                                  parent = root;
-                                  
-      yield { step: '2' };        while (ptr) {
-      yield { step: '4' };          if (element < parent) {
-                                      if (this.tree[parent].left !== undefined) {
-                                        // if has left child
-                                        parent = this.tree[parent].left;
-      yield { step: '5' };              ptr = this.tree[parent];
-                                      } else {
-      yield { step: '8' };                this.tree[parent].left = element;
-                                        this.tree[element] = {};
-                                        this.graph.addNode(element);
-                                        this.graph.addEdge(parent, element);
-                                        break;
-                                      }
-                                    } else if (element > parent) {
-                                      if (this.tree[parent].right !== undefined) {
-                                        // if has right child
-                                        parent = this.tree[parent].right;
-      yield { step: '6' };                ptr = this.tree[parent];
-                                    } else {
-      yield { step: '9' };                this.tree[parent].right = element;
-                                        this.tree[element] = {};
-                                        this.graph.addNode(element);
-                                        this.graph.addEdge(parent, element);
-                                        break;
-                                      }
-                                    }
-                                  } 
-      yield { step: 'end' };                          }
+      chunker.add('end', (vis, t) => vis.graph.setTree(t), [tree]);
+    }
   },
 };

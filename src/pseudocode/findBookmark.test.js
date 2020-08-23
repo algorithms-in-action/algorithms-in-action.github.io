@@ -11,13 +11,13 @@ const testPseudocode = {
 };
 
 test('find bookmark on first line', () => {
-  expect(findBookmark(testPseudocode.P, { step: 'start', current: null, parent: null })).toEqual(
+  expect(findBookmark(testPseudocode.P, 'start')).toEqual(
     { code: 'procedure BinaryTreeSearch(needle):', bookmark: 'start', explanation: undefined },
   );
 });
 
 test('find bookmark on later line', () => {
-  expect(findBookmark(testPseudocode.P, { step: 'somethingElse', current: null, parent: null })).toEqual(
+  expect(findBookmark(testPseudocode.P, 'somethingElse')).toEqual(
     { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
   );
 });

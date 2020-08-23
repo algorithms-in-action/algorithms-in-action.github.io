@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
@@ -72,7 +74,7 @@ function BSTParam() {
             ? insertionVal.split(',').map((x) => parseInt(x, 10))
             : insertionVal;
           // run insertion animation
-          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeInsertion' }, nodes);
+          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binaryTreeInsertion', nodes });
         } else {
           updateParamStatus(INSERTION, insertionVal, false);
         }
@@ -83,18 +85,21 @@ function BSTParam() {
           setSearchVal(parseInt(evtVal, 10));
 
           const target = parseInt(searchVal, 10);
-          // make sure the tree is not empty
-          if (Object.keys(algorithm.tree).length) {
-            // run search animation
-            dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
-            updateParamStatus(SEARCH, searchVal, true);
-          } else {
-            updateParamStatus(EXCEPTION, searchVal, false);
-          }
+          const visualiser = algorithm.chunker.visualisers;
+
+          console.log(algorithm);
+          dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree', visualiser, target });
+          // // make sure the tree is not empty
+          // if (Object.keys(algorithm.tree).length) {
+          //   // run search animation
+          //   dispatch(GlobalActions.LOAD_ALGORITHM, { name: 'binarySearchTree' }, algorithm.tree, target);
+          //   updateParamStatus(SEARCH, searchVal, true);
+          // } else {
+          //   updateParamStatus(EXCEPTION, searchVal, false);
+          // }
         } else {
           updateParamStatus(SEARCH, searchVal, false);
         }
-
         break;
       default:
         break;

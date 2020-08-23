@@ -58,27 +58,45 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
-  /**
-   * add nodes and edges using the provided data
-   * @param {object} tree a tree object
-   */
-  setTree(tree) {
-    this.nodes = [];
-    this.edges = [];
+  // /**
+  //  * add nodes and edges using the provided data
+  //  * @param {object} tree a tree object
+  //  */
+  // setTree(tree) {
+  //   this.nodes = [];
+  //   this.edges = [];
 
-    for (const [node, children] of Object.entries(tree)) {
-      // Note: node is a string
-      // '+node' implicitly convert string to number
-      this.addNode(+node);
-      if (children.hasOwnProperty('left')) {
-        this.addEdge(+node, children.left);
-      }
-      if (children.hasOwnProperty('right')) {
-        this.addEdge(+node, children.right);
-      }
-    }
-    this.layout();
-    super.set();
+  //   for (const [node, children] of Object.entries(tree)) {
+  //     // Note: node is a string
+  //     // '+node' implicitly convert string to number
+  //     this.addNode(+node);
+  //     if (children.hasOwnProperty('left')) {
+  //       this.addEdge(+node, children.left);
+  //     }
+  //     if (children.hasOwnProperty('right')) {
+  //       this.addEdge(+node, children.right);
+  //     }
+  //   }
+  //   this.layout();
+  //   super.set();
+  // }
+
+  setRoot(root) {
+    this.root = root;
+  }
+
+  setTree(tree) {
+    this.tree = tree;
+  }
+
+  clear() {
+    this.edges.forEach(edge => {
+      edge.visitedCount = 0;
+      edge.selectedCount = 0;
+    });
+    this.nodes.forEach(node => {
+      node.visitedCount = 0;
+    });
   }
 
   directed(isDirected = true) {
