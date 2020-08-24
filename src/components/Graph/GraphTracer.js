@@ -101,6 +101,12 @@ class GraphTracer extends Tracer {
       }
     });
 
+    this.nodes.forEach(obj => {
+      if (!tree.hasOwnProperty(obj.id)) {
+        tree[obj.id] = {};
+      }
+    });
+
     return tree;
   }
 
@@ -109,6 +115,10 @@ class GraphTracer extends Tracer {
    * @return {number} root
    */
   getRoot() {
+    // in case there is only a single node in the graph
+    if (this.edges.length === 0 && this.nodes.length === 1) {
+      return this.nodes[0].id;
+    }
     const sources = this.edges.map(obj => obj.source);
     const targets = this.edges.map(obj => obj.target);
     const nodes = [...new Set([...sources, ...targets])];
