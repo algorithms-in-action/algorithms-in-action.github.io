@@ -12,7 +12,7 @@ export function sleep(time) {
 }
 
 export function setTime(value) {
-  speed = value * 1000;
+  speed = (0.5 ** value) * 10000;
 }
 
 function PlayButton() {
