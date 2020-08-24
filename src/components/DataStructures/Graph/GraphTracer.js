@@ -11,8 +11,8 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
-import Tracer from './Tracer';
-import { distance } from './util';
+import Tracer from '../common/Tracer';
+import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 
 class GraphTracer extends Tracer {
@@ -38,27 +38,6 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * This is the original function provided by Tracer.js,
-   * but the arguments need a 2D array.
-   * @param {array} array2d 2D array of nodes
-   */
-  set(array2d = []) {
-    this.nodes = [];
-    this.edges = [];
-    for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i);
-      for (let j = 0; j < array2d.length; j++) {
-        const value = array2d[i][j];
-        if (value) {
-          this.addEdge(i, j, this.isWeighted ? value : null);
-        }
-      }
-    }
-    this.layout();
-    super.set();
-  }
-
-  /**
    * add nodes and edges using the provided data
    * @param {object} tree a tree object
    */
@@ -81,6 +60,64 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * This is the original function provided by Tracer.js,
+   * but the arguments need a 2D array.
+   * @param {array} array2d 2D array of nodes
+   */
+  set(array2d = [], values = []) {
+    this.nodes = [];
+    this.edges = [];
+    for (let i = 0; i < array2d.length; i++) {
+      this.addNode(i, values[i] ? values[i] : i);
+      for (let j = 0; j < array2d.length; j++) {
+        const value = array2d[i][j];
+        if (value) {
+          this.addEdge(i, j, this.isWeighted ? value : null);
+        }
+      }
+    }
+    this.layout();
+    super.set();
+  }
+
+  setHeap(nodes) {
+    this.nodes = [];
+    this.edges = [];
+    // 1 is the id of the first element of the array
+    for (let i = 1; i <= nodes.length; i++) {
+      this.addNode(i, nodes[i - 1]);
+      // left child
+      if ((2 * i) <= nodes.length) {
+        this.addEdge(i, 2 * i);
+      }
+      // right child
+      if (((2 * i) + 1) <= nodes.length) {
+        this.addEdge(i, (2 * i) + 1);
+      }
+    }
+
+    // set the root node, 1 is the id of the first element of the array
+    this.layoutTree(1);
+    this.directed(false);
+    this.layout();
+    super.set();
+  }
+
+  swapNodes(nodeId1, nodeId2) {
+    let newRoot = this.root;
+    if (nodeId1 === this.root) newRoot = nodeId2;
+    else if (nodeId2 === this.root) newRoot = nodeId1;
+
+    this.edges.forEach(edge => {
+      if (edge.source === nodeId1) edge.source = nodeId2;
+      else if (edge.source === nodeId2) edge.source = nodeId1;
+      if (edge.target === nodeId1) edge.target = nodeId2;
+      else if (edge.target === nodeId2) edge.target = nodeId1;
+    });
+    this.layoutTree(newRoot);
+  }
+
   directed(isDirected = true) {
     this.isDirected = isDirected;
   }
@@ -89,15 +126,16 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
-    this.nodes.push({ id, weight, x, y, visitedCount, selectedCount });
+    value = (value === undefined ? id : value);
+    this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
-  updateNode(id, weight, x, y, visitedCount, selectedCount) {
+  updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { weight, x, y, visitedCount, selectedCount };
+    const update = { value, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
@@ -198,6 +236,7 @@ class GraphTracer extends Tracer {
   }
 
   layoutTree(root = 0, sorted = false) {
+    this.root = root;
     this.callLayout = { method: this.layoutTree, args: arguments };
     const rect = this.getRect();
 
