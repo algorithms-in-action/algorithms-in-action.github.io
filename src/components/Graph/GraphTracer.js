@@ -72,8 +72,12 @@ class GraphTracer extends Tracer {
     });
   }
 
+  isEmpty() {
+    return this.nodes.length === 0 && this.edges.length === 0;
+  }
+
   /**
-   * extract a tree object from edges
+   * extract a tree object from edges and nodes
    * @return {object} a tree object
    */
   getTree() {
@@ -101,14 +105,24 @@ class GraphTracer extends Tracer {
       }
     });
 
+    this.nodes.forEach(obj => {
+      if (!tree.hasOwnProperty(obj.id)) {
+        tree[obj.id] = {};
+      }
+    });
+
     return tree;
   }
 
   /**
-   * extract the root from edges
+   * extract the root from edges and nodes
    * @return {number} root
    */
   getRoot() {
+    // in case there is only a single node in the graph
+    if (this.edges.length === 0 && this.nodes.length === 1) {
+      return this.nodes[0].id;
+    }
     const sources = this.edges.map(obj => obj.source);
     const targets = this.edges.map(obj => obj.target);
     const nodes = [...new Set([...sources, ...targets])];

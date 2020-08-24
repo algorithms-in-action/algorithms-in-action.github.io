@@ -3,24 +3,38 @@
 import algorithms from '../algorithms';
 import Chunker from './chunker';
 
-const DEFAULT_ALGORITHM = 'binaryTreeInsertion';
+const DEFAULT_ALGORITHM = 'binarySearchTree';
 
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
 export const GlobalActions = {
 
+  // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
+    const data = algorithms[params.name];
+    const { param, name, explanation } = data;
+
+    return {
+      id: params.name,
+      name,
+      explanation,
+      param,
+    };
+  },
+
+  // run an algorithm by executing the algorithm
+  RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
       param, controller, name, explanation,
     } = data;
 
-    const procedurePseudocode = Object.values(controller.pseudocode)[0];
+    const procedurePseudocode = Object.values(controller[params.mode].pseudocode)[0];
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
-    const chunker = new Chunker(() => controller.initVisualisers(params));
-    controller.run(chunker, params);
+    const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
+    controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
 
     return {
