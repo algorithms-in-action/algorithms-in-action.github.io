@@ -18,7 +18,7 @@ function NextLineButton() {
   }, [algorithm]);
 
   return (
-    <Tooltip title="Please create a graph first" disableHoverListener={!disabled}>
+    <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
       <span>
         <button
           type="button"
