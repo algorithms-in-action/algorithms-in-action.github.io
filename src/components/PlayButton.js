@@ -4,12 +4,12 @@ import { GlobalContext } from '../context/GlobalState';
 import { GlobalActions } from '../context/actions';
 import '../styles/NextLineButton.scss';
 
+let speed;
+
 // Function used to force the thread to sleep for n milliseconds.
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
-
-let speed;
 
 export function setTime(value) {
   speed = value * 1000;

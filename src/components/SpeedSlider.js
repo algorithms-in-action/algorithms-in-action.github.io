@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SpeedSlider() {
+function SpeedSlider() {
   const classes = useStyles();
   const [value, setValue] = React.useState(2);
 
@@ -28,8 +28,10 @@ export default function SpeedSlider() {
     <div>
       <div className={classes.root}>
         <Slider
+          placeholder="slider"
           defaultValue={2}
           onLoad={setTime(value)}
+          value={value}
           aria-labelledby="discrete-slider"
           valueLabelDisplay="auto"
           step={1}
@@ -42,3 +44,5 @@ export default function SpeedSlider() {
     </div>
   );
 }
+
+export default SpeedSlider;
