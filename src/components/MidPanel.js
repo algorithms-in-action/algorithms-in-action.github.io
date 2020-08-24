@@ -21,8 +21,8 @@ function MidPanel() {
       <div className="midPanelFooter">
         <div className="controlPanel">
           <PlayButton />
-          <NextLineButton />
           <PrevLineButton />
+          <NextLineButton />
         </div>
         <div className="parameterPanel">
           { algorithm.param }
