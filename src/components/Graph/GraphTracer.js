@@ -59,22 +59,6 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * assign a root to this GraphTracer object
-   * @param {number} root
-   */
-  setRoot(root) {
-    this.root = root;
-  }
-
-  /**
-   * assign a tree to this GraphTracer object
-   * @param {object} tree
-   */
-  setTree(tree) {
-    this.tree = tree;
-  }
-
-  /**
    * clear existing trace, if any
    * nodes and edges remain unchanged
    */
@@ -86,6 +70,50 @@ class GraphTracer extends Tracer {
     this.nodes.forEach(node => {
       node.visitedCount = 0;
     });
+  }
+
+  /**
+   * extract a tree object from edges
+   * @return {object} a tree object
+   */
+  getTree() {
+    const tree = {};
+
+    const setLeftOrRightChild = (t, parent, child) => {
+      if (parent < child) {
+        // right child
+        t[parent].right = child;
+      } else if (parent > child) {
+        // left child
+        t[parent].left = child;
+      }
+    };
+
+    this.edges.forEach(obj => {
+      if (!tree.hasOwnProperty(obj.source)) {
+        tree[obj.source] = {};
+        setLeftOrRightChild(tree, obj.source, obj.target);
+      } else {
+        setLeftOrRightChild(tree, obj.source, obj.target);
+      }
+      if (!tree.hasOwnProperty(obj.target)) {
+        tree[obj.target] = {};
+      }
+    });
+
+    return tree;
+  }
+
+  /**
+   * extract the root from edges
+   * @return {number} root
+   */
+  getRoot() {
+    const sources = this.edges.map(obj => obj.source);
+    const targets = this.edges.map(obj => obj.target);
+    const nodes = [...new Set([...sources, ...targets])];
+    // the node that does not a source is the root
+    return nodes.find(node => !targets.includes(node));
   }
 
   directed(isDirected = true) {

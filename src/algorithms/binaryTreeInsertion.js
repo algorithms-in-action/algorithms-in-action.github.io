@@ -51,7 +51,7 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
     //   2: {},
     //   3: { right: 4, left: 1 },
     //   4: {},
-    //   5: { root: true, right: 8, left: 3 },
+    //   5: { right: 8, left: 3 },
     //   6: { right: 7 },
     //   7: {},
     //   8: { right: 10, left: 6 },
@@ -60,20 +60,15 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
     // };
     const tree = {};
     const root = nodes[0];
-
-    if (root) {
-      tree[root] = { root: true };
-    }
+    tree[root] = {};
 
     chunker.add('start');   
     if (nodes.length === 0) return;
 
-    chunker.add('1', (vis, r, t) => {
-      vis.graph.setRoot(r);   
+    chunker.add('1', (vis, r) => {   
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
-      vis.graph.setTree(t);
-    }, [root, tree]);
+    }, [root]);
 
     for (let i = 1; i < nodes.length; i++) {
       const element = nodes[i];
@@ -117,7 +112,7 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
           }
         }
       }
-      chunker.add('end', (vis, t) => vis.graph.setTree(t), [tree]);
+      chunker.add('end');
     }
   },
 };

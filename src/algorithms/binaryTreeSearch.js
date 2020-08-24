@@ -48,8 +48,8 @@ procedure BinaryTreeSearch(Tree, Item):  $start
    * @param {number} target 
    */
   run(chunker, { visualiser, target }) {
-    const tree = visualiser.graph.instance.tree;
-    const root = visualiser.graph.instance.root;
+    const tree = visualiser.graph.instance.getTree();
+    const root = visualiser.graph.instance.getRoot();
     const item = target;
 
     chunker.add('start');

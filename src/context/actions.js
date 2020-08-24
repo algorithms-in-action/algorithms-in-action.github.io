@@ -55,6 +55,5 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
-  // return GlobalActions.LOAD_ALGORITHM(undefined, {});
   return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM, nodes: [] });
 }
