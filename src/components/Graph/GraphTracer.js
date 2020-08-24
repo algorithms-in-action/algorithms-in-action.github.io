@@ -58,37 +58,26 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
-  // /**
-  //  * add nodes and edges using the provided data
-  //  * @param {object} tree a tree object
-  //  */
-  // setTree(tree) {
-  //   this.nodes = [];
-  //   this.edges = [];
-
-  //   for (const [node, children] of Object.entries(tree)) {
-  //     // Note: node is a string
-  //     // '+node' implicitly convert string to number
-  //     this.addNode(+node);
-  //     if (children.hasOwnProperty('left')) {
-  //       this.addEdge(+node, children.left);
-  //     }
-  //     if (children.hasOwnProperty('right')) {
-  //       this.addEdge(+node, children.right);
-  //     }
-  //   }
-  //   this.layout();
-  //   super.set();
-  // }
-
+  /**
+   * assign a root to this GraphTracer object
+   * @param {number} root
+   */
   setRoot(root) {
     this.root = root;
   }
 
+  /**
+   * assign a tree to this GraphTracer object
+   * @param {object} tree
+   */
   setTree(tree) {
     this.tree = tree;
   }
 
+  /**
+   * clear existing trace, if any
+   * nodes and edges remain unchanged
+   */
   clear() {
     this.edges.forEach(edge => {
       edge.visitedCount = 0;

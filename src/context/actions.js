@@ -11,13 +11,6 @@ const DEFAULT_ALGORITHM = 'binaryTreeInsertion';
 export const GlobalActions = {
 
   LOAD_ALGORITHM: (state, params) => {
-    if (!params.name) {
-      return {
-
-      };
-    }
-
-
     const data = algorithms[params.name];
     const {
       param, controller, name, explanation,
@@ -29,8 +22,6 @@ export const GlobalActions = {
     const chunker = new Chunker(() => controller.initVisualisers(params));
     controller.run(chunker, params);
     const bookmarkInfo = chunker.next();
-
-    console.log(chunker);
 
     return {
       id: params.name,
@@ -64,5 +55,6 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
+  // return GlobalActions.LOAD_ALGORITHM(undefined, {});
   return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM, nodes: [] });
 }

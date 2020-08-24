@@ -37,8 +37,27 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
     };
   },
 
+  /**
+   * 
+   * @param {object} chunker 
+   * @param {array} nodes array of numbers needs to be inserted 
+   */
   run(chunker, { nodes }) {
     let parent;
+    // tree is an object contains nodes and edges, e.g.
+    //  {
+    //   0: {},
+    //   1: { right: 2, left: 0 },
+    //   2: {},
+    //   3: { right: 4, left: 1 },
+    //   4: {},
+    //   5: { root: true, right: 8, left: 3 },
+    //   6: { right: 7 },
+    //   7: {},
+    //   8: { right: 10, left: 6 },
+    //   9: {},
+    //   10: { left: 9 },
+    // };
     const tree = {};
     const root = nodes[0];
 
