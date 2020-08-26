@@ -1,8 +1,8 @@
 /* eslint-disable linebreak-style */
 import React, { useContext } from 'react';
 // eslint-disable-next-line import/named
-import { GlobalContext } from '../context/GlobalState';
-import '../styles/LineNumHighLight.css';
+import { GlobalContext } from '../../context/GlobalState';
+import '../../styles/LineNumHighLight.css';
 
 export const Global = {
   PAINT_CODELINE: (lineOfCode, currentBookmark) => {
