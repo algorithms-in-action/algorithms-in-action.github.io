@@ -7,9 +7,15 @@ import { GlobalContext } from '../context/GlobalState';
 import { GlobalActions } from '../context/actions';
 import '../styles/NextLineButton.scss';
 
+let speed;
+
 // Function used to force the thread to sleep for n milliseconds.
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export function setTime(value) {
+  speed = (0.5 ** value) * 10000;
 }
 
 function PlayButton() {
@@ -30,7 +36,7 @@ function PlayButton() {
   const AutomaticExecution = () => {
     if (!algorithm.finished) {
       dispatch(GlobalActions.NEXT_LINE);
-      sleep(100).then(() => {
+      sleep(speed).then(() => {
         fireEvent.click(document.getElementById('PlayButton'));
       });
     }
