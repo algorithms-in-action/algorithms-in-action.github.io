@@ -1,8 +1,8 @@
+/* eslint-disable no-lonely-if */
 /* eslint-disable comma-dangle */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../pseudocode/parse';
-import GraphTracer from '../components/DataStructures/Graph/GraphTracer';
 import { BSTExp } from './explanations';
 
 export default {
@@ -24,60 +24,74 @@ procedure BinaryTreeSearch(Tree, Item):  $start
   return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
 `),
   explanation: BSTExp,
-  nodes: [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-  ],
-  root: 5,
-  target: 2,
-  graph: new GraphTracer('key', null, 'Searching for Item = 2'),
-  init() {
-    this.graph.set(this.nodes);
-    this.graph.layoutTree(this.root);
+
+  /**
+   * For the search algorithm, we use the tree that is created in 
+   * the insertion algorithm to initialise the visualiser 
+   * @param {object} visualiser 
+   */
+  initVisualisers({ visualiser }) {
+    // clear existing trace, if any
+    visualiser.graph.instance.clear();
+    return {
+      graph: {
+        instance: visualiser.graph.instance,
+        order: 0
+      }
+    };
   },
-  // This next line is special syntax for a generator. It's just a function that uses `yield` to
-  // return control to the caller regularly. It yields a bookmark so the caller knows where in
-  // the pseudocode the execution is up to.
-  * run() {
-      // const tree = [5, [3, [1], [4]], [8, [6], [10]]];
-      const tree = [5, 
-        [3, [1, [0], [2]], [4]],
-        [8, [6, [7]], [10, [9]]]
-      ];
-      let current = null;
-      let parent = null;
-      
-      yield { step: 'start' };  current = tree[0];
-                                parent = null;
-                                const item = this.target;
-      yield { step: '1' };      let ptr = tree;
-                                parent = current;
-                                this.graph.visit(current, parent);
-      yield { step: '2' };      while (ptr) {
-      yield { step: '3' };        if (ptr[0] === item) {
-      yield { step: '4' };          return;
-                                  }
-      yield { step: '5' };        if (item < ptr[0]) {
-                                    parent = current;
-                                    current = ptr[1][0];
-        yield { step: '6' };        ptr = ptr[1];
-                                    this.graph.visit(current, parent);
-                                  } else {
-                                    parent = current;
-                                    current = ptr[2][0];
-        yield { step: '7' };        ptr = ptr[2];
-                                    this.graph.visit(current, parent);
-                                  }
-                                }
-      yield { step: '8' };
+
+  /**
+   * We use the tree that is created in the insertion algorithm to search
+   * @param {object} chunker 
+   * @param {object} visualiser 
+   * @param {number} target 
+   */
+  run(chunker, { visualiser, target }) {
+    const tree = visualiser.graph.instance.getTree();
+    const root = visualiser.graph.instance.getRoot();
+    const item = target;
+
+    chunker.add('start');
+
+    let current = root;
+    let parent = null;
+
+    chunker.add('1', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+    let ptr = tree;
+    parent = current;
+
+    chunker.add('2');
+    while (ptr) {
+      chunker.add('3');
+      if (current === item) {
+        chunker.add('4');
+        return;
+      }
+
+      chunker.add('5');
+      if (item < current) {
+        if (tree[current].left !== undefined) {
+          // if current node has left child
+          parent = current;
+          current = tree[current].left;
+          ptr = tree[current];
+          chunker.add('6', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+        } else {
+          break;
+        }
+      } else {
+        if (tree[current].right !== undefined) {
+          // if current node has right child
+          parent = current;
+          current = tree[current].right;
+          ptr = tree[current];
+          chunker.add('7', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+        } else {
+          break;
+        }
+      }
+    }
+    chunker.add('8');
   },
 };

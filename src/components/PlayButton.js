@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { fireEvent } from '@testing-library/react';
@@ -13,12 +14,12 @@ export function sleep(time) {
 function PlayButton() {
   const { dispatch, algorithm } = useContext(GlobalContext);
 
-  const [disabled, setDisabled] = useState(true);
-  useEffect(() => {
-    if (Object.keys(algorithm.tree).length) {
-      setDisabled(false);
-    }
-  }, [algorithm.tree]);
+  // const [disabled, setDisabled] = useState(true);
+  // useEffect(() => {
+  //   if (Object.keys(algorithm.tree).length) {
+  //     setDisabled(false);
+  //   }
+  // }, [algorithm.tree]);
 
   /* After button being clicked, the state of the execution is checked.
   * If the algorithm is finished, nothing happens.
@@ -35,20 +36,20 @@ function PlayButton() {
   };
 
   return (
-    <Tooltip title="Please insert nodes first" disableHoverListener={!disabled}>
-      <span>
-        <button
-          type="button"
-          className="nextLineButton"
-          id="PlayButton"
-          disabled={disabled}
-          style={disabled ? { pointerEvents: 'none' } : {}}
-          onClick={() => AutomaticExecution()}
-        >
-          Play
-        </button>
-      </span>
-    </Tooltip>
+  // <Tooltip title="Please insert nodes first" disableHoverListener={!disabled}>
+  //   <span>
+    <button
+      type="button"
+      className="nextLineButton"
+      id="PlayButton"
+          // disabled={disabled}
+          // style={disabled ? { pointerEvents: 'none' } : {}}
+      onClick={() => AutomaticExecution()}
+    >
+      Play
+    </button>
+  //   </span>
+  // </Tooltip>
   );
 }
 
