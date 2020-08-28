@@ -3,7 +3,7 @@ import '../../styles/RightPanel.scss';
 import HeaderButton from './HeaderButton';
 import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
-import MoreInfo from './MoreInfo';
+import ExtraInfo from './ExtraInfo';
 
 const BTN_1 = 'BTN_1';
 const BTN_2 = 'BTN_2';
@@ -38,7 +38,7 @@ function RightPanel() {
             case BTN_2:
               return <Explanation />;
             case BTN_3:
-              return <MoreInfo />;
+              return <ExtraInfo />;
             default:
               return <Explanation />;
           }

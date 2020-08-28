@@ -4,6 +4,7 @@ import * as Explanation from './explanations';
 import * as Param from '../components/parameters';
 import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
+
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
@@ -20,6 +21,7 @@ const algorithms = {
     category: 'Graphs',
     param: <Param.BSTParam />,
     explanation: Explanation.BSTExp,
+    extraInfo: ExtraInfo.BSTInfo,
     controller: {
       insertion: Controller.binaryTreeInsertion,
       search: Controller.binaryTreeSearch,
@@ -45,7 +47,6 @@ const algorithms = {
     explanation: Explanation.KMPExp,
     param: <Param.KMPParam />,
     extraInfo: ExtraInfo.KMPInfo,
-
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
