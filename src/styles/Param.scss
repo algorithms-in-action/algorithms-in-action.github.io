@@ -35,134 +35,114 @@ $charCol: #717071;
     .outerInput {
       border: 1px solid $inputBorder;
       border-radius: 4px;
-      width: 100%;
       display: flex;
       align-items: center;
       padding: 6px 10px;
       
       .inputText {
-        outline: none;
-        font-size: 1.05em;
-        font-weight: 200;
-        color: $fontCol;
-        border: none;
-        padding: 8px 0px;
-        // background-color: #EFEFEF;
-        color: $charCol;
+        width: 100%;
 
-      }
-
-      ::placeholder { 
-        color: $inputText;
-        opacity: 0.4;
-      }
-
-      // .inputSubmit {
-      //   background: none;
-      //   cursor: pointer;
-      //   border: none;     
-      //   font-size: 0.85em;
-      //   font-weight: 300;
-      //   color: $sigBlue;
-      //   padding: 8px 6px;
-      //   text-transform: uppercase;
-
-      // }
-
-      // input[type=submit]:active {
-      //   background: none;
-      //   border: none;  
-      //   @include border-radii(0,0,0,0);
-
-      // }
-
-      // input[type=submit]:focus {
-      //   background: none;
-      //   border: none;  
-      //   @include border-radii(0,0,0,0);
-
-      // }
-
-    }
-
-    .btn {
-      background: none;
-      color: inherit;
-      border: none;
-      padding: 0;
-      font: inherit;
-      cursor: pointer;
-      outline: inherit;
-      margin-left: auto;
-
-    }
-
-    .refresh {
-      height: 28px;
-      width: 28px;
-      @include border-radii(12px,12px,12px,12px);
-
-      // padding: 8px;
-      // margin-right: 8px;
-
-      svg {
-        width: 12px;
-        height: 12px;
-
-        path {
-          fill:$charCol;
+        input {
+          width: 100%;
+          outline: none;
+          font-size: 1.05em;
+          font-weight: 200;
+          color: $fontCol;
+          border: none;
+          padding: 8px 0px;
+          // background-color: #EFEFEF;
+          color: $charCol;
         }
       }
-    }
 
-    .refresh:hover {
-      transition: .4s;
-      background: #f7f7f7;
-      @include border-radii(12px,12px,12px,12px);
-      // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-      // border: 1px solid $sigBlue;
-    }
-    .refresh:active {
-      transition: .2s;
-      background: #E3E2E4;
-      @include border-radii(12px,12px,12px,12px);
-      // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-      // border: 1px solid $sigBlue;
-    }
+      .btn-grp {
+        display: flex;
+        margin-left: 12px;
+        width: 30%;
 
-    .insertion {
-      height: 28px;
-      width: 56px;
-      font: 13px "Roboto", sans-serif !important;
-      border-radius: 1px;
-      text-align: center;
-      position: relative;
-      cursor: pointer;
-      text-transform: uppercase;
+        .btn {
+          background: none;
+          color: inherit;
+          border: none;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          outline: inherit;
 
-      transition: .4s;
-      background: none;
-      color: $sigBlue;
-      // border: 1px solid $sigBlue;
-      // margin: 10px;
-    }
+        }
 
-    .insertion:hover {
-      transition: .4s;
-      background: #f5faff;
-      // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-      // border: 1px solid $sigBlue;
-    }
-    .insertion:active {
-      transition: .2s;
-      background: #e4f1ff;
-      // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-      // border: 1px solid $sigBlue;
+        .refresh {
+          height: 28px;
+          width: 28px;
+          @include border-radii(12px,12px,12px,12px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // padding-bottom: 2px;
+
+          svg {
+            width: 12px;
+            height: 12px;
+
+            path {
+              fill:$charCol;
+            }
+          }
+        }
+
+        .refresh:hover {
+          transition: .4s;
+          background: #f7f7f7;
+          @include border-radii(12px,12px,12px,12px);
+          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+        .refresh:active {
+          transition: .2s;
+          background: #E3E2E4;
+          @include border-radii(12px,12px,12px,12px);
+          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+
+        .insertion {
+          height: 28px;
+          width: 56px;
+          font: 13px "Roboto", sans-serif !important;
+          border-radius: 1px;
+          text-align: center;
+          position: relative;
+          cursor: pointer;
+          text-transform: uppercase;
+
+          transition: .4s;
+          background: none;
+          color: $sigBlue;
+          // border: 1px solid $sigBlue;
+          // margin: 10px;
+        }
+
+        .insertion:hover {
+          transition: .4s;
+          background: #f5faff;
+          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+        .insertion:active {
+          transition: .2s;
+          background: #e4f1ff;
+          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+
+      }
+
     }
 
     
     
   }
+
 
   .searchForm {
     width: 36%;
@@ -170,96 +150,113 @@ $charCol: #717071;
     .outerInput {
       border: 1px solid $inputBorder;
       border-radius: 4px;
-      width: 100%;
-        
+      display: flex;
+      align-items: center;
+      padding: 6px 10px;
+      
       .inputText {
-        height: 36px;
-        outline: none;
-        font-size: 1.05em;
-        color: $fontCol;
-        border: none;
-        @include border-radii(4px,0,0,4px);
-        padding: 0px 6px;
-        width: 60%;
-        letter-spacing: 1px;
+        width: 100%;
+        // background-color: blue;
+
+        input {
+          width: 100%;
+          outline: none;
+          font-size: 1.05em;
+          font-weight: 200;
+          color: $fontCol;
+          border: none;
+          padding: 8px 0px;
+          // background-color: #EFEFEF;
+          color: $charCol;
+        }
       }
 
-      ::placeholder { 
-        color: $inputText;
-        opacity: 0.7;
-        letter-spacing: 1px;
-      }
-
-      .inputSubmit {
-        background-color: $submitCol;
-        cursor: pointer;
-        @include border-radii(0,3px,3px,0);
-        border: none;     
-        font-size: 1.05em;
-        height: 36px;
-        color: $loadBtnCol;
+      .btn-grp {
+        display: flex;
+        margin-left: 12px;
         width: 40%;
+        // background-color: orange;
+
+        .btn {
+          background: none;
+          color: inherit;
+          border: none;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          outline: inherit;
+
+        }
+
+        .refresh {
+          height: 28px;
+          width: 28px;
+          @include border-radii(12px,12px,12px,12px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // padding-bottom: 2px;
+
+          svg {
+            width: 12px;
+            height: 12px;
+
+            path {
+              fill:$charCol;
+            }
+          }
+        }
+
+        .refresh:hover {
+          transition: .4s;
+          background: #f7f7f7;
+          @include border-radii(12px,12px,12px,12px);
+          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+        .refresh:active {
+          transition: .2s;
+          background: #E3E2E4;
+          @include border-radii(12px,12px,12px,12px);
+          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+
+        .insertion {
+          height: 28px;
+          width: 56px;
+          font: 13px "Roboto", sans-serif !important;
+          border-radius: 1px;
+          text-align: center;
+          position: relative;
+          cursor: pointer;
+          text-transform: uppercase;
+
+          transition: .4s;
+          background: none;
+          color: $sigBlue;
+          // border: 1px solid $sigBlue;
+          // margin: 10px;
+        }
+
+        .insertion:hover {
+          transition: .4s;
+          background: #f5faff;
+          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
+        .insertion:active {
+          transition: .2s;
+          background: #e4f1ff;
+          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
+          // border: 1px solid $sigBlue;
+        }
 
       }
-      input[type=submit]:active {
-        background-color: $submitHighlightCol;
-      }
+
     }
+
     
-  }
-
-}
-
-.HeapsortForm {
-  color: $fontCol;
-  font-size: 1.05em;
-  display: flex;
-  justify-content: space-between;
-
-  .insertionForm {
-    width: 62%;
-
-    .outerInput {
-      border: 1px solid $inputBorder;
-      border-radius: 4px;
-      width: 100%;
-
-      .inputText {
-        height: 36px;
-        width: 75%;
-        outline: none;
-        font-size: 1.05em;
-        color: $fontCol;
-        border: none;
-        @include border-radii(4px,0,0,4px);
-        padding: 0px 8px;
-        letter-spacing: 1px;
-
-      }
-
-      ::placeholder { 
-        color: $inputText;
-        opacity: 0.7;
-        letter-spacing: 1px;
-      }
-
-      .inputSubmit {
-        background-color: $submitCol;
-        cursor: pointer;
-        @include border-radii(0,3px,3px,0);
-        border: none;     
-        font-size: 1.05em;
-        height: 36px;
-        color: $loadBtnCol;
-        padding: 0 8px;
-        width: 25%;
-      }
-
-      input[type=submit]:active {
-        background-color: $submitHighlightCol;
-      }
-
-    }
     
   }
 

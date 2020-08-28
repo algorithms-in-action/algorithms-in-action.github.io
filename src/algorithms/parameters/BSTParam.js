@@ -104,57 +104,56 @@ function BSTParam() {
 
         <form className="insertionForm" onSubmit={handleSubmit}>
           <div className="outerInput">
-            <label>
+            <label className="inputText">
               <input
                 name={INSERTION}
-                className="inputText"
                 type="text"
                 value={insertionVal}
                 data-testid="insertionText"
-                placeholder="e.g. 4,2,3,1,2,3,4,5"
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
-            <button
-              className="btn refresh"
-              type="button"
-              id={INSERTION}
-              onClick={() => {
-                const list = genRandNumList(10, 1, 100);
-                setInsertionVal(list);
-              }}
-            >
-              <RefreshIcon />
-            </button>
-            <button
-              className="btn insertion"
-              type="submit"
-            >
-              Insert
-            </button>
+            <div className="btn-grp">
+              <button
+                className="btn refresh"
+                type="button"
+                id={INSERTION}
+                onClick={() => {
+                  const list = genRandNumList(10, 1, 100);
+                  setInsertionVal(list);
+                }}
+              >
+                <RefreshIcon />
+              </button>
+              <button
+                className="btn insertion"
+                type="submit"
+              >
+                Insert
+              </button>
+            </div>
           </div>
         </form>
 
         <form className="searchForm" onSubmit={handleSubmit}>
           <div className="outerInput">
-            <label>
+            <label className="inputText">
               <input
                 name={SEARCH}
-                className="inputText"
                 type="text"
                 value={searchVal}
-                data-testid="searchText"
-                placeholder="e.g. 17"
+                data-testid="insertionText"
                 onChange={(e) => setSearchVal(e.target.value)}
               />
             </label>
-            <input
-
-              className="inputSubmit"
-              type="submit"
-              value="Search"
-              data-testid="searchSubmit"
-            />
+            <div className="btn-grp">
+              <button
+                className="btn insertion"
+                type="submit"
+              >
+                Search
+              </button>
+            </div>
           </div>
         </form>
       </div>
