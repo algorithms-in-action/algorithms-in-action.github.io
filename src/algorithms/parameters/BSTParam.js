@@ -7,7 +7,8 @@ import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import ParamMsg from './ParamMsg';
 import '../../styles/Param.scss';
-import { commaSeparatedNumberListValidCheck, singleNumberValidCheck } from './ParamHelper';
+import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
+import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
 
 const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
 const DEFAULT_TARGET = '2';
@@ -114,12 +115,23 @@ function BSTParam() {
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
-            <input
-              className="inputSubmit"
+            <button
+              className="btn refresh"
+              type="button"
+              id={INSERTION}
+              onClick={() => {
+                const list = genRandNumList(10, 1, 100);
+                setInsertionVal(list);
+              }}
+            >
+              <RefreshIcon />
+            </button>
+            <button
+              className="btn insertion"
               type="submit"
-              value="Insert"
-              data-testid="insertionSubmit"
-            />
+            >
+              Insert
+            </button>
           </div>
         </form>
 
