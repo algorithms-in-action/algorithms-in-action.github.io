@@ -14,9 +14,6 @@ export const GlobalActions = {
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
 
-    console.log('HELLO');
-    console.log(data);
-
     const {
       param, name, explanation, extraInfo,
     } = data;
@@ -33,7 +30,7 @@ export const GlobalActions = {
   RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      param, controller, name, explanation,
+      param, controller, name, explanation, extraInfo,
     } = data;
 
     const procedurePseudocode = Object.values(controller[params.mode].pseudocode)[0];
@@ -47,6 +44,7 @@ export const GlobalActions = {
       id: params.name,
       name,
       explanation,
+      extraInfo,
       param,
       pseudocode: procedurePseudocode,
       ...bookmarkInfo, // sets bookmark & finished fields
