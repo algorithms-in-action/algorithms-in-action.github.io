@@ -33,13 +33,14 @@ $fontCol: #343434;
     font-size: 0.72em;
     font-weight: 600;
 
-    img {
+    svg {
       width: 12px;
       height: 12px;
-      svg path {
-        fill: orange;
+      path {
+        fill: $buttonDefCol;
       }
     }
+
 
 
   }
@@ -48,8 +49,8 @@ $fontCol: #343434;
     background-color: $buttonHighlightCol;
     color: white;
 
-    img svg path {
-      fill: orange;
+    svg path {
+      fill: white;
     }
   }
 }
