@@ -5,43 +5,33 @@
 import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
+import ParamMsg from './ParamMsg';
+import '../../styles/Param.scss';
+import { commaSeparatedNumberListValidCheck, singleNumberValidCheck } from './ParamHelper';
 
 const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
 const DEFAULT_TARGET = '2';
+const INSERTION = 'insertion';
+const SEARCH = 'search';
+const EXCEPTION = 'exception';
 
 function BSTParam() {
   const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
   const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
-  const INSERTION = 'insertion';
-  const SEARCH = 'search';
-  const EXCEPTION = 'exception';
-  const [logTagCol, setLogTagCol] = useState('');
-  const [logTagText, setLogTagText] = useState('');
-  const [logText, setLogText] = useState('');
+  const [logWarning, setLogWarning] = useState(false);
+  const [logTag, setLogTag] = useState('');
+  const [logMsg, setLogMsg] = useState('');
 
   const { algorithm, dispatch } = useContext(GlobalContext);
 
-  const commaSeparatedNumberListValidCheck = (t) => {
-    const regex = /^[0-9]+(,[0-9]+)*$/g;
-    return t.match(regex);
-  };
-
-  const singleNumberValidCheck = (t) => {
-    const regex = /^\d+$/g;
-    return t.match(regex);
-  };
-
   const updateParamStatus = (type, val, success) => {
-    const warningCol = '#DC0707';
-    const successCol = '#40980B';
-
     if (success) {
-      setLogTagText(`${type} success!`);
-      setLogTagCol(successCol);
-      setLogText(`Input for ${type} algorithm is valid.`);
+      setLogTag(`${type} success!`);
+      setLogWarning(false);
+      setLogMsg(`Input for ${type} algorithm is valid.`);
     } else {
-      setLogTagText(`${type} failure!`);
-      setLogTagCol(warningCol);
+      setLogTag(`${type} failure!`);
+      setLogWarning(true);
 
       let warningText = '';
       if (type === EXCEPTION) {
@@ -55,7 +45,7 @@ function BSTParam() {
         }
       }
 
-      setLogText(warningText);
+      setLogMsg(warningText);
     }
   };
 
@@ -157,19 +147,8 @@ function BSTParam() {
         </form>
       </div>
 
-      {logText
-        ? (
-          <div className="logContainer">
-            <span
-              className="logTag"
-              data-testid="logTag"
-              style={{ color: logTagCol }}
-            >
-              { logTagText }
-            </span>
-            <span className="logText">{ logText }</span>
-          </div>
-        )
+      {logMsg
+        ? <ParamMsg logWarning={logWarning} logTag={logTag} logMsg={logMsg} />
         : ''}
     </>
   );

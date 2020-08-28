@@ -15,9 +15,11 @@ const useStyles = makeStyles({
   },
 });
 
+const DEFAULT_SPEED = 6;
+
 function SpeedSlider() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(DEFAULT_SPEED);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);

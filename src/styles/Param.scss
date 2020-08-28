@@ -1,0 +1,175 @@
+$inputBorder: #2A2A2A;
+$inputText: #2B2B2B;
+$fontCol: #343434;
+$submitCol: #0065AE;
+$loadBtnCol: #FFFFFF;
+$submitHighlightCol: #0065AE;
+
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
+
+.BSTForm {
+  color: $fontCol;
+  font-size: 1.05em;
+  display: flex;
+  justify-content: space-between;
+
+  .insertionForm {
+    width: 62%;
+
+    .outerInput {
+      border: 1px solid $inputBorder;
+      border-radius: 4px;
+      width: 100%;
+
+      .inputText {
+        height: 36px;
+        width: 75%;
+        outline: none;
+        font-size: 1.05em;
+        color: $fontCol;
+        border: none;
+        @include border-radii(4px,0,0,4px);
+        padding: 0px 8px;
+        letter-spacing: 1px;
+
+      }
+
+      ::placeholder { 
+        color: $inputText;
+        opacity: 0.7;
+        letter-spacing: 1px;
+      }
+
+      .inputSubmit {
+        background-color: $submitCol;
+        cursor: pointer;
+        @include border-radii(0,3px,3px,0);
+        border: none;     
+        font-size: 1.05em;
+        height: 36px;
+        color: $loadBtnCol;
+        padding: 0 8px;
+        width: 25%;
+      }
+
+      input[type=submit]:active {
+        background-color: $submitHighlightCol;
+      }
+
+    }
+    
+  }
+
+  .searchForm {
+    width: 36%;
+
+    .outerInput {
+      border: 1px solid $inputBorder;
+      border-radius: 4px;
+      width: 100%;
+        
+      .inputText {
+        height: 36px;
+        outline: none;
+        font-size: 1.05em;
+        color: $fontCol;
+        border: none;
+        @include border-radii(4px,0,0,4px);
+        padding: 0px 6px;
+        width: 60%;
+        letter-spacing: 1px;
+      }
+
+      ::placeholder { 
+        color: $inputText;
+        opacity: 0.7;
+        letter-spacing: 1px;
+      }
+
+      .inputSubmit {
+        background-color: $submitCol;
+        cursor: pointer;
+        @include border-radii(0,3px,3px,0);
+        border: none;     
+        font-size: 1.05em;
+        height: 36px;
+        color: $loadBtnCol;
+        width: 40%;
+
+      }
+      input[type=submit]:active {
+        background-color: $submitHighlightCol;
+      }
+    }
+    
+  }
+
+}
+
+.HeapsortForm {
+  color: $fontCol;
+  font-size: 1.05em;
+  display: flex;
+  justify-content: space-between;
+
+  .insertionForm {
+    width: 62%;
+
+    .outerInput {
+      border: 1px solid $inputBorder;
+      border-radius: 4px;
+      width: 100%;
+
+      .inputText {
+        height: 36px;
+        width: 75%;
+        outline: none;
+        font-size: 1.05em;
+        color: $fontCol;
+        border: none;
+        @include border-radii(4px,0,0,4px);
+        padding: 0px 8px;
+        letter-spacing: 1px;
+
+      }
+
+      ::placeholder { 
+        color: $inputText;
+        opacity: 0.7;
+        letter-spacing: 1px;
+      }
+
+      .inputSubmit {
+        background-color: $submitCol;
+        cursor: pointer;
+        @include border-radii(0,3px,3px,0);
+        border: none;     
+        font-size: 1.05em;
+        height: 36px;
+        color: $loadBtnCol;
+        padding: 0 8px;
+        width: 25%;
+      }
+
+      input[type=submit]:active {
+        background-color: $submitHighlightCol;
+      }
+
+    }
+    
+  }
+
+}
