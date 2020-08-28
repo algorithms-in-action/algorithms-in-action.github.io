@@ -1,3 +1,5 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { fireEvent } from '@testing-library/react';
@@ -21,10 +23,10 @@ function PlayButton() {
 
   const [disabled, setDisabled] = useState(true);
   useEffect(() => {
-    if (Object.keys(algorithm.tree).length) {
+    if (algorithm.hasOwnProperty('visualisers')) {
       setDisabled(false);
     }
-  }, [algorithm.tree]);
+  }, [algorithm]);
 
   /* After button being clicked, the state of the execution is checked.
   * If the algorithm is finished, nothing happens.
@@ -41,7 +43,7 @@ function PlayButton() {
   };
 
   return (
-    <Tooltip title="Please insert nodes first" disableHoverListener={!disabled}>
+    <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
       <span>
         <button
           type="button"

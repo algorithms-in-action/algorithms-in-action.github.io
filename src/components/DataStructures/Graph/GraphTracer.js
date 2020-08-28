@@ -37,32 +37,10 @@ class GraphTracer extends Tracer {
     this.logTracer = null;
   }
 
-  /**
-   * add nodes and edges using the provided data
-   * @param {object} tree a tree object
-   */
-  setTree(tree) {
-    this.nodes = [];
-    this.edges = [];
-
-    for (const [node, children] of Object.entries(tree)) {
-      // Note: node is a string
-      // '+node' implicitly convert string to number
-      this.addNode(+node);
-      if (children.hasOwnProperty('left')) {
-        this.addEdge(+node, children.left);
-      }
-      if (children.hasOwnProperty('right')) {
-        this.addEdge(+node, children.right);
-      }
-    }
-    this.layout();
-    super.set();
-  }
 
   /**
    * This is the original function provided by Tracer.js,
-   * but the arguments need a 2D array.
+   * but we add a second argument which accepts nodes' values
    * @param {array} array2d 2D array of nodes
    */
   set(array2d = [], values = []) {
@@ -79,6 +57,78 @@ class GraphTracer extends Tracer {
     }
     this.layout();
     super.set();
+  }
+
+  /**
+   * clear existing trace, if any
+   * nodes and edges remain unchanged
+   */
+  clear() {
+    this.edges.forEach(edge => {
+      edge.visitedCount = 0;
+      edge.selectedCount = 0;
+    });
+    this.nodes.forEach(node => {
+      node.visitedCount = 0;
+    });
+  }
+
+  isEmpty() {
+    return this.nodes.length === 0 && this.edges.length === 0;
+  }
+
+  /**
+   * extract a tree object from edges and nodes
+   * @return {object} a tree object
+   */
+  getTree() {
+    const tree = {};
+
+    const setLeftOrRightChild = (t, parent, child) => {
+      if (parent < child) {
+        // right child
+        t[parent].right = child;
+      } else if (parent > child) {
+        // left child
+        t[parent].left = child;
+      }
+    };
+
+    this.edges.forEach(obj => {
+      if (!tree.hasOwnProperty(obj.source)) {
+        tree[obj.source] = {};
+        setLeftOrRightChild(tree, obj.source, obj.target);
+      } else {
+        setLeftOrRightChild(tree, obj.source, obj.target);
+      }
+      if (!tree.hasOwnProperty(obj.target)) {
+        tree[obj.target] = {};
+      }
+    });
+
+    this.nodes.forEach(obj => {
+      if (!tree.hasOwnProperty(obj.id)) {
+        tree[obj.id] = {};
+      }
+    });
+
+    return tree;
+  }
+
+  /**
+   * extract the root from edges and nodes
+   * @return {number} root
+   */
+  getRoot() {
+    // in case there is only a single node in the graph
+    if (this.edges.length === 0 && this.nodes.length === 1) {
+      return this.nodes[0].id;
+    }
+    const sources = this.edges.map(obj => obj.source);
+    const targets = this.edges.map(obj => obj.target);
+    const nodes = [...new Set([...sources, ...targets])];
+    // the node that does not a source is the root
+    return nodes.find(node => !targets.includes(node));
   }
 
   setHeap(nodes) {

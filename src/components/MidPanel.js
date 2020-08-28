@@ -4,6 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import '../styles/MidPanel.scss';
 import NextLineButton from './NextLineButton';
 import PlayButton from './PlayButton';
+import PrevLineButton from './PrevLineButton';
 import SpeedSlider from './SpeedSlider';
 
 function MidPanel() {
@@ -17,16 +18,17 @@ function MidPanel() {
       </div>
       <div className="midPanelBody">
         {/* Animation Goes here */}
-        {algorithm.graph && algorithm.graph.render()}
+        {algorithm.chunker && algorithm.chunker.getVisualisers()[0].render()}
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">
-          <PlayButton />
-          <NextLineButton />
-          <SpeedSlider />
           <Typography id="discrete-slider" heigth={25}>
             Speed:
           </Typography>
+          <SpeedSlider />
+          <PlayButton />
+          <PrevLineButton />
+          <NextLineButton />
         </div>
         <div className="parameterPanel">
           { algorithm.param }
