@@ -1,7 +1,7 @@
 /* eslint quote-props: 0 */
 import React from 'react';
 import * as Explanation from './explanations';
-import * as Param from '../components/parameters';
+import * as Param from './parameters';
 import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 
@@ -31,14 +31,14 @@ const algorithms = {
     name: 'Quick Sort',
     category: 'Sorting',
     explanation: Explanation.QSExp,
-    param: <Param.QuicksortParam />,
+    param: <Param.QSParam />,
     extraInfo: ExtraInfo.QSInfo,
   },
   'heapSort': {
     name: 'Heap Sort',
     category: 'Sorting',
     explanation: Explanation.HSExp,
-    param: <Param.HeapsortParam />,
+    param: <Param.HSParam />,
     extraInfo: ExtraInfo.HSInfo,
   },
   'kmp': {
@@ -52,7 +52,7 @@ const algorithms = {
     name: 'Transitive Closure',
     category: 'Graphs',
     explanation: Explanation.TCExp,
-    param: <Param.TransitiveClosureParam />,
+    param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,
   },
 };
