@@ -1,8 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-import { commaSeparatedNumberListValidCheck } from './ParamHelper';
+import { commaSeparatedNumberListValidCheck, genRandNumList } from './ParamHelper';
 import ParamMsg from './ParamMsg';
 import '../../styles/Param.scss';
+import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
+
 
 const DEFAULT_ARR = '5,8,10,3,1,6,9,7,2,0,4';
 const HEAP_SORT = 'Heap Sort';
@@ -58,26 +60,37 @@ function HeapsortParam() {
 
   return (
     <>
-      <div className="HeapsortForm">
-
+      <div className="HSForm">
         <form className="insertionForm" onSubmit={handleSubmit}>
           <div className="outerInput">
-            <label>
+            <label className="inputText">
               <input
                 name={HEAP_SORT}
-                className="inputText"
                 type="text"
                 value={arrVal}
-                placeholder="e.g. 4,2,3,1,2,3,4,5"
+                data-testid="insertionText"
                 onChange={(e) => setArrVal(e.target.value)}
               />
             </label>
-            <input
-              className="inputSubmit"
-              type="submit"
-              value="Insert"
-              data-testid="insertionSubmit"
-            />
+            <div className="btn-grp">
+              <button
+                className="btn refresh"
+                type="button"
+                id={HEAP_SORT}
+                onClick={() => {
+                  const list = genRandNumList(10, 1, 100);
+                  setArrVal(list);
+                }}
+              >
+                <RefreshIcon />
+              </button>
+              <button
+                className="btn insertion"
+                type="submit"
+              >
+                Insert
+              </button>
+            </div>
           </div>
         </form>
       </div>
