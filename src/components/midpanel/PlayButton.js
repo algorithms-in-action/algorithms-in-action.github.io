@@ -1,3 +1,5 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { fireEvent } from '@testing-library/react';
@@ -5,9 +7,15 @@ import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/NextLineButton.scss';
 
+let speed;
+
 // Function used to force the thread to sleep for n milliseconds.
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export function setTime(value) {
+  speed = (0.5 ** value) * 10000;
 }
 
 function PlayButton() {
@@ -15,10 +23,10 @@ function PlayButton() {
 
   const [disabled, setDisabled] = useState(true);
   useEffect(() => {
-    if (Object.keys(algorithm.tree).length) {
+    if (algorithm.hasOwnProperty('visualisers')) {
       setDisabled(false);
     }
-  }, [algorithm.tree]);
+  }, [algorithm]);
 
   /* After button being clicked, the state of the execution is checked.
   * If the algorithm is finished, nothing happens.
@@ -28,14 +36,14 @@ function PlayButton() {
   const AutomaticExecution = () => {
     if (!algorithm.finished) {
       dispatch(GlobalActions.NEXT_LINE);
-      sleep(100).then(() => {
+      sleep(speed).then(() => {
         fireEvent.click(document.getElementById('PlayButton'));
       });
     }
   };
 
   return (
-    <Tooltip title="Please insert nodes first" disableHoverListener={!disabled}>
+    <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
       <span>
         <button
           type="button"

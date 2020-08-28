@@ -20,16 +20,10 @@ const algorithms = {
     category: 'Graphs',
     param: <Param.BSTParam />,
     explanation: Explanation.BSTExp,
-    extraInfo: ExtraInfo.BSTInfo,
-    controller: Controller.BSTSearchController,
-  },
-  'binaryTreeInsertion': {
-    name: 'Binary Search Tree - Insertion',
-    category: 'Graphs',
-    param: <Param.BSTParam />,
-    explanation: Explanation.BSTExp,
-    extraInfo: ExtraInfo.BSTInfo,
-    controller: Controller.BSTInsertController,
+    controller: {
+      insertion: Controller.binaryTreeInsertion,
+      search: Controller.binaryTreeSearch,
+    },
   },
   'quickSort': {
     name: 'Quick Sort',

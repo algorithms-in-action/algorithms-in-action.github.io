@@ -1,5 +1,4 @@
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable no-unused-vars */
 // eslint-disable-next-line import/named
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
@@ -26,9 +25,9 @@ function NextLineButton() {
           className="nextLineButton"
           disabled={disabled}
           style={disabled ? { pointerEvents: 'none' } : {}}
-          onClick={() => dispatch(GlobalActions.NEXT_LINE)}
+          onClick={() => dispatch(GlobalActions.PREV_LINE)}
         >
-          Next Line
+          Prev Line
         </button>
       </span>
     </Tooltip>

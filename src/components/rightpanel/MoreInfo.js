@@ -13,9 +13,6 @@ function MoreInfo() {
     fetch(algorithm.moreInfo).then((res) => res.text()).then((text) => setInfo(text));
   }, [algorithm.moreInfo]);
 
-  console.log('HERELOL');
-  console.log(algorithm);
-
   return (
     <div className="textArea">
       <ReactMarkDown

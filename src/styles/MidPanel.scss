@@ -83,6 +83,9 @@ $loadBtnCol: #FFFFFF;
       height: 40px;
       border-bottom: 1px solid $borderCol;
       padding: auto $sidePad;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .parameterPanel {

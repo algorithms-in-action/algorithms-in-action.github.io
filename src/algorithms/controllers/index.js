@@ -1,2 +1,2 @@
-export { default as BSTSearchController } from './BSTSearchController';
-export { default as BSTInsertController } from './BSTInsertionController';
+export { default as binaryTreeSearch } from './binaryTreeSearch';
+export { default as binaryTreeInsertion } from './binaryTreeInsertion';
