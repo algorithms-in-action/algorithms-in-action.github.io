@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../styles/RightPanel.scss';
-import RightPanelButton from './RightPanelButton';
+import HeaderButton from './HeaderButton';
 import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 import MoreInfo from './MoreInfo';
@@ -29,7 +29,7 @@ function RightPanel() {
   };
   return (
     <>
-      <RightPanelButton value={[BTN_1, BTN_2, BTN_3]} onChange={getBtnState} />
+      <HeaderButton value={[BTN_1, BTN_2, BTN_3]} onChange={getBtnState} />
       <div className="textAreaContainer">
         {(() => {
           switch (state) {

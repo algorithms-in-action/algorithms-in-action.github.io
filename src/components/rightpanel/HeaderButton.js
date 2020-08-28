@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import * as Icon from '../../resources/icons';
 
-function RightPanelButton({ value, onChange }) {
+function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(value[0]);
-
 
   const updateState = (val) => {
     setState(val);
@@ -35,7 +35,7 @@ function RightPanelButton({ value, onChange }) {
           value={value[2]}
           onClick={(e) => updateState(e.target.value)}
         >
-          +
+          <img src={Icon.Add} alt="Add Icon" />
         </button>
       </div>
 
@@ -43,8 +43,8 @@ function RightPanelButton({ value, onChange }) {
   );
 }
 
-RightPanelButton.propTypes = {
+HeaderButton.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
 };
-export default RightPanelButton;
+export default HeaderButton;

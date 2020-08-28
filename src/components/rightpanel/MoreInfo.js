@@ -7,16 +7,19 @@ import { GlobalContext } from '../../context/GlobalState';
 
 function MoreInfo() {
   const { algorithm } = useContext(GlobalContext);
-  const [explanation, setExplanation] = useState('');
+  const [info, setInfo] = useState('');
 
   useEffect(() => {
-    fetch(algorithm.explanation).then((res) => res.text()).then((text) => setExplanation(text));
-  }, [algorithm.explanation]);
+    fetch(algorithm.moreInfo).then((res) => res.text()).then((text) => setInfo(text));
+  }, [algorithm.moreInfo]);
+
+  console.log('HERELOL');
+  console.log(algorithm);
 
   return (
     <div className="textArea">
       <ReactMarkDown
-        source={explanation}
+        source={info}
         escapeHtml={false}
         renderers={{ code: CodeBlock }}
         plugins={[toc]}
