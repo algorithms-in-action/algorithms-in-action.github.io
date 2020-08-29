@@ -7,10 +7,10 @@ import { Input } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { GlobalContext } from '../context/GlobalState';
-import { GlobalActions } from '../context/actions';
-import '../styles/LeftPanel.scss';
-import { AlgorithmCategoryList, AlgorithmList } from '../algorithms';
+import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
+import '../../styles/LeftPanel.scss';
+import { AlgorithmCategoryList, AlgorithmList } from '../../algorithms';
 
 function LeftPanel() {
   const itemListState = AlgorithmCategoryList;

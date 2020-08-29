@@ -39,6 +39,27 @@ class GraphTracer extends Tracer {
 
 
   /**
+   * This is the original function provided by Tracer.js,
+   * but we add a second argument which accepts nodes' values
+   * @param {array} array2d 2D array of nodes
+   */
+  set(array2d = [], values = []) {
+    this.nodes = [];
+    this.edges = [];
+    for (let i = 0; i < array2d.length; i++) {
+      this.addNode(i, values[i] ? values[i] : i);
+      for (let j = 0; j < array2d.length; j++) {
+        const value = array2d[i][j];
+        if (value) {
+          this.addEdge(i, j, this.isWeighted ? value : null);
+        }
+      }
+    }
+    this.layout();
+    super.set();
+  }
+
+  /**
    * clear existing trace, if any
    * nodes and edges remain unchanged
    */
@@ -52,8 +73,12 @@ class GraphTracer extends Tracer {
     });
   }
 
+  isEmpty() {
+    return this.nodes.length === 0 && this.edges.length === 0;
+  }
+
   /**
-   * extract a tree object from edges
+   * extract a tree object from edges and nodes
    * @return {object} a tree object
    */
   getTree() {
@@ -91,7 +116,7 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * extract the root from edges
+   * extract the root from edges and nodes
    * @return {number} root
    */
   getRoot() {
@@ -104,27 +129,6 @@ class GraphTracer extends Tracer {
     const nodes = [...new Set([...sources, ...targets])];
     // the node that does not a source is the root
     return nodes.find(node => !targets.includes(node));
-  }
-
-  /**
-   * This is the original function provided by Tracer.js,
-   * but the arguments need a 2D array.
-   * @param {array} array2d 2D array of nodes
-   */
-  set(array2d = [], values = []) {
-    this.nodes = [];
-    this.edges = [];
-    for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i, values[i] ? values[i] : i);
-      for (let j = 0; j < array2d.length; j++) {
-        const value = array2d[i][j];
-        if (value) {
-          this.addEdge(i, j, this.isWeighted ? value : null);
-        }
-      }
-    }
-    this.layout();
-    super.set();
   }
 
   setHeap(nodes) {

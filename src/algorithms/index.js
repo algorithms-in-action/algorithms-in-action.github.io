@@ -1,9 +1,10 @@
 /* eslint quote-props: 0 */
 import React from 'react';
 import * as Explanation from './explanations';
-import binaryTreeSearch from './binaryTreeSearch';
-import binaryTreeInsertion from './binaryTreeInsertion';
-import * as Param from '../components/parameters';
+import * as Param from './parameters';
+import * as ExtraInfo from './extra-info';
+import * as Controller from './controllers';
+
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
@@ -20,54 +21,39 @@ const algorithms = {
     category: 'Graphs',
     param: <Param.BSTParam />,
     explanation: Explanation.BSTExp,
-    controller: binaryTreeSearch,
-  },
-  'binaryTreeInsertion': {
-    name: 'Binary Search Tree - Insertion',
-    category: 'Graphs',
-    param: <Param.BSTParam />,
-    explanation: Explanation.BSTExp,
-    controller: binaryTreeInsertion,
+    extraInfo: ExtraInfo.BSTInfo,
+    controller: {
+      insertion: Controller.binaryTreeInsertion,
+      search: Controller.binaryTreeSearch,
+    },
   },
   'quickSort': {
     name: 'Quick Sort',
     category: 'Sorting',
-    explanation: Explanation.QuicksortExp,
-    param: <Param.QuicksortParam />,
-    controller: {
-      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-      * run() { yield ''; },
-    },
+    explanation: Explanation.QSExp,
+    param: <Param.QSParam />,
+    extraInfo: ExtraInfo.QSInfo,
   },
   'heapSort': {
     name: 'Heap Sort',
     category: 'Sorting',
-    explanation: Explanation.HeapsortExp,
-    param: <Param.HeapsortParam />,
-    controller: {
-      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-      * run() { yield ''; },
-    },
+    explanation: Explanation.HSExp,
+    param: <Param.HSParam />,
+    extraInfo: ExtraInfo.HSInfo,
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
     category: 'Dynamic Programming',
     explanation: Explanation.KMPExp,
     param: <Param.KMPParam />,
-    controller: {
-      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-      * run() { yield ''; },
-    },
+    extraInfo: ExtraInfo.KMPInfo,
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
     category: 'Graphs',
-    explanation: Explanation.TransitiveClosureExp,
-    param: <Param.TransitiveClosureParam />,
-    controller: {
-      pseudocode: { main: [{ code: '', bookmark: '', explanation: '' }] },
-      * run() { yield ''; },
-    },
+    explanation: Explanation.TCExp,
+    param: <Param.TCParam />,
+    extraInfo: ExtraInfo.TCInfo,
   },
 };
 

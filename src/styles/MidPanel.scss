@@ -83,6 +83,9 @@ $loadBtnCol: #FFFFFF;
       height: 40px;
       border-bottom: 1px solid $borderCol;
       padding: auto $sidePad;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .parameterPanel {
@@ -114,107 +117,6 @@ $loadBtnCol: #FFFFFF;
 
       }
 
-
-      .BSTForm {
-        color: $fontCol;
-        font-size: 1.05em;
-        display: flex;
-        justify-content: space-between;
-
-        $inputBorder: #2A2A2A;
-        $inputText: #2B2B2B;
-
-        
-        .insertionForm {
-          width: 62%;
-
-          .outerInput {
-            border: 1px solid $inputBorder;
-            border-radius: 4px;
-            width: 100%;
-
-            .inputText {
-              height: 36px;
-              width: 75%;
-              outline: none;
-              font-size: 1.05em;
-              color: $fontCol;
-              border: none;
-              @include border-radii(4px,0,0,4px);
-              padding: 0px 8px;
-
-            }
-
-            ::placeholder { 
-              color: $inputText;
-              opacity: 0.7;
-            }
-
-            .inputSubmit {
-              background-color: $submitCol;
-              cursor: pointer;
-              @include border-radii(0,3px,3px,0);
-              border: none;     
-              font-size: 1.05em;
-              height: 36px;
-              color: $loadBtnCol;
-              padding: 0 8px;
-              width: 25%;
-            }
-
-            input[type=submit]:active {
-              background-color: $submitHighlightCol;
-            }
-
-          }
-          
-        }
-
-
-        .searchForm {
-          width: 36%;
-
-          .outerInput {
-            border: 1px solid $inputBorder;
-            border-radius: 4px;
-            width: 100%;
-              
-            .inputText {
-              height: 36px;
-              outline: none;
-              font-size: 1.05em;
-              color: $fontCol;
-              border: none;
-              @include border-radii(4px,0,0,4px);
-              padding: 0px 6px;
-              width: 60%;
-            }
-
-            ::placeholder { 
-              color: $inputText;
-              opacity: 0.7;
-            }
-
-            .inputSubmit {
-              background-color: $submitCol;
-              cursor: pointer;
-              @include border-radii(0,3px,3px,0);
-              border: none;     
-              font-size: 1.05em;
-              height: 36px;
-              color: $loadBtnCol;
-              width: 40%;
-
-            }
-            input[type=submit]:active {
-              background-color: $submitHighlightCol;
-            }
-
-          }
-
-        }
-
-      }
     }
   }
 }
