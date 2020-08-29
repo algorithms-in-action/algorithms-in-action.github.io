@@ -54,7 +54,6 @@ function HeapsortParam() {
 
           // run heap sort animation
           dispatch(GlobalActions.RUN_ALGORITHM, { name: 'heapSort', mode: 'sort', nodes });
-          // dispatch(GlobalActions.RUN_ALGORITHM, { name: 'binarySearchTree', mode: 'insertion', nodes });
         } else {
           updateParamStatus(HEAP_SORT, arrVal, false);
         }
