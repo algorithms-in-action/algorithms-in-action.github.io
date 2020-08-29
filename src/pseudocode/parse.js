@@ -100,7 +100,7 @@ function extractCodeBlock(lines) {
 let c = 0;
 
 
-// Add bookmark and indentation recurvely.
+// Add bookmark and indentation recurvely
 function addBookmark(json, name, indentation, refBookmark) {
   if (json[name] instanceof Array) {
     json[name].forEach((line) => {
@@ -119,6 +119,9 @@ function addBookmark(json, name, indentation, refBookmark) {
   }
 }
 
+// Notes for json attributes
+// ref: the reference which is inside Linda's pseudocode
+// refBookmark: the reference to the bookmark of the entrance code of current codeblock
 export default function parse(input) {
   const rawCode = removeLineContinuation(input);
   const json = extractCodeBlock(rawCode);
