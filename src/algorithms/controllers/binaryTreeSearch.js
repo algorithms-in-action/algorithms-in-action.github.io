@@ -8,21 +8,37 @@ import { BSTExp } from '../explanations';
 export default {
   name: 'Binary Tree Search',
   pseudocode: parse(`
-procedure BinaryTreeSearch(Tree, Item):  $start
-  Ptr = Root;                   $1            (* Set search pointer Ptr to root *)
-  while (Ptr Not Null)          $2            (* Continue searching until we go past a leaf to Null *)
-    if(Ptr->Key == Item)        $3            (* Compare to see if keys match *)
-      return FOUND              $4            (* Keys match, item has been found in tree *)
-    else                        $a
-      if(DataItem < Ptr->Key)   $5            (* Compare data item and the data pointed by the search pointer *)
-        Ptr = Ptr->lchild       $6            (* Item key is less, so should follow the left child on search path. *)
-      else                      $b            (* Item key is greater or equal to data pointed by the search pointer. *)
-        Ptr = Ptr->rchild       $7            (* Item key is greater or equal, so should follow the right child on search path *)
-      end if                    $c
-    end if                      $d
-  end while                     $e
-  return NOTFOUND               $8            (* Following along the search path, item was not encountered, so it must not be in the tree. *)
-`),
+    \\Code{
+    Main
+    BST_Search(t, k)  // return subtree whose root has key k; or
+                      // NotFound is no such node is present
+    \\In{
+        while t not Empty
+        \\In{
+            if t.key = k 
+            \\In{
+                return t
+                \\Expl{  We have found a node with the desired key k.
+                \\Expl}
+            \\In}
+            if t.key > k 
+            \\Expl{  The BST condition is that nodes with keys less than the 
+                    current node's key are to be found in the left subtree, and
+                    nodes whose keys are greater are to be in the right subtree.
+            \\Expl}
+            \\In{
+                t <- t.left
+            \\In}
+            else
+            \\In{
+                t <- t.right
+            \\In}
+        return NotFound
+        \\In}
+    \\In}
+    \\Code}
+  `),
+
   explanation: BSTExp,
 
   /**
@@ -52,46 +68,45 @@ procedure BinaryTreeSearch(Tree, Item):  $start
     const root = visualiser.graph.instance.getRoot();
     const item = target;
 
-    chunker.add('start');
-
     let current = root;
     let parent = null;
 
-    chunker.add('1', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+    chunker.add(1, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
     let ptr = tree;
     parent = current;
 
-    chunker.add('2');
     while (ptr) {
-      chunker.add('3');
+      chunker.add(2);
       if (current === item) {
-        chunker.add('4');
+        chunker.add(3);
+        chunker.add(4);
         return;
       }
 
-      chunker.add('5');
       if (item < current) {
+        chunker.add(5);
         if (tree[current].left !== undefined) {
           // if current node has left child
           parent = current;
           current = tree[current].left;
           ptr = tree[current];
-          chunker.add('6', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+          chunker.add(6, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         } else {
           break;
         }
       } else {
+        chunker.add(7);
         if (tree[current].right !== undefined) {
           // if current node has right child
           parent = current;
           current = tree[current].right;
           ptr = tree[current];
-          chunker.add('7', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+          chunker.add(8, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         } else {
           break;
         }
       }
     }
-    chunker.add('8');
+    chunker.add(9);
   },
 };

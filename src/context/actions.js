@@ -35,12 +35,21 @@ export const GlobalActions = {
       param, controller, name, explanation, extraInfo,
     } = data;
 
-    const procedurePseudocode = Object.values(controller[params.mode].pseudocode)[0];
+    const procedurePseudocode = controller[params.mode].pseudocode;
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
     const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
+    const collapseController = {};
+    for (const codeBlockName of Object.keys(procedurePseudocode)) {
+      if (codeBlockName === 'Main') {
+        collapseController[codeBlockName] = true;
+      } else {
+        collapseController[codeBlockName] = false;
+      }
+    }
+
 
     return {
       id: params.name,
@@ -52,6 +61,7 @@ export const GlobalActions = {
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
       visualisers: chunker.visualisers.graph,
+      collapse: collapseController,
     };
   },
 
@@ -66,6 +76,14 @@ export const GlobalActions = {
     ...state,
     ...state.chunker.prev(),
   }),
+  COLLAPSE: (state, codeblockname) => {
+    const result = state.collapse;
+    result[codeblockname] = !result[codeblockname];
+    return {
+      ...state,
+      collapse: result,
+    };
+  },
 };
 
 export function dispatcher(state, setState) {
