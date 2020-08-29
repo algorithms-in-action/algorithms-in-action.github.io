@@ -1,7 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import '../styles/LineNumHighLight.css';
+// eslint-disable-next-line import/named
+import { GlobalContext } from '../../context/GlobalState';
+import '../../styles/LineNumHighLight.css';
 
 const LineNumHighLight = () => {
   const { algorithm } = useContext(GlobalContext);

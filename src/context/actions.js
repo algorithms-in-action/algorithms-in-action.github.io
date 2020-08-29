@@ -13,12 +13,15 @@ export const GlobalActions = {
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
-    const { param, name, explanation } = data;
 
+    const {
+      param, name, explanation, extraInfo,
+    } = data;
     return {
       id: params.name,
       name,
       explanation,
+      extraInfo,
       param,
     };
   },
@@ -27,7 +30,7 @@ export const GlobalActions = {
   RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      param, controller, name, explanation,
+      param, controller, name, explanation, extraInfo,
     } = data;
 
     const procedurePseudocode = Object.values(controller[params.mode].pseudocode)[0];
@@ -41,6 +44,7 @@ export const GlobalActions = {
       id: params.name,
       name,
       explanation,
+      extraInfo,
       param,
       pseudocode: procedurePseudocode,
       ...bookmarkInfo, // sets bookmark & finished fields

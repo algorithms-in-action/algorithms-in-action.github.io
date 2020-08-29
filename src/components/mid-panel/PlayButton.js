@@ -3,9 +3,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
 import { fireEvent } from '@testing-library/react';
-import { GlobalContext } from '../context/GlobalState';
-import { GlobalActions } from '../context/actions';
-import '../styles/NextLineButton.scss';
+import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
+import '../../styles/NextLineButton.scss';
 
 let speed;
 

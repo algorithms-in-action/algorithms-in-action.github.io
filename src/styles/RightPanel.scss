@@ -10,7 +10,7 @@ $fontCol: #343434;
   padding: 12px 8px 24px 12px;
 }
 
-.codeExplanationButton {
+.rightPanelButtons {
   background-color: $buttonBgCol;
   display: flex; 
   flex-direction: row;
@@ -25,15 +25,32 @@ $fontCol: #343434;
     cursor:pointer;
     overflow: hidden;
     outline:none;
-    font-size: 0.75em;
     color: $buttonDefCol;
-    font-weight: 600;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.72em;
+    font-weight: 600;
+
+    img {
+      width: 12px;
+      height: 12px;
+      svg path {
+        fill: orange;
+      }
+    }
+
+
   }
 
   .active {
     background-color: $buttonHighlightCol;
     color: white;
+
+    img svg path {
+      fill: orange;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/NextLineButton.scss';
+import '../../styles/NextLineButton.scss';
 import Slider from '@material-ui/core/Slider';
 import { makeStyles } from '@material-ui/core/styles';
 import { setTime } from './PlayButton';
