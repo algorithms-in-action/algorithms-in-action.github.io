@@ -3,58 +3,146 @@ $minContainerWidth: 1250px;
 $headerHeight: 50px;
 $borderCol: #D4D4D4;
 
-* {
-  box-sizing: border-box;
-} 
+// * {
+//   box-sizing: border-box;
+// } 
 
-html, body { 
+// html, body { 
+//   margin:0; 
+//   padding: 0;
+//   background-color: $bgColor;
+//   font-family: Roboto, 'sans-serif';
+//   position: relative;
+//   width: 100%;
+  
+
+//   .container {
+//     height: 100vh;
+//     min-width: $minContainerWidth;
+//     display: flex;
+//     flex-direction: column;
+//     // border-bottom: 1px solid $borderCol;
+
+//     .panel {
+//       display: flex;
+//       flex-direction: row;
+//       flex: 1;
+
+//       .leftPanel {
+//         width: 15%; 
+//         display: flex;
+//         flex-direction: column;
+//         min-width: 200px;
+//         // border-left: 1px solid $borderCol;
+//       }
+  
+//       .midPanel {
+//         flex: 1;
+//         border-left: 1px solid $borderCol;
+//         border-right: 1px solid $borderCol;
+//       }
+  
+//       .rightPanel {
+//         width: 26%;
+//         display: flex;
+//         flex-direction: column;
+//         height: 100%;
+//         min-width: 400px;
+//         // border-right: 1px solid $borderCol;
+//       }
+      
+//     }
+    
+//   }
+
+// }
+
+
+body {
   margin:0; 
   padding: 0;
-  background-color: $bgColor;
-  font-family: Roboto, 'sans-serif';
-  position: relative;
-  width: 100%;
-  
+  height: 100vh;
+}
 
-  .container {
-    height: 100vh;
-    min-width: $minContainerWidth;
-    display: flex;
-    flex-direction: column;
-    // border-bottom: 1px solid $borderCol;
+#page {
+	height: 100%;
+	background: none;
+	display: grid;
+	grid-template-areas:
+		'header header header header header'
+		'leftcol leftdragbar tabpages rightdragbar rightcol'
+    'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
+    'leftcol leftdragbar footer rightdragbar rightcol';
+	grid-template-rows: min-content 6fr 4px 4fr;
+	grid-template-columns: 2fr 4px 6fr 4px 2fr;	
+}
 
-    .panel {
-      display: flex;
-      flex-direction: row;
-      flex: 1;
+/*****************************/
+#header {
+	background-color: $bgColor;
+	overflow: auto;
+	grid-area: header;
+}
 
-      .leftPanel {
-        width: 15%; 
-        display: flex;
-        flex-direction: column;
-        min-width: 200px;
-        // border-left: 1px solid $borderCol;
-      }
-  
-      .midPanel {
-        flex: 1;
-        border-left: 1px solid $borderCol;
-        border-right: 1px solid $borderCol;
-      }
-  
-      .rightPanel {
-        width: 26%;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-width: 400px;
-        // border-right: 1px solid $borderCol;
-      }
-      
-    }
-    
-  }
+#leftcol {
+	background-color: $bgColor;
+	overflow: auto;
+  grid-area: leftcol;
+  // max-width: 30%;
+}
 
+#rightcol {
+	background-color: #aaaaaa;
+	overflow: auto;
+	grid-area: rightcol;
+}
+
+#tabpages {
+	background-color: #888888;
+	overflow: auto;
+	grid-area: tabpages;
+}
+
+#footer {
+	background-color: lightblue;
+	overflow: auto;
+	grid-area: footer;
+}
+
+#rightdragbar {
+	background-color: black;
+	grid-area: rightdragbar;
+	cursor: col-resize;
+}
+
+#rightdragbar:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+#leftdragbar {
+	background-color: black;
+	grid-area: leftdragbar;
+	cursor: col-resize;
+}
+
+#leftdragbar:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+#bottomdragbar {
+  background-color: black;
+  grid-area: bottomdragbar;
+  cursor: row-resize;
+}
+
+#bottomdragbar:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
 }
 
 
