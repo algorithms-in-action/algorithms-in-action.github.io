@@ -10,7 +10,7 @@ import '../../styles/Param.scss';
 import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
 import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
 
-const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
+const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
