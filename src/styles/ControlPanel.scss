@@ -1,0 +1,55 @@
+$borderCol: #e9e9e9;
+$fontCol: #343434;
+$sidePad: 24px;
+$paramLog: #EFEEF0;
+$warningCol: #DC0707;
+$successCol: #40980B;
+$borderSize: 3px;
+
+
+.container {
+  height: 28%;
+  font-size: 0.8em;
+  color: $fontCol;
+
+  .controlPanel {
+    height: 40px;
+    border-bottom: $borderSize solid $borderCol;
+    padding: auto $sidePad;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .parameterPanel {
+    padding: 16px $sidePad 16px $sidePad;
+  
+    .logContainer {
+      background-color: $paramLog;
+      padding: 8px 16px;
+      border-radius: 4px;
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 16px auto 0px auto;
+      
+  
+      .logTag {
+        color: $successCol;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 1em;
+        margin-right: 12px;
+      }
+  
+      .logText {
+        font-size: 1.03em;
+        font-weight: 300;
+        color: $fontCol;
+      }
+  
+    }
+  
+  }
+
+}

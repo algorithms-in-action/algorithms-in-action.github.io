@@ -6,28 +6,7 @@ import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';
 import LeftPanel from './components/left-panel';
 import MidPanel from './components/mid-panel';
-
-// function App() {
-//   return (
-//     <GlobalProvider>
-//       <div className="container">
-//         <Header />
-//         <div className="panel">
-//           <div className="leftPanel">
-//             <LeftPanel />
-//           </div>
-//           <div className="midPanel">
-//             <MidPanel />
-//           </div>
-//           <div className="rightPanel">
-//             <RightPanel />
-//           </div>
-//         </div>
-//       </div>
-//     </GlobalProvider>
-//   );
-// }
-
+import ControlPanel from './components/mid-panel/ControlPanel';
 
 function App() {
   let isLeftDragging = false;
@@ -36,7 +15,8 @@ function App() {
 
   function resetColumnSizes() {
     const page = document.getElementById('pageFrame');
-    page.style.gridTemplateColumns = '2fr 4px 6fr 4px 2fr';
+    page.style.gridTemplateColumns = '2fr 3px 6fr 3px 2fr';
+    page.style.gridTemplateRows = 'min-content 7fr 3px 3fr';
   }
 
   function setCursor(cursor) {
@@ -79,7 +59,7 @@ function App() {
       const rightColWidth = isRightDragging ? page.clientWidth - event.clientX : rightcol.clientWidth;
       const bottomRowHeight = isBottomDragging ? page.clientHeight - event.clientY : footer.clientHeight;
 
-      const dragbarWidth = 4;
+      const dragbarWidth = 3;
 
       const cols = [
         leftColWidth,
@@ -126,7 +106,7 @@ function App() {
           </div>
           <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onMouseDown={startBottomDrag} role="button" />
           <div id="footer">
-            Footer
+            <ControlPanel />
           </div>
         </div>
       </body>

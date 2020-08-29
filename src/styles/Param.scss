@@ -7,6 +7,11 @@ $submitHighlightCol: #0065AE;
 $sigBlue: #027AFF;
 $charCol: #717071;
 
+$sidePad: 24px;
+$paramLog: #EFEEF0;
+$warningCol: #DC0707;
+$successCol: #40980B;
+
 
 @mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
 	border-top-left-radius: $topleft;

@@ -1,30 +1,9 @@
-$midHeaderHeight: 40px;
-$headerColor: #4D4D4D;
-$quizButCol: #DEDEDE;
-$borderCol: #D4D4D4;
-$fontCol: #343434;
 $sidePad: 24px;
-$submitCol: #0065AE;
-$submitHighlightCol: #0065AE;
-$paramLog: #EFEEF0;
-$warningCol: #DC0707;
-$successCol: #40980B;
-$loadBtnCol: #FFFFFF;
-
-@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
-	border-top-left-radius: $topleft;
-	border-top-right-radius: $topright;
-	border-bottom-right-radius: $bottomright;
-	border-bottom-left-radius: $bottomleft;
-	-webkit-border-top-left-radius: $topleft;
-	-webkit-border-top-right-radius: $topright;
-	-webkit-border-bottom-right-radius: $bottomright;
-	-webkit-border-bottom-left-radius: $bottomleft;
-	-moz-border-radius-topleft: $topleft;
-	-moz-border-radius-topright: $topright;
-	-moz-border-radius-bottomright: $bottomright;
-	-moz-border-radius-bottomleft: $bottomleft;
-}
+$midHeaderHeight: 40px;
+$borderCol: #e9e9e9;
+$quizButCol: #DEDEDE;
+$headerColor: #838383;
+$borderSize: 3px;
 
 .midPanelContainer {
   display: flex;
@@ -34,7 +13,7 @@ $loadBtnCol: #FFFFFF;
   
   .midPanelHeader {
     height: $midHeaderHeight;
-    border-bottom: 1px solid $borderCol;
+    border-bottom: $borderSize solid $borderCol;
     display: flex;
     justify-content: space-between;
     
@@ -72,52 +51,5 @@ $loadBtnCol: #FFFFFF;
     min-height: 0;
   }
 
-  .midPanelFooter {
-    height: 28%;
-    font-size: 0.8em;
-    color: $fontCol;
-    overflow-y: scroll;
-    border-top: 1px solid $borderCol;
-
-    .controlPanel {
-      height: 40px;
-      border-bottom: 1px solid $borderCol;
-      padding: auto $sidePad;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .parameterPanel {
-      padding: 16px $sidePad 16px $sidePad;
-
-      .logContainer {
-        background-color: $paramLog;
-        padding: 8px 16px;
-        border-radius: 4px;
-        white-space: nowrap; 
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 16px auto 0px auto;
-        
-
-        .logTag {
-          color: $successCol;
-          text-transform: uppercase;
-          font-weight: 500;
-          font-size: 1em;
-          margin-right: 12px;
-        }
-
-        .logText {
-          font-size: 1.03em;
-          font-weight: 300;
-          color: $fontCol;
-        }
-
-      }
-
-    }
-  }
 }
 

@@ -3,7 +3,8 @@ $buttonBgCol: #FFFFFF;
 $buttonDefCol: #909090;
 $buttonHighlightCol: #0065AE;
 $codeExplanationButtonHeight: 40px;
-$borderCol: #D4D4D4;
+$borderCol: #e9e9e9;
+$borderSize: 3px;
 $fontCol: #343434;
 
 @mixin textPadding {
@@ -15,7 +16,7 @@ $fontCol: #343434;
   display: flex; 
   flex-direction: row;
   justify-content: center;
-  border-bottom: 1px solid $borderCol;
+  border-bottom: $borderSize solid $borderCol;
   height: $codeExplanationButtonHeight;
 
   button {
