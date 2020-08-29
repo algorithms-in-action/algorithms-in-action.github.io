@@ -32,10 +32,8 @@ function addIndentation(json, name) {
   codeBlocks[name] = codeBlock;
 }
 
-
-let i = 0;
-
-const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockName) => {
+const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockName, lineNum) => {
+  let i = lineNum;
   let codeLines = [];
   for (const [key, value] of Object.entries(codeBlocks1[blockName])) {
     const ref = findRef(value);
@@ -59,9 +57,10 @@ const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockN
         </p>,
       );
       i += 1;
+      const temp = addCollapse(algorithm1, dispatch1, codeBlocks1, currentBookmark, ref, i);
       if (algorithm1.collapse[ref]) {
-        const temp = addCollapse(algorithm1, dispatch1, codeBlocks1, currentBookmark, ref);
-        codeLines = codeLines.concat(temp);
+        codeLines = codeLines.concat(temp.cl);
+        i = temp.index;
       }
     } else {
       codeLines.push(
@@ -79,13 +78,12 @@ const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockN
       i += 1;
     }
   }
-  return codeLines;
+  return { index: i, cl: codeLines };
 };
 
 const LineNumHighLight = () => {
   const { algorithm, dispatch } = useContext(GlobalContext);
   codeBlocks = {};
-  i = 0;
   addIndentation(algorithm.pseudocode, 'Main');
   const currentBookmark = findCodeBlock(algorithm, algorithm.bookmark);
 
@@ -94,7 +92,7 @@ const LineNumHighLight = () => {
   return (
     <div className="line-light">
       <div className="code-container">
-        {addCollapse(algorithm, dispatch, codeBlocks, currentBookmark, 'Main')}
+        {addCollapse(algorithm, dispatch, codeBlocks, currentBookmark, 'Main', 0).cl}
       </div>
     </div>
   );
