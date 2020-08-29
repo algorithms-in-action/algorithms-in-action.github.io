@@ -68,6 +68,7 @@ $loadBtnCol: #FFFFFF;
    /* Animation Goes Here */
   .midPanelBody {
     display: flex;
+    flex-direction: column;
     flex: 1 1 1px; /* Important */
     min-height: 0;
   }

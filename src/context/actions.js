@@ -87,8 +87,8 @@ export const GlobalActions = {
 };
 
 export function dispatcher(state, setState) {
-  return (action, params, nodes, target) => {
-    setState(action(state, params, nodes, target));
+  return (action, params) => {
+    setState(action(state, params));
   };
 }
 

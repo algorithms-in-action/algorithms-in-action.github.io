@@ -43,6 +43,13 @@ class Array1DTracer extends Array2DTracer {
   syncChartTracer() {
     if (this.chartTracer) this.chartTracer.data = this.data;
   }
+
+  swapElements(x, y) {
+    const temp = this.data[0][x].value;
+    this.data[0][x].value = this.data[0][y].value;
+    this.data[0][y].value = temp;
+  }
+
 }
 
 export default Array1DTracer;
