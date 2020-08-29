@@ -119,16 +119,18 @@ export default {
     // };
     const tree = {};
     const root = nodes[0];
+    chunker.add(2);
     tree[root] = {};
     
     if (nodes.length === 0) return;
-
+    chunker.add(3);
     chunker.add(6, (vis, r) => {   
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
     }, [root]);
 
     for (let i = 1; i < nodes.length; i++) {
+      chunker.add(3);
       const element = nodes[i];
 
       let ptr = tree;
@@ -141,6 +143,7 @@ export default {
           chunker.add(16);
           if (tree[parent].left !== undefined) {
             // if current node has left child
+            chunker.add(17);
             parent = tree[parent].left;
             ptr = tree[parent];
           } else {
@@ -156,12 +159,13 @@ export default {
           chunker.add(18);
           if (tree[parent].right !== undefined) {
             // if current node has right child
+            chunker.add(19);
             parent = tree[parent].right;
             ptr = tree[parent];
           } else {
             tree[parent].right = element;
             tree[element] = {};
-            chunker.add(25, (vis, e, p) => {
+            chunker.add(24, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
             }, [element, parent]);
@@ -170,5 +174,6 @@ export default {
         }
       }
     }
+    chunker.add(25);
   },
 };
