@@ -6,12 +6,12 @@
 import React, { useContext } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { GlobalContext } from '../context/GlobalState';
-import { GlobalActions } from '../context/actions';
+import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
 // eslint-disable-next-line import/named
-import '../styles/LineNumHighLight.css';
-import findRef from '../pseudocode/findRef';
-import findCodeBlock from '../pseudocode/findCodeBlock';
+import '../../styles/LineNumHighLight.css';
+import findRef from '../../pseudocode/findRef';
+import findCodeBlock from '../../pseudocode/findCodeBlock';
 
 let codeBlocks = {};
 
