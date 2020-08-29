@@ -2,9 +2,9 @@
 // eslint-disable-next-line import/named
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from '@material-ui/core';
-import { GlobalContext } from '../context/GlobalState';
-import { GlobalActions } from '../context/actions';
-import '../styles/NextLineButton.scss';
+import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
+import '../../styles/NextLineButton.scss';
 
 
 function NextLineButton() {
