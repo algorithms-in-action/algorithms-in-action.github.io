@@ -70,6 +70,7 @@ function PlayButton() {
           type="button"
           className={disabled ? 'btnDisabled' : 'btnActive play'}
           id="PlayButton"
+          data-testid="PlayButton"
           disabled={disabled}
           style={disabled ? { pointerEvents: 'none' } : {}}
           onClick={() => AutomaticExecution()}
