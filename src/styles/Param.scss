@@ -41,7 +41,6 @@ $successCol: #53DD6C;
 
 .blueWordBtn {
   @extend .btn;
-  height: 28px;
   font: 13px "Roboto", sans-serif !important;
   border-radius: 1px;
   text-align: center;
@@ -49,9 +48,6 @@ $successCol: #53DD6C;
   cursor: pointer;
   text-transform: uppercase;
   padding: 0 6px;
-
-  transition: .4s;
-  background: none;
   color: $sigBlue;
 }
 
