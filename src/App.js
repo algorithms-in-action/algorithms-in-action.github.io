@@ -8,16 +8,17 @@ import LeftPanel from './components/left-panel';
 import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 
+
 function App() {
   let isLeftDragging = false;
   let isRightDragging = false;
   let isBottomDragging = false;
 
-  function resetColumnSizes() {
-    const page = document.getElementById('pageFrame');
-    page.style.gridTemplateColumns = '2fr 3px 6fr 3px 2fr';
-    page.style.gridTemplateRows = 'min-content 7fr 3px 3fr';
-  }
+  // function resetColumnSizes() {
+  //   const page = document.getElementById('pageFrame');
+  //   page.style.gridTemplateColumns = '2fr 3px 6fr 3px 2fr';
+  //   page.style.gridTemplateRows = 'min-content 7fr 3px 3fr';
+  // }
 
   function setCursor(cursor) {
     const page = document.getElementById('page');
@@ -86,9 +87,11 @@ function App() {
       event.preventDefault();
     }
   }
+
+  // onresize={resetColumnSizes}
   return (
-    <GlobalProvider>
-      <body onresize={resetColumnSizes}>
+    <div>
+      <GlobalProvider>
         <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
           <div id="header">
             <Header />
@@ -109,9 +112,8 @@ function App() {
             <ControlPanel />
           </div>
         </div>
-      </body>
-
-    </GlobalProvider>
+      </GlobalProvider>
+    </div>
   );
 }
 
