@@ -9,23 +9,82 @@ import { BSTExp } from '../explanations';
 
 export default {
   pseudocode: parse(`
-procedure BinaryTreeInsertion(Tree, DataItem):  $start
-  Ptr = Parent = Root;                  $1            (* Set search pointer Ptr to root *)
-  while (Ptr Not Null)                  $2            (* Continue searching until we go past a leaf to Null *)
-    Parent = Ptr;                       $3            (* Set parent pointer to search pointer Ptr *)
-    if(less(DataItem, Ptr->Item))       $4            (* If DataItem less than the data pointed by the search pointer *)
-      Ptr = Ptr->lchild                 $5            (* Item key is less, so should follow the left child on search path *)
-    else                                $a                                             
-      Ptr = Ptr->rchild                 $6            (* Item key is greater or equal, so should follow the right child on search path *)
-    end if                              $b
-  end while                             $c
-
-  if(less(DataItem, Parent->key))       $7            (* If DataItem less than the data pointed by the parent pointer *)
-    Parent->lchild = newnode(DataItem)  $8            (* Item key is less, so should create the new node on the left child on search path *)
-  else                                  $d
-    Parent->rchild = newnode(DataItem)  $9           (* Item key is greater or equal, so should create the new node on the right child on search path *)
-  end if                                $end
+  \\Code{
+    Main
+    BST_Build(keys)  // return the BST that results from inserting nodes
+                     // with keys 'keys', in the given order, into an
+                     // initially empty BST
+    t <- Empty
+    for each k in keys
+    \\In{
+        t <- BST_Insert(t, k) \\Ref Insert
+    \\In}
+    \\Code}
+  \\Code{
+    Insert
+    BST_Insert(t, k) // Insert key k in BST t, maintaining the BST invariant
+    \\In{
+        n <- new Node     // create a new node to hold key k
+        n.key <- k
+        n.left <- Empty   // it will be a leaf, that is,
+        n.right <- Empty  // it has empty subtrees
+        
+        if t = Empty
+        \\In{
+            return n      // in this case, the result is a tree with just one node
+            \\Expl{  If the tree is initially empty, the resulting BST is just
+                    the new node, which has key k, and empty sub-trees.
+            \\Expl}
+        \\In}
+        Locate the node p that should be the parent of the new node n. \\Ref Locate
+        if k < p.key 
+        \\Expl{  The new node n (whose key is k) will be a child of p. We just 
+                need to decide whether it should be a left or a right child of p.
+        \\Expl}
+        \\In{
+            p.left <- n       // insert n as p's left child         
+        \\In}
+        else
+        \\In{
+            p.right <- n      // insert n as p's right child        
+        \\In}
+        return t                                                    
+    \\In}
+    \\Code}
+    
+    \\Code{
+    Locate
+    c <- t            // c traverses the path from the root to the insertion point
+    
+    \\Expl{  c is going to follow a path down to where the new node is to 
+            be inserted. We start from the root (t).
+    \\Expl}
+    repeat
+    \\In{
+        p <- c        // when the loop exits, p will be c's parent
+        \\Expl{  Parent p and child c will move in lockstep, with p always 
+                trailing one step behind c.
+        \\Expl}
+        if k < c.key
+        \\Expl{  The BST condition is that nodes with keys less than the current
+                node's key are to be found in the left subtree, and nodes whose
+                keys are greater (or the same) are to be in the right subtree.
+        \\Expl}
+        \\In{
+            c <- c.left
+        \\In}
+        else
+        \\In{
+            c <- c.right
+        \\In}
+    \\In}
+    until c = Empty
+    \\Expl{  At the end of this loop, c has located the empty subtree where new
+            node n should be located, and p will be the parent of the new node.
+    \\Expl}
+    \\Code}
 `),
+
   explanation: BSTExp,
 
   initVisualisers() {
@@ -60,51 +119,53 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
     // };
     const tree = {};
     const root = nodes[0];
+    chunker.add(2);
     tree[root] = {};
-
-    chunker.add('start');   
+    
     if (nodes.length === 0) return;
-
-    chunker.add('1', (vis, r) => {   
+    chunker.add(3);
+    chunker.add(6, (vis, r) => {   
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
     }, [root]);
 
     for (let i = 1; i < nodes.length; i++) {
+      chunker.add(3);
       const element = nodes[i];
 
-      chunker.add('1');
       let ptr = tree;
       parent = root;
 
-      chunker.add('2');
+      chunker.add(12);
       while (ptr) {
-        chunker.add('4');
+        chunker.add(14);
         if (element < parent) {
+          chunker.add(16);
           if (tree[parent].left !== undefined) {
             // if current node has left child
-            chunker.add('5');
+            chunker.add(17);
             parent = tree[parent].left;
             ptr = tree[parent];
           } else {
             tree[parent].left = element;
             tree[element] = {};
-            chunker.add('8', (vis, e, p) => {
+            chunker.add(22, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
             }, [element, parent]);
             break;
           } 
         } else if (element > parent) {
+          chunker.add(18);
           if (tree[parent].right !== undefined) {
             // if current node has right child
-            chunker.add('6');
+            chunker.add(19);
             parent = tree[parent].right;
             ptr = tree[parent];
           } else {
             tree[parent].right = element;
             tree[element] = {};
-            chunker.add('9', (vis, e, p) => {
+            chunker.add(24, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
             }, [element, parent]);
@@ -112,7 +173,7 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
           }
         }
       }
-      chunker.add('end');
     }
+    chunker.add(25);
   },
 };

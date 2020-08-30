@@ -1,3 +1,13 @@
+.code-container{
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+.expand-collopse-button{
+    border: 0;
+    margin-left: -26px;
+    border-radius: 50%;
+    outline:none;
+}
+
 .line-light {
     width    : 100%;
     height   : 400px;
@@ -25,7 +35,7 @@
 }
 
 .line-light p span:nth-child(2) {
-    padding-left: 10px;
+    padding-left: 30px;
 }
 
 .active{
