@@ -60,8 +60,8 @@ function HeapsortParam() {
 
   return (
     <>
-      <div className="HSForm">
-        <form className="insertionForm" onSubmit={handleSubmit}>
+      <div className="form">
+        <form className="formLeft" onSubmit={handleSubmit}>
           <div className="outerInput">
             <label className="inputText">
               <input
@@ -72,9 +72,9 @@ function HeapsortParam() {
                 onChange={(e) => setArrVal(e.target.value)}
               />
             </label>
-            <div className="btn-grp">
+            <div className="btnGrp">
               <button
-                className="btn refresh"
+                className="greyRoundBtn"
                 type="button"
                 id={HEAP_SORT}
                 onClick={() => {
@@ -85,7 +85,7 @@ function HeapsortParam() {
                 <RefreshIcon />
               </button>
               <button
-                className="btn insertion"
+                className="blueWordBtn"
                 type="submit"
               >
                 Insert

@@ -5,6 +5,7 @@ import { Tooltip } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/NextLineButton.scss';
+import { ReactComponent as PrevIcon } from '../../resources/icons/arrow.svg';
 
 
 function NextLineButton() {
@@ -18,19 +19,19 @@ function NextLineButton() {
   }, [algorithm]);
 
   return (
-    <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
-      <span>
-        <button
-          type="button"
-          className="nextLineButton"
-          disabled={disabled}
-          style={disabled ? { pointerEvents: 'none' } : {}}
-          onClick={() => dispatch(GlobalActions.PREV_LINE)}
-        >
-          Prev Line
-        </button>
-      </span>
-    </Tooltip>
+  // <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
+    <span>
+      <button
+        type="button"
+        className={disabled ? 'btnDisabled prev' : 'btnActive prev'}
+        disabled={disabled}
+        style={disabled ? { pointerEvents: 'none' } : {}}
+        onClick={() => dispatch(GlobalActions.PREV_LINE)}
+      >
+        <PrevIcon />
+      </button>
+    </span>
+  // </Tooltip>
   );
 }
 

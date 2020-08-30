@@ -100,9 +100,9 @@ function BSTParam() {
 
   return (
     <>
-      <div className="BSTForm">
+      <div className="form">
 
-        <form className="insertionForm" onSubmit={handleSubmit}>
+        <form className="formLeft" onSubmit={handleSubmit}>
           <div className="outerInput">
             <label className="inputText">
               <input
@@ -113,9 +113,9 @@ function BSTParam() {
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
-            <div className="btn-grp">
+            <div className="btnGrp">
               <button
-                className="btn refresh"
+                className="greyRoundBtn"
                 type="button"
                 id={INSERTION}
                 onClick={() => {
@@ -126,7 +126,7 @@ function BSTParam() {
                 <RefreshIcon />
               </button>
               <button
-                className="btn insertion"
+                className="blueWordBtn"
                 type="submit"
               >
                 Insert
@@ -135,7 +135,7 @@ function BSTParam() {
           </div>
         </form>
 
-        <form className="searchForm" onSubmit={handleSubmit}>
+        <form className="formRight" onSubmit={handleSubmit}>
           <div className="outerInput">
             <label className="inputText">
               <input
@@ -146,9 +146,9 @@ function BSTParam() {
                 onChange={(e) => setSearchVal(e.target.value)}
               />
             </label>
-            <div className="btn-grp">
+            <div className="btnGrp">
               <button
-                className="btn insertion"
+                className="blueWordBtn"
                 type="submit"
               >
                 Search

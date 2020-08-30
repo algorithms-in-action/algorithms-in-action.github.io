@@ -14,13 +14,15 @@ function ControlPanel() {
   return (
     <div className="container">
       <div className="controlPanel">
-        <Typography id="discrete-slider" heigth={25}>
-          Speed:
-        </Typography>
+        {/* <Typography id="discrete-slider" heigth={25}>
+          Speed
+        </Typography> */}
         <SpeedSlider />
-        <PlayButton />
-        <PrevLineButton />
-        <NextLineButton />
+        <div className="controlButtons">
+          <PrevLineButton />
+          <PlayButton />
+          <NextLineButton />
+        </div>
       </div>
 
       <div className="parameterPanel">

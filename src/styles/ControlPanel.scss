@@ -1,10 +1,25 @@
 $borderCol: #e9e9e9;
 $fontCol: #343434;
 $sidePad: 24px;
-$paramLog: #EFEEF0;
+$paramLog: #f7f7f7;
 $warningCol: #DC0707;
-$successCol: #40980B;
+$successCol: #53DD6C;
 $borderSize: 3px;
+
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
 
 
 .container {
@@ -15,10 +30,20 @@ $borderSize: 3px;
   .controlPanel {
     height: 40px;
     border-bottom: $borderSize solid $borderCol;
-    padding: auto $sidePad;
+    padding: 0px $sidePad;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+
+    .controlButtons {
+      display: flex;
+      background-color: #F7F7F7;
+      // padding: 0px 4px;
+      @include border-radii(16px, 16px, 16px, 16px);
+      // border: 1px solid #D4D4D4;
+
+    }
+
   }
 
   .parameterPanel {
@@ -32,7 +57,6 @@ $borderSize: 3px;
       overflow: hidden;
       text-overflow: ellipsis;
       margin: 16px auto 0px auto;
-      
   
       .logTag {
         color: $successCol;

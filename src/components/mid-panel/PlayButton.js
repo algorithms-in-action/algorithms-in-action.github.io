@@ -6,6 +6,9 @@ import { fireEvent } from '@testing-library/react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/NextLineButton.scss';
+import { ReactComponent as PlayIcon } from '../../resources/icons/play.svg';
+import { ReactComponent as PauseIcon } from '../../resources/icons/pause.svg';
+
 
 let speed;
 
@@ -15,11 +18,12 @@ export function sleep(time) {
 }
 
 export function setTime(value) {
-  speed = (0.5 ** value) * 10000;
+  speed = (0.5 ** (2 * value)) * 10000;
 }
 
 function PlayButton() {
   const { dispatch, algorithm } = useContext(GlobalContext);
+  const [play, setPlay] = useState(false);
 
   const [disabled, setDisabled] = useState(true);
   useEffect(() => {
@@ -42,19 +46,45 @@ function PlayButton() {
     }
   };
 
+  const clickPlay = () => {
+    setPlay(true);
+    console.log(`Play: ${play}`);
+    console.log(`Disable: ${disabled}`);
+    AutomaticExecution();
+  };
+
+  const PauseExecution = () => {
+    setPlay(false);
+  };
+
   return (
     <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
       <span>
-        <button
-          type="button"
-          className="nextLineButton"
-          id="PlayButton"
-          disabled={disabled}
-          style={disabled ? { pointerEvents: 'none' } : {}}
-          onClick={() => AutomaticExecution()}
-        >
-          Play
-        </button>
+        {
+        play
+          ? (
+            <button
+              type="button"
+              className="btnActive play"
+              id="PlayButton"
+              onClick={() => PauseExecution()}
+            >
+              <PauseIcon />
+            </button>
+          )
+          : (
+            <button
+              type="button"
+              className={disabled ? 'btnDisabled' : 'btnActive play'}
+              id="PlayButton"
+              disabled={disabled}
+              style={disabled ? { pointerEvents: 'none' } : {}}
+              onClick={() => clickPlay()}
+            >
+              <PlayIcon />
+            </button>
+          )
+      }
       </span>
     </Tooltip>
   );
