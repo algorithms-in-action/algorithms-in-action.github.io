@@ -72,9 +72,9 @@ $fontCol: #343434;
   }
 
   .lineExplanation {
-    padding: 16px;
-    // height: 15%;
-    border-top: 1px solid $borderCol;
+    // height: 200px;
+    // border-top: 1px solid $borderCol;
+    border-top: 3px solid $borderCol;
     @include textPadding;
 
   }
