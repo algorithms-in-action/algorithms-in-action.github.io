@@ -39,14 +39,11 @@ function SpeedSlider() {
 
   return (
     <div className="sliderContainer">
-      {/* <div className="text">
-        Speed
-      </div> */}
       <div className="slider">
         <ThemeProvider theme={muiTheme}>
           <Slider
             placeholder="slider"
-            defaultValue={2}
+            defaultValue={3}
             onLoad={setTime(value)}
             value={value}
             aria-labelledby="discrete-slider"

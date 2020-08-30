@@ -31,13 +31,12 @@ $group: #F7F7F7;
   @include border-radii(16px,16px,16px,16px);
 
   .slider {
-    width: 100px;
+    width: 160px;
     height: 30px;
     margin-top: 2px;
   }
 
 }
-
 
 .btn {
   background: none;
@@ -49,6 +48,15 @@ $group: #F7F7F7;
   outline: inherit;
   margin: 0px 8px;
 
+}
+
+.btnGone {
+  display: none;
+
+}
+
+.btnPresent {
+  display: block;
 }
 
 // Button Active Style
@@ -79,8 +87,6 @@ $group: #F7F7F7;
   background: #E3E2E4 !important;
   @include border-radii(14px,14px,14px,14px);
 }
-
-// Button Disabled Style
 
 .btnDisabled {
   @extend .btnActive;

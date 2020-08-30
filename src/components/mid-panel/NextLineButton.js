@@ -24,6 +24,7 @@ function NextLineButton() {
       <span>
         <button
           type="button"
+          id="NextButton"
           className={disabled ? 'btnDisabled next' : 'btnActive next'}
           disabled={disabled}
           style={disabled ? { pointerEvents: 'none' } : {}}

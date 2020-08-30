@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Typography from '@material-ui/core/Typography';
 import NextLineButton from './NextLineButton';
 import PlayButton from './PlayButton';
 import PrevLineButton from './PrevLineButton';
@@ -14,9 +13,6 @@ function ControlPanel() {
   return (
     <div className="container">
       <div className="controlPanel">
-        {/* <Typography id="discrete-slider" heigth={25}>
-          Speed
-        </Typography> */}
         <SpeedSlider />
         <div className="controlButtons">
           <PrevLineButton />

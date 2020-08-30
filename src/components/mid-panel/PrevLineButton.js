@@ -19,19 +19,19 @@ function NextLineButton() {
   }, [algorithm]);
 
   return (
-  // <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
-    <span>
-      <button
-        type="button"
-        className={disabled ? 'btnDisabled prev' : 'btnActive prev'}
-        disabled={disabled}
-        style={disabled ? { pointerEvents: 'none' } : {}}
-        onClick={() => dispatch(GlobalActions.PREV_LINE)}
-      >
-        <PrevIcon />
-      </button>
-    </span>
-  // </Tooltip>
+    <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
+      <span>
+        <button
+          type="button"
+          className={disabled ? 'btnDisabled prev' : 'btnActive prev'}
+          disabled={disabled}
+          style={disabled ? { pointerEvents: 'none' } : {}}
+          onClick={() => dispatch(GlobalActions.PREV_LINE)}
+        >
+          <PrevIcon />
+        </button>
+      </span>
+    </Tooltip>
   );
 }
 

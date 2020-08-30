@@ -1,6 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect, useRef,
+} from 'react';
 import { Tooltip } from '@material-ui/core';
 import { fireEvent } from '@testing-library/react';
 import { GlobalContext } from '../../context/GlobalState';
@@ -9,16 +11,14 @@ import '../../styles/NextLineButton.scss';
 import { ReactComponent as PlayIcon } from '../../resources/icons/play.svg';
 import { ReactComponent as PauseIcon } from '../../resources/icons/pause.svg';
 
-
 let speed;
-
 // Function used to force the thread to sleep for n milliseconds.
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 export function setTime(value) {
-  speed = (0.5 ** (2 * value)) * 10000;
+  speed = ((0.5 ** (value * 2)) * 10000);
 }
 
 function PlayButton() {
@@ -32,12 +32,14 @@ function PlayButton() {
     }
   }, [algorithm]);
 
+
   /* After button being clicked, the state of the execution is checked.
   * If the algorithm is finished, nothing happens.
   * Otherwise, it simulates the pressing of the button,
   * making it proceed to the next line.
   */
   const AutomaticExecution = () => {
+    // setPlay(true);
     if (!algorithm.finished) {
       dispatch(GlobalActions.NEXT_LINE);
       sleep(speed).then(() => {
@@ -46,45 +48,36 @@ function PlayButton() {
     }
   };
 
-  const clickPlay = () => {
-    setPlay(true);
-    console.log(`Play: ${play}`);
-    console.log(`Disable: ${disabled}`);
-    AutomaticExecution();
-  };
-
   const PauseExecution = () => {
-    setPlay(false);
+    // setPlay(false);
+    // console.log('Pause');
   };
 
   return (
     <Tooltip title="Please run the algorithm first" disableHoverListener={!disabled}>
       <span>
-        {
-        play
-          ? (
-            <button
-              type="button"
-              className="btnActive play"
-              id="PlayButton"
-              onClick={() => PauseExecution()}
-            >
-              <PauseIcon />
-            </button>
-          )
-          : (
-            <button
-              type="button"
-              className={disabled ? 'btnDisabled' : 'btnActive play'}
-              id="PlayButton"
-              disabled={disabled}
-              style={disabled ? { pointerEvents: 'none' } : {}}
-              onClick={() => clickPlay()}
-            >
-              <PlayIcon />
-            </button>
-          )
-      }
+
+        {/* <button
+          type="button"
+          className="btnActive play"
+          id="PauseButton"
+          onClick={() => PauseExecution()}
+        >
+          <PauseIcon />
+        </button> */}
+
+        <button
+          type="button"
+          className={disabled ? 'btnDisabled' : 'btnActive play'}
+          id="PlayButton"
+          disabled={disabled}
+          style={disabled ? { pointerEvents: 'none' } : {}}
+          onClick={() => AutomaticExecution()}
+        >
+          <PlayIcon />
+        </button>
+
+
       </span>
     </Tooltip>
   );
