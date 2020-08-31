@@ -99,15 +99,21 @@ function App() {
           <div id="leftcol">
             <LeftPanel />
           </div>
-          <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onMouseDown={startLeftDrag} role="button" />
+          <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onMouseDown={startLeftDrag} role="button">
+            <div id="draghandle" />
+          </div>
           <div id="tabpages">
             <MidPanel />
           </div>
-          <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onMouseDown={startRightDrag} role="button" />
+          <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onMouseDown={startRightDrag} role="button">
+            <div id="draghandle" />
+          </div>
           <div id="rightcol">
             <RightPanel />
           </div>
-          <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onMouseDown={startBottomDrag} role="button" />
+          <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onMouseDown={startBottomDrag} role="button">
+            <div id="draghandle" />
+          </div>
           <div id="footer">
             <ControlPanel />
           </div>
