@@ -1,56 +1,71 @@
 /* eslint-disable no-undef */
+
 import parse from './parse';
 
+// When Input is Empty
 test('empty pseudocode', () => {
   expect(parse('')).toEqual({});
 });
 
+// Test signle basic parse
 test('single basic procedure', () => {
-  expect(parse(`procedure BinaryTreeSearch(needle):
-  doSomething
-  doSomethingElse`)).toEqual({
-    BinaryTreeSearch: [
-      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
-      { code: '  doSomething', bookmark: undefined, explanation: undefined },
-      { code: '  doSomethingElse', bookmark: undefined, explanation: undefined },
-    ],
-  });
+  expect(parse(`
+  \\Code{
+  Main
+  \\In{
+      while t not Empty
+  \\In}
+  \\Code}
+`)).toEqual(
+    {
+      Main: [{
+        bookmark: 1, code: 'while t not Empty', explanation: '', indentation: 1, ref: '', refBookmark: 0,
+      }],
+    },
+  );
 });
 
-test('single procedure with bookmarks', () => {
-  expect(parse(`procedure BinaryTreeSearch(needle):
-  doSomething $something
-  doSomethingElse    $somethingElse`)).toEqual({
-    BinaryTreeSearch: [
-      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
-      { code: '  doSomething', bookmark: 'something', explanation: undefined },
-      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: undefined },
-    ],
-  });
+// Test whether explanation function can work well
+test('procedure with explanation', () => {
+  expect(parse(`
+  \\Code{
+  Main
+  \\In{
+      while t not Empty
+      \\Expl{  We have found a node with the desired key k.
+      \\Expl}
+  \\In}
+  \\Code}
+`)).toEqual(
+    {
+      Main: [{
+        bookmark: 1, code: 'while t not Empty', explanation: ' We have found a node with the desired key k.', indentation: 1, ref: '', refBookmark: 0,
+      }],
+    },
+  );
 });
 
-test('single procedure with explanation', () => {
-  expect(parse(`procedure BinaryTreeSearch(needle):
-  doSomething $something (* abc *)
-  doSomethingElse    $somethingElse    (* def *)`)).toEqual({
-    BinaryTreeSearch: [
-      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
-      { code: '  doSomething', bookmark: 'something', explanation: 'abc' },
-      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: 'def' },
-    ],
-  });
-});
-
-test('multi-line explanation', () => {
-  expect(parse(`procedure BinaryTreeSearch(needle):
-  doSomething $something (* abc 
-    def
-    ghi *)
-  doSomethingElse    $somethingElse`)).toEqual({
-    BinaryTreeSearch: [
-      { code: 'procedure BinaryTreeSearch(needle):', bookmark: undefined, explanation: undefined },
-      { code: '  doSomething', bookmark: 'something', explanation: 'abc def ghi' },
-      { code: '  doSomethingElse', bookmark: 'somethingElse', explanation: undefined },
-    ],
+// Test whether Ref function can work well.
+test('procedure with ref', () => {
+  expect(parse(`
+  \\Code{
+    Main
+    \\In{
+        Ref thing \\Ref Insert
+    \\In}
+    \\Code}
+  \\Code{
+    Insert
+    \\In{
+        something                                              
+    \\In}
+    \\Code}
+`)).toEqual({
+    Insert: [{
+      bookmark: 2, code: 'something', explanation: '', indentation: 2, ref: '', refBookmark: 1,
+    }],
+    Main: [{
+      bookmark: 1, code: 'Ref thing', explanation: '', indentation: 1, ref: 'Insert', refBookmark: 0,
+    }],
   });
 });

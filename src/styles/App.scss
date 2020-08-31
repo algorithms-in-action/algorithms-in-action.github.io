@@ -21,7 +21,7 @@ html, body {
     min-width: $minContainerWidth;
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid $borderCol;
+    // border-bottom: 1px solid $borderCol;
 
     .panel {
       display: flex;
@@ -33,8 +33,7 @@ html, body {
         display: flex;
         flex-direction: column;
         min-width: 200px;
-        border-left: 1px solid $borderCol;
-
+        // border-left: 1px solid $borderCol;
       }
   
       .midPanel {
@@ -49,9 +48,7 @@ html, body {
         flex-direction: column;
         height: 100%;
         min-width: 400px;
-        border-right: 1px solid $borderCol;
-
-
+        // border-right: 1px solid $borderCol;
       }
       
     }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { GlobalContext } from '../context/GlobalState';
-import '../styles/MidPanel.scss';
+import { GlobalContext } from '../../context/GlobalState';
+import '../../styles/MidPanel.scss';
 import NextLineButton from './NextLineButton';
 import PlayButton from './PlayButton';
 import PrevLineButton from './PrevLineButton';

@@ -5,43 +5,34 @@
 import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
+import ParamMsg from './ParamMsg';
+import '../../styles/Param.scss';
+import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
+import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
 
 const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
 const DEFAULT_TARGET = '2';
+const INSERTION = 'insertion';
+const SEARCH = 'search';
+const EXCEPTION = 'exception';
 
 function BSTParam() {
   const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
   const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
-  const INSERTION = 'insertion';
-  const SEARCH = 'search';
-  const EXCEPTION = 'exception';
-  const [logTagCol, setLogTagCol] = useState('');
-  const [logTagText, setLogTagText] = useState('');
-  const [logText, setLogText] = useState('');
+  const [logWarning, setLogWarning] = useState(false);
+  const [logTag, setLogTag] = useState('');
+  const [logMsg, setLogMsg] = useState('');
 
   const { algorithm, dispatch } = useContext(GlobalContext);
 
-  const commaSeparatedNumberListValidCheck = (t) => {
-    const regex = /^[0-9]+(,[0-9]+)*$/g;
-    return t.match(regex);
-  };
-
-  const singleNumberValidCheck = (t) => {
-    const regex = /^\d+$/g;
-    return t.match(regex);
-  };
-
   const updateParamStatus = (type, val, success) => {
-    const warningCol = '#DC0707';
-    const successCol = '#40980B';
-
     if (success) {
-      setLogTagText(`${type} success!`);
-      setLogTagCol(successCol);
-      setLogText(`Input for ${type} algorithm is valid.`);
+      setLogTag(`${type} success!`);
+      setLogWarning(false);
+      setLogMsg(`Input for ${type} algorithm is valid.`);
     } else {
-      setLogTagText(`${type} failure!`);
-      setLogTagCol(warningCol);
+      setLogTag(`${type} failure!`);
+      setLogWarning(true);
 
       let warningText = '';
       if (type === EXCEPTION) {
@@ -55,7 +46,7 @@ function BSTParam() {
         }
       }
 
-      setLogText(warningText);
+      setLogMsg(warningText);
     }
   };
 
@@ -113,63 +104,62 @@ function BSTParam() {
 
         <form className="insertionForm" onSubmit={handleSubmit}>
           <div className="outerInput">
-            <label>
+            <label className="inputText">
               <input
                 name={INSERTION}
-                className="inputText"
                 type="text"
                 value={insertionVal}
                 data-testid="insertionText"
-                placeholder="e.g. 4,2,3,1,2,3,4,5"
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
-            <input
-              className="inputSubmit"
-              type="submit"
-              value="Insert"
-              data-testid="insertionSubmit"
-            />
+            <div className="btn-grp">
+              <button
+                className="btn refresh"
+                type="button"
+                id={INSERTION}
+                onClick={() => {
+                  const list = genRandNumList(10, 1, 100);
+                  setInsertionVal(list);
+                }}
+              >
+                <RefreshIcon />
+              </button>
+              <button
+                className="btn insertion"
+                type="submit"
+              >
+                Insert
+              </button>
+            </div>
           </div>
         </form>
 
         <form className="searchForm" onSubmit={handleSubmit}>
           <div className="outerInput">
-            <label>
+            <label className="inputText">
               <input
                 name={SEARCH}
-                className="inputText"
                 type="text"
                 value={searchVal}
-                data-testid="searchText"
-                placeholder="e.g. 17"
+                data-testid="insertionText"
                 onChange={(e) => setSearchVal(e.target.value)}
               />
             </label>
-            <input
-
-              className="inputSubmit"
-              type="submit"
-              value="Search"
-              data-testid="searchSubmit"
-            />
+            <div className="btn-grp">
+              <button
+                className="btn insertion"
+                type="submit"
+              >
+                Search
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
-      {logText
-        ? (
-          <div className="logContainer">
-            <span
-              className="logTag"
-              data-testid="logTag"
-              style={{ color: logTagCol }}
-            >
-              { logTagText }
-            </span>
-            <span className="logText">{ logText }</span>
-          </div>
-        )
+      {logMsg
+        ? <ParamMsg logWarning={logWarning} logTag={logTag} logMsg={logMsg} />
         : ''}
     </>
   );

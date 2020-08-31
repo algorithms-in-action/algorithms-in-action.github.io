@@ -2,17 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import ReactMarkDown from 'react-markdown/with-html';
 import toc from 'remark-toc';
 
-import { GlobalContext } from '../context/GlobalState';
-import CodeBlock from '../markdown/code-block';
+import CodeBlock from '../../markdown/code-block';
+import { GlobalContext } from '../../context/GlobalState';
 
-
-function Explanation() {
+function MoreInfo() {
   const { algorithm } = useContext(GlobalContext);
   const [explanation, setExplanation] = useState('');
 
   useEffect(() => {
-    fetch(algorithm.explanation).then((res) => res.text()).then((text) => setExplanation(text));
-  }, [algorithm.explanation]);
+    fetch(algorithm.extraInfo).then((res) => res.text()).then((text) => setExplanation(text));
+  }, [algorithm.extraInfo]);
 
   return (
     <div className="textArea">
@@ -26,4 +25,4 @@ function Explanation() {
   );
 }
 
-export default Explanation;
+export default MoreInfo;
