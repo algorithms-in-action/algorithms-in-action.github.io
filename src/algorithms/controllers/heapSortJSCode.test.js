@@ -1,4 +1,4 @@
-import HeapSort from './heapSort';
+import HeapSort from './heapSortJSCode';
 
 test('HeapSort 1', () => {
   const A = [4, 10, 3];
