@@ -13,7 +13,6 @@ export const GlobalActions = {
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
-    console.log('LOAD ALGORITHM');
 
     const {
       param, name, explanation, extraInfo,
@@ -29,7 +28,6 @@ export const GlobalActions = {
 
   // run an algorithm by executing the algorithm
   RUN_ALGORITHM: (state, params) => {
-    console.log('RUN ALGORITHM');
     const data = algorithms[params.name];
     const {
       param, controller, name, explanation, extraInfo,
@@ -60,7 +58,7 @@ export const GlobalActions = {
       pseudocode: procedurePseudocode,
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
-      visualisers: chunker.visualisers.graph,
+      visualisers: chunker.visualisers,
       collapse: collapseController,
     };
   },
