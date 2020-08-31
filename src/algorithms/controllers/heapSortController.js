@@ -136,11 +136,12 @@ export default {
                 Use the DownHeap operation to restore the heap condition. 
         \\Expl}
     \\In}
+    \\Code}
     
     \\Note{  This is very similar to DownHeapk.
     \\Note}
     
-    \\Code
+    \\Code{
     DownHeap1
     // DownHeap(A, 1, n)
     i <- 1                                                            
@@ -194,79 +195,7 @@ export default {
         j <- 2*i                                                      
     \\In}
     \\Code}
-    
-    \\Note{  The following is an implementation in C:
-    #include <stdlib.h>
-    #include <stdio.h>
-    
-    #define False 0
-    #define True 1
-    #define Swap(a,b) {int tmp; tmp=a; a=b; b=tmp;}
-    
-    #define Size 10
-    int A[Size];
-    // int i1; // for debugging
-    // for (i1=1; i1 < Size; i1++) printf("%d ", A[i1]); printf("\n");
-    
-    int IndexOfLargestChild(int *A, int i, int n);
-    void heapsort(int A[], int n);
-    
-    void
-    main() {
-            int i = 1;
-            // read A[1]..A[Size-1] from stdin
-            while (i < Size)
-                    scanf("%d", &A[i++]);
-            heapsort(A, Size-1);
-            for (i=1; i < Size; i++) printf("%d ", A[i]); printf("\n");
-    }
-    
-    void
-    heapsort(int A[], int n) { // sort A[1]..A[n]
-            int i, j, k, heap;
-    
-            // BuildHeap
-            for (k = n/2; k>=1; k--) {
-                    // DownHeap(A,k,n)
-                    i = k;
-                    heap = False;
-                    while (i<=n/2 && !heap) {
-                            j = IndexOfLargestChild(A,i,n);
-                            if (A[i] >= A[j])
-                            heap = True;
-                            else {
-                                    Swap(A[i], A[j])
-                                    i = j;
-                            }
-                    }
-            }
-            // SortHeap
-            while (n>1) {
-                    Swap(A[n], A[1])
-                    n = n-1;
-                    // DownHeap(A,1,n)
-                    i = 1;
-                    heap = False;
-                    while (i<=n/2 && !heap) {
-                            j = IndexOfLargestChild(A,i,n);
-                            if (A[i] >= A[j])
-                                    heap = True;
-                            else {
-                                    Swap(A[i], A[j])
-                                    i = j;
-                            }
-                    }
-            }
-    }
-    
-    int
-    IndexOfLargestChild(int *A, int i, int n) {
-            if ((2*i+1 <= n) && (A[2*i+1] > A[2*i]))
-                    return 2*i+1;
-            else
-                    return 2*i;
-    }
-    \\Note}
+       
 `),
 
   explanation: BSTExp,
@@ -296,7 +225,7 @@ export default {
     let heap;
     let swap;
 
-    chunker.add(1, (vis, array) => {  
+    chunker.add(2, (vis, array) => {  
       vis.heap.setHeap(array);
       vis.array.set(array);
     }, [[...A]]);
@@ -321,55 +250,80 @@ export default {
     };
 
     for (let k = Math.floor(n / 2); k >= 0; k -= 1) {
-      let j;
-      heap = false;
+      chunker.add(3);
+      let j;  
       i = k;
+      chunker.add(6);
+      heap = false;
+      chunker.add(7);
 
       while (!(i > (n - 1) / 2 || heap)) {
+        chunker.add(8);
         if (2 * i < n && A[2 * i] < A[2 * i + 1]) {
+          chunker.add(10);
           j = 2 * i + 1;
+          chunker.add(11);
         } else {
+          chunker.add(12);
           j = 2 * i;
+          chunker.add(13);
         }
 
         if (A[i] >= A[j]) {
+          chunker.add(14);
           heap = true;
+          chunker.add(15);
         } else {
-          swapAction(1, 2, i, j);
+          chunker.add(16);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
+          swapAction(17, 17, i, j);
           i = j;
+          chunker.add(18);
         }
       }
     }
 
     while (n > 0) {
+      chunker.add(20);
       let j;
-      swapAction(1, 2, 0, n);
       swap = A[n];
       A[n] = A[0];
       A[0] = swap;
+      swapAction(21, 21, 0, n);
 
       n -= 1;
+      chunker.add(22);
       i = 0;
+      chunker.add(24);
       heap = false;
+      chunker.add(25);
 
       while (!(i > (n - 1) / 2 || heap)) {
+        chunker.add(26);
         if (2 * i < n && A[2 * i] < A[2 * i + 1]) {
+          chunker.add(28);
           j = 2 * i + 1;
+          chunker.add(29);
         } else {
+          chunker.add(30);
           j = 2 * i;
+          chunker.add(31);
         }
 
         if (A[i] >= A[j]) {
+          chunker.add(32);
           heap = true;
+          chunker.add(33);
         } else {
-          swapAction(1, 2, i, j);
+          chunker.add(34);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
+          swapAction(35, 35, i, j);
           i = j;
+          chunker.add(36);
         }
       }
     }
