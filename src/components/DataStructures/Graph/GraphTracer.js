@@ -161,17 +161,6 @@ class GraphTracer extends Tracer {
     node1.value = node2.value;
     node2.value = temp;
     this.layoutTree(this.root);
-    // let newRoot = this.root;
-    // if (nodeId1 === this.root) newRoot = nodeId2;
-    // else if (nodeId2 === this.root) newRoot = nodeId1;
-
-    // this.edges.forEach(edge => {
-    //   if (edge.source === nodeId1) edge.source = nodeId2;
-    //   else if (edge.source === nodeId2) edge.source = nodeId1;
-    //   if (edge.target === nodeId1) edge.target = nodeId2;
-    //   else if (edge.target === nodeId2) edge.target = nodeId1;
-    // });
-    // this.layoutTree(newRoot);
   }
 
   directed(isDirected = true) {

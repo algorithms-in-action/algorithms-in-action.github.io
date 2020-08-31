@@ -248,7 +248,8 @@ export default {
       }, [n1, n2]);
     };
  
-    /** NOTE: In Linda's code, array index starts from 1 
+    /** NOTE: In Linda's code, array index starts from 1
+     * however, in JS, array index naturally starts from 0
      * index start from 0:
      * parent = k , left child = 2*k + 1, right child = 2*k + 2
      * index start from 1:
@@ -256,107 +257,138 @@ export default {
     */
     // k is the first non-leaf node
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
-      // chunker.add(3, (vis, index) => {
-      //   vis.array.select(index);
-      //   vis.heap.visit(index + 1);
-      // }, [k]);
+      chunker.add(3, (vis, index) => {
+        vis.array.select(index);
+        vis.heap.select(index + 1);
+      }, [k]);
 
-      chunker.add(3);
       let j;  
       i = k;
       chunker.add(6);
       heap = false;
       chunker.add(7);
 
-      chunker.add(8);
-      // chunker.add(8, (vis, index) => {
-      //   vis.array.deselect(index);
-      //   vis.heap.leave(A[index]);
-      // }, [k]);
-
-      
+      chunker.add(8, (vis, index) => {
+        vis.array.deselect(index);
+        vis.heap.deselect(index + 1);
+      }, [k]);
       // if current node's left child'index is greater than array length, 
       // then current node is a leaf
       while (!(2 * i + 1 >= n || heap)) {
-        chunker.add(10);
-        // chunker.add(10, (vis, index) => {
-        //   vis.array.select(index);
-        //   vis.heap.visit(A[index]);
-        // }, [i]);
+        chunker.add(10, (vis, index) => {
+          vis.array.select(index);
+          vis.heap.select(index + 1);
+        }, [i]);
         // left child is smaller than right child
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           j = 2 * i + 2;
-          chunker.add(11);
-          // chunker.add(11, (vis, index) => {
-          //   vis.array.select(index);
-          //   vis.heap.visit(A[index]);
-          // }, [j]);
+          chunker.add(11, (vis, index) => {
+            vis.array.select(index);
+            vis.heap.select(index + 1);
+          }, [j]);
         } else {
           chunker.add(12);
           j = 2 * i + 1;
-          chunker.add(13);
-          // chunker.add(13, (vis, index) => {
-          //   vis.array.select(index);
-          //   vis.heap.visit(A[index]);
-          // }, [j]);
+          chunker.add(13, (vis, index) => {
+            vis.array.select(index);
+            vis.heap.select(index + 1);
+          }, [j]);
         }
 
         chunker.add(14);
-        // parent is greater than largest child
         if (A[i] >= A[j]) {
           heap = true;
-          chunker.add(15);
+          chunker.add(15, (vis, p, c) => {
+            vis.array.deselect(p);
+            vis.array.deselect(c);
+            vis.heap.deselect(p + 1);
+            vis.heap.deselect(c + 1);
+          }, [i, j]);
         } else {
           chunker.add(16);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
           swapAction(17, 17, i, j);
+          chunker.add(18, (vis, p, c) => {
+            vis.array.deselect(p);
+            vis.array.deselect(c);
+            vis.heap.deselect(p + 1);
+            vis.heap.deselect(c + 1);
+          }, [i, j]);
           i = j;
-          chunker.add(18);
         }
       }
     }
 
+    chunker.add(20);
     while (n > 0) {
-      chunker.add(20);
       let j;
       swap = A[n - 1];
       A[n - 1] = A[0];
       A[0] = swap;
       swapAction(21, 21, 0, n - 1);
 
+      chunker.add(22, (vis, index) => {
+        vis.array.patch(index);
+      }, [n - 1]);
       n -= 1;
-      chunker.add(22);
+      
       i = 0;
-      chunker.add(24);
-      heap = false;
+      chunker.add(24, (vis, index) => {
+        vis.array.select(index);
+        vis.heap.select(index + 1);
+      }, [i]);
+      
       chunker.add(25);
-
+      heap = false;
+      
+      chunker.add(26, (vis, index) => {
+        vis.array.deselect(index);
+        vis.heap.deselect(index + 1);
+      }, [i]);
       while (!(2 * i + 1 >= n || heap)) {
-        chunker.add(26);
+        chunker.add(28, (vis, index) => {
+          vis.array.select(index);
+          vis.heap.select(index + 1);
+        }, [i]);
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
-          chunker.add(28);
           j = 2 * i + 2;
-          chunker.add(29);
+          chunker.add(29, (vis, index) => {
+            vis.array.select(index);
+            vis.heap.select(index + 1);
+          }, [j]);
         } else {
           chunker.add(30);
           j = 2 * i + 1;
-          chunker.add(31);
+          chunker.add(31, (vis, index) => {
+            vis.array.select(index);
+            vis.heap.select(index + 1);
+          }, [j]);
         }
 
-        if (A[i] >= A[j]) {
-          chunker.add(32);
+        chunker.add(32);
+        if (A[i] >= A[j]) {  
           heap = true;
-          chunker.add(33);
+          chunker.add(33, (vis, p, c) => {
+            vis.array.deselect(p);
+            vis.array.deselect(c);
+            vis.heap.deselect(p + 1);
+            vis.heap.deselect(c + 1);
+          }, [i, j]);
         } else {
           chunker.add(34);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
           swapAction(35, 35, i, j);
+          chunker.add(36, (vis, p, c) => {
+            vis.array.deselect(p);
+            vis.array.deselect(c);
+            vis.heap.deselect(p + 1);
+            vis.heap.deselect(c + 1);
+          }, [i, j]);
           i = j;
-          chunker.add(36);
         }
       }
     }
