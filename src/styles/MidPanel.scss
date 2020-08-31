@@ -9,7 +9,6 @@ $midCol: #f9f9f9;
 .midPanelContainer {
   display: flex;
   flex-direction: column;
-  flex: 1;
   height: 100%;
   
   .midPanelHeader {
@@ -48,6 +47,7 @@ $midCol: #f9f9f9;
    /* Animation Goes Here */
   .midPanelBody {
     display: flex;
+    flex-direction: column;
     flex: 1 1 1px; /* Important */
     min-height: 0;
     background-color: $midCol;
