@@ -10,81 +10,264 @@ import { BSTExp } from '../explanations';
 
 export default {
   pseudocode: parse(`
-  \\Code{
+  \\Note{  REAL specification of heapsort animation
+    \\Note}
+    
+    \\Code{
     Main
-    BST_Build(keys)  // return the BST that results from inserting nodes
-                     // with keys 'keys', in the given order, into an
-                     // initially empty BST
-    t <- Empty
-    for each k in keys
+    HeapSort(A, n) // Sort array A[1]..A[n] in ascending order.
+    \\Expl{  We are not using A[0] (for languages that start array indices at 0).
+    \\Expl}
     \\In{
-        t <- BST_Insert(t, k) \\Ref Insert
-    \\In}
-    \\Code}
-  \\Code{
-    Insert
-    BST_Insert(t, k) // Insert key k in BST t, maintaining the BST invariant
-    \\In{
-        n <- new Node     // create a new node to hold key k
-        n.key <- k
-        n.left <- Empty   // it will be a leaf, that is,
-        n.right <- Empty  // it has empty subtrees
-        
-        if t = Empty
-        \\In{
-            return n      // in this case, the result is a tree with just one node
-            \\Expl{  If the tree is initially empty, the resulting BST is just
-                    the new node, which has key k, and empty sub-trees.
-            \\Expl}
-        \\In}
-        Locate the node p that should be the parent of the new node n. \\Ref Locate
-        if k < p.key 
-        \\Expl{  The new node n (whose key is k) will be a child of p. We just 
-                need to decide whether it should be a left or a right child of p.
+        BuildHeap(A, n)    \\Ref BuildHeap 
+        \\Expl{  First reorder the array elements so they form a (max) heap
+                (no element is larger than its parent). The root node, A[1],
+                is therefore the largest element.  
         \\Expl}
-        \\In{
-            p.left <- n       // insert n as p's left child         
-        \\In}
-        else
-        \\In{
-            p.right <- n      // insert n as p's right child        
-        \\In}
-        return t                                                    
+        SortHeap(A, n)    \\Ref SortHeap 
+        \\Expl{  Convert the heap into a sorted array. The largest element is
+                put in the correct position A[n] first and we work backwards 
+                from there, putting the next-largest element in its place, 
+                etc, shrinking the heap by one element at each step. 
+        \\Expl}
     \\In}
     \\Code}
     
     \\Code{
-    Locate
-    c <- t            // c traverses the path from the root to the insertion point
-    
-    \\Expl{  c is going to follow a path down to where the new node is to 
-            be inserted. We start from the root (t).
+    BuildHeap
+    // build heap
+    for k <- Index of last non-leaf downto 1    \\Ref BHForLoop 
+    \\Expl{  We use bottom-up heap creation, to build the heap from the bottom
+            up (tree view) and right to left (array view). The leaves are 
+            already heaps of size 1, so nothing needs to be done with them. 
+            Working backwards through the heap, and starting from the last 
+            non-leaf node, we form heaps of up to size 3 (from 2 leaves plus
+            their parent k), then 7 (2 heaps of size 3 and their parent k) 
+            etc, until the whole array is a single heap. 
     \\Expl}
-    repeat
     \\In{
-        p <- c        // when the loop exits, p will be c's parent
-        \\Expl{  Parent p and child c will move in lockstep, with p always 
-                trailing one step behind c.
+        DownHeap(A, k, n)    \\Ref DownHeapk 
+        \\Expl{  DownHeap is where smaller heaps are combined to form larger
+                heaps. The children of node k are already heaps, so we need
+                only be concerned about where A[k] fits in. 
         \\Expl}
-        if k < c.key
-        \\Expl{  The BST condition is that nodes with keys less than the current
-                node's key are to be found in the left subtree, and nodes whose
-                keys are greater (or the same) are to be in the right subtree.
+    \\In}
+    \\Code}
+    
+    \\Code{
+    BHForLoop
+    for k <- n/2 downto 1                                           
+    \\Expl{  Using root index 1, the last non-leaf has index n/2 (rounded down
+            to the nearest integer).
+    \\Expl}
+    \\Code}
+    
+    \\Code{
+    DownHeapk
+    // DownHeap(A, k, n)
+    \\Expl{  DownHeap is where smaller heaps are combined to form larger heaps.
+            The children of node k are already heaps, so we need only be 
+            concerned about where A[k] fits in. 
+    \\Expl}
+    i <- k                                                            
+    \\Expl{  Set index i to the root of the subtree that we are now going to 
+            make into a heap. 
+    \\Expl}
+    heap <- False // 'heap' is a flag                                 
+    while not (IsLeaf(A[i]) or heap) 
+    \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
+            We also terminate the loop if the children of A[i] are in the 
+            correct order relative to the parent, since we know that subtrees
+            lower down already meet the heap condition. We use the heap flag
+            to test the heap condition.  
+    \\Expl}
+    \\In{        
+        j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargestk 
+        \\Expl{  Find the larger of the two children of the node.
         \\Expl}
+        if A[i] >= A[j] 
         \\In{
-            c <- c.left
+            heap <- True                                              
+            \\Expl{  The heap condition is satisfied (the root is larger 
+                    than both children), so exit from while loop. 
+            \\Expl}
         \\In}
         else
         \\In{
-            c <- c.right
+            Swap(A[i], A[j]) // Swap root element with (larger) child 
+            i <- j                                                    
         \\In}
-    \\In}
-    until c = Empty
-    \\Expl{  At the end of this loop, c has located the empty subtree where new
-            node n should be located, and p will be the parent of the new node.
-    \\Expl}
+    \\In}        
     \\Code}
-` ),
+    
+    \\Code{
+    IndexOfLargestk
+    if 2*i < n and A[2*i] < A[2*i+1] 
+    \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
+            a right child) is A[2*i+1]; set j to the index of the larger child.
+    \\Expl}
+    \\In{
+        j <- 2*i+1                                                    
+    \\In}
+    else
+    \\In{
+        j <- 2*i                                                      
+    \\In}
+    \\Code}
+    
+    \\Code{
+    SortHeap
+    // Sort heap
+    while n > 1                                                         
+    \\Expl{  A[1] always has the largest value not yet processed in the 
+            sorting phase. A[n] is the last array element in the heap-ordered
+            array that is not yet sorted. Repeatedly swap these two values, 
+            so that the largest element is now in the last place, decrement n 
+            and re-establish the heap condition for the remaining heap (which
+            now has one less element). Repeat this procedure until n=1, that 
+            is, only one node remains.  
+    \\Expl}
+    \\In{
+        Swap(A[n], A[1])                                              
+        n <- n-1                                                      
+        DownHeap(A, 1, n)    \\Ref DownHeap1
+        \\Expl{  Now that the root node has been swapped to the end, A[1] may 
+                no longer be the largest element in the (reduced size) heap.
+                Use the DownHeap operation to restore the heap condition. 
+        \\Expl}
+    \\In}
+    
+    \\Note{  This is very similar to DownHeapk.
+    \\Note}
+    
+    \\Code
+    DownHeap1
+    // DownHeap(A, 1, n)
+    i <- 1                                                            
+    \\Expl{  Set index i to the root of the subtree that we are now going to 
+            examine. 
+    \\Expl}
+    heap <- False // 'heap' is a flag                                 
+    while not (IsLeaf(A[i]) or heap) do                               
+    \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
+            We also terminate the loop if the children of A[i] are in the 
+            correct order relative to the parent, since we know that subtrees
+            lower down already meet the heap condition. We use the heap flag
+            to test the heap condition.  
+    \\Expl}
+    \\In{        
+        j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargest0 
+        \\Expl{  Find the larger of the two children of the node. 
+        \\Expl}
+        if A[i] >= A[j]         // Parent is larger than the largest child
+                                                                      
+        \\In{
+            heap <- True                                              
+            \\Expl{  The heap condition is satisfied, that is, the root is 
+                    larger than both children, so we exit from the while loop.
+            \\Expl}
+        \\In}
+        else
+        \\In{
+            Swap(A[i], A[j])    // Swap root element with (larger) child 
+            i <- j                                                    
+        \\In}
+    \\In}        
+    \\Code}
+    
+    \\Note{  Same as IndexOfLargestk (could possible reuse that; it is duplicated 
+            here because it might make linking with animation easier if each code 
+            expansion is used from a single place).
+    \\Note}
+    
+    \\Code{
+    IndexOfLargest0
+    if 2*i < n and A[2*i] < A[2*i+1] 
+    \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
+            a right child) is A[2*i+1]; set j to the index of the larger child.
+    \\Expl}
+    \\In{
+        j <- 2*i+1                                                    
+    \\In}
+    else
+    \\In{
+        j <- 2*i                                                      
+    \\In}
+    \\Code}
+    
+    \\Note{  The following is an implementation in C:
+    #include <stdlib.h>
+    #include <stdio.h>
+    
+    #define False 0
+    #define True 1
+    #define Swap(a,b) {int tmp; tmp=a; a=b; b=tmp;}
+    
+    #define Size 10
+    int A[Size];
+    // int i1; // for debugging
+    // for (i1=1; i1 < Size; i1++) printf("%d ", A[i1]); printf("\n");
+    
+    int IndexOfLargestChild(int *A, int i, int n);
+    void heapsort(int A[], int n);
+    
+    void
+    main() {
+            int i = 1;
+            // read A[1]..A[Size-1] from stdin
+            while (i < Size)
+                    scanf("%d", &A[i++]);
+            heapsort(A, Size-1);
+            for (i=1; i < Size; i++) printf("%d ", A[i]); printf("\n");
+    }
+    
+    void
+    heapsort(int A[], int n) { // sort A[1]..A[n]
+            int i, j, k, heap;
+    
+            // BuildHeap
+            for (k = n/2; k>=1; k--) {
+                    // DownHeap(A,k,n)
+                    i = k;
+                    heap = False;
+                    while (i<=n/2 && !heap) {
+                            j = IndexOfLargestChild(A,i,n);
+                            if (A[i] >= A[j])
+                            heap = True;
+                            else {
+                                    Swap(A[i], A[j])
+                                    i = j;
+                            }
+                    }
+            }
+            // SortHeap
+            while (n>1) {
+                    Swap(A[n], A[1])
+                    n = n-1;
+                    // DownHeap(A,1,n)
+                    i = 1;
+                    heap = False;
+                    while (i<=n/2 && !heap) {
+                            j = IndexOfLargestChild(A,i,n);
+                            if (A[i] >= A[j])
+                                    heap = True;
+                            else {
+                                    Swap(A[i], A[j])
+                                    i = j;
+                            }
+                    }
+            }
+    }
+    
+    int
+    IndexOfLargestChild(int *A, int i, int n) {
+            if ((2*i+1 <= n) && (A[2*i+1] > A[2*i]))
+                    return 2*i+1;
+            else
+                    return 2*i;
+    }
+    \\Note}
+`),
 
   explanation: BSTExp,
 
