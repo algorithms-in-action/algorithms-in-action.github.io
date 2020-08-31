@@ -187,7 +187,9 @@ export default {
               vis.graph.addEdge(p, e);
             }, [element, parent]);
             break;
-          }
+          } 
+        } else {
+          break;
         }
       }
       chunker.add(25, (vis, index) => {
