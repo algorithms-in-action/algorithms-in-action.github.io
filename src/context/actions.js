@@ -45,7 +45,7 @@ export const GlobalActions = {
       pseudocode: procedurePseudocode,
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
-      visualisers: chunker.visualisers.graph,
+      visualisers: chunker.visualisers,
     };
   },
 

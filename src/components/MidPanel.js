@@ -18,7 +18,7 @@ function MidPanel() {
       </div>
       <div className="midPanelBody">
         {/* Animation Goes here */}
-        {algorithm.chunker && algorithm.chunker.getVisualisers()[0].render()}
+        {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
       <div className="midPanelFooter">
         <div className="controlPanel">

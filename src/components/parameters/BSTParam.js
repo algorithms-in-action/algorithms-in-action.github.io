@@ -88,7 +88,7 @@ function BSTParam() {
           const target = parseInt(searchVal, 10);
 
           // make sure the tree is not empty
-          if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.instance.isEmpty()) {
+          if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.graph.instance.isEmpty()) {
             // run search animation
             const visualiser = algorithm.chunker.visualisers;
             dispatch(GlobalActions.RUN_ALGORITHM, {

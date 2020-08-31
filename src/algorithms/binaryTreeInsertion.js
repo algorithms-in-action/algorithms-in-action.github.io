@@ -5,6 +5,7 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../pseudocode/parse';
 import GraphTracer from '../components/DataStructures/Graph/GraphTracer';
+import Array1DTracer from '../components/DataStructures/Array/Array1DTracer';
 import { BSTExp } from './explanations';
 
 export default {
@@ -30,10 +31,14 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
 
   initVisualisers() {
     return {
+      array: {
+        instance: new Array1DTracer('array', null, 'Array'),
+        order: 0
+      },
       graph: {
         instance: new GraphTracer('bst', null, 'BST'),
-        order: 0
-      }
+        order: 1
+      }, 
     };
   },
 
@@ -62,18 +67,24 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
     const root = nodes[0];
     tree[root] = {};
 
-    chunker.add('start');   
     if (nodes.length === 0) return;
 
-    chunker.add('1', (vis, r) => {   
+    chunker.add('start', (vis, elements) => {
+      vis.array.set(elements);
+    }, [nodes]);   
+
+    chunker.add('1', (vis, r) => {  
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
+      vis.array.select(0); // the index of root element is 0
     }, [root]);
 
     for (let i = 1; i < nodes.length; i++) {
       const element = nodes[i];
-
-      chunker.add('1');
+      chunker.add('1', (vis, index) => {
+        vis.array.deselect(0);
+        vis.array.select(index);
+      }, [i]);
       let ptr = tree;
       parent = root;
 
@@ -112,7 +123,9 @@ procedure BinaryTreeInsertion(Tree, DataItem):  $start
           }
         }
       }
-      chunker.add('end');
+      chunker.add('end', (vis, index) => {
+        vis.array.deselect(index);
+      }, [i]);
     }
   },
 };
