@@ -203,11 +203,11 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new ArrayTracer('', null, 'array'),
+        instance: new ArrayTracer('array', null, 'Array'),
         order: 0
       },
       heap: {
-        instance: new GraphTracer('', null, 'heap'),
+        instance: new GraphTracer('heap', null, 'Heap'),
         order: 1
       },
     };
@@ -220,7 +220,7 @@ export default {
    */
   run(chunker, { nodes }) {
     const A = nodes;
-    let n = nodes.length - 1;
+    let n = nodes.length;
     let i;
     let heap;
     let swap;
@@ -231,7 +231,6 @@ export default {
     }, [[...A]]);
 
     const swapAction = (b1, b2, n1, n2) => {
-      // console.log(`swap A[${n1}]=${A[n1]} with A[${n2}]=${A[n2]}`);
       chunker.add(b1, (vis, _n1, _n2) => {  
         vis.heap.visit(_n1 + 1);
         vis.heap.visit(_n2 + 1);
@@ -248,8 +247,20 @@ export default {
         vis.array.depatch(_n1);
       }, [n1, n2]);
     };
+ 
+    /** NOTE: In Linda's code, array index starts from 1 
+     * index start from 0:
+     * parent = k , left child = 2*k + 1, right child = 2*k + 2
+     * index start from 1:
+     * parent = k , left child = 2*k, right child = 2*k + 1
+    */
+    // k is the first non-leaf node
+    for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
+      // chunker.add(3, (vis, index) => {
+      //   vis.array.select(index);
+      //   vis.heap.visit(index + 1);
+      // }, [k]);
 
-    for (let k = Math.floor(n / 2); k >= 0; k -= 1) {
       chunker.add(3);
       let j;  
       i = k;
@@ -257,20 +268,42 @@ export default {
       heap = false;
       chunker.add(7);
 
-      while (!(i > (n - 1) / 2 || heap)) {
-        chunker.add(8);
-        if (2 * i < n && A[2 * i] < A[2 * i + 1]) {
-          chunker.add(10);
-          j = 2 * i + 1;
+      chunker.add(8);
+      // chunker.add(8, (vis, index) => {
+      //   vis.array.deselect(index);
+      //   vis.heap.leave(A[index]);
+      // }, [k]);
+
+      
+      // if current node's left child'index is greater than array length, 
+      // then current node is a leaf
+      while (!(2 * i + 1 >= n || heap)) {
+        chunker.add(10);
+        // chunker.add(10, (vis, index) => {
+        //   vis.array.select(index);
+        //   vis.heap.visit(A[index]);
+        // }, [i]);
+        // left child is smaller than right child
+        if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
+          j = 2 * i + 2;
           chunker.add(11);
+          // chunker.add(11, (vis, index) => {
+          //   vis.array.select(index);
+          //   vis.heap.visit(A[index]);
+          // }, [j]);
         } else {
           chunker.add(12);
-          j = 2 * i;
+          j = 2 * i + 1;
           chunker.add(13);
+          // chunker.add(13, (vis, index) => {
+          //   vis.array.select(index);
+          //   vis.heap.visit(A[index]);
+          // }, [j]);
         }
 
+        chunker.add(14);
+        // parent is greater than largest child
         if (A[i] >= A[j]) {
-          chunker.add(14);
           heap = true;
           chunker.add(15);
         } else {
@@ -288,10 +321,10 @@ export default {
     while (n > 0) {
       chunker.add(20);
       let j;
-      swap = A[n];
-      A[n] = A[0];
+      swap = A[n - 1];
+      A[n - 1] = A[0];
       A[0] = swap;
-      swapAction(21, 21, 0, n);
+      swapAction(21, 21, 0, n - 1);
 
       n -= 1;
       chunker.add(22);
@@ -300,15 +333,15 @@ export default {
       heap = false;
       chunker.add(25);
 
-      while (!(i > (n - 1) / 2 || heap)) {
+      while (!(2 * i + 1 >= n || heap)) {
         chunker.add(26);
-        if (2 * i < n && A[2 * i] < A[2 * i + 1]) {
+        if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           chunker.add(28);
-          j = 2 * i + 1;
+          j = 2 * i + 2;
           chunker.add(29);
         } else {
           chunker.add(30);
-          j = 2 * i;
+          j = 2 * i + 1;
           chunker.add(31);
         }
 

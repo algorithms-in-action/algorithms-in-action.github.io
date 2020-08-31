@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import HeapSort from './heapSortJSCode';
 
 test('HeapSort 1', () => {
@@ -17,7 +18,7 @@ test('HeapSort 2', () => {
 test('HeapSort 3', () => {
   const A = [23, 22, 44, 11, 2, 34, 52, 5, 6, 4, 4, 1];
   const n = 11;
-  
+
   HeapSort(A, n);
   expect(A).toEqual([1, 2, 4, 4, 5, 6, 11, 22, 23, 34, 44, 52]);
 });
