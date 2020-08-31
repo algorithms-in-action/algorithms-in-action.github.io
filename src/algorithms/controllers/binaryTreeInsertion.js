@@ -83,7 +83,7 @@ export default {
             node n should be located, and p will be the parent of the new node.
     \\Expl}
     \\Code}
-` ),
+`),
 
   explanation: BSTExp,
 

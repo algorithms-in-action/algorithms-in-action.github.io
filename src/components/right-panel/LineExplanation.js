@@ -12,4 +12,3 @@ function LineExplanation() {
 }
 
 export default LineExplanation;
-

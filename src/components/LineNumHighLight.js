@@ -6,12 +6,12 @@
 import React, { useContext } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { GlobalContext } from '../../context/GlobalState';
-import { GlobalActions } from '../../context/actions';
+import { GlobalContext } from '../context/GlobalState';
+import { GlobalActions } from '../context/actions';
 // eslint-disable-next-line import/named
-import '../../styles/LineNumHighLight.css';
-import findRef from '../../pseudocode/findRef';
-import findCodeBlock from '../../pseudocode/findCodeBlock';
+import '../styles/LineNumHighLight.css';
+import findRef from '../pseudocode/findRef';
+import findCodeBlock from '../pseudocode/findCodeBlock';
 
 let codeBlocks = {};
 
@@ -32,8 +32,10 @@ function addIndentation(json, name) {
   codeBlocks[name] = codeBlock;
 }
 
-const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockName, lineNum) => {
-  let i = lineNum;
+
+let i = 0;
+
+const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockName) => {
   let codeLines = [];
   for (const [key, value] of Object.entries(codeBlocks1[blockName])) {
     const ref = findRef(value);
@@ -57,10 +59,9 @@ const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockN
         </p>,
       );
       i += 1;
-      const temp = addCollapse(algorithm1, dispatch1, codeBlocks1, currentBookmark, ref, i);
       if (algorithm1.collapse[ref]) {
-        codeLines = codeLines.concat(temp.cl);
-        i = temp.index;
+        const temp = addCollapse(algorithm1, dispatch1, codeBlocks1, currentBookmark, ref);
+        codeLines = codeLines.concat(temp);
       }
     } else {
       codeLines.push(
@@ -78,21 +79,21 @@ const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockN
       i += 1;
     }
   }
-  return { index: i, cl: codeLines };
+  return codeLines;
 };
 
 const LineNumHighLight = () => {
   const { algorithm, dispatch } = useContext(GlobalContext);
   codeBlocks = {};
+  i = 0;
   addIndentation(algorithm.pseudocode, 'Main');
   const currentBookmark = findCodeBlock(algorithm, algorithm.bookmark);
 
   /* render data */
-
   return (
     <div className="line-light">
       <div className="code-container">
-        {addCollapse(algorithm, dispatch, codeBlocks, currentBookmark, 'Main', 0).cl}
+        {addCollapse(algorithm, dispatch, codeBlocks, currentBookmark, 'Main')}
       </div>
     </div>
   );
