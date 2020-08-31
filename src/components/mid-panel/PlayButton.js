@@ -10,6 +10,7 @@ import { GlobalActions } from '../../context/actions';
 import '../../styles/NextLineButton.scss';
 import { ReactComponent as PlayIcon } from '../../resources/icons/play.svg';
 import { ReactComponent as PauseIcon } from '../../resources/icons/pause.svg';
+import algorithms from '../../algorithms';
 
 let speed;
 // Function used to force the thread to sleep for n milliseconds.
@@ -38,8 +39,10 @@ function PlayButton() {
   * Otherwise, it simulates the pressing of the button,
   * making it proceed to the next line.
   */
+
+  // YUou cannot pause it
+  // you can stop when algorithm is finished.
   const AutomaticExecution = () => {
-    // setPlay(true);
     if (!algorithm.finished) {
       dispatch(GlobalActions.NEXT_LINE);
       sleep(speed).then(() => {
@@ -47,6 +50,7 @@ function PlayButton() {
       });
     }
   };
+
 
   const PauseExecution = () => {
     // setPlay(false);

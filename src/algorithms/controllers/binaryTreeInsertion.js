@@ -171,6 +171,8 @@ export default {
             }, [element, parent]);
             break;
           }
+        } else {
+          break;
         }
       }
     }
