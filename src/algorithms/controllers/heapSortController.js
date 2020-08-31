@@ -5,7 +5,7 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../../pseudocode/parse';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Array from '../../components/DataStructures/Array/Array1DTracer';
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { BSTExp } from '../explanations';
 
 export default {
@@ -91,7 +91,7 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new Array('', null, 'array'),
+        instance: new ArrayTracer('', null, 'array'),
         order: 0
       },
       heap: {
