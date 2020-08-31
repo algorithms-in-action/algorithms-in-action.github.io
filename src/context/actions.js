@@ -13,7 +13,6 @@ export const GlobalActions = {
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
-    console.log('LOAD ALGORITHM');
 
     const {
       param, name, explanation, extraInfo,
@@ -60,7 +59,6 @@ export const GlobalActions = {
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
       visualisers: chunker.visualisers,
-      // visualisers: chunker.visualisers.graph,
       collapse: collapseController,
     };
   },
