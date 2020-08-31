@@ -5,6 +5,7 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import parse from '../../pseudocode/parse';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { BSTExp } from '../explanations';
 
 export default {
@@ -89,10 +90,14 @@ export default {
 
   initVisualisers() {
     return {
+      array: {
+        instance: new Array1DTracer('array', null, 'Array'),
+        order: 0
+      },
       graph: {
         instance: new GraphTracer('bst', null, 'BST'),
-        order: 0
-      }
+        order: 1
+      }, 
     };
   },
 
@@ -102,7 +107,8 @@ export default {
    * @param {array} nodes array of numbers needs to be inserted 
    */
   run(chunker, { nodes }) {
-    let parent;
+    if (nodes.length === 0) return;
+    
     // tree is an object contains nodes and edges, e.g.
     //  {
     //   0: {},
@@ -117,20 +123,31 @@ export default {
     //   9: {},
     //   10: { left: 9 },
     // };
+    let parent;
     const tree = {};
     const root = nodes[0];
+
+    // populate the ArrayTracer using nodes
+    chunker.add(1, (vis, elements) => {
+      vis.array.set(elements);
+    }, [nodes]);  
+
     chunker.add(2);
     tree[root] = {};
-    
-    if (nodes.length === 0) return;
-    chunker.add(3);
+
+    chunker.add(3, (vis) => {
+      vis.array.select(0); // the index of root element is 0
+    });
     chunker.add(6, (vis, r) => {   
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
     }, [root]);
 
     for (let i = 1; i < nodes.length; i++) {
-      chunker.add(3);
+      chunker.add(3, (vis, index) => {
+        vis.array.deselect(0);
+        vis.array.select(index);
+      }, [i]);
       const element = nodes[i];
 
       let ptr = tree;
@@ -170,10 +187,14 @@ export default {
               vis.graph.addEdge(p, e);
             }, [element, parent]);
             break;
-          }
+          } 
+        } else {
+          break;
         }
       }
+      chunker.add(25, (vis, index) => {
+        vis.array.deselect(index);
+      }, [i]);
     }
-    chunker.add(25);
   },
 };
