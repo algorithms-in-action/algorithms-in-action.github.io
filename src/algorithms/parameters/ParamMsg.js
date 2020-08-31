@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 
 function ParamMsg({ logWarning, logTag, logMsg }) {
-  const warningCol = '#DC0707';
-  const successCol = '#40980B';
+  const warningCol = '#FB3640';
+  const successCol = '#52AA5E';
   return (
     <div className="logContainer">
       <span

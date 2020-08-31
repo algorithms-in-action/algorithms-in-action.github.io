@@ -1,24 +1,133 @@
-.nextLineButton {
-    display: inline-block;
-    font-size: 14px;
-    padding: 2px 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;   
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #1D9CE3;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px #999;
-    margin-right: 10px;
+$warningCol: #DC0707;
+$successCol: #53DD6C;
+$sigBlue: #027AFF;
+
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
+
+$playBtn: #027AFF;
+$disabledBtn: #b5b5b5;
+$activeBtn: #6a6a6a;
+
+$group: #F7F7F7;
+
+
+.sliderContainer {
+  display: flex;
+  background-color: $group;
+  padding: 0 16px;
+  @include border-radii(16px,16px,16px,16px);
+
+  .slider {
+    width: 160px;
+    height: 30px;
+    margin-top: 2px;
   }
-  
-  .nextLineButton:hover {background-color: #1D9CE3}
-  
-  .nextLineButton:active {
-    background-color: #1D9CE3;
-    box-shadow: 0 3px #666;
-    transform: translateY(4px);
+
+}
+
+.btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  margin: 0px 8px;
+
+}
+
+.btnGone {
+  display: none;
+
+}
+
+.btnPresent {
+  display: block;
+}
+
+// Button Active Style
+.btnActive {
+  @extend .btn;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    height: 12px;
+    width: 12px;
+    path {
+      fill: $activeBtn;
+    }
   }
+}
+
+.btnActive:hover {
+  transition: .4s;
+  background: #f7f7f7 !important;
+  @include border-radii(14px,14px,14px,14px);
+}
+.btnActive:active {
+  transition: .2s;
+  background: #E3E2E4 !important;
+  @include border-radii(14px,14px,14px,14px);
+}
+
+.btnDisabled {
+  @extend .btnActive;
+  cursor: not-allowed !important;
+
+  svg {
+    path {
+      fill: $disabledBtn !important;
+    }
+  }
+
+}
+
+.btnDisabled:hover {
+  background: none !important;
+}
+.btnDisabled:active {
+  background: none !important;
+}
+
+.prev {
+  svg {
+    transform: rotate(90deg);
+  }
+}
+
+.next {
+  svg {
+    transform: rotate(-90deg); 
+  }
+}
+
+.play {
+  svg {
+    path {
+      fill: $playBtn;
+    }
+  }
+}
+
+
+
+
+

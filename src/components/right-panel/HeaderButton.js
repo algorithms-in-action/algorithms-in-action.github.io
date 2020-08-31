@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ReactComponent as PlusIcon } from '../../resources/icons/add.svg';
+import { ReactComponent as AddIcon } from '../../resources/icons/add.svg';
 
 function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(value[0]);
@@ -35,7 +35,7 @@ function HeaderButton({ value, onChange }) {
           value={value[2]}
           onClick={(e) => updateState(e.target.value)}
         >
-          <PlusIcon />
+          <AddIcon />
         </button>
       </div>
 
