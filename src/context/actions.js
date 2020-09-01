@@ -74,6 +74,7 @@ export const GlobalActions = {
     ...state,
     ...state.chunker.prev(),
   }),
+
   COLLAPSE: (state, codeblockname) => {
     const result = state.collapse;
     result[codeblockname] = !result[codeblockname];

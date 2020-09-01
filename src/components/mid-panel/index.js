@@ -4,6 +4,9 @@ import '../../styles/MidPanel.scss';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
+  console.log(algorithm);
+  console.log(algorithm.chunker && algorithm.chunker.chunks.length);
+  console.log(algorithm.chunker && algorithm.chunker.currentChunk);
 
   return (
     <div className="midPanelContainer">
@@ -15,7 +18,6 @@ function MidPanel() {
         {/* Animation Goes here */}
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
-
     </div>
   );
 }
