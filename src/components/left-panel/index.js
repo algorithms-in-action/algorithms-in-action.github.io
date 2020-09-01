@@ -45,7 +45,7 @@ function LeftPanel() {
   const isDisableUnderline = true;
 
   return (
-    <>
+    <div className="container">
       <Input
         className="search-input"
         placeholder="Search..."
@@ -118,8 +118,7 @@ function LeftPanel() {
         }
 
       </div>
-
-    </>
+    </div>
   );
 }
 

@@ -9,10 +9,10 @@ function Pseudocode() {
   const show = !!algorithm.hasOwnProperty('pseudocode');
   return (
     show ? (
-      <div className="textAreaContainer">
+      <>
         <LineNumHighLight />
         <LineExplanation />
-      </div>
+      </>
     ) : null
   );
 }

@@ -1,24 +1,35 @@
 import React from 'react';
 import '../../styles/NextLineButton.scss';
 import Slider from '@material-ui/core/Slider';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import { setTime } from './PlayButton';
 
-const useStyles = makeStyles({
-  root: {
-    width: 200,
-    height: 25,
-    marginTop: 3,
-    marginBottom: 5,
-    marginRight: 50,
-    marginLeft: 15,
+const muiTheme = createMuiTheme({
+  overrides: {
+    MuiSlider: {
+      thumb: {
+        color: '#027AFF',
+      },
+      track: {
+        color: '#3392FF',
+      },
+      rail: {
+        color: '#B5B5B5',
+      },
+      mark: {
+        color: '#F7F7F7',
+      },
+      markActive: {
+        color: '#F7F7F7',
+      },
+    },
   },
 });
 
-const DEFAULT_SPEED = 6;
+const DEFAULT_SPEED = 3;
 
 function SpeedSlider() {
-  const classes = useStyles();
   const [value, setValue] = React.useState(DEFAULT_SPEED);
 
   const handleSliderChange = (event, newValue) => {
@@ -27,21 +38,23 @@ function SpeedSlider() {
   };
 
   return (
-    <div>
-      <div className={classes.root}>
-        <Slider
-          placeholder="slider"
-          defaultValue={2}
-          onLoad={setTime(value)}
-          value={value}
-          aria-labelledby="discrete-slider"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={10}
-          onChange={handleSliderChange}
-        />
+    <div className="sliderContainer">
+      <div className="slider">
+        <ThemeProvider theme={muiTheme}>
+          <Slider
+            placeholder="slider"
+            defaultValue={3}
+            onLoad={setTime(value)}
+            value={value}
+            aria-labelledby="discrete-slider"
+            valueLabelDisplay="auto"
+            step={1}
+            marks
+            min={1}
+            max={5}
+            onChange={handleSliderChange}
+          />
+        </ThemeProvider>
       </div>
     </div>
   );

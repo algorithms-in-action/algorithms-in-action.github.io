@@ -6,8 +6,9 @@ import PlayButton, { sleep } from './PlayButton';
 import App from '../../App';
 
 test('PlayButton execution', () => {
-  const { getByText } = render(<App />);
-  fireEvent.click(getByText(/Play/));
+  const { getByTestId } = render(<App />);
+
+  fireEvent.click(getByTestId('PlayButton'));
   sleep(10000).then(() => {
     const { algorithm } = useContext(GlobalContext);
     expect(algorithm.finished).toEqual(true);

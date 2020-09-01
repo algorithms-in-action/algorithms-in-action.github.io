@@ -5,6 +5,7 @@ import { Tooltip } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/NextLineButton.scss';
+import { ReactComponent as PrevIcon } from '../../resources/icons/arrow.svg';
 
 
 function NextLineButton() {
@@ -22,12 +23,12 @@ function NextLineButton() {
       <span>
         <button
           type="button"
-          className="nextLineButton"
+          className={disabled ? 'btnDisabled prev' : 'btnActive prev'}
           disabled={disabled}
           style={disabled ? { pointerEvents: 'none' } : {}}
           onClick={() => dispatch(GlobalActions.PREV_LINE)}
         >
-          Prev Line
+          <PrevIcon />
         </button>
       </span>
     </Tooltip>

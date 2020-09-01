@@ -7,6 +7,11 @@ $submitHighlightCol: #0065AE;
 $sigBlue: #027AFF;
 $charCol: #717071;
 
+$sidePad: 24px;
+$paramLog: #f4f4f4;
+$warningCol: #DC0707;
+$successCol: #53DD6C;
+
 
 @mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
 	border-top-left-radius: $topleft;
@@ -23,363 +28,108 @@ $charCol: #717071;
 	-moz-border-radius-bottomleft: $bottomleft;
 }
 
-.BSTForm {
+.btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+
+}
+
+.blueWordBtn {
+  @extend .btn;
+  font: 13px "Roboto", sans-serif !important;
+  border-radius: 1px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 0 6px;
+  color: $sigBlue;
+}
+
+.blueWordBtn:hover {
+  transition: .4s;
+  background: #f5faff;
+}
+.blueWordBtn:active {
+  transition: .2s;
+  background: #e4f1ff;
+}
+
+.greyRoundBtn {
+  @extend .btn;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 12px;
+    height: 12px;
+
+    path {
+      fill:$charCol;
+    }
+  }
+}
+
+.greyRoundBtn:hover {
+  transition: .4s;
+  background: #f7f7f7;
+  @include border-radii(14px,14px,14px,14px);
+
+}
+.greyRoundBtn:active {
+  transition: .2s;
+  background: #E3E2E4;
+  @include border-radii(14px,14px,14px,14px);
+}
+
+.outerInput {
+  border: 1px solid $inputBorder;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  
+  .inputText {
+    width: 100%;
+
+    input {
+      width: 100%;
+      outline: none;
+      font-size: 1.05em;
+      font-weight: 200;
+      color: $fontCol;
+      border: none;
+      padding: 8px 0px;
+      color: $charCol;
+    }
+  }
+
+  .btnGrp {
+    display: flex;
+    justify-content: flex-end;
+
+  }
+}
+
+.form {
   color: $fontCol;
   font-size: 1.05em;
   display: flex;
   justify-content: space-between;
 
-  .insertionForm {
+  .formLeft {
     width: 62%;
-
-    .outerInput {
-      border: 1px solid $inputBorder;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      
-      .inputText {
-        width: 100%;
-
-        input {
-          width: 100%;
-          outline: none;
-          font-size: 1.05em;
-          font-weight: 200;
-          color: $fontCol;
-          border: none;
-          padding: 8px 0px;
-          // background-color: #EFEFEF;
-          color: $charCol;
-        }
-      }
-
-      .btn-grp {
-        display: flex;
-        margin-left: 12px;
-        width: 30%;
-
-        .btn {
-          background: none;
-          color: inherit;
-          border: none;
-          padding: 0;
-          font: inherit;
-          cursor: pointer;
-          outline: inherit;
-
-        }
-
-        .refresh {
-          height: 28px;
-          width: 28px;
-          @include border-radii(12px,12px,12px,12px);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          // padding-bottom: 2px;
-
-          svg {
-            width: 12px;
-            height: 12px;
-
-            path {
-              fill:$charCol;
-            }
-          }
-        }
-
-        .refresh:hover {
-          transition: .4s;
-          background: #f7f7f7;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .refresh:active {
-          transition: .2s;
-          background: #E3E2E4;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-        .insertion {
-          height: 28px;
-          width: 56px;
-          font: 13px "Roboto", sans-serif !important;
-          border-radius: 1px;
-          text-align: center;
-          position: relative;
-          cursor: pointer;
-          text-transform: uppercase;
-
-          transition: .4s;
-          background: none;
-          color: $sigBlue;
-          // border: 1px solid $sigBlue;
-          // margin: 10px;
-        }
-
-        .insertion:hover {
-          transition: .4s;
-          background: #f5faff;
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .insertion:active {
-          transition: .2s;
-          background: #e4f1ff;
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-      }
-
-    }
-
-    
-    
   }
 
-
-  .searchForm {
+  .formRight {
     width: 36%;
-
-    .outerInput {
-      border: 1px solid $inputBorder;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      
-      .inputText {
-        width: 100%;
-        // background-color: blue;
-
-        input {
-          width: 100%;
-          outline: none;
-          font-size: 1.05em;
-          font-weight: 200;
-          color: $fontCol;
-          border: none;
-          padding: 8px 0px;
-          // background-color: #EFEFEF;
-          color: $charCol;
-        }
-      }
-
-      .btn-grp {
-        display: flex;
-        margin-left: 12px;
-        width: 40%;
-        // background-color: orange;
-
-        .btn {
-          background: none;
-          color: inherit;
-          border: none;
-          padding: 0;
-          font: inherit;
-          cursor: pointer;
-          outline: inherit;
-
-        }
-
-        .refresh {
-          height: 28px;
-          width: 28px;
-          @include border-radii(12px,12px,12px,12px);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          // padding-bottom: 2px;
-
-          svg {
-            width: 12px;
-            height: 12px;
-
-            path {
-              fill:$charCol;
-            }
-          }
-        }
-
-        .refresh:hover {
-          transition: .4s;
-          background: #f7f7f7;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .refresh:active {
-          transition: .2s;
-          background: #E3E2E4;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-        .insertion {
-          height: 28px;
-          width: 56px;
-          font: 13px "Roboto", sans-serif !important;
-          border-radius: 1px;
-          text-align: center;
-          position: relative;
-          cursor: pointer;
-          text-transform: uppercase;
-
-          transition: .4s;
-          background: none;
-          color: $sigBlue;
-          // border: 1px solid $sigBlue;
-          // margin: 10px;
-        }
-
-        .insertion:hover {
-          transition: .4s;
-          background: #f5faff;
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .insertion:active {
-          transition: .2s;
-          background: #e4f1ff;
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-      }
-
-    }
-
-    
-    
   }
 
 }
-
-.HSForm {
-  color: $fontCol;
-  font-size: 1.05em;
-  display: flex;
-  justify-content: space-between;
-
-  .insertionForm {
-    width: 62%;
-
-    .outerInput {
-      border: 1px solid $inputBorder;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      
-      .inputText {
-        width: 100%;
-
-        input {
-          width: 100%;
-          outline: none;
-          font-size: 1.05em;
-          font-weight: 200;
-          color: $fontCol;
-          border: none;
-          padding: 8px 0px;
-          // background-color: #EFEFEF;
-          color: $charCol;
-        }
-      }
-
-      .btn-grp {
-        display: flex;
-        margin-left: 12px;
-        width: 30%;
-
-        .btn {
-          background: none;
-          color: inherit;
-          border: none;
-          padding: 0;
-          font: inherit;
-          cursor: pointer;
-          outline: inherit;
-
-        }
-
-        .refresh {
-          height: 28px;
-          width: 28px;
-          @include border-radii(12px,12px,12px,12px);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          // padding-bottom: 2px;
-
-          svg {
-            width: 12px;
-            height: 12px;
-
-            path {
-              fill:$charCol;
-            }
-          }
-        }
-
-        .refresh:hover {
-          transition: .4s;
-          background: #f7f7f7;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .refresh:active {
-          transition: .2s;
-          background: #E3E2E4;
-          @include border-radii(12px,12px,12px,12px);
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-        .insertion {
-          height: 28px;
-          width: 56px;
-          font: 13px "Roboto", sans-serif !important;
-          border-radius: 1px;
-          text-align: center;
-          position: relative;
-          cursor: pointer;
-          text-transform: uppercase;
-
-          transition: .4s;
-          background: none;
-          color: $sigBlue;
-          // border: 1px solid $sigBlue;
-          // margin: 10px;
-        }
-
-        .insertion:hover {
-          transition: .4s;
-          background: #f5faff;
-          // box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-        .insertion:active {
-          transition: .2s;
-          background: #e4f1ff;
-          // box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.26);
-          // border: 1px solid $sigBlue;
-        }
-
-      }
-
-    }
-
-  }
-
-}
-    
-    

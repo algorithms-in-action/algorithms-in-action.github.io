@@ -10,7 +10,7 @@ import '../../styles/Param.scss';
 import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
 import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
 
-const DEFAULT_NODES = '5,8,10,3,1,6,9,7,2,0,4';
+const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
@@ -79,7 +79,7 @@ function BSTParam() {
           const target = parseInt(searchVal, 10);
 
           // make sure the tree is not empty
-          if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.instance.isEmpty()) {
+          if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.graph.instance.isEmpty()) {
             // run search animation
             const visualiser = algorithm.chunker.visualisers;
             dispatch(GlobalActions.RUN_ALGORITHM, {
@@ -100,9 +100,9 @@ function BSTParam() {
 
   return (
     <>
-      <div className="BSTForm">
+      <div className="form">
 
-        <form className="insertionForm" onSubmit={handleSubmit}>
+        <form className="formLeft" onSubmit={handleSubmit}>
           <div className="outerInput">
             <label className="inputText">
               <input
@@ -113,9 +113,9 @@ function BSTParam() {
                 onChange={(e) => setInsertionVal(e.target.value)}
               />
             </label>
-            <div className="btn-grp">
+            <div className="btnGrp">
               <button
-                className="btn refresh"
+                className="greyRoundBtn"
                 type="button"
                 id={INSERTION}
                 onClick={() => {
@@ -126,7 +126,7 @@ function BSTParam() {
                 <RefreshIcon />
               </button>
               <button
-                className="btn insertion"
+                className="blueWordBtn"
                 type="submit"
               >
                 Insert
@@ -135,7 +135,7 @@ function BSTParam() {
           </div>
         </form>
 
-        <form className="searchForm" onSubmit={handleSubmit}>
+        <form className="formRight" onSubmit={handleSubmit}>
           <div className="outerInput">
             <label className="inputText">
               <input
@@ -146,9 +146,9 @@ function BSTParam() {
                 onChange={(e) => setSearchVal(e.target.value)}
               />
             </label>
-            <div className="btn-grp">
+            <div className="btnGrp">
               <button
-                className="btn insertion"
+                className="blueWordBtn"
                 type="submit"
               >
                 Search
