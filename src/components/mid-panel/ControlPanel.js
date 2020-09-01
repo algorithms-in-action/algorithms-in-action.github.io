@@ -1,20 +1,17 @@
 /* eslint-disable no-prototype-builtins */
-import React, { useContext, useState, useEffect } from 'react';
-
+import React, {
+  useContext, useState, useEffect,
+} from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { Slider, Tooltip } from '@material-ui/core';
+import { Slider } from '@material-ui/core';
 import ControlButton from './ControlButton';
-// import NextLineButton from './NextLineButton';
-// import SpeedSlider from './SpeedSlider';
-// import PlayButton from './PlayButton';
-// import PrevLineButton from './PrevLineButton';
+import useInterval from '../../context/useInterval';
 import { ReactComponent as PlayIcon } from '../../resources/icons/play.svg';
 import { ReactComponent as PauseIcon } from '../../resources/icons/pause.svg';
 import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../resources/icons/arrow.svg';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-
 import '../../styles/ControlPanel.scss';
 
 const muiTheme = createMuiTheme({
@@ -40,7 +37,6 @@ const muiTheme = createMuiTheme({
 });
 
 const DEFAULT_SPEED = 3;
-let timerId;
 
 function ControlPanel() {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -48,13 +44,8 @@ function ControlPanel() {
   const currentChunk = chunker ? chunker.currentChunk : -1;
 
   const [disabled, setDisabled] = useState(true);
-  const [value, setValue] = useState(DEFAULT_SPEED);
+  const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [playing, setPlaying] = useState(false);
-
-  const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
-    // setTime(value);
-  };
 
   useEffect(() => {
     if (algorithm.hasOwnProperty('visualisers')) {
@@ -62,39 +53,42 @@ function ControlPanel() {
     }
   }, [algorithm]);
 
-  useEffect(() => {
-    setPlaying(playing);
-  }, [playing]);
+  const pause = () => {
+    setPlaying(false);
+  };
 
   const prev = () => {
+    pause();
     dispatch(GlobalActions.PREV_LINE);
   };
 
   const next = () => {
+    pause();
     dispatch(GlobalActions.NEXT_LINE);
   };
 
-  const pause = () => {
-    if (timerId) {
-      window.clearTimeout(timerId);
-      timerId = undefined;
-      setPlaying(false);
+  /**
+   * play() needs to check if there any chunks left first
+   */
+  const play = () => {
+    pause();
+    const canPlay = chunker && chunker.isValidChunk(algorithm.chunker.currentChunk + 1);
+    if (canPlay) {
+      next();
+      setPlaying(true);
     }
   };
 
-  const play = () => {
-    // clear any existing timer first
-    pause();
-    console.log(currentChunk);
-    console.log(algorithm.chunker.currentChunk);
-    const canPlay = chunker && chunker.isValidChunk(algorithm.chunker.currentChunk + 1);
-    console.log(algorithm.finished);
-    if (canPlay) {
-      next();
-      const interval = 4000 / (Math.E ** value);
-      timerId = window.setTimeout(() => play(), interval);
-      setPlaying(true);
-    }
+  /**
+   * when click play button, calling play() based on slider speed
+   * Current Issue: if speed is too fast, then pause button does not work
+   */
+  useInterval(() => {
+    play();
+  }, playing ? 10000 / (Math.E ** speed) : null);
+
+  const handleSliderChange = (event, newSpeed) => {
+    setSpeed(newSpeed);
   };
 
   return (
@@ -107,8 +101,7 @@ function ControlPanel() {
               <Slider
                 placeholder="slider"
                 defaultValue={3}
-                // onLoad={setTime(value)}
-                value={value}
+                value={speed}
                 aria-labelledby="discrete-slider"
                 valueLabelDisplay="auto"
                 step={1}
