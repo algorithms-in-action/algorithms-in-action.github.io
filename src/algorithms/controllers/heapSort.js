@@ -219,7 +219,9 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted 
    */
   run(chunker, { nodes }) {
-    const A = nodes;
+    // create a copy, can't simply let A = nodes because it creates a reference
+    // sort A in-place will cause nodes sorted as well
+    const A = [...nodes];  
     let n = nodes.length;
     let i;
     let heap;
@@ -228,7 +230,7 @@ export default {
     chunker.add(2, (vis, array) => {  
       vis.heap.setHeap(array);
       vis.array.set(array);
-    }, [[...A]]);
+    }, [nodes]);
 
     const swapAction = (b1, b2, n1, n2) => {
       chunker.add(b1, (vis, _n1, _n2) => {  
@@ -255,7 +257,9 @@ export default {
      * index start from 1:
      * parent = k , left child = 2*k, right child = 2*k + 1
     */
-    // k is the first non-leaf node
+
+    // build heap
+    // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
       chunker.add(3, (vis, index) => {
         vis.array.select(index);
@@ -296,6 +300,7 @@ export default {
         }
 
         chunker.add(14);
+        // parent is greater than largest child, so it is already a valid heap
         if (A[i] >= A[j]) {
           heap = true;
           chunker.add(15, (vis, p, c) => {
@@ -321,6 +326,7 @@ export default {
       }
     }
 
+    // sort heap
     chunker.add(20);
     while (n > 0) {
       let j;
@@ -347,6 +353,7 @@ export default {
         vis.array.deselect(index);
         vis.heap.deselect(index + 1);
       }, [i]);
+      // need to maintain the heap after swap
       while (!(2 * i + 1 >= n || heap)) {
         chunker.add(28, (vis, index) => {
           vis.array.select(index);
