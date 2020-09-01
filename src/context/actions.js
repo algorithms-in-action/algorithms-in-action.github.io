@@ -74,6 +74,7 @@ export const GlobalActions = {
     ...state,
     ...state.chunker.prev(),
   }),
+
   COLLAPSE: (state, codeblockname) => {
     const result = state.collapse;
     result[codeblockname] = !result[codeblockname];
@@ -85,8 +86,8 @@ export const GlobalActions = {
 };
 
 export function dispatcher(state, setState) {
-  return (action, params, nodes, target) => {
-    setState(action(state, params, nodes, target));
+  return (action, params) => {
+    setState(action(state, params));
   };
 }
 

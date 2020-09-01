@@ -83,8 +83,8 @@ export default {
         return;
       }
 
+      chunker.add(5);
       if (item < current) {
-        chunker.add(5);
         if (tree[current].left !== undefined) {
           // if current node has left child
           parent = current;

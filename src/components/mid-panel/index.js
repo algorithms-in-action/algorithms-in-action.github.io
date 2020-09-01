@@ -15,7 +15,6 @@ function MidPanel() {
         {/* Animation Goes here */}
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
-
     </div>
   );
 }

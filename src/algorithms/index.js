@@ -40,6 +40,9 @@ const algorithms = {
     explanation: Explanation.HSExp,
     param: <Param.HSParam />,
     extraInfo: ExtraInfo.HSInfo,
+    controller: {
+      sort: Controller.heapSort,
+    },
   },
   'kmp': {
     name: 'Knuth-Morris-Pratt',
