@@ -33,7 +33,7 @@ export default class {
   }
 
   isValidChunk(currentChunk) {
-    return currentChunk >= 0 && currentChunk < this.chunks.length;
+    return currentChunk >= 1 && currentChunk <= this.chunks.length;
   }
 
   getVisualisers() {

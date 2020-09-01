@@ -40,9 +40,12 @@ const muiTheme = createMuiTheme({
 });
 
 const DEFAULT_SPEED = 3;
+let timerId;
 
 function ControlPanel() {
   const { algorithm, dispatch } = useContext(GlobalContext);
+  const { chunker } = algorithm;
+  const currentChunk = chunker ? chunker.currentChunk : -1;
 
   const [disabled, setDisabled] = useState(true);
   const [value, setValue] = useState(DEFAULT_SPEED);
@@ -53,31 +56,45 @@ function ControlPanel() {
     // setTime(value);
   };
 
-
   useEffect(() => {
     if (algorithm.hasOwnProperty('visualisers')) {
       setDisabled(false);
     }
   }, [algorithm]);
 
+  useEffect(() => {
+    setPlaying(playing);
+  }, [playing]);
+
   const prev = () => {
-    console.log('prev');
     dispatch(GlobalActions.PREV_LINE);
   };
 
-  const play = () => {
-    console.log('play');
-    setPlaying(true);
+  const next = () => {
+    dispatch(GlobalActions.NEXT_LINE);
   };
 
   const pause = () => {
-    console.log('pause');
-    setPlaying(false);
+    if (timerId) {
+      window.clearTimeout(timerId);
+      timerId = undefined;
+      setPlaying(false);
+    }
   };
 
-  const next = () => {
-    console.log('next');
-    dispatch(GlobalActions.NEXT_LINE);
+  const play = () => {
+    // clear any existing timer first
+    pause();
+    console.log(currentChunk);
+    console.log(algorithm.chunker.currentChunk);
+    const canPlay = chunker && chunker.isValidChunk(algorithm.chunker.currentChunk + 1);
+    console.log(algorithm.finished);
+    if (canPlay) {
+      next();
+      const interval = 4000 / (Math.E ** value);
+      timerId = window.setTimeout(() => play(), interval);
+      setPlaying(true);
+    }
   };
 
   return (
@@ -106,17 +123,27 @@ function ControlPanel() {
 
         <div className="controlButtons">
           {/* Prev Button */}
-          <ControlButton icon={<PrevIcon />} type="prev" disabled={disabled} onClick={() => prev()} />
+          <ControlButton
+            icon={<PrevIcon />}
+            type="prev"
+            disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
+            onClick={() => prev()}
+          />
 
           {/* Play/Pause Button */}
           {playing ? (
-            <ControlButton icon={<PauseIcon />} type="pause" disabled={disabled} onClick={() => pause()} />
+            <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
           ) : (
             <ControlButton icon={<PlayIcon />} type="play" disabled={disabled} onClick={() => play()} />
           )}
 
           {/* Next Button */}
-          <ControlButton icon={<NextIcon />} type="next" disabled={disabled} onClick={() => next()} />
+          <ControlButton
+            icon={<NextIcon />}
+            type="next"
+            disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+            onClick={() => next()}
+          />
         </div>
       </div>
 

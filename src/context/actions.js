@@ -48,7 +48,6 @@ export const GlobalActions = {
       }
     }
 
-
     return {
       id: params.name,
       name,

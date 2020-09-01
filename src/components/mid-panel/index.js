@@ -4,9 +4,6 @@ import '../../styles/MidPanel.scss';
 
 function MidPanel() {
   const { algorithm } = useContext(GlobalContext);
-  console.log(algorithm);
-  console.log(algorithm.chunker && algorithm.chunker.chunks.length);
-  console.log(algorithm.chunker && algorithm.chunker.currentChunk);
 
   return (
     <div className="midPanelContainer">
