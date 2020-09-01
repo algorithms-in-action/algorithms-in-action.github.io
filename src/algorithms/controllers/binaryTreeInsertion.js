@@ -156,8 +156,8 @@ export default {
       chunker.add(12);
       while (ptr) {
         chunker.add(14);
+        chunker.add(16);
         if (element < parent) {
-          chunker.add(16);
           if (tree[parent].left !== undefined) {
             // if current node has left child
             chunker.add(17);
