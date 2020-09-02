@@ -5,6 +5,7 @@
 import React, { useState, useContext } from 'react';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
+import ControlButton from '../../components/common/ControlButton';
 import ParamMsg from './ParamMsg';
 import '../../styles/Param.scss';
 import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
@@ -24,6 +25,7 @@ function BSTParam() {
   const [logMsg, setLogMsg] = useState('');
 
   const { algorithm, dispatch } = useContext(GlobalContext);
+  const disabled = algorithm.hasOwnProperty('visualisers') && algorithm.playing;
 
   const updateParamStatus = (type, val, success) => {
     if (success) {
@@ -50,6 +52,7 @@ function BSTParam() {
     }
   };
 
+  // TODO: Need to extract BSTParam, HSParam as a more generalized component
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -114,23 +117,23 @@ function BSTParam() {
               />
             </label>
             <div className="btnGrp">
-              <button
-                className="greyRoundBtn"
-                type="button"
+              <ControlButton
+                icon={<RefreshIcon />}
+                className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
                 id={INSERTION}
+                disabled={disabled}
                 onClick={() => {
                   const list = genRandNumList(10, 1, 100);
                   setInsertionVal(list);
                 }}
-              >
-                <RefreshIcon />
-              </button>
-              <button
-                className="blueWordBtn"
+              />
+              <ControlButton
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
+                disabled={disabled}
               >
                 Insert
-              </button>
+              </ControlButton>
             </div>
           </div>
         </form>
@@ -147,12 +150,13 @@ function BSTParam() {
               />
             </label>
             <div className="btnGrp">
-              <button
-                className="blueWordBtn"
+              <ControlButton
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
+                disabled={disabled}
               >
                 Search
-              </button>
+              </ControlButton>
             </div>
           </div>
         </form>

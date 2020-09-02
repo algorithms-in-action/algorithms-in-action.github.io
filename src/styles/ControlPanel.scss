@@ -48,7 +48,8 @@ $borderSize: 3px;
 
   .parameterPanel {
     padding: 16px $sidePad 16px $sidePad;
-  
+    // transition: .10s;
+    
     .logContainer {
       background-color: $paramLog;
       padding: 8px 16px;
@@ -57,6 +58,8 @@ $borderSize: 3px;
       overflow: hidden;
       text-overflow: ellipsis;
       margin: 16px auto 0px auto;
+      // animation: popup 0.7s;
+      
   
       .logTag {
         color: $successCol;
@@ -77,3 +80,27 @@ $borderSize: 3px;
   }
 
 }
+
+// @keyframes popup {
+//   0%{
+//     transform: scale(1);
+//   }
+//   50%{
+//     transform: scale(1.4);
+//   }
+//   60%{
+//     transform: scale(1.1);
+//   }
+//   70%{
+//     transform: scale(1.2);
+//   }
+//   80%{
+//     transform: scale(1);
+//   }
+//   90%{
+//     transform: scale(1.1);
+//   }
+//   100%{
+//     transform: scale(1);
+//   }
+// }

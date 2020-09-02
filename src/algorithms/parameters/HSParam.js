@@ -1,6 +1,8 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useContext } from 'react';
 import { commaSeparatedNumberListValidCheck, genRandNumList } from './ParamHelper';
+import ControlButton from '../../components/common/ControlButton';
 import ParamMsg from './ParamMsg';
 import '../../styles/Param.scss';
 import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
@@ -12,7 +14,8 @@ const HEAP_SORT = 'Heap Sort';
 
 function HeapsortParam() {
   const [arrVal, setArrVal] = useState(DEFAULT_ARR);
-  const { dispatch } = useContext(GlobalContext);
+  const { algorithm, dispatch } = useContext(GlobalContext);
+  const disabled = algorithm.hasOwnProperty('visualisers') && algorithm.playing;
 
   const [logWarning, setLogWarning] = useState(false);
   const [logTag, setLogTag] = useState('');
@@ -79,23 +82,23 @@ function HeapsortParam() {
               />
             </label>
             <div className="btnGrp">
-              <button
-                className="greyRoundBtn"
-                type="button"
+              <ControlButton
+                icon={<RefreshIcon />}
+                className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
                 id={HEAP_SORT}
+                disabled={disabled}
                 onClick={() => {
                   const list = genRandNumList(10, 1, 100);
                   setArrVal(list);
                 }}
-              >
-                <RefreshIcon />
-              </button>
-              <button
-                className="blueWordBtn"
+              />
+              <ControlButton
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
+                disabled={disabled}
               >
                 Sort
-              </button>
+              </ControlButton>
             </div>
           </div>
         </form>

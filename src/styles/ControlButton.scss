@@ -127,6 +127,14 @@ $group: #F7F7F7;
   }
 }
 
+.pause {
+  svg {
+    path {
+      fill: $playBtn;
+    }
+  }
+}
+
 
 
 

@@ -8,6 +8,9 @@ body {
   padding: 0;
   background-color: $bgColor;
 	font-family: Roboto, 'sans-serif';
+
+	-webkit-font-smoothing: subpixel-antialiased;
+
 }
 
 $dragBarSize: 3px;
