@@ -53,35 +53,37 @@ function ControlPanel() {
     }
   }, [algorithm]);
 
-  const pause = () => {
-    setPlaying(false);
-  };
 
   const prev = () => {
-    pause();
     dispatch(GlobalActions.PREV_LINE);
   };
 
   const next = () => {
-    pause();
     dispatch(GlobalActions.NEXT_LINE);
   };
 
-  /**
-   * play() needs to check if there any chunks left first
-   */
+  const pause = () => {
+    setPlaying(false);
+  };
+
+  // needs to check if there any chunks left first
   const play = () => {
-    pause();
-    const canPlay = chunker && chunker.isValidChunk(algorithm.chunker.currentChunk + 1);
+    const canPlay = chunker && chunker.isValidChunk(currentChunk + 1);
     if (canPlay) {
       next();
       setPlaying(true);
+    } else {
+      pause();
     }
   };
 
   /**
-   * when click play button, calling play() based on slider speed
-   * Current Issue: if speed is too fast, then pause button does not work
+   * when click play button, calling play() based on the slider speed.
+   * Using useInterval, play() now can read fresh states, otherwise play() will
+   * stuck in the closure when this component first mount.
+   * (e.g. currentChunk will always be 1)
+   * @param {function} callback function that will be called in each interval
+   * @param {number} delay millisecond delay between next call
    */
   useInterval(() => {
     play();
