@@ -59,19 +59,27 @@ export const GlobalActions = {
       chunker,
       visualisers: chunker.visualisers,
       collapse: collapseController,
+      playing: false,
     };
   },
 
-  // No expected params
-  NEXT_LINE: (state) => ({
+  // run next line of code
+  NEXT_LINE: (state, playing) => ({
     ...state,
     ...state.chunker.next(),
+    playing,
   }),
 
-  // No expected params
-  PREV_LINE: (state) => ({
+  // run previous line of code
+  PREV_LINE: (state, playing) => ({
     ...state,
     ...state.chunker.prev(),
+    playing,
+  }),
+
+  TOGGLE_PLAY: (state, playing) => ({
+    ...state,
+    playing,
   }),
 
   COLLAPSE: (state, codeblockname) => {
@@ -85,11 +93,11 @@ export const GlobalActions = {
 };
 
 export function dispatcher(state, setState) {
-  return (action, params, nodes, target) => {
-    setState(action(state, params, nodes, target));
+  return (action, params) => {
+    setState(action(state, params));
   };
 }
 
 export function initialState() {
-  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM, nodes: [] });
+  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM });
 }

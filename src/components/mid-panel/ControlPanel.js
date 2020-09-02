@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
-import ControlButton from './ControlButton';
+import ControlButton from '../common/ControlButton';
 import useInterval from '../../context/useInterval';
 import { ReactComponent as PlayIcon } from '../../resources/icons/play.svg';
 import { ReactComponent as PauseIcon } from '../../resources/icons/pause.svg';
@@ -44,15 +44,16 @@ function ControlPanel() {
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [playing, setPlaying] = useState(false);
 
-  const prev = () => {
-    dispatch(GlobalActions.PREV_LINE);
+  const prev = (isPlaying = false) => {
+    dispatch(GlobalActions.PREV_LINE, isPlaying);
   };
 
-  const next = () => {
-    dispatch(GlobalActions.NEXT_LINE);
+  const next = (isPlaying = false) => {
+    dispatch(GlobalActions.NEXT_LINE, isPlaying);
   };
 
   const pause = () => {
+    dispatch(GlobalActions.TOGGLE_PLAY, false);
     setPlaying(false);
   };
 
@@ -60,7 +61,12 @@ function ControlPanel() {
   const play = () => {
     const canPlay = chunker && chunker.isValidChunk(currentChunk + 1);
     if (canPlay) {
-      next();
+      // dispatch(GlobalActions.TOGGLE_PLAY, true);
+      // I could have used this to update the global state that the animation is playing,
+      // however this means we will call two dispatches (TOGGLE_PLAY and NEXT_LINE) in a
+      // very short interval, but setState() updates asynchronously, so state does not change
+      // as expected.
+      next(true);
       setPlaying(true);
     } else {
       pause();

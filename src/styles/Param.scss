@@ -133,3 +133,13 @@ $successCol: #53DD6C;
   }
 
 }
+
+.btnDisabled {
+  @extend .blueWordBtn;
+  cursor: not-allowed !important;
+}
+
+.iconDisabled {
+  @extend .greyRoundBtn;
+  cursor: not-allowed !important;
+}
