@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import React from 'react';
-import '../../styles/NextLineButton.scss';
+import '../../styles/ControlButton.scss';
 
 function ControlButton(props) {
   const {
