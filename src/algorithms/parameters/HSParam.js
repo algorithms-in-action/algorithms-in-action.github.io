@@ -84,7 +84,7 @@ function HeapsortParam() {
             <div className="btnGrp">
               <ControlButton
                 icon={<RefreshIcon />}
-                className={disabled ? 'iconDisabled' : 'greyRoundBtn'}
+                className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
                 id={HEAP_SORT}
                 disabled={disabled}
                 onClick={() => {
@@ -93,7 +93,7 @@ function HeapsortParam() {
                 }}
               />
               <ControlButton
-                className={disabled ? 'btnDisabled' : 'blueWordBtn'}
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
                 disabled={disabled}
               >

@@ -6,6 +6,7 @@ $loadBtnCol: #FFFFFF;
 $submitHighlightCol: #0065AE;
 $sigBlue: #027AFF;
 $charCol: #717071;
+$disabledCol: #B5B5B5;
 
 $sidePad: 24px;
 $paramLog: #f4f4f4;
@@ -58,6 +59,19 @@ $successCol: #53DD6C;
 .blueWordBtn:active {
   transition: .2s;
   background: #e4f1ff;
+}
+
+.blueWordBtnDisabled {
+  @extend .blueWordBtn;
+  color: $disabledCol;
+  cursor: not-allowed !important;
+}
+
+.blueWordBtnDisabled:hover {
+  background: none;
+}
+.blueWordBtnDisabled:active {
+  background: none;
 }
 
 .greyRoundBtn {
@@ -139,7 +153,20 @@ $successCol: #53DD6C;
   cursor: not-allowed !important;
 }
 
-.iconDisabled {
+.greyRoundBtnDisabled {
   @extend .greyRoundBtn;
   cursor: not-allowed !important;
+  svg {
+    path {
+      fill:$disabledCol;
+    }
+  }
 }
+
+.greyRoundBtnDisabled:hover {
+  background: none;
+}
+.greyRoundBtnDisabled:active {
+  background: none;
+}
+

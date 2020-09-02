@@ -119,7 +119,7 @@ function BSTParam() {
             <div className="btnGrp">
               <ControlButton
                 icon={<RefreshIcon />}
-                className={disabled ? 'iconDisabled' : 'greyRoundBtn'}
+                className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
                 id={INSERTION}
                 disabled={disabled}
                 onClick={() => {
@@ -128,7 +128,7 @@ function BSTParam() {
                 }}
               />
               <ControlButton
-                className={disabled ? 'btnDisabled' : 'blueWordBtn'}
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
                 disabled={disabled}
               >
@@ -151,7 +151,7 @@ function BSTParam() {
             </label>
             <div className="btnGrp">
               <ControlButton
-                className={disabled ? 'btnDisabled' : 'blueWordBtn'}
+                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
                 type="submit"
                 disabled={disabled}
               >
