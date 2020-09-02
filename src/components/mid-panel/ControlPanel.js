@@ -1,7 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import React, {
-  useContext, useState, useEffect,
-} from 'react';
+import React, { useContext, useState } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
@@ -43,16 +41,8 @@ function ControlPanel() {
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
 
-  const [disabled, setDisabled] = useState(true);
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    if (algorithm.hasOwnProperty('visualisers')) {
-      setDisabled(false);
-    }
-  }, [algorithm]);
-
 
   const prev = () => {
     dispatch(GlobalActions.PREV_LINE);
@@ -129,7 +119,12 @@ function ControlPanel() {
           {playing ? (
             <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
           ) : (
-            <ControlButton icon={<PlayIcon />} type="play" disabled={disabled} onClick={() => play()} />
+            <ControlButton
+              icon={<PlayIcon />}
+              type="play"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+              onClick={() => play()}
+            />
           )}
 
           {/* Next Button */}

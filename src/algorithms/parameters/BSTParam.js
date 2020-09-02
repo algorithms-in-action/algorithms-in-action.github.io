@@ -50,6 +50,7 @@ function BSTParam() {
     }
   };
 
+  // TODO: Need to extract BSTParam, HSParam as a more generalized component
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
