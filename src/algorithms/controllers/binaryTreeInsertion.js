@@ -12,7 +12,7 @@ export default {
   pseudocode: parse(`
   \\Code{
       Main
-      BST_Build(keys)  // return the BST that results from inserting nodes \\B start
+      BST_Build(keys)  // return the BST that results from inserting nodes
                        // with keys 'keys', in the given order, into an
                        // initially empty BST
       t <- Empty \\B 1
