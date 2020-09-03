@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
-/* eslint-disable linebreak-style */
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */
 // Remove the space before and after the pseudocode
@@ -10,9 +7,6 @@ function removeLineContinuation(input) {
   let builtLine = '';
   for (const line of lines) {
     builtLine = `${line.trim()}`;
-    if (builtLine.indexOf('//') >= 0) {
-      builtLine = builtLine.substring(0, builtLine.indexOf('//'));
-    }
     if (builtLine !== '') {
       output.push(builtLine);
     }
@@ -54,9 +48,12 @@ function extractCode(lines) {
       if (line.indexOf(' \\Ref ') >= 0) {
         json['code'] = line.substring(0, line.indexOf(' \\Ref '));
         json['ref'] = line.substring(line.indexOf(' \\Ref ') + 6, line.length);
+      } else if (line.indexOf(' \\B ') >= 0) {
+        json['code'] = line.substring(0, line.indexOf(' \\B '));
+        json['bookmark'] = line.substring(line.indexOf(' \\B ') + 4, line.length);
+        // json['ref'] = '';
       } else {
         json['code'] = line;
-        json['ref'] = '';
       }
       json['explanation'] = '';
       json['indentation'] = ind;
@@ -69,7 +66,7 @@ function extractCode(lines) {
 }
 
 
-// For exch code block, in other words /Code {} section,
+// For each code block, in other words /Code {} section,
 // extract the code, explanation, indentation and reference information.
 function extractCodeBlock(lines) {
   let codeBlock = 'Default';
@@ -97,38 +94,23 @@ function extractCodeBlock(lines) {
   return json;
 }
 
-// Global value in this class scope for counting the bookmark.
-let c = 0;
-
-
-// Add bookmark and indentation recurvely
-function addBookmark(json, name, indentation, refBookmark) {
-  if (json[name] instanceof Array) {
-    json[name].forEach((line) => {
-      c += 1;
-      line['indentation'] += indentation;
-      if (line['ref'].length > 0) {
-        const tempBookmark = c;
-        line['bookmark'] = c;
-        line['refBookmark'] = refBookmark;
-        addBookmark(json, line['ref'], line['indentation'], tempBookmark);
-      } else {
-        line['bookmark'] = c;
-        line['refBookmark'] = refBookmark;
-      }
-    });
-  }
+function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
+  let indentedLine;
+  // eslint-disable-next-line no-param-reassign
+  outputBlocks[blockName] = [];
+  originalBlocks[blockName].forEach((line) => {
+    indentedLine = '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) + line['code'];
+    outputBlocks[blockName].push({ ...line, code: indentedLine });
+    if (line['ref']) {
+      addIndentation(originalBlocks, line['ref'], baseIndent + 1, outputBlocks);
+    }
+  });
 }
 
-// Notes for json attributes
-// ref: the reference which is inside Linda's pseudocode
-// refBookmark: the reference to the bookmark of the entrance code of current codeblock
 export default function parse(input) {
   const rawCode = removeLineContinuation(input);
-  const json = extractCodeBlock(rawCode);
-  c = 0;
-  addBookmark(json, 'Main', 0, 0);
-  // print pseudocode
-  console.log(json);
-  return json;
+  const rawCodeBlocks = extractCodeBlock(rawCode);
+  const indentedCodeBlocks = {};
+  addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
+  return indentedCodeBlocks;
 }

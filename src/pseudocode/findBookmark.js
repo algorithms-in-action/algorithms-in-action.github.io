@@ -6,5 +6,5 @@ export default function (procedure, bookmark) {
       }
     }
   }
-  return null;
+  throw new Error(`Bookmark ${bookmark} does not exist`);
 }

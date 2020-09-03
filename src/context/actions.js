@@ -7,12 +7,15 @@ const DEFAULT_ALGORITHM = 'binarySearchTree';
 
 // Given some pseudocode and a block collapse state, is bookmark visible on screen?
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
-  let containingBlock;
+  let containingBlock = false;
   for (const blockName of Object.keys(pseudocode)) {
     if (pseudocode[blockName].reduce((acc, cur) => acc || cur.bookmark === bookmark, false)) {
       containingBlock = blockName;
       break;
     }
+  }
+  if (!containingBlock) {
+    throw new Error(`Cannot find bookmark ${bookmark}`);
   }
   return collapse[containingBlock];
 }
@@ -59,7 +62,6 @@ export const GlobalActions = {
         collapseController[codeBlockName] = false;
       }
     }
-
     return {
       id: params.name,
       name,
@@ -96,7 +98,7 @@ export const GlobalActions = {
     } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
     return {
       ...state,
-      ...state.chunker.prev(state.collapse),
+      ...result,
       playing,
     };
   },

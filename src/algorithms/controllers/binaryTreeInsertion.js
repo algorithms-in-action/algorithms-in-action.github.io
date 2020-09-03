@@ -11,79 +11,79 @@ import { BSTExp } from '../explanations';
 export default {
   pseudocode: parse(`
   \\Code{
-    Main
-    BST_Build(keys)  // return the BST that results from inserting nodes
-                     // with keys 'keys', in the given order, into an
-                     // initially empty BST
-    t <- Empty
-    for each k in keys
-    \\In{
-        t <- BST_Insert(t, k) \\Ref Insert
-    \\In}
-    \\Code}
+      Main
+      BST_Build(keys)  // return the BST that results from inserting nodes \\B start
+                       // with keys 'keys', in the given order, into an
+                       // initially empty BST
+      t <- Empty \\B 1
+      for each k in keys \\B 2
+      \\In{
+          t <- BST_Insert(t, k) \\Ref Insert
+      \\In}
+  \\Code}
   \\Code{
-    Insert
-    BST_Insert(t, k) // Insert key k in BST t, maintaining the BST invariant
-    \\In{
-        n <- new Node     // create a new node to hold key k
-        n.key <- k
-        n.left <- Empty   // it will be a leaf, that is,
-        n.right <- Empty  // it has empty subtrees
-        
-        if t = Empty
-        \\In{
-            return n      // in this case, the result is a tree with just one node
-            \\Expl{  If the tree is initially empty, the resulting BST is just
-                    the new node, which has key k, and empty sub-trees.
-            \\Expl}
-        \\In}
+      Insert
+      // Insert key k in BST t, maintaining the BST invariant
+      n <- new Node     // create a new node to hold key k \\B 3
+      n.key <- k \\B 4
+      n.left <- Empty   // it will be a leaf, that is, \\B 5
+      n.right <- Empty  // it has empty subtrees \\B 6
+
+      if t = Empty \\B 7
+      \\In{
+          t <- n      // in this case, the result is a tree with just one node \\B 8
+          \\Expl{  If the tree is initially empty, the resulting BST is just
+                  the new node, which has key k, and empty sub-trees.
+          \\Expl}
+      \\In}
+      else
+      \\In{
         Locate the node p that should be the parent of the new node n. \\Ref Locate
-        if k < p.key 
+        if k < p.key  \\B 9
         \\Expl{  The new node n (whose key is k) will be a child of p. We just 
                 need to decide whether it should be a left or a right child of p.
         \\Expl}
         \\In{
-            p.left <- n       // insert n as p's left child         
+            p.left <- n       // insert n as p's left child \\B 10
         \\In}
         else
         \\In{
-            p.right <- n      // insert n as p's right child        
+            p.right <- n      // insert n as p's right child  \\B 11
         \\In}
-        return t                                                    
-    \\In}
-    \\Code}
+      \\In}
+  \\Code}
     
-    \\Code{
+  \\Code{
     Locate
-    c <- t            // c traverses the path from the root to the insertion point
+    c <- t            // c traverses the path from the root to the insertion point \\B 13
     
     \\Expl{  c is going to follow a path down to where the new node is to 
             be inserted. We start from the root (t).
     \\Expl}
     repeat
     \\In{
-        p <- c        // when the loop exits, p will be c's parent
+        p <- c        // when the loop exits, p will be c's parent \\B 14
         \\Expl{  Parent p and child c will move in lockstep, with p always 
                 trailing one step behind c.
         \\Expl}
-        if k < c.key
+        if k < c.key \\B 15
         \\Expl{  The BST condition is that nodes with keys less than the current
                 node's key are to be found in the left subtree, and nodes whose
                 keys are greater (or the same) are to be in the right subtree.
         \\Expl}
         \\In{
-            c <- c.left
+            c <- c.left \\B 16
         \\In}
         else
         \\In{
-            c <- c.right
+            c <- c.right \\B 17
         \\In}
     \\In}
-    until c = Empty
+    until c = Empty \\B 18
     \\Expl{  At the end of this loop, c has located the empty subtree where new
             node n should be located, and p will be the parent of the new node.
     \\Expl}
-    \\Code}
+  \\Code}
 `),
 
   explanation: BSTExp,
@@ -91,11 +91,11 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new Array1DTracer('array', null, 'Array'),
+        instance: new Array1DTracer('array', null, 'Keys to insert'),
         order: 0
       },
       graph: {
-        instance: new GraphTracer('bst', null, 'BST'),
+        instance: new GraphTracer('bst', null, 'Binary tree'),
         order: 1
       }, 
     };
@@ -126,63 +126,69 @@ export default {
     let parent;
     const tree = {};
     const root = nodes[0];
-
-    // populate the ArrayTracer using nodes
-    chunker.add(1, (vis, elements) => {
-      vis.array.set(elements);
-    }, [nodes]);  
-
-    chunker.add(2);
     tree[root] = {};
 
-    chunker.add(3, (vis) => {
+    // populate the ArrayTracer using nodes
+    chunker.add('1', (vis, elements) => {
+      vis.array.set(elements);
       vis.array.select(0); // the index of root element is 0
-    });
-    chunker.add(6, (vis, r) => {   
+    }, [nodes]);
+    chunker.add(2);
+    chunker.add(3, (vis, r) => {
       vis.graph.addNode(r);
       vis.graph.layoutTree(r, true);
     }, [root]);
-
+    chunker.add(4);
+    chunker.add(5);
+    chunker.add(6);
+    chunker.add(7);
+    chunker.add(8);
     for (let i = 1; i < nodes.length; i++) {
-      chunker.add(3, (vis, index) => {
-        vis.array.deselect(0);
+      chunker.add(2, (vis, index) => {
+        vis.array.deselect(index - 1);
         vis.array.select(index);
       }, [i]);
       const element = nodes[i];
-
+      chunker.add(3);
+      chunker.add(4);
+      chunker.add(5);
+      chunker.add(6);
+      chunker.add(7);
+      chunker.add(13);
       let ptr = tree;
       parent = root;
-
-      chunker.add(12);
       while (ptr) {
         chunker.add(14);
-        chunker.add(16);
+        chunker.add(15);
         if (element < parent) {
+          chunker.add(16);
+          chunker.add(18);
           if (tree[parent].left !== undefined) {
             // if current node has left child
-            chunker.add(17);
             parent = tree[parent].left;
             ptr = tree[parent];
           } else {
+            chunker.add(9);
             tree[parent].left = element;
             tree[element] = {};
-            chunker.add(22, (vis, e, p) => {
+            chunker.add(10, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
             }, [element, parent]);
             break;
           } 
         } else if (element > parent) {
+          chunker.add(17);
           chunker.add(18);
           if (tree[parent].right !== undefined) {
             // if current node has right child
-            chunker.add(19);
             parent = tree[parent].right;
             ptr = tree[parent];
           } else {
+            chunker.add(9);
             tree[parent].right = element;
             tree[element] = {};
-            chunker.add(24, (vis, e, p) => {
+            chunker.add(11, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
             }, [element, parent]);
@@ -192,9 +198,6 @@ export default {
           break;
         }
       }
-      chunker.add(25, (vis, index) => {
-        vis.array.deselect(index);
-      }, [i]);
     }
   },
 };
