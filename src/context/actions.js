@@ -5,6 +5,18 @@ import Chunker from './chunker';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 
+// Given some pseudocode and a block collapse state, is bookmark visible on screen?
+function isBookmarkVisible(pseudocode, collapse, bookmark) {
+  let containingBlock;
+  for (const blockName of Object.keys(pseudocode)) {
+    if (pseudocode[blockName].reduce((acc, cur) => acc || cur.bookmark === bookmark, false)) {
+      containingBlock = blockName;
+      break;
+    }
+  }
+  return collapse[containingBlock];
+}
+
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
@@ -64,18 +76,30 @@ export const GlobalActions = {
   },
 
   // run next line of code
-  NEXT_LINE: (state, playing) => ({
-    ...state,
-    ...state.chunker.next(),
-    playing,
-  }),
+  NEXT_LINE: (state, playing) => {
+    let result;
+    do {
+      result = state.chunker.next();
+    } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    return {
+      ...state,
+      ...result,
+      playing,
+    };
+  },
 
   // run previous line of code
-  PREV_LINE: (state, playing) => ({
-    ...state,
-    ...state.chunker.prev(),
-    playing,
-  }),
+  PREV_LINE: (state, playing) => {
+    let result;
+    do {
+      result = state.chunker.prev();
+    } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    return {
+      ...state,
+      ...state.chunker.prev(state.collapse),
+      playing,
+    };
+  },
 
   TOGGLE_PLAY: (state, playing) => ({
     ...state,
