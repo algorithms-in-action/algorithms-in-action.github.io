@@ -49,8 +49,8 @@ const addCollapse = (algorithm1, dispatch1, codeBlocks1, currentBookmark, blockN
           <span>{i + 1}</span>
           <span>
             <button className="expand-collopse-button" onClick={() => { dispatch1(GlobalActions.COLLAPSE, ref); }}>
-              {algorithm1.collapse[ref] ? <ChevronRightIcon style={{ fontSize: 12 }} />
-                : <ExpandMoreIcon style={{ fontSize: 12 }} />}
+              {algorithm1.collapse[ref] ? <ExpandMoreIcon style={{ fontSize: 12 }} />
+                : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
           <span>{key}</span>
