@@ -52,8 +52,10 @@ export default class {
       this.visualisers = this.init();
       this.doChunk(0);
       this.currentChunk = 0;
-    } else if (this.currentChunk <= this.chunks.length - 1) {
+    } else if (this.currentChunk > 0 && this.currentChunk <= this.chunks.length - 1) {
       this.doChunk(this.currentChunk);
+      this.currentChunk += 1;
+    } else if (this.currentChunk === 0) {
       this.currentChunk += 1;
     }
     if (this.currentChunk < this.chunks.length) {

@@ -15,7 +15,7 @@ export default {
     
     \\Code{
     Main
-    HeapSort(A, n) // Sort array A[1]..A[n] in ascending order.
+    HeapSort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
     \\Expl{  We are not using A[0] (for languages that start array indices at 0).
     \\Expl}
     \\In{
@@ -56,7 +56,7 @@ export default {
     
     \\Code{
     BHForLoop
-    for k <- n/2 downto 1                                           
+    for k <- n/2 downto 1 \\B 4
     \\Expl{  Using root index 1, the last non-leaf has index n/2 (rounded down
             to the nearest integer).
     \\Expl}
@@ -69,12 +69,12 @@ export default {
             The children of node k are already heaps, so we need only be 
             concerned about where A[k] fits in. 
     \\Expl}
-    i <- k                                                            
+    i <- k \\B 6
     \\Expl{  Set index i to the root of the subtree that we are now going to 
             make into a heap. 
     \\Expl}
-    heap <- False // 'heap' is a flag                                 
-    while not (IsLeaf(A[i]) or heap) 
+    heap <- False // 'heap' is a flag \\B 7
+    while not (IsLeaf(A[i]) or heap) \\B 8
     \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
             We also terminate the loop if the children of A[i] are in the 
             correct order relative to the parent, since we know that subtrees
@@ -85,40 +85,40 @@ export default {
         j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargestk 
         \\Expl{  Find the larger of the two children of the node.
         \\Expl}
-        if A[i] >= A[j] 
+        if A[i] >= A[j] \\B 14
         \\In{
-            heap <- True                                              
+            heap <- True \\B 15
             \\Expl{  The heap condition is satisfied (the root is larger 
                     than both children), so exit from while loop. 
             \\Expl}
         \\In}
         else
         \\In{
-            Swap(A[i], A[j]) // Swap root element with (larger) child 
-            i <- j                                                    
+            Swap(A[i], A[j]) // Swap root element with (larger) child \\B 17
+            i <- j \\B 18
         \\In}
     \\In}        
     \\Code}
     
     \\Code{
     IndexOfLargestk
-    if 2*i < n and A[2*i] < A[2*i+1] 
+    if 2*i < n and A[2*i] < A[2*i+1] \\B 10
     \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
             a right child) is A[2*i+1]; set j to the index of the larger child.
     \\Expl}
     \\In{
-        j <- 2*i+1                                                    
+        j <- 2*i+1 \\B 11
     \\In}
     else
     \\In{
-        j <- 2*i                                                      
+        j <- 2*i \\B 13
     \\In}
     \\Code}
     
     \\Code{
     SortHeap
     // Sort heap
-    while n > 1                                                         
+    while n > 1 \\B 20
     \\Expl{  A[1] always has the largest value not yet processed in the 
             sorting phase. A[n] is the last array element in the heap-ordered
             array that is not yet sorted. Repeatedly swap these two values, 
@@ -128,14 +128,15 @@ export default {
             is, only one node remains.  
     \\Expl}
     \\In{
-        Swap(A[n], A[1])                                              
-        n <- n-1                                                      
+        Swap(A[n], A[1]) \\B 21
+        n <- n-1 \\B 22
         DownHeap(A, 1, n)    \\Ref DownHeap1
         \\Expl{  Now that the root node has been swapped to the end, A[1] may 
                 no longer be the largest element in the (reduced size) heap.
                 Use the DownHeap operation to restore the heap condition. 
         \\Expl}
     \\In}
+    // Done \\B 37
     \\Code}
     
     \\Note{  This is very similar to DownHeapk.
@@ -144,12 +145,12 @@ export default {
     \\Code{
     DownHeap1
     // DownHeap(A, 1, n)
-    i <- 1                                                            
+    i <- 1 \\B 24
     \\Expl{  Set index i to the root of the subtree that we are now going to 
             examine. 
     \\Expl}
-    heap <- False // 'heap' is a flag                                 
-    while not (IsLeaf(A[i]) or heap) do                               
+    heap <- False // 'heap' is a flag \\B 25
+    while not (IsLeaf(A[i]) or heap) do \\B 26
     \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
             We also terminate the loop if the children of A[i] are in the 
             correct order relative to the parent, since we know that subtrees
@@ -160,20 +161,20 @@ export default {
         j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargest0 
         \\Expl{  Find the larger of the two children of the node. 
         \\Expl}
-        if A[i] >= A[j]         // Parent is larger than the largest child
+        if A[i] >= A[j]         // Parent is larger than the largest child \\B 32
                                                                       
         \\In{
-            heap <- True                                              
+            heap <- True \\B 33
             \\Expl{  The heap condition is satisfied, that is, the root is 
                     larger than both children, so we exit from the while loop.
             \\Expl}
         \\In}
         else
         \\In{
-            Swap(A[i], A[j])    // Swap root element with (larger) child 
-            i <- j                                                    
+            Swap(A[i], A[j])    // Swap root element with (larger) child \\B 35
+            i <- j \\B 36
         \\In}
-    \\In}        
+    \\In}
     \\Code}
     
     \\Note{  Same as IndexOfLargestk (could possible reuse that; it is duplicated 
@@ -183,16 +184,16 @@ export default {
     
     \\Code{
     IndexOfLargest0
-    if 2*i < n and A[2*i] < A[2*i+1] 
+    if 2*i < n and A[2*i] < A[2*i+1] \\B 28
     \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
             a right child) is A[2*i+1]; set j to the index of the larger child.
     \\Expl}
     \\In{
-        j <- 2*i+1                                                    
+        j <- 2*i+1 \\B 29
     \\In}
     else
     \\In{
-        j <- 2*i                                                      
+        j <- 2*i \\B 31
     \\In}
     \\Code}
        
@@ -227,7 +228,7 @@ export default {
     let heap;
     let swap;
 
-    chunker.add(2, (vis, array) => {  
+    chunker.add(1, (vis, array) => {
       vis.heap.setHeap(array);
       vis.array.set(array);
     }, [nodes]);
@@ -261,7 +262,7 @@ export default {
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
-      chunker.add(3, (vis, index) => {
+      chunker.add(4, (vis, index) => {
         vis.array.select(index);
         vis.heap.select(index + 1);
       }, [k]);
@@ -291,7 +292,6 @@ export default {
             vis.heap.select(index + 1);
           }, [j]);
         } else {
-          chunker.add(12);
           j = 2 * i + 1;
           chunker.add(13, (vis, index) => {
             vis.array.select(index);
@@ -310,7 +310,6 @@ export default {
             vis.heap.deselect(c + 1);
           }, [i, j]);
         } else {
-          chunker.add(16);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
@@ -366,7 +365,6 @@ export default {
             vis.heap.select(index + 1);
           }, [j]);
         } else {
-          chunker.add(30);
           j = 2 * i + 1;
           chunker.add(31, (vis, index) => {
             vis.array.select(index);
@@ -384,7 +382,6 @@ export default {
             vis.heap.deselect(c + 1);
           }, [i, j]);
         } else {
-          chunker.add(34);
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
@@ -399,5 +396,6 @@ export default {
         }
       }
     }
+    chunker.add(37);
   },
 };
