@@ -32,6 +32,10 @@ export default class {
     });
   }
 
+  isValidChunk(currentChunk) {
+    return currentChunk >= 1 && currentChunk <= this.chunks.length;
+  }
+
   getVisualisers() {
     return Object.values(this.visualisers)
       .sort((a, b) => a.order - b.order)

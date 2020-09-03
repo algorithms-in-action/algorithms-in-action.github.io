@@ -1,0 +1,141 @@
+$warningCol: #DC0707;
+$successCol: #53DD6C;
+$sigBlue: #027AFF;
+
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
+
+$playBtn: #027AFF;
+$disabledBtn: #b5b5b5;
+$activeBtn: #6a6a6a;
+
+$group: #F7F7F7;
+
+
+.sliderContainer {
+  display: flex;
+  background-color: $group;
+  padding: 0 16px;
+  @include border-radii(16px,16px,16px,16px);
+
+  .slider {
+    width: 160px;
+    height: 30px;
+    margin-top: 2px;
+  }
+
+}
+
+.btn {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  margin: 0px 8px;
+
+}
+
+.btnGone {
+  display: none;
+
+}
+
+.btnPresent {
+  display: block;
+}
+
+// Button Active Style
+.btnActive {
+  @extend .btn;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    height: 12px;
+    width: 12px;
+    path {
+      fill: $activeBtn;
+    }
+  }
+}
+
+.btnActive:hover {
+  transition: .4s;
+  background: #f7f7f7 !important;
+  @include border-radii(14px,14px,14px,14px);
+}
+.btnActive:active {
+  transition: .2s;
+  background: #E3E2E4 !important;
+  @include border-radii(14px,14px,14px,14px);
+}
+
+.btnDisabled {
+  @extend .btnActive;
+  cursor: not-allowed !important;
+
+  svg {
+    path {
+      fill: $disabledBtn !important;
+    }
+  }
+
+}
+
+.btnDisabled:hover {
+  background: none !important;
+}
+.btnDisabled:active {
+  background: none !important;
+}
+
+.prev {
+  svg {
+    transform: rotate(90deg);
+  }
+}
+
+.next {
+  svg {
+    transform: rotate(-90deg); 
+  }
+}
+
+.play {
+  svg {
+    path {
+      fill: $playBtn;
+    }
+  }
+}
+
+.pause {
+  svg {
+    path {
+      fill: $playBtn;
+    }
+  }
+}
+
+
+
+
+

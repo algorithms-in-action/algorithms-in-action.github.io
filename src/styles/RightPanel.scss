@@ -3,19 +3,20 @@ $buttonBgCol: #FFFFFF;
 $buttonDefCol: #909090;
 $buttonHighlightCol: #0065AE;
 $codeExplanationButtonHeight: 40px;
-$borderCol: #D4D4D4;
+$borderCol: #e9e9e9;
+$borderSize: 3px;
 $fontCol: #343434;
 
 @mixin textPadding {
   padding: 12px 8px 24px 12px;
 }
 
-.codeExplanationButton {
+.rightPanelButtons {
   background-color: $buttonBgCol;
   display: flex; 
   flex-direction: row;
   justify-content: center;
-  border-bottom: 1px solid $borderCol;
+  border-bottom: $borderSize solid $borderCol;
   height: $codeExplanationButtonHeight;
 
   button {
@@ -25,37 +26,51 @@ $fontCol: #343434;
     cursor:pointer;
     overflow: hidden;
     outline:none;
-    font-size: 0.75em;
     color: $buttonDefCol;
-    font-weight: 600;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.72em;
+    font-weight: 600;
+
+    svg {
+      width: 12px;
+      height: 12px;
+
+      path {
+        fill: $buttonDefCol;
+      }
+    }
+
+
+
   }
 
   .active {
     background-color: $buttonHighlightCol;
     color: white;
+
+    svg path {
+      fill: white;
+    }
   }
 }
 
 .textAreaContainer {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  max-height: 100%;
   font-size: 0.9em;
   color: $fontCol;
 
   .textArea {
-    flex: 1 1 1px; /* Important */
     @include textPadding;
-    overflow-y: scroll;
     
   }
 
   .lineExplanation {
-    padding: 16px;
-    height: 15%;
-    border-top: 1px solid $borderCol;
+    // height: 200px;
+    border-top: 3px solid $borderCol;
     @include textPadding;
 
   }
