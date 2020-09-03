@@ -111,7 +111,12 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
 export default function parse(input) {
   const rawCode = removeLineContinuation(input);
   const rawCodeBlocks = extractCodeBlock(rawCode);
-  const indentedCodeBlocks = {};
-  addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
-  return indentedCodeBlocks;
+  if (Object.keys(rawCodeBlocks).length > 0) {
+    const indentedCodeBlocks = {};
+    addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
+    console.log(indentedCodeBlocks)
+    return indentedCodeBlocks;
+  } else {
+    return rawCodeBlocks;
+  }
 }

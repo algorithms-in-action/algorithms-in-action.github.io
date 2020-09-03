@@ -2,12 +2,10 @@
 
 import parse from './parse';
 
-/*
 // When Input is Empty
 test('empty pseudocode', () => {
   expect(parse('')).toEqual({});
 });
-*/
 
 // Test signle basic parse
 test('single basic procedure', () => {
