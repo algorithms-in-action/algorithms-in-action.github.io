@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */
 // Remove the space before and after the pseudocode
