@@ -111,6 +111,9 @@ export default function parse(input) {
   const rawCode = removeLineContinuation(input);
   const rawCodeBlocks = extractCodeBlock(rawCode);
   const indentedCodeBlocks = {};
-  addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
-  return indentedCodeBlocks;
+  if (rawCodeBlocks instanceof Array) {
+    addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
+    return indentedCodeBlocks;
+  }
+  return rawCodeBlocks;
 }
