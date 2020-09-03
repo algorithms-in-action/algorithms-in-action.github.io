@@ -69,7 +69,6 @@ export default class {
   }
 
   prev() {
-    console.trace();
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i < this.currentChunk - (this.currentChunk === 1 ? 0 : 1); i += 1) {
