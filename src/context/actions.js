@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
 import Chunker from './chunker';
@@ -9,15 +8,17 @@ const DEFAULT_ALGORITHM = 'binarySearchTree';
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
   let containingBlock = false;
   for (const blockName of Object.keys(pseudocode)) {
-    if (pseudocode[blockName].reduce((acc, cur) => acc || cur.bookmark === bookmark, false)) {
-      containingBlock = blockName;
-      break;
+    for (let i = 0; i < pseudocode[blockName].length; i += 1) {
+      if (pseudocode[blockName][i].bookmark === bookmark) {
+        containingBlock = blockName;
+        if (i === 0) {
+          return true;
+        }
+        return collapse[containingBlock];
+      }
     }
   }
-  if (!containingBlock) {
-    throw new Error(`Cannot find bookmark ${bookmark}`);
-  }
-  return collapse[containingBlock];
+  throw new Error(`Cannot find bookmark ${bookmark}`);
 }
 
 // At any time the app may call dispatch(action, params), which will trigger one of
@@ -83,6 +84,7 @@ export const GlobalActions = {
     do {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    console.log(result.bookmark);
     return {
       ...state,
       ...result,

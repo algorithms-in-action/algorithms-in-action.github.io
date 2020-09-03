@@ -8,9 +8,18 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.css';
-import findCodeBlock from '../../pseudocode/findCodeBlock';
 
-function pseudocodeBlock(algorithm, dispatch, currentBookmark, blockName, lineNum) {
+function blockContainsBookmark(algorithm, block) {
+  for (const line of algorithm.pseudocode[block]) {
+    if (line.bookmark === algorithm.bookmark
+        || (line.ref && blockContainsBookmark(algorithm, line.ref, algorithm.bookmark))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   let i = lineNum;
   let codeLines = [];
   for (const line of algorithm.pseudocode[blockName]) {
@@ -19,8 +28,8 @@ function pseudocodeBlock(algorithm, dispatch, currentBookmark, blockName, lineNu
       codeLines.push(
         <p
           key={i}
-          className={currentBookmark === line.bookmark ? 'active' : ''}
-          index={i}
+          className={(!algorithm.collapse[line.ref]
+            && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
           role="presentation"
         >
           <span>{i}</span>
@@ -40,7 +49,7 @@ function pseudocodeBlock(algorithm, dispatch, currentBookmark, blockName, lineNu
         </p>,
       );
       if (algorithm.collapse[line.ref]) {
-        const subblock = pseudocodeBlock(algorithm, dispatch, currentBookmark, line.ref, i);
+        const subblock = pseudocodeBlock(algorithm, dispatch, line.ref, i);
         i = subblock.index;
         codeLines = codeLines.concat(subblock.cl);
       }
@@ -48,8 +57,7 @@ function pseudocodeBlock(algorithm, dispatch, currentBookmark, blockName, lineNu
       codeLines.push(
         <p
           key={i}
-          className={currentBookmark === line.bookmark ? 'active' : ''}
-          index={i}
+          className={algorithm.bookmark === line.bookmark ? 'active' : ''}
           role="presentation"
         >
           <span>{i}</span>
@@ -63,14 +71,11 @@ function pseudocodeBlock(algorithm, dispatch, currentBookmark, blockName, lineNu
 
 const LineNumHighLight = () => {
   const { algorithm, dispatch } = useContext(GlobalContext);
-  const currentBookmark = findCodeBlock(algorithm, algorithm.bookmark);
-
-  /* render data */
 
   return (
     <div className="line-light">
       <div className="code-container">
-        {pseudocodeBlock(algorithm, dispatch, currentBookmark, 'Main', 0).cl}
+        {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
       </div>
     </div>
   );
