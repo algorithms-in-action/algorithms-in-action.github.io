@@ -19,19 +19,6 @@ function HeaderButton({ value, onChange }) {
         main: '#027AFF',
       },
     },
-    overrides: {
-      MuiPaper: {
-        root: {
-          height: 40,
-
-        },
-      },
-      MuiTabs: {
-        root: {
-          height: 30,
-        },
-      },
-    },
   });
 
   const tabHeight = '42px'; // default: '48px'
