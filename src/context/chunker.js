@@ -27,13 +27,13 @@ export default class {
   // values is a list of arguments passed to func when it is called to perform its task.
   add(bookmark, func, values) {
     this.chunks.push({
-      bookmark,
+      bookmark: String(bookmark),
       mutator: defer(func, values),
     });
   }
 
   isValidChunk(currentChunk) {
-    return currentChunk >= 1 && currentChunk <= this.chunks.length;
+    return currentChunk >= 0 && currentChunk <= this.chunks.length;
   }
 
   getVisualisers() {
@@ -50,22 +50,30 @@ export default class {
   next() {
     if (this.currentChunk === null) {
       this.visualisers = this.init();
+      this.doChunk(0);
       this.currentChunk = 0;
-    }
-    if (this.currentChunk <= this.chunks.length - 1) {
+    } else if (this.currentChunk > 0 && this.currentChunk <= this.chunks.length - 1) {
       this.doChunk(this.currentChunk);
       this.currentChunk += 1;
+    } else if (this.currentChunk === 0) {
+      this.currentChunk += 1;
+    }
+    if (this.currentChunk < this.chunks.length) {
+      return {
+        bookmark: this.chunks[this.currentChunk].bookmark,
+        finished: false,
+      };
     }
     return {
       bookmark: this.chunks[this.currentChunk - 1].bookmark,
-      finished: !(this.currentChunk <= this.chunks.length - 1),
+      finished: true,
     };
   }
 
   prev() {
-    if (this.currentChunk > 1) {
+    if (this.currentChunk > 0) {
       this.visualisers = this.init();
-      for (let i = 0; i < this.currentChunk - 1; i += 1) {
+      for (let i = 0; i < this.currentChunk - (this.currentChunk === 1 ? 0 : 1); i += 1) {
         this.doChunk(i);
       }
       this.currentChunk -= 1;

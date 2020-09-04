@@ -13,27 +13,27 @@ export default {
     BST_Search(t, k)  // return subtree whose root has key k; or
                       // NotFound is no such node is present
     \\In{
-        while t not Empty
+        while t not Empty \\B 1
         \\In{
-            if t.key = k 
+            if t.key = k  \\B 2
             \\In{
-                return t
+                return t \\B 3
                 \\Expl{  We have found a node with the desired key k.
                 \\Expl}
             \\In}
-            if t.key > k 
+            if t.key > k  \\B 4
             \\Expl{  The BST condition is that nodes with keys less than the 
                     current node's key are to be found in the left subtree, and
                     nodes whose keys are greater are to be in the right subtree.
             \\Expl}
             \\In{
-                t <- t.left
+                t <- t.left \\B 5
             \\In}
             else
             \\In{
-                t <- t.right
+                t <- t.right \\B 6
             \\In}
-        return NotFound
+        return NotFound \\B 7
         \\In}
     \\In}
     \\Code}
@@ -79,34 +79,32 @@ export default {
       chunker.add(2);
       if (current === item) {
         chunker.add(3);
-        chunker.add(4);
         return;
       }
 
-      chunker.add(5);
+      chunker.add(4);
       if (item < current) {
         if (tree[current].left !== undefined) {
           // if current node has left child
           parent = current;
           current = tree[current].left;
           ptr = tree[current];
-          chunker.add(6, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+          chunker.add(5, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         } else {
           break;
         }
       } else {
-        chunker.add(7);
         if (tree[current].right !== undefined) {
           // if current node has right child
           parent = current;
           current = tree[current].right;
           ptr = tree[current];
-          chunker.add(8, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+          chunker.add(6, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         } else {
           break;
         }
       }
     }
-    chunker.add(9);
+    chunker.add(7);
   },
 };
