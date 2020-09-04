@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Input } from '@material-ui/core';
+import { Input, withStyles } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -18,6 +18,8 @@ function LeftPanel() {
   const [displaySearch, setDisplaySearch] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [openStatus, setOpenStatus] = useState(AlgorithmCategoryList.map((obj) => true));
+
+  const { algorithm } = useContext(GlobalContext);
 
   // Handle items when clicked
   const handleClick = (itemId) => {
@@ -43,6 +45,16 @@ function LeftPanel() {
   // if the search input field has the value, Display the search list.
 
   const isDisableUnderline = true;
+
+  const StyledListItem = withStyles({
+    root: {
+      backgroundColor: 'white',
+      '&.Mui-selected': {
+        backgroundColor: '#F4F4F4',
+      },
+    },
+  })(ListItem);
+
 
   return (
     <div className="container">
@@ -74,7 +86,8 @@ function LeftPanel() {
                       {
                          cat.algorithms.map((algo) => (
                            <List component="div" disablePadding key={algo.name}>
-                             <ListItem
+                             <StyledListItem
+                               selected={algorithm.name === algo.name}
                                button
                                onClick={() => {
                                  dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
@@ -85,7 +98,7 @@ function LeftPanel() {
                                  disableTypography
                                  className="algorithm-list-sub"
                                />
-                             </ListItem>
+                             </StyledListItem>
                            </List>
                          ))
                       }
@@ -99,7 +112,8 @@ function LeftPanel() {
               <div>
                 {displaySearch.map((algo) => (
                   <List component="div" disablePadding key={algo}>
-                    <ListItem
+                    <StyledListItem
+                      selected={algorithm.name === algo.name}
                       button
                       onClick={() => {
                         dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
@@ -110,7 +124,7 @@ function LeftPanel() {
                         disableTypography
                         className="algorithm-list-sub"
                       />
-                    </ListItem>
+                    </StyledListItem>
                   </List>
                 ))}
               </div>
