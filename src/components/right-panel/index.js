@@ -5,9 +5,9 @@ import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 import ExtraInfo from './ExtraInfo';
 
-const BTN_1 = 'BTN_1';
-const BTN_2 = 'BTN_2';
-const BTN_3 = 'BTN_3';
+const BTN_1 = 0;
+const BTN_2 = 1;
+const BTN_3 = 2;
 
 function RightPanel() {
   const [state, setState] = React.useState(BTN_1);

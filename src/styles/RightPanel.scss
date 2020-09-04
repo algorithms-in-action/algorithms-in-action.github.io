@@ -1,7 +1,7 @@
 $bgColor: #FEFEFE;
 $buttonBgCol: #FFFFFF;
 $buttonDefCol: #909090;
-$buttonHighlightCol: #0065AE;
+$buttonHighlightCol: #027AFF;
 $codeExplanationButtonHeight: 40px;
 $borderCol: #e9e9e9;
 $borderSize: 3px;
@@ -20,19 +20,20 @@ $fontCol: #343434;
   height: $codeExplanationButtonHeight;
 
   button {
-    background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
-    color: $buttonDefCol;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // background-color: Transparent;
+    // background-repeat:no-repeat;
+    // border: none;
+    // cursor:pointer;
+    // overflow: hidden;
+    // outline:none;
+    // color: $buttonDefCol;
+    // // width: 100%;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
     font-size: 0.72em;
-    font-weight: 600;
+    font-weight: 400;
+    height: 30px;
 
     svg {
       width: 12px;
@@ -43,19 +44,16 @@ $fontCol: #343434;
       }
     }
 
-
-
-  }
-
-  .active {
-    background-color: $buttonHighlightCol;
-    color: white;
-
-    svg path {
-      fill: white;
+    .new {
+      svg path {
+        fill: orange;
+      }
     }
+
   }
+
 }
+
 
 .textAreaContainer {
   display: flex;

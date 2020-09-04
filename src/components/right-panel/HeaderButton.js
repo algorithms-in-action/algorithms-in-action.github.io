@@ -1,44 +1,100 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ReactComponent as AddIcon } from '../../resources/icons/add.svg';
+import {
+  Tabs, Tab, Paper, makeStyles,
+} from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+// import { ReactComponent as AddIcon } from '../../resources/icons/add.svg';
 
 function HeaderButton({ value, onChange }) {
-  const [state, setState] = useState(value[0]);
-
-  const updateState = (val) => {
-    setState(val);
-    onChange(val);
+  const [state, setState] = useState(0);
+  const handleChange = (event, newValue) => {
+    setState(newValue);
+    onChange(newValue);
   };
+
+  const globalTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: '#027AFF',
+      },
+    },
+    overrides: {
+      MuiPaper: {
+        root: {
+          height: 40,
+
+        },
+      },
+      MuiTabs: {
+        root: {
+          height: 30,
+        },
+      },
+    },
+  });
+
+  const tabHeight = '42px'; // default: '48px'
+  const useStyles = makeStyles(() => ({
+    tabsRoot: {
+      minHeight: tabHeight,
+      height: tabHeight,
+      width: '100%',
+    },
+    tabRoot: {
+      minHeight: tabHeight,
+      height: tabHeight,
+      width: '30px',
+    },
+  }));
+
+  const classes = useStyles();
 
   return (
     <>
-      <div className="rightPanelButtons">
-        <button
-          className={(state === value[0]) ? 'active' : 'notActive'}
-          type="button"
-          value={value[0]}
-          onClick={(e) => updateState(e.target.value)}
-        >
-          Code
-        </button>
-        <button
-          className={(state === value[1]) ? 'active' : 'notActive'}
-          type="button"
-          value={value[1]}
-          onClick={(e) => updateState(e.target.value)}
-        >
-          Background
-        </button>
-        <button
-          className={(state === value[2]) ? 'active' : 'notActive'}
-          type="button"
-          value={value[2]}
-          onClick={(e) => updateState(e.target.value)}
-        >
-          <AddIcon />
-        </button>
-      </div>
+      <ThemeProvider theme={globalTheme}>
 
+        <Paper square elevation={0} className="rightPanelButtons">
+          <Tabs
+            value={state}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            indicatorColor="primary"
+            textColor="primary"
+            aria-label="tabs button"
+            classes={{
+              root: classes.tabsRoot,
+            }}
+          >
+            <Tab
+              label="Code"
+              disableRipple
+              value={value[0]}
+              classes={{
+                root: classes.tabRoot,
+              }}
+            />
+            <Tab
+              label="Background"
+              disableRipple
+              value={value[1]}
+              classes={{
+                root: classes.tabRoot,
+              }}
+            />
+            <Tab
+              label="Extra"
+              disableRipple
+              aria-label="add icon"
+              value={value[2]}
+              classes={{
+                root: classes.tabRoot,
+              }}
+            />
+          </Tabs>
+        </Paper>
+      </ThemeProvider>
     </>
   );
 }
