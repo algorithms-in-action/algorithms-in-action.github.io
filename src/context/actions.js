@@ -84,7 +84,7 @@ export const GlobalActions = {
     do {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
-    console.log(result.bookmark);
+
     return {
       ...state,
       ...result,

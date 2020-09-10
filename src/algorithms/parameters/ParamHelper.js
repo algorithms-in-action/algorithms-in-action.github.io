@@ -1,4 +1,7 @@
 /* eslint-disable no-param-reassign */
+import React from 'react';
+import ParamMsg from './ParamMsg';
+
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
   return t.match(regex);
@@ -22,3 +25,33 @@ export const genRandNumList = (num, min, max) => {
   }
   return list;
 };
+
+/**
+ *
+ * @param {string} type algorithm type
+ */
+export const successParamMsg = (type) => (
+  <ParamMsg
+    logWarning={false}
+    logTag={`${type} success!`}
+    logMsg={`Input for ${type} algorithm is valid.`}
+  />
+);
+
+/**
+ *
+ * @param {string} type algorithm type
+ * @param {string} exmaple optional provided
+ * @param {string} reason optional provided, if not provide, use default value
+ */
+export const errorParamMsg = (
+  type,
+  exmaple,
+  reason = `Input for ${type} algorithm is not valid.`,
+) => (
+  <ParamMsg
+    logWarning
+    logTag={`${type} failure!`}
+    logMsg={`${reason}. ${exmaple || ''}`}
+  />
+);

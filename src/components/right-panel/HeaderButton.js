@@ -87,7 +87,7 @@ function HeaderButton({ value, onChange }) {
 }
 
 HeaderButton.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  value: PropTypes.arrayOf(PropTypes.number).isRequired,
   onChange: PropTypes.func.isRequired,
 };
 export default HeaderButton;
