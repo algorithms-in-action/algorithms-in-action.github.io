@@ -186,8 +186,8 @@ export const onDrag = (event) => {
     page.style.gridTemplateRows = newRowDefn;
     page.style.gridTemplateColumns = newColDefn;
 
-    console.log(`COL DEF: ${newColDefn}`);
-    console.log(`ROW DEF: ${newRowDefn}`);
+    // console.log(`COL DEF: ${newColDefn}`);
+    // console.log(`ROW DEF: ${newRowDefn}`);
 
     event.preventDefault();
   }
@@ -202,10 +202,8 @@ export const collapseLeftDrag = () => {
   let col;
 
   if (leftcol.clientWidth < MIN_COL_THRESHOLD) {
-    console.log('EXPAND LEFT');
     col = getColDefn(page, null, EXPAND_LEFT);
   } else {
-    console.log('COLLAPSE LEFT');
     col = getColDefn(page, null, COLLAPSE_LEFT);
   }
   page.style.gridTemplateColumns = col;
@@ -218,10 +216,8 @@ export const collapseRightDrag = () => {
   let col;
 
   if (rightcol.clientWidth < MIN_COL_THRESHOLD) {
-    console.log('EXPAND RIGHT');
     col = getColDefn(page, null, EXPAND_RIGHT);
   } else {
-    console.log('COLLAPSE RIGHT');
     col = getColDefn(page, null, COLLAPSE_RIGHT);
   }
 
@@ -235,10 +231,8 @@ export const collapseBottomDrag = () => {
   let row;
 
   if (footer.clientHeight < MIN_ROW_THRESHOLD) {
-    console.log('EXPAND FOOTER');
     row = getRowDefn(page, null, EXPAND_BOTTOM);
   } else {
-    console.log('COLLAPSE FOOTER');
     row = getRowDefn(page, null, COLLAPSE_BOTTOM);
   }
 
