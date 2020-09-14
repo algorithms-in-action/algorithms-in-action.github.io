@@ -25,8 +25,25 @@ function App() {
     return (_) => { window.removeEventListener('resize', handleResize); };
   });
 
+  function addEvent(obj, evt, fn) {
+    if (obj.addEventListener) {
+      obj.addEventListener(evt, fn, false);
+    } else if (obj.attachEvent) {
+      obj.attachEvent(`on${evt}`, fn);
+    }
+  }
 
-  // onresize={resetColumnSizes}
+  addEvent(document, 'mouseout', (e) => {
+    e = e || window.event;
+    const from = e.relatedTarget || e.toElement;
+    if (!from || from.nodeName === 'HTML') {
+      // the cursor has left the building
+      console.log('Mouse LEft');
+      endDrag();
+    }
+  });
+
+
   return (
 
     <GlobalProvider>

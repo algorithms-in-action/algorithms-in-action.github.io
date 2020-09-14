@@ -13,7 +13,7 @@ body {
 
 }
 
-$dragBarSize: 3px;
+$dragBarSize: 10px;
 
 #page {
 	height: 100vh;
@@ -67,8 +67,7 @@ $dragBarSize: 3px;
 
 $blue: #037DFF;
 $handleBar: #D4D2D5;
-$handleSize: 30px;
-
+$handleSize: 60px;
 
 #rightdragbar {
 	background-color: $borderCol;
@@ -82,6 +81,7 @@ $handleSize: 30px;
 		background-color: $handleBar;
 		width: $dragBarSize;
 		height: $handleSize;
+		cursor: pointer;
 	}
 	
 }
@@ -104,6 +104,7 @@ $handleSize: 30px;
 		background-color: $handleBar;
 		width: $dragBarSize;
 		height: $handleSize;
+		cursor: pointer;
 	}
 }
 
@@ -125,6 +126,7 @@ $handleSize: 30px;
 		background-color: $handleBar;
 		width: $handleSize ;
 		height: $dragBarSize;
+		cursor: pointer;
 	}
 }
 

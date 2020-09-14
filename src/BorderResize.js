@@ -3,6 +3,10 @@ let isLeftDragging = false;
 let isRightDragging = false;
 let isBottomDragging = false;
 
+const minLeft = '150px';
+const minRight = '200px';
+
+
 export const setCursor = (cursor) => {
   const page = document.getElementById('page');
   page.style.cursor = cursor;
@@ -16,6 +20,7 @@ export const startLeftDrag = () => {
 export const startRightDrag = () => {
   isRightDragging = true;
   setCursor('col-resize');
+  console.log('Start Drag');
 };
 
 export const startBottomDrag = () => {
@@ -53,9 +58,9 @@ const getColDefn = (page, event) => {
   if (event == null) {
     const colsFr = [
       convertToUnit([cols[0] / (cols[0] + cols[2] + cols[4])], 'fr'),
-      convertToUnit([leftDragbar.clientWidth], 'px'),
+      convertToUnit([cols[1]], 'px'),
       convertToUnit([cols[2] / (cols[0] + cols[2] + cols[4])], 'fr'),
-      convertToUnit([rightDragbar.clientWidth], 'px'),
+      convertToUnit([cols[3]], 'px'),
       convertToUnit([cols[4] / (cols[0] + cols[2] + cols[4])], 'fr'),
     ];
 
@@ -78,6 +83,17 @@ const getRowDefn = (page, event) => {
     bottomRowHeight,
   ];
 
+  if (event == null) {
+    const rowsFr = [
+      convertToUnit([rows[0]], 'px'),
+      convertToUnit([rows[1] / (rows[1] + rows[3])], 'fr'),
+      convertToUnit([rows[2]], 'px'),
+      convertToUnit([rows[3] / (rows[1] + rows[3])], 'fr'),
+    ];
+
+    return convertToUnit(rowsFr, '');
+  }
+
   return convertToUnit(rows, 'px');
 };
 
@@ -86,7 +102,6 @@ export const onDrag = (event) => {
     const page = document.getElementById('page');
     const newColDefn = getColDefn(page, event);
     const newRowDefn = getRowDefn(page, event);
-
     page.style.gridTemplateRows = newRowDefn;
     page.style.gridTemplateColumns = newColDefn;
 
@@ -97,7 +112,8 @@ export const onDrag = (event) => {
 export const resetColumnSizes = () => {
   const page = document.getElementById('page');
   const col = getColDefn(page, null);
+  const row = getRowDefn(page, null);
 
   page.style.gridTemplateColumns = col;
-  page.style.gridTemplateRows = 'min-content 7fr 3px 3fr';
+  page.style.gridTemplateRows = row;
 };
