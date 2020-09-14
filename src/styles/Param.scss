@@ -1,33 +1,4 @@
-$inputBorder: #D4D4D4;
-$inputText: #2B2B2B;
-$fontCol: #565656;
-$submitCol: #0065AE;
-$loadBtnCol: #FFFFFF;
-$submitHighlightCol: #0065AE;
-$sigBlue: #027AFF;
-$charCol: #717071;
-$disabledCol: #B5B5B5;
-
-$sidePad: 24px;
-$paramLog: #f4f4f4;
-$warningCol: #DC0707;
-$successCol: #53DD6C;
-
-
-@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
-	border-top-left-radius: $topleft;
-	border-top-right-radius: $topright;
-	border-bottom-right-radius: $bottomright;
-	border-bottom-left-radius: $bottomleft;
-	-webkit-border-top-left-radius: $topleft;
-	-webkit-border-top-right-radius: $topright;
-	-webkit-border-bottom-right-radius: $bottomright;
-	-webkit-border-bottom-left-radius: $bottomleft;
-	-moz-border-radius-topleft: $topleft;
-	-moz-border-radius-topright: $topright;
-	-moz-border-radius-bottomright: $bottomright;
-	-moz-border-radius-bottomleft: $bottomleft;
-}
+@import './global.scss';
 
 .btn {
   background: none;
@@ -48,7 +19,7 @@ $successCol: #53DD6C;
   position: relative;
   cursor: pointer;
   text-transform: uppercase;
-  padding: 0 6px;
+  padding: 6px;
   color: $sigBlue;
 }
 
@@ -63,7 +34,7 @@ $successCol: #53DD6C;
 
 .blueWordBtnDisabled {
   @extend .blueWordBtn;
-  color: $disabledCol;
+  color: $lightGreyCol;
   cursor: not-allowed !important;
 }
 
@@ -86,7 +57,7 @@ $successCol: #53DD6C;
     height: 12px;
 
     path {
-      fill:$charCol;
+      fill:$greyCol;
     }
   }
 }
@@ -94,17 +65,18 @@ $successCol: #53DD6C;
 .greyRoundBtn:hover {
   transition: .4s;
   background: #f7f7f7;
-  @include border-radii(14px,14px,14px,14px);
+  @include border-radius(14px);
 
 }
 .greyRoundBtn:active {
   transition: .2s;
   background: #E3E2E4;
-  @include border-radii(14px,14px,14px,14px);
+  @include border-radius(14px);
+
 }
 
 .outerInput {
-  border: 1px solid $inputBorder;
+  border: 1px solid $paramBorderCol;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -118,10 +90,9 @@ $successCol: #53DD6C;
       outline: none;
       font-size: 1.05em;
       font-weight: 200;
-      color: $fontCol;
+      color: $paramFontCol;
       border: none;
       padding: 8px 0px;
-      color: $charCol;
     }
   }
 
@@ -133,7 +104,7 @@ $successCol: #53DD6C;
 }
 
 .form {
-  color: $fontCol;
+  color: $paramFontCol;
   font-size: 1.05em;
   display: flex;
   justify-content: space-between;
