@@ -8,37 +8,23 @@ import LeftPanel from './components/left-panel';
 import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 import {
-  resetColumnSizes, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag,
+  resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
 
 
 function App() {
   useEffect(() => {
-    function handleResize() {
-      resetColumnSizes();
-      console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
-    }
-
-    window.addEventListener('resize', handleResize);
-
+    window.addEventListener('resize', resizeWindow);
     // eslint-disable-next-line no-unused-vars
-    return (_) => { window.removeEventListener('resize', handleResize); };
+    return (_) => { window.removeEventListener('resize', resizeWindow); };
   });
 
-  function addEvent(obj, evt, fn) {
-    if (obj.addEventListener) {
-      obj.addEventListener(evt, fn, false);
-    } else if (obj.attachEvent) {
-      obj.attachEvent(`on${evt}`, fn);
-    }
-  }
 
   addEvent(document, 'mouseout', (e) => {
     e = e || window.event;
     const from = e.relatedTarget || e.toElement;
     if (!from || from.nodeName === 'HTML') {
-      // the cursor has left the building
-      console.log('Mouse LEft');
+      // End dragging when mouse out of html
       endDrag();
     }
   });
@@ -54,19 +40,19 @@ function App() {
         <div id="leftcol">
           <LeftPanel />
         </div>
-        <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onMouseDown={startLeftDrag} role="button">
+        <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onDoubleClick={collapseLeftDrag} onMouseDown={startLeftDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="tabpages">
           <MidPanel />
         </div>
-        <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onMouseDown={startRightDrag} role="button">
+        <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onDoubleClick={collapseRightDrag} onMouseDown={startRightDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="rightcol">
           <RightPanel />
         </div>
-        <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onMouseDown={startBottomDrag} role="button">
+        <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onDoubleClick={collapseBottomDrag} onMouseDown={startBottomDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="footer">
