@@ -4,7 +4,6 @@ import {
   Tabs, Tab, Paper, makeStyles,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-// import { ReactComponent as AddIcon } from '../../resources/icons/add.svg';
 
 function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(0);
@@ -54,31 +53,20 @@ function HeaderButton({ value, onChange }) {
               root: classes.tabsRoot,
             }}
           >
-            <Tab
-              label="Code"
-              disableRipple
-              value={value[0]}
-              classes={{
-                root: classes.tabRoot,
-              }}
-            />
-            <Tab
-              label="Background"
-              disableRipple
-              value={value[1]}
-              classes={{
-                root: classes.tabRoot,
-              }}
-            />
-            <Tab
-              label="Extra"
-              disableRipple
-              aria-label="add icon"
-              value={value[2]}
-              classes={{
-                root: classes.tabRoot,
-              }}
-            />
+
+            {
+              value.map((item) => (
+                <Tab
+                  key={item.id}
+                  label={item.label}
+                  disableRipple
+                  value={item.id}
+                  classes={{
+                    root: classes.tabRoot,
+                  }}
+                />
+              ))
+            }
           </Tabs>
         </Paper>
       </ThemeProvider>
@@ -87,7 +75,11 @@ function HeaderButton({ value, onChange }) {
 }
 
 HeaderButton.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  value: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    label: PropTypes.string,
+    display: PropTypes.element,
+  })).isRequired,
   onChange: PropTypes.func.isRequired,
 };
 export default HeaderButton;

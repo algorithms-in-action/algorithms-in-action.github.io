@@ -29,7 +29,7 @@ $borderSize: 3px;
 
   .controlPanel {
     height: 40px;
-    border-bottom: $borderSize solid $borderCol;
+    // border-bottom: $borderSize solid $borderCol;
     padding: 0px $sidePad;
     display: flex;
     align-items: center;

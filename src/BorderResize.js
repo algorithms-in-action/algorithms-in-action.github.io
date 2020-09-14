@@ -35,7 +35,6 @@ export const startLeftDrag = () => {
 export const startRightDrag = () => {
   isRightDragging = true;
   setCursor('col-resize');
-  console.log('Start Drag');
 };
 
 export const startBottomDrag = () => {
@@ -48,12 +47,14 @@ export const endDrag = () => {
   isRightDragging = false;
   isBottomDragging = false;
   setCursor('auto');
-  console.log('END DRAGGING');
 };
 
 const addUnitToList = (list, unit) => list.map((c) => `${c.toString()}${unit}`).join(' ');
 const addUnitToNum = (num, unit) => `${num.toString()}${unit}`;
 
+const EXPAND_COL_RIGHT_SIZE = 360;
+const EXPAND_COL_LEFT_SIZE = 190;
+const EXPAND_ROW_BOTTOM_SIZE = 190;
 
 const getDefn = (page, list, status) => {
   let tempList = addUnitToList(list, 'px');
@@ -70,7 +71,6 @@ const getDefn = (page, list, status) => {
         addUnitToNum(list[2], 'px'),
         addUnitToNum([list[3] / (list[1] + list[3])], 'fr'),
       ], '');
-      console.log(`EXTERNAL ROW: ${tempList}`);
 
       break;
     case COL_EXTERNAL:
@@ -81,7 +81,6 @@ const getDefn = (page, list, status) => {
         addUnitToNum(list[3], 'px'),
         addUnitToNum(list[4] / (list[0] + list[2] + list[4]), 'fr'),
       ], '');
-      console.log(`EXTERNAL COL: ${tempList}`);
       break;
     case COLLAPSE_LEFT:
       tempList = addUnitToList([
@@ -110,10 +109,30 @@ const getDefn = (page, list, status) => {
       ], '');
       break;
     case EXPAND_LEFT:
+      tempList = addUnitToList([
+        addUnitToNum(EXPAND_COL_LEFT_SIZE, 'px'),
+        addUnitToNum(list[1], 'px'),
+        addUnitToNum(list[2] / (list[2] + list[4]), 'fr'),
+        addUnitToNum(list[3], 'px'),
+        addUnitToNum(list[4] / (list[2] + list[4]), 'fr'),
+      ], '');
       break;
     case EXPAND_RIGHT:
+      tempList = addUnitToList([
+        addUnitToNum(list[0] / (list[0] + list[2]), 'fr'),
+        addUnitToNum(list[1], 'px'),
+        addUnitToNum(list[2] / (list[0] + list[2]), 'fr'),
+        addUnitToNum(list[3], 'px'),
+        addUnitToNum(EXPAND_COL_RIGHT_SIZE, 'px'),
+      ], '');
       break;
     case EXPAND_BOTTOM:
+      tempList = addUnitToList([
+        addUnitToNum(list[0], 'px'),
+        addUnitToNum(list[1] / list[1], 'fr'),
+        addUnitToNum(list[2], 'px'),
+        addUnitToNum(EXPAND_ROW_BOTTOM_SIZE, 'px'),
+      ], '');
       break;
     default:
       break;
@@ -174,55 +193,65 @@ export const onDrag = (event) => {
   }
 };
 
-
+const MIN_COL_THRESHOLD = 100;
+const MIN_ROW_THRESHOLD = 125;
 // This section pertains to collapsing the dragbars
 export const collapseLeftDrag = () => {
-  console.log('Double Click Left');
   const page = document.getElementById('page');
+  const leftcol = document.getElementById('leftcol');
+  let col;
 
-  const col = getColDefn(page, null, COLLAPSE_LEFT);
+  if (leftcol.clientWidth < MIN_COL_THRESHOLD) {
+    console.log('EXPAND LEFT');
+    col = getColDefn(page, null, EXPAND_LEFT);
+  } else {
+    console.log('COLLAPSE LEFT');
+    col = getColDefn(page, null, COLLAPSE_LEFT);
+  }
   page.style.gridTemplateColumns = col;
 };
 
 export const collapseRightDrag = () => {
   const page = document.getElementById('page');
-  console.log(`Double Click Right ${page.clientWidth}`);
+  const rightcol = document.getElementById('rightcol');
 
-  const col = getColDefn(page, null, COLLAPSE_RIGHT);
-  console.log(`COL: ${col}`);
+  let col;
+
+  if (rightcol.clientWidth < MIN_COL_THRESHOLD) {
+    console.log('EXPAND RIGHT');
+    col = getColDefn(page, null, EXPAND_RIGHT);
+  } else {
+    console.log('COLLAPSE RIGHT');
+    col = getColDefn(page, null, COLLAPSE_RIGHT);
+  }
+
   page.style.gridTemplateColumns = col;
 };
 
 export const collapseBottomDrag = () => {
-  console.log('Double Click Bottom');
   const page = document.getElementById('page');
-  const row = getRowDefn(page, null, COLLAPSE_BOTTOM);
+  const footer = document.getElementById('footer');
+
+  let row;
+
+  if (footer.clientHeight < MIN_ROW_THRESHOLD) {
+    console.log('EXPAND FOOTER');
+    row = getRowDefn(page, null, EXPAND_BOTTOM);
+  } else {
+    console.log('COLLAPSE FOOTER');
+    row = getRowDefn(page, null, COLLAPSE_BOTTOM);
+  }
+
   page.style.gridTemplateRows = row;
 };
 
 // This section pertains to resizing the window
-
-const minLeft = 200;
-const minRight = 150;
-
 export const resizeWindow = () => {
   const page = document.getElementById('page');
   const col = getColDefn(page, null, COL_EXTERNAL);
   const row = getRowDefn(page, null, ROW_EXTERNAL);
-
-  const leftcol = document.getElementById('leftcol');
-  const rightcol = document.getElementById('rightcol');
-
   page.style.gridTemplateColumns = col;
   page.style.gridTemplateRows = row;
-
-  if (leftcol.clientWidth < minLeft) {
-    collapseLeftDrag();
-  }
-
-  if (rightcol.clientWidth < minRight) {
-    collapseRightDrag();
-  }
 };
 
 

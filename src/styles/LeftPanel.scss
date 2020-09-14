@@ -1,4 +1,4 @@
-$searchHeight: 43px;
+$searchHeight: 40px;
 $topicFontCol: #4D4D4D;
 $itemFontCol: #565656;
 $topicBgCol: #f0f0f0;
@@ -30,7 +30,7 @@ $selectedCol:#565656 ;
     font-size: $fontSize!important;
     width: 100%;
     height: $searchHeight;
-    border-bottom: 3px solid $borderCol;
+    // border-bottom: 3px solid $borderCol;
 }
 
 .itemListContainer {
