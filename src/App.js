@@ -21,7 +21,7 @@ function App() {
 
 
   addEvent(document, 'mouseout', (e) => {
-    e = e || window.event;
+    // e = e || window.event;
     const from = e.relatedTarget || e.toElement;
     if (!from || from.nodeName === 'HTML') {
       // End dragging when mouse out of html
