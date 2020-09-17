@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */

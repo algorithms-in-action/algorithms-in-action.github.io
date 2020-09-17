@@ -39,9 +39,6 @@ function MatrixParam({
     setOriginalData(newData);
   }, [size]);
 
-  console.log(data);
-  console.log(originalData);
-
   // Reset the matrix to the inital set
   const resetData = () => {
     setMessage(null);
