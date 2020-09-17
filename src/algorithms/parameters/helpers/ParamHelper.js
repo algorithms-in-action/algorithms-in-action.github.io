@@ -72,7 +72,7 @@ export const makeData = (len) => {
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-      data[`col${j}`] = getRandomInt(0, 1);
+      data[`col${j}`] = `${getRandomInt(0, 1)}`;
     }
     arr.push(data);
   }

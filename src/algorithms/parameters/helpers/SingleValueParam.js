@@ -18,7 +18,8 @@ import useParam from '../../../context/useParam';
  * the param input accepts a single number
  */
 function SingleValueParam({
-  name, mode, DEFAULT_VAL, ALGORITHM_NAME, EXAMPLE, formClassName, handleSubmit, setMessage,
+  name, buttonName, mode, DEFAULT_VAL, ALGORITHM_NAME,
+  EXAMPLE, formClassName, handleSubmit, setMessage, setValue,
 }) {
   const {
     dispatch,
@@ -39,8 +40,16 @@ function SingleValueParam({
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
       setParamVal(target);
-      // run animation
-      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
+
+      if (setValue) setValue(target);
+      console.log(target);
+      console.log(name);
+
+      // TODO: need to be removed when these two algorithms are done
+      if (!(name === 'transitiveClosure' || name === 'prim')) {
+        // run animation
+        dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
+      }
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
@@ -51,6 +60,7 @@ function SingleValueParam({
     <ParamForm
       formClassName={formClassName}
       name={ALGORITHM_NAME}
+      buttonName={buttonName}
       value={paramVal}
       disabled={disabled}
       onChange={(e) => setParamVal(e.target.value)}

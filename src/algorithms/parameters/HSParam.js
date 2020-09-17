@@ -17,6 +17,7 @@ function HeapsortParam() {
       <div className="form">
         <ListParam
           name="heapSort"
+          buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
           DEFAULT_VAL={DEFAULT_ARR}

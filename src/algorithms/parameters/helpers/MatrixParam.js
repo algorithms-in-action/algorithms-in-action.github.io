@@ -1,29 +1,57 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useMemo } from 'react';
+import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
-import { makeColumnArray, makeData } from './ParamHelper';
+import {
+  makeColumnArray,
+  makeData,
+  singleNumberValidCheck,
+  errorParamMsg,
+  successParamMsg,
+} from './ParamHelper';
 
-function MatrixParam() {
+import useParam from '../../../context/useParam';
+
+function MatrixParam({
+  size,
+  name,
+  mode,
+  setMessage,
+  ALGORITHM_NAME,
+  EXAMPLE,
+}) {
   const columns = useMemo(
-    () => makeColumnArray(5),
-    [],
+    () => makeColumnArray(size),
+    [size],
   );
+  const { dispatch } = useParam();
+  const [data, setData] = useState(() => makeData(size));
+  const [originalData, setOriginalData] = useState(data);
 
-  const [data, setData] = useState(() => makeData(5));
-  const [originalData] = useState(data);
-  const [skipPageReset, setSkipPageReset] = useState(false);
+  // reset the Table when the size changes
+  useEffect(() => {
+    const newData = makeData(size);
+    setData(newData);
+    setOriginalData(newData);
+  }, [size]);
 
-  // We need to keep the table from resetting the pageIndex when we
-  // Update data. So we can keep track of that flag with a ref.
+  console.log(data);
+  console.log(originalData);
+
+  // Reset the matrix to the inital set
+  const resetData = () => {
+    setMessage(null);
+    setData(originalData);
+  };
 
   // When our cell renderer calls updateMyData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
-  const updateMyData = (rowIndex, columnId, value) => {
-    // We also turn on the flag to not reset the page
-    setSkipPageReset(true);
+  const updateData = (rowIndex, columnId, value) => {
     setData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
@@ -35,27 +63,54 @@ function MatrixParam() {
     }));
   };
 
-  // After data chagnes, we turn the flag back off
-  // so that if data actually changes when we're not
-  // editing it, the page is reset
-  useEffect(() => {
-    setSkipPageReset(false);
-  }, [data]);
+  // Get and parse the matrix
+  const getMatrix = () => {
+    const matrix = [];
+    data.forEach((row) => {
+      const temp = [];
+      for (const [_, value] of Object.entries(row)) {
+        if (singleNumberValidCheck(value)) {
+          const num = parseInt(value, 10);
+          temp.push(num);
+        } else {
+          // when the input cannot be converted to a number
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+          return;
+        }
+      }
+      matrix.push(temp);
+    });
 
-  // Let's add a data resetter/randomizer to help
-  // illustrate that flow...
-  const resetData = () => setData(originalData);
+    if (matrix.length !== size || matrix[0].length !== size) return [];
+
+    return matrix;
+  };
+
+
+  // Run the animation
+  const handleSearch = () => {
+    setMessage(null);
+    const matrix = getMatrix();
+
+    if (matrix.length !== 0) {
+      setMessage(successParamMsg(ALGORITHM_NAME));
+      // TODO: run animation here
+      // dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, size, matrix });
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+    }
+  };
 
   return (
-    <>
+    <div>
       <button onClick={resetData}>Reset Data</button>
+      <button onClick={handleSearch}>Run Algo</button>
       <Table
         columns={columns}
         data={data}
-        updateMyData={updateMyData}
-        skipPageReset={skipPageReset}
+        updateData={updateData}
       />
-    </>
+    </div>
   );
 }
 

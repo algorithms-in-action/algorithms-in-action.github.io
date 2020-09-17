@@ -16,6 +16,7 @@ function QuicksortParam() {
       <div className="form">
         <ListParam
           name="quickSort"
+          buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
           DEFAULT_VAL={DEFAULT_ARR}

@@ -62,6 +62,7 @@ function BSTParam() {
         {/* Insert input */}
         <ListParam
           name="binarySearchTree"
+          buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
           DEFAULT_VAL={DEFAULT_NODES}
@@ -73,6 +74,7 @@ function BSTParam() {
         {/* Search input */}
         <SingleValueParam
           name="binarySearchTree"
+          buttonName="Search"
           mode="search"
           formClassName="formRight"
           DEFAULT_VAL={DEFAULT_TARGET}

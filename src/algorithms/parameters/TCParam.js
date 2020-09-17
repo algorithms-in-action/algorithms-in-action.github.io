@@ -4,37 +4,43 @@ import MatrixParam from './helpers/MatrixParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 
-// const DEFAULT_ARR = genRandNumList(10, 1, 100);
-// const HEAP_SORT = 'heap Sort';
-// const HEAP_SORT_EXAMPLE = 'Example: 0,1,2,3,4';
+const DEFAULT_SIZE = 7;
+const TRANSITIVE_CLOSURE = 'Transitive Closure';
+const TRANSITIVE_CLOSURE_EXAMPLE = 'Example: 0,1';
 
 function TransitiveClosureParam() {
   const [message, setMessage] = useState(null);
+  const [size, setSize] = useState(DEFAULT_SIZE);
 
   return (
     <>
-      <div className="form">
-        {/* Insert input */}
-        <MatrixParam />
-
-        {/* Search input */}
+      <div className="matrixForm">
+        {/* Size input */}
         <SingleValueParam
-          name="binarySearchTree"
-          mode="search"
-          // formClassName="formRight"
-          // DEFAULT_VAL={DEFAULT_TARGET}
-          // ALGORITHM_NAME={SEARCH}
-          // EXAMPLE={SEARCH_EXAMPLE}
-          // handleSubmit={handleSearch}
-          // setMessage={setMessage}
+          name="transitiveClosure"
+          buttonName="Set"
+          // TODO: replace mode for Transitive Closure
+          // mode="search"
+          formClassName="singleInput"
+          DEFAULT_VAL={DEFAULT_SIZE}
+          ALGORITHM_NAME={TRANSITIVE_CLOSURE}
+          EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
+          setMessage={setMessage}
+          setValue={setSize}
+        />
+
+        {/* Matrix input */}
+        <MatrixParam
+          size={size}
+          ALGORITHM_NAME={TRANSITIVE_CLOSURE}
+          EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
+          setMessage={setMessage}
         />
       </div>
 
       {/* render success/error message */}
       {message}
     </>
-
-
   );
 }
 

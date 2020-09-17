@@ -21,7 +21,8 @@ import useParam from '../../../context/useParam';
  * the param input accepts a list
  */
 function ListParam({
-  name, mode, DEFAULT_VAL, ALGORITHM_NAME, EXAMPLE, formClassName, handleSubmit, setMessage,
+  name, buttonName, mode, DEFAULT_VAL, ALGORITHM_NAME,
+  EXAMPLE, formClassName, handleSubmit, setMessage,
 }) {
   const {
     dispatch,
@@ -54,6 +55,7 @@ function ListParam({
     <ParamForm
       formClassName={formClassName}
       name={ALGORITHM_NAME}
+      buttonName={buttonName}
       value={paramVal}
       disabled={disabled}
       onChange={(e) => setParamVal(e.target.value)}

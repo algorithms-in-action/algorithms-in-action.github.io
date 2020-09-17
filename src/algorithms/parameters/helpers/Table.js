@@ -12,13 +12,11 @@ const defaultColumn = {
 
 /**
  * Table component
- * @param {*} param0
  */
 function Table({
   columns,
   data,
-  updateMyData,
-  skipPageReset,
+  updateData,
 }) {
   const {
     getTableProps,
@@ -26,18 +24,14 @@ function Table({
     headerGroups,
     prepareRow,
     rows,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-      // use the skipPageReset option to disable page resetting temporarily
-      autoResetPage: !skipPageReset,
-      updateMyData,
-    },
-  );
+  } = useTable({
+    columns,
+    data,
+    defaultColumn,
+    updateData,
+  });
 
-  // Render the UI for your table
+  // Render the table
   return (
     <div className="table">
       <table {...getTableProps()}>

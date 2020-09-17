@@ -6,7 +6,7 @@ import '../../../styles/Param.scss';
 
 function ParamForm(props) {
   const {
-    formClassName, name, value, onChange, handleSubmit, children, disabled,
+    formClassName, name, buttonName, value, onChange, handleSubmit, children, disabled,
   } = props;
 
   return (
@@ -28,7 +28,7 @@ function ParamForm(props) {
             type="submit"
             disabled={disabled}
           >
-            {name}
+            {buttonName}
           </ControlButton>
         </div>
       </div>

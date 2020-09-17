@@ -56,7 +56,7 @@ const algorithms = {
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
-    category: 'Graphs',
+    category: 'Dynamic Programming',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,

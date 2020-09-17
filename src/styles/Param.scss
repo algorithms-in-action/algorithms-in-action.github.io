@@ -145,7 +145,17 @@ $successCol: #53DD6C;
   .formRight {
     width: 36%;
   }
+}
 
+.matrixForm {
+  color: $fontCol;
+  font-size: 1.05em;
+  display: flex;
+  justify-content: space-around;
+
+  .singleInput {
+    width: 20%;
+  }
 }
 
 .btnDisabled {
