@@ -5,44 +5,36 @@ import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 import ExtraInfo from './ExtraInfo';
 
-const BTN_1 = 0;
-const BTN_2 = 1;
-const BTN_3 = 2;
-
 function RightPanel() {
-  const [state, setState] = React.useState(BTN_1);
+  const buttons = [
+    {
+      id: 0,
+      label: 'Code',
+      display: <Pseudocode />,
+    },
+    {
+      id: 1,
+      label: 'Background',
+      display: <Explanation />,
+    },
+    {
+      id: 2,
+      label: 'More',
+      display: <ExtraInfo />,
+    },
+
+  ];
+
+  const [state, setState] = React.useState(0);
 
   const getBtnState = (val) => {
-    switch (val) {
-      case BTN_1:
-        setState(BTN_1);
-        break;
-      case BTN_2:
-        setState(BTN_2);
-        break;
-      case BTN_3:
-        setState(BTN_3);
-        break;
-      default:
-        break;
-    }
+    setState(val);
   };
   return (
     <>
-      <HeaderButton value={[BTN_1, BTN_2, BTN_3]} onChange={getBtnState} />
+      <HeaderButton value={buttons} onChange={getBtnState} />
       <div className="textAreaContainer">
-        {(() => {
-          switch (state) {
-            case BTN_1:
-              return <Pseudocode />;
-            case BTN_2:
-              return <Explanation />;
-            case BTN_3:
-              return <ExtraInfo />;
-            default:
-              return <Explanation />;
-          }
-        })()}
+        {buttons[state].display}
       </div>
     </>
   );
