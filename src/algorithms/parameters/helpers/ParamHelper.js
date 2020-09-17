@@ -55,3 +55,26 @@ export const errorParamMsg = (
     logMsg={`${reason}. ${exmaple || ''}`}
   />
 );
+
+export const makeColumnArray = (len) => {
+  const arr = [];
+  for (let i = 0; i < len; i += 1) {
+    arr.push({
+      Header: i,
+      accessor: `col${i}`, // accessor is the "key" in the data,
+    });
+  }
+  return arr;
+};
+
+export const makeData = (len) => {
+  const arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+      data[`col${j}`] = getRandomInt(0, 1);
+    }
+    arr.push(data);
+  }
+  return arr;
+};

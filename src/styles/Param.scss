@@ -170,3 +170,18 @@ $successCol: #53DD6C;
   background: none;
 }
 
+.table {
+  th,
+  td {
+    // padding: 10px;
+    // border: solid 1px;
+    // width: 22px;
+    // text-align: center;
+
+    input {
+      width: 20px;
+      text-align: center;
+    }
+  }
+}
+

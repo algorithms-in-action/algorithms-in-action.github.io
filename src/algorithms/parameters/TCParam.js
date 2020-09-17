@@ -1,10 +1,10 @@
 import React from 'react';
+import MatrixParam from './helpers/MatrixParam';
 
 function TransitiveClosureParam() {
   return (
-    <div>
-      Transitive Closure Param
-    </div>
+
+    <MatrixParam />
   );
 }
 
