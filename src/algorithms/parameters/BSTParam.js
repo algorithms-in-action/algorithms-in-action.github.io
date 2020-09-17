@@ -2,9 +2,8 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { GlobalActions } from '../../context/actions';
-import { GlobalContext } from '../../context/GlobalState';
 import ControlButton from '../../components/common/ControlButton';
 import ParamForm from './ParamForm';
 import '../../styles/Param.scss';
@@ -16,6 +15,7 @@ import {
   errorParamMsg,
 } from './ParamHelper';
 import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
+import useParam from '../../context/useParam';
 
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
@@ -25,11 +25,20 @@ const INSERTION_EXAMPLE = 'Example: 0,1,2,3,4';
 const SEARCH_EXAMPLE = 'Example: 16';
 
 function BSTParam() {
-  const { algorithm, dispatch } = useContext(GlobalContext);
-  const disabled = algorithm.hasOwnProperty('visualisers') && algorithm.playing;
-  const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
-  const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
-  const [message, setMessage] = useState(null);
+  const {
+    algorithm,
+    dispatch,
+    disabled,
+    paramVal: insertionVal,
+    message,
+    setParamVal: setInsertionVal,
+    setMessage,
+  } = useParam(DEFAULT_NODES);
+
+  const {
+    paramVal: searchVal,
+    setParamVal: setSearchVal,
+  } = useParam(DEFAULT_TARGET);
 
   const handleInsert = (e) => {
     e.preventDefault();
@@ -80,6 +89,7 @@ function BSTParam() {
           formClassName="formLeft"
           name={INSERTION}
           value={insertionVal}
+          disabled={disabled}
           onChange={(e) => setInsertionVal(e.target.value)}
           handleSubmit={handleInsert}
         >
@@ -95,13 +105,6 @@ function BSTParam() {
               setInsertionVal(list);
             }}
           />
-          <ControlButton
-            className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
-            type="submit"
-            disabled={disabled}
-          >
-            Insert
-          </ControlButton>
         </ParamForm>
 
         {/* Search input */}
@@ -109,17 +112,10 @@ function BSTParam() {
           formClassName="formRight"
           name={SEARCH}
           value={searchVal}
+          disabled={disabled}
           onChange={(e) => setSearchVal(e.target.value)}
           handleSubmit={handleSearch}
-        >
-          <ControlButton
-            className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
-            type="submit"
-            disabled={disabled}
-          >
-            Search
-          </ControlButton>
-        </ParamForm>
+        />
       </div>
 
       {/* render success/error message */}
