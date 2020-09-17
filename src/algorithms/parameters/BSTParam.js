@@ -29,15 +29,15 @@ function BSTParam() {
     algorithm,
     dispatch,
     disabled,
-    paramVal: insertionVal,
+    paramVal: insertionVal, // renaming
     message,
-    setParamVal: setInsertionVal,
+    setParamVal: setInsertionVal, // renaming
     setMessage,
   } = useParam(DEFAULT_NODES);
 
   const {
-    paramVal: searchVal,
-    setParamVal: setSearchVal,
+    paramVal: searchVal, // renaming
+    setParamVal: setSearchVal, // renaming
   } = useParam(DEFAULT_TARGET);
 
   const handleInsert = (e) => {

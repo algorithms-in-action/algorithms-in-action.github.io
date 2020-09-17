@@ -44,12 +44,12 @@ const algorithms = {
       sort: Controller.heapSort,
     },
   },
-  'kmp': {
-    name: 'Knuth-Morris-Pratt',
-    category: 'Dynamic Programming',
-    explanation: Explanation.KMPExp,
-    param: <Param.KMPParam />,
-    extraInfo: ExtraInfo.KMPInfo,
+  'prim': {
+    name: 'Prim\'s Algorithm',
+    category: 'Greedy',
+    explanation: Explanation.PrimsExp,
+    param: <Param.PrimsParam />,
+    extraInfo: ExtraInfo.PrimsInfo,
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
