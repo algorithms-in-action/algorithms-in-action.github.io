@@ -5,7 +5,7 @@
 import React from 'react';
 import { GlobalActions } from '../../context/actions';
 import ControlButton from '../../components/common/ControlButton';
-import ParamForm from './ParamForm';
+import ParamForm from './helpers/ParamForm';
 import '../../styles/Param.scss';
 import {
   commaSeparatedNumberListValidCheck,
@@ -13,7 +13,7 @@ import {
   genRandNumList,
   successParamMsg,
   errorParamMsg,
-} from './ParamHelper';
+} from './helpers/ParamHelper';
 import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
 import useParam from '../../context/useParam';
 

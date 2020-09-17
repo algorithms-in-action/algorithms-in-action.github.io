@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import ControlButton from '../../components/common/ControlButton';
-import '../../styles/Param.scss';
+import ControlButton from '../../../components/common/ControlButton';
+import '../../../styles/Param.scss';
 
 function ParamForm(props) {
   const {
