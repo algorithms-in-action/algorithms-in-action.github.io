@@ -16,6 +16,10 @@ import {
 
 import useParam from '../../../context/useParam';
 
+/**
+ * This matrix param component can be used when
+ * the param input accepts a matrix
+ */
 function MatrixParam({
   size,
   name,
@@ -45,7 +49,7 @@ function MatrixParam({
     setData(originalData);
   };
 
-  // When our cell renderer calls updateMyData, we'll use
+  // When cell renderer calls updateData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
   const updateData = (rowIndex, columnId, value) => {
@@ -83,7 +87,6 @@ function MatrixParam({
     return matrix;
   };
 
-
   // Run the animation
   const handleSearch = () => {
     setMessage(null);
@@ -101,7 +104,7 @@ function MatrixParam({
   return (
     <div>
       <button onClick={resetData}>Reset Data</button>
-      <button onClick={handleSearch}>Run Algo</button>
+      <button onClick={handleSearch}>Run</button>
       <Table
         columns={columns}
         data={data}

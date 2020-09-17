@@ -20,7 +20,7 @@ import useParam from '../../../context/useParam';
  */
 function SingleValueParam({
   name, buttonName, mode, DEFAULT_VAL, ALGORITHM_NAME,
-  EXAMPLE, formClassName, handleSubmit, setMessage, setValue,
+  EXAMPLE, formClassName, handleSubmit, setMessage,
 }) {
   const {
     dispatch,
@@ -41,10 +41,6 @@ function SingleValueParam({
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
       setParamVal(target);
-
-      if (setValue) setValue(target);
-      console.log(target);
-      console.log(name);
 
       // TODO: need to be removed when these two algorithms are done
       if (!(name === 'transitiveClosure' || name === 'prim')) {

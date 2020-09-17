@@ -32,7 +32,6 @@ function BSTParam() {
    * So we need to implement a new handle function instead of using the default one.
    */
   const handleSearch = (e) => {
-    console.log('self defined used');
     e.preventDefault();
     const inputValue = e.target[0].value;
 

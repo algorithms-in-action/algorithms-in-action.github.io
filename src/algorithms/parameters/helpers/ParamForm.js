@@ -4,9 +4,13 @@ import React from 'react';
 import ControlButton from '../../../components/common/ControlButton';
 import '../../../styles/Param.scss';
 
+/**
+ * The ParamForm wraps a input, icon(optional) and a button.
+ */
 function ParamForm(props) {
   const {
-    formClassName, name, buttonName, value, onChange, handleSubmit, children, disabled,
+    formClassName, name, buttonName, value,
+    onChange, handleSubmit, children, disabled,
   } = props;
 
   return (
