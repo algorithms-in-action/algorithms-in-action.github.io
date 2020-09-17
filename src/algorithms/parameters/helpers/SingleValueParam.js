@@ -2,14 +2,11 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import ControlButton from '../../../components/common/ControlButton';
 import '../../../styles/Param.scss';
-import { ReactComponent as RefreshIcon } from '../../../resources/icons/refresh.svg';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
 import {
-  commaSeparatedNumberListValidCheck,
-  genRandNumList,
+  singleNumberValidCheck,
   successParamMsg,
   errorParamMsg,
 } from './ParamHelper';
@@ -17,10 +14,10 @@ import {
 import useParam from '../../../context/useParam';
 
 /**
- * This list param component can be used when
- * the param input accepts a list
+ * This single value param component can be used when
+ * the param input accepts a single number
  */
-function ListParam({
+function SingleValueParam({
   name, mode, DEFAULT_VAL, ALGORITHM_NAME, EXAMPLE, formClassName, handleSubmit, setMessage,
 }) {
   const {
@@ -31,19 +28,19 @@ function ListParam({
   } = useParam(DEFAULT_VAL);
 
   /**
-   * The default function that uses the list of values to
-   * run an animation. It will check whether the input list
+   * The default function that uses the single value to
+   * run an animation. It will check whether the input number
    * is valid first.
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
 
-    if (commaSeparatedNumberListValidCheck(inputValue)) {
-      const nodes = inputValue.split`,`.map((x) => +x);
-      setParamVal(nodes);
+    if (singleNumberValidCheck(inputValue)) {
+      const target = parseInt(inputValue, 10);
+      setParamVal(target);
       // run animation
-      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
+      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
@@ -63,20 +60,8 @@ function ListParam({
           ? handleSubmit
           : handleDefaultSubmit
       }
-    >
-      <ControlButton
-        icon={<RefreshIcon />}
-        className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
-        id={ALGORITHM_NAME}
-        disabled={disabled}
-        onClick={() => {
-          const list = genRandNumList(10, 1, 100);
-          setMessage(null);
-          setParamVal(list);
-        }}
-      />
-    </ParamForm>
+    />
   );
 }
 
-export default ListParam;
+export default SingleValueParam;
