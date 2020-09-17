@@ -1,40 +1,31 @@
-$searchHeight: 43px;
-$topicFontCol: #4D4D4D;
-$itemFontCol: #565656;
-$topicBgCol: #f0f0f0;
-$borderCol: #e9e9e9;
-$borderSize: 3px;
-$fontSize: 0.89em;
-$selectedCol:#565656 ;
+@import './global.scss';
 
 .algorithm-list-bg{
-    background-color: $topicBgCol !important;
+    background-color: $leftCatBg !important;
 }
 .algorithm-list-main{
-    color: $topicFontCol;
-    font-size: $fontSize;
+    color: $leftCatFontCol;
+    font-size: $leftFontSize;
     font-weight: 400;
 }
 .algorithm-list-sub{
     padding-left: 12px;
-    color: $itemFontCol;
+    color: $leftFontCol;
     font-weight: 300;
-    font-size: $fontSize;
+    font-size: $leftFontSize;
 }
 .MuiList-padding{
     padding: 0px !important;
 }
 
 .search-input{
-    padding: 16px 16px 16px 16px;
-    font-size: $fontSize!important;
+    padding: 16px;
+    font-size: $leftFontSize!important;
     width: 100%;
     height: $searchHeight;
-    border-bottom: 3px solid $borderCol;
+    // border-bottom: 3px solid $borderCol;
 }
 
 .itemListContainer {
-    // overflow-y: scroll;
-    flex: 1 1 1px; /* Important */
-
+    // flex: 1 1 1px; /* Important */
 }

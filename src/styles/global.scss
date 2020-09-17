@@ -1,0 +1,101 @@
+// Shared Colors and Sizes
+$blue: #037DFF;
+$sigBlue: #027AFF;
+$red: #DC0707;
+$green: #53DD6C;
+$lightWhite: #F7F7F7;
+$borderCol: #e9e9e9;
+$white: #FFFFFF;
+
+$yellowLine: #FFDE3C;
+$blueLine: rgba(0, 187, 255, 0.2);
+
+$sidePad: 24px;
+
+// Header
+$headerBg: #001F39;
+$headerFontCol: #E0E0E0;
+$headerBtnCol: #E7E7E7;
+$headerBtnHgCol: $sigBlue;
+
+// Left Panel
+$leftCatFontCol: #4D4D4D;
+$leftFontCol: #565656;
+$leftCatBg: #f5f5f5;
+
+$searchHeight: 40px;
+$leftFontSize: 0.89em;
+
+// Mid Panel
+$quizButCol: #DEDEDE;
+$midTitleFontCol: #616161;
+$midBgCol: #f9f9f9;
+$midHeaderCol: white;
+
+$midOffset: $sidePad;
+$midHeaderHeight: 40px;
+$midTitleFontSize: 0.89em;
+
+// Dragbar and borders 
+$handleCol: #e6e6e6;
+$dragbarCol: #f0f0f0;
+$handleLen: 60px;
+$dragBarWidth: 10px;
+
+// Control Buttons (Play and Next Line, Slider)
+$sliderBg: $lightWhite;
+$playBtn: $sigBlue;
+$disabledCol: #b5b5b5;
+$activeCol: #6a6a6a;
+$ctrlBtnBg:  $lightWhite;
+
+// Param and Log
+$warningCol: $red;
+$successCol: $green;
+$paramBg: $lightWhite;
+$paramFontCol: #343434;
+$paramOffset: $sidePad;
+$ctrlOffset: $sidePad;
+
+// Param
+$paramBorderCol: #D4D4D4;
+$paramFontCol: #565656;
+$greyCol: #717071;
+$lightGreyCol: #B5B5B5;
+
+// Right Panel
+$codeExplanationButtonHeight: 40px;
+$borderSize: 3px;
+$rightPanelFontCol: #343434;
+$rightBtnFontSize: 0.72em;
+
+$lineHgCol: $blueLine;
+$rightNumCol: #9DA9AD;
+$rightNumBgCol: #F9F9F9;
+$codeBgCol:  #F9F9F9;
+$codeFontCol: #434343;
+$codeExpandBtn: $blue;
+
+
+
+// Global Functions
+@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
+	border-top-left-radius: $topleft;
+	border-top-right-radius: $topright;
+	border-bottom-right-radius: $bottomright;
+	border-bottom-left-radius: $bottomleft;
+	-webkit-border-top-left-radius: $topleft;
+	-webkit-border-top-right-radius: $topright;
+	-webkit-border-bottom-right-radius: $bottomright;
+	-webkit-border-bottom-left-radius: $bottomleft;
+	-moz-border-radius-topleft: $topleft;
+	-moz-border-radius-topright: $topright;
+	-moz-border-radius-bottomright: $bottomright;
+	-moz-border-radius-bottomleft: $bottomleft;
+}
+
+@mixin border-radius($radius) {
+	border-radius: $radius;
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+}
