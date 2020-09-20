@@ -54,4 +54,9 @@
 
 .keyword{
     color: rgb(194, 32, 235);
+    font-weight:bold;
+}
+
+.function{
+    color: rgb(74, 101, 255);
 }
