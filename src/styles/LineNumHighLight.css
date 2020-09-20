@@ -46,4 +46,12 @@
 .textArea-pseudocode{
     padding: 0px;
     flex: 1;
-  }
+}
+
+.explanation{
+    color: rgb(4, 151, 4);
+}
+
+.keyword{
+    color: rgb(194, 32, 235);
+}

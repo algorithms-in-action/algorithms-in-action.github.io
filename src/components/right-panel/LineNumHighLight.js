@@ -24,6 +24,47 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   let codeLines = [];
   for (const line of algorithm.pseudocode[blockName]) {
     i += 1;
+    const keywords = ['for', 'while', 'if', 'else', 'in', 'each',
+      'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or'];
+    const explaIndex = line.code.indexOf('//');
+    const codeRexItem = [];
+    if (explaIndex === -1) {
+      const codeItemArray = line.code.split(' ');
+      let codeItem;
+      for (codeItem of codeItemArray) {
+        if (keywords.includes(codeItem.trim())) {
+          codeItem += ' ';
+          const spanItem = <span className="keyword">{codeItem}</span>;
+          codeRexItem.push(spanItem);
+        } else {
+          codeItem += ' ';
+          const spanItem = <span>{codeItem}</span>;
+          codeRexItem.push(spanItem);
+        }
+      }
+    } else if (explaIndex === 0) {
+      const spanItem = <span className="explanation">{line.code}</span>;
+      codeRexItem.push(spanItem);
+    } else {
+      let spanItem;
+      const code = line.code.substring(0, explaIndex);
+      const codeItemArray = code.split(' ');
+      let codeItem;
+      for (codeItem of codeItemArray) {
+        if (keywords.includes(codeItem.trim())) {
+          codeItem += ' ';
+          spanItem = <span className="keyword">{codeItem}</span>;
+          codeRexItem.push(spanItem);
+        } else {
+          codeItem += ' ';
+          spanItem = <span>{codeItem}</span>;
+          codeRexItem.push(spanItem);
+        }
+      }
+      const expla = line.code.substring(explaIndex);
+      spanItem = <span className="explanation">{expla}</span>;
+      codeRexItem.push(spanItem);
+    }
     if (line.ref) {
       codeLines.push(
         <p
@@ -45,7 +86,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
-          <span>{line.code}</span>
+          {codeRexItem}
         </p>,
       );
       if (algorithm.collapse[line.ref]) {
@@ -61,7 +102,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           role="presentation"
         >
           <span>{i}</span>
-          <span>{line.code}</span>
+          {codeRexItem}
         </p>,
       );
     }
