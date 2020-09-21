@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-else-return */
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */

@@ -33,6 +33,9 @@ const algorithms = {
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
     extraInfo: ExtraInfo.QSInfo,
+    controller: {
+      sort: Controller.heapSort, // TODO: replace quick sort algorithm here
+    },
   },
   'heapSort': {
     name: 'Heap Sort',
@@ -44,16 +47,16 @@ const algorithms = {
       sort: Controller.heapSort,
     },
   },
-  'kmp': {
-    name: 'Knuth-Morris-Pratt',
-    category: 'Dynamic Programming',
-    explanation: Explanation.KMPExp,
-    param: <Param.KMPParam />,
-    extraInfo: ExtraInfo.KMPInfo,
+  'prim': {
+    name: 'Prim\'s Algorithm',
+    category: 'Greedy',
+    explanation: Explanation.PrimsExp,
+    param: <Param.PrimsParam />,
+    extraInfo: ExtraInfo.PrimsInfo,
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
-    category: 'Graphs',
+    category: 'Dynamic Programming',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,
