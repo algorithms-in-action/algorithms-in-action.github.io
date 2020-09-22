@@ -1,0 +1,104 @@
+@import './global.scss';
+
+$codePad: 24px;
+$rightNumWidth: 36px;
+
+.code-container{
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+}
+.expand-collopse-button{
+    border: none;
+    outline:none;
+    margin-left: (-1 *$codePad) + 2px;
+    cursor:pointer;
+
+    @include border-radius(2px);
+    background-color: $white;
+    color: #343434;
+    border: 1px solid #c1c1c1;
+}
+
+.line-light {
+    width: 100%;
+    height: 700px;
+    overflow: scroll;
+    padding: 12px 0;
+    background-color: $codeBgCol;
+    color: $codeFontCol;
+}
+.line-light p {
+    text-align: left;
+    margin: 0px;
+    white-space:nowrap;
+}
+
+.line-light p span {
+    white-space: pre;
+}
+
+
+.line-light p span:first-child {
+    display: inline-block;
+    background-color:$rightNumBgCol;
+    width: $rightNumWidth;
+    color: $rightNumCol;
+    text-align: right;
+    padding: 1px;
+    padding-right: 12px;
+    
+}
+
+
+.line-light p span:nth-child(2) {
+    padding-left: $codePad;
+}
+
+.active{
+    background-color: $lineHgCol;
+}
+
+.textArea-pseudocode{
+    padding: 0px;
+    flex: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

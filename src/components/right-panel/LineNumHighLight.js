@@ -7,7 +7,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-import '../../styles/LineNumHighLight.css';
+import '../../styles/LineNumHighLight.scss';
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {

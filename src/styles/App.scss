@@ -1,19 +1,11 @@
-$bgColor: #FEFEFE;
-$minContainerWidth: 1250px;
-$headerHeight: 50px;
-$borderCol: #e9e9e9;
+@import './global.scss';
 
 body {
   margin:0; 
   padding: 0;
-  background-color: $bgColor;
 	font-family: Roboto, 'sans-serif';
-
 	-webkit-font-smoothing: subpixel-antialiased;
-
 }
-
-$dragBarSize: 3px;
 
 #page {
 	height: 100vh;
@@ -24,8 +16,8 @@ $dragBarSize: 3px;
 		'leftcol leftdragbar tabpages rightdragbar rightcol'
     'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
     'leftcol leftdragbar footer rightdragbar rightcol';
-	grid-template-rows: min-content 7fr $dragBarSize 2fr;
-	grid-template-columns: 2fr $dragBarSize 6fr $dragBarSize 3fr;	
+	grid-template-rows: min-content 7fr $dragBarWidth 2fr;
+	grid-template-columns: 2fr $dragBarWidth 5fr $dragBarWidth 5fr;	
 }
 
 #page:focus {
@@ -34,44 +26,34 @@ $dragBarSize: 3px;
   border-color: transparent;
 }
 
-/*****************************/
 #header {
-	// background-color: $bgColor;
 	overflow: auto;
 	grid-area: header;
 }
 
 #leftcol {
-	// background-color: $bgColor;
 	overflow: auto;
   grid-area: leftcol;
 }
 
 #rightcol {
-	// background-color: #aaaaaa;
 	overflow: auto;
 	grid-area: rightcol;
 }
 
 #tabpages {
-	// background-color: #888888;
 	overflow: auto;
 	grid-area: tabpages;
 }
 
 #footer {
-	// background-color: lightblue;
 	overflow: auto;
 	grid-area: footer;
 }
 
-$blue: #037DFF;
-$handleBar: #D4D2D5;
-$handleSize: 30px;
-
 
 #rightdragbar {
-	background-color: $borderCol;
+	background-color: $dragbarCol;
 	grid-area: rightdragbar;
 	cursor: col-resize;
 	display: flex;
@@ -79,9 +61,10 @@ $handleSize: 30px;
 	align-items: center;
 
 	#draghandle {
-		background-color: $handleBar;
-		width: $dragBarSize;
-		height: $handleSize;
+		background-color: $handleCol;
+		width: $dragBarWidth;
+		height: $handleLen;
+		cursor: pointer;
 	}
 	
 }
@@ -93,7 +76,7 @@ $handleSize: 30px;
 }
 
 #leftdragbar {
-	background-color: $borderCol;
+	background-color: $dragbarCol;
 	grid-area: leftdragbar;
 	cursor: col-resize;
 	display: flex;
@@ -101,9 +84,10 @@ $handleSize: 30px;
 	align-items: center;
 
 	#draghandle {
-		background-color: $handleBar;
-		width: $dragBarSize;
-		height: $handleSize;
+		background-color: $handleCol;
+		width: $dragBarWidth;
+		height: $handleLen;
+		cursor: pointer;
 	}
 }
 
@@ -114,7 +98,7 @@ $handleSize: 30px;
 }
 
 #bottomdragbar {
-  background-color: $borderCol;
+  background-color: $dragbarCol;
   grid-area: bottomdragbar;
 	cursor: row-resize;
 	display: flex;
@@ -122,9 +106,10 @@ $handleSize: 30px;
 	align-items: center;
 	
 	#draghandle {
-		background-color: $handleBar;
-		width: $handleSize ;
-		height: $dragBarSize;
+		background-color: $handleCol;
+		width: $handleLen ;
+		height: $dragBarWidth;
+		cursor: pointer;
 	}
 }
 

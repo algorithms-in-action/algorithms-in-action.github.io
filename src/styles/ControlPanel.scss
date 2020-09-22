@@ -1,57 +1,25 @@
-$borderCol: #e9e9e9;
-$fontCol: #343434;
-$sidePad: 24px;
-$paramLog: #f7f7f7;
-$warningCol: #DC0707;
-$successCol: #53DD6C;
-$borderSize: 3px;
-
-@mixin border-radii($topleft, $topright, $bottomright, $bottomleft) {
-	border-top-left-radius: $topleft;
-	border-top-right-radius: $topright;
-	border-bottom-right-radius: $bottomright;
-	border-bottom-left-radius: $bottomleft;
-	-webkit-border-top-left-radius: $topleft;
-	-webkit-border-top-right-radius: $topright;
-	-webkit-border-bottom-right-radius: $bottomright;
-	-webkit-border-bottom-left-radius: $bottomleft;
-	-moz-border-radius-topleft: $topleft;
-	-moz-border-radius-topright: $topright;
-	-moz-border-radius-bottomright: $bottomright;
-	-moz-border-radius-bottomleft: $bottomleft;
-}
-
+@import './global.scss';
 
 .container {
   height: 28%;
   font-size: 0.8em;
-  color: $fontCol;
 
   .controlPanel {
     height: 40px;
-    border-bottom: $borderSize solid $borderCol;
-    padding: 0px $sidePad;
+    // border-bottom: $borderSize solid $borderCol;
+    padding: 0px $ctrlOffset;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    .controlButtons {
-      display: flex;
-      background-color: #F7F7F7;
-      // padding: 0px 4px;
-      @include border-radii(16px, 16px, 16px, 16px);
-      // border: 1px solid #D4D4D4;
-
-    }
-
   }
 
   .parameterPanel {
-    padding: 16px $sidePad 16px $sidePad;
+    padding: 16px $paramOffset 16px $paramOffset;
     // transition: .10s;
     
     .logContainer {
-      background-color: $paramLog;
+      background-color: $paramBg;
       padding: 8px 16px;
       border-radius: 4px;
       white-space: nowrap; 
@@ -60,7 +28,6 @@ $borderSize: 3px;
       margin: 16px auto 0px auto;
       // animation: popup 0.7s;
       
-  
       .logTag {
         color: $successCol;
         text-transform: uppercase;
@@ -72,7 +39,7 @@ $borderSize: 3px;
       .logText {
         font-size: 1.03em;
         font-weight: 300;
-        color: $fontCol;
+        color: $paramFontCol;
       }
   
     }
@@ -80,27 +47,3 @@ $borderSize: 3px;
   }
 
 }
-
-// @keyframes popup {
-//   0%{
-//     transform: scale(1);
-//   }
-//   50%{
-//     transform: scale(1.4);
-//   }
-//   60%{
-//     transform: scale(1.1);
-//   }
-//   70%{
-//     transform: scale(1.2);
-//   }
-//   80%{
-//     transform: scale(1);
-//   }
-//   90%{
-//     transform: scale(1.1);
-//   }
-//   100%{
-//     transform: scale(1);
-//   }
-// }
