@@ -41,24 +41,13 @@ export const GlobalActions = {
 
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
-    console.log(params);
     const data = algorithms[params.name];
-
     const {
       param, name, explanation, extraInfo, pseudocode,
     } = data;
 
     const procedurePseudocode = pseudocode[params.mode];
-    console.log(procedurePseudocode);
     const collapseController = getCollapseController(procedurePseudocode);
-    // const collapseController = {};
-    // for (const codeBlockName of Object.keys(procedurePseudocode)) {
-    //   if (codeBlockName === 'Main') {
-    //     collapseController[codeBlockName] = true;
-    //   } else {
-    //     collapseController[codeBlockName] = false;
-    //   }
-    // }
 
     return {
       id: params.name,
@@ -77,8 +66,8 @@ export const GlobalActions = {
     const {
       param, controller, name, explanation, extraInfo, pseudocode,
     } = data;
-    console.log(params.mode);
     const procedurePseudocode = pseudocode[params.mode];
+    const collapseController = getCollapseController(procedurePseudocode);
 
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
@@ -86,15 +75,6 @@ export const GlobalActions = {
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
 
-    const collapseController = getCollapseController(procedurePseudocode);
-    // const collapseController = {};
-    // for (const codeBlockName of Object.keys(procedurePseudocode)) {
-    //   if (codeBlockName === 'Main') {
-    //     collapseController[codeBlockName] = true;
-    //   } else {
-    //     collapseController[codeBlockName] = false;
-    //   }
-    // }
     return {
       ...state,
       id: params.name,

@@ -20,8 +20,6 @@ function LeftPanel() {
   const [openStatus, setOpenStatus] = useState(AlgorithmCategoryList.map((obj) => true));
 
   const { algorithm } = useContext(GlobalContext);
-  console.log(itemListState);
-  console.log(displaySearch);
 
   // Handle items when clicked
   const handleClick = (itemId) => {
