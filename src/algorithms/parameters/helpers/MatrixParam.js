@@ -8,7 +8,7 @@ import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
   makeColumnArray,
-  makeData,
+  makeBinaryData,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg,
@@ -33,12 +33,12 @@ function MatrixParam({
     [size],
   );
   const { dispatch } = useParam();
-  const [data, setData] = useState(() => makeData(size));
+  const [data, setData] = useState(() => makeBinaryData(size));
   const [originalData, setOriginalData] = useState(data);
 
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size);
+    const newData = makeBinaryData(size);
     setData(newData);
     setOriginalData(newData);
   }, [size]);
@@ -95,7 +95,9 @@ function MatrixParam({
     if (matrix.length !== 0) {
       setMessage(successParamMsg(ALGORITHM_NAME));
       // TODO: run animation here
-      // dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, size, matrix });
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name, mode, size, matrix,
+      });
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }

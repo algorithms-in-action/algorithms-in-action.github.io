@@ -60,6 +60,9 @@ const algorithms = {
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,
+    controller: {
+      tc: Controller.transitiveClosure,
+    },
   },
 };
 
