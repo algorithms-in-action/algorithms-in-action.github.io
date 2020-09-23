@@ -65,7 +65,7 @@ const algorithms = {
     param: <Param.PrimsParam />,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
-      search: Pseudocode.quickSort,
+      search: Pseudocode.prims,
     },
   },
   'transitiveClosure': {
@@ -80,6 +80,10 @@ const algorithms = {
   },
 };
 
+/**
+ * Get the first mode of an algorithm
+ * @param {string} key algorithm's name
+ */
 const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
 
 // This function generates a list of algorithms classed by categories
@@ -102,9 +106,6 @@ const generateAlgorithmCategoryList = () => {
 
   // For every category, get all the algorithms
   for (const [key, value] of Object.entries(algorithms)) {
-    // console.log(key);
-    // console.log(algorithms[key].pseudocode);
-    // console.log(Object.keys(algorithms[key].pseudocode));
     const algo = alCatList.find((al) => al.category === value.category);
     algo.algorithms.push({
       name: value.name,

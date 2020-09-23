@@ -2,78 +2,122 @@ import parse from '../../pseudocode/parse';
 
 // TODO: replace this with quick sort pseudocode
 export default parse(`
-  \\Code{
-      Main
-      BST_Build(keys)  // return the BST that results from inserting nodes
-                       // with keys 'keys', in the given order, into an
-                       // initially empty BST
-      t <- Empty \\B 1
-      for each k in keys \\B 2
-      \\In{
-          t <- BST_Insert(t, k) \\Ref Insert
-      \\In}
-  \\Code}
-  \\Code{
-      Insert
-      // Insert key k in BST t, maintaining the BST invariant
-      n <- new Node     // create a new node to hold key k \\B 3
-      n.key <- k \\B 4
-      n.left <- Empty   // it will be a leaf, that is, \\B 5
-      n.right <- Empty  // it has empty subtrees \\B 6
-
-      if t = Empty \\B 7
-      \\In{
-          t <- n      // in this case, the result is a tree with just one node \\B 8
-          \\Expl{  If the tree is initially empty, the resulting BST is just
-                  the new node, which has key k, and empty sub-trees.
-          \\Expl}
-      \\In}
-      else
-      \\In{
-        Locate the node p that should be the parent of the new node n. \\Ref Locate
-        if k < p.key  \\B 9
-        \\Expl{  The new node n (whose key is k) will be a child of p. We just 
-                need to decide whether it should be a left or a right child of p.
-        \\Expl}
-        \\In{
-            p.left <- n       // insert n as p's left child \\B 10
-        \\In}
-        else
-        \\In{
-            p.right <- n      // insert n as p's right child  \\B 11
-        \\In}
-      \\In}
-  \\Code}
-    
-  \\Code{
-    Locate
-    c <- t            // c traverses the path from the root to the insertion point \\B 13
-    
-    \\Expl{  c is going to follow a path down to where the new node is to 
-            be inserted. We start from the root (t).
+\\Code{
+    Main
+    // Sort array A[left]..A[right] in ascending order
+    Quicksort(A, left, right)
+    \\Expl{  We need left and right indices because the code is recursive
+            and both may be different for recursive calls.
     \\Expl}
-    repeat
-    \\In{
-        p <- c        // when the loop exits, p will be c's parent \\B 14
-        \\Expl{  Parent p and child c will move in lockstep, with p always 
-                trailing one step behind c.
-        \\Expl}
-        if k < c.key \\B 15
-        \\Expl{  The BST condition is that nodes with keys less than the current
-                node's key are to be found in the left subtree, and nodes whose
-                keys are greater (or the same) are to be in the right subtree.
+        if (left < right)
+        \\Expl{  Terminating condition (if there are less than two
+                elements in the array segment do nothing).
         \\Expl}
         \\In{
-            c <- c.left \\B 16
+            Choose pivot    \\Ref ChoosePivot 
+            \\Expl{  There are various ways to choose the "pivot", which
+                    is used to distinguish (relatively) small elements
+                    and (relatively) large elements in the partitioning
+                    process.
+            \\Expl}
+            Partition array segment    \\Ref Partition 
+            \\Expl{  This is where most of the work of Quicksort gets done.
+                    We start with an unordered array segment, and finish
+                    with an array segment containing the pivot in its final
+                    place, A[i], and two partitions, one containing only
+                    elements smaller than or equal to the pivot, and the other
+                    containing only elements larger than or equal to the pivot.
+                    There are various ways this can be coded, often with
+                    some subtle points.
+            \\Expl}
+            Quicksort FirstHalf    \\Ref QuicksortFirstHalf 
+            \\Expl{  Sort elements left of (smaller or equal to) the
+                    pivot, which is in A[i].
+            \\Expl}
+            Quicksort SecondHalf    \\Ref QuicksortSecondHalf
+            \\Expl{  Sort elements right of (greater or equal to) the
+                    pivot, which is in A[i].
+            \\Expl}
         \\In}
-        else
+    \\Code}
+    
+    \\Code{
+    QuicksortFirstHalf
+    Quicksort(A, left, i - 1)
+    \\Code}
+    
+    \\Code{
+    QuicksortSecondHalf
+    Quicksort(A, i + 1, right)
+    \\Code}
+    
+    \\Code{
+    ChoosePivot
+    pivot <- A[right]
+    \\Expl{  This simple method of choosing a pivot just uses the rightmost 
+            element of the array segment. Unfortunately it leads to very poor 
+            performance in some common cases, such as when the array is almost 
+            sorted already.
+    \\Expl}
+    \\Code}
+    
+    \\Code{
+    Partition
+    Set index i at left the of array segment and j at the right    \\Ref init_iAndj 
+    \\Expl{  i scans from left to right stopping at large elements and
+            j scans from right to left stopping at small elements.
+    \\Expl}
+    while i < j
+    \\Expl{  When the indices cross, all the large elements at the left of
+            the array segment have been swapped with small elements from the
+            right of the array segment. The coding here can be simplified 
+            if we use "break" or similar to exit from this loop.
+    \\Expl}
+    \\In{
+        Repeatedly increment i until A[i] >= pivot
+        \\Expl{  Stopping at elements equal to the pivot results in better
+                performance when there are many equal elements and because 
+                the pivot is in A[right] this also acts as a sentinel, so 
+                we don't increment beyond the right of the array segment.
+        \\Expl}
+        Repeatedly decrement j until A[j] <= pivot or j < i
+        \\Expl{  Stopping at elements equal to the pivot results in better
+                performance when there are many equal elements. If the 
+                indices cross we exit the outer loop; this also stops us 
+                decrementing beyond the left of the array segment.
+        \\Expl}
+        if j > i
+        \\Expl{  If the indices cross we exit the loop.
+        \\Expl}
         \\In{
-            c <- c.right \\B 17
+            swap(A[i], A[j])
+            \\Expl{  Swap the larger element (A[i]) with the smaller
+                    element (A[j]).
+            \\Expl}
         \\In}
     \\In}
-    until c = Empty \\B 18
-    \\Expl{  At the end of this loop, c has located the empty subtree where new
-            node n should be located, and p will be the parent of the new node.
+    Put the pivot in its final place    \\Ref SwapP 
+    \\Code}
+    
+    \\Code{
+    init_iAndj
+    i <- left - 1
+    \\Expl{  i is incremented before use, so A[left] is the first element
+            in the left to right scan.
     \\Expl}
-  \\Code}
+    j <- right
+    \\Expl{  j is decremented before use, so A[right-1] is the first
+            element in the right to left scan (A[right] is the pivot).
+    \\Expl}
+    \\Code}
+    
+    \\Code{
+    SwapP
+    swap(A[i], A[right])
+    \\Expl{  The pivot element, in A[right], is swapped with A[i]. All
+            elements to the left of A[i] must be less then or equal to
+            the pivot and A[i] plus all elements to its right must be
+            greater than or equal to the pivot.
+    \\Expl}
+    \\Code}
 `);

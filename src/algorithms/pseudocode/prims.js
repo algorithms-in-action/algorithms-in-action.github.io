@@ -2,78 +2,71 @@ import parse from '../../pseudocode/parse';
 
 // TODO: replace this with prim's pseudocode
 export default parse(`
-  \\Code{
-      Main
-      BST_Build(keys)  // return the BST that results from inserting nodes
-                       // with keys 'keys', in the given order, into an
-                       // initially empty BST
-      t <- Empty \\B 1
-      for each k in keys \\B 2
-      \\In{
-          t <- BST_Insert(t, k) \\Ref Insert
-      \\In}
-  \\Code}
-  \\Code{
-      Insert
-      // Insert key k in BST t, maintaining the BST invariant
-      n <- new Node     // create a new node to hold key k \\B 3
-      n.key <- k \\B 4
-      n.left <- Empty   // it will be a leaf, that is, \\B 5
-      n.right <- Empty  // it has empty subtrees \\B 6
-
-      if t = Empty \\B 7
-      \\In{
-          t <- n      // in this case, the result is a tree with just one node \\B 8
-          \\Expl{  If the tree is initially empty, the resulting BST is just
-                  the new node, which has key k, and empty sub-trees.
-          \\Expl}
-      \\In}
-      else
-      \\In{
-        Locate the node p that should be the parent of the new node n. \\Ref Locate
-        if k < p.key  \\B 9
-        \\Expl{  The new node n (whose key is k) will be a child of p. We just 
-                need to decide whether it should be a left or a right child of p.
-        \\Expl}
-        \\In{
-            p.left <- n       // insert n as p's left child \\B 10
-        \\In}
-        else
-        \\In{
-            p.right <- n      // insert n as p's right child  \\B 11
-        \\In}
-      \\In}
-  \\Code}
-    
-  \\Code{
-    Locate
-    c <- t            // c traverses the path from the root to the insertion point \\B 13
-    
-    \\Expl{  c is going to follow a path down to where the new node is to 
-            be inserted. We start from the root (t).
-    \\Expl}
-    repeat
+\\Code{
+    Main
+    Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E, 
+               // find a minimum spanning tree for G.
     \\In{
-        p <- c        // when the loop exits, p will be c's parent \\B 14
-        \\Expl{  Parent p and child c will move in lockstep, with p always 
-                trailing one step behind c.
-        \\Expl}
-        if k < c.key \\B 15
-        \\Expl{  The BST condition is that nodes with keys less than the current
-                node's key are to be found in the left subtree, and nodes whose
-                keys are greater (or the same) are to be in the right subtree.
-        \\Expl}
+        for i <- 1 to n                                             
         \\In{
-            c <- c.left \\B 16
+            Cost[i] <- Infinity                                     
+            Prev[i] <- Null
+            \\Expl{  The array Prev will be used to track how nodes are 
+                    connected into the resulting spanning tree. 
+                    Whenever an edge (j,i) is added to the tree, this 
+                    is captured by setting Prev[i] to j.
+            \\Expl}
         \\In}
-        else
+        Cost[1] <- 0
+        \\Expl{  We arrange for the tree construction to start with
+                node 1; this is achieved by setting the cost of node
+                1 to 0 (to get from node 1 to itself costs nothing).
+                Other nodes initially assigned the largest possible 
+                cost, Infinity, as they have not been considered yet.
+        \\Expl}
+        Q <- InitPriorityQueue(n)                                   
+        \\Expl{  Nodes are arranged in the priority queue Q according 
+                to cost. Smaller cost means higher priority.
+        \\Expl}
+        while Q not Empty 
         \\In{
-            c <- c.right \\B 17
+            i <- RemoveMin(Q)  // i is now part of the spanning tree
+            \\Expl{  Node i is closest to the tree constructed so far.
+                    More precisely, for every node k inside the current 
+                    tree, and every node j outside of it, the weight of
+                    (k,i) is smaller than (or possibly equal to) the weight
+                    of (k,j) for all outside nodes j. So i is picked as 
+                    the next node to add to the tree. Note that, unless 
+                    i = 1, prev[i] has already been determined.
+            \\Expl}
+            update priority queue Q    \\Ref Update
         \\In}
     \\In}
-    until c = Empty \\B 18
-    \\Expl{  At the end of this loop, c has located the empty subtree where new
-            node n should be located, and p will be the parent of the new node.
+    \\Code}
+    
+    \\Code{
+    Update
+    for each (i,j) in E 
+    \\Expl{  Now that i gets included in the tree, we need to check the edge 
+            to each of its neighbours j.
     \\Expl}
-  \\Code}
+    \\In{
+        if j is in Q and weight(i,j) < Cost[j] 
+        \\Expl{  The inclusion of i may have brought i's neighbour j closer 
+                to the tree; if so, update the information we have about j.
+        \\Expl}
+        \\In{
+            Cost[j] <- weight(i,j)                                  
+            \\Expl{  The new cost for j is its distance to i.
+            \\Expl}
+            Update(Q, j, Cost[j])                                   
+            \\Expl{  Rearrange Q so the priority queue reflects j's new cost.
+            \\Expl}
+            Prev[j] <- i                                            
+            \\Expl{  Record the fact that j's closest neighbour in the 
+                    spanning tree (so far) was i.
+            \\Expl}
+        \\In}
+    \\In}
+    \\Code}
 `);

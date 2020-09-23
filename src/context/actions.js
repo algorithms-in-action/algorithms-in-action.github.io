@@ -22,6 +22,10 @@ function isBookmarkVisible(pseudocode, collapse, bookmark) {
   throw new Error(`Cannot find bookmark ${bookmark}`);
 }
 
+/**
+ * Setup initial collapse state
+ * @param {object} procedurePseudocode
+ */
 function getCollapseController(procedurePseudocode) {
   const collapseController = {};
   for (const codeBlockName of Object.keys(procedurePseudocode)) {

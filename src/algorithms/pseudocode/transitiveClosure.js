@@ -1,6 +1,5 @@
 import parse from '../../pseudocode/parse';
 
-// TODO: replace this with transitive closure pseudocode
 export default parse(`
 \\Code{
     Main
@@ -18,7 +17,7 @@ export default parse(`
             \\Expl{  Explore and try to add new paths from each source node i.
             \\Expl}
             \\In{
-                find all nodes reachable from i via k     \Ref Reachable
+                find all nodes reachable from i via k     \\Ref Reachable
                 \\Expl{  Identify target nodes j that are reachable from 
                         source node i, whether they were already reachable 
                         before now, or whether they are now reachable using 
