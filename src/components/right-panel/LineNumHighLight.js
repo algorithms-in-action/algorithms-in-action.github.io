@@ -11,7 +11,7 @@ import '../../styles/LineNumHighLight.scss';
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
-    if (line.bookmark === algorithm.bookmark
+    if ((line.bookmark !== undefined && line.bookmark === algorithm.bookmark)
         || (line.ref && blockContainsBookmark(algorithm, line.ref, algorithm.bookmark))) {
       return true;
     }
@@ -117,7 +117,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
       codeLines.push(
         <p
           key={i}
-          className={algorithm.bookmark === line.bookmark ? 'active' : ''}
+          className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
         >
           <span>{i}</span>
