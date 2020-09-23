@@ -9,13 +9,13 @@ function RightPanel() {
   const buttons = [
     {
       id: 0,
-      label: 'Code',
-      display: <Pseudocode />,
+      label: 'Background',
+      display: <Explanation />,
     },
     {
       id: 1,
-      label: 'Background',
-      display: <Explanation />,
+      label: 'Code',
+      display: <Pseudocode />,
     },
     {
       id: 2,
