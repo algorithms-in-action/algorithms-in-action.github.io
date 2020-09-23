@@ -4,6 +4,7 @@ import * as Explanation from './explanations';
 import * as Param from './parameters';
 import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
+import * as Pseudocode from './pseudocode';
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -18,10 +19,14 @@ import * as Controller from './controllers';
 const algorithms = {
   'binarySearchTree': {
     name: 'Binary Search Tree',
-    category: 'Graphs',
+    category: 'Searching',
     param: <Param.BSTParam />,
     explanation: Explanation.BSTExp,
     extraInfo: ExtraInfo.BSTInfo,
+    pseudocode: {
+      insertion: Pseudocode.binaryTreeInsertion,
+      search: Pseudocode.binaryTreeSearch,
+    },
     controller: {
       insertion: Controller.binaryTreeInsertion,
       search: Controller.binaryTreeSearch,
@@ -33,6 +38,9 @@ const algorithms = {
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
     extraInfo: ExtraInfo.QSInfo,
+    pseudocode: {
+      sort: Pseudocode.quickSort,
+    },
     controller: {
       sort: Controller.heapSort, // TODO: replace quick sort algorithm here
     },
@@ -43,6 +51,9 @@ const algorithms = {
     explanation: Explanation.HSExp,
     param: <Param.HSParam />,
     extraInfo: ExtraInfo.HSInfo,
+    pseudocode: {
+      sort: Pseudocode.heapSort,
+    },
     controller: {
       sort: Controller.heapSort,
     },
@@ -53,6 +64,9 @@ const algorithms = {
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
     extraInfo: ExtraInfo.PrimsInfo,
+    pseudocode: {
+      search: Pseudocode.quickSort,
+    },
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
@@ -60,8 +74,13 @@ const algorithms = {
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,
+    pseudocode: {
+      search: Pseudocode.transitiveClosure,
+    },
   },
 };
+
+const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {
@@ -83,10 +102,14 @@ const generateAlgorithmCategoryList = () => {
 
   // For every category, get all the algorithms
   for (const [key, value] of Object.entries(algorithms)) {
+    // console.log(key);
+    // console.log(algorithms[key].pseudocode);
+    // console.log(Object.keys(algorithms[key].pseudocode));
     const algo = alCatList.find((al) => al.category === value.category);
     algo.algorithms.push({
       name: value.name,
       shorthand: key,
+      mode: getDefaultMode(key),
     });
   }
 
@@ -104,6 +127,7 @@ const generateAlgorithmList = () => {
       name: value.name,
       shorthand: key,
       id: alNum,
+      mode: getDefaultMode(key),
     });
     alNum += 1;
   }

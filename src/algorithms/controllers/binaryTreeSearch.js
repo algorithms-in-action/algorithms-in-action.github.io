@@ -39,7 +39,7 @@ export default {
     \\Code}
   `),
 
-  explanation: BSTExp,
+  // explanation: BSTExp,
 
   /**
    * For the search algorithm, we use the tree that is created in 

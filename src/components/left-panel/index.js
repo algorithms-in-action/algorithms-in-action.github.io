@@ -20,6 +20,8 @@ function LeftPanel() {
   const [openStatus, setOpenStatus] = useState(AlgorithmCategoryList.map((obj) => true));
 
   const { algorithm } = useContext(GlobalContext);
+  console.log(itemListState);
+  console.log(displaySearch);
 
   // Handle items when clicked
   const handleClick = (itemId) => {
@@ -90,7 +92,7 @@ function LeftPanel() {
                                selected={algorithm.name === algo.name}
                                button
                                onClick={() => {
-                                 dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
+                                 dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
                                }}
                              >
                                <ListItemText
@@ -111,12 +113,12 @@ function LeftPanel() {
             : (
               <div>
                 {displaySearch.map((algo) => (
-                  <List component="div" disablePadding key={algo}>
+                  <List component="div" disablePadding key={algo.id}>
                     <StyledListItem
                       selected={algorithm.name === algo.name}
                       button
                       onClick={() => {
-                        dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand });
+                        dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
                       }}
                     >
                       <ListItemText
