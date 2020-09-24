@@ -76,7 +76,7 @@ export const GlobalActions = {
       param,
       pseudocode: procedurePseudocode,
       collapse: collapseController,
-      lineExaplanation: '',
+      lineExplanation: '',
     };
   },
 
@@ -109,7 +109,7 @@ export const GlobalActions = {
       visualisers: chunker.visualisers,
       collapse: collapseController,
       playing: false,
-      lineExaplanation: firstLineExplan,
+      lineExplanation: firstLineExplan,
     };
   },
 
@@ -120,10 +120,13 @@ export const GlobalActions = {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
 
+    const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+
     return {
       ...state,
       ...result,
       playing,
+      lineExplanation: lineExplan,
     };
   },
 
@@ -133,10 +136,14 @@ export const GlobalActions = {
     do {
       result = state.chunker.prev();
     } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+
+    const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+
     return {
       ...state,
       ...result,
       playing,
+      lineExplanation: lineExplan,
     };
   },
 
@@ -158,7 +165,7 @@ export const GlobalActions = {
     if (updateLineExplan.length > 0) {
       return {
         ...state,
-        lineExaplanation: updateLineExplan,
+        lineExplanation: updateLineExplan,
       };
     }
     return {

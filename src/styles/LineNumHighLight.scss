@@ -2,6 +2,7 @@
 
 $codePad: 24px;
 $rightNumWidth: 36px;
+$rightButtonWidth: 24px;
 
 .code-container{
     font-family: Menlo, "Liberation Mono", Courier, monospace;
@@ -9,7 +10,6 @@ $rightNumWidth: 36px;
 .expand-collopse-button{
     border: none;
     outline:none;
-    margin-left: (-1 *$codePad) + 2px;
     cursor:pointer;
 
     @include border-radius(2px);
@@ -18,10 +18,20 @@ $rightNumWidth: 36px;
     border: 1px solid #c1c1c1;
 }
 
-.line-explanation-button{
+.line-explanation-button-active{
     border: none;
     outline:none;
-    margin-left: (1.5 *$codePad);
+    cursor:pointer;
+
+    @include border-radius(2px);
+    background-color:  #d8eaf0;
+    color: #343434;
+    border: 1px solid #c1c1c1;
+}
+
+.line-explanation-button-negative{
+    border: none;
+    outline:none;
     cursor:pointer;
 
     @include border-radius(2px);
@@ -33,7 +43,7 @@ $rightNumWidth: 36px;
 
 .line-light {
     width: 100%;
-    height: 700px;
+    height: 350px;
     overflow: scroll;
     padding: 12px 0;
     background-color: $codeBgCol;
@@ -61,9 +71,22 @@ $rightNumWidth: 36px;
     
 }
 
+.line-light p span:nth-child(2) {
+    display: inline-block;
+    width: $rightButtonWidth;
+    align-items: center;
+    padding: 1px;
+    padding-right: 1px;
+    
+}
 
 .line-light p span:nth-child(3) {
-    padding-left: $codePad;
+    display: inline-block;
+    width: $rightButtonWidth;
+    align-items: center;
+    padding: 2px;
+    padding-right: 1px;
+    
 }
 
 .active{

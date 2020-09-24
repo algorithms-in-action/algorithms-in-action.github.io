@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable no-plusplus */
@@ -25,7 +26,7 @@ function blockContainsBookmark(algorithm, block) {
 
 function codeFormatting(codeArray) {
   const keywords = ['for', 'while', 'if', 'else', 'in', 'each', 'do',
-    'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or'];
+    'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or', 'return', 'NotFound'];
   let spanItem;
   let codeItem;
   const codeRexItem = [];
@@ -98,9 +99,13 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
 
     let lineExplanButton = null;
     if (algorithm.collapse[blockName] && line.lineExplanButton !== undefined) {
-      lineExplanButton = <button className="line-explanation-button" onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}>
-                          <DescriptionIcon style={{ fontSize: 10 }} />
-                         </button>;
+      lineExplanButton =
+      <button
+        className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
+        onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+      >
+        <DescriptionIcon style={{ fontSize: 10 }} />
+      </button>;
     }
 
     if (line.ref) {

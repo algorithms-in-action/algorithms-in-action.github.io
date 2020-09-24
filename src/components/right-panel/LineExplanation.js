@@ -1,3 +1,4 @@
+import { lightGreen } from '@material-ui/core/colors';
 import React, { useContext } from 'react';
 import ReactMarkDown from 'react-markdown/with-html';
 import { GlobalContext } from '../../context/GlobalState';
@@ -8,7 +9,7 @@ function LineExplanation() {
   return (
     <div className="lineExplanation">
       <ReactMarkDown
-        source={algorithm.LineExplanation}
+        source={algorithm.lineExplanation}
         escapeHtml={false}
         renderers={{ code: CodeBlock }}
       />

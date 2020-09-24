@@ -6,8 +6,9 @@ export default parse(`
     
     \\Code{
     Main
-    HeapSort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
-    \\Expl{  We are not using A[0] (for languages that start array indices at 0).
+    HeapSort(A, n) \\B 1
+    \\Expl{  Sort array A[1]..A[n] in ascending order.
+        We are not using A[0] (for languages that start array indices at 0).
     \\Expl}
     \\In{
         BuildHeap(A, n)    \\Ref BuildHeap 
@@ -26,7 +27,8 @@ export default parse(`
     
     \\Code{
     BuildHeap
-    // build heap
+    \\Expl{  build heap
+    \\Expl}
     for k <- Index of last non-leaf downto 1    \\Ref BHForLoop 
     \\Expl{  We use bottom-up heap creation, to build the heap from the bottom
             up (tree view) and right to left (array view). The leaves are 
@@ -55,7 +57,8 @@ export default parse(`
     
     \\Code{
     DownHeapk
-    // DownHeap(A, k, n)
+    \\Expl{  DownHeap(A, k, n)
+    \\Expl}
     \\Expl{  DownHeap is where smaller heaps are combined to form larger heaps.
             The children of node k are already heaps, so we need only be 
             concerned about where A[k] fits in. 
@@ -64,7 +67,9 @@ export default parse(`
     \\Expl{  Set index i to the root of the subtree that we are now going to 
             make into a heap. 
     \\Expl}
-    heap <- False // 'heap' is a flag \\B 7
+    heap <- False \\B 7
+    \\Expl{  'heap' is a flag
+    \\Expl}
     while not (IsLeaf(A[i]) or heap) \\B 8
     \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
             We also terminate the loop if the children of A[i] are in the 
@@ -85,7 +90,9 @@ export default parse(`
         \\In}
         else
         \\In{
-            Swap(A[i], A[j]) // Swap root element with (larger) child \\B 17
+            Swap(A[i], A[j])  \\B 17
+            \\Expl{  Swap root element with (larger) child
+            \\Expl}
             i <- j \\B 18
         \\In}
     \\In}        
@@ -108,7 +115,8 @@ export default parse(`
     
     \\Code{
     SortHeap
-    // Sort heap
+    \\Expl{  Sort heap
+    \\Expl}
     while n > 1 \\B 20
     \\Expl{  A[1] always has the largest value not yet processed in the 
             sorting phase. A[n] is the last array element in the heap-ordered
@@ -127,7 +135,6 @@ export default parse(`
                 Use the DownHeap operation to restore the heap condition. 
         \\Expl}
     \\In}
-    // Done \\B 37
     \\Code}
     
     \\Note{  This is very similar to DownHeapk.
@@ -135,12 +142,15 @@ export default parse(`
     
     \\Code{
     DownHeap1
-    // DownHeap(A, 1, n)
+    \\Expl{  DownHeap(A, 1, n)
+    \\Expl}
     i <- 1 \\B 24
     \\Expl{  Set index i to the root of the subtree that we are now going to 
             examine. 
     \\Expl}
-    heap <- False // 'heap' is a flag \\B 25
+    heap <- False \\B 25
+    \\Expl{  'heap' is a flag
+    \\Expl}
     while not (IsLeaf(A[i]) or heap) do \\B 26
     \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
             We also terminate the loop if the children of A[i] are in the 
@@ -152,7 +162,9 @@ export default parse(`
         j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargest0 
         \\Expl{  Find the larger of the two children of the node. 
         \\Expl}
-        if A[i] >= A[j]         // Parent is larger than the largest child \\B 32
+        if A[i] >= A[j]        \\B 32
+        \\Expl{  Parent is larger than the largest child
+        \\Expl}
                                                                       
         \\In{
             heap <- True \\B 33
@@ -162,7 +174,9 @@ export default parse(`
         \\In}
         else
         \\In{
-            Swap(A[i], A[j])    // Swap root element with (larger) child \\B 35
+            Swap(A[i], A[j])   \\B 35
+            \\Expl{  Swap root element with (larger) child
+            \\Expl}
             i <- j \\B 36
         \\In}
     \\In}
