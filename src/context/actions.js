@@ -1,6 +1,8 @@
+/* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
 import Chunker from './chunker';
+import findBookmark from '../pseudocode/findBookmark';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
@@ -38,6 +40,18 @@ function getCollapseController(procedurePseudocode) {
   return collapseController;
 }
 
+function addLineExplanation(procedurePseudocode) {
+  let index = 0;
+  for (const codeBlockName of Object.keys(procedurePseudocode)) {
+    for (const line of procedurePseudocode[codeBlockName]) {
+      if (line.explanation.length > 0) {
+        line['lineExplanButton'] = { id: index, state: false };
+        index += 1;
+      }
+    }
+  }
+}
+
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
@@ -52,6 +66,7 @@ export const GlobalActions = {
 
     const procedurePseudocode = pseudocode[params.mode];
     const collapseController = getCollapseController(procedurePseudocode);
+    addLineExplanation(procedurePseudocode);
 
     return {
       id: params.name,
@@ -61,6 +76,7 @@ export const GlobalActions = {
       param,
       pseudocode: procedurePseudocode,
       collapse: collapseController,
+      lineExaplanation: '',
     };
   },
 
@@ -78,6 +94,7 @@ export const GlobalActions = {
     const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
+    const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
 
     return {
       ...state,
@@ -92,6 +109,7 @@ export const GlobalActions = {
       visualisers: chunker.visualisers,
       collapse: collapseController,
       playing: false,
+      lineExaplanation: firstLineExplan,
     };
   },
 
@@ -133,6 +151,18 @@ export const GlobalActions = {
     return {
       ...state,
       collapse: result,
+    };
+  },
+
+  LineExplan: (state, updateLineExplan) => {
+    if (updateLineExplan.length > 0) {
+      return {
+        ...state,
+        lineExaplanation: updateLineExplan,
+      };
+    }
+    return {
+      ...state,
     };
   },
 };

@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-loop-func */
 /* eslint-disable react/button-has-type */
@@ -6,6 +8,7 @@
 import React, { useContext } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DescriptionIcon from '@material-ui/icons/Description';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.scss';
@@ -92,6 +95,14 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
       const spanItem = <span key={key} className="explanation">{expla}</span>;
       pseudoceArary.push(spanItem);
     }
+
+    let lineExplanButton = null;
+    if (algorithm.collapse[blockName] && line.lineExplanButton !== undefined) {
+      lineExplanButton = <button className="line-explanation-button" onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}>
+                          <DescriptionIcon style={{ fontSize: 10 }} />
+                         </button>;
+    }
+
     if (line.ref) {
       codeLines.push(
         <p
@@ -113,6 +124,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
+          <span>{lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -129,6 +141,8 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           role="presentation"
         >
           <span>{i}</span>
+          <span>{null}</span>
+          <span>{lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );

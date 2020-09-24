@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import ReactMarkDown from 'react-markdown/with-html';
 import { GlobalContext } from '../../context/GlobalState';
-import findBookmark from '../../pseudocode/findBookmark';
 import CodeBlock from '../../markdown/code-block';
 
 function LineExplanation() {
@@ -9,7 +8,7 @@ function LineExplanation() {
   return (
     <div className="lineExplanation">
       <ReactMarkDown
-        source={findBookmark(algorithm.pseudocode, algorithm.bookmark).explanation}
+        source={algorithm.LineExplanation}
         escapeHtml={false}
         renderers={{ code: CodeBlock }}
       />
