@@ -91,9 +91,9 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
-        if (nodes[i][k] === 1) {
+        if (nodes[i][k] === 1 && i !== k) {
           for (let j = 0; j < numOfNodes; j++) {
-            if (nodes[k][j] === 1) {
+            if (nodes[k][j] === 1 && k !== j && i !== j) {
               chunker.add(2, (g, i, j) => {
                 g.graph.visit(i);
                 g.graph.visit(k, i);
@@ -102,8 +102,6 @@ export default {
               
 
               chunker.add(3, (g, i, j) => {
-                g.graph.visit(j, i);
-                g.graph.leave(j, i);
                 g.graph.addEdge(i, j);
                 g.graph.visit(j, i);
               }, [i, j]);
