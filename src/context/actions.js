@@ -7,6 +7,7 @@ import findBookmark from '../pseudocode/findBookmark';
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
 
+
 // Given some pseudocode and a block collapse state, is bookmark visible on screen?
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
   let containingBlock = false;
@@ -96,6 +97,7 @@ export const GlobalActions = {
     const bookmarkInfo = chunker.next();
     const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
 
+
     return {
       ...state,
       id: params.name,
@@ -172,6 +174,8 @@ export const GlobalActions = {
       ...state,
     };
   },
+
+
 };
 
 export function dispatcher(state, setState) {

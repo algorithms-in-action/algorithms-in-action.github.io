@@ -6,6 +6,10 @@ $rightButtonWidth: 24px;
 
 .code-container{
     font-family: Menlo, "Liberation Mono", Courier, monospace;
+    background-color: $codeBgCol;
+    height: 100%;
+    padding: 12px 0;
+
 }
 .expand-collopse-button{
     border: none;
@@ -24,9 +28,9 @@ $rightButtonWidth: 24px;
     cursor:pointer;
 
     @include border-radius(2px);
-    background-color:  #d8eaf0;
-    color: #343434;
-    border: 1px solid #c1c1c1;
+    background-color:  $white;
+    color: $sigBlue;
+    border: 1px solid $sigBlue;
 }
 
 .line-explanation-button-negative{
@@ -43,10 +47,7 @@ $rightButtonWidth: 24px;
 
 .line-light {
     width: 100%;
-    height: 350px;
-    overflow: scroll;
-    padding: 12px 0;
-    background-color: $codeBgCol;
+    // overflow: scroll;
     color: $codeFontCol;
 }
 .line-light p {
@@ -62,7 +63,6 @@ $rightButtonWidth: 24px;
 
 .line-light p span:first-child {
     display: inline-block;
-    background-color:$rightNumBgCol;
     width: $rightNumWidth;
     color: $rightNumCol;
     text-align: right;
@@ -114,7 +114,40 @@ $rightButtonWidth: 24px;
 
 
 
+.lineExplanation {
+    position: fixed;
+    background-color: $white;
+    white-space:normal;
+    word-wrap:break-word;
+    overflow-wrap: break-word;
 
+    width: auto;
+    // height: 7%;
+    bottom: 36px;
+    margin: 0 24px;
+    padding: 12px 36px 12px 12px;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.2));
+    @include border-radius(1%);
+    color: #3e3e3e;
+    font-weight: 300;
+
+    .lEtitle {
+        font-weight: 500;
+        margin-bottom: 6px;
+        font-size: 0.82em;
+        text-transform: uppercase;
+        color: #a2a2a2;
+    }
+
+    button {
+        margin-left: auto;
+        position: fixed;
+        right: 6px;
+        top: 6px;
+    }
+
+    
+}
 
 
 

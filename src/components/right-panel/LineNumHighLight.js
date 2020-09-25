@@ -13,6 +13,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.scss';
+import LineExplanation from './LineExplanation';
+
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -72,6 +74,7 @@ function codeFormatting(codeArray) {
   }
   return codeRexItem;
 }
+
 
 function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   let i = lineNum;
@@ -159,11 +162,17 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
 const LineNumHighLight = () => {
   const { algorithm, dispatch } = useContext(GlobalContext);
 
+  const closeLineExplain = () => {
+    // close line explain window
+  };
+
+
   return (
     <div className="line-light">
       <div className="code-container">
         {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
       </div>
+      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} onCancel={closeLineExplain} /> : ''}
     </div>
   );
 };
