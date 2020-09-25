@@ -1,10 +1,4 @@
-$sidePad: 24px;
-$midHeaderHeight: 40px;
-$borderCol: #e9e9e9;
-$quizButCol: #DEDEDE;
-$headerColor: #616161;
-$borderSize: 3px;
-$midCol: #f9f9f9;
+@import './global.scss';
 
 .midPanelContainer {
   display: flex;
@@ -13,19 +7,20 @@ $midCol: #f9f9f9;
   
   .midPanelHeader {
     height: $midHeaderHeight;
-    border-bottom: $borderSize solid $borderCol;
+    // border-bottom: $borderSize solid $borderCol;
     display: flex;
     justify-content: space-between;
+    background-color: $midHeaderCol;
     
     .algorithmTitle {
-      font-size: 0.89em;
-      margin: auto $sidePad;
-      color: $headerColor;
+      font-size: $midTitleFontSize;
+      margin: auto $midOffset;
+      color: $midTitleFontCol;
       font-weight: 300;
     }
 
     .quizButton {
-      margin: auto $sidePad;
+      margin: auto $midOffset;
       font-size: 0.8em;
       background-color: Transparent;
       background-repeat:no-repeat;
@@ -38,7 +33,7 @@ $midCol: #f9f9f9;
       padding: 4px 8px;
       border-radius: 20px;
       background-color: $quizButCol;
-      color: $headerColor;
+      color: $midTitleFontCol;
 
     }
 
@@ -50,7 +45,7 @@ $midCol: #f9f9f9;
     flex-direction: column;
     flex: 1 1 1px; /* Important */
     min-height: 0;
-    background-color: $midCol;
+    background-color: $midBgCol;
   }
 
 }

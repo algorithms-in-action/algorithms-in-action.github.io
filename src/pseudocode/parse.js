@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-else-return */
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */
@@ -114,7 +115,7 @@ export default function parse(input) {
   if (Object.keys(rawCodeBlocks).length > 0) {
     const indentedCodeBlocks = {};
     addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
-    console.log(indentedCodeBlocks)
+    console.log(indentedCodeBlocks);
     return indentedCodeBlocks;
   } else {
     return rawCodeBlocks;

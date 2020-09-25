@@ -1,7 +1,4 @@
-$bgColor: #001F39;
-$titleColor: #E0E0E0;
-$buttonColor: #E7E7E7;
-$buttonHighlightColor: #009EE9;
+@import './global.scss';
 
 a {
   text-decoration: none;
@@ -9,7 +6,7 @@ a {
 }
 
 .header {
-  background-color: $bgColor;
+  background-color: $headerBg;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
   height: 50px;
@@ -35,7 +32,7 @@ a {
     }
   
     h1 {
-      color: $titleColor;
+      color: $headerFontCol;
       font-size: 0.8em;
       font-weight: 500;
     }
@@ -49,7 +46,7 @@ a {
     align-self: stretch;
      
     button {
-      color: $buttonColor;
+      color: $headerBtnCol;
       font-size: 0.8em;
       font-weight: 500;
       background-color: Transparent;
@@ -65,7 +62,7 @@ a {
     }
 
     button:hover {
-      border-bottom: 4px solid $buttonHighlightColor;
+      border-bottom: 4px solid $headerBtnHgCol;
     }
 
   }
