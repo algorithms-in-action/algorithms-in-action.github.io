@@ -222,7 +222,7 @@ export default {
   run(chunker, { nodes }) {
     // create a copy, can't simply let A = nodes because it creates a reference
     // sort A in-place will cause nodes sorted as well
-    const A = [...nodes];  
+    const A = [...nodes];
     let n = nodes.length;
     let i;
     let heap;
