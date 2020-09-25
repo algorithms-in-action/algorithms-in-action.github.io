@@ -120,13 +120,13 @@ export const GlobalActions = {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
 
-    const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+    // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
     return {
       ...state,
       ...result,
       playing,
-      lineExplanation: lineExplan,
+      // lineExplanation: lineExplan,
     };
   },
 
@@ -137,13 +137,13 @@ export const GlobalActions = {
       result = state.chunker.prev();
     } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
 
-    const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+    // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
     return {
       ...state,
       ...result,
       playing,
-      lineExplanation: lineExplan,
+      // lineExplanation: lineExplan,
     };
   },
 
