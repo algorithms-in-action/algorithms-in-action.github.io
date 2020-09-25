@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import './styles/App.scss';
+import 'semantic-ui-css/semantic.min.css';
 import Header from './components/Header';
 import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';

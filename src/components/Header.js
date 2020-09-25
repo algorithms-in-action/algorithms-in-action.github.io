@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react';
 import '../styles/Header.scss';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import { Dropdown } from 'semantic-ui-react';
 import logo from '../resources/logo.svg';
 
 
 function Header() {
   const [fontSizing, setFontSizing] = React.useState('');
-  const handleChange = (event) => {
-    setFontSizing(event.target.value);
-  };
   useEffect(() => {
     // Update the document title using the browser API
     switch (fontSizing) {
@@ -48,7 +43,7 @@ function Header() {
         document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '14px';
         document.getElementsByClassName('parameterPanel')[0].style.fontSize = '14px';
     }
-  });
+  }, [fontSizing]);
 
   return (
     <div className="header">
@@ -58,25 +53,27 @@ function Header() {
       </div>
       <div className="navButton">
         <button type="button">
+          <Dropdown text="Setting" pointing className="link item">
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Dropdown
+                  text="Text Size"
+                  direction="left"
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => setFontSizing(80)}>80%</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFontSizing(100)}>100%</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFontSizing(150)}>150%</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </button>
+        <button type="button">
           Contribute
         </button>
-        <button type="button">
-          Settings
-        </button>
-        <button type="button">
-          <FormControl>
-            <Select
-              value={fontSizing}
-              onChange={handleChange}
-              displayEmpty
-            >
-              <MenuItem value="">Text Size</MenuItem>
-              <MenuItem value={80}>80%</MenuItem>
-              <MenuItem value={100}>100%</MenuItem>
-              <MenuItem value={150}>150%</MenuItem>
-            </Select>
-          </FormControl>
-        </button>
+
       </div>
     </div>
   );
