@@ -164,14 +164,9 @@ export const GlobalActions = {
   },
 
   LineExplan: (state, updateLineExplan) => {
-    if (updateLineExplan.length > 0) {
-      return {
-        ...state,
-        lineExplanation: updateLineExplan,
-      };
-    }
     return {
       ...state,
+      lineExplanation: updateLineExplan,
     };
   },
 

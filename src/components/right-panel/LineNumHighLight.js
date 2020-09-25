@@ -162,17 +162,12 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
 const LineNumHighLight = () => {
   const { algorithm, dispatch } = useContext(GlobalContext);
 
-  const closeLineExplain = () => {
-    // close line explain window
-  };
-
-
   return (
     <div className="line-light">
       <div className="code-container">
         {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
       </div>
-      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} onCancel={closeLineExplain} /> : ''}
+      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} /> : ''}
     </div>
   );
 };

@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
 import ControlButton from '../common/ControlButton';
 import { ReactComponent as Cancel } from '../../assets/icons/cancel.svg';
 
-function LineExplanation({ explanation, onCancel }) {
+function LineExplanation({ explanation }) {
+  const { dispatch } = useContext(GlobalContext);
   return (
     <div className="lineExplanation">
       <div className="lEtitle">Explanation</div>
@@ -12,7 +15,7 @@ function LineExplanation({ explanation, onCancel }) {
         className="greyRoundBtn"
         id="cancelLineExplainBtn"
         onClick={() => {
-          onCancel();
+          dispatch(GlobalActions.LineExplan, '');
         }}
       />
       {explanation}
@@ -22,7 +25,6 @@ function LineExplanation({ explanation, onCancel }) {
 
 LineExplanation.propTypes = {
   explanation: PropTypes.string.isRequired,
-  onCancel: PropTypes.func.isRequired,
 };
 
 export default LineExplanation;
