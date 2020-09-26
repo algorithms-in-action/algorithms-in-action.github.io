@@ -86,13 +86,13 @@ export default {
           if we use "break" or similar to exit from this loop.
   \\Expl}
   \\In{
-      Repeatedly increment i until A[i] >= pivot \\B 7
+      Repeatedly increment i until A[i] >= pivot or j <= i \\B 7
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements and because 
               the pivot is in A[right] this also acts as a sentinel, so 
               we don't increment beyond the right of the array segment.
       \\Expl}
-      Repeatedly decrement j until A[j] <= pivot or j < i \\B 8
+      Repeatedly decrement j until A[j] <= pivot or j <= i \\B 8
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements. If the 
               indices cross we exit the outer loop; this also stops us 
@@ -151,8 +151,6 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    console.log("Values to sort: ", nodes);
-
     function partition(values, left, right, parentId) {
       const a = values;
       let l = left - 1;
@@ -186,16 +184,20 @@ export default {
       return [r, a]; // Return [pivot location, array values]
     }
 
-    function QuickSort(values, l, r, parentId) {
-      let a = values;
+    function QuickSort(array, l, r, parentId) {
+      let a = array;
       let p;
+      const id = `${l}/${r}`;
       chunker.add(2);
       if (l < r) {
         [p, a] = partition(a, l, r, parentId);
-        chunker.add(3);
-        QuickSort(a, l, p, 'x');
+        chunker.add(3, (vis, oid, pid, values) => {
+          vis.graph.addNode(oid, values);
+          vis.graph.addEdge(pid, oid);
+        }, [id, parentId, array.splice(l, r - l + 1)]);
+        QuickSort(a, l, p, id);
         chunker.add(4);
-        QuickSort(a, p + 1, r, 'y');
+        QuickSort(a, p + 1, r, id);
       }
     }
 
