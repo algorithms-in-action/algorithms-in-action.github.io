@@ -33,6 +33,9 @@ const algorithms = {
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
     extraInfo: ExtraInfo.QSInfo,
+    controller: {
+      sort: Controller.quickSort,
+    },
   },
   'heapSort': {
     name: 'Heap Sort',

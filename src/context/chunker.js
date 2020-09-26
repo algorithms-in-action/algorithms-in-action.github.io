@@ -13,7 +13,9 @@ function defer(f, v) {
   if (!f) {
     return () => undefined;
   }
-  return (visualisers) => f(visualisers, ...args);
+  return (visualisers) => {
+    f(visualisers, ...args);
+  };
 }
 
 export default class {

@@ -1,5 +1,5 @@
 import parse from '../../pseudocode/parse';
-import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
 import { QSExp } from '../explanations';
 
 export default {
@@ -138,8 +138,8 @@ export default {
 
   initVisualisers() {
     return {
-      array: {
-        instance: new ArrayTracer('array', null, 'Array'),
+      graph: {
+        instance: new ArrayGraphTracer('graph', null, 'Graph'),
         order: 0,
       },
     };
@@ -151,38 +151,41 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
+    console.log(nodes);
+    console.log([...nodes]);
     const A = [...nodes];
     const left = 0;
     const right = nodes.length - 1;
 
     chunker.add(1, (vis, array) => {
-      vis.array.set(array);
+      vis.graph.addNode(0, array);
     }, [nodes]);
 
     const swapAction = (b1, b2, n1, n2) => {
       chunker.add(b1, (vis, _n1, _n2) => {
-        vis.array.patch(_n1);
-        vis.array.patch(_n2);
+        // vis.array.patch(_n1);
+        // vis.array.patch(_n2);
       }, [n1, n2]);
 
       chunker.add(b2, (vis, _n1, _n2) => {
-        vis.array.swapElements(_n1, _n2);
-        vis.array.depatch(_n2);
-        vis.array.depatch(_n1);
+        // vis.array.swapElements(_n1, _n2);
+        // vis.array.depatch(_n2);
+        // vis.array.depatch(_n1);
       }, [n1, n2]);
     };
 
     function partition(a, l, r) {
       // Choose pivot
       const pivot = a[r];
+
       chunker.add(3, (vis) => {
-        vis.array.select(r);
+        // vis.array.select(r);
       }, [a]);
 
       while (l < r) {
-        chunker.add(4, (vis) => {
-          vis.array.deselect(r);
-        }, [a]);
+        chunker.add(4, (vis, index) => {
+          // vis.array.deselect(index);
+        }, [r]);
 
         // Repeatedly increment l until A[l] >= pivot
         while (l < r && a[l] <= pivot) {
@@ -208,27 +211,25 @@ export default {
       return r;
     }
 
-    function QuickSort(a, l, r) {
-      if (l < r) {
-        chunker.add(2, (vis) => {
-          vis.array.select(l);
-          vis.array.select(r);
-        }, [a]);
+    function QuickSort(a, l, r, parentId) {
+      const id = `${l}/${r}`;
 
-        chunker.add(3, (vis) => {
-          vis.array.deselect(l);
-          vis.array.deselect(r);
-        }, [a]);
+      if (l < r) {
+        chunker.add(2, (vis, name, array) => {
+          vis.graph.addNode(name, array);
+          vis.graph.addEdge(parentId, name);
+          console.log(array);
+        }, [id, a]);
 
         const p = partition(a, l, r);
         //  Quicksort FirstHalf
-        QuickSort(a, l, p - 1);
+        QuickSort(a, l, p - 1, id);
         //  Quicksort SecondHalf
-        QuickSort(a, p + 1, r);
+        QuickSort(a, p + 1, r, id);
       }
     }
 
-    QuickSort(A, left, right);
+    QuickSort(A, left, right, 0);
   },
 };
 
