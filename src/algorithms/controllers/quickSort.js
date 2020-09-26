@@ -55,17 +55,17 @@ export default {
 
   \\Code{
   QuicksortFirstHalf
-  Quicksort(A, left, i - 1)
+  Quicksort(A, left, i - 1) \\B 3
   \\Code}
   
   \\Code{
   QuicksortSecondHalf
-  Quicksort(A, i + 1, right)
+  Quicksort(A, i + 1, right) \\B 4
   \\Code}
   
   \\Code{
   ChoosePivot
-  pivot <- A[right] \\B 3
+  pivot <- A[right] \\B 5
   \\Expl{  This simple method of choosing a pivot just uses the rightmost 
           element of the array segment. Unfortunately it leads to very poor 
           performance in some common cases, such as when the array is almost 
@@ -79,30 +79,30 @@ export default {
   \\Expl{  i scans from left to right stopping at large elements and
           j scans from right to left stopping at small elements.
   \\Expl}
-  while i < j \\B 4
+  while i < j \\B 6
   \\Expl{  When the indices cross, all the large elements at the left of
           the array segment have been swapped with small elements from the
           right of the array segment. The coding here can be simplified 
           if we use "break" or similar to exit from this loop.
   \\Expl}
   \\In{
-      Repeatedly increment i until A[i] >= pivot \\B 5
+      Repeatedly increment i until A[i] >= pivot \\B 7
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements and because 
               the pivot is in A[right] this also acts as a sentinel, so 
               we don't increment beyond the right of the array segment.
       \\Expl}
-      Repeatedly decrement j until A[j] <= pivot or j < i \\B 6
+      Repeatedly decrement j until A[j] <= pivot or j < i \\B 8
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements. If the 
               indices cross we exit the outer loop; this also stops us 
               decrementing beyond the left of the array segment.
       \\Expl}
-      if j > i \\B 7
+      if j > i \\B 9
       \\Expl{  If the indices cross we exit the loop.
       \\Expl}
       \\In{
-          swap(A[i], A[j]) \\B 8
+          swap(A[i], A[j]) \\B 10
           \\Expl{  Swap the larger element (A[i]) with the smaller
                   element (A[j]).
           \\Expl}
@@ -113,11 +113,11 @@ export default {
   
   \\Code{
   init_iAndj
-  i <- left - 1 \\B 9
+  i <- left - 1 \\B 11
   \\Expl{  i is incremented before use, so A[left] is the first element
           in the left to right scan.
   \\Expl}
-  j <- right \\B 10
+  j <- right \\B 12
   \\Expl{  j is decremented before use, so A[right-1] is the first
           element in the right to left scan (A[right] is the pivot).
   \\Expl}
@@ -125,7 +125,7 @@ export default {
   
   \\Code{
   SwapP
-  swap(A[i], A[right]) \\B 11
+  swap(A[i], A[right]) \\B 13
   \\Expl{  The pivot element, in A[right], is swapped with A[i]. All
           elements to the left of A[i] must be less then or equal to
           the pivot and A[i] plus all elements to its right must be
@@ -151,16 +151,23 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    console.log(nodes);
-    console.log([...nodes]);
     const A = [...nodes];
     const left = 0;
     const right = nodes.length - 1;
 
+    const rootId = 0;
+    let nextLeftNode = 0;
+    let nextRightNode = 0;
+    let pivotId = '';
+
+    let leftArray = [];
+    let rightArray = [];
+
     chunker.add(1, (vis, array) => {
-      vis.graph.addNode(0, array);
+      vis.graph.addNode(`${rootId}`, array);
     }, [nodes]);
 
+    /*
     const swapAction = (b1, b2, n1, n2) => {
       chunker.add(b1, (vis, _n1, _n2) => {
         // vis.array.patch(_n1);
@@ -173,20 +180,19 @@ export default {
         // vis.array.depatch(_n1);
       }, [n1, n2]);
     };
+     */
 
-    function partition(a, l, r) {
+    function partition(a, l, r, parentId) {
+      leftArray = [];
+      rightArray = [];
+
+      let i = l;
+      const lim = r;
+
       // Choose pivot
       const pivot = a[r];
 
-      chunker.add(3, (vis) => {
-        // vis.array.select(r);
-      }, [a]);
-
       while (l < r) {
-        chunker.add(4, (vis, index) => {
-          // vis.array.deselect(index);
-        }, [r]);
-
         // Repeatedly increment l until A[l] >= pivot
         while (l < r && a[l] <= pivot) {
           // eslint-disable-next-line no-param-reassign
@@ -195,7 +201,7 @@ export default {
         // Swap
         // eslint-disable-next-line no-param-reassign
         a[r] = a[l];
-        swapAction(8, 8, l, r);
+
         // Repeatedly decrement r until A[r] <= pivot or r < l
         while (l < r && pivot <= a[r]) {
           // eslint-disable-next-line no-param-reassign
@@ -204,32 +210,74 @@ export default {
         // Swap
         // eslint-disable-next-line no-param-reassign
         a[l] = a[r];
-        swapAction(11, 11, l, r);
       }
       // eslint-disable-next-line no-param-reassign
       a[r] = pivot;
+
+      while (i <= lim) {
+        if (i < r) {
+          leftArray.push(a[i]);
+          i += 1;
+        } else if (i > r) {
+          rightArray.push(a[i]);
+          i += 1;
+        } else {
+          i += 1;
+        }
+      }
+
+      if (leftArray.length !== 0 && rightArray.length !== 0) {
+        nextLeftNode += 1;
+        nextRightNode += r + 1;
+
+        chunker.add(13, (vis, leftA, _pivot, rightA) => {
+          vis.graph.addNode(`${nextRightNode}`, rightA);
+          vis.graph.addEdge(`${parentId}`, `${nextRightNode}`);
+          vis.graph.addNode(`${pivotId}`, _pivot);
+          vis.graph.addEdge(`${parentId}`, `${pivotId}`);
+          vis.graph.addNode(`${nextLeftNode}`, leftA);
+          vis.graph.addEdge(`${parentId}`, `${nextLeftNode}`);
+        }, [leftArray, pivot, rightArray]);
+      } else if (leftArray.length === 0 && rightArray.length !== 0) {
+        nextRightNode += 1;
+
+        chunker.add(13, (vis, _pivot, rightA) => {
+          vis.graph.addNode(`${nextRightNode}`, rightA);
+          vis.graph.addEdge(`${parentId}`, `${nextRightNode}`);
+          vis.graph.addNode(`${pivotId}`, _pivot);
+          vis.graph.addEdge(`${parentId}`, `${pivotId}`);
+        }, [pivot, rightArray]);
+      } else if (leftArray.length !== 0 && rightArray.length === 0) {
+        nextLeftNode += 1;
+
+        chunker.add(13, (vis, leftA, _pivot) => {
+          vis.graph.addNode(`${pivotId}`, _pivot);
+          vis.graph.addEdge(`${parentId}`, `${pivotId}`);
+          vis.graph.addNode(`${nextLeftNode}`, leftA);
+          vis.graph.addEdge(`${parentId}`, `${nextLeftNode}`);
+        }, [leftArray, pivot]);
+      }
+
+      pivotId = `${pivotId}P`;
+
       return r;
     }
 
     function QuickSort(a, l, r, parentId) {
-      const id = `${l}/${r}`;
-
       if (l < r) {
-        chunker.add(2, (vis, name, array) => {
-          vis.graph.addNode(name, array);
-          vis.graph.addEdge(parentId, name);
-          console.log(array);
-        }, [id, a]);
+        const p = partition(a, l, r, parentId);
 
-        const p = partition(a, l, r);
         //  Quicksort FirstHalf
-        QuickSort(a, l, p - 1, id);
+        chunker.add(3);
+        QuickSort(a, l, p - 1, `${nextLeftNode}`);
+
         //  Quicksort SecondHalf
-        QuickSort(a, p + 1, r, id);
+        chunker.add(4);
+        QuickSort(a, p + 1, r, `${nextRightNode}`);
       }
     }
 
-    QuickSort(A, left, right, 0);
+    QuickSort(A, left, right, rootId);
   },
 };
 
@@ -244,7 +292,7 @@ export default {
       // Swap
       a[r] = a[l];
       // Repeatedly decrement r until A[r] <= pivot or r < l
-      while(l<r&&pivot<=a[r])
+      while(l<r && pivot<=a[r])
         r--;
       // Swap
       a[l] = a[r];
