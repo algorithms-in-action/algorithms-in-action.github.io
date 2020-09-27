@@ -86,13 +86,13 @@ export default {
           if we use "break" or similar to exit from this loop.
   \\Expl}
   \\In{
-      Repeatedly increment i until A[i] >= pivot or j <= i \\B 7
+      Repeatedly increment i until A[i] >= pivot \\B 7
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements and because 
               the pivot is in A[right] this also acts as a sentinel, so 
               we don't increment beyond the right of the array segment.
       \\Expl}
-      Repeatedly decrement j until A[j] <= pivot or j <= i \\B 8
+      Repeatedly decrement j until A[j] <= pivot or j < i \\B 8
       \\Expl{  Stopping at elements equal to the pivot results in better
               performance when there are many equal elements. If the 
               indices cross we exit the outer loop; this also stops us 
@@ -113,13 +113,12 @@ export default {
   
   \\Code{
   init_iAndj
-  i <- left - 1 \\B 11
-  \\Expl{  i is incremented before use, so A[left] is the first element
-          in the left to right scan.
+  i <- left + 1 \\B 11
+  \\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
   \\Expl}
   j <- right \\B 12
-  \\Expl{  j is decremented before use, so A[right-1] is the first
-          element in the right to left scan (A[right] is the pivot).
+  \\Expl{  The j pointer is set to right, rather than right + 1, because the pivot
+          element is in A[right] and is not part of the partitioning.
   \\Expl}
   \\Code}
   
@@ -153,58 +152,59 @@ export default {
   run(chunker, { nodes }) {
     function partition(values, left, right, parentId) {
       const a = values;
-      let l = left - 1;
-      let r = right;
+      let i = left - 1;
+      let j = right;
       let tmp;
       chunker.add(5);
       chunker.add(11);
       chunker.add(12);
-      const pivot = a[r];
+      const pivot = a[right];
       chunker.add(6);
-      while (l < r) {
+      while (i < j) {
         chunker.add(7);
         do {
-          l += 1;
-        } while (l < r && a[l] < pivot);
+          i += 1;
+        } while (a[i] < pivot);
         chunker.add(8);
         do {
-          r -= 1;
-        } while (l < r && pivot < a[r]);
+          j -= 1;
+        } while (i <= j && pivot < a[j]);
         chunker.add(9);
-        if (l < r) {
+        if (i < j) {
           chunker.add(10);
-          tmp = a[r];
-          a[r] = a[l];
-          a[l] = tmp;
+          tmp = a[j];
+          a[j] = a[i];
+          a[i] = tmp;
         }
       }
       chunker.add(13);
-      a[right] = a[l];
-      a[l] = pivot;
-      return [r, a]; // Return [pivot location, array values]
+      a[right] = a[i];
+      a[i] = pivot;
+      return [i, a]; // Return [pivot location, array values]
     }
 
-    function QuickSort(array, l, r, parentId) {
+    function QuickSort(array, left, right, parentId) {
       let a = array;
       let p;
-      const id = `${l}/${r}`;
+      const id = `${left}/${right}`;
       chunker.add(2);
-      if (l < r) {
-        [p, a] = partition(a, l, r, parentId);
-        chunker.add(3, (vis, oid, pid, values) => {
-          vis.graph.addNode(oid, values);
-          vis.graph.addEdge(pid, oid);
-        }, [id, parentId, array.splice(l, r - l + 1)]);
-        QuickSort(a, l, p, id);
+      if (left < right) {
+        [p, a] = partition(a, left, right, parentId);
+        chunker.add(3, (vis, id_, parentId_, values) => {
+          vis.graph.addNode(id_, values);
+          vis.graph.addEdge(parentId_, id_);
+        }, [id, parentId, [...array].splice(left, right - left + 1)]);
+        QuickSort(a, left, p - 1, id);
         chunker.add(4);
-        QuickSort(a, p + 1, r, id);
+        QuickSort(a, p + 1, right, id);
       }
+      return a; // Facilitates testing
     }
 
     chunker.add(1, (vis, values) => {
       vis.graph.addNode(`0/${values.length}`, values);
     }, [nodes]);
-    QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
   },
   //      chunker.add(2);
   //       chunker.add(2, (vis, values) => {
