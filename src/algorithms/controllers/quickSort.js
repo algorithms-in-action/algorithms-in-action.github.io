@@ -151,16 +151,24 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    function partition(values, left, right, parentId) {
+    function partition(values, left, right) {
       const a = values;
       let l = left - 1;
       let r = right;
       let tmp;
+      let i = left;
+
+      const leftArray = [];
+      const rightArray = [];
+
       chunker.add(5);
       chunker.add(11);
       chunker.add(12);
+
       const pivot = a[r];
+
       chunker.add(6);
+
       while (l < r) {
         chunker.add(7);
         do {
@@ -178,31 +186,87 @@ export default {
           a[l] = tmp;
         }
       }
+
       chunker.add(13);
+
       a[right] = a[l];
       a[l] = pivot;
-      return [r, a]; // Return [pivot location, array values]
+
+
+      console.log(l);
+      console.log(r);
+
+      while (i <= right) {
+        if (i < l) {
+          leftArray.push(a[i]);
+          i += 1;
+        } else if (i > l) {
+          rightArray.push(a[i]);
+          i += 1;
+        } else {
+          i += 1;
+        }
+      }
+
+      if (l === r) {
+        r -= 1;
+      }
+
+      console.log(a);
+      console.log(leftArray);
+      console.log(rightArray);
+
+      return [r, leftArray, rightArray]; // Return [pivot location, array values]
     }
 
     function QuickSort(array, l, r, parentId) {
-      let a = array;
+      const a = array;
       let p;
-      const id = `${l}/${r}`;
+      let leftArray = [];
+      let rightArray = [];
+      let idLeft;
+      let idRight;
+
       chunker.add(2);
+
       if (l < r) {
-        [p, a] = partition(a, l, r, parentId);
-        chunker.add(3, (vis, oid, pid, values) => {
-          vis.graph.addNode(oid, values);
-          vis.graph.addEdge(pid, oid);
-        }, [id, parentId, array.splice(l, r - l + 1)]);
-        QuickSort(a, l, p, id);
+        [p, leftArray, rightArray] = partition(a, l, r);
+        console.log(`Hello ${p}`);
+        console.log(`Hello ${p + 1}`);
+
+        idLeft = `${l}/${p}`;
+        idRight = `${p + 1}/${r}`;
+
+        chunker.add(3, (vis, pivotIndex, ownIdLeft, ownIdRight, _parentId, leftA, rightA) => {
+          if (leftArray.length >= 1) {
+            vis.graph.addNode(ownIdLeft, leftA);
+            vis.graph.addEdge(_parentId, ownIdLeft);
+          }
+
+          vis.graph.addNode(`${pivotIndex}`, a[pivotIndex + 1]);
+          vis.graph.addEdge(_parentId, `${pivotIndex}`);
+
+          if (rightArray.length >= 1) {
+            console.log(`Here ${rightA}`);
+            vis.graph.addNode(ownIdRight, rightA);
+            vis.graph.addEdge(_parentId, ownIdRight);
+          }
+
+          leftArray = [];
+          rightArray = [];
+        }, [p, idLeft, idRight, parentId, leftArray, rightArray]);
+
+        QuickSort(a, l, p, idLeft);
+
         chunker.add(4);
-        QuickSort(a, p + 1, r, id);
+
+        QuickSort(a, p + 1, r, idRight);
       }
     }
 
     chunker.add(1, (vis, values) => {
-      vis.graph.addNode(`0/${values.length}`, values);
+      vis.graph.addNode(`0/${values.length - 1}`, values);
+      vis.graph.layoutTree(`0/${values.length - 1}`, false);
     }, [nodes]);
     QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
   },
@@ -225,19 +289,6 @@ export default {
   //   chunker.add(1, (vis, array) => {
   //     vis.graph.addNode(`${rootId}`, array);
   //   }, [nodes]);
-  //
-  //   const swapAction = (b1, b2, n1, n2) => {
-  //     chunker.add(b1, (vis, _n1, _n2) => {
-  //       // vis.array.patch(_n1);
-  //       // vis.array.patch(_n2);
-  //     }, [n1, n2]);
-  //
-  //     chunker.add(b2, (vis, _n1, _n2) => {
-  //       // vis.array.swapElements(_n1, _n2);
-  //       // vis.array.depatch(_n2);
-  //       // vis.array.depatch(_n1);
-  //     }, [n1, n2]);
-  //   };
   //
   //   function partition(a, l, r, parentId) {
   //     leftArray = [];
