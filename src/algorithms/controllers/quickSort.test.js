@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 import quickSort from './quickSort';
 
 // Simple stub for the chunker

@@ -150,7 +150,7 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    function partition(values, left, right, parentId) {
+    function partition(values, left, right) {
       const a = values;
       let i = left - 1;
       let j = right;
@@ -186,186 +186,31 @@ export default {
     function QuickSort(array, left, right, parentId) {
       let a = array;
       let p;
-      const id = `${left}/${right}`;
       chunker.add(2);
       if (left < right) {
-        [p, a] = partition(a, left, right, parentId);
-        chunker.add(3, (vis, id_, parentId_, values) => {
-          vis.graph.addNode(id_, values);
-          vis.graph.addEdge(parentId_, id_);
-        }, [id, parentId, [...array].splice(left, right - left + 1)]);
-        QuickSort(a, left, p - 1, id);
+        [p, a] = partition(a, left, right);
+        chunker.add(3, (vis, _a, _left, _p, _right, _parentId) => {
+          const leftArray = _a.slice(_left, _p);
+          const rightArray = _a.slice(_p + 1, _right + 1);
+          console.log(leftArray, rightArray, _parentId);
+          vis.graph.addNode(`${_left}/${_p - 1}`, leftArray);
+          vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);
+          vis.graph.addNode(`p${_parentId}`, _a[_p]);
+          vis.graph.addEdge(_parentId, `p${_parentId}`);
+          vis.graph.addNode(`${_right}/${_p + 1}`, rightArray);
+          vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
+        }, [a, left, p, right, parentId]);
+        QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
-        QuickSort(a, p + 1, right, id);
+        QuickSort(a, p + 1, right, `${right}/${p + 1}`);
       }
       return a; // Facilitates testing
     }
 
-    chunker.add(1, (vis, values) => {
-      vis.graph.addNode(`0/${values.length}`, values);
+    chunker.add(1, (vis, _nodes) => {
+      vis.graph.addNode(`0/${_nodes.length - 1}`, _nodes);
+      vis.graph.layoutTree(`0/${_nodes.length - 1}`, false);
     }, [nodes]);
     return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
   },
-  //      chunker.add(2);
-  //       chunker.add(2, (vis, values) => {
-  //         vis.graph.addNode(`${left}/${right}`, values.splice(left, right - left + 1));
-  //       });
-  //   const A = [...nodes];
-  //   const left = 0;
-  //   const right = nodes.length - 1;
-  //
-  //   const rootId = 0;
-  //   let nextLeftNode = 0;
-  //   let nextRightNode = 0;
-  //   let pivotId = '';
-  //
-  //   let leftArray = [];
-  //   let rightArray = [];
-  //
-  //   chunker.add(1, (vis, array) => {
-  //     vis.graph.addNode(`${rootId}`, array);
-  //   }, [nodes]);
-  //
-  //   const swapAction = (b1, b2, n1, n2) => {
-  //     chunker.add(b1, (vis, _n1, _n2) => {
-  //       // vis.array.patch(_n1);
-  //       // vis.array.patch(_n2);
-  //     }, [n1, n2]);
-  //
-  //     chunker.add(b2, (vis, _n1, _n2) => {
-  //       // vis.array.swapElements(_n1, _n2);
-  //       // vis.array.depatch(_n2);
-  //       // vis.array.depatch(_n1);
-  //     }, [n1, n2]);
-  //   };
-  //
-  //   function partition(a, l, r, parentId) {
-  //     leftArray = [];
-  //     rightArray = [];
-  //
-  //     let i = l;
-  //     const lim = r;
-  //
-  //     // Choose pivot
-  //     const pivot = a[r];
-  //
-  //     while (l < r) {
-  //       // Repeatedly increment l until A[l] >= pivot
-  //       while (l < r && a[l] <= pivot) {
-  //         // eslint-disable-next-line no-param-reassign
-  //         l += 1;
-  //       }
-  //       // Swap
-  //       // eslint-disable-next-line no-param-reassign
-  //       a[r] = a[l];
-  //
-  //       // Repeatedly decrement r until A[r] <= pivot or r < l
-  //       while (l < r && pivot <= a[r]) {
-  //         // eslint-disable-next-line no-param-reassign
-  //         r -= 1;
-  //       }
-  //       // Swap
-  //       // eslint-disable-next-line no-param-reassign
-  //       a[l] = a[r];
-  //     }
-  //     // eslint-disable-next-line no-param-reassign
-  //     a[r] = pivot;
-  //
-  //     while (i <= lim) {
-  //       if (i < r) {
-  //         leftArray.push(a[i]);
-  //         i += 1;
-  //       } else if (i > r) {
-  //         rightArray.push(a[i]);
-  //         i += 1;
-  //       } else {
-  //         i += 1;
-  //       }
-  //     }
-  //
-  //     if (leftArray.length !== 0 && rightArray.length !== 0) {
-  //       nextLeftNode += 1;
-  //       nextRightNode += r + 1;
-  //
-  //       chunker.add(13, (vis, leftA, _pivot, rightA) => {
-  //         vis.graph.addNode(`${nextRightNode}`, rightA);
-  //         vis.graph.addEdge(`${parentId}`, `${nextRightNode}`);
-  //         vis.graph.addNode(`${pivotId}`, _pivot);
-  //         vis.graph.addEdge(`${parentId}`, `${pivotId}`);
-  //         vis.graph.addNode(`${nextLeftNode}`, leftA);
-  //         vis.graph.addEdge(`${parentId}`, `${nextLeftNode}`);
-  //       }, [leftArray, pivot, rightArray]);
-  //     } else if (leftArray.length === 0 && rightArray.length !== 0) {
-  //       nextRightNode += 1;
-  //
-  //       chunker.add(13, (vis, _pivot, rightA) => {
-  //         vis.graph.addNode(`${nextRightNode}`, rightA);
-  //         vis.graph.addEdge(`${parentId}`, `${nextRightNode}`);
-  //         vis.graph.addNode(`${pivotId}`, _pivot);
-  //         vis.graph.addEdge(`${parentId}`, `${pivotId}`);
-  //       }, [pivot, rightArray]);
-  //     } else if (leftArray.length !== 0 && rightArray.length === 0) {
-  //       nextLeftNode += 1;
-  //
-  //       chunker.add(13, (vis, leftA, _pivot) => {
-  //         vis.graph.addNode(`${pivotId}`, _pivot);
-  //         vis.graph.addEdge(`${parentId}`, `${pivotId}`);
-  //         vis.graph.addNode(`${nextLeftNode}`, leftA);
-  //         vis.graph.addEdge(`${parentId}`, `${nextLeftNode}`);
-  //       }, [leftArray, pivot]);
-  //     }
-  //
-  //     pivotId = `${pivotId}P`;
-  //
-  //     return r;
-  //   }
-  //
-  //   function QuickSort(a, l, r, parentId) {
-  //     if (l < r) {
-  //       const p = partition(a, l, r, parentId);
-  //
-  //       //  Quicksort FirstHalf
-  //       chunker.add(3);
-  //       QuickSort(a, l, p - 1, `${nextLeftNode}`);
-  //
-  //       //  Quicksort SecondHalf
-  //       chunker.add(4);
-  //       QuickSort(a, p + 1, r, `${nextRightNode}`);
-  //     }
-  //   }
-  //
-  //   QuickSort(A, left, right, rootId);
-  // },
 };
-
-/*
-  function partition(a, l, r){
-    // Choose pivot
-    pivot = a[r]
-    while(l < r) {
-      // Repeatedly increment l until A[l] >= pivot
-      while(l<r && a[l]<=pivot)
-        l++;
-      // Swap
-      a[r] = a[l];
-      // Repeatedly decrement r until A[r] <= pivot or r < l
-      while(l<r && pivot<=a[r])
-        r--;
-      // Swap
-      a[l] = a[r];
-
-    }
-    a[r] = pivot;
-    return r;
-  }
-
-  function QuickSort(a,left, right){
-    if(left<right){
-      l = partition(a, left, right)
-      //  Quicksort FirstHalf
-      QuickSort(a, left, l-1);
-      //  Quicksort SecondHalf
-      QuickSort(a, l+1, right);
-    }
-  }
-*/
