@@ -1,3 +1,6 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-loop-func */
 /* eslint-disable react/button-has-type */
@@ -6,9 +9,12 @@
 import React, { useContext } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DescriptionIcon from '@material-ui/icons/Description';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.scss';
+import LineExplanation from './LineExplanation';
+
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -22,7 +28,7 @@ function blockContainsBookmark(algorithm, block) {
 
 function codeFormatting(codeArray) {
   const keywords = ['for', 'while', 'if', 'else', 'in', 'each', 'do',
-    'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or'];
+    'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or', 'return', 'NotFound'];
   let spanItem;
   let codeItem;
   const codeRexItem = [];
@@ -69,6 +75,7 @@ function codeFormatting(codeArray) {
   return codeRexItem;
 }
 
+
 function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   let i = lineNum;
   let codeLines = [];
@@ -92,6 +99,18 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
       const spanItem = <span key={key} className="explanation">{expla}</span>;
       pseudoceArary.push(spanItem);
     }
+
+    let lineExplanButton = null;
+    if (algorithm.collapse[blockName] && line.lineExplanButton !== undefined) {
+      lineExplanButton =
+      <button
+        className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
+        onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+      >
+        <DescriptionIcon style={{ fontSize: 10 }} />
+      </button>;
+    }
+
     if (line.ref) {
       codeLines.push(
         <p
@@ -113,6 +132,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
+          <span>{lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -129,6 +149,8 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           role="presentation"
         >
           <span>{i}</span>
+          <span>{null}</span>
+          <span>{lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -145,6 +167,7 @@ const LineNumHighLight = () => {
       <div className="code-container">
         {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
       </div>
+      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} /> : ''}
     </div>
   );
 };

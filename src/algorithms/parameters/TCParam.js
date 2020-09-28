@@ -9,7 +9,7 @@ import {
 } from './helpers/ParamHelper';
 import '../../styles/Param.scss';
 
-const DEFAULT_SIZE = 7;
+const DEFAULT_SIZE = 4;
 const TRANSITIVE_CLOSURE = 'Transitive Closure';
 const TRANSITIVE_CLOSURE_EXAMPLE = 'Example: 0,1';
 
@@ -44,7 +44,7 @@ function TransitiveClosureParam() {
           name="transitiveClosure"
           buttonName="Set"
           // TODO: replace mode for Transitive Closure
-          // mode="search"
+          mode="tc"
           formClassName="singleInput"
           DEFAULT_VAL={DEFAULT_SIZE}
           ALGORITHM_NAME={TRANSITIVE_CLOSURE}
@@ -55,7 +55,11 @@ function TransitiveClosureParam() {
 
         {/* Matrix input */}
         <MatrixParam
+          name="transitiveClosure"
+          mode="tc"
           size={size}
+          min={0}
+          max={1}
           ALGORITHM_NAME={TRANSITIVE_CLOSURE}
           EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
           setMessage={setMessage}

@@ -1,9 +1,12 @@
+/* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
 import Chunker from './chunker';
+import findBookmark from '../pseudocode/findBookmark';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
+
 
 // Given some pseudocode and a block collapse state, is bookmark visible on screen?
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
@@ -38,6 +41,18 @@ function getCollapseController(procedurePseudocode) {
   return collapseController;
 }
 
+function addLineExplanation(procedurePseudocode) {
+  let index = 0;
+  for (const codeBlockName of Object.keys(procedurePseudocode)) {
+    for (const line of procedurePseudocode[codeBlockName]) {
+      if (line.explanation.length > 0) {
+        line['lineExplanButton'] = { id: index, state: false };
+        index += 1;
+      }
+    }
+  }
+}
+
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
@@ -52,6 +67,7 @@ export const GlobalActions = {
 
     const procedurePseudocode = pseudocode[params.mode];
     const collapseController = getCollapseController(procedurePseudocode);
+    addLineExplanation(procedurePseudocode);
 
     return {
       id: params.name,
@@ -61,6 +77,7 @@ export const GlobalActions = {
       param,
       pseudocode: procedurePseudocode,
       collapse: collapseController,
+      lineExplanation: '',
     };
   },
 
@@ -78,6 +95,8 @@ export const GlobalActions = {
     const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
+    const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
+
 
     return {
       ...state,
@@ -92,6 +111,7 @@ export const GlobalActions = {
       visualisers: chunker.visualisers,
       collapse: collapseController,
       playing: false,
+      lineExplanation: firstLineExplan,
     };
   },
 
@@ -102,10 +122,13 @@ export const GlobalActions = {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
 
+    // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+
     return {
       ...state,
       ...result,
       playing,
+      // lineExplanation: lineExplan,
     };
   },
 
@@ -115,10 +138,14 @@ export const GlobalActions = {
     do {
       result = state.chunker.prev();
     } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+
+    // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
+
     return {
       ...state,
       ...result,
       playing,
+      // lineExplanation: lineExplan,
     };
   },
 
@@ -135,6 +162,13 @@ export const GlobalActions = {
       collapse: result,
     };
   },
+
+  LineExplan: (state, updateLineExplan) => ({
+    ...state,
+    lineExplanation: updateLineExplan,
+  }),
+
+
 };
 
 export function dispatcher(state, setState) {

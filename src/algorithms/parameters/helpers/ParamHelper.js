@@ -79,12 +79,12 @@ export const makeColumnArray = (len) => {
  * @param {number} len size of the matrix
  * @return array of object
  */
-export const makeData = (len) => {
+export const makeData = (len, min, max) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-      data[`col${j}`] = `${getRandomInt(0, 9)}`;
+      data[`col${j}`] = `${getRandomInt(min, max)}`;
     }
     arr.push(data);
   }

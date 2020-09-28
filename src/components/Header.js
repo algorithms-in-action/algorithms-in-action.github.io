@@ -1,49 +1,49 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../styles/Header.scss';
 import { Dropdown } from 'semantic-ui-react';
-import logo from '../resources/logo.svg';
+import logo from '../assets/logo.svg';
 
 
 function Header() {
-  const [fontSizing, setFontSizing] = React.useState('');
-  useEffect(() => {
-    // Update the document title using the browser API
-    switch (fontSizing) {
-      case 80:
-        // left panel
-        Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
-          e.style.fontSize = '12px';
-        });
-        // algorithm title
-        document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '12px';
-        // code panel
-        document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '12px';
-        document.getElementsByClassName('parameterPanel')[0].style.fontSize = '12px';
+  // const [fontSizing, setFontSizing] = React.useState('');
+  // useEffect(() => {
+  //   // Update the document title using the browser API
+  //   switch (fontSizing) {
+  //     case 80:
+  //       // left panel
+  //       Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
+  //         e.style.fontSize = '12px';
+  //       });
+  //       // algorithm title
+  //       document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '12px';
+  //       // code panel
+  //       document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '12px';
+  //       document.getElementsByClassName('parameterPanel')[0].style.fontSize = '12px';
 
-        break;
-      case 150:
-        // left panel
-        Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
-          e.style.fontSize = '16px';
-        });
-        // algorithm title
-        document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '18px';
-        // code panel
-        document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '18px';
-        document.getElementsByClassName('parameterPanel')[0].style.fontSize = '18px';
-        break;
-      default:
-        // left panel
-        Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
-          e.style.fontSize = '12px';
-        });
-        // algorithm title
-        document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '14px';
-        // code panel
-        document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '14px';
-        document.getElementsByClassName('parameterPanel')[0].style.fontSize = '14px';
-    }
-  }, [fontSizing]);
+  //       break;
+  //     case 150:
+  //       // left panel
+  //       Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
+  //         e.style.fontSize = '16px';
+  //       });
+  //       // algorithm title
+  //       document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '18px';
+  //       // code panel
+  //       document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '18px';
+  //       document.getElementsByClassName('parameterPanel')[0].style.fontSize = '18px';
+  //       break;
+  //     default:
+  //       // left panel
+  //       Array.prototype.map.call(document.getElementsByClassName('MuiList-root'), (e) => {
+  //         e.style.fontSize = '12px';
+  //       });
+  //       // algorithm title
+  //       document.getElementsByClassName('algorithmTitle')[0].style.fontSize = '14px';
+  //       // code panel
+  //       document.getElementsByClassName('textAreaContainer')[0].style.fontSize = '14px';
+  //       document.getElementsByClassName('parameterPanel')[0].style.fontSize = '14px';
+  //   }
+  // }, [fontSizing]);
 
   return (
     <div className="header">
@@ -61,9 +61,9 @@ function Header() {
                   direction="left"
                 >
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setFontSizing(80)}>80%</Dropdown.Item>
+                    {/* <Dropdown.Item onClick={() => setFontSizing(80)}>80%</Dropdown.Item>
                     <Dropdown.Item onClick={() => setFontSizing(100)}>100%</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setFontSizing(150)}>150%</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFontSizing(150)}>150%</Dropdown.Item> */}
                   </Dropdown.Menu>
                 </Dropdown>
               </Dropdown.Item>

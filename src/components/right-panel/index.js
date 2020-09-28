@@ -33,9 +33,7 @@ function RightPanel() {
   return (
     <>
       <HeaderButton value={buttons} onChange={getBtnState} />
-      <div className="textAreaContainer">
-        {buttons[state].display}
-      </div>
+      {buttons[state].display}
     </>
   );
 }

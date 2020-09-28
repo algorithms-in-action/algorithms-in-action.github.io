@@ -22,6 +22,8 @@ import useParam from '../../../context/useParam';
  */
 function MatrixParam({
   size,
+  min,
+  max,
   name,
   mode,
   setMessage,
@@ -33,15 +35,15 @@ function MatrixParam({
     [size],
   );
   const { dispatch } = useParam();
-  const [data, setData] = useState(() => makeData(size));
+  const [data, setData] = useState(() => makeData(size, min, max));
   const [originalData, setOriginalData] = useState(data);
 
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size);
+    const newData = makeData(size, min, max);
     setData(newData);
     setOriginalData(newData);
-  }, [size]);
+  }, [size, min, max]);
 
   // Reset the matrix to the inital set
   const resetData = () => {
@@ -95,7 +97,9 @@ function MatrixParam({
     if (matrix.length !== 0) {
       setMessage(successParamMsg(ALGORITHM_NAME));
       // TODO: run animation here
-      // dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, size, matrix });
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name, mode, size, matrix,
+      });
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
