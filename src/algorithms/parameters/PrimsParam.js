@@ -56,6 +56,8 @@ function PrimsParam() {
         {/* Matrix input */}
         <MatrixParam
           size={size}
+          min={0}
+          max={9}
           ALGORITHM_NAME={PRIMS}
           EXAMPLE={PRIMS_EXAMPLE}
           setMessage={setMessage}

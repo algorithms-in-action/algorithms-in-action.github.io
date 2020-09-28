@@ -75,7 +75,10 @@ const algorithms = {
     param: <Param.TCParam />,
     extraInfo: ExtraInfo.TCInfo,
     pseudocode: {
-      search: Pseudocode.transitiveClosure,
+      tc: Pseudocode.transitiveClosure,
+    },
+    controller: {
+      tc: Controller.transitiveClosure,
     },
   },
 };
