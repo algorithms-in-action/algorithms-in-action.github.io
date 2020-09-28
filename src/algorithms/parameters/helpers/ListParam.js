@@ -4,7 +4,7 @@
 import React from 'react';
 import ControlButton from '../../../components/common/ControlButton';
 import '../../../styles/Param.scss';
-import { ReactComponent as RefreshIcon } from '../../../resources/icons/refresh.svg';
+import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
 import {

@@ -1,7 +1,7 @@
 import parse from '../../pseudocode/parse';
 
 export default parse(`
-    \\Code{
+\\Code{
     Main
     BST_Search(t, k)  // return subtree whose root has key k; or
                       // NotFound is no such node is present

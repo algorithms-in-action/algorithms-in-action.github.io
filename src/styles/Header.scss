@@ -9,7 +9,7 @@ a {
   background-color: $headerBg;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
-  height: 50px;
+  height: $headerHeight;
   display: flex;
   flex-basis: auto;
   align-items: center;
