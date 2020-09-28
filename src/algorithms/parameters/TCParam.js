@@ -58,6 +58,8 @@ function TransitiveClosureParam() {
           name="transitiveClosure"
           mode="tc"
           size={size}
+          min={0}
+          max={1}
           ALGORITHM_NAME={TRANSITIVE_CLOSURE}
           EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
           setMessage={setMessage}
