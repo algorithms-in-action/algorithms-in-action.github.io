@@ -126,8 +126,9 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
-            console.log(typeof value);
-            console.log(value);
+            console.log(x+" "+value.toString());
+            // console.log(typeof value);
+            // console.log(value);
             let arr = [];
             if (typeof value === 'object') {
               arr = Object.values(value);
@@ -137,7 +138,7 @@ class GraphRenderer extends Renderer {
             } else {
               arr.push(value);
             }
-            console.log(arr);
+            // console.log(arr);
 
             const data = [];
             for (let i = 0; i < arr.length; i += 1) {

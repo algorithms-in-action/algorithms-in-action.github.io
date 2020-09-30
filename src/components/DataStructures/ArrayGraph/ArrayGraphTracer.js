@@ -289,7 +289,7 @@ class ArrayGraphTracer extends Tracer {
     // If there is a sole node, it centers it.
     if (this.nodes.length === 1) {
       const [node] = this.nodes;
-      node.x = (rect.left + rect.right) / 2;
+      node.x = (rect.left + rect.right) / 2 - 0.5 * rect.width;
       node.y = (rect.top + rect.bottom) / 2;
       return;
     }
@@ -317,8 +317,10 @@ class ArrayGraphTracer extends Tracer {
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
+      console.log("h: "+hGap)
+      // console.log("v: "+vGap)
       marked[node.id] = true;
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap;
       node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
