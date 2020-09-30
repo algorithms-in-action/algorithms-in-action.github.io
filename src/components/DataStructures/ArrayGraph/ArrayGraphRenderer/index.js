@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable arrow-parens */
@@ -15,6 +16,14 @@ import React from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './ArrayGraphRenderer.module.scss';
+
+class Element {
+  constructor(value) {
+    this.value = value;
+    this.patched = false;
+    this.selected = false;
+  }
+}
 
 class GraphRenderer extends Renderer {
   constructor(props) {
@@ -119,16 +128,27 @@ class GraphRenderer extends Renderer {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
             console.log(typeof value);
             console.log(value);
-            let data = [];
+            let arr = [];
             if (typeof value === 'object') {
-              data = Object.values(value);
-              if (data.length === 0) {
-                data.push(' ');
+              arr = Object.values(value);
+              if (arr.length === 0) {
+                arr.push(' ');
               }
             } else {
-              data.push(value);
+              arr.push(value);
             }
-            console.log(data);
+            console.log(arr);
+
+            const data = [];
+            for (let i = 0; i < arr.length; i += 1) {
+              const elem = new Element();
+              if (i === arr.length - 1 && arr[i] !== ' ') {
+                elem.selected = true;
+              }
+              elem.value = arr[i];
+              data.push(elem);
+            }
+
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
@@ -136,7 +156,7 @@ class GraphRenderer extends Renderer {
                   <body xmlns="http://www.w3.org/1999/xhtml">
                     <table className={styles.array_2d}>
                       <tr className={styles.row}>
-                        {data.map(elem => (<td className={styles.col}>{elem}</td>))}
+                        {data.map(elem => (<td className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
                       </tr>
                     </table>
                   </body>
