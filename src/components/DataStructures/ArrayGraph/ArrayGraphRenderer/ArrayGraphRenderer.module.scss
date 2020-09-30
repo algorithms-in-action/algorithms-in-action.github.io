@@ -5,16 +5,43 @@
   align-self: stretch;
 
   .node {
-    .circle {
-      fill: $theme-light;
-      stroke: $color-font;
-      stroke-width: 1;
-    }
-
-    .id {
-      fill: $color-font;
-      alignment-baseline: central;
-      text-anchor: middle;
+    .array_2d {
+      flex-shrink: 0;
+      display: table;
+      border-collapse: collapse;
+    
+      .row {
+        display: table-row;
+        height: 28px;
+    
+        .col {
+          display: table-cell;
+          text-align: center;
+          // background-color: $theme-light;
+          background-color: "#fff";
+          border: 1px solid $theme-light;
+          padding: 0 4px;
+    
+          .value {
+            font-size: 12px;
+            // color: $color-font;
+          }
+    
+          &.selected {
+            background-color: $color-selected;
+          }
+    
+          &.patched {
+            background-color: $color-patched;
+          }
+    
+          &.index {
+            background: none;
+            border: none;
+            color: $theme-light;
+          }
+        }
+      }
     }
 
     .weight {

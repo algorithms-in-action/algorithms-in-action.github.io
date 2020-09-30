@@ -118,15 +118,29 @@ class GraphRenderer extends Renderer {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
             console.log(typeof value);
-            const data = Object.values(value);
+            console.log(value);
+            let data = [];
+            if (typeof value === 'object') {
+              data = Object.values(value);
+              if (data.length === 0) {
+                data.push(' ');
+              }
+            } else {
+              data.push(value);
+            }
+            console.log(data);
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <table>
-                  <tr>
-                    {data.map(elem => (<td>{elem}</td>))}
-                  </tr>
-                </table>
+                <foreignObject width="100%" height="50px" y="0">
+                  <body xmlns="http://www.w3.org/1999/xhtml">
+                    <table className={styles.array_2d}>
+                      <tr className={styles.row}>
+                        {data.map(elem => (<td className={styles.col}>{elem}</td>))}
+                      </tr>
+                    </table>
+                  </body>
+                </foreignObject>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
