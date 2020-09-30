@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */

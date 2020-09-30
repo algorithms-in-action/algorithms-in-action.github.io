@@ -117,11 +117,16 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
+            console.log(typeof value);
+            const data = Object.values(value);
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
-                <text className={styles.id}>{value}</text>
+                <table>
+                  <tr>
+                    {data.map(elem => (<td>{elem}</td>))}
+                  </tr>
+                </table>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
