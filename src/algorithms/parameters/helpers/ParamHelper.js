@@ -66,7 +66,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i,
+      Header: i + 1,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -80,11 +80,26 @@ export const makeColumnArray = (len) => {
  * @return array of object
  */
 export const makeData = (len) => {
+  const rows = [];
+  for (let i = 0; i < len; i += 1) {
+    const row = [];
+    for (let j = 0; j < len; j += 1) {
+      let val = 0; // i === j
+      if (j < i) {
+        val = rows[j][i];
+      } else if (i !== j) {
+        val = getRandomInt(0, 9);
+      }
+      row.push(val);
+    }
+    rows.push(row);
+  }
+
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-      data[`col${j}`] = `${getRandomInt(0, 9)}`;
+      data[`col${j}`] = `${rows[i][j]}`;
     }
     arr.push(data);
   }
