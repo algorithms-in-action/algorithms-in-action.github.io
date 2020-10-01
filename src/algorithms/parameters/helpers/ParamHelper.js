@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import React from 'react';
-import ParamMsg from './ParamMsg';
+import React from "react";
+import ParamMsg from "./ParamMsg";
 
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
@@ -47,12 +47,12 @@ export const successParamMsg = (type) => (
 export const errorParamMsg = (
   type,
   exmaple,
-  reason = `Input for ${type} algorithm is not valid.`,
+  reason = `Input for ${type} algorithm is not valid.`
 ) => (
   <ParamMsg
     logWarning
     logTag={`${type} failure!`}
-    logMsg={`${reason}. ${exmaple || ''}`}
+    logMsg={`${reason}. ${exmaple || ""}`}
   />
 );
 
@@ -79,27 +79,30 @@ export const makeColumnArray = (len) => {
  * @param {number} len size of the matrix
  * @return array of object
  */
-export const makeData = (len, min, max) => {
-    const rows = [];
+export const makeData = (len, min, max, symmetric) => {
+  const rows = [];
+  if (symmetric) {
     for (let i = 0; i < len; i += 1) {
-        const row = [];
-        for (let j = 0; j < len; j += 1) {
-            let val = 0; // i === j
-            if (j < i) {
-                val = rows[j][i];
-            } else if (i !== j) {
-                val = getRandomInt(min, max);
-            }
-            row.push(val);
+      const row = [];
+      for (let j = 0; j < len; j += 1) {
+        let val = 0; // i === j
+        if (j < i) {
+          val = rows[j][i];
+        } else if (i !== j) {
+          val = getRandomInt(min, max);
         }
-        rows.push(row);
+        row.push(val);
+      }
+      rows.push(row);
     }
-    
+  }
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-        data[`col${j}`] = `${rows[i][j]}`;
+      data[`col${j}`] = symmetric
+        ? `${rows[i][j]}`
+        : `${getRandomInt(min, max)}`;
     }
     arr.push(data);
   }

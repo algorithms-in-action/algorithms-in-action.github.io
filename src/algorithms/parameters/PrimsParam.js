@@ -55,9 +55,12 @@ function PrimsParam() {
 
         {/* Matrix input */}
         <MatrixParam
+          name="prim"
+          mode="find"
           size={size}
           min={0}
           max={9}
+          symmetric
           ALGORITHM_NAME={PRIMS}
           EXAMPLE={PRIMS_EXAMPLE}
           setMessage={setMessage}
