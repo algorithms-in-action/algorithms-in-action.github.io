@@ -53,6 +53,9 @@ const algorithms = {
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
     extraInfo: ExtraInfo.PrimsInfo,
+    controller: {
+      find: Controller.prim,
+    },
   },
   'transitiveClosure': {
     name: 'Transitive Closure',
