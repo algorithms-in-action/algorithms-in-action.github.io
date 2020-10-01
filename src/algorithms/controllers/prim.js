@@ -87,7 +87,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer("graph", null, "Graph"),
+        instance: new GraphTracer("graph", null, "Prim"),
         order: 0,
       },
     };
