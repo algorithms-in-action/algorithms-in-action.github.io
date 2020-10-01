@@ -94,8 +94,9 @@ function MatrixParam({
 
     if (matrix.length !== 0) {
       setMessage(successParamMsg(ALGORITHM_NAME));
-      // TODO: run animation here
-      // dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, size, matrix });
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'prim', mode: 'find', size, matrix,
+      });
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
