@@ -65,7 +65,10 @@ const algorithms = {
     param: <Param.PrimsParam />,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
-      search: Pseudocode.prims,
+      find: Pseudocode.prim,
+    },
+    controller: {
+      find: Controller.prim,
     },
   },
   'transitiveClosure': {
