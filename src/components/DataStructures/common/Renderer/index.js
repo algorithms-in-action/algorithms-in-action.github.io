@@ -110,8 +110,7 @@ class Renderer extends React.Component {
     const { className, title } = this.props;
 
     return (
-      <div className={classes(styles.renderer, className)} onMouseDown={this.handleMouseDown}
-           onWheel={this.handleWheel}>
+      <div className={classes(styles.renderer, className)}>
         <Ellipsis className={styles.title}>{title}</Ellipsis>
         {
           this.renderData()
