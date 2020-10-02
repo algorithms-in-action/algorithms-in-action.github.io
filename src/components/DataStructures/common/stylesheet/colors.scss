@@ -9,6 +9,12 @@ $color-selected: #2962ff;
 $color-patched: #c51162;
 $color-highlight: #29d;
 $color-active: #00e676;
+$color-blue: #28b2e9;
+$color-red: #e02108;
+$color-purple: #e26ff1;
+$color-green: #4bb454;
+$color-yellow: #f1f513;
+$color-lightgreen: #39e787;
 
 :export {
   themeDark: $theme-dark;
@@ -22,4 +28,10 @@ $color-active: #00e676;
   colorPatched: $color-patched;
   colorHighlight: $color-highlight;
   colorActive: $color-active;
+  colorBlue: $color-blue;
+  colorRed: $color-red;
+  colorPurple:$color-purple;
+  colorGreen:$color-green;
+  colorYellow:$color-yellow;
+  colorLightGreen:$color-lightgreen;
 }
