@@ -163,12 +163,10 @@ export const GlobalActions = {
     };
   },
 
-  LineExplan: (state, updateLineExplan) => {
-    return {
-      ...state,
-      lineExplanation: updateLineExplan,
-    };
-  },
+  LineExplan: (state, updateLineExplan) => ({
+    ...state,
+    lineExplanation: updateLineExplan,
+  }),
 
 
 };

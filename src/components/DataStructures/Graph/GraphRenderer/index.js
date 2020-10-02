@@ -15,6 +15,22 @@ import React from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
+import { mode } from '../../../Header';
+
+let modename;
+function switchmode(modetype = mode()) {
+  switch (modetype) {
+    case 1:
+      modename = styles.graphgreen;
+      break;
+    case 2:
+      modename = styles.graphblue;
+      break;
+    default:
+      modename = styles.graph;
+  }
+  return modename;
+}
 
 class GraphRenderer extends Renderer {
   constructor(props) {
@@ -66,7 +82,7 @@ class GraphRenderer extends Renderer {
       baseHeight * this.zoom,
     ];
     return (
-      <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
+      <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
           <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
