@@ -17,6 +17,7 @@ $headerBg: #001F39;
 $headerFontCol: #E0E0E0;
 $headerBtnCol: #E7E7E7;
 $headerBtnHgCol: $sigBlue;
+$headerHeight: 40px;
 
 // Left Panel
 $leftCatFontCol: #4D4D4D;
@@ -98,4 +99,21 @@ $codeExpandBtn: $blue;
 	border-radius: $radius;
 	-webkit-border-radius: $radius;
 	-moz-border-radius: $radius;
+}
+
+// @mixin give-height($x, $y) {
+// 	height: -moz-calc($x - $y); /* Firefox */
+// 	height: -webkit-calc($x - $y); /* Chrome, Safari */
+// 	height: calc($x - $y); /* IE9+ and future browsers */
+// }
+
+@mixin calc($property, $expression...) { 
+  #{$property}: -moz-calc(#{$expression}); 
+  #{$property}: -o-calc(#{$expression}); 
+  #{$property}: -webkit-calc(#{$expression}); 
+  #{$property}: calc(#{$expression}); 
+} 
+
+@mixin textPadding {
+  padding: 12px 8px 24px 12px;
 }

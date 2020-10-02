@@ -1,20 +1,30 @@
 import React, { useContext } from 'react';
-import ReactMarkDown from 'react-markdown/with-html';
+import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
-import findBookmark from '../../pseudocode/findBookmark';
-import CodeBlock from '../../markdown/code-block';
+import { GlobalActions } from '../../context/actions';
+import ControlButton from '../common/ControlButton';
+import { ReactComponent as Cancel } from '../../assets/icons/cancel.svg';
 
-function LineExplanation() {
-  const { algorithm } = useContext(GlobalContext);
+function LineExplanation({ explanation }) {
+  const { dispatch } = useContext(GlobalContext);
   return (
     <div className="lineExplanation">
-      <ReactMarkDown
-        source={findBookmark(algorithm.pseudocode, algorithm.bookmark).explanation}
-        escapeHtml={false}
-        renderers={{ code: CodeBlock }}
+      <div className="lEtitle">Explanation</div>
+      <ControlButton
+        icon={<Cancel />}
+        className="greyRoundBtn"
+        id="cancelLineExplainBtn"
+        onClick={() => {
+          dispatch(GlobalActions.LineExplan, '');
+        }}
       />
+      {explanation}
     </div>
   );
 }
+
+LineExplanation.propTypes = {
+  explanation: PropTypes.string.isRequired,
+};
 
 export default LineExplanation;

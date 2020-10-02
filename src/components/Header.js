@@ -3,7 +3,8 @@ import '../styles/Header.scss';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import logo from '../resources/logo.svg';
+// import logo from '../resources/logo.svg';
+import logo from '../assets/logo.svg';
 
 let a = 0;
 

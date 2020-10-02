@@ -1,39 +1,40 @@
 @import './global.scss';
 
-@mixin textPadding {
-  padding: 12px 8px 24px 12px;
-}
 
-.rightPanelButtons {
-  display: flex; 
-  flex-direction: row;
-  justify-content: center;
-  // border-bottom: $borderSize solid $borderCol;
-  height: $codeExplanationButtonHeight;
 
-  button {
-    font-size: $rightBtnFontSize;
-    font-weight: 400;
+#rightcol {
+  height: 100%;
+
+  .rightPanelButtons {
+    height: $codeExplanationButtonHeight;
+  
+    button {
+      font-size: $rightBtnFontSize;
+      font-weight: 400;
+    }
   }
-}
-
-.textAreaContainer {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9em;
-  color: $rightPanelFontCol;
 
   .textArea {
+    font-size: 0.9em;
+    color: $rightPanelFontCol;
+    @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
+
     @include textPadding;
     
   }
 
-  .lineExplanation {
-    border-top: 3px solid $borderCol;
-    @include textPadding;
+  .line-light {
+    font-size: 0.87em;
+    // display:flex;
+    // height: 100%;
+    @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
 
   }
-
+  
 }
+
+
+
+
 
 

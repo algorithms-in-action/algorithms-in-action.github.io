@@ -1,3 +1,5 @@
+@import './global.scss';
+
 $bgColor: #001F39;
 $titleColor: #E0E0E0;
 $buttonColor: #E7E7E7;
@@ -12,7 +14,7 @@ a {
   background-color: $bgColor;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
-  height: 50px;
+  height: $headerHeight;
   display: flex;
   flex-basis: auto;
   align-items: center;
