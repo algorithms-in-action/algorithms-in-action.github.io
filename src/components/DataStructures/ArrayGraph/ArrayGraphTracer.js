@@ -253,10 +253,10 @@ class ArrayGraphTracer extends Tracer {
 
   getRect() {
     const { baseWidth, baseHeight, padding } = this.dimensions;
-    const left = -baseWidth / 2 + padding;
-    const top = -baseHeight / 2 + padding;
-    const right = baseWidth / 2 - padding;
-    const bottom = baseHeight / 2 - padding;
+    const left = -baseWidth + padding;
+    const top = -baseHeight + padding;
+    const right = baseWidth - padding;
+    const bottom = baseHeight - padding;
     const width = right - left;
     const height = bottom - top;
     return { left, top, right, bottom, width, height };

@@ -189,17 +189,22 @@ export default {
       chunker.add(2);
       if (left < right) {
         [p, a] = partition(a, left, right);
-        chunker.add(3, (vis, _a, _left, _p, _right, _parentId) => {
-          const leftArray = _a.slice(_left, _p);
-          const rightArray = _a.slice(_p + 1, _right + 1);
+        const leftArray = a.slice(left, p);
+        const rightArray = a.slice(p + 1, right + 1);
+        chunker.add(3, (vis, _a, _left, _p, _right, _parentId, _leftArray, _rightArray) => {
           console.log(leftArray, rightArray, _parentId);
-          vis.graph.addNode(`${_left}/${_p - 1}`, leftArray);
-          vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);
+          if (_leftArray.length !== 0) {
+            vis.graph.addNode(`${_left}/${_p - 1}`, _leftArray);
+            vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);
+          }
           vis.graph.addNode(`p${_parentId}`, _a[_p]);
           vis.graph.addEdge(_parentId, `p${_parentId}`);
-          vis.graph.addNode(`${_right}/${_p + 1}`, rightArray);
-          vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
-        }, [a, left, p, right, parentId]);
+
+          if (_rightArray.length !== 0) {
+            vis.graph.addNode(`${_right}/${_p + 1}`, _rightArray);
+            vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
+          }
+        }, [a, left, p, right, parentId, leftArray, rightArray]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);

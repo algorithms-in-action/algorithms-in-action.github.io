@@ -77,13 +77,13 @@ class GraphRenderer extends Renderer {
     return (
       <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
-          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.selected)} />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
           </marker>
         </defs>
@@ -126,7 +126,7 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
-            console.log(x+" "+value.toString());
+            // console.log(x+" "+value.toString());
             // console.log(typeof value);
             // console.log(value);
             let arr = [];
@@ -153,7 +153,7 @@ class GraphRenderer extends Renderer {
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <foreignObject width="100%" height="50px" y="0">
+                <foreignObject width="100%" height="50px" x={-(arr.length * 18) / 2} y="-28">
                   <body xmlns="http://www.w3.org/1999/xhtml">
                     <table className={styles.array_2d}>
                       <tr className={styles.row}>
