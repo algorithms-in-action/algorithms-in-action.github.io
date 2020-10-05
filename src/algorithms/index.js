@@ -42,7 +42,7 @@ const algorithms = {
       sort: Pseudocode.quickSort,
     },
     controller: {
-      sort: Controller.heapSort, // TODO: replace quick sort algorithm here
+      sort: Controller.quickSort,
     },
   },
   'heapSort': {

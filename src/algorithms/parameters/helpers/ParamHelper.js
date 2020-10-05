@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import React from "react";
-import ParamMsg from "./ParamMsg";
+import React from 'react';
+import ParamMsg from './ParamMsg';
 
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
@@ -47,12 +47,12 @@ export const successParamMsg = (type) => (
 export const errorParamMsg = (
   type,
   exmaple,
-  reason = `Input for ${type} algorithm is not valid.`
+  reason = `Input for ${type} algorithm is not valid.`,
 ) => (
   <ParamMsg
     logWarning
     logTag={`${type} failure!`}
-    logMsg={`${reason}. ${exmaple || ""}`}
+    logMsg={`${reason}. ${exmaple || ''}`}
   />
 );
 

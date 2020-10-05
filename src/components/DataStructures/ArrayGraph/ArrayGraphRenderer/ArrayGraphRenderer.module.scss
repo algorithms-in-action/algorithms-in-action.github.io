@@ -1,0 +1,125 @@
+@import "../../common/stylesheet/index";
+
+.graph {
+  flex: 1;
+  align-self: stretch;
+
+  .node {
+    .array_2d {
+      flex-shrink: 0;
+      display: table;
+      border-collapse: collapse;
+    
+      .row {
+        display: table-row;
+        height: 28px;
+    
+        .col {
+          display: table-cell;
+          text-align: center;
+          // background-color: $theme-light;
+          background-color: "#fff";
+          border: 1px solid $theme-light;
+          padding: 0 4px;
+    
+          .value {
+            font-size: 12px;
+            // color: $color-font;
+          }
+    
+          &.selected {
+            background-color: $color-selected;
+          }
+    
+          &.patched {
+            background-color: $color-patched;
+          }
+    
+          &.index {
+            background: none;
+            border: none;
+            color: $theme-light;
+          }
+        }
+      }
+    }
+
+    .weight {
+      fill: white;
+      font-weight: bold;
+      alignment-baseline: central;
+      text-anchor: left;
+    }
+
+    &.selected {
+      .circle {
+        fill: $color-selected;
+        stroke: $color-selected;
+      }
+    }
+
+    &.visited {
+      .circle {
+        fill: $color-patched;
+        stroke: $color-patched;
+      }
+    }
+  }
+
+  .edge {
+    .line {
+      stroke: $color-font;
+      stroke-width: 2;
+
+      &.directed {
+        marker-end: url(#markerArrow);
+      }
+    }
+
+    .weight {
+      fill: $color-font;
+      alignment-baseline: baseline;
+      text-anchor: middle;
+    }
+
+    &.selected {
+      .line {
+        stroke: $color-selected;
+
+        &.directed {
+          marker-end: url(#markerArrowSelected);
+        }
+      }
+
+      .weight {
+        fill: $color-selected;
+      }
+    }
+
+    &.visited {
+      .line {
+        stroke: $color-patched;
+
+        &.directed {
+          marker-end: url(#markerArrowVisited);
+        }
+      }
+
+      .weight {
+        fill: $color-patched;
+      }
+    }
+  }
+
+  .arrow {
+    fill: $color-font;
+
+    &.selected {
+      fill: $color-selected;
+    }
+
+    &.visited {
+      fill: $color-patched;
+    }
+  }
+}

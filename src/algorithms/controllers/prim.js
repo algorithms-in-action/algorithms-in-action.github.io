@@ -3,13 +3,13 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
-import GraphTracer from "../../components/DataStructures/Graph/GraphTracer";
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 
 export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer("graph", null, "Prim"),
+        instance: new GraphTracer('graph', null, 'Prim'),
         order: 0,
       },
     };
@@ -41,8 +41,7 @@ export default {
       (vis, array) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
-        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1))
-        );
+        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
       },
       [E]
     );
