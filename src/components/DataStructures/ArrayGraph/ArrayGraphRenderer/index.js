@@ -155,13 +155,15 @@ class GraphRenderer extends Renderer {
                  key={id} transform={`translate(${x},${y})`}>
                 {/* TODO: calculate the height of the array to set y, shouldn't use magic number */}
                 <foreignObject width="100%" height="50px" x={-(arr.length * 18) / 2} y="-13">
-                  <body xmlns="http://www.w3.org/1999/xhtml">
-                    <table className={styles.array_2d}>
+                  {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
+                  <table className={styles.array_2d}>
+                    <tbody>
                       <tr className={styles.row}>
-                        {data.map(elem => (<td className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
+                        {data.map(elem => (<td key={elem.value} className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
                       </tr>
-                    </table>
-                  </body>
+                    </tbody>
+                  </table>
+                  {/* </body> */}
                 </foreignObject>
                 {
                   isWeighted &&
