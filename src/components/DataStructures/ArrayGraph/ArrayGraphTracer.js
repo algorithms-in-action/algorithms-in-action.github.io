@@ -253,10 +253,10 @@ class ArrayGraphTracer extends Tracer {
 
   getRect() {
     const { baseWidth, baseHeight, padding } = this.dimensions;
-    const left = -baseWidth + padding;
-    const top = -baseHeight + padding;
-    const right = baseWidth - padding;
-    const bottom = baseHeight - padding;
+    const left = -baseWidth / 2 + padding;
+    const top = -baseHeight / 2 + padding;
+    const right = baseWidth / 2 - padding;
+    const bottom = baseHeight / 2 - padding;
     const width = right - left;
     const height = bottom - top;
     return { left, top, right, bottom, width, height };
@@ -317,7 +317,7 @@ class ArrayGraphTracer extends Tracer {
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
-      console.log("h: "+hGap)
+      // console.log('h: ' + hGap);
       // console.log("v: "+vGap)
       marked[node.id] = true;
       node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap;
