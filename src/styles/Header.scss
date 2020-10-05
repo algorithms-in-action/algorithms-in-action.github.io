@@ -1,15 +1,20 @@
 @import './global.scss';
 
+$bgColor: #001F39;
+$titleColor: #E0E0E0;
+$buttonColor: #E7E7E7;
+$buttonHighlightColor: #009EE9;
+
 a {
   text-decoration: none;
   color: inherit;
 }
 
 .header {
-  background-color: $headerBg;
+  background-color: $bgColor;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
-  height: 50px;
+  height: $headerHeight;
   display: flex;
   flex-basis: auto;
   align-items: center;
@@ -32,7 +37,7 @@ a {
     }
   
     h1 {
-      color: $headerFontCol;
+      color: $titleColor;
       font-size: 0.8em;
       font-weight: 500;
     }
@@ -46,7 +51,7 @@ a {
     align-self: stretch;
      
     button {
-      color: $headerBtnCol;
+      color: $buttonColor;
       font-size: 0.8em;
       font-weight: 500;
       background-color: Transparent;
@@ -62,8 +67,16 @@ a {
     }
 
     button:hover {
-      border-bottom: 4px solid $headerBtnHgCol;
+      border-bottom: 4px solid $buttonHighlightColor;
     }
 
   }
+
+  .MuiSelect-root{
+    font-family: Arial;
+    color: #E7E7E7;
+    font-size: 0.8em;
+    font-weight: 500;
+    background-color: Transparent;
+  }  
 }

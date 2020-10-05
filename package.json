@@ -18,8 +18,9 @@
     "react-resize-detector": "^5.0.7",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "remark-toc": "^7.0.0",
-    "rfdc": "^1.1.4"
+    "rfdc": "^1.1.4",
+    "react-table": "^7.5.0",
+    "remark-toc": "^7.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -9,13 +9,13 @@ function RightPanel() {
   const buttons = [
     {
       id: 0,
-      label: 'Code',
-      display: <Pseudocode />,
+      label: 'Background',
+      display: <Explanation />,
     },
     {
       id: 1,
-      label: 'Background',
-      display: <Explanation />,
+      label: 'Code',
+      display: <Pseudocode />,
     },
     {
       id: 2,
@@ -33,9 +33,7 @@ function RightPanel() {
   return (
     <>
       <HeaderButton value={buttons} onChange={getBtnState} />
-      <div className="textAreaContainer">
-        {buttons[state].display}
-      </div>
+      {buttons[state].display}
     </>
   );
 }

@@ -3,168 +3,89 @@
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useContext } from 'react';
-import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
-import ControlButton from '../../components/common/ControlButton';
-import ParamMsg from './ParamMsg';
+import { GlobalActions } from '../../context/actions';
+import ListParam from './helpers/ListParam';
+import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import { commaSeparatedNumberListValidCheck, singleNumberValidCheck, genRandNumList } from './ParamHelper';
-import { ReactComponent as RefreshIcon } from '../../resources/icons/refresh.svg';
+import {
+  singleNumberValidCheck,
+  genRandNumList,
+  successParamMsg,
+  errorParamMsg,
+} from './helpers/ParamHelper';
 
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
-const EXCEPTION = 'exception';
+const INSERTION_EXAMPLE = 'Example: 0,1,2,3,4';
+const SEARCH_EXAMPLE = 'Example: 16';
 
 function BSTParam() {
-  const [insertionVal, setInsertionVal] = useState(DEFAULT_NODES);
-  const [searchVal, setSearchVal] = useState(DEFAULT_TARGET);
-  const [logWarning, setLogWarning] = useState(false);
-  const [logTag, setLogTag] = useState('');
-  const [logMsg, setLogMsg] = useState('');
-
   const { algorithm, dispatch } = useContext(GlobalContext);
-  const disabled = algorithm.hasOwnProperty('visualisers') && algorithm.playing;
+  const [message, setMessage] = useState(null);
 
-  const updateParamStatus = (type, val, success) => {
-    if (success) {
-      setLogTag(`${type} success!`);
-      setLogWarning(false);
-      setLogMsg(`Input for ${type} algorithm is valid.`);
-    } else {
-      setLogTag(`${type} failure!`);
-      setLogWarning(true);
+  /**
+   * For BST, since we need to insert nodes before run the search algorithm,
+   * therefore we need some extra check to make sure the tree is not empty.
+   * So we need to implement a new handle function instead of using the default one.
+   */
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const inputValue = e.target[0].value;
 
-      let warningText = '';
-      if (type === EXCEPTION) {
-        warningText = 'Please insert nodes first.';
+    if (singleNumberValidCheck(inputValue)) {
+      const target = parseInt(inputValue, 10);
+      // make sure the tree is not empty
+      if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.graph.instance.isEmpty()) {
+        const visualiser = algorithm.chunker.visualisers;
+        // run search animation
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'binarySearchTree', mode: 'search', visualiser, target,
+        });
+        setMessage(successParamMsg(SEARCH));
       } else {
-        warningText += `Input for ${type} algorithm is not valid. `;
-        if (type === INSERTION) {
-          warningText += 'Example: 0,1,2,3,4';
-        } else {
-          warningText += 'Example: 16';
-        }
+        // when the tree is empty
+        setMessage(errorParamMsg(SEARCH, undefined, 'Please insert nodes first.'));
       }
-
-      setLogMsg(warningText);
-    }
-  };
-
-  // TODO: Need to extract BSTParam, HSParam as a more generalized component
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-
-    const evtName = evt.target[0].name;
-    const evtVal = evt.target[0].value;
-
-    switch (evtName) {
-      case INSERTION:
-        if (commaSeparatedNumberListValidCheck(evtVal)) {
-          setInsertionVal(evtVal.split`,`.map((x) => +x));
-          updateParamStatus(INSERTION, insertionVal, true);
-
-          const nodes = typeof insertionVal === 'string'
-            ? insertionVal.split(',').map((x) => parseInt(x, 10))
-            : insertionVal;
-          // run insertion animation
-          dispatch(GlobalActions.RUN_ALGORITHM, { name: 'binarySearchTree', mode: 'insertion', nodes });
-        } else {
-          updateParamStatus(INSERTION, insertionVal, false);
-        }
-
-        break;
-      case SEARCH:
-        if (singleNumberValidCheck(evtVal)) {
-          setSearchVal(parseInt(evtVal, 10));
-
-          const target = parseInt(searchVal, 10);
-
-          // make sure the tree is not empty
-          if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.graph.instance.isEmpty()) {
-            // run search animation
-            const visualiser = algorithm.chunker.visualisers;
-            dispatch(GlobalActions.RUN_ALGORITHM, {
-              name: 'binarySearchTree', mode: 'search', visualiser, target,
-            });
-            updateParamStatus(SEARCH, searchVal, true);
-          } else {
-            updateParamStatus(EXCEPTION, searchVal, false);
-          }
-        } else {
-          updateParamStatus(SEARCH, searchVal, false);
-        }
-        break;
-      default:
-        break;
+    } else {
+      // when the input cannot be converted to a number
+      setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE));
     }
   };
 
   return (
     <>
       <div className="form">
+        {/* Insert input */}
+        <ListParam
+          name="binarySearchTree"
+          buttonName="Insert"
+          mode="insertion"
+          formClassName="formLeft"
+          DEFAULT_VAL={DEFAULT_NODES}
+          ALGORITHM_NAME={INSERTION}
+          EXAMPLE={INSERTION_EXAMPLE}
+          setMessage={setMessage}
+        />
 
-        <form className="formLeft" onSubmit={handleSubmit}>
-          <div className="outerInput">
-            <label className="inputText">
-              <input
-                name={INSERTION}
-                type="text"
-                value={insertionVal}
-                data-testid="insertionText"
-                onChange={(e) => setInsertionVal(e.target.value)}
-              />
-            </label>
-            <div className="btnGrp">
-              <ControlButton
-                icon={<RefreshIcon />}
-                className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
-                id={INSERTION}
-                disabled={disabled}
-                onClick={() => {
-                  const list = genRandNumList(10, 1, 100);
-                  setInsertionVal(list);
-                }}
-              />
-              <ControlButton
-                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
-                type="submit"
-                disabled={disabled}
-              >
-                Insert
-              </ControlButton>
-            </div>
-          </div>
-        </form>
-
-        <form className="formRight" onSubmit={handleSubmit}>
-          <div className="outerInput">
-            <label className="inputText">
-              <input
-                name={SEARCH}
-                type="text"
-                value={searchVal}
-                data-testid="insertionText"
-                onChange={(e) => setSearchVal(e.target.value)}
-              />
-            </label>
-            <div className="btnGrp">
-              <ControlButton
-                className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
-                type="submit"
-                disabled={disabled}
-              >
-                Search
-              </ControlButton>
-            </div>
-          </div>
-        </form>
+        {/* Search input */}
+        <SingleValueParam
+          name="binarySearchTree"
+          buttonName="Search"
+          mode="search"
+          formClassName="formRight"
+          DEFAULT_VAL={DEFAULT_TARGET}
+          ALGORITHM_NAME={SEARCH}
+          EXAMPLE={SEARCH_EXAMPLE}
+          handleSubmit={handleSearch}
+          setMessage={setMessage}
+        />
       </div>
 
-      {logMsg
-        ? <ParamMsg logWarning={logWarning} logTag={logTag} logMsg={logMsg} />
-        : ''}
+      {/* render success/error message */}
+      {message}
     </>
   );
 }

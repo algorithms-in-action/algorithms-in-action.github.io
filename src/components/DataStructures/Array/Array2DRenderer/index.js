@@ -34,7 +34,7 @@ class Array2DRenderer extends Renderer {
 
   renderData() {
     const { data } = this.props.data;
-    console.log(data);
+    // console.log(data);
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
