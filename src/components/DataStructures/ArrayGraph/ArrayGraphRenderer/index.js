@@ -77,13 +77,13 @@ class GraphRenderer extends Renderer {
     return (
       <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
-          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
+          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
+          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.selected)} />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="11" refY="2" orient="auto">
+          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
           </marker>
         </defs>
