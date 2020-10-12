@@ -84,6 +84,7 @@ class GraphRenderer extends Renderer {
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
+    const arrayBottom = -28;
     return (
       <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -160,7 +161,7 @@ class GraphRenderer extends Renderer {
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y="-28">
+                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayBottom}>
                   {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
                   <table className={styles.array_2d}>
                     <tbody>
