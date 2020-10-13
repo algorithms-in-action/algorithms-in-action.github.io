@@ -1,8 +1,7 @@
 import React from 'react';
-import '../styles/Header.scss';
-import { Dropdown } from 'semantic-ui-react';
-import logo from '../assets/logo.svg';
-
+import '../../styles/Header.scss';
+// import { Dropdown } from 'semantic-ui-react';
+import logo from '../../assets/logo.svg';
 
 function Header() {
   // const [fontSizing, setFontSizing] = React.useState('');
@@ -45,6 +44,25 @@ function Header() {
   //   }
   // }, [fontSizing]);
 
+  /* <Dropdown text="Setting" pointing className="link item">
+  <Dropdown.Menu>
+    <Dropdown.Item>
+      <Dropdown
+        text="Text Size"
+        direction="left"
+      >
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => setFontSizing(80)}>80%</Dropdown.Item>
+          <Dropdown.Item onClick={() => setFontSizing(100)}>100%</Dropdown.Item>
+          <Dropdown.Item onClick={() => setFontSizing(150)}>150%</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown>
+*/
+
+
   return (
     <div className="header">
       <div className="headerTitle">
@@ -53,28 +71,14 @@ function Header() {
       </div>
       <div className="navButton">
         <button type="button">
-          <Dropdown text="Setting" pointing className="link item">
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <Dropdown
-                  text="Text Size"
-                  direction="left"
-                >
-                  <Dropdown.Menu>
-                    {/* <Dropdown.Item onClick={() => setFontSizing(80)}>80%</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setFontSizing(100)}>100%</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setFontSizing(150)}>150%</Dropdown.Item> */}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          About
         </button>
         <button type="button">
-          Contribute
+          Settings
         </button>
-
       </div>
+
+
     </div>
   );
 }

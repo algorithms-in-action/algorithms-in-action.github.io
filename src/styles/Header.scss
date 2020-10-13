@@ -5,6 +5,8 @@ a {
   color: inherit;
 }
 
+
+
 .header {
   background-color: $headerBg;
   font-family: Roboto, 'sans-serif';
@@ -20,21 +22,22 @@ a {
   .headerTitle {
     display: flex;
     flex-direction: row;
-    margin-left: 30px;
+    margin-left: $headerOffset;
     justify-content: space-between;
     cursor: pointer;
     align-items: center;
 
     img {
       margin-right: 8px; 
-      width: 36px;
-      height: 36px;
+      width: 1.2em;
+      height: 1.2em;
     }
   
     h1 {
       color: $headerFontCol;
-      font-size: 0.8em;
-      font-weight: 500;
+      font-size: 0.72em;
+      font-weight: 600;
+      text-transform: uppercase;
     }
 
   }
@@ -42,13 +45,13 @@ a {
   .navButton {
     display:flex;
     justify-content: space-between;
-    margin-right: 30px;
+    margin-right: $headerOffset;
     align-self: stretch;
      
     button {
       color: $headerBtnCol;
-      font-size: 0.8em;
-      font-weight: 500;
+      font-size: 0.69em;
+      font-weight: 600;
       background-color: Transparent;
       background-repeat: no-repeat;
       border: none;
@@ -59,16 +62,18 @@ a {
       padding-top: 4px;
       border-bottom: 4px solid transparent;
       margin-left: 16px;
+      text-transform: uppercase;
     }
 
     button:hover {
       border-bottom: 4px solid $headerBtnHgCol;
+      // background-color: #1d71d0;
     }
 
   }
 
   .MuiSelect-root{
-    font-family: Arial;
+    // font-family: Arial;
     color: #E7E7E7;
     font-size: 0.8em;
     font-weight: 500;

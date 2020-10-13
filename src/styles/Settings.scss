@@ -1,0 +1,101 @@
+@import './global.scss';
+
+.settingsContainer {
+  // Position
+  position: absolute;
+  display: block;
+  z-index: 10;
+  right: $headerOffset/2;
+  top: $headerHeight + $headerOffset;
+  
+  // Dimension
+  max-height: calc(100vh - 62px - 100px);
+  width: 250px;
+
+  // Styling
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #FFFFFF;
+  border: 1px solid #ccc;
+  border-color: $borderCol;
+  @include border-radius(4px);
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.1));
+  padding: 16px;
+  font-size: 0.95em;
+}
+
+.fontSize {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid $borderCol;
+  $btnRad: 8px;
+
+  .fontBtn {
+    @include removeBtnStyling;
+    cursor: pointer;
+    flex: 1;
+    padding: 6px 0;
+    background-color: rgb(237, 237, 237);
+
+    svg {
+      path {
+        fill: #5b5b5b;
+      }
+    }
+
+  }
+
+  .fontBtn:active {
+    background-color: rgb(220, 220, 220);
+
+  }
+
+
+  .small {
+
+    svg {
+      height: 1.1em;
+      width: 1.1em;
+    }
+  }
+
+
+  .big {
+    svg {
+      height: 1.3em;
+      width: 1.3em;
+    }
+  }
+
+  .label {
+
+  }
+
+}
+
+$colBtnSize: 48px;
+
+.algoCol {
+  background-color: orange;
+  display: grid;
+  grid-template-columns: repeat(4, $colBtnSize);
+  grid-gap: 12px;
+  grid-auto-rows: minmax($colBtnSize, auto);
+
+  .colorBtn {
+    @include removeBtnStyling;
+    display:block;
+    // height: 15px;
+    // width: 15px;
+    @include border-radius(50%);
+    border: 1px solid red;
+    background: red;
+    cursor: pointer;
+
+  }
+
+
+
+}

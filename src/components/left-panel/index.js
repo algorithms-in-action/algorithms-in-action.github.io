@@ -50,7 +50,7 @@ function LeftPanel() {
     root: {
       backgroundColor: 'white',
       '&.Mui-selected': {
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#ECECEC',
       },
     },
   })(ListItem);

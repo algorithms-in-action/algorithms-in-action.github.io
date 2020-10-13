@@ -4,6 +4,8 @@
 
 #rightcol {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .rightPanelButtons {
     height: $codeExplanationButtonHeight;
@@ -17,7 +19,10 @@
   .textArea {
     font-size: 0.9em;
     color: $rightPanelFontCol;
-    @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
+    // @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
+    // flex: 1;
+    overflow-y: scroll;
+    height: 100%;
 
     @include textPadding;
     
@@ -25,9 +30,11 @@
 
   .line-light {
     font-size: 0.87em;
+    overflow: scroll;
+
     // display:flex;
-    // height: 100%;
-    @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
+    height: 100%;
+    // @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
 
   }
   

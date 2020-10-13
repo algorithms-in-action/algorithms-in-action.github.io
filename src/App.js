@@ -2,16 +2,18 @@
 import React, { useEffect } from 'react';
 import './styles/App.scss';
 // import 'semantic-ui-css/semantic.min.css';
-import Header from './components/Header';
+import Header from './components/top/Header';
 import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';
 import LeftPanel from './components/left-panel';
 import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
+import Settings from './components/top/Settings';
 import {
   resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
 
+import useComponentVisible from './components/top/helper';
 
 function App() {
   useEffect(() => {
@@ -30,14 +32,30 @@ function App() {
     }
   });
 
+  const {
+    ref,
+    isComponentVisible,
+    setIsComponentVisible,
+  } = useComponentVisible(true);
+
+  const onSetting = () => {
+    if (isComponentVisible) {
+      setIsComponentVisible(false);
+    } else {
+      setIsComponentVisible(true);
+    }
+  };
 
   return (
 
-    <GlobalProvider>
+    <GlobalProvider ref={ref}>
+      { isComponentVisible ? <Settings /> : ''}
+
       <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
         <div id="header">
-          <Header />
+          <Header onSetting={onSetting} />
         </div>
+
         <div id="leftcol">
           <LeftPanel />
         </div>
