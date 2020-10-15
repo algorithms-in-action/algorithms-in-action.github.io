@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/Header.scss';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -54,6 +55,9 @@ function Header() {
               <MenuItem value="blue">Blue</MenuItem>
             </Select>
           </FormControl>
+        </button>
+        <button type="button">
+          <Link to="/about">About</Link>
         </button>
       </div>
     </div>

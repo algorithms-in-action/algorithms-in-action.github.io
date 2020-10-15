@@ -19,15 +19,33 @@ function App() {
     return (_) => { window.removeEventListener('resize', resizeWindow); };
   });
 
+  // addEvent(document, 'mouseout', (e) => {
+  //   // e = e || window.event;
+  //   const from = e.relatedTarget || e.toElement;
+  //   if (!from || from.nodeName === 'HTML') {
+  //     // End dragging when mouse out of html
+  //     endDrag();
+  //   }
+  // });
 
-  addEvent(document, 'mouseout', (e) => {
-    // e = e || window.event;
-    const from = e.relatedTarget || e.toElement;
-    if (!from || from.nodeName === 'HTML') {
-      // End dragging when mouse out of html
-      endDrag();
-    }
-  });
+  // add mouseout event listener to 'document' when App first mount
+  useEffect(() => {
+    const mouseOutCallback = (e) => {
+      // e = e || window.event;
+      const from = e.relatedTarget || e.toElement;
+      if (!from || from.nodeName === 'HTML') {
+        // End dragging when mouse out of html
+        endDrag();
+      }
+    };
+
+    addEvent(document, 'mouseout', mouseOutCallback);
+
+    // do not forget to remove event listener when the App component unmount
+    return () => {
+      document.removeEventListener('mouseout', mouseOutCallback);
+    };
+  }, []);
 
 
   return (
