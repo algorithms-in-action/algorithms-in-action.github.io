@@ -1,0 +1,38 @@
+@import './global.scss';
+
+.aboutContainer {
+  margin: 48px 20%;
+
+  .heading {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .bodyText {
+    margin-bottom: 12px;
+  }
+
+  .projectContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    margin-bottom: 48px;
+  }
+
+  .teamMembers {
+    margin-top: 48px;
+
+    .teamCard {
+      height: 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      a {
+        margin-top: 12px;
+      }
+    }
+  }
+}

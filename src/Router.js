@@ -9,6 +9,7 @@ function Router() {
       <Switch>
         <Route exact path="/" component={App} />
         <Route path="/about" component={About} />
+        <Route component={App} />
       </Switch>
     </BrowserRouter>
   );
