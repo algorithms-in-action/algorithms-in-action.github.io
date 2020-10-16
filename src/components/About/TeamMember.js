@@ -6,7 +6,7 @@ import {
   Link,
   Grid,
 } from '@material-ui/core';
-import '../styles/About.scss';
+import '../../styles/About.scss';
 
 const TeamMember = ({ name, link }) => {
   return (

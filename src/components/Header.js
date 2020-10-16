@@ -27,6 +27,11 @@ function Header() {
     history.push('/');
   };
 
+  // goes to about page
+  const handleAboutClick = () => {
+    history.push('/about');
+  };
+
   switch (modeType) {
     case 'green':
       a = 1;
@@ -64,8 +69,8 @@ function Header() {
             </Select>
           </FormControl>
         </button>
-        <button type="button">
-          <Link to="/about">About</Link>
+        <button type="button" onClick={handleAboutClick}>
+          About
         </button>
       </div>
     </div>
