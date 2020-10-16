@@ -40,7 +40,7 @@ function App() {
 
   // ref={ref}
   const onSetting = () => {
-    console.log(isComponentVisible);
+    // console.log(isComponentVisible);
     if (isComponentVisible) {
       setIsComponentVisible(false);
     } else {
