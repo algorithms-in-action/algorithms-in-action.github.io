@@ -9,6 +9,9 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import '../../styles/About.scss';
 
+/**
+ * Team member card that contains photo, name and social media
+ */
 const TeamMember = ({
   name, photo, github, linkedIn,
 }) => {
@@ -17,7 +20,7 @@ const TeamMember = ({
   return (
     <Grid item xs={6} sm={4} md={3}>
       <div className="teamCard">
-        <img className="photo" src={photo} alt="team member" />
+        <img className="photo" src={photo} alt={name} />
         <div className="memberDescription">
           <h4>{name}</h4>
           <div className="icons">

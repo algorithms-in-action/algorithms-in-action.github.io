@@ -3,14 +3,14 @@
 /**
  * This file is used to store the content/description shown
  * on the About page.
- * 
+ */
+
+/**
  * How to use:
  * Each object represents a section on the About page.
  * 'heading' is the heading for the section,
  * 'paragraph' array stores paragraphs you want to show
- * 
- */
-
+*/
 export const content = {
   projectDescription: {
     heading: 'About the Project',
@@ -42,6 +42,11 @@ export const content = {
   },
 };
 
+/**
+ * How to use:
+ * Each object contains the information of a team member
+ * 
+ */
 export const team = [
   {
     name: 'Zihan Zhang',
