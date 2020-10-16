@@ -38,6 +38,8 @@
     flex: 1;
     padding: 6px 0;
     background-color: rgb(237, 237, 237);
+    display: flex;
+    justify-content: center;
 
     svg {
       path {
@@ -75,27 +77,68 @@
 
 }
 
-$colBtnSize: 48px;
+$btnSize: 48px;
+$outerBorder: 2px;
 
 .algoCol {
-  background-color: orange;
   display: grid;
-  grid-template-columns: repeat(4, $colBtnSize);
+  grid-template-columns: repeat(4, $btnSize);
   grid-gap: 12px;
-  grid-auto-rows: minmax($colBtnSize, auto);
+  grid-auto-rows: minmax($btnSize, auto);
+  justify-content: center;
+  align-content: center;
 
   .colorBtn {
     @include removeBtnStyling;
-    display:block;
-    // height: 15px;
-    // width: 15px;
+    border: $outerBorder solid $white;
+    display:flex;
     @include border-radius(50%);
-    border: 1px solid red;
-    background: red;
     cursor: pointer;
+    padding: $outerBorder;
+    height: $btnSize;
+    width: $btnSize;
+
+    .left {
+      @include border-radii($btnSize,0,0,$btnSize);
+      height: $btnSize - ($outerBorder * 4);
+      width: $btnSize /2 - ($outerBorder * 2);
+    }
+
+    .right {
+      height: $btnSize - ($outerBorder * 4);
+      width: $btnSize /2 - ($outerBorder * 2);
+      @include border-radii(0,$btnSize,$btnSize,0);
+
+    }
 
   }
 
+  .active {
+    border: $outerBorder solid $sigBlue;
+  }
 
+  .red {
+    background: #a4092d;
+  }
+
+  .yellow {
+    background: #f7f715;
+  }
+
+  .green {
+    background: #00881b;
+  }
+
+  .blue {
+    background: #0e469a;
+  }
+
+  .black {
+    background: #5b5b5b;
+  }
+
+  .white {
+    background: #cecece;
+  }
 
 }

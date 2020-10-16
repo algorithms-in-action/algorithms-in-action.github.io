@@ -33,12 +33,14 @@ function App() {
   });
 
   const {
-    ref,
+    // ref,
     isComponentVisible,
     setIsComponentVisible,
   } = useComponentVisible(true);
 
+  // ref={ref}
   const onSetting = () => {
+    console.log(isComponentVisible);
     if (isComponentVisible) {
       setIsComponentVisible(false);
     } else {
@@ -48,7 +50,7 @@ function App() {
 
   return (
 
-    <GlobalProvider ref={ref}>
+    <GlobalProvider>
       { isComponentVisible ? <Settings /> : ''}
 
       <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>

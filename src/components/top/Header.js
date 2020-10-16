@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/Header.scss';
 // import { Dropdown } from 'semantic-ui-react';
 import logo from '../../assets/logo.svg';
 
-function Header() {
+function Header({ onSetting }) {
   // const [fontSizing, setFontSizing] = React.useState('');
   // useEffect(() => {
   //   // Update the document title using the browser API
@@ -73,7 +74,7 @@ function Header() {
         <button type="button">
           About
         </button>
-        <button type="button">
+        <button type="button" onClick={onSetting}>
           Settings
         </button>
       </div>
@@ -84,3 +85,7 @@ function Header() {
 }
 
 export default Header;
+
+Header.propTypes = {
+  onSetting: PropTypes.func.isRequired,
+};
