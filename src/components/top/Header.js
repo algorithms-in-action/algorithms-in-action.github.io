@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import '../../styles/Header.scss';
 import logo from '../../assets/logo.svg';
 
-
 function Header({ onSetting }) {
   return (
     <div className="header">

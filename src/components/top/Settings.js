@@ -7,7 +7,10 @@ import { ReactComponent as Font } from '../../assets/icons/font.svg';
 // import { increaseFontSize } from './helper';
 
 const DEFAULT_COL = 0;
-const mode = 0;
+
+const mode = () => DEFAULT_COL;
+
+
 function Settings({ onFontIncrease }) {
   const allColBtn = [
     {
