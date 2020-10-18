@@ -14,7 +14,6 @@ function LineExplanation({ explanation, fontSize, fontSizeIncrement }) {
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Line Explanation Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [fontSizeIncrement, fontSize]);
 
   return (

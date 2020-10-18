@@ -62,7 +62,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Left Panel Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [algorithm.explanation, fontSize, fontSizeIncrement]);
 
 

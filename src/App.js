@@ -14,7 +14,10 @@ import {
 
 import useComponentVisible from './components/top/helper';
 
-const DEFAULT_FONT = 0;
+const DEFAULT_FONT_INCREMENT = 0;
+const LEFT_FONT_SIZE = 14;
+const MID_FONT_SIZE = 15;
+const RIGHT_FONT_SIZE = 15;
 
 function App() {
   useEffect(() => {
@@ -49,18 +52,9 @@ function App() {
     }
   };
 
-  const [fontSizeIncrease, setFontSizeIncrease] = useState(DEFAULT_FONT);
-
+  const [fontSizeIncrease, setFontSizeIncrease] = useState(DEFAULT_FONT_INCREMENT);
   const onFontIncrease = (val) => {
-    // setFontSizeIncrease(fontSizeIncrease + val);
-    // increaseFontSize('itemListContainer', 1); // Left panel
-    // increaseFontSize('algorithmTitle', 1); // Mid Title
-    // // increaseFontSize('lineExplanation', 1); // Right panel (line Explanation)
-    // // increaseFontSize('pseudocodeContainer', 1); // Right panel (Pseudocode)
-    // // increaseFontSize('textAreaExplanation', 1); // Right panel (Explanation)
-    // // increaseFontSize('textAreaExtra', 1); // Right panel (Extra Info)
     setFontSizeIncrease(fontSizeIncrease + val);
-    console.log(val);
   };
 
   return (
@@ -74,19 +68,19 @@ function App() {
         </div>
 
         <div id="leftcol">
-          <LeftPanel fontSize={14} fontSizeIncrement={fontSizeIncrease} />
+          <LeftPanel fontSize={LEFT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onDoubleClick={collapseLeftDrag} onMouseDown={startLeftDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="tabpages">
-          <MidPanel fontSize={15} fontSizeIncrement={fontSizeIncrease} />
+          <MidPanel fontSize={MID_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onDoubleClick={collapseRightDrag} onMouseDown={startRightDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="rightcol">
-          <RightPanel fontSize={15} fontSizeIncrement={fontSizeIncrease} />
+          <RightPanel fontSize={RIGHT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onDoubleClick={collapseBottomDrag} onMouseDown={startBottomDrag} role="button">
           <div id="draghandle" />

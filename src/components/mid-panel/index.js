@@ -12,7 +12,6 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Mid Panel Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [fontSize, fontSizeIncrement]);
 
 

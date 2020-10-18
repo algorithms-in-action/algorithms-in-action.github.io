@@ -169,7 +169,6 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Pseudocode Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [fontSizeIncrement, fontSize]);
 
   return (

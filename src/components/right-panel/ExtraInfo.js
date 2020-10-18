@@ -19,7 +19,6 @@ function MoreInfo({ fontSize, fontSizeIncrement }) {
     fetch(algorithm.extraInfo).then((res) => res.text()).then((text) => setExplanation(text));
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Extra Info Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [algorithm.extraInfo, fontSize, fontSizeIncrement]);
 
   return (

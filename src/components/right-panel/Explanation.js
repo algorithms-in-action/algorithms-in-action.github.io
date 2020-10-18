@@ -19,7 +19,6 @@ function Explanation({ fontSize, fontSizeIncrement }) {
     fetch(algorithm.explanation).then((res) => res.text()).then((text) => setExplanation(text));
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-    console.log(`Explanation Font Size: ${fontSizeIncrement}, Increment by ${fontSizeIncrement}`);
   }, [algorithm.explanation, fontSizeIncrement, fontSize]);
 
 
