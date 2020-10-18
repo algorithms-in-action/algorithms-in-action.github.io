@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
@@ -13,11 +14,11 @@
 /* eslint-disable prefer-template */
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
-import GraphRenderer from './GraphRenderer/index';
+import ArrayGraphRenderer from './ArrayGraphRenderer/index';
 
-class GraphTracer extends Tracer {
+class ArrayGraphTracer extends Tracer {
   getRendererClass() {
-    return GraphRenderer;
+    return ArrayGraphRenderer;
   }
 
   init() {
@@ -33,7 +34,7 @@ class GraphTracer extends Tracer {
     };
     this.isDirected = true;
     this.isWeighted = false;
-    this.callLayout = { method: this.layoutCircle, args: [] };
+    this.callLayout = { method: this.layoutArray, args: [] };
     this.logTracer = null;
   }
 
@@ -266,8 +267,8 @@ class GraphTracer extends Tracer {
     method.apply(this, args);
   }
 
-  layoutCircle() {
-    this.callLayout = { method: this.layoutCircle, args: arguments };
+  layoutArray() {
+    this.callLayout = { method: this.layoutArray, args: arguments };
     const rect = this.getRect();
     const unitAngle = 2 * Math.PI / this.nodes.length;
     let angle = -Math.PI / 2;
@@ -288,7 +289,7 @@ class GraphTracer extends Tracer {
     // If there is a sole node, it centers it.
     if (this.nodes.length === 1) {
       const [node] = this.nodes;
-      node.x = (rect.left + rect.right) / 2;
+      node.x = (rect.left + rect.right) / 2 - 0.5 * rect.width;
       node.y = (rect.top + rect.bottom) / 2;
       return;
     }
@@ -316,8 +317,10 @@ class GraphTracer extends Tracer {
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
+      // console.log('h: ' + hGap);
+      // console.log("v: "+vGap)
       marked[node.id] = true;
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap;
       node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
@@ -386,4 +389,4 @@ class GraphTracer extends Tracer {
   }
 }
 
-export default GraphTracer;
+export default ArrayGraphTracer;

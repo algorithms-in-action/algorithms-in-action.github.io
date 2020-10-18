@@ -42,7 +42,7 @@ const algorithms = {
       sort: Pseudocode.quickSort,
     },
     controller: {
-      sort: Controller.heapSort, // TODO: replace quick sort algorithm here
+      sort: Controller.quickSort,
     },
   },
   'heapSort': {
@@ -65,7 +65,10 @@ const algorithms = {
     param: <Param.PrimsParam />,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
-      search: Pseudocode.prims,
+      find: Pseudocode.prim,
+    },
+    controller: {
+      find: Controller.prim,
     },
   },
   'transitiveClosure': {

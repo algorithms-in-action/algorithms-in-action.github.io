@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
-// import 'semantic-ui-css/semantic.min.css';
 import Header from './components/top/Header';
 import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';
@@ -14,6 +13,8 @@ import {
 } from './BorderResize';
 
 import useComponentVisible from './components/top/helper';
+
+const DEFAULT_FONT = 0;
 
 function App() {
   useEffect(() => {
@@ -48,10 +49,24 @@ function App() {
     }
   };
 
+  const [fontSizeIncrease, setFontSizeIncrease] = useState(DEFAULT_FONT);
+
+  const onFontIncrease = (val) => {
+    // setFontSizeIncrease(fontSizeIncrease + val);
+    // increaseFontSize('itemListContainer', 1); // Left panel
+    // increaseFontSize('algorithmTitle', 1); // Mid Title
+    // // increaseFontSize('lineExplanation', 1); // Right panel (line Explanation)
+    // // increaseFontSize('pseudocodeContainer', 1); // Right panel (Pseudocode)
+    // // increaseFontSize('textAreaExplanation', 1); // Right panel (Explanation)
+    // // increaseFontSize('textAreaExtra', 1); // Right panel (Extra Info)
+    setFontSizeIncrease(fontSizeIncrease + val);
+    console.log(val);
+  };
+
   return (
 
     <GlobalProvider>
-      { isComponentVisible ? <Settings /> : ''}
+      { isComponentVisible ? <Settings onFontIncrease={onFontIncrease} /> : ''}
 
       <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
         <div id="header">
@@ -59,19 +74,19 @@ function App() {
         </div>
 
         <div id="leftcol">
-          <LeftPanel />
+          <LeftPanel fontSize={14} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onDoubleClick={collapseLeftDrag} onMouseDown={startLeftDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="tabpages">
-          <MidPanel />
+          <MidPanel fontSize={15} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onDoubleClick={collapseRightDrag} onMouseDown={startRightDrag} role="button">
           <div id="draghandle" />
         </div>
         <div id="rightcol">
-          <RightPanel />
+          <RightPanel fontSize={15} fontSizeIncrement={fontSizeIncrease} />
         </div>
         <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onDoubleClick={collapseBottomDrag} onMouseDown={startBottomDrag} role="button">
           <div id="draghandle" />

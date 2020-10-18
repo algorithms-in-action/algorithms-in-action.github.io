@@ -66,7 +66,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i,
+      Header: i + 1,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -79,12 +79,30 @@ export const makeColumnArray = (len) => {
  * @param {number} len size of the matrix
  * @return array of object
  */
-export const makeData = (len, min, max) => {
+export const makeData = (len, min, max, symmetric) => {
+  const rows = [];
+  if (symmetric) {
+    for (let i = 0; i < len; i += 1) {
+      const row = [];
+      for (let j = 0; j < len; j += 1) {
+        let val = 0; // i === j
+        if (j < i) {
+          val = rows[j][i];
+        } else if (i !== j) {
+          val = getRandomInt(min, max);
+        }
+        row.push(val);
+      }
+      rows.push(row);
+    }
+  }
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-      data[`col${j}`] = `${getRandomInt(min, max)}`;
+      data[`col${j}`] = symmetric
+        ? `${rows[i][j]}`
+        : `${getRandomInt(min, max)}`;
     }
     arr.push(data);
   }

@@ -19,3 +19,37 @@ export default function useComponentVisible(initialIsVisible) {
 
   return { ref, isComponentVisible, setIsComponentVisible };
 }
+
+// Returns true if it is a DOM node
+function isNode(o) {
+  return (
+    typeof Node === 'object' ? o instanceof Node
+      : o && typeof o === 'object' && typeof o.nodeType === 'number' && typeof o.nodeName === 'string'
+  );
+}
+
+// Returns true if it is a DOM element
+function isElement(o) {
+  return (
+    typeof HTMLElement === 'object' ? o instanceof HTMLElement // DOM2
+      : o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
+  );
+}
+
+export function increaseFontSize(id, increaseFactor) {
+  const txt = document.getElementById(id);
+  if (isElement(txt) || isNode(txt)) {
+    const style = window.getComputedStyle(txt, null).getPropertyValue('font-size');
+    const currentSize = parseFloat(style);
+    txt.style.fontSize = `${currentSize + increaseFactor}px`;
+  }
+}
+
+export function setFontSize(id, fontSize) {
+  const txt = document.getElementById(id);
+  if (isElement(txt) || isNode(txt)) {
+    // const style = window.getComputedStyle(txt, null).getPropertyValue('font-size');
+    // const currentSize = parseFloat(style);
+    txt.style.fontSize = `${fontSize}px`;
+  }
+}

@@ -1,3 +1,4 @@
+const clone = require('rfdc')();
 /*
 A chunk is a delta from one state of animation to the next. It consists primarily of
 a function that, when applied, mutates one state into the next.
@@ -13,7 +14,9 @@ function defer(f, v) {
   if (!f) {
     return () => undefined;
   }
-  return (visualisers) => f(visualisers, ...args);
+  return (visualisers) => {
+    f(visualisers, ...args);
+  };
 }
 
 export default class {
@@ -28,7 +31,7 @@ export default class {
   add(bookmark, func, values) {
     this.chunks.push({
       bookmark: String(bookmark),
-      mutator: defer(func, values),
+      mutator: defer(func, clone(values)),
     });
   }
 

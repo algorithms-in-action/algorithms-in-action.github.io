@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable arrow-parens */
@@ -14,22 +15,14 @@
 import React from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
-import styles from './GraphRenderer.module.scss';
-import { mode } from '../../../top/Settings';
+import styles from './ArrayGraphRenderer.module.scss';
 
-let modename;
-function switchmode(modetype = mode()) {
-  switch (modetype) {
-    case 1:
-      modename = styles.graphgreen;
-      break;
-    case 2:
-      modename = styles.graphblue;
-      break;
-    default:
-      modename = styles.graph;
+class Element {
+  constructor(value) {
+    this.value = value;
+    this.patched = false;
+    this.selected = false;
   }
-  return modename;
 }
 
 class GraphRenderer extends Renderer {
@@ -82,7 +75,7 @@ class GraphRenderer extends Renderer {
       baseHeight * this.zoom,
     ];
     return (
-      <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
+      <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
           <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
@@ -133,11 +126,45 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
+            // console.log(x+" "+value.toString());
+            // console.log(typeof value);
+            // console.log(value);
+            let arr = [];
+            if (typeof value === 'object') {
+              arr = Object.values(value);
+              if (arr.length === 0) {
+                arr.push(' ');
+              }
+            } else {
+              arr.push(value);
+            }
+            // console.log(arr);
+
+            const data = [];
+            for (let i = 0; i < arr.length; i += 1) {
+              const elem = new Element();
+              if (i === arr.length - 1 && arr[i] !== ' ') {
+                elem.selected = true;
+              }
+              elem.value = arr[i];
+              data.push(elem);
+            }
+
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
-                <text className={styles.id}>{value}</text>
+                {/* TODO: calculate the height of the array to set y, shouldn't use magic number */}
+                <foreignObject width="100%" height="50px" x={-(arr.length * 18) / 2} y="-13">
+                  {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
+                  <table className={styles.array_2d}>
+                    <tbody>
+                      <tr className={styles.row}>
+                        {data.map(elem => (<td key={elem.value} className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
+                      </tr>
+                    </tbody>
+                  </table>
+                  {/* </body> */}
+                </foreignObject>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>

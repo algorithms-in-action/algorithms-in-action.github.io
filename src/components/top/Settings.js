@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import '../../styles/Settings.scss';
 // import { ReactComponent as Add } from '../../assets/icons/add.svg';
 // import { ReactComponent as Minus } from '../../assets/icons/minus.svg';
+import PropTypes from 'prop-types';
 import { ReactComponent as Font } from '../../assets/icons/font.svg';
+// import { increaseFontSize } from './helper';
 
-const DEFAULT_FONT = 12;
 const DEFAULT_COL = 0;
-
-function Settings() {
-  const [fontSize, setFontSize] = useState(DEFAULT_FONT);
+const mode = 0;
+function Settings({ onFontIncrease }) {
   const allColBtn = [
     {
       primary: 'black',
@@ -30,14 +30,6 @@ function Settings() {
   const [currColBtn, setCurrColBtn] = useState(DEFAULT_COL);
 
 
-  const onFontIncrease = () => {
-    setFontSize(fontSize + 1);
-  };
-
-  const onFontDecrease = () => {
-    setFontSize(fontSize - 1);
-  };
-
   const onColorClick = (id) => {
     const num = parseInt(id, 10);
     setCurrColBtn(num);
@@ -46,11 +38,11 @@ function Settings() {
   return (
     <div className="settingsContainer">
       <div className="fontSize">
-        <button type="button" className="fontBtn small" onClick={onFontDecrease}>
+        <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-1); }}>
           <Font />
         </button>
         {/* <div className="label">Font Size</div> */}
-        <button type="button" className="fontBtn big" onClick={onFontIncrease}>
+        <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(1); }}>
           <Font />
         </button>
       </div>
@@ -69,3 +61,10 @@ function Settings() {
 }
 
 export default Settings;
+export {
+  mode,
+};
+
+Settings.propTypes = {
+  onFontIncrease: PropTypes.func.isRequired,
+};
