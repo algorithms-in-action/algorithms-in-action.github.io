@@ -1,9 +1,6 @@
 @import './global.scss';
 
-$bgColor: #001F39;
-$titleColor: #E0E0E0;
-$buttonColor: #E7E7E7;
-$buttonHighlightColor: #009EE9;
+
 
 a {
   text-decoration: none;
@@ -11,7 +8,7 @@ a {
 }
 
 .header {
-  background-color: $bgColor;
+  background-color: $headerBg;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
   height: $headerHeight;

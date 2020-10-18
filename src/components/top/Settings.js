@@ -11,20 +11,19 @@ const mode = 0;
 function Settings({ onFontIncrease }) {
   const allColBtn = [
     {
+      id: 0,
       primary: 'black',
       secondary: 'white',
     },
     {
+      id: 1,
       primary: 'green',
       secondary: 'blue',
     },
     {
+      id: 2,
       primary: 'yellow',
       secondary: 'red',
-    },
-    {
-      primary: 'green',
-      secondary: 'blue',
     },
   ];
   const [currColBtn, setCurrColBtn] = useState(DEFAULT_COL);
@@ -41,7 +40,6 @@ function Settings({ onFontIncrease }) {
         <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-1); }}>
           <Font />
         </button>
-        {/* <div className="label">Font Size</div> */}
         <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(1); }}>
           <Font />
         </button>

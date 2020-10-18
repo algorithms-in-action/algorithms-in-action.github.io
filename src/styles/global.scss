@@ -13,8 +13,8 @@ $blueLine: rgba(0, 187, 255, 0.2);
 $sidePad: 24px;
 
 // Header
-$headerBg: #001730;
-$headerFontCol:#d3d3d3;
+$headerBg: #01233F;
+$headerFontCol:#d7d7d7;
 $headerBtnCol: #d3d3d3;
 $headerBtnHgCol: $sigBlue;
 $headerHeight: 30px;
@@ -101,12 +101,6 @@ $codeExpandBtn: $blue;
 	-webkit-border-radius: $radius;
 	-moz-border-radius: $radius;
 }
-
-// @mixin give-height($x, $y) {
-// 	height: -moz-calc($x - $y); /* Firefox */
-// 	height: -webkit-calc($x - $y); /* Chrome, Safari */
-// 	height: calc($x - $y); /* IE9+ and future browsers */
-// }
 
 @mixin calc($property, $expression...) { 
   #{$property}: -moz-calc(#{$expression}); 

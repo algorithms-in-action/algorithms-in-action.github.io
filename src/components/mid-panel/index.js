@@ -19,7 +19,6 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
     <div className="midPanelContainer">
       <div className="midPanelHeader">
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
-        <button type="button" className="quizButton">Quiz</button>
       </div>
       <div className="midPanelBody">
         {/* Animation Goes here */}

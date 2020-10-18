@@ -18,15 +18,18 @@ function LineExplanation({ explanation, fontSize, fontSizeIncrement }) {
 
   return (
     <div className="lineExplanation" id={fontID}>
-      <div className="lEtitle">Explanation</div>
-      <ControlButton
-        icon={<Cancel />}
-        className="greyRoundBtn"
-        id="cancelLineExplainBtn"
-        onClick={() => {
-          dispatch(GlobalActions.LineExplan, '');
-        }}
-      />
+      <div className="lEHeader">
+        <div className="lEtitle">Explanation</div>
+        <ControlButton
+          icon={<Cancel />}
+          className="greyRoundBtn"
+          id="cancelLineExplainBtn"
+          onClick={() => {
+            dispatch(GlobalActions.LineExplan, '');
+          }}
+        />
+      </div>
+
       {explanation}
     </div>
   );
