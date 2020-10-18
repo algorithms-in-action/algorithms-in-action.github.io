@@ -198,5 +198,7 @@ export default {
         }
       }
     }
+    // for test
+    return A;
   },
 };
