@@ -29,8 +29,9 @@ function LineExplanation({ explanation, fontSize, fontSizeIncrement }) {
           }}
         />
       </div>
-
-      {explanation}
+      <div className="lEDesc">
+        {explanation}
+      </div>
     </div>
   );
 }
