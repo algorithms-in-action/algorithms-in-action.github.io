@@ -84,8 +84,7 @@ function ControlPanel() {
    */
   useInterval(() => {
     play();
-  }, playing ? 10000 / (Math.E ** speed) : null);
-
+  }, playing ? 10000 / (5 * speed + 50) : null);
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
