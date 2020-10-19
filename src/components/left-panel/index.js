@@ -5,8 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Input, withStyles } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -52,7 +50,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
     root: {
       backgroundColor: 'white',
       '&.Mui-selected': {
-        backgroundColor: '#ECECEC',
+        backgroundColor: '#EAEAEA',
       },
     },
   })(ListItem);
@@ -89,7 +87,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         disableTypography
                         className="algorithm-list-main"
                       />
-                      {openStatus[cat.id] ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
                     <Collapse in={openStatus[cat.id]} timeout="auto" unmountOnExit>
                       {
