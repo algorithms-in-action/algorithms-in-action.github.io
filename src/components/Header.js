@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import '../styles/Header.scss';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-// import logo from '../resources/logo.svg';
 import logo from '../assets/logo.svg';
 
 let a = 0;
@@ -14,8 +16,20 @@ function mode() {
 
 function Header() {
   const [modeType, setModeType] = React.useState('');
+  const history = useHistory();
+
   const handleChange = (event) => {
     setModeType(event.target.value);
+  };
+
+  // goes back to main page
+  const handleLogoClick = () => {
+    history.push('/');
+  };
+
+  // goes to about page
+  const handleAboutClick = () => {
+    history.push('/about');
   };
 
   switch (modeType) {
@@ -31,7 +45,7 @@ function Header() {
 
   return (
     <div className="header">
-      <div className="headerTitle">
+      <div className="headerTitle" role="button" onClick={handleLogoClick}>
         <img src={logo} alt="logo" />
         <h1>Algorithms in Action</h1>
       </div>
@@ -54,6 +68,9 @@ function Header() {
               <MenuItem value="blue">Blue</MenuItem>
             </Select>
           </FormControl>
+        </button>
+        <button type="button" onClick={handleAboutClick}>
+          About
         </button>
       </div>
     </div>

@@ -186,9 +186,6 @@ export const onDrag = (event) => {
     page.style.gridTemplateRows = newRowDefn;
     page.style.gridTemplateColumns = newColDefn;
 
-    // console.log(`COL DEF: ${newColDefn}`);
-    // console.log(`ROW DEF: ${newRowDefn}`);
-
     event.preventDefault();
   }
 };
