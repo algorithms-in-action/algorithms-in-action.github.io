@@ -6,7 +6,6 @@
 
   .controlPanel {
     height: 40px;
-    // border-bottom: $borderSize solid $borderCol;
     padding: 0px $ctrlOffset;
     display: flex;
     align-items: center;
@@ -25,7 +24,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       margin: 16px auto 0px auto;
-      // animation: popup 0.7s;
       
       .logTag {
         color: $successCol;

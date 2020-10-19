@@ -3,12 +3,13 @@
 $codePad: 24px;
 $rightNumWidth: 36px;
 $rightButtonWidth: 24px;
+$containerTopBottomPad: 2%;
 
 .code-container{
   font-family: Menlo, "Liberation Mono", Courier, monospace;
   background-color: $codeBgCol;
-  height: 100%;
-  padding: 12px 0;
+  height: 100% - (2 * $containerTopBottomPad);
+  padding: $containerTopBottomPad 0;
 }
 
 .expand-collopse-button{
