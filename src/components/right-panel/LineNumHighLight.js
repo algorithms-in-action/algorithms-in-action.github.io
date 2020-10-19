@@ -101,7 +101,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     }
 
     let lineExplanButton = null;
-    if (algorithm.collapse[blockName] && line.lineExplanButton !== undefined) {
+    if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][blockName] && line.lineExplanButton !== undefined) {
       lineExplanButton =
       <button
         className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
@@ -115,7 +115,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
       codeLines.push(
         <p
           key={i}
-          className={(!algorithm.collapse[line.ref]
+          className={(!algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
             && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
           role="presentation"
         >
@@ -127,7 +127,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 dispatch(GlobalActions.COLLAPSE, line.ref);
               }}
             >
-              {algorithm.collapse[line.ref]
+              {algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
                 ? <ExpandMoreIcon style={{ fontSize: 12 }} />
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
@@ -136,7 +136,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           {pseudoceArary}
         </p>,
       );
-      if (algorithm.collapse[line.ref]) {
+      if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
         const subblock = pseudocodeBlock(algorithm, dispatch, line.ref, i);
         i = subblock.index;
         codeLines = codeLines.concat(subblock.cl);
