@@ -1,8 +1,8 @@
 @import './global.scss';
 
-.container {
-  height: 28%;
+.controlContainer {
   font-size: 0.8em;
+  min-width: $paramMinWidth;
 
   .controlPanel {
     height: 40px;
@@ -16,7 +16,6 @@
 
   .parameterPanel {
     padding: 16px $paramOffset 16px $paramOffset;
-    // transition: .10s;
     
     .logContainer {
       background-color: $paramBg;
