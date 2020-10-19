@@ -109,7 +109,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
         className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
         onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
       >
-        <DescriptionIcon style={{ fontSize: 10 }} />
+        <DescriptionIcon style={{ fontSize: 14 }} />
       </button>;
     }
 
@@ -124,14 +124,15 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <span>{i}</span>
           <span>
             <button
-              className="expand-collopse-button"
+              // className="expand-collopse-button"
+              className={algorithm.collapse[line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
                 dispatch(GlobalActions.COLLAPSE, line.ref);
               }}
             >
               {algorithm.collapse[line.ref]
-                ? <ExpandMoreIcon style={{ fontSize: 12 }} />
-                : <ChevronRightIcon style={{ fontSize: 12 }} />}
+                ? <ExpandMoreIcon style={{ fontSize: 16 }} />
+                : <ChevronRightIcon style={{ fontSize: 16 }} />}
             </button>
           </span>
           <span>{lineExplanButton}</span>

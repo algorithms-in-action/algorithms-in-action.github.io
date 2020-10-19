@@ -7,20 +7,31 @@ $containerTopBottomPad: 2%;
 
 .code-container{
   font-family: Menlo, "Liberation Mono", Courier, monospace;
-  background-color: $codeBgCol;
   height: 100% - (2 * $containerTopBottomPad);
   padding: $containerTopBottomPad 0;
 }
 
-.expand-collopse-button{
+.expand-collopse-button {
   border: none;
   outline:none;
   cursor:pointer;
   @include border-radius(2px);
-  background-color: $white;
-  color: #343434;
+  
+  color: #505050;
+  background-color: #EFEFEF;
+  display: flex;
+  align-items: center;
+  margin: auto 0;
+}
 
-  border: 1px solid #c1c1c1;
+.expand-collapse-button-active {
+  @extend .expand-collopse-button;
+  background: none;
+
+}
+
+.expand-collopse-button:hover {
+  background-color: #e1e1e1;
 }
 
 .line-explanation-button-active{
@@ -28,9 +39,12 @@ $containerTopBottomPad: 2%;
   outline:none;
   cursor:pointer;
   @include border-radius(2px);
-  background-color:  $white;
+  background: none;
   color: $sigBlue;
-  border: 1px solid $sigBlue;
+  // border: 1px solid $sigBlue;
+  display: flex;
+  align-items: center;
+
 }
 
 .line-explanation-button-negative{
@@ -38,25 +52,42 @@ $containerTopBottomPad: 2%;
   outline:none;
   cursor:pointer;
   @include border-radius(2px);
-  background-color: $white;
-  color: #343434;
-  border: 1px solid #c1c1c1;
+  // background-color: $codeBgCol;
+  background: none;
+  color: #666667;
+  // border: 1px solid #c1c1c1;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+
 }
+
+.line-explanation-button-negative:hover {
+  background-color: #e1e1e1;
+}
+
+
 
 .line-light {
   width: 100%;
   color: $codeFontCol;
+  background-color: $codeBgCol;
+
 }
 
 .line-light p {
   text-align: left;
   margin: 0px;
   white-space:nowrap;
+  padding: 4px 0;
 }
+
+// .line-light p:hover {
+//   background-color: rgb(237, 237, 237);
+// }
 
 .line-light p span {
   white-space: pre;
-  padding: 2px 0;
 }
 
 .line-light p span:first-child {
