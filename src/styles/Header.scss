@@ -8,6 +8,8 @@ a {
 }
 
 .header {
+  position: sticky;
+  top: 0;
   background-color: $headerBg;
   font-family: Roboto, 'sans-serif';
   font-style: normal;
@@ -20,6 +22,7 @@ a {
   width: 100%;
   
   .headerTitle {
+    @include removeBtnStyling;
     display: flex;
     flex-direction: row;
     margin-left: $headerOffset;
