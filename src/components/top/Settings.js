@@ -49,8 +49,8 @@ function Settings({ onFontIncrease }) {
       </div>
       <div className="algoCol">
         {
-          allColBtn.map(({ primary, secondary }, index) => (
-            <button id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => { onColorClick(e.target.id); }}>
+          allColBtn.map(({ primary, secondary, id }, index) => (
+            <button key={id} id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => { onColorClick(e.target.id); }}>
               <span id={index} className={`left ${primary}`}> </span>
               <span id={index} className={`right ${secondary}`}> </span>
             </button>

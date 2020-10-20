@@ -5,7 +5,7 @@ import '../../styles/About.scss';
 
 const Team = ({ teammembers }) => (
   <div className="projectContainer">
-    <div className="heading" variant="h4" display="block" gutterBottom>
+    <div className="heading" variant="h4" display="block">
       core team
     </div>
     <div className="teamMembers">

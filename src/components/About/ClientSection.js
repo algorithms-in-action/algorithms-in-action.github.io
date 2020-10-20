@@ -35,7 +35,7 @@ function Section() {
         professors.map(({
           name, desc, department, link, img,
         }) => (
-          <a href={link} target="_blank" rel="noopener noreferrer" className="profile">
+          <a key={name} href={link} target="_blank" rel="noopener noreferrer" className="profile">
             <img src={img} alt={name} />
             <div className="info">
               <div className="desc">{desc}</div>

@@ -17,11 +17,13 @@ const TeamMember = ({
   const [gitHover, setGitHover] = useState(false);
   const [linkedInHover, setLinkedInHover] = useState(false);
   return (
-    <a className="teamCard" href={linkedIn}>
+    <div className="teamCard">
       <img className="photo" src={photo} alt={name} />
       <div className="memberDescription">
         <div className="title">{title}</div>
-        <div className="name">{name}</div>
+        <a href={linkedIn} target="_blank" rel="noopener noreferrer">
+          <div className="name">{name}</div>
+        </a>
         <div className="desc">{desc}</div>
       </div>
       <div className="icons">
@@ -50,7 +52,7 @@ const TeamMember = ({
           </Link>
         )}
       </div>
-    </a>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../../styles/About.scss';
 import logo from '../../assets/logo.svg';
 
@@ -18,7 +19,7 @@ function Header() {
         <div className="subtitle">
           Designed by students, for students.
         </div>
-        <a type="button" className="start" href="/">Start Now</a>
+        <Link className="start" to="/">Start Now</Link>
       </div>
 
     </>
