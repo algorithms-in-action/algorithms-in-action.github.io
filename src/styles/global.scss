@@ -123,3 +123,17 @@ $codeExpandBtn: $blue;
 	cursor: pointer;
 	outline: inherit;
 }
+
+
+@mixin gradientText($background) {
+	background: $background;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+@mixin preventWrap {
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
