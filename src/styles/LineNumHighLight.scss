@@ -82,9 +82,10 @@ $containerTopBottomPad: 2%;
   padding: 4px 0;
 }
 
-// .line-light p:hover {
-//   background-color: rgb(237, 237, 237);
-// }
+.line-light p:hover {
+  background-color: rgba(238, 238, 238, 0.475);
+  cursor: default;
+}
 
 .line-light p span {
   white-space: pre;
@@ -146,7 +147,7 @@ $containerTopBottomPad: 2%;
   overflow-wrap: break-word;
   
   width: auto;
-  bottom: 36px;
+  bottom: 56px;
   margin: 0 24px;
   padding: 8px 16px 12px;
   filter: drop-shadow(0 0 10px rgba(0,0,0,0.2));
@@ -170,6 +171,7 @@ $containerTopBottomPad: 2%;
   }
 
 }
+
 
 
 

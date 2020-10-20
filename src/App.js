@@ -78,7 +78,7 @@ function App() {
   return (
 
     <GlobalProvider>
-      { isComponentVisible ? <Settings onFontIncrease={onFontIncrease} /> : ''}
+      { !isComponentVisible ? <Settings onFontIncrease={onFontIncrease} /> : ''}
 
       <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
         <div id="header">

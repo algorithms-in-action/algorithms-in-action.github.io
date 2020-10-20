@@ -17,6 +17,7 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 
+const PADDING_LINE = 15;
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -163,6 +164,23 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   return { index: i, cl: codeLines };
 }
 
+const pseudoCodePadding = (lineNum, limit) => {
+  const codeLines = [];
+
+  for (let i = lineNum; i < (lineNum + limit); i++) {
+    codeLines.push(
+    <p
+      key={i}
+      role="presentation"
+    >
+      <span>{i}</span>
+    </p>,
+    );
+  }
+
+  return codeLines;
+};
+
 const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const fontID = 'pseudocodeContainer';
@@ -172,10 +190,14 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
     increaseFontSize(fontID, fontSizeIncrement);
   }, [fontSizeIncrement, fontSize]);
 
+  const { index, cl } = pseudocodeBlock(algorithm, dispatch, 'Main', 0);
+  const pseudoCodePad = pseudoCodePadding(index + 1, PADDING_LINE);
+
   return (
     <div className="line-light">
       <div className="code-container" id={fontID}>
-        {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
+        {cl}
+        {pseudoCodePad}
       </div>
       { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} /> : ''}
     </div>
