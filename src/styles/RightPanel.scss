@@ -38,7 +38,8 @@
 
     .bottomBtn {
       @include removeBtnStyling;
-      padding: 8px 24px;
+      padding: 8px 0;
+      width: 200px;
       background: white;
       text-transform: uppercase;
       font-size: 0.72em;

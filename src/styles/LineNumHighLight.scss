@@ -84,11 +84,16 @@ $containerTopBottomPad: 2%;
   margin: 0px;
   white-space:nowrap;
   padding: 4px 0;
+  cursor: default;
 }
 
 .line-light p:hover {
   background-color: rgba(238, 238, 238, 0.475);
-  cursor: default;
+
+}
+
+.line-light p:active {
+  background-color: rgb(238, 238, 238)
 }
 
 .line-light p span {
