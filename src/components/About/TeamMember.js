@@ -17,7 +17,7 @@ const TeamMember = ({
   const [gitHover, setGitHover] = useState(false);
   const [linkedInHover, setLinkedInHover] = useState(false);
   return (
-    <a className="teamCard" href={linkedIn}>
+    <div className="teamCard" href={linkedIn}>
       <img className="photo" src={photo} alt={name} />
       <div className="memberDescription">
         <div className="title">{title}</div>
@@ -50,7 +50,7 @@ const TeamMember = ({
           </Link>
         )}
       </div>
-    </a>
+    </div>
   );
 };
 

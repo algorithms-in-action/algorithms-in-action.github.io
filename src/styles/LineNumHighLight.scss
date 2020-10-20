@@ -40,7 +40,9 @@ $containerTopBottomPad: 2%;
   cursor:pointer;
   @include border-radius(2px);
   background: none;
-  color: $sigBlue;
+  // color: $sigBlue;
+  color: #575757;
+
   // border: 1px solid $sigBlue;
   display: flex;
   align-items: center;
@@ -54,7 +56,7 @@ $containerTopBottomPad: 2%;
   @include border-radius(2px);
   // background-color: $codeBgCol;
   background: none;
-  color: #666667;
+  color: #c9c9c9;
   // border: 1px solid #c1c1c1;
   margin: auto 0;
   display: flex;
@@ -63,7 +65,9 @@ $containerTopBottomPad: 2%;
 }
 
 .line-explanation-button-negative:hover {
-  background-color: #e1e1e1;
+  // background-color: #e1e1e1;
+  color: #575757;
+
 }
 
 

@@ -17,7 +17,6 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 
-const PADDING_LINE = 15;
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -180,6 +179,8 @@ const pseudoCodePadding = (lineNum, limit) => {
 
   return codeLines;
 };
+
+const PADDING_LINE = 6;
 
 const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const { algorithm, dispatch } = useContext(GlobalContext);
