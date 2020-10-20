@@ -12,6 +12,7 @@ function AppSection() {
           <div className="subtitle">
             with more coming soon.
           </div>
+          <div className="dotdot" />
         </div>
       </div>
 

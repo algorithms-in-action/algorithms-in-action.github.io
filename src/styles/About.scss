@@ -347,20 +347,12 @@ $maxWidth: 800px;
    }
 }
 
-.blob {
-  width: 98%;
-  margin: 0 auto;
-  // z-index: 0;
-  background-color: orange;
 
-  svg {
-
-     path {
-       fill: $headerCol;
-     }
-   }
+.dotdot {
+  margin-top: 16px;
+  width: 40px;
+  border-bottom: 10px  dotted rgb(2, 18, 108);
 }
-
 
 
 
