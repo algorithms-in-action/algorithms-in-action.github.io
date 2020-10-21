@@ -13,6 +13,10 @@ function ParamForm(props) {
     onChange, handleSubmit, children, disabled,
   } = props;
 
+  const cancelCover = () => {
+    document.getElementById('cover-show-instructions').style.display = 'none';
+  };
+
   return (
     <form className={formClassName} onSubmit={handleSubmit}>
       <div className="outerInput">
@@ -29,6 +33,7 @@ function ParamForm(props) {
           {children}
           <ControlButton
             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
+            onClick={() => cancelCover()}
             type="submit"
             disabled={disabled}
           >

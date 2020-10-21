@@ -62,6 +62,10 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
     increaseFontSize(fontID, fontSizeIncrement);
   }, [algorithm.explanation, fontSize, fontSizeIncrement]);
 
+  const openCover = () => {
+    document.getElementById('cover-show-instructions').style.display = 'block';
+  };
+
 
   return (
     <div className="container">
@@ -96,6 +100,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                                selected={algorithm.name === algo.name}
                                button
                                onClick={() => {
+                                 openCover();
                                  dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
                                }}
                              >

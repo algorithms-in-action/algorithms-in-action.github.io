@@ -31,5 +31,14 @@
     background-color: $midBgCol;
   }
 
+  // Cover for insturctions
+  .cover-show-instructions{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 1px; /* Important */
+    min-height: 0;
+    background-color: $midBgCol;
+  }
+
 }
 

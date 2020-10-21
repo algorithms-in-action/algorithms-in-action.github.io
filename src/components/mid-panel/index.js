@@ -21,6 +21,19 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
       </div>
       <div className="midPanelBody">
+        <div className="cover-show-instructions" id="cover-show-instructions">
+          {(() => {
+            switch (algorithm.id) {
+              case 'binarySearchTree': return 'tree';
+              case 'quickSort': return 'quickSort';
+              case 'heapSort': return 'heapSort';
+              case 'tranitiveClosure': return 'transitiveClosure';
+              case 'prim': return 'prim';
+              default: return null;
+            }
+          }
+          )()}
+        </div>
         {/* Animation Goes here */}
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
