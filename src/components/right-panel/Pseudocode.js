@@ -10,10 +10,17 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const show = !!algorithm.hasOwnProperty('pseudocode');
 
-
   const onExpand = () => {
     Object.keys(algorithm.pseudocode).forEach((key) => {
-      dispatch(GlobalActions.COLLAPSE, key);
+      dispatch(GlobalActions.COLLAPSE, { codeblockname: key, expandOrCollapase: true });
+    });
+  };
+
+  const onCollapse = () => {
+    Object.keys(algorithm.pseudocode).forEach((key) => {
+      if (key !== 'Main') {
+        dispatch(GlobalActions.COLLAPSE, { codeblockname: key, expandOrCollapase: false });
+      }
     });
   };
 
@@ -21,7 +28,10 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
     show ? (
       <>
         <LineNumHighLight fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />
-        <ButtonPanel onExpand={onExpand} />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <ButtonPanel onClick={onExpand} name="Expand All" />
+          <ButtonPanel onClick={onCollapse} name="Collapse All" />
+        </div>
       </>
     ) : null
   );
