@@ -11,6 +11,26 @@
  * 'heading' is the heading for the section,
  * 'paragraph' array stores paragraphs you want to show
 */
+/**
+ * How to use:
+ * Each object contains the information of a team member
+ * 
+ */
+
+import Harald from '../assets/images/Prof_Sondergaard.jpg';
+import Linda from '../assets/images/Dr_Stern.jpg';
+import Boyu from '../assets/images/boyu.JPG';
+import Carina from '../assets/images/carina.jpg';
+import Joao from '../assets/images/joao.jpg';
+import Kenny from '../assets/images/kenny.JPG';
+import Luke from '../assets/images/luke.jpeg';
+import Tianyang from '../assets/images/tianyang.jpg';
+import Linfan from '../assets/images/linfan.jpeg';
+import Yinsong from '../assets/images/yinsong.jpg';
+import Zihan from '../assets/images/zihan.jpg';
+import Nir from '../assets/images/nir.png';
+
+
 export const content = {
   projectDescription: {
     heading: 'About the Project',
@@ -42,105 +62,114 @@ export const content = {
   },
 };
 
-/**
- * How to use:
- * Each object contains the information of a team member
- * 
- */
+export const professors = [
+  {
+    id: 0,
+    name: 'Haralf Sondergaard',
+    desc: 'Professor',
+    department: 'University of Melbourne',
+    link: 'https://findanexpert.unimelb.edu.au/profile/13416-harald-sondergaard',
+    img: Harald,
+  },
+  {
+    id: 1,
+    name: 'Dr. Linda Stern',
+    desc: 'Honarary',
+    department: 'University of Melbourne',
+    link: 'https://findanexpert.unimelb.edu.au/profile/14535-linda-stern',
+    img: Linda,
+  },
+];
+
 export const team = [
   {
     name: 'Zihan Zhang',
-    photo: '/team/fake-photo.png',
+    photo: Zihan,
     github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    linkedIn: 'https://www.linkedin.com/in/zihan-zhang-a40855172/',
     desc: 'University of Melbourne',
-    title: 'Student',
+    title: 'MEng (Software)',
   }, {
     name: 'Luke Ceddia',
-    photo: '/team/fake-photo.png',
+    photo: Luke,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
   {
     name: 'Kenny Lee',
-    photo: '/team/fake-photo.png',
+    photo: Kenny,
     github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    linkedIn: 'https://www.linkedin.com/in/kennylwx/',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
   {
     name: 'Yingsong Chen',
-    photo: '/team/fake-photo.png',
+    photo: Yinsong,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
+    title: 'MEng (Software)',
 
 
   },
   {
     name: 'Bohao Liu',
-    photo: '/team/fake-photo.png',
+    photo: Carina,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
   {
     name: 'Nir Palombo',
-    photo: '/team/fake-photo.png',
+    photo: Nir,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
+    title: 'MEng (Software)',
 
 
   },
   {
     name: 'Boyu Zhou',
-    photo: '/team/fake-photo.png',
+    photo: Boyu,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
   {
     name: 'João Pereira',
-    photo: '/team/fake-photo.png',
+    photo: Joao,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
   {
     name: 'Lin Fan',
-    photo: '/team/fake-photo.png',
+    photo: Linfan,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
+    title: 'MEng (Software)',
 
   },
   {
     name: 'Tianyang Chen',
-    photo: '/team/fake-photo.png',
+    photo: Tianyang,
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
     desc: 'University of Melbourne',
-    title: 'Student',
-
+    title: 'MEng (Software)',
 
   },
 ];

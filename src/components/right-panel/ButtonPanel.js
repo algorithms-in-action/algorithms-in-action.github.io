@@ -1,16 +1,13 @@
 import React from 'react';
+
 import '../../styles/RightPanel.scss';
 import PropTypes from 'prop-types';
 
-function ButtonPanel({ isExpanded, onExpand }) {
+function ButtonPanel({ onClick, name }) {
   return (
     <div className="btnPanel">
-      <button className="bottomBtn" type="button" onClick={onExpand}>
-        {
-          isExpanded
-            ? 'Condense'
-            : 'Expand'
-        }
+      <button className="bottomBtn" type="button" onClick={onClick}>
+        {name}
       </button>
     </div>
   );
@@ -18,6 +15,6 @@ function ButtonPanel({ isExpanded, onExpand }) {
 
 export default ButtonPanel;
 ButtonPanel.propTypes = {
-  isExpanded: PropTypes.bool.isRequired,
-  onExpand: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
 };

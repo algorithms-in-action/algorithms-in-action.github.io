@@ -124,10 +124,9 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <span>{i}</span>
           <span>
             <button
-              // className="expand-collopse-button"
               className={algorithm.collapse[line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
-                dispatch(GlobalActions.COLLAPSE, line.ref);
+                dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
               }}
             >
               {algorithm.collapse[line.ref]
