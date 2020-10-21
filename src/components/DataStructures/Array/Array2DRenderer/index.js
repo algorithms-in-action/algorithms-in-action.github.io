@@ -23,6 +23,23 @@ import React from 'react';
 import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
+import { mode } from '../../../top/Settings';
+
+let modename;
+function switchmode(modetype = mode()) {
+  switch (modetype) {
+    case 1:
+      modename = styles.array_2d_green;
+      break;
+    case 2:
+      modename = styles.array_2d_blue;
+      break;
+    default:
+      modename = styles.array_2d;
+  }
+  return modename;
+}
+
 
 class Array2DRenderer extends Renderer {
   constructor(props) {
@@ -42,7 +59,7 @@ class Array2DRenderer extends Renderer {
 
 
     return (
-      <table className={styles.array_2d}
+      <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
         <tbody>
         <tr className={styles.row}>
