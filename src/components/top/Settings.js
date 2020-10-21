@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 import React, { useState } from 'react';
 import '../../styles/Settings.scss';
 // import { ReactComponent as Add } from '../../assets/icons/add.svg';
@@ -8,10 +9,11 @@ import { ReactComponent as Font } from '../../assets/icons/font.svg';
 
 const DEFAULT_COL = 0;
 
-const mode = () => DEFAULT_COL;
+let mode = () => DEFAULT_COL;
 
-
-function Settings({ onFontIncrease }) {
+function Settings({
+  onFontIncrease, onSetting, handleColorModeChange, selectedMode,
+}) {
   const allColBtn = [
     {
       id: 0,
@@ -29,12 +31,14 @@ function Settings({ onFontIncrease }) {
       secondary: 'red',
     },
   ];
-  const [currColBtn, setCurrColBtn] = useState(DEFAULT_COL);
-
+  const [currColBtn, setCurrColBtn] = useState(selectedMode);
 
   const onColorClick = (id) => {
     const num = parseInt(id, 10);
+    mode = () => num;
     setCurrColBtn(num);
+    onSetting();
+    handleColorModeChange(Number(id));
   };
 
   return (
@@ -50,7 +54,7 @@ function Settings({ onFontIncrease }) {
       <div className="algoCol">
         {
           allColBtn.map(({ primary, secondary, id }, index) => (
-            <button key={id} id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => { onColorClick(e.target.id); }}>
+            <button key={id} id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => onColorClick(e.target.id)}>
               <span id={index} className={`left ${primary}`}> </span>
               <span id={index} className={`right ${secondary}`}> </span>
             </button>
@@ -68,4 +72,7 @@ export {
 
 Settings.propTypes = {
   onFontIncrease: PropTypes.func.isRequired,
+  onSetting: PropTypes.func.isRequired,
+  handleColorModeChange: PropTypes.func.isRequired,
+  selectedMode: PropTypes.number.isRequired,
 };

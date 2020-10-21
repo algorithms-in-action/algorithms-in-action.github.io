@@ -20,20 +20,17 @@ const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
 function App() {
+  const [colorMode, setColorMode] = useState(0);
+
+  const handleColorModeChange = (color) => {
+    setColorMode(color);
+  };
+
   useEffect(() => {
     window.addEventListener('resize', resizeWindow);
     // eslint-disable-next-line no-unused-vars
     return (_) => { window.removeEventListener('resize', resizeWindow); };
   });
-
-  // addEvent(document, 'mouseout', (e) => {
-  //   // e = e || window.event;
-  //   const from = e.relatedTarget || e.toElement;
-  //   if (!from || from.nodeName === 'HTML') {
-  //     // End dragging when mouse out of html
-  //     endDrag();
-  //   }
-  // });
 
   // add mouseout event listener to 'document' when App first mount
   useEffect(() => {
@@ -55,14 +52,11 @@ function App() {
   }, []);
 
   const {
-    // ref,
     isComponentVisible,
     setIsComponentVisible,
   } = useComponentVisible(true);
 
-  // ref={ref}
   const onSetting = () => {
-    // console.log(isComponentVisible);
     if (isComponentVisible) {
       setIsComponentVisible(false);
     } else {
@@ -78,7 +72,14 @@ function App() {
   return (
 
     <GlobalProvider>
-      { !isComponentVisible ? <Settings onFontIncrease={onFontIncrease} /> : ''}
+      { !isComponentVisible ? (
+        <Settings
+          selectedMode={colorMode}
+          onFontIncrease={onFontIncrease}
+          onSetting={onSetting}
+          handleColorModeChange={handleColorModeChange}
+        />
+      ) : ''}
 
       <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
         <div id="header">
