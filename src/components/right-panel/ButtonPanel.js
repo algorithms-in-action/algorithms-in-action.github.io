@@ -1,4 +1,5 @@
 import React from 'react';
+
 import '../../styles/RightPanel.scss';
 import PropTypes from 'prop-types';
 
@@ -8,8 +9,8 @@ function ButtonPanel({ isExpanded, onExpand }) {
       <button className="bottomBtn" type="button" onClick={onExpand}>
         {
           isExpanded
-            ? 'Condense'
-            : 'Expand'
+            ? 'Condense All'
+            : 'Collapse All'
         }
       </button>
     </div>
