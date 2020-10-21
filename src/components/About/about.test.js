@@ -20,6 +20,6 @@ test('full app rendering', () => {
   const leftClick = { button: 0 };
   userEvent.click(screen.getByText(/About/i), leftClick);
   // check that the content changed to the about page
-  expect(screen.getByText(/About the Project/i)).toBeInTheDocument();
-  expect(screen.getByText(/Team/i)).toBeInTheDocument();
+  expect(screen.getByText(/Algorithms in Action/i)).toBeInTheDocument();
+  expect(screen.getByText(/Core Team/i)).toBeInTheDocument();
 });

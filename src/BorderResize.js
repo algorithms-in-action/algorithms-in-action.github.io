@@ -179,15 +179,16 @@ const getRowDefn = (page, event, status) => {
 };
 
 export const onDrag = (event) => {
-  if (isLeftDragging || isRightDragging || isBottomDragging) {
-    const page = document.getElementById('page');
+  const page = document.getElementById('page');
+  if (isLeftDragging || isRightDragging) {
     const newColDefn = getColDefn(page, event, COL_INTERNAL);
+    page.style.gridTemplateColumns = newColDefn;
+  } else if (isBottomDragging) {
     const newRowDefn = getRowDefn(page, event, ROW_INTERNAL);
     page.style.gridTemplateRows = newRowDefn;
-    page.style.gridTemplateColumns = newColDefn;
-
-    event.preventDefault();
   }
+
+  event.preventDefault();
 };
 
 const MIN_COL_THRESHOLD = 100;
