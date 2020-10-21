@@ -123,3 +123,253 @@
     }
   }
 }
+.graph_green {
+  flex: 1;
+  align-self: stretch;
+
+  .node {
+    .array_2d {
+      flex-shrink: 0;
+      display: table;
+      border-collapse: collapse;
+    
+      .row {
+        display: table-row;
+        height: 28px;
+    
+        .col {
+          display: table-cell;
+          text-align: center;
+          // background-color: $theme-light;
+          background-color:$color-purple;
+          border: 1px solid $theme-light;
+          padding: 0 4px;
+          color: $color-yellow;
+    
+          .value {
+            font-size: 12px;
+            // color: $color-font;
+          }
+    
+          &.selected {
+            background-color:  $color-lightgreen;
+          }
+    
+          &.patched {
+            background-color:  $color-green;
+          }
+    
+          &.index {
+            background: none;
+            border: none;
+            color: $theme-light;
+          }
+        }
+      }
+    }
+
+    .weight {
+      fill: white;
+      font-weight: bold;
+      alignment-baseline: central;
+      text-anchor: left;
+    }
+
+    &.selected {
+      .circle {
+        fill: $color-lightgreen;
+        stroke: $color-lightgreen;
+      }
+    }
+
+    &.visited {
+      .circle {
+        fill: $color-green;
+        stroke: $color-green;
+      }
+    }
+  }
+
+  .edge {
+    .line {
+      stroke: $color-purple;
+      stroke-width: 2;
+
+      &.directed {
+        marker-end: url(#markerArrow);
+      }
+    }
+
+    .weight {
+      fill: $color-font;
+      alignment-baseline: baseline;
+      text-anchor: middle;
+    }
+
+    &.selected {
+      .line {
+        stroke: $color-lightgreen;
+
+        &.directed {
+          marker-end: url(#markerArrowSelected);
+        }
+      }
+
+      .weight {
+        fill: $color-lightgreen;
+      }
+    }
+
+    &.visited {
+      .line {
+        stroke: $color-green;
+
+        &.directed {
+          marker-end: url(#markerArrowVisited);
+        }
+      }
+
+      .weight {
+        fill:$color-green;
+      }
+    }
+  }
+
+  .arrow {
+    fill: $color-purple;
+
+    &.selected {
+      fill: $color-lightgreen;
+    }
+
+    &.visited {
+      fill: $color-green;
+    }
+  }
+}
+.graph_blue {
+  flex: 1;
+  align-self: stretch;
+
+  .node {
+    .array_2d {
+      flex-shrink: 0;
+      display: table;
+      border-collapse: collapse;
+    
+      .row {
+        display: table-row;
+        height: 28px;
+    
+        .col {
+          display: table-cell;
+          text-align: center;
+          // background-color: $theme-light;
+          background-color:$color-red;
+          border: 1px solid $theme-light;
+          padding: 0 4px;
+          color: $color-yellow;
+    
+          .value {
+            font-size: 12px;
+            // color: $color-font;
+          }
+    
+          &.selected {
+            background-color:  $color-blue;
+          }
+    
+          &.patched {
+            background-color:  $color-green;
+          }
+    
+          &.index {
+            background: none;
+            border: none;
+            color: $theme-light;
+          }
+        }
+      }
+    }
+
+    .weight {
+      fill: white;
+      font-weight: bold;
+      alignment-baseline: central;
+      text-anchor: left;
+    }
+
+    &.selected {
+      .circle {
+        fill: $color-blue;
+        stroke: $color-blue;
+      }
+    }
+
+    &.visited {
+      .circle {
+        fill: $color-green;
+        stroke: $color-green;
+      }
+    }
+  }
+
+  .edge {
+    .line {
+      stroke: $color-red;
+      stroke-width: 2;
+
+      &.directed {
+        marker-end: url(#markerArrow);
+      }
+    }
+
+    .weight {
+      fill: $color-font;
+      alignment-baseline: baseline;
+      text-anchor: middle;
+    }
+
+    &.selected {
+      .line {
+        stroke: $color-blue;
+
+        &.directed {
+          marker-end: url(#markerArrowSelected);
+        }
+      }
+
+      .weight {
+        fill: $color-blue;
+      }
+    }
+
+    &.visited {
+      .line {
+        stroke: $color-green;
+
+        &.directed {
+          marker-end: url(#markerArrowVisited);
+        }
+      }
+
+      .weight {
+        fill:$color-green;
+      }
+    }
+  }
+
+  .arrow {
+    fill: $color-red;
+
+    &.selected {
+      fill: $color-blue;
+    }
+
+    &.visited {
+      fill: $color-green;
+    }
+  }
+}
+
+
