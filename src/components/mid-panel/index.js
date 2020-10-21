@@ -8,7 +8,6 @@ import { increaseFontSize, setFontSize } from '../top/helper';
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm } = useContext(GlobalContext);
   const fontID = 'algorithmTitle';
-
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
