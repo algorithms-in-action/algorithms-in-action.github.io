@@ -90,7 +90,7 @@ function ControlPanel() {
   };
 
   return (
-    <div className="container">
+    <div className="controlContainer">
       <div className="controlPanel">
         {/* Speed Slider */}
         <div className="sliderContainer">

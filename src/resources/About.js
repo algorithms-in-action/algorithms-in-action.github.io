@@ -53,58 +53,94 @@ export const team = [
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
   }, {
     name: 'Luke Ceddia',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Kenny Lee',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Yingsong Chen',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Bohao Liu',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Nir Palombo',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Boyu Zhou',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'João Pereira',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
   {
     name: 'Lin Fan',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+
   },
   {
     name: 'Tianyang Chen',
     photo: '/team/fake-photo.png',
     github: 'http://www.google.com',
     linkedIn: 'http://www.google.com',
+    desc: 'University of Melbourne',
+    title: 'Student',
+
+
   },
 ];

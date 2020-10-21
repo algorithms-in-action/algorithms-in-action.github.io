@@ -1,22 +1,32 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 import React from 'react';
-import Header from '../Header';
-import ProjectDescription from './ProjectDescription';
+import Header from './Header';
 import Team from './Team';
-import { content, team } from '../../resources/About';
+import { team } from '../../resources/About';
 import '../../styles/About.scss';
-
-const { projectDescription, licenseDescription } = content;
+import { ReactComponent as Wave } from '../../assets/wave.svg';
+import ClientSection from './ClientSection';
+import AppSection from './AppSection';
+import Contribute from './Contribute';
 
 const About = () => {
   return (
     <>
-      <Header />
-      <div className="aboutContainer">
-        <ProjectDescription heading={projectDescription.heading} paragraph={projectDescription.paragraph} />
-        <ProjectDescription heading={licenseDescription.heading} paragraph={licenseDescription.paragraph} />
-        <Team teammembers={team} />
+      <div className="background">
+        <div className="top">
+          <Header />
+        </div>
+        <div className="separator">
+          <Wave />
+        </div>
+        <ClientSection />
+        <AppSection />
+        <div className="aboutContainer">
+          <Team teammembers={team} />
+        </div>
+        <Contribute />
+
       </div>
     </>
   );
