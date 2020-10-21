@@ -31,6 +31,10 @@
         background-color: $color-patched;
       }
 
+      &.sorted {
+        background-color: $color-sorted;
+      }
+
       &.index {
         background: none;
         border: none;

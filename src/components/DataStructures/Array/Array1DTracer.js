@@ -27,6 +27,11 @@ class Array1DTracer extends Array2DTracer {
     super.depatch(0, x);
   }
 
+  // used to highlight sorted elements
+  sorted(x) {
+    super.sorted(0, x);
+  }
+
   select(sx, ex = sx) {
     super.select(0, sx, 0, ex);
   }

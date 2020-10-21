@@ -143,8 +143,11 @@ export default {
       A[0] = swap;
       swapAction(21, 21, 0, n - 1);
 
+      // chunker.add(22, (vis, index) => {
+      //   vis.array.patch(index);
+      // }, [n - 1]);
       chunker.add(22, (vis, index) => {
-        vis.array.patch(index);
+        vis.array.sorted(index);
       }, [n - 1]);
       n -= 1;
 
