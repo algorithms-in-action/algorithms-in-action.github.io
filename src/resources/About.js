@@ -110,8 +110,8 @@ export const team = [
   {
     name: 'Yingsong Chen',
     photo: Yinsong,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/icarusunimelb',
+    linkedIn: 'https://www.linkedin.com/in/yinsong-chen-62707b15b/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
