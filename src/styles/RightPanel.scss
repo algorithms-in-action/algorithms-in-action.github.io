@@ -19,8 +19,6 @@
   .textArea {
     font-size: 0.9em;
     color: $rightPanelFontCol;
-    // @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
-    // flex: 1;
     overflow-y: scroll;
     height: 100%;
 
@@ -31,11 +29,32 @@
   .line-light {
     font-size: 0.87em;
     overflow: scroll;
-
-    // display:flex;
     height: 100%;
-    // @include calc(height, #{"100% -  #{$codeExplanationButtonHeight + $headerHeight}"});
+  }
 
+  .btnPanel {
+    // padding: 0 24px;
+    overflow: hidden;
+
+    .bottomBtn {
+      @include removeBtnStyling;
+      padding: 8px 0;
+      width: 200px;
+      background: white;
+      text-transform: uppercase;
+      font-size: 0.72em;
+      font-weight: 500;
+      color: rgb(155, 155, 155);
+      white-space: nowrap;
+      border-right: 1px solid $borderCol;
+
+
+    }
+
+    .bottomBtn:hover {
+      background: rgb(227, 227, 227);
+      color: rgb(114, 114, 114);
+    }
   }
   
 }

@@ -17,7 +17,7 @@ const TeamMember = ({
   const [gitHover, setGitHover] = useState(false);
   const [linkedInHover, setLinkedInHover] = useState(false);
   return (
-    <div className="teamCard">
+    <div className="teamCard" href={linkedIn}>
       <img className="photo" src={photo} alt={name} />
       <div className="memberDescription">
         <div className="title">{title}</div>

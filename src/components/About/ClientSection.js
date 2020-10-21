@@ -2,11 +2,12 @@ import React from 'react';
 import '../../styles/About.scss';
 import Harald from '../../assets/Prof_Sondergaard.jpg';
 import Linda from '../../assets/Dr_Stern.jpg';
-
+import Professor from './Professor';
 
 function Section() {
   const professors = [
     {
+      id: 0,
       name: 'Haralf Sondergaard',
       desc: 'Professor',
       department: 'University of Melbourne',
@@ -14,6 +15,7 @@ function Section() {
       img: Harald,
     },
     {
+      id: 1,
       name: 'Dr. Linda Stern',
       desc: 'Honarary',
       department: 'University of Melbourne',
@@ -33,16 +35,17 @@ function Section() {
       <div className="professors">
         {
         professors.map(({
-          name, desc, department, link, img,
+          name, desc, department, link, img, id,
         }) => (
-          <a key={name} href={link} target="_blank" rel="noopener noreferrer" className="profile">
-            <img src={img} alt={name} />
-            <div className="info">
-              <div className="desc">{desc}</div>
-              <div className="name">{name}</div>
-              <div className="department">{department}</div>
-            </div>
-          </a>
+          <Professor
+            name={name}
+            desc={desc}
+            department={department}
+            link={link}
+            img={img}
+            id={id}
+            key={id}
+          />
         ))
       }
       </div>
