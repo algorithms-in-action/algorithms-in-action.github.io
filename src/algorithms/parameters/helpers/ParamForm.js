@@ -14,7 +14,7 @@ function ParamForm(props) {
   } = props;
 
   const cancelCover = () => {
-    document.getElementById('cover-show-instructions').style.display = 'none';
+    document.getElementById('coverShowInstructions').style.display = 'none';
   };
 
   return (

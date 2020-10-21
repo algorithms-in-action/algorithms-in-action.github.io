@@ -1,0 +1,31 @@
+.instructionTitle{
+    font-size: 2.4em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 26px 0 8px;
+    text-align: center;
+    color: white;
+    background: #000000;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: radial-gradient(circle 465px at -15.1% -25%, #1182c1 0%, #43a6ee 49%, #7ecbf4 90.2%);
+}
+
+.instructionSubTitle{
+    font-size: 1.25em;
+    font-weight: 500;
+    text-align: left;
+    margin: 30px 10px 10px 20px;
+}
+
+.instructionContent{
+    font-size: 1em;
+    font-weight: 300;
+    text-align: left;
+    margin: 8px 10px 10px 20px;
+}
+
+.instructionSubContent{
+    margin-bottom: 10px;
+}

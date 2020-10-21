@@ -63,7 +63,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
   }, [algorithm.explanation, fontSize, fontSizeIncrement]);
 
   const openCover = () => {
-    document.getElementById('cover-show-instructions').style.display = 'block';
+    document.getElementById('coverShowInstructions').style.display = 'block';
   };
 
 
