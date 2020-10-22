@@ -72,7 +72,7 @@ class GraphRenderer extends Renderer {
       l += ((elem.toString().length * 6) + 12);
     }
 
-    return this.toString(-l / 2);
+    return this.toString(-(l / 2));
   }
 
   renderData() {
@@ -85,6 +85,7 @@ class GraphRenderer extends Renderer {
       baseHeight * this.zoom,
     ];
     const arrayBottom = -28;
+    const arrowLength = 18;
     return (
       <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -115,7 +116,7 @@ class GraphRenderer extends Renderer {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
                 ex = sx + dx / length * (length - nodeRadius - arrowGap);
-                ey = sy + dy / length * (length - nodeRadius - arrowGap);
+                ey = sy + dy / length * (length - nodeRadius - arrowGap) - arrowLength;
               }
             }
 
