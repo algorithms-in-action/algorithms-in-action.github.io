@@ -166,9 +166,17 @@ export const GlobalActions = {
     playing,
   }),
 
-  COLLAPSE: (state, codeblockname) => {
+  COLLAPSE: (state, { codeblockname, expandOrCollapase }) => {
     const result = state.collapse;
-    result[state.id.name][state.id.mode][codeblockname] = !result[state.id.name][state.id.mode][codeblockname];
+
+    if (expandOrCollapase === undefined) {
+      result[state.id.name][state.id.mode][codeblockname] = !result[state.id.name][state.id.mode][codeblockname];
+    } else if (expandOrCollapase) {
+      result[state.id.name][state.id.mode][codeblockname] = true; // expand
+    } else {
+      result[state.id.name][state.id.mode][codeblockname] = false; // collapase
+    }
+
     return {
       ...state,
       collapse: result,

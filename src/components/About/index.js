@@ -5,7 +5,7 @@ import Header from './Header';
 import Team from './Team';
 import { team } from '../../resources/About';
 import '../../styles/About.scss';
-import { ReactComponent as Wave } from '../../assets/wave.svg';
+import { ReactComponent as Wave } from '../../assets/icons/wave.svg';
 import ClientSection from './ClientSection';
 import AppSection from './AppSection';
 import Contribute from './Contribute';
