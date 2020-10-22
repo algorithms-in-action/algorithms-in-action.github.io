@@ -85,7 +85,7 @@ export const team = [
   {
     name: 'Zihan Zhang',
     photo: Zihan,
-    github: 'http://www.google.com',
+    github: 'https://github.com/ZhangzihanGit',
     linkedIn: 'https://www.linkedin.com/in/zihan-zhang-a40855172/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
@@ -110,8 +110,8 @@ export const team = [
   {
     name: 'Yingsong Chen',
     photo: Yinsong,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/icarusunimelb',
+    linkedIn: 'https://www.linkedin.com/in/yinsong-chen-62707b15b/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
