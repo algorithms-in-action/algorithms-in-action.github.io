@@ -88,8 +88,13 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     const explaIndex = line.code.indexOf('//');
     let pseudoceArary = [];
     if (explaIndex === -1) {
-      const codeItemArray = line.code.split(' ');
-      pseudoceArary = [...codeFormatting(codeItemArray)];
+      if (line.ref && algorithm.collapse[line.ref]) {
+        const spanItem = <span key={key} className="explanation">{`//${line.code}`}</span>;
+        pseudoceArary.push(spanItem);
+      } else {
+        const codeItemArray = line.code.split(' ');
+        pseudoceArary = [...codeFormatting(codeItemArray)];
+      }
     } else if (explaIndex === 0) {
       const spanItem = <span key={key} className="explanation">{line.code}</span>;
       pseudoceArary.push(spanItem);
