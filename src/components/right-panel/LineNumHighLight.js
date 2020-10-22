@@ -86,7 +86,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     const explaIndex = line.code.indexOf('//');
     let pseudoceArary = [];
     if (explaIndex === -1) {
-      if (line.ref && algorithm.collapse[line.ref]) {
+      if (line.ref && algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
         const spanItem = <span key={key} className="explanation">{`//${line.code}`}</span>;
         pseudoceArary.push(spanItem);
       } else {
