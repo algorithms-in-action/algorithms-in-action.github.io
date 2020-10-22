@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import LineNumHighLight from './LineNumHighLight';
-import ButtonPanel from './ButtonPanel';
+import BottomButton from './BottomButton';
 
 function Pseudocode({ fontSize, fontSizeIncrement }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -28,9 +28,9 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
     show ? (
       <>
         <LineNumHighLight fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <ButtonPanel onClick={onExpand} name="Expand All" />
-          <ButtonPanel onClick={onCollapse} name="Collapse All" />
+        <div className="btnPanel">
+          <BottomButton onClick={onExpand} name="Expand All" />
+          <BottomButton onClick={onCollapse} name="Collapse All" />
         </div>
       </>
     ) : null

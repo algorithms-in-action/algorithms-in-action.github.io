@@ -101,7 +101,7 @@ export const team = [
   {
     name: 'Kenny Lee',
     photo: Kenny,
-    github: 'http://www.google.com',
+    github: 'https://github.com/kennylwx',
     linkedIn: 'https://www.linkedin.com/in/kennylwx/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
