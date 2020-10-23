@@ -1,26 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../../styles/RightPanel.scss';
 import HeaderButton from './HeaderButton';
 import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 import ExtraInfo from './ExtraInfo';
 
-function RightPanel() {
+function RightPanel({ fontSize, fontSizeIncrement }) {
   const buttons = [
     {
       id: 0,
       label: 'Background',
-      display: <Explanation />,
+      display: <Explanation fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
     {
       id: 1,
       label: 'Code',
-      display: <Pseudocode />,
+      display: <Pseudocode fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
     {
       id: 2,
       label: 'More',
-      display: <ExtraInfo />,
+      display: <ExtraInfo fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
 
   ];
@@ -39,3 +40,7 @@ function RightPanel() {
 }
 
 export default RightPanel;
+RightPanel.propTypes = {
+  fontSize: PropTypes.number.isRequired,
+  fontSizeIncrement: PropTypes.number.isRequired,
+};
