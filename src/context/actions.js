@@ -132,7 +132,7 @@ export const GlobalActions = {
     let result;
     do {
       result = state.chunker.next();
-    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
