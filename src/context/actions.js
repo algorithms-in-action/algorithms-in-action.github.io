@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
@@ -26,10 +27,10 @@ function isBookmarkVisible(pseudocode, collapse, bookmark) {
 }
 
 /**
- * Setup initial collapse state
+ * Setup initial collapse state for each pseudocode
  * @param {object} procedurePseudocode
  */
-function getCollapseController(procedurePseudocode) {
+function getCollapseControllerForSinglePseudocode(procedurePseudocode) {
   const collapseController = {};
   for (const codeBlockName of Object.keys(procedurePseudocode)) {
     if (codeBlockName === 'Main') {
@@ -37,6 +38,19 @@ function getCollapseController(procedurePseudocode) {
     } else {
       collapseController[codeBlockName] = false;
     }
+  }
+  return collapseController;
+}
+
+// get the collapse controller for all the algorithms and all the modes
+function getCollapseController(procedureAlgorithms) {
+  const collapseController = {};
+  for (const algorithmName of Object.keys(procedureAlgorithms)) {
+    const algorithmCollapseController = {};
+    for (const modeName of Object.keys(procedureAlgorithms[algorithmName].pseudocode)) {
+      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]); 
+    }
+    collapseController[algorithmName] = algorithmCollapseController;
   }
   return collapseController;
 }
@@ -66,17 +80,16 @@ export const GlobalActions = {
     } = data;
 
     const procedurePseudocode = pseudocode[params.mode];
-    const collapseController = getCollapseController(procedurePseudocode);
     addLineExplanation(procedurePseudocode);
 
     return {
-      id: params.name,
+      id: params,
       name,
       explanation,
       extraInfo,
       param,
       pseudocode: procedurePseudocode,
-      collapse: collapseController,
+      collapse: state === undefined || state.collapse === undefined ? getCollapseController(algorithms) : state.collapse,
       lineExplanation: '',
     };
   },
@@ -88,7 +101,6 @@ export const GlobalActions = {
       param, controller, name, explanation, extraInfo, pseudocode,
     } = data;
     const procedurePseudocode = pseudocode[params.mode];
-    const collapseController = getCollapseController(procedurePseudocode);
 
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
@@ -100,7 +112,7 @@ export const GlobalActions = {
 
     return {
       ...state,
-      id: params.name,
+      id: params,
       name,
       explanation,
       extraInfo,
@@ -109,7 +121,7 @@ export const GlobalActions = {
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
       visualisers: chunker.visualisers,
-      collapse: collapseController,
+      collapse: state === undefined || state.collapse === undefined ? getCollapseController(algorithms) : state.collapse,
       playing: false,
       lineExplanation: firstLineExplan,
     };
@@ -158,12 +170,13 @@ export const GlobalActions = {
     const result = state.collapse;
 
     if (expandOrCollapase === undefined) {
-      result[codeblockname] = !result[codeblockname];
+      result[state.id.name][state.id.mode][codeblockname] = !result[state.id.name][state.id.mode][codeblockname];
     } else if (expandOrCollapase) {
-      result[codeblockname] = true; // expand
+      result[state.id.name][state.id.mode][codeblockname] = true; // expand
     } else {
-      result[codeblockname] = false; // collapase
+      result[state.id.name][state.id.mode][codeblockname] = false; // collapase
     }
+
     return {
       ...state,
       collapse: result,
