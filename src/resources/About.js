@@ -139,8 +139,8 @@ export const team = [
   {
     name: 'Boyu Zhou',
     photo: Boyu,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/BOYU0926',
+    linkedIn: 'https://www.linkedin.com/in/boyu-zhou-05487b1a0/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
