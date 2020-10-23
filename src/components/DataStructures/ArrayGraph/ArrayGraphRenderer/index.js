@@ -69,7 +69,7 @@ class GraphRenderer extends Renderer {
     let l = 0;
     for (let index = 0; index < arr.length; index += 1) {
       const elem = arr[index];
-      l += ((elem.toString().length * 6) + 12);
+      l += ((elem.toString().length * 8) + 2);
     }
 
     return this.toString(-(l / 2));
@@ -78,14 +78,15 @@ class GraphRenderer extends Renderer {
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const arrayHeight = -16;
+    const arrowLength = 12;
     const viewBox = [
       (this.centerX - baseWidth / 2) * this.zoom,
       (this.centerY - baseHeight / 2) * this.zoom,
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
-    const arrayBottom = -28;
-    const arrowLength = 18;
+
     return (
       <svg className={styles.graph} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -108,15 +109,15 @@ class GraphRenderer extends Renderer {
             const { x: sx, y: sy } = sourceNode;
             let { x: ex, y: ey } = targetNode;
             const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
+            const my = (sy + (ey + arrayHeight)) / 2;
             const dx = ex - sx;
-            const dy = ey - sy;
+            const dy = (ey + arrayHeight) - sy;
             const degree = Math.atan2(dy, dx) / Math.PI * 180;
             if (isDirected) {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
                 ex = sx + dx / length * (length - nodeRadius - arrowGap);
-                ey = sy + dy / length * (length - nodeRadius - arrowGap) - arrowLength;
+                ey = sy + (dy + arrayHeight) / length * (length - nodeRadius - arrowGap) + arrowLength;
               }
             }
 
@@ -162,7 +163,7 @@ class GraphRenderer extends Renderer {
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayBottom}>
+                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayHeight}>
                   {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
                   <table className={styles.array_2d}>
                     <tbody>
