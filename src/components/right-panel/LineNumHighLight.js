@@ -6,7 +6,8 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -14,6 +15,7 @@ import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
+import { setFontSize, increaseFontSize } from '../top/helper';
 
 
 function blockContainsBookmark(algorithm, block) {
@@ -86,8 +88,13 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     const explaIndex = line.code.indexOf('//');
     let pseudoceArary = [];
     if (explaIndex === -1) {
-      const codeItemArray = line.code.split(' ');
-      pseudoceArary = [...codeFormatting(codeItemArray)];
+      if (line.ref && algorithm.collapse[line.ref]) {
+        const spanItem = <span key={key} className="explanation">{`//${line.code}`}</span>;
+        pseudoceArary.push(spanItem);
+      } else {
+        const codeItemArray = line.code.split(' ');
+        pseudoceArary = [...codeFormatting(codeItemArray)];
+      }
     } else if (explaIndex === 0) {
       const spanItem = <span key={key} className="explanation">{line.code}</span>;
       pseudoceArary.push(spanItem);
@@ -107,7 +114,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
         className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
         onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
       >
-        <DescriptionIcon style={{ fontSize: 10 }} />
+        <DescriptionIcon style={{ fontSize: 14 }} />
       </button>;
     }
 
@@ -122,14 +129,14 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <span>{i}</span>
           <span>
             <button
-              className="expand-collopse-button"
+              className={algorithm.collapse[line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
-                dispatch(GlobalActions.COLLAPSE, line.ref);
+                dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
               }}
             >
               {algorithm.collapse[line.ref]
-                ? <ExpandMoreIcon style={{ fontSize: 12 }} />
-                : <ChevronRightIcon style={{ fontSize: 12 }} />}
+                ? <ExpandMoreIcon style={{ fontSize: 16 }} />
+                : <ChevronRightIcon style={{ fontSize: 16 }} />}
             </button>
           </span>
           <span>{lineExplanButton}</span>
@@ -147,6 +154,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           key={i}
           className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
+
         >
           <span>{i}</span>
           <span>{null}</span>
@@ -159,17 +167,50 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   return { index: i, cl: codeLines };
 }
 
-const LineNumHighLight = () => {
+const pseudoCodePadding = (lineNum, limit) => {
+  const codeLines = [];
+
+  for (let i = lineNum; i < (lineNum + limit); i++) {
+    codeLines.push(
+    <p
+      key={i}
+      role="presentation"
+    >
+      <span>{i}</span>
+    </p>,
+    );
+  }
+
+  return codeLines;
+};
+
+const PADDING_LINE = 6;
+
+const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const { algorithm, dispatch } = useContext(GlobalContext);
+  const fontID = 'pseudocodeContainer';
+
+  useEffect(() => {
+    setFontSize(fontID, fontSize);
+    increaseFontSize(fontID, fontSizeIncrement);
+  }, [fontSizeIncrement, fontSize]);
+
+  const { index, cl } = pseudocodeBlock(algorithm, dispatch, 'Main', 0);
+  const pseudoCodePad = pseudoCodePadding(index + 1, PADDING_LINE);
 
   return (
     <div className="line-light">
-      <div className="code-container">
-        {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
+      <div className="code-container" id={fontID}>
+        {cl}
+        {pseudoCodePad}
       </div>
-      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} /> : ''}
+      { algorithm.lineExplanation ? <LineExplanation explanation={algorithm.lineExplanation} fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} /> : ''}
     </div>
   );
 };
 
 export default LineNumHighLight;
+LineNumHighLight.propTypes = {
+  fontSize: PropTypes.number.isRequired,
+  fontSizeIncrement: PropTypes.number.isRequired,
+};

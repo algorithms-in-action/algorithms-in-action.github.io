@@ -13,16 +13,17 @@ $blueLine: rgba(0, 187, 255, 0.2);
 $sidePad: 24px;
 
 // Header
-$headerBg: #001F39;
-$headerFontCol: #E0E0E0;
-$headerBtnCol: #E7E7E7;
+$headerBg: #01233F;
+$headerFontCol:#d7d7d7;
+$headerBtnCol: #d3d3d3;
 $headerBtnHgCol: $sigBlue;
-$headerHeight: 40px;
+$headerHeight: 30px;
+$headerOffset: 15px;
 
 // Left Panel
-$leftCatFontCol: #4D4D4D;
-$leftFontCol: #565656;
-$leftCatBg: #f5f5f5;
+$leftCatFontCol: #595959;
+$leftFontCol: #393939;
+$leftCatBg: #F9F9F9;
 
 $searchHeight: 40px;
 $leftFontSize: 0.89em;
@@ -57,6 +58,7 @@ $paramBg: $lightWhite;
 $paramFontCol: #343434;
 $paramOffset: $sidePad;
 $ctrlOffset: $sidePad;
+$paramMinWidth: 420px;
 
 // Param
 $paramBorderCol: #D4D4D4;
@@ -101,12 +103,6 @@ $codeExpandBtn: $blue;
 	-moz-border-radius: $radius;
 }
 
-// @mixin give-height($x, $y) {
-// 	height: -moz-calc($x - $y); /* Firefox */
-// 	height: -webkit-calc($x - $y); /* Chrome, Safari */
-// 	height: calc($x - $y); /* IE9+ and future browsers */
-// }
-
 @mixin calc($property, $expression...) { 
   #{$property}: -moz-calc(#{$expression}); 
   #{$property}: -o-calc(#{$expression}); 
@@ -116,4 +112,28 @@ $codeExpandBtn: $blue;
 
 @mixin textPadding {
   padding: 12px 8px 24px 12px;
+}
+
+@mixin removeBtnStyling {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+
+@mixin gradientText($background) {
+	background: $background;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+@mixin preventWrap {
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

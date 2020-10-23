@@ -15,7 +15,7 @@ import React from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
-import { mode } from '../../../Header';
+import { mode } from '../../../top/Settings';
 
 let modename;
 function switchmode(modetype = mode()) {

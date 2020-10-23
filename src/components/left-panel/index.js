@@ -1,18 +1,18 @@
 /* eslint-disable max-len */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Input, withStyles } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/LeftPanel.scss';
 import { AlgorithmCategoryList, AlgorithmList } from '../../algorithms';
+import { increaseFontSize, setFontSize } from '../top/helper';
 
-function LeftPanel() {
+function LeftPanel({ fontSize, fontSizeIncrement }) {
   const itemListState = AlgorithmCategoryList;
   const { dispatch } = useContext(GlobalContext);
   const [displaySearch, setDisplaySearch] = useState(null);
@@ -50,10 +50,17 @@ function LeftPanel() {
     root: {
       backgroundColor: 'white',
       '&.Mui-selected': {
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#EAEAEA',
       },
     },
   })(ListItem);
+
+
+  const fontID = 'itemListContainer';
+  useEffect(() => {
+    setFontSize(fontID, fontSize);
+    increaseFontSize(fontID, fontSizeIncrement);
+  }, [algorithm.explanation, fontSize, fontSizeIncrement]);
 
 
   return (
@@ -65,7 +72,7 @@ function LeftPanel() {
         disableUnderline={isDisableUnderline}
         onChange={searchAlgorithm}
       />
-      <div className="itemListContainer">
+      <div className="itemListContainer" id={fontID}>
 
         {
           (displaySearch === null)
@@ -80,7 +87,6 @@ function LeftPanel() {
                         disableTypography
                         className="algorithm-list-main"
                       />
-                      {openStatus[cat.id] ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
                     <Collapse in={openStatus[cat.id]} timeout="auto" unmountOnExit>
                       {
@@ -137,3 +143,7 @@ function LeftPanel() {
 }
 
 export default LeftPanel;
+LeftPanel.propTypes = {
+  fontSize: PropTypes.number.isRequired,
+  fontSizeIncrement: PropTypes.number.isRequired,
+};

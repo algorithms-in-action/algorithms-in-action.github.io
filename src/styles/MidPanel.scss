@@ -7,34 +7,17 @@
   
   .midPanelHeader {
     height: $midHeaderHeight;
-    // border-bottom: $borderSize solid $borderCol;
-    display: flex;
-    justify-content: space-between;
     background-color: $midHeaderCol;
+    display: flex;
+    align-items: center;
     
     .algorithmTitle {
       font-size: $midTitleFontSize;
       margin: auto $midOffset;
       color: $midTitleFontCol;
       font-weight: 300;
-    }
-
-    .quizButton {
-      margin: auto $midOffset;
-      font-size: 0.8em;
-      background-color: Transparent;
-      background-repeat:no-repeat;
-      border: none;
-      cursor:pointer;
-      overflow: hidden;
-      outline:none;
-      font-size: 0.8em;
-      font-weight: 400;
-      padding: 4px 8px;
-      border-radius: 20px;
-      background-color: $quizButCol;
-      color: $midTitleFontCol;
-
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
   }

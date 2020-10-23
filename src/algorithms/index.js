@@ -145,3 +145,4 @@ const generateAlgorithmList = () => {
 export default algorithms;
 export const AlgorithmCategoryList = generateAlgorithmCategoryList();
 export const AlgorithmList = generateAlgorithmList();
+export const AlgorithmNum = generateAlgorithmList().length;
