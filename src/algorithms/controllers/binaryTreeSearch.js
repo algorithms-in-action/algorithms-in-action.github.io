@@ -37,7 +37,8 @@ export default {
       chunker.add(2);
       if (current === item) {
         chunker.add(3);
-        return;
+        // for test
+        return 'success';
       }
 
       chunker.add(4);
@@ -62,5 +63,7 @@ export default {
       }
     }
     chunker.add(7);
+    // for test
+    return 'fail';
   },
 };

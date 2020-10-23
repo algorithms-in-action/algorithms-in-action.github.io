@@ -1,18 +1,44 @@
 /* eslint-disable no-prototype-builtins */
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
+import { GlobalActions } from '../../context/actions';
 import LineNumHighLight from './LineNumHighLight';
+import ButtonPanel from './ButtonPanel';
 
-function Pseudocode() {
-  const { algorithm } = useContext(GlobalContext);
+function Pseudocode({ fontSize, fontSizeIncrement }) {
+  const { algorithm, dispatch } = useContext(GlobalContext);
   const show = !!algorithm.hasOwnProperty('pseudocode');
+
+  const onExpand = () => {
+    Object.keys(algorithm.pseudocode).forEach((key) => {
+      dispatch(GlobalActions.COLLAPSE, { codeblockname: key, expandOrCollapase: true });
+    });
+  };
+
+  const onCollapse = () => {
+    Object.keys(algorithm.pseudocode).forEach((key) => {
+      if (key !== 'Main') {
+        dispatch(GlobalActions.COLLAPSE, { codeblockname: key, expandOrCollapase: false });
+      }
+    });
+  };
+
   return (
     show ? (
       <>
-        <LineNumHighLight />
+        <LineNumHighLight fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <ButtonPanel onClick={onExpand} name="Expand All" />
+          <ButtonPanel onClick={onCollapse} name="Collapse All" />
+        </div>
       </>
     ) : null
   );
 }
 
 export default Pseudocode;
+Pseudocode.propTypes = {
+  fontSize: PropTypes.number.isRequired,
+  fontSizeIncrement: PropTypes.number.isRequired,
+};

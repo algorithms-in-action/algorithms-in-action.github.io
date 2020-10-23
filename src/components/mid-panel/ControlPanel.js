@@ -10,6 +10,7 @@ import { ReactComponent as PauseIcon } from '../../assets/icons/pause.svg';
 import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../assets/icons/arrow.svg';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
+import Grid from '@material-ui/core/Grid';
 import '../../styles/ControlPanel.scss';
 
 const muiTheme = createMuiTheme({
@@ -83,31 +84,23 @@ function ControlPanel() {
    */
   useInterval(() => {
     play();
-  }, playing ? 10000 / (Math.E ** speed) : null);
-
+  }, playing ? 2000 - (19 * speed) : null);
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
 
   return (
-    <div className="container">
+    <div className="controlContainer">
       <div className="controlPanel">
         {/* Speed Slider */}
         <div className="sliderContainer">
           <div className="slider">
             <ThemeProvider theme={muiTheme}>
-              <Slider
-                placeholder="slider"
-                defaultValue={3}
-                value={speed}
-                aria-labelledby="discrete-slider"
-                valueLabelDisplay="auto"
-                step={1}
-                marks
-                min={1}
-                max={5}
-                onChange={handleSliderChange}
-              />
+             <Grid container spacing={2}>
+              <Grid item xs>
+               <Slider value={speed} onChange={handleSliderChange} aria-labelledby="continuous-slider" />
+              </Grid>
+             </Grid>
             </ThemeProvider>
           </div>
         </div>

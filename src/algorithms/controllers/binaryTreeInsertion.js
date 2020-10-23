@@ -99,5 +99,8 @@ export default {
         }
       }
     }
+    // for test
+    // eslint-disable-next-line consistent-return
+    return tree;
   },
 };
