@@ -1,5 +1,7 @@
 @import './global.scss';
 
+
+
 .algorithm-list-bg{
     background-color: $leftCatBg !important;
 }
@@ -28,6 +30,11 @@
     width: 100%;
     height: $searchHeight;
     // border-bottom: 3px solid $borderCol;
+}
+
+.container {
+    width: 100%;
+
 }
 
 .itemListContainer {

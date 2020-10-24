@@ -45,6 +45,8 @@ body {
 #tabpages {
 	overflow: auto;
 	grid-area: tabpages;
+	background-color: $midBgCol;
+
 }
 
 #footer {

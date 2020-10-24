@@ -27,7 +27,7 @@ function App() {
   };
 
   useEffect(() => {
-    window.addEventListener('resize', resizeWindow);
+    window.addEventListener('resize', (event) => { resizeWindow(event); });
     // eslint-disable-next-line no-unused-vars
     return (_) => { window.removeEventListener('resize', resizeWindow); };
   });
