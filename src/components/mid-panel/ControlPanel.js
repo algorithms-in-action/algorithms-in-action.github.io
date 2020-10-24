@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import ControlButton from '../common/ControlButton';
 import useInterval from '../../context/useInterval';
 import { ReactComponent as PlayIcon } from '../../assets/icons/play.svg';
@@ -10,7 +11,6 @@ import { ReactComponent as PauseIcon } from '../../assets/icons/pause.svg';
 import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../assets/icons/arrow.svg';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-import Grid from '@material-ui/core/Grid';
 import '../../styles/ControlPanel.scss';
 
 const muiTheme = createMuiTheme({
@@ -35,7 +35,7 @@ const muiTheme = createMuiTheme({
   },
 });
 
-const DEFAULT_SPEED = 3;
+const DEFAULT_SPEED = 50;
 
 function ControlPanel() {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -96,11 +96,11 @@ function ControlPanel() {
         <div className="sliderContainer">
           <div className="slider">
             <ThemeProvider theme={muiTheme}>
-             <Grid container spacing={2}>
-              <Grid item xs>
-               <Slider value={speed} onChange={handleSliderChange} aria-labelledby="continuous-slider" />
+              <Grid container spacing={2}>
+                <Grid item xs>
+                  <Slider value={speed} onChange={handleSliderChange} aria-labelledby="continuous-slider" />
+                </Grid>
               </Grid>
-             </Grid>
             </ThemeProvider>
           </div>
         </div>
