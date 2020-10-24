@@ -48,7 +48,7 @@ function getCollapseController(procedureAlgorithms) {
   for (const algorithmName of Object.keys(procedureAlgorithms)) {
     const algorithmCollapseController = {};
     for (const modeName of Object.keys(procedureAlgorithms[algorithmName].pseudocode)) {
-      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]); 
+      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]);
     }
     collapseController[algorithmName] = algorithmCollapseController;
   }
@@ -132,7 +132,7 @@ export const GlobalActions = {
     let result;
     do {
       result = state.chunker.next();
-    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
@@ -149,7 +149,7 @@ export const GlobalActions = {
     let result;
     do {
       result = state.chunker.prev();
-    } while (!isBookmarkVisible(state.pseudocode, state.collapse, result.bookmark));
+    } while (!isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
