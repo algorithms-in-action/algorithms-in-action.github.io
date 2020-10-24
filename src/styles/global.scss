@@ -10,7 +10,7 @@ $white: #FFFFFF;
 $yellowLine: #FFDE3C;
 $blueLine: rgba(0, 187, 255, 0.2);
 
-$sidePad: 24px;
+$sidePad: 16px;
 
 // Header
 $headerBg: #01233F;
@@ -18,7 +18,7 @@ $headerFontCol:#d7d7d7;
 $headerBtnCol: #d3d3d3;
 $headerBtnHgCol: $sigBlue;
 $headerHeight: 30px;
-$headerOffset: 15px;
+$headerOffset: 16px;
 
 // Left Panel
 $leftCatFontCol: #595959;
@@ -110,9 +110,6 @@ $codeExpandBtn: $blue;
   #{$property}: calc(#{$expression}); 
 } 
 
-@mixin textPadding {
-  padding: 12px 8px 24px 12px;
-}
 
 @mixin removeBtnStyling {
 	background: none;

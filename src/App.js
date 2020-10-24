@@ -15,7 +15,7 @@ import {
 import useComponentVisible from './components/top/helper';
 
 const DEFAULT_FONT_INCREMENT = 0;
-const LEFT_FONT_SIZE = 14;
+const LEFT_FONT_SIZE = 13;
 const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
