@@ -48,7 +48,7 @@ function getCollapseController(procedureAlgorithms) {
   for (const algorithmName of Object.keys(procedureAlgorithms)) {
     const algorithmCollapseController = {};
     for (const modeName of Object.keys(procedureAlgorithms[algorithmName].pseudocode)) {
-      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]); 
+      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]);
     }
     collapseController[algorithmName] = algorithmCollapseController;
   }
