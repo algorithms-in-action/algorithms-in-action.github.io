@@ -33,26 +33,38 @@ export const genRandNumList = (num, min, max) => {
 export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}
-    logTag={`${type} success!`}
-    logMsg={`Input for ${type} algorithm is valid.`}
+    logTag="Great success!"
+    logMsg={`The ${type} algorithm is now ready for execution.`}
   />
 );
 
 /**
  *
  * @param {string} type algorithm type
- * @param {string} exmaple optional provided
+ * @param {string} example optional provided
  * @param {string} reason optional provided, if not provide, use default value
  */
 export const errorParamMsg = (
   type,
-  exmaple,
-  reason = `Input for ${type} algorithm is not valid.`,
+  example,
+  reason = `It seems the ${type} algorithm does not accept this data.`,
 ) => (
   <ParamMsg
     logWarning
-    logTag={`${type} failure!`}
-    logMsg={`${reason}. ${exmaple || ''}`}
+    logTag="Oops..."
+    logMsg={`${reason} ${example || ''}`}
+  />
+);
+
+/**
+ *
+ * @returns {string} success message
+ */
+export const finishedAlgorithmMsg = () => (
+  <ParamMsg
+    logWarning={false}
+    logTag="Great success!"
+    logMsg="The algorithm has finished executing."
   />
 );
 

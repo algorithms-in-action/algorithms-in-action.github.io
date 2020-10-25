@@ -11,7 +11,7 @@ import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
 const PRIMS = 'Prim\'s';
-const PRIMS_EXAMPLE = 'Example: 0,1';
+const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 
 function PrimsParam() {
   const [message, setMessage] = useState(null);
