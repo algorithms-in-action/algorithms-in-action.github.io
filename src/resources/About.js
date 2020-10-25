@@ -148,8 +148,8 @@ export const team = [
   {
     name: 'João Pereira',
     photo: Joao,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/jofrancis1997',
+    linkedIn: 'https://www.linkedin.com/in/joão-pereira-574972163/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
