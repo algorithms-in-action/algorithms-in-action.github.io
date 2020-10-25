@@ -289,7 +289,7 @@ class ArrayGraphTracer extends Tracer {
     // If there is a sole node, it centers it.
     if (this.nodes.length === 1) {
       const [node] = this.nodes;
-      node.x = (rect.left + rect.right) / 2 - 0.5 * rect.width;
+      node.x = (rect.left + rect.right) / 2;
       node.y = (rect.top + rect.bottom) / 2;
       return;
     }

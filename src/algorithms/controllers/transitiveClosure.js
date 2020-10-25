@@ -17,7 +17,7 @@ export default {
   },
 
   run(chunker, { matrix, size }) {
-    const nodes = matrix;
+    const nodes = [...matrix];
     const numOfNodes = size;
     
     chunker.add(1, (g) => {
@@ -27,9 +27,10 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
-        if (nodes[i][k] === 1 && i !== k) {
+        if (nodes[i][k]) {
           for (let j = 0; j < numOfNodes; j++) {
-            if (nodes[k][j] === 1 && k !== j && i !== j) {
+            if (nodes[k][j]) {
+              nodes[i][j] = 1;
               chunker.add(2, (g, i, j) => {
                 g.graph.visit(i);
                 g.graph.visit(k, i);
@@ -50,9 +51,11 @@ export default {
                 g.graph.leave(i);
               }, [i, j, k]);
             }  
-          } 
-       }
-     }
-  }
+          }
+        }
+      }
+    }
+    // for test
+    return nodes;
   },
 };

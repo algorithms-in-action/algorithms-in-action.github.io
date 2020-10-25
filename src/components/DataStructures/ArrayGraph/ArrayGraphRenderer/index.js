@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable no-mixed-operators */
@@ -82,15 +83,28 @@ class GraphRenderer extends Renderer {
     return { x, y };
   }
 
+  getArrayCenter(arr) {
+    let l = 0;
+    for (let index = 0; index < arr.length; index += 1) {
+      const elem = arr[index];
+      l += ((elem.toString().length * 8) + 2);
+    }
+
+    return this.toString(-(l / 2));
+  }
+
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const arrayHeight = -16;
+    const arrowLength = 12;
     const viewBox = [
       (this.centerX - baseWidth / 2) * this.zoom,
       (this.centerY - baseHeight / 2) * this.zoom,
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
+
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -113,15 +127,15 @@ class GraphRenderer extends Renderer {
             const { x: sx, y: sy } = sourceNode;
             let { x: ex, y: ey } = targetNode;
             const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
+            const my = (sy + (ey + arrayHeight)) / 2;
             const dx = ex - sx;
-            const dy = ey - sy;
+            const dy = (ey + arrayHeight) - sy;
             const degree = Math.atan2(dy, dx) / Math.PI * 180;
             if (isDirected) {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
                 ex = sx + dx / length * (length - nodeRadius - arrowGap);
-                ey = sy + dy / length * (length - nodeRadius - arrowGap);
+                ey = sy + (dy + arrayHeight) / length * (length - nodeRadius - arrowGap) + arrowLength;
               }
             }
 
@@ -143,9 +157,7 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
-            // console.log(x+" "+value.toString());
-            // console.log(typeof value);
-            // console.log(value);
+
             let arr = [];
             if (typeof value === 'object') {
               arr = Object.values(value);
@@ -155,7 +167,6 @@ class GraphRenderer extends Renderer {
             } else {
               arr.push(value);
             }
-            // console.log(arr);
 
             const data = [];
             for (let i = 0; i < arr.length; i += 1) {
@@ -170,13 +181,12 @@ class GraphRenderer extends Renderer {
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                {/* TODO: calculate the height of the array to set y, shouldn't use magic number */}
-                <foreignObject width="100%" height="50px" x={-(arr.length * 18) / 2} y="-13">
+                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayHeight}>
                   {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
                   <table className={styles.array_2d}>
                     <tbody>
                       <tr className={styles.row}>
-                        {data.map(elem => (<td key={elem.value} className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
+                        {data.map((elem, i) => (<td key={`${i}-${elem.value}`} className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
                       </tr>
                     </tbody>
                   </table>
