@@ -81,28 +81,67 @@ function App() {
         />
       ) : ''}
 
-      <div id="page" onMouseUp={endDrag} role="button" tabIndex="-1" onMouseMove={(event) => onDrag(event)}>
+      <div
+        id="page"
+        onMouseUp={endDrag}
+        role="button"
+        tabIndex="-1"
+        onMouseMove={(event) => onDrag(event)}
+      >
         <div id="header">
           <Header onSetting={onSetting} />
         </div>
 
         <div id="leftcol">
-          <LeftPanel fontSize={LEFT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
+          <LeftPanel
+            fontSize={LEFT_FONT_SIZE}
+            fontSizeIncrement={fontSizeIncrease}
+          />
         </div>
-        <div id="leftdragbar" tabIndex="-1" aria-label="Move left drag bar" onDoubleClick={collapseLeftDrag} onMouseDown={startLeftDrag} role="button">
-          <div id="draghandle" />
+        <div
+          id="leftdragbar"
+          tabIndex="-1"
+          aria-label="Move left drag bar"
+          onDoubleClick={collapseLeftDrag}
+          onMouseDown={startLeftDrag}
+          role="button"
+          className="dragbar"
+        >
+          <div id="draghandle" className="handle" />
         </div>
         <div id="tabpages">
-          <MidPanel fontSize={MID_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
+          <MidPanel
+            fontSize={MID_FONT_SIZE}
+            fontSizeIncrement={fontSizeIncrease}
+          />
         </div>
-        <div id="rightdragbar" tabIndex="-1" aria-label="Move right drag bar" onDoubleClick={collapseRightDrag} onMouseDown={startRightDrag} role="button">
-          <div id="draghandle" />
+        <div
+          id="rightdragbar"
+          tabIndex="-1"
+          aria-label="Move right drag bar"
+          onDoubleClick={collapseRightDrag}
+          onMouseDown={startRightDrag}
+          role="button"
+          className="dragbar"
+        >
+          <div id="draghandle" className="handle" />
         </div>
         <div id="rightcol">
-          <RightPanel fontSize={RIGHT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
+          <RightPanel
+            fontSize={RIGHT_FONT_SIZE}
+            fontSizeIncrement={fontSizeIncrease}
+          />
         </div>
-        <div id="bottomdragbar" tabIndex="-1" aria-label="Move bottom drag bar" onDoubleClick={collapseBottomDrag} onMouseDown={startBottomDrag} role="button">
-          <div id="draghandle" />
+        <div
+          id="bottomdragbar"
+          tabIndex="-1"
+          aria-label="Move bottom drag bar"
+          onDoubleClick={collapseBottomDrag}
+          onMouseDown={startBottomDrag}
+          role="button"
+          className="dragbar"
+        >
+          <div id="draghandle" className="handle" />
         </div>
         <div id="footer">
           <ControlPanel />

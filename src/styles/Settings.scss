@@ -1,5 +1,12 @@
 @import './global.scss';
 
+@mixin borderSeparate {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid $borderCol;
+}
+
+
 .settingsContainer {
   // Position
   position: absolute;
@@ -24,12 +31,26 @@
   font-size: 0.95em;
 }
 
+
+.setContainer {
+  @include borderSeparate;
+
+  .label {
+    margin: 4px 0 8px;
+    text-transform: uppercase;
+    font-size: 0.78em;
+    font-weight: 500;
+    color: #606060;
+  }
+}
+
+
+
+
+
 .fontSize {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid $borderCol;
   $btnRad: 8px;
 
   .fontBtn {
@@ -117,40 +138,64 @@ $outerBorder: 2px;
     border: $outerBorder solid $sigBlue;
   }
 
-  .red {
-    background: #a4092d;
+
+}
+
+// asdassda
+.settingFooter {
+  display: flex;
+
+  .saveBtn {
+    @include removeBtnStyling;
+    padding: 8px 0;
+    flex: 1;
+    cursor: pointer;
+    text-transform: uppercase;
+    background-color: rgb(237, 237, 237);
+    font-size: 0.82em;
+    color: #454545;
+
   }
 
-  .yellow {
-    background: #F1F511;
-  }
+  .saveBtn:active {
+    background-color: rgb(220, 220, 220);
 
-  .green {
-    background: #39E787;
   }
+}
 
-  .pink {
-    background: #E26FF1;
-  }
 
-  .cyan {
-    background: #2BB2E9;
-  }
+.red {
+  background: #a4092d;
+}
 
-  .blue {
-    background: #2962FF;
-  }
+.yellow {
+  background: #F1F511;
+}
 
-  .black {
-    background: #505050;
-  }
+.green {
+  background: #39E787;
+}
 
-  .grey {
-    background: #BBBBBB;
-  }
+.pink {
+  background: #E26FF1;
+}
 
-  .white {
-    background: #cecece;
-  }
+.cyan {
+  background: #2BB2E9;
+}
 
+.blue {
+  background: #2962FF;
+}
+
+.black {
+  background: #505050;
+}
+
+.grey {
+  background: #BBBBBB;
+}
+
+.white {
+  background: #cecece;
 }

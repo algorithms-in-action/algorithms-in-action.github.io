@@ -37,22 +37,27 @@ function Settings({
     const num = parseInt(id, 10);
     mode = () => num;
     setCurrColBtn(num);
-    onSetting();
+    // onSetting();
     handleColorModeChange(Number(id));
   };
 
   return (
     <div className="settingsContainer">
-      <div className="fontSize">
-        <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-1); }}>
-          <Font />
-        </button>
-        <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(1); }}>
-          <Font />
-        </button>
+      <div className="setContainer">
+        <div className="label">Font Size</div>
+        <div className="fontSize">
+          <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-1); }}>
+            <Font />
+          </button>
+          <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(1); }}>
+            <Font />
+          </button>
+        </div>
       </div>
-      <div className="algoCol">
-        {
+      <div className="setContainer">
+        <div className="label">Data Structures</div>
+        <div className="algoCol">
+          {
           allColBtn.map(({ primary, secondary, id }, index) => (
             <button key={id} id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => onColorClick(e.target.id)}>
               <span id={index} className={`left ${primary}`}> </span>
@@ -60,6 +65,10 @@ function Settings({
             </button>
           ))
         }
+        </div>
+      </div>
+      <div className="settingFooter">
+        <button className="saveBtn" type="button" onClick={onSetting}>Return</button>
       </div>
     </div>
   );

@@ -21,9 +21,7 @@ $headerHeight: 30px;
 $headerOffset: 16px;
 
 // Left Panel
-$leftCatFontCol: #595959;
-$leftFontCol: #393939;
-$leftCatBg: #F9F9F9;
+$leftFontCol: #393939;;
 
 $searchHeight: 40px;
 $leftFontSize: 0.89em;
@@ -40,7 +38,8 @@ $midTitleFontSize: 0.89em;
 
 // Dragbar and borders 
 $handleCol: #e6e6e6;
-$dragbarCol: #f0f0f0;
+$handleHover: #eeeeee;
+$dragbarCol: #f4f4f4;
 $handleLen: 60px;
 $dragBarWidth: 10px;
 
@@ -76,7 +75,7 @@ $lineHgCol: $blueLine;
 $rightNumCol: #9DA9AD;
 $rightNumBgCol: #F9F9F9;
 $codeBgCol:  #F9F9F9;
-$codeFontCol: #434343;
+$codeFontCol: #383A43;
 $codeExpandBtn: $blue;
 
 

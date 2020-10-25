@@ -10,6 +10,8 @@ $itemBorderHard: #d5d5d5;
 $itemBorderLight: #eeeeee;
 $itemBg: white;
 
+$border: 4px;
+
 .content {
   transition: max-height 0.06s ease-in;
   -webkit-transition: max-height 0.06s ease-in;
@@ -37,11 +39,11 @@ $itemBg: white;
       -webkit-appearance: none;
       outline: none;
       border: none;
-      border-left: thick solid $itemBorderHard;
+      border-left: $border solid $itemBorderHard;
         
     }
     .searchInput:focus {
-      border-left: thick solid $itemHoverBorder;
+      border-left: $border solid $itemHoverBorder;
       background-color: $itemHoverBg;
     }
   }   
@@ -72,7 +74,7 @@ $itemBg: white;
   text-align: left;
   padding: 0 $padding;
 
-  border-left: thick solid $itemBorderHard;
+  border-left: $border solid $itemBorderHard;
   text-transform: uppercase;
 
   min-height: $itemHeight !important;
@@ -86,7 +88,7 @@ $itemBg: white;
 }
 
 .algoCat:hover {
-  border-left: thick solid $itemHoverBorder;
+  border-left: $border solid $itemHoverBorder;
   background-color: $itemHoverBg;
 
 }
@@ -104,36 +106,38 @@ $itemBg: white;
   align-items: stretch;
 
   .algoItemContent {
-    border-left: thick solid $itemBorderLight;
+    border-left: $border solid $itemBorderLight;
     padding: 0 $padding;
 
     width: 100%;
   
-    text-overflow: ellipsis;
     text-align: left;
     font-weight: 300;
     font-size: 0.95em;
 
     display: flex;
+    
+
     align-items: center;
     white-space: nowrap;
+    text-overflow: ellipsis;
     overflow: hidden;
   }
 
   .algoItemContent:hover {
-    border-left: thick solid $itemHoverBorder;
+    border-left: $border solid $itemHoverBorder;
     background-color: $itemHoverBg;
   }
 }
 
 .active {
   .algoItemContent {
-    border-left: thick solid $sigBlue;
+    border-left: $border solid $sigBlue;
     color: $sigBlue;
   }
 
   .algoItemContent:hover {
-    border-left: thick solid $sigBlue;
+    border-left: $border solid $sigBlue;
     color: $sigBlue;
   }
 

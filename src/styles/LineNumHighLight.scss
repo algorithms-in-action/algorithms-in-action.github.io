@@ -88,12 +88,12 @@ $containerTopBottomPad: 2%;
 }
 
 .line-light p:hover {
-  background-color: rgba(238, 238, 238, 0.475);
+  background-color: #f4f4f4;
 
 }
 
 .line-light p:active {
-  background-color: rgb(238, 238, 238)
+  background-color: #F0F0F0;
 }
 
 .line-light p span {
@@ -135,16 +135,27 @@ $containerTopBottomPad: 2%;
 }
 
 .explanation{
-  color: rgb(4, 151, 4);
+  color: #A0A1A8;
 }
 
 .keyword{
-  color: rgb(194, 32, 235);
-  font-weight:bold;
+  color: #B502A9;
+  font-weight:500;
+
+}
+
+.variable {
+  color: #A06600;
+}
+
+.operator {
+  color: #0086C1;
 }
 
 .function{
-  color: rgb(74, 101, 255);
+  color: #327BF7;
+  font-weight:500;
+
 }
 
 
