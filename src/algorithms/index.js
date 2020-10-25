@@ -84,7 +84,6 @@ const algorithms = {
       tc: Controller.transitiveClosure,
     },
   },
-
 };
 
 /**

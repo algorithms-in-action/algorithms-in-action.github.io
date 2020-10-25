@@ -1,18 +1,5 @@
 @import './global.scss';
 
-
-
-
-.content {
-    transition: max-height 0.06s ease-in;
-    -webkit-transition: max-height 0.06s ease-in;
-    -moz-transition: max-height 0.06s ease-in;
-    -o-transition: max-height 0.06s ease-in;
-    -ms-transition: max-height 0.06s ease-in;
-    max-height: 0;
-}
-
-
 $padding: 16px;
 $itemHeight: 40px;
 
@@ -23,133 +10,131 @@ $itemBorderHard: #d5d5d5;
 $itemBorderLight: #eeeeee;
 $itemBg: white;
 
+.content {
+  transition: max-height 0.06s ease-in;
+  -webkit-transition: max-height 0.06s ease-in;
+  -moz-transition: max-height 0.06s ease-in;
+  -o-transition: max-height 0.06s ease-in;
+  -ms-transition: max-height 0.06s ease-in;
+  max-height: 0;
+}
 
 .container {
+  display: flex;
+  flex-direction: column;
+
+  span {
+    display: flex;
+
+    .searchInput{
+      font-size: 0.82em !important;
+      font-weight: 500;
+      color: $leftFontCol;
+      padding: 0px $padding;
+      background-color: #F9F9F9;
+      width: 100%;
+      height: $searchHeight;
+      -webkit-appearance: none;
+      outline: none;
+      border: none;
+      border-left: thick solid $itemBorderHard;
+        
+    }
+    .searchInput:focus {
+      border-left: thick solid $itemHoverBorder;
+      background-color: $itemHoverBg;
+    }
+  }   
+  
+  // Algorithm List
+  .algorithmList {
     display: flex;
     flex-direction: column;
-    // overflow:hidden;
 
-    // Search Input
-    span {
-        display: flex;
-
-        .searchInput{
-            font-size: 0.82em !important;
-            font-weight: 500;
-            color: $leftFontCol;
-            padding: 0px $padding;
-            background-color: #F9F9F9;
-            
-            width: 100%;
-            height: $searchHeight;
-        
-            -webkit-appearance: none;
-            outline: none;
-            border: none;
-            border-left: thick solid $itemBorderHard;
-            
-        }
-    
-        .searchInput:focus {
-            border-left: thick solid $itemHoverBorder;
-            background-color: $itemHoverBg;
-    
-        }
-    }
-    
-    // Algorithm List
-    .algorithmList {
-        display: flex;
-        flex-direction: column;
-
-        .algoItemContainer {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-
-        }
+    .algoItemContainer {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
 
     }
+
+  }
     
 
 }
 
 .algoCat {
-    @include removeBtnStyling;
-    font-size: 0.9em;
-    font-weight: 400;
-    color: #727272;
-    background-color: $itemBg;
-    text-align: left;
-    padding: 0 $padding;
+  @include removeBtnStyling;
+  font-size: 0.9em;
+  font-weight: 400;
+  color: #727272;
+  background-color: $itemBg;
+  text-align: left;
+  padding: 0 $padding;
 
-    border-left: thick solid $itemBorderHard;
-    text-transform: uppercase;
+  border-left: thick solid $itemBorderHard;
+  text-transform: uppercase;
 
-    min-height: $itemHeight !important;
-    display: flex;
-    align-items: center;
+  min-height: $itemHeight !important;
+  display: flex;
+  align-items: center;
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
 }
 
 .algoCat:hover {
-    border-left: thick solid $itemHoverBorder;
-    background-color: $itemHoverBg;
+  border-left: thick solid $itemHoverBorder;
+  background-color: $itemHoverBg;
 
 }
 
 
 .algoItem {
-    @include removeBtnStyling;
-    color: #5b5b5b;
-    padding-left: $padding;
+  @include removeBtnStyling;
+  color: #5b5b5b;
+  padding-left: $padding;
 
-    background-color: $itemBg;
+  background-color: $itemBg;
    
-    min-height: $itemHeight !important;
-    display: flex;
-    align-items: stretch;
+  min-height: $itemHeight !important;
+  display: flex;
+  align-items: stretch;
 
-    .algoItemContent {
-        border-left: thick solid $itemBorderLight;
-        padding: 0 $padding;
+  .algoItemContent {
+    border-left: thick solid $itemBorderLight;
+    padding: 0 $padding;
 
-        width: 100%;
+    width: 100%;
   
-        text-overflow: ellipsis;
-        text-align: left;
-        font-weight: 300;
-        font-size: 0.95em;
+    text-overflow: ellipsis;
+    text-align: left;
+    font-weight: 300;
+    font-size: 0.95em;
 
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        overflow: hidden;
-    }
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
-    .algoItemContent:hover {
-        border-left: thick solid $itemHoverBorder;
-        background-color: $itemHoverBg;
-    }
-
-
+  .algoItemContent:hover {
+    border-left: thick solid $itemHoverBorder;
+    background-color: $itemHoverBg;
+  }
 }
 
 .active {
-    .algoItemContent {
-        border-left: thick solid $sigBlue;
-        color: $sigBlue;
-    }
+  .algoItemContent {
+    border-left: thick solid $sigBlue;
+    color: $sigBlue;
+  }
 
-    .algoItemContent:hover {
-        border-left: thick solid $sigBlue;
-        color: $sigBlue;
-    }
+  .algoItemContent:hover {
+    border-left: thick solid $sigBlue;
+    color: $sigBlue;
+  }
 
 }
-
-

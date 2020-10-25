@@ -57,7 +57,6 @@ const EXPAND_COL_LEFT_SIZE = 190;
 const EXPAND_ROW_BOTTOM_SIZE = 190;
 
 const getDefn = (page, list, status) => {
-  console.log(list);
   let tempList = addUnitToList(list, 'px');
   switch (status) {
     case ROW_INTERNAL:
@@ -67,23 +66,29 @@ const getDefn = (page, list, status) => {
     case ROW_EXTERNAL:
       tempList = addUnitToList([
         addUnitToNum(list[0], 'px'),
-        // addUnitToNum([list[1] / (list[1] + list[3])], 'fr'),
-        addUnitToNum(7, 'fr'),
+        addUnitToNum([list[1] / (list[1] + list[3])], 'fr'),
+        // addUnitToNum(7, 'fr'),
         addUnitToNum(list[2], 'px'),
-        // addUnitToNum([list[3] / (list[1] + list[3])], 'fr'),
-        addUnitToNum(2, 'fr'),
+        addUnitToNum([list[3] / (list[1] + list[3])], 'fr'),
+        // addUnitToNum(2, 'fr'),
 
       ], '');
 
       break;
     case COL_EXTERNAL:
+      console.log(list);
+
       tempList = addUnitToList([
         addUnitToNum(list[0] / (list[0] + list[2] + list[4]), 'fr'),
-        // addUnitToNum(2, 'fr'),
+        // addUnitToNum(list[0], 'px'),
         addUnitToNum(list[1], 'px'),
         addUnitToNum(list[2] / (list[0] + list[2] + list[4]), 'fr'),
+        // addUnitToNum(list[2] / (list[2] + list[4]), 'fr'),
+
         addUnitToNum(list[3], 'px'),
         addUnitToNum(list[4] / (list[0] + list[2] + list[4]), 'fr'),
+        // addUnitToNum(list[4] / (list[2] + list[4]), 'fr'),
+
       ], '');
       break;
     case COLLAPSE_LEFT:
@@ -152,14 +157,14 @@ const getColDefn = (page, event, status) => {
   const leftDragbar = document.getElementById('leftdragbar');
   const rightDragbar = document.getElementById('rightdragbar');
 
-  const leftColWidth = isLeftDragging ? event.clientX : leftcol.clientWidth;
-  const rightColWidth = isRightDragging ? page.clientWidth - event.clientX : rightcol.clientWidth;
+  const leftColWidth = isLeftDragging ? event.clientX : leftcol.offsetWidth;
+  const rightColWidth = isRightDragging ? page.clientWidth - event.clientX : rightcol.offsetWidth;
 
   const cols = [
     leftColWidth,
-    leftDragbar.clientWidth,
-    page.clientWidth - (leftDragbar.clientWidth + rightDragbar.clientWidth) - leftColWidth - rightColWidth,
-    rightDragbar.clientWidth,
+    leftDragbar.offsetWidth,
+    page.clientWidth - (leftDragbar.offsetWidth + rightDragbar.offsetWidth) - leftColWidth - rightColWidth,
+    rightDragbar.offsetWidth,
     rightColWidth,
   ];
 
@@ -170,12 +175,12 @@ const getRowDefn = (page, event, status) => {
   const footer = document.getElementById('footer');
   const header = document.getElementById('header');
   const bottomDragbar = document.getElementById('bottomdragbar');
-  const bottomRowHeight = isBottomDragging ? page.clientHeight - event.clientY : footer.clientHeight;
+  const bottomRowHeight = isBottomDragging ? page.clientHeight - event.clientY : footer.offsetHeight;
 
   const rows = [
-    header.clientHeight,
-    page.clientHeight - bottomDragbar.clientHeight - bottomRowHeight - header.clientHeight,
-    bottomDragbar.clientHeight,
+    header.offsetHeight,
+    page.clientHeight - bottomDragbar.offsetHeight - bottomRowHeight - header.offsetHeight,
+    bottomDragbar.offsetHeight,
     bottomRowHeight,
   ];
 

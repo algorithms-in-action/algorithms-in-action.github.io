@@ -23,11 +23,11 @@ function Settings({
     {
       id: 1,
       primary: 'green',
-      secondary: 'blue',
+      secondary: 'pink',
     },
     {
       id: 2,
-      primary: 'yellow',
+      primary: 'cyan',
       secondary: 'red',
     },
   ];
