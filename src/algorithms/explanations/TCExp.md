@@ -1,4 +1,4 @@
-## Transitive Closure
+# Transitive Closure
 Warshalls algorithm computes the transitive closure of a directed 
 graph, that is, what nodes can be reached from other nodes.  
 

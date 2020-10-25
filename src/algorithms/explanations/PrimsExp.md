@@ -1,4 +1,4 @@
-## Prim's Algorithm
+# Prim's Algorithm
 
 A minimum spanning tree of a weighted connected graph G is
 a connected acyclic subgraph of the tree of lowest weight.
