@@ -40,6 +40,7 @@ $rightBtnFontSize: 0.72em;
   .btnPanel {
     overflow: hidden;
     display: flex;
+    padding: none;
 
     .bottomBtn {
       @include removeBtnStyling;
@@ -53,6 +54,9 @@ $rightBtnFontSize: 0.72em;
       border-right: 1px solid var(--system-border);
       flex: 1;
       text-overflow: ellipsis;
+      height: 100%;
+      width: 100%;
+
     }
 
     .bottomBtn:hover {

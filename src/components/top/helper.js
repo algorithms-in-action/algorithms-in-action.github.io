@@ -120,6 +120,7 @@ export function getWithExpiry(key) {
     return null;
   }
   const item = JSON.parse(itemStr);
+
   const now = new Date();
   // compare the expiry time of the item with the current time
   if (now.getTime() > item.expiry) {

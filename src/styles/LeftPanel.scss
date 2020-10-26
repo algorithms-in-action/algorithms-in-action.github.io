@@ -94,23 +94,23 @@ $leftFontSize: 0.89em;
   padding-left: $padding;
   background-color: var(--left-bg);
 
-   
   min-height: $itemHeight !important;
   display: flex;
   align-items: stretch;
-
+  
   .algoItemContent {
     border-left: $border solid var(--left-item-border);
     padding: 0 $padding;
     background-color: var(--left-item-bg);
 
     width: 100%;
+    height: $itemHeight ;
   
     text-align: left;
     font-weight: 300;
     font-size: 0.95em;
-
     display: flex;
+
     
     align-items: center;
     white-space: nowrap;
