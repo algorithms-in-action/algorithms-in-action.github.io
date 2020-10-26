@@ -21,7 +21,7 @@ import useParam from '../../../context/useParam';
  * the param input accepts a matrix
  */
 function MatrixParam({
-  size,
+  defaultSize,
   min,
   max,
   name,
@@ -31,6 +31,10 @@ function MatrixParam({
   ALGORITHM_NAME,
   EXAMPLE,
 }) {
+
+  // const [size, setSize] = useState(defaultSize);
+  const [size, setSize] = useState(defaultSize);
+
   const columns = useMemo(
     () => makeColumnArray(size),
     [size],
@@ -50,6 +54,11 @@ function MatrixParam({
   const resetData = () => {
     setMessage(null);
     setData(originalData);
+  };
+
+  const updateTableSize = (newSize) => {
+    setMessage(null);
+    setSize(newSize);
   };
 
   // When cell renderer calls updateData, we'll use
@@ -107,13 +116,21 @@ function MatrixParam({
 
   return (
     <div>
-      <button onClick={resetData}>Reset Data</button>
-      <button onClick={handleSearch}>Run</button>
-      <Table
-        columns={columns}
-        data={data}
-        updateData={updateData}
-      />
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={resetData}>Reset</button>
+        <button onClick={handleSearch}>Run</button>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Table
+          columns={columns}
+          data={data}
+          updateData={updateData}
+        />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <button disabled={size <= 2} onClick={() => updateTableSize(size - 1)}>-</button>
+        <button onClick={() => updateTableSize(size + 1)}>+</button>
+      </div>
     </div>
   );
 }
