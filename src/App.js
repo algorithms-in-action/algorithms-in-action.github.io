@@ -22,13 +22,6 @@ const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
 function App() {
-  // const [colorMode, setColorMode] = useState(0);
-
-  // const handleColorModeChange = (color) => {
-  //   setColorMode(color);
-  // };
-
-
   useEffect(() => {
     window.addEventListener('resize', (event) => { resizeWindow(event); });
     // eslint-disable-next-line no-unused-vars
@@ -74,12 +67,10 @@ function App() {
   const [systemColor, setSystemColor] = useState(localStorage.getItem('theme'));
   const handleSystemColorChange = (id) => {
     setSystemColor(id);
-    console.log('HER');
     setTheme(id);
   };
 
   useEffect(() => {
-    console.log(`effect: ${localStorage.getItem('theme')}`);
     setTheme(localStorage.getItem('theme'));
   });
 
