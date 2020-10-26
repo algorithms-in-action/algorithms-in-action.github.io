@@ -7,8 +7,9 @@ $containerTopBottomPad: 2%;
 
 .code-container{
   font-family: Menlo, "Liberation Mono", Courier, monospace;
-  height: 100% - (2 * $containerTopBottomPad);
+  // height: 100% - (2 * $containerTopBottomPad);
   padding: $containerTopBottomPad 0;
+  padding-bottom: 100px;
 }
 
 .expand-collopse-button {
