@@ -112,7 +112,7 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--graph-edge-line-stroke-selected: #067AFF;
 	--graph-edge-weight-fill-selected: #067AFF;
 	--graph-edge-line-stroke-visited: #c51162;
-	--graph-edge-weight-stroke-visited: #c51162;
+	--graph-edge-weight-fill-visited: #c51162;
 
 	--graph-arrow-fill: #cecece;
 	--graph-arrow-fill-selected: #067AFF;
@@ -127,6 +127,29 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
 
+	--array-graph-row-col-bg: #FFFFFF;
+	--array-graph-row-col-border: #FFFFFF;
+	--array-graph-row-col-value-color: #FFFFFF;
+	--array-graph-row-col-bg-selected: #067AFF;
+	--array-graph-row-col-bg-patched: #c51162;
+	--array-graph-row-col-bg-index: none;
+	--array-graph-row-col-border-index: none;
+	--array-graph-row-col-color-index: #505050;
+	--array-graph-node-weight-fill: #FFFFFF;
+	--array-graph-node-circle-fill-selected: #067AFF;
+	--array-graph-node-circle-stroke-selected: #067AFF;
+	--array-graph-node-circle-fill-visited: #c51162;
+	--array-graph-node-circle-stroke-visited: #c51162;
+	
+	--array-graph-edge-line-stroke: #505050;
+	--array-graph-edge-weight-fill: #505050;
+	--array-graph-edge-line-stroke-selected: #067AFF;
+	--array-graph-edge-weight-fill-selected: #067AFF;
+	--array-graph-edge-line-stroke-visited: #c51162;
+	--array-graph-edge-weight-fill-visited: #c51162;
+	--array-graph-edge-arrow-fill: #505050;
+	--array-graph-edge-arrow-fill-selected: #067AFF;
+	--array-graph-edge-arrow-fill-visited: #067AFF;
 
 
 }

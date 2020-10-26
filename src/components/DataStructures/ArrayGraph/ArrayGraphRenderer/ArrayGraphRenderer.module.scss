@@ -17,36 +17,36 @@
         .col {
           display: table-cell;
           text-align: center;
-          // background-color: $theme-light;
-          background-color: #FFFFFF;
-          border: 0.5px solid $theme-light;
+          background-color: var(--array-graph-row-col-bg);
+          border: 0.5px solid var(--array-graph-row-col-border);
           padding: 0 4px;
           font-size: 8px;
     
           .value {
             font-size: 12px;
-            // color: $color-font;
+            color: var(--array-graph-row-col-value-color);
           }
     
           &.selected {
-            background-color: $color-selected;
+            background-color: var(--array-graph-row-col-bg-selected);
           }
     
           &.patched {
-            background-color: $color-patched;
+            background-color: var(--array-graph-row-col-bg-patched);
           }
     
           &.index {
-            background: none;
-            border: none;
-            color: $theme-light;
+            background: var(--array-graph-row-col-bg-index);
+            border: var(--array-graph-row-col-border-index);
+            color: var(--array-graph-row-col-color-index);
+
           }
         }
       }
     }
 
     .weight {
-      fill: white;
+      fill: var(--array-graph-node-weight-fill);
       font-weight: bold;
       alignment-baseline: central;
       text-anchor: left;
@@ -54,22 +54,22 @@
 
     &.selected {
       .circle {
-        fill: $color-selected;
-        stroke: $color-selected;
+        fill: var(--array-graph-node-circle-fill-selected);
+        stroke: var(--array-graph-node-circle-stroke-selected);
       }
     }
 
     &.visited {
       .circle {
-        fill: $color-patched;
-        stroke: $color-patched;
+        fill: var(--array-graph-node-circle-fill-visited);
+        stroke: var(--array-graph-node-circle-stroke-visited);
       }
     }
   }
 
   .edge {
     .line {
-      stroke: $color-font;
+      stroke: var(--array-graph-edge-line-stroke);
       stroke-width: 2;
 
       &.directed {
@@ -78,14 +78,14 @@
     }
 
     .weight {
-      fill: $color-font;
+      fill: var(--array-graph-edge-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
     }
 
     &.selected {
       .line {
-        stroke: $color-selected;
+        stroke: var(--array-graph-edge-line-stroke-selected);
 
         &.directed {
           marker-end: url(#markerArrowSelected);
@@ -93,13 +93,13 @@
       }
 
       .weight {
-        fill: $color-selected;
+        fill: var(--array-graph-weight-line-stroke-selected);
       }
     }
 
     &.visited {
       .line {
-        stroke: $color-patched;
+        stroke: var(--array-graph-edge-line-stroke-visited);
 
         &.directed {
           marker-end: url(#markerArrowVisited);
@@ -107,268 +107,20 @@
       }
 
       .weight {
-        fill: $color-patched;
+        fill: var(--array-graph-edge-weight-fill-visited);
       }
     }
   }
 
   .arrow {
-    fill: $color-font;
+    fill: var(--array-graph-edge-arrow-fill);
 
     &.selected {
-      fill: $color-selected;
+      fill: var(--array-graph-edge-arrow-fill-selected);
     }
 
     &.visited {
-      fill: $color-patched;
-    }
-  }
-}
-.graph_green {
-  flex: 1;
-  align-self: stretch;
-
-  .node {
-    .array_2d {
-      flex-shrink: 0;
-      display: table;
-      border-collapse: collapse;
-    
-      .row {
-        display: table-row;
-        height: 28px;
-    
-        .col {
-          display: table-cell;
-          text-align: center;
-          // background-color: $theme-light;
-          background-color:$color-purple;
-          border: 1px solid $theme-light;
-          padding: 0 4px;
-          color: $color-yellow;
-    
-          .value {
-            font-size: 12px;
-            // color: $color-font;
-          }
-    
-          &.selected {
-            background-color:  $color-lightgreen;
-          }
-    
-          &.patched {
-            background-color:  $color-green;
-          }
-    
-          &.index {
-            background: none;
-            border: none;
-            color: $theme-light;
-          }
-        }
-      }
-    }
-
-    .weight {
-      fill: white;
-      font-weight: bold;
-      alignment-baseline: central;
-      text-anchor: left;
-    }
-
-    &.selected {
-      .circle {
-        fill: $color-lightgreen;
-        stroke: $color-lightgreen;
-      }
-    }
-
-    &.visited {
-      .circle {
-        fill: $color-green;
-        stroke: $color-green;
-      }
-    }
-  }
-
-  .edge {
-    .line {
-      stroke: $color-purple;
-      stroke-width: 2;
-
-      &.directed {
-        marker-end: url(#markerArrow);
-      }
-    }
-
-    .weight {
-      fill: $color-font;
-      alignment-baseline: baseline;
-      text-anchor: middle;
-    }
-
-    &.selected {
-      .line {
-        stroke: $color-lightgreen;
-
-        &.directed {
-          marker-end: url(#markerArrowSelected);
-        }
-      }
-
-      .weight {
-        fill: $color-lightgreen;
-      }
-    }
-
-    &.visited {
-      .line {
-        stroke: $color-green;
-
-        &.directed {
-          marker-end: url(#markerArrowVisited);
-        }
-      }
-
-      .weight {
-        fill:$color-green;
-      }
-    }
-  }
-
-  .arrow {
-    fill: $color-purple;
-
-    &.selected {
-      fill: $color-lightgreen;
-    }
-
-    &.visited {
-      fill: $color-green;
-    }
-  }
-}
-.graph_blue {
-  flex: 1;
-  align-self: stretch;
-
-  .node {
-    .array_2d {
-      flex-shrink: 0;
-      display: table;
-      border-collapse: collapse;
-    
-      .row {
-        display: table-row;
-        height: 28px;
-    
-        .col {
-          display: table-cell;
-          text-align: center;
-          // background-color: $theme-light;
-          background-color:$color-red;
-          border: 1px solid $theme-light;
-          padding: 0 4px;
-          color: $color-yellow;
-    
-          .value {
-            font-size: 12px;
-            // color: $color-font;
-          }
-    
-          &.selected {
-            background-color:  $color-blue;
-          }
-    
-          &.patched {
-            background-color:  $color-green;
-          }
-    
-          &.index {
-            background: none;
-            border: none;
-            color: $theme-light;
-          }
-        }
-      }
-    }
-
-    .weight {
-      fill: white;
-      font-weight: bold;
-      alignment-baseline: central;
-      text-anchor: left;
-    }
-
-    &.selected {
-      .circle {
-        fill: $color-blue;
-        stroke: $color-blue;
-      }
-    }
-
-    &.visited {
-      .circle {
-        fill: $color-green;
-        stroke: $color-green;
-      }
-    }
-  }
-
-  .edge {
-    .line {
-      stroke: $color-red;
-      stroke-width: 2;
-
-      &.directed {
-        marker-end: url(#markerArrow);
-      }
-    }
-
-    .weight {
-      fill: $color-font;
-      alignment-baseline: baseline;
-      text-anchor: middle;
-    }
-
-    &.selected {
-      .line {
-        stroke: $color-blue;
-
-        &.directed {
-          marker-end: url(#markerArrowSelected);
-        }
-      }
-
-      .weight {
-        fill: $color-blue;
-      }
-    }
-
-    &.visited {
-      .line {
-        stroke: $color-green;
-
-        &.directed {
-          marker-end: url(#markerArrowVisited);
-        }
-      }
-
-      .weight {
-        fill:$color-green;
-      }
-    }
-  }
-
-  .arrow {
-    fill: $color-red;
-
-    &.selected {
-      fill: $color-blue;
-    }
-
-    &.visited {
-      fill: $color-green;
+      fill: var(--array-graph-edge-arrow-fill-visited);
     }
   }
 }
