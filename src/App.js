@@ -13,6 +13,8 @@ import {
 } from './BorderResize';
 import {
   setTheme,
+  getSystemColorMode,
+  getWithExpiry,
 } from './components/top/helper';
 
 
@@ -64,14 +66,25 @@ function App() {
     setColorMode(num);
   };
 
-  const [systemColor, setSystemColor] = useState(localStorage.getItem('theme'));
+  const initSystemColor = () => {
+    const theme = getWithExpiry('theme');
+    console.log(`GET LOCAL: ${theme}`);
+    if (theme === null) {
+      setTheme(getSystemColorMode());
+      return getSystemColorMode();
+    }
+    return theme;
+  };
+
+  const [systemColor, setSystemColor] = useState(initSystemColor());
   const handleSystemColorChange = (id) => {
     setSystemColor(id);
     setTheme(id);
   };
 
   useEffect(() => {
-    setTheme(localStorage.getItem('theme'));
+    // setTheme(localStorage.getItem('theme'));
+    setTheme(getWithExpiry('theme'));
   });
 
   return (
