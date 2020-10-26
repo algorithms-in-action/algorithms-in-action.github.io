@@ -1,5 +1,11 @@
 @import './global.scss';
 
+$disabledCol: #b5b5b5;
+// $paramBorderCol: #D4D4D4;
+// $paramFontCol: #565656;
+$greyCol: #717071;
+$lightGreyCol: #B5B5B5;
+
 .btn {
   background: none;
   color: inherit;
@@ -57,7 +63,7 @@
     height: 12px;
 
     path {
-      fill:$greyCol;
+      fill: $greyCol;
     }
   }
 }
@@ -76,7 +82,7 @@
 }
 
 .outerInput {
-  border: 1px solid $paramBorderCol;
+  border: 1px solid var(--mid-control-param-border);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -90,7 +96,7 @@
       outline: none;
       font-size: 1.05em;
       font-weight: 200;
-      color: $paramFontCol;
+      color: var(--mid-control-font);
       border: none;
       padding: 8px 0px;
     }
@@ -104,7 +110,7 @@
 }
 
 .form {
-  color: $paramFontCol;
+  color: var(--mid-control-font);
   font-size: 1.05em;
   display: flex;
   justify-content: space-between;
@@ -119,7 +125,7 @@
 }
 
 .matrixForm {
-  color: $paramFontCol;
+  color: var(--mid-control-font);
   font-size: 1.05em;
   display: flex;
   justify-content: space-around;
@@ -139,7 +145,7 @@
   cursor: not-allowed !important;
   svg {
     path {
-      fill:$disabledCol;
+      fill: $disabledCol;
     }
   }
 }

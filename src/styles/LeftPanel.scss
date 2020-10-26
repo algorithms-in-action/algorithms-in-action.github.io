@@ -2,15 +2,9 @@
 
 $padding: 16px;
 $itemHeight: 40px;
-
-$itemHoverBg: #f0f0f0;
-$itemHoverBorder: #bbbbbb;
-
-$itemBorderHard: #d5d5d5;
-$itemBorderLight: #eeeeee;
-$itemBg: white;
-
 $border: 4px;
+$searchHeight: 40px;
+$leftFontSize: 0.89em;
 
 .content {
   transition: max-height 0.06s ease-in;
@@ -31,20 +25,20 @@ $border: 4px;
     .searchInput{
       font-size: 0.82em !important;
       font-weight: 500;
-      color: $leftFontCol;
+      color: var(--left-font);
       padding: 0px $padding;
-      background-color: #F9F9F9;
+      background-color: var(--left-search-bg);
       width: 100%;
       height: $searchHeight;
       -webkit-appearance: none;
       outline: none;
       border: none;
-      border-left: $border solid $itemBorderHard;
+      border-left: $border solid var(--left-search-border);
         
     }
     .searchInput:focus {
-      border-left: $border solid $itemHoverBorder;
-      background-color: $itemHoverBg;
+      border-left: $border solid var(--left-search-border-focus);
+      background-color: var(--left-search-bg-focus);
     }
   }   
   
@@ -70,11 +64,11 @@ $border: 4px;
   font-size: 0.9em;
   font-weight: 400;
   color: #727272;
-  background-color: $itemBg;
+  background-color: var(--left-cat-bg);
   text-align: left;
   padding: 0 $padding;
 
-  border-left: $border solid $itemBorderHard;
+  border-left: $border solid var(--left-cat-border);
   text-transform: uppercase;
 
   min-height: $itemHeight !important;
@@ -88,8 +82,8 @@ $border: 4px;
 }
 
 .algoCat:hover {
-  border-left: $border solid $itemHoverBorder;
-  background-color: $itemHoverBg;
+  border-left: $border solid var(--left-cat-border-hover);
+  background-color: var(--left-cat-bg-hover);
 
 }
 
@@ -98,16 +92,17 @@ $border: 4px;
   @include removeBtnStyling;
   color: #5b5b5b;
   padding-left: $padding;
+  background-color: var(--left-bg);
 
-  background-color: $itemBg;
    
   min-height: $itemHeight !important;
   display: flex;
   align-items: stretch;
 
   .algoItemContent {
-    border-left: $border solid $itemBorderLight;
+    border-left: $border solid var(--left-item-border);
     padding: 0 $padding;
+    background-color: var(--left-item-bg);
 
     width: 100%;
   
@@ -117,7 +112,6 @@ $border: 4px;
 
     display: flex;
     
-
     align-items: center;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -125,20 +119,21 @@ $border: 4px;
   }
 
   .algoItemContent:hover {
-    border-left: $border solid $itemHoverBorder;
-    background-color: $itemHoverBg;
+    border-left: $border solid var(--left-item-border-hover);
+    background-color: var(--left-item-bg-hover);
+
   }
 }
 
 .active {
   .algoItemContent {
-    border-left: $border solid $sigBlue;
-    color: $sigBlue;
+    border-left: $border solid var(--left-item-border-active);
+    color: var(--left-item-font-active);
   }
 
   .algoItemContent:hover {
-    border-left: $border solid $sigBlue;
-    color: $sigBlue;
+    border-left: $border solid var(--left-item-border-active);
+    color: var(--left-item-font-active);
   }
 
 }

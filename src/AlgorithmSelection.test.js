@@ -9,7 +9,8 @@ import App from './App';
 
 test('Check if the input value is correct', () => {
   const utils = render(<Router><App /></Router>);
-  const input = utils.getByTestId('search-input').firstChild;
+  const input = utils.getByTestId('searchInput').firstChild;
+
   fireEvent.change(input, { target: { value: 'quick' } });
   expect(input.value).toBe('quick');
   expect(screen.getByText(/Quick Sort/i).textContent).toBe('Quick Sort');

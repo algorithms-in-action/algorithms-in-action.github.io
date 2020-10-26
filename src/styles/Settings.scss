@@ -3,9 +3,11 @@
 @mixin borderSeparate {
   padding-bottom: 12px;
   margin-bottom: 12px;
-  border-bottom: 1px solid $borderCol;
+  border-bottom: 1px solid var(--system-border);
 }
 
+$headerOffset: 16px;
+$headerHeight: 30px;
 
 .settingsContainer {
   // Position
@@ -22,9 +24,9 @@
   // Styling
   overflow-y: auto;
   overflow-x: hidden;
-  background: #FFFFFF;
+  background: var(--top-setting-bg);
   border: 1px solid #ccc;
-  border-color: $borderCol;
+  border-color: var(--system-border);
   @include border-radius(4px);
   filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.1));
   padding: 16px;
@@ -40,7 +42,8 @@
     text-transform: uppercase;
     font-size: 0.78em;
     font-weight: 500;
-    color: #606060;
+    color: var(--top-setting-label);
+
   }
 }
 
@@ -58,20 +61,20 @@
     cursor: pointer;
     flex: 1;
     padding: 6px 0;
-    background-color: rgb(237, 237, 237);
+    background-color: var(--top-setting-btn-bg);    
     display: flex;
     justify-content: center;
 
     svg {
       path {
-        fill: #5b5b5b;
+        fill: var(--top-setting-btn);
       }
     }
 
   }
 
   .fontBtn:active {
-    background-color: rgb(220, 220, 220);
+    background-color: var(--top-setting-btn-bg-active);
 
   }
 
@@ -111,7 +114,7 @@ $outerBorder: 2px;
 
   .colorBtn {
     @include removeBtnStyling;
-    border: $outerBorder solid $white;
+    border: $outerBorder solid var(--top-setting-bg);
     display:flex;
     @include border-radius(50%);
     cursor: pointer;

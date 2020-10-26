@@ -9,7 +9,7 @@
   }
 
 }
-$headerCol:#01223F;
+// $headerCol:#01223F;
 
 $maxWidth: 800px;
 
@@ -331,7 +331,7 @@ $maxWidth: 800px;
 
 
 .top {
-  background-color: $headerCol;
+  background-color: var(--top-header-bg);
 }
 
 .separator {
@@ -342,7 +342,7 @@ $maxWidth: 800px;
    svg {
     transform: scale(-1,1);
      path {
-       fill: $headerCol;
+       fill: var(--top-header-bg);
      }
    }
 }
@@ -443,7 +443,6 @@ $maxWidth: 800px;
         justify-content: space-between;
         align-items: center;
         margin-left: auto;
-
 
       }
     }

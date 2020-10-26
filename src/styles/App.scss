@@ -1,11 +1,16 @@
 @import './global.scss';
 
+
+
 body {
   margin:0; 
   padding: 0;
 	font-family: Roboto, 'sans-serif';
 	-webkit-font-smoothing: subpixel-antialiased;
 }
+
+$handleLen: 60px;
+$dragBarWidth: 10px;
 
 #page {
 	height: 100vh;
@@ -33,7 +38,8 @@ body {
 
 #leftcol {
 	overflow: auto;
-  grid-area: leftcol;
+	grid-area: leftcol;
+	background-color: var(--left-bg);
 }
 
 #rightcol {
@@ -45,18 +51,19 @@ body {
 #tabpages {
 	overflow: auto;
 	grid-area: tabpages;
-	background-color: $midBgCol;
 
 }
 
 #footer {
 	overflow: auto;
 	grid-area: footer;
+	background-color: var(--mid-control-bg);
+
 }
 
 
 .dragbar {
-	background-color: $dragbarCol;
+	background-color: var(--system-handle-bg);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -76,16 +83,14 @@ body {
 }
 
 .dragbar:hover {
-	background-color: $handleHover;
+	background-color: var(--system-handle-bg-hover);
 
 }
 
 .dragbar:active {
-	background-color: $handleCol;
+	background-color: var(--system-handle-bg-active);
 
 }
-
-
 
 // Right Dragbar
 #rightdragbar {
@@ -93,7 +98,6 @@ body {
 	cursor: col-resize;
 
 }
-
 
 // Left Dragbar
 #leftdragbar {

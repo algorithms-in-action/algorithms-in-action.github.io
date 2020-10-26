@@ -4,80 +4,89 @@ $sigBlue: #027AFF;
 $red: #DC0707;
 $green: #53DD6C;
 $lightWhite: #F7F7F7;
-$borderCol: #e9e9e9;
-$white: #FFFFFF;
+// $white: #FFFFFF;
 
 $yellowLine: #FFDE3C;
 $blueLine: rgba(0, 187, 255, 0.2);
 
-$sidePad: 16px;
+// Global Variables
+:root {
+	--system-handle-bg: #f4f4f4;
+	--system-handle-bg-hover: #eeeeee;
+	--system-handle-bg-active: #e6e6e6;
+	--system-border: #e9e9e9;
 
-// Header
-$headerBg: #01233F;
-$headerFontCol:#d7d7d7;
-$headerBtnCol: #d3d3d3;
-$headerBtnHgCol: $sigBlue;
-$headerHeight: 30px;
-$headerOffset: 16px;
+	--top-header-bg: #01233F;
+	--top-header-btn: #d7d7d7;
+	--top-header-btn-hg:  #027AFF;
+	--top-setting-bg: #FFFFFF;
+	--top-setting-label: #606060;
+	--top-setting-btn: #5b5b5b;
+	--top-setting-btn-bg: rgb(237, 237, 237);
+	--top-setting-btn-bg-active: rgb(220, 220, 220);
 
-// Left Panel
-$leftFontCol: #393939;;
 
-$searchHeight: 40px;
-$leftFontSize: 0.89em;
+	--left-bg: #FFFFFF;
+	--left-font: #393939;
+	--left-search-bg: #F9F9F9;
+	--left-search-bg-focus: #f0f0f0;
+	--left-search-border: #d5d5d5;
+	--left-search-border-focus: #bbbbbb;
+	--left-cat-bg: #FFFFFF;
+	--left-cat-bg-hover: #f0f0f0;
+	--left-cat-border: #d5d5d5;
+	--left-cat-border-hover: #bbbbbb;
+	--left-item-bg: #FFFFFF;
+	--left-item-bg-hover: #f0f0f0;
+	--left-item-border: #d5d5d5;
+	--left-item-border-hover: #bbbbbb;
+	--left-item-font-active: #027AFF;
+	--left-item-border-active: #027AFF;
 
-// Mid Panel
-$quizButCol: #DEDEDE;
-$midTitleFontCol: #616161;
-$midBgCol: #f9f9f9;
-$midHeaderCol: white;
+	--mid-header-bg: #FFFFFF;
+	--mid-header-font: #545454;
+	--mid-anim-bg: #f9f9f9;
+	--mid-control-bg: #FFFFFF;
+	--mid-control-slider-bg: #F7F7F7;
+	--mid-control-btn-bg: #F7F7F7;
+	--mid-control-font: #393939;
+	--mid-control-param-border: #D4D4D4;
+	--mid-control-log-bg:#F7F7F7;
+	--mid-control-log-success: #53DD6C;
+	--mid-control-log-failure: #DC0707;
 
-$midOffset: $sidePad;
-$midHeaderHeight: 40px;
-$midTitleFontSize: 0.89em;
+	--right-header-bg: #FFFFFF;
+	--right-text-font: #343434;
+	--right-text-bg: #FFFFFF;
+	
+	--right-code-font: #383A43;
+	--right-code-explanation-font: #A0A1A8;
+	--right-code-keyword-font: #B502A9;
+	--right-code-variable-font: #A06600;
+	--right-code-operator-font: #0086C1;
+	--right-code-function-font: #327BF7;
+	--right-code-bg: #F9F9F9;
+	--right-code-line-hg: rgba(0, 187, 255, 0.2);
+	--right-code-line-hover: #f4f4f4;
+	--right-code-line-active: #F0F0F0;
+	--right-code-line-num: #9DA9AD;
+	--right-code-line-explain-btn-active: #575757;
+	--right-code-line-explain-btn-inactive: #c9c9c9;
+	--right-code-line-explain-btn-inactive-hover: #c1c1c1;
+	--right-code-expand-btn-bg: #EFEFEF;
+	--right-code-expand-btn: #505050;
+	--right-code-expand-btn-bg-hover: #e1e1e1;
+	--right-code-line-explain-bg: #FFFFFF;
+	--right-code-line-explain-title: #a2a2a2;
+	--right-code-line-explain-font: #3e3e3e;
+	--right-code-bottom-btn: #8B8B8B;
+	--right-code-bottom-btn-bg: #FFFFFF;
+	--right-code-bottom-btn-bg-hover: rgb(245, 245, 245);
+	--right-code-bottom-btn-bg-active: rgb(238, 238, 238);
 
-// Dragbar and borders 
-$handleCol: #e6e6e6;
-$handleHover: #eeeeee;
-$dragbarCol: #f4f4f4;
-$handleLen: 60px;
-$dragBarWidth: 10px;
 
-// Control Buttons (Play and Next Line, Slider)
-$sliderBg: $lightWhite;
-$playBtn: $sigBlue;
-$disabledCol: #b5b5b5;
-$activeCol: #6a6a6a;
-$ctrlBtnBg:  $lightWhite;
 
-// Param and Log
-$warningCol: $red;
-$successCol: $green;
-$paramBg: $lightWhite;
-$paramFontCol: #343434;
-$paramOffset: $sidePad;
-$ctrlOffset: $sidePad;
-$paramMinWidth: 420px;
-
-// Param
-$paramBorderCol: #D4D4D4;
-$paramFontCol: #565656;
-$greyCol: #717071;
-$lightGreyCol: #B5B5B5;
-
-// Right Panel
-$codeExplanationButtonHeight: 40px;
-$borderSize: 3px;
-$rightPanelFontCol: #343434;
-$rightBtnFontSize: 0.72em;
-
-$lineHgCol: $blueLine;
-$rightNumCol: #9DA9AD;
-$rightNumBgCol: #F9F9F9;
-$codeBgCol:  #F9F9F9;
-$codeFontCol: #383A43;
-$codeExpandBtn: $blue;
-
+}
 
 
 // Global Functions

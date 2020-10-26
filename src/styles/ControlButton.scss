@@ -1,8 +1,12 @@
 @import './global.scss';
 
+$playBtn: $sigBlue;
+$disabledCol: #b5b5b5;
+$activeCol: #6a6a6a;
+
 .sliderContainer {
   display: flex;
-  background-color: $sliderBg;
+  background-color: var(--mid-control-slider-bg);
   padding: 0 16px;
   @include border-radius(16px);
 
@@ -113,7 +117,7 @@
 
 .controlButtons {
   display: flex;
-  background-color: $ctrlBtnBg;
+  background-color: var(--mid-control-btn-bg);
   @include border-radius(16px);
 
 }

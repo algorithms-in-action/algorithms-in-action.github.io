@@ -74,7 +74,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
         <input
           className="searchInput"
           placeholder="Search..."
-          data-testid="search-input"
+          data-testid="searchInput"
           onChange={searchAlgorithm}
         />
       </span>

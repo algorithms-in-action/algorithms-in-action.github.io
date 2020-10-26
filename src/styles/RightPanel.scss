@@ -1,14 +1,19 @@
 @import './global.scss';
 
-
+$sidePad: 16px;
+$codeExplanationButtonHeight: 40px;
+$borderSize: 3px;
+$rightBtnFontSize: 0.72em;
 
 #rightcol {
   height: 100%;
   display: flex;
   flex-direction: column;
 
+
   .rightPanelButtons {
     height: $codeExplanationButtonHeight;
+    background-color: var(--right-header-bg);
   
     button {
       font-size: $rightBtnFontSize;
@@ -18,10 +23,11 @@
 
   .textArea {
     font-size: 0.9em;
-    color: $rightPanelFontCol;
+    color: var(--right-text-font);
     overflow-y: scroll;
     height: 100%;
     padding: $sidePad;
+    background-color: var(--right-text-bg);
     
   }
 
@@ -38,23 +44,23 @@
     .bottomBtn {
       @include removeBtnStyling;
       padding: 8px;
-      background: white;
+      background: var(--right-code-bottom-btn-bg);
       text-transform: uppercase;
       font-size: 0.70em;
       font-weight: 400;
-      color: rgb(147, 147, 147);
+      color: var(--right-code-bottom-btn);
       white-space: nowrap;
-      border-right: 1px solid $borderCol;
+      border-right: 1px solid var(--system-border);
       flex: 1;
       text-overflow: ellipsis;
     }
 
     .bottomBtn:hover {
-      background: rgb(245, 245, 245);
+      background: var(--right-code-bottom-btn-bg-hover);
     }
 
     .bottomBtn:active {
-      background: rgb(238, 238, 238);
+      background: var(--right-code-bottom-btn-bg-active);
     }
   }
   

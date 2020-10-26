@@ -1,5 +1,9 @@
 @import './global.scss';
 
+$midOffset: 16px;
+$midHeaderHeight: 40px;
+$midTitleFontSize: 0.89em;
+
 .midPanelContainer {
   display: flex;
   flex-direction: column;
@@ -8,14 +12,14 @@
   
   .midPanelHeader {
     height: $midHeaderHeight;
-    background-color: $midHeaderCol;
+    background-color: var(--mid-header-bg);
     display: flex;
     align-items: center;
     
     .algorithmTitle {
       font-size: $midTitleFontSize;
       margin: auto $midOffset;
-      color: $midTitleFontCol;
+      color: var(--mid-header-font);
       font-weight: 300;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -29,7 +33,7 @@
     flex-direction: column;
     flex: 1 1 1px; /* Important */
     min-height: 0;
-    background-color: $midBgCol;
+    background-color: var(--mid-anim-bg);
   }
 
 }

@@ -17,8 +17,8 @@ $containerTopBottomPad: 2%;
   cursor:pointer;
   @include border-radius(2px);
   
-  color: #505050;
-  background-color: #EFEFEF;
+  color: var(--right-code-expand-btn);
+  background-color: var(--right-code-expand-btn-bg);
   display: flex;
   align-items: center;
   margin: auto 0;
@@ -31,7 +31,7 @@ $containerTopBottomPad: 2%;
 }
 
 .expand-collopse-button:hover {
-  background-color: #e1e1e1;
+  background-color: var(--right-code-expand-btn-bg-hover);
 }
 
 .line-explanation-button-active{
@@ -40,42 +40,30 @@ $containerTopBottomPad: 2%;
   cursor:pointer;
   @include border-radius(2px);
   background: none;
-  // color: $sigBlue;
-  color: #575757;
-
-  // border: 1px solid $sigBlue;
+  color: var(--right-code-line-explain-btn-active);
   display: flex;
   align-items: center;
 
 }
+
 
 .line-explanation-button-negative{
   border: none;
   outline:none;
   cursor:pointer;
   @include border-radius(2px);
-  // background-color: $codeBgCol;
   background: none;
-  color: #c9c9c9;
-  // border: 1px solid #c1c1c1;
+  color: var(--right-code-line-explain-btn-inactive);
   margin: auto 0;
   display: flex;
   align-items: center;
 
 }
 
-.line-explanation-button-negative:hover {
-  // background-color: #e1e1e1;
-  color: #575757;
-
-}
-
-
-
 .line-light {
   width: 100%;
-  color: $codeFontCol;
-  background-color: $codeBgCol;
+  color: var(--right-code-font);
+  background-color: var(--right-code-bg);
 
 }
 
@@ -88,12 +76,13 @@ $containerTopBottomPad: 2%;
 }
 
 .line-light p:hover {
-  background-color: #f4f4f4;
+  background-color: var(--right-code-line-hover);
+
 
 }
 
 .line-light p:active {
-  background-color: #F0F0F0;
+  background-color: var(--right-code-line-active);
 }
 
 .line-light p span {
@@ -103,7 +92,7 @@ $containerTopBottomPad: 2%;
 .line-light p span:first-child {
   display: inline-block;
   width: $rightNumWidth;
-  color: $rightNumCol;
+  color: var(--right-code-line-num);
   text-align: right;
   padding: 0 2px;
     
@@ -126,7 +115,7 @@ $containerTopBottomPad: 2%;
 
 .active{
   width: 200%;
-  background-color: $lineHgCol;
+  background-color: var(--right-code-line-hg);
 }
 
 .textArea-pseudocode{
@@ -135,25 +124,25 @@ $containerTopBottomPad: 2%;
 }
 
 .explanation{
-  color: #A0A1A8;
+  color: var(--right-code-explanation-font);
 }
 
 .keyword{
-  color: #B502A9;
+  color: var(--right-code-keyword-font);
   font-weight:500;
 
 }
 
 .variable {
-  color: #A06600;
+  color: var(--right-code-variable-font);
 }
 
 .operator {
-  color: #0086C1;
+  color: var(--right-code-operator-font);
 }
 
 .function{
-  color: #327BF7;
+  color: var(--right-code-function-font);
   font-weight:500;
 
 }
@@ -161,7 +150,7 @@ $containerTopBottomPad: 2%;
 
 .lineExplanation {
   position: fixed;
-  background-color: $white;
+  background-color: var(--right-code-line-explain-bg);
   white-space:normal;
   word-wrap:break-word;
   overflow-wrap: break-word;
@@ -172,12 +161,11 @@ $containerTopBottomPad: 2%;
   padding: 8px 16px 12px;
   filter: drop-shadow(0 0 10px rgba(0,0,0,0.2));
   @include border-radius(1%);
-  color: #3e3e3e;
+  color: var(--right-code-line-explain-font);
   font-weight: 300;
   
   .lEHeader {
     display: flex;
-    // margin-bottom: 6px;
     align-items: center;
     justify-content: space-between;
 
@@ -185,7 +173,7 @@ $containerTopBottomPad: 2%;
       font-weight: 500;
       font-size: 0.82em;
       text-transform: uppercase;
-      color: #a2a2a2;
+      color: var(--right-code-line-explain-title);
     }
 
   }
