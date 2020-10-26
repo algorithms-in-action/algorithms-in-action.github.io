@@ -97,7 +97,7 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--right-code-bottom-btn-bg-active: rgb(238, 238, 238);
 
 
-
+	// Graph
 	--graph-node-circle-fill:  #505050;
 	--graph-node-circle-stroke:  #cecece;
 	--graph-node-id-fill: #cecece;
@@ -117,6 +117,15 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--graph-arrow-fill: #cecece;
 	--graph-arrow-fill-selected: #067AFF;
 	--graph-arrow-fill-visited: #c51162;
+
+	--array-2d-row-col-bg: #505050;
+	--array-2d-row-col-border: #505050;
+	--array-2d-row-col-value-color: #cecece;
+	--array-2d-row-col-bg-selected: #067AFF;
+	--array-2d-row-col-bg-patched: #c51162;
+	--array-2d-row-col-bg-index: none;
+	--array-2d-row-col-border-index: none;
+	--array-2d-row-col-color-index: #505050;
 
 
 
