@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-shadow */
 /* eslint-disable prefer-const */
 /* eslint-disable no-confusing-arrow */
@@ -50,8 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data } = this.props.data;
-    // console.log(data);
+    const { data, algo } = this.props.data;
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
@@ -68,11 +68,17 @@ class Array2DRenderer extends Renderer {
             <td className={classes(styles.col, styles.index)} />
           }
           {
-            longestRow.map((_, i) => (
-              <td className={classes(styles.col, styles.index)} key={i}>
-                <span className={styles.value}>{i}</span>
-              </td>
-            ))
+            longestRow.map((_, i) => {
+              // if the graph instance is heapsort, then the array index starts from 1
+              if (algo === 'heapsort') {
+                i += 1;
+              }
+              return (
+                <td className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{i}</span>
+                </td>
+              );
+            })
           }
         </tr>
         {

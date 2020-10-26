@@ -106,5 +106,8 @@ export default {
     chunker.add(18, (vis, index) => {
       vis.array.deselect(index);
     }, [nodes.length - 1]);
+    // for test
+    // eslint-disable-next-line consistent-return
+    return tree;
   },
 };

@@ -32,7 +32,9 @@ export default {
 
     chunker.add(1, (vis, array) => {
       vis.heap.setHeap(array);
-      vis.array.set(array);
+      // tell the graph renderer that it is heapsort
+      // so that the array index should start from 1
+      vis.array.set(array, 'heapsort');
     }, [nodes]);
 
     const swapAction = (b1, b2, n1, n2) => {
@@ -215,5 +217,7 @@ export default {
         }
       }
     }
+    // for test
+    return A;
   },
 };

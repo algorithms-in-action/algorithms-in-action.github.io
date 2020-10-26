@@ -32,8 +32,13 @@ class Array2DTracer extends Tracer {
     return Array2DRenderer;
   }
 
-  set(array2d = []) {
+  /**
+   * @param {array} array2d
+   * @param {string} algo used to mark if it is a specific algorithm
+   */
+  set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map(value => new Element(value)));
+    this.algo = algo;
     super.set();
   }
 

@@ -12,15 +12,16 @@
     
       .row {
         display: table-row;
-        height: 28px;
+        height: 16px;
     
         .col {
           display: table-cell;
           text-align: center;
           // background-color: $theme-light;
-          background-color: "#fff";
-          border: 1px solid $theme-light;
+          background-color: #FFFFFF;
+          border: 0.5px solid $theme-light;
           padding: 0 4px;
+          font-size: 8px;
     
           .value {
             font-size: 12px;
