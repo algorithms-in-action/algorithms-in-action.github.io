@@ -11,8 +11,10 @@ import Settings from './components/top/Settings';
 import {
   resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
+import {
+  setTheme,
+} from './components/top/helper';
 
-import useComponentVisible from './components/top/helper';
 
 const DEFAULT_FONT_INCREMENT = 0;
 const LEFT_FONT_SIZE = 13;
@@ -20,11 +22,12 @@ const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
 function App() {
-  const [colorMode, setColorMode] = useState(0);
+  // const [colorMode, setColorMode] = useState(0);
 
-  const handleColorModeChange = (color) => {
-    setColorMode(color);
-  };
+  // const handleColorModeChange = (color) => {
+  //   setColorMode(color);
+  // };
+
 
   useEffect(() => {
     window.addEventListener('resize', (event) => { resizeWindow(event); });
@@ -51,17 +54,10 @@ function App() {
     };
   }, []);
 
-  const {
-    isComponentVisible,
-    setIsComponentVisible,
-  } = useComponentVisible(true);
+  const [isSettingVisible, setSettingVisible] = useState(false);
 
   const onSetting = () => {
-    if (isComponentVisible) {
-      setIsComponentVisible(false);
-    } else {
-      setIsComponentVisible(true);
-    }
+    setSettingVisible(!isSettingVisible);
   };
 
   const [fontSizeIncrease, setFontSizeIncrease] = useState(DEFAULT_FONT_INCREMENT);
@@ -69,15 +65,35 @@ function App() {
     setFontSizeIncrease(fontSizeIncrease + val);
   };
 
+  const [colorMode, setColorMode] = useState(0);
+  const handleColorModeChange = (id) => {
+    const num = parseInt(id, 10);
+    setColorMode(num);
+  };
+
+  const [systemColor, setSystemColor] = useState(localStorage.getItem('theme'));
+  const handleSystemColorChange = (id) => {
+    setSystemColor(id);
+    console.log('HER');
+    setTheme(id);
+  };
+
+  useEffect(() => {
+    console.log(`effect: ${localStorage.getItem('theme')}`);
+    setTheme(localStorage.getItem('theme'));
+  });
+
   return (
 
     <GlobalProvider>
-      { !isComponentVisible ? (
+      { isSettingVisible ? (
         <Settings
-          selectedMode={colorMode}
           onFontIncrease={onFontIncrease}
           onSetting={onSetting}
+          colorMode={colorMode}
           handleColorModeChange={handleColorModeChange}
+          systemColor={systemColor}
+          handleSystemColorChange={handleSystemColorChange}
         />
       ) : ''}
 

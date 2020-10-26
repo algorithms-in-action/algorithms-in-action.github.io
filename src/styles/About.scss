@@ -331,7 +331,7 @@ $maxWidth: 800px;
 
 
 .top {
-  background-color: var(--top-header-bg);
+  background-color: #01233F;
 }
 
 .separator {
@@ -342,7 +342,7 @@ $maxWidth: 800px;
    svg {
     transform: scale(-1,1);
      path {
-       fill: var(--top-header-bg);
+       fill: #01233F;
      }
    }
 }

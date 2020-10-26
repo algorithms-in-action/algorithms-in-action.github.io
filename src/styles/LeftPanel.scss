@@ -63,7 +63,7 @@ $leftFontSize: 0.89em;
   @include removeBtnStyling;
   font-size: 0.9em;
   font-weight: 400;
-  color: #727272;
+  color: var(--left-cat-font);
   background-color: var(--left-cat-bg);
   text-align: left;
   padding: 0 $padding;
@@ -90,7 +90,7 @@ $leftFontSize: 0.89em;
 
 .algoItem {
   @include removeBtnStyling;
-  color: #5b5b5b;
+  color: var(--left-item-font);
   padding-left: $padding;
   background-color: var(--left-bg);
 

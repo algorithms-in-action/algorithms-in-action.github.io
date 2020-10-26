@@ -53,3 +53,68 @@ export function setFontSize(id, fontSize) {
     txt.style.fontSize = `${fontSize}px`;
   }
 }
+
+export function getCSSVariable(cssVar) {
+  let res = getComputedStyle(document.documentElement).getPropertyValue(cssVar);
+  res = res.replace(/\s/g, '');
+  return res;
+}
+
+export function isDarkMode() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return true;
+  }
+
+  return false;
+}
+
+
+// Color Scheme
+export const allColBtn = [
+  {
+    id: 0,
+    primary: 'black',
+    secondary: 'white',
+  },
+  {
+    id: 1,
+    primary: 'green',
+    secondary: 'pink',
+  },
+  {
+    id: 2,
+    primary: 'cyan',
+    secondary: 'red',
+  },
+];
+
+export const allSystemCol = [
+  {
+    id: 'light',
+    primary: 'white',
+    secondary: 'white',
+  },
+  {
+    id: 'dark',
+    primary: 'black',
+    secondary: 'black',
+  },
+];
+
+export function setTheme(theme) {
+  if (theme === 'dark') {
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+}
+
+export function getSystemColorMode() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+
+  return 'light';
+}

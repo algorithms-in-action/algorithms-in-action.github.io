@@ -154,14 +154,14 @@ $outerBorder: 2px;
     flex: 1;
     cursor: pointer;
     text-transform: uppercase;
-    background-color: rgb(237, 237, 237);
+    background-color: var(--top-setting-btn-bg);
     font-size: 0.82em;
-    color: #454545;
+    color: var(--top-setting-btn);
 
   }
 
   .saveBtn:active {
-    background-color: rgb(220, 220, 220);
+    background-color: var(--top-setting-btn-bg-active);
 
   }
 }

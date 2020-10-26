@@ -4,7 +4,6 @@ $sigBlue: #027AFF;
 $red: #DC0707;
 $green: #53DD6C;
 $lightWhite: #F7F7F7;
-// $white: #FFFFFF;
 
 $yellowLine: #FFDE3C;
 $blueLine: rgba(0, 187, 255, 0.2);
@@ -25,17 +24,18 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--top-setting-btn-bg: rgb(237, 237, 237);
 	--top-setting-btn-bg-active: rgb(220, 220, 220);
 
-
 	--left-bg: #FFFFFF;
 	--left-font: #393939;
 	--left-search-bg: #F9F9F9;
 	--left-search-bg-focus: #f0f0f0;
 	--left-search-border: #d5d5d5;
 	--left-search-border-focus: #bbbbbb;
+	--left-cat-font: #727272;
 	--left-cat-bg: #FFFFFF;
 	--left-cat-bg-hover: #f0f0f0;
 	--left-cat-border: #d5d5d5;
 	--left-cat-border-hover: #bbbbbb;
+	--left-item-font: #5b5b5b;
 	--left-item-bg: #FFFFFF;
 	--left-item-bg-hover: #f0f0f0;
 	--left-item-border: #d5d5d5;
@@ -51,11 +51,22 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--mid-control-btn-bg: #F7F7F7;
 	--mid-control-font: #393939;
 	--mid-control-param-border: #D4D4D4;
+	--mid-control-param-btn-active: #6a6a6a;
+	--mid-control-param-btn-disabled: #b5b5b5;
+	--mid-control-param-btn-active-col: #027AFF;
+	--mid-control-param-btn-bg-hover: #f7f7f7;
+	--mid-control-param-btn-bg-active: #E3E2E4;
+	--mid-control-param-btn-bg-col-hover: #f5faff;
+	--mid-control-param-btn-bg-col-active: #e4f1ff;
 	--mid-control-log-bg:#F7F7F7;
 	--mid-control-log-success: #53DD6C;
 	--mid-control-log-failure: #DC0707;
 
 	--right-header-bg: #FFFFFF;
+	--right-header-font: #454545;
+	--right-header-side-btn: #1d1d1d;
+	--right-header-font-active: #027AFF;
+
 	--right-text-font: #343434;
 	--right-text-bg: #FFFFFF;
 	
@@ -65,10 +76,11 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--right-code-variable-font: #A06600;
 	--right-code-operator-font: #0086C1;
 	--right-code-function-font: #327BF7;
+
 	--right-code-bg: #F9F9F9;
 	--right-code-line-hg: rgba(0, 187, 255, 0.2);
-	--right-code-line-hover: #f4f4f4;
-	--right-code-line-active: #F0F0F0;
+	--right-code-line-hover: rgba(0,0,0,0.03);
+	--right-code-line-active: rgba(0,0,0,0.05);
 	--right-code-line-num: #9DA9AD;
 	--right-code-line-explain-btn-active: #575757;
 	--right-code-line-explain-btn-inactive: #c9c9c9;
@@ -84,9 +96,100 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--right-code-bottom-btn-bg-hover: rgb(245, 245, 245);
 	--right-code-bottom-btn-bg-active: rgb(238, 238, 238);
 
-
-
 }
+
+[data-theme="dark"] {
+	--system-handle-bg: #131313;
+	--system-handle-bg-hover: #101010;
+	--system-handle-bg-active: #0b0b0b;
+	--system-border: #2e2d2d;
+
+	--top-header-bg: #0E0E0E;
+	--top-header-btn: #b8b8b8;
+
+	--top-setting-bg: #131313;
+	--top-setting-label: #a9a9a9;
+	--top-setting-btn: #a0a0a0;
+	--top-setting-btn-bg: #212121;
+	--top-setting-btn-bg-active: #1d1d1d;
+
+
+	--left-search-bg-focus: #25272b;
+	--left-cat-bg-hover: #25272b;
+	--left-item-bg-hover: #25272b;
+
+	--left-search-bg: #202125;
+
+	--left-search-border: #2b2e35;
+	--left-item-border: #2b2e35;
+	--left-cat-border: #2b2e35;
+
+
+	--left-cat-border-hover: #505050;
+	--left-search-border-focus: #505050;
+	--left-item-border-hover: #505050;
+
+	--left-bg:#16171B;
+	--left-item-bg: #16171B;
+	--left-cat-bg: #16171B;		
+
+	--left-font: #bfbfbf;
+	--left-cat-font: #a9a9a9;
+	--left-item-font: #bababa;
+
+	--mid-header-bg:#16171B;
+	--mid-header-font: #a9a9a9;
+	--mid-anim-bg: #202125;
+	--mid-control-bg: #16171B;
+	--mid-control-slider-bg: #111215;
+	--mid-control-btn-bg: #111215;
+	--mid-control-param-border: #434343;
+	--mid-control-param-btn-active: #a4a4a4;
+	--mid-control-param-btn-disabled: #323232;
+	--mid-control-param-btn-bg-hover: #111215;
+	--mid-control-param-btn-bg-active: #070809;
+	--mid-control-param-btn-bg-col-hover: #111215;
+	--mid-control-param-btn-bg-col-active: #070809;
+	--mid-control-log-bg:#111215;
+	--mid-control-font: #bfbfbf;
+
+	--right-text-bg: #16171B;
+
+	--right-code-bg: #202125;
+	--right-text-font: #a9a9a9;
+	--right-code-font: #bbbbbb;
+	--right-code-explanation-font: #475164;
+
+	--right-header-bg: #16171B;		
+	--right-header-font: #a9a9a9;
+	--right-header-side-btn: #1d1d1d;
+
+	--right-code-line-hg: rgba(2, 88, 125, 0.29);
+	--right-code-line-num: #475164;
+	--right-code-line-explain-btn-active: #9b9b9b;
+	--right-code-line-explain-btn-inactive: #3f3f3f;
+	--right-code-expand-btn-bg: #1d1d1d;
+	--right-code-expand-btn: #5b5b5b;
+	--right-code-expand-btn-bg-hover: #171717;
+
+	--right-code-line-explain-bg: #16171B;
+	--right-code-line-explain-title: #a2a2a2;
+	--right-code-line-explain-font: #a0a0a0;
+
+	--right-code-bottom-btn: #8B8B8B;
+	--right-code-bottom-btn-bg: #16171B;
+	--right-code-bottom-btn-bg-hover: #25272b;
+	--right-code-bottom-btn-bg-active: #282a2e;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+	}
+}
+
+
+
+
 
 
 // Global Functions

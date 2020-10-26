@@ -1,46 +1,26 @@
 /* eslint-disable import/no-mutable-exports */
-import React, { useState } from 'react';
+import React from 'react';
 import '../../styles/Settings.scss';
 // import { ReactComponent as Add } from '../../assets/icons/add.svg';
 // import { ReactComponent as Minus } from '../../assets/icons/minus.svg';
 import PropTypes from 'prop-types';
 import { ReactComponent as Font } from '../../assets/icons/font.svg';
-// import { increaseFontSize } from './helper';
+import {
+  allColBtn, allSystemCol,
+} from './helper';
 
 const DEFAULT_COL = 0;
 
-let mode = () => DEFAULT_COL;
+const mode = () => DEFAULT_COL;
 
 function Settings({
-  onFontIncrease, onSetting, handleColorModeChange, selectedMode,
+  onFontIncrease,
+  onSetting,
+  colorMode,
+  handleColorModeChange,
+  systemColor,
+  handleSystemColorChange,
 }) {
-  const allColBtn = [
-    {
-      id: 0,
-      primary: 'black',
-      secondary: 'white',
-    },
-    {
-      id: 1,
-      primary: 'green',
-      secondary: 'pink',
-    },
-    {
-      id: 2,
-      primary: 'cyan',
-      secondary: 'red',
-    },
-  ];
-  const [currColBtn, setCurrColBtn] = useState(selectedMode);
-
-  const onColorClick = (id) => {
-    const num = parseInt(id, 10);
-    mode = () => num;
-    setCurrColBtn(num);
-    // onSetting();
-    handleColorModeChange(Number(id));
-  };
-
   return (
     <div className="settingsContainer">
       <div className="setContainer">
@@ -59,9 +39,22 @@ function Settings({
         <div className="algoCol">
           {
           allColBtn.map(({ primary, secondary, id }, index) => (
-            <button key={id} id={index} type="button" className={currColBtn === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => onColorClick(e.target.id)}>
+            <button key={id} id={index} type="button" className={colorMode === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => handleColorModeChange(e.target.id)}>
               <span id={index} className={`left ${primary}`}> </span>
               <span id={index} className={`right ${secondary}`}> </span>
+            </button>
+          ))
+        }
+        </div>
+      </div>
+      <div className="setContainer">
+        <div className="label">System</div>
+        <div className="algoCol">
+          {
+          allSystemCol.map(({ primary, secondary, id }) => (
+            <button key={id} id={id} type="button" className={systemColor === id ? 'colorBtn active' : 'colorBtn'} onClick={(e) => handleSystemColorChange(e.target.id)}>
+              <span id={id} className={`left ${primary}`}> </span>
+              <span id={id} className={`right ${secondary}`}> </span>
             </button>
           ))
         }
@@ -82,6 +75,8 @@ export {
 Settings.propTypes = {
   onFontIncrease: PropTypes.func.isRequired,
   onSetting: PropTypes.func.isRequired,
+  colorMode: PropTypes.number.isRequired,
   handleColorModeChange: PropTypes.func.isRequired,
-  selectedMode: PropTypes.number.isRequired,
+  systemColor: PropTypes.string.isRequired,
+  handleSystemColorChange: PropTypes.func.isRequired,
 };
