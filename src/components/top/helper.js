@@ -136,11 +136,9 @@ const EXPIRE_SEC = (86400) * 1000;
 
 export function setTheme(theme) {
   if (theme === 'dark') {
-    // localStorage.setItem('theme', 'dark');
     setWithExpiry('theme', 'dark', EXPIRE_SEC);
     document.documentElement.setAttribute('data-theme', 'dark');
   } else if (theme === 'light') {
-    // localStorage.setItem('theme', 'light');
     setWithExpiry('theme', 'light', EXPIRE_SEC);
     document.documentElement.setAttribute('data-theme', 'light');
   }
@@ -152,4 +150,20 @@ export function getSystemColorMode() {
     return 'dark';
   }
   return 'light';
+}
+
+
+export function setAlgoTheme(theme) {
+  console.log(`sdsd${theme}`);
+  console.log(`HERE${document.documentElement.getAttribute('algo-theme')}`);
+  if (theme === 0) {
+    setWithExpiry('algo-theme', 0, EXPIRE_SEC);
+    document.documentElement.setAttribute('algo-theme', '0');
+  } else if (theme === 1) {
+    setWithExpiry('algo-theme', 1, EXPIRE_SEC);
+    document.documentElement.setAttribute('algo-theme', '1');
+  } else if (theme === 2) {
+    setWithExpiry('algo-theme', 2, EXPIRE_SEC);
+    document.documentElement.setAttribute('algo-theme', '2');
+  }
 }
