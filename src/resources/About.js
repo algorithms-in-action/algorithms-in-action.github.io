@@ -157,8 +157,8 @@ export const team = [
   {
     name: 'Lin Fan',
     photo: Linfan,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/tututulillian',
+    linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
