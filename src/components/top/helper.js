@@ -68,34 +68,42 @@ export function isDarkMode() {
   return false;
 }
 
+export const ALGO_THEME_KEY = 'algo-theme';
+export const ALGO_THEME_1 = 'default';
+const ALGO_THEME_2 = 'green';
+const ALGO_THEME_3 = 'red';
 
 // Color Scheme
 export const allColBtn = [
   {
-    id: 0,
+    id: ALGO_THEME_1,
     primary: 'black',
     secondary: 'white',
   },
   {
-    id: 1,
+    id: ALGO_THEME_2,
     primary: 'green',
     secondary: 'pink',
   },
   {
-    id: 2,
+    id: ALGO_THEME_3,
     primary: 'cyan',
     secondary: 'red',
   },
 ];
 
+export const SYSTEM_THEME_KEY = 'data-theme';
+const SYSTEM_THEME_1 = 'light';
+const SYSTEM_THEME_2 = 'dark';
+
 export const allSystemCol = [
   {
-    id: 'light',
+    id: SYSTEM_THEME_1,
     primary: 'white',
     secondary: 'white',
   },
   {
-    id: 'dark',
+    id: SYSTEM_THEME_2,
     primary: 'black',
     secondary: 'black',
   },
@@ -129,41 +137,42 @@ export function getWithExpiry(key) {
     localStorage.removeItem(key);
     return null;
   }
+
   return item.value;
 }
 
-const EXPIRE_SEC = (86400) * 1000;
+// const EXPIRE_SEC = (86400) * 1000; // 1 day
+const EXPIRE_SEC = 5 * 1000; // 5 sec
+
 
 export function setTheme(theme) {
-  if (theme === 'dark') {
-    setWithExpiry('theme', 'dark', EXPIRE_SEC);
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else if (theme === 'light') {
-    setWithExpiry('theme', 'light', EXPIRE_SEC);
-    document.documentElement.setAttribute('data-theme', 'light');
+  if (theme === SYSTEM_THEME_1) {
+    setWithExpiry(SYSTEM_THEME_KEY, SYSTEM_THEME_1, EXPIRE_SEC);
+    document.documentElement.setAttribute(SYSTEM_THEME_KEY, SYSTEM_THEME_1);
+  } else if (theme === SYSTEM_THEME_2) {
+    setWithExpiry(SYSTEM_THEME_KEY, SYSTEM_THEME_2, EXPIRE_SEC);
+    document.documentElement.setAttribute(SYSTEM_THEME_KEY, SYSTEM_THEME_2);
   }
 }
 
 
 export function getSystemColorMode() {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    return 'dark';
+  if (window.matchMedia && window.matchMedia(`(prefers-color-scheme: ${SYSTEM_THEME_2})`).matches) {
+    return SYSTEM_THEME_2;
   }
-  return 'light';
+  return SYSTEM_THEME_1;
 }
 
 
 export function setAlgoTheme(theme) {
-  console.log(`sdsd${theme}`);
-  console.log(`HERE${document.documentElement.getAttribute('algo-theme')}`);
-  if (theme === 0) {
-    setWithExpiry('algo-theme', 0, EXPIRE_SEC);
-    document.documentElement.setAttribute('algo-theme', '0');
-  } else if (theme === 1) {
-    setWithExpiry('algo-theme', 1, EXPIRE_SEC);
-    document.documentElement.setAttribute('algo-theme', '1');
-  } else if (theme === 2) {
-    setWithExpiry('algo-theme', 2, EXPIRE_SEC);
-    document.documentElement.setAttribute('algo-theme', '2');
+  if (theme === ALGO_THEME_1) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_1, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_1);
+  } else if (theme === ALGO_THEME_2) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_2, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_2);
+  } else if (theme === ALGO_THEME_3) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_3, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_3);
   }
 }

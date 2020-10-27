@@ -38,10 +38,10 @@ function Settings({
         <div className="label">Data Structures</div>
         <div className="algoCol">
           {
-          allColBtn.map(({ primary, secondary, id }, index) => (
-            <button key={id} id={index} type="button" className={colorMode === index ? 'colorBtn active' : 'colorBtn'} onClick={(e) => handleColorModeChange(e.target.id)}>
-              <span id={index} className={`left ${primary}`}> </span>
-              <span id={index} className={`right ${secondary}`}> </span>
+          allColBtn.map(({ primary, secondary, id }) => (
+            <button key={id} id={id} type="button" className={colorMode === id ? 'colorBtn active' : 'colorBtn'} onClick={(e) => handleColorModeChange(e.target.id)}>
+              <span id={id} className={`left ${primary}`}> </span>
+              <span id={id} className={`right ${secondary}`}> </span>
             </button>
           ))
         }
@@ -75,7 +75,7 @@ export {
 Settings.propTypes = {
   onFontIncrease: PropTypes.func.isRequired,
   onSetting: PropTypes.func.isRequired,
-  colorMode: PropTypes.number.isRequired,
+  colorMode: PropTypes.string.isRequired,
   handleColorModeChange: PropTypes.func.isRequired,
   systemColor: PropTypes.string.isRequired,
   handleSystemColorChange: PropTypes.func.isRequired,

@@ -16,6 +16,9 @@ import {
   setAlgoTheme,
   getSystemColorMode,
   getWithExpiry,
+  ALGO_THEME_KEY,
+  ALGO_THEME_1,
+  SYSTEM_THEME_KEY,
 } from './components/top/helper';
 
 
@@ -61,20 +64,30 @@ function App() {
     setFontSizeIncrease(fontSizeIncrease + val);
   };
 
-  const [colorMode, setColorMode] = useState(0);
+
+  const initAlgoColor = () => {
+    const algoTheme = getWithExpiry(ALGO_THEME_KEY);
+    if (algoTheme === null) {
+      setAlgoTheme(ALGO_THEME_1);
+      return ALGO_THEME_1;
+    }
+    return algoTheme;
+  };
+
+  const [colorMode, setColorMode] = useState(initAlgoColor());
   const handleColorModeChange = (id) => {
-    const num = parseInt(id, 10);
-    setColorMode(num);
-    setAlgoTheme(num);
+    setColorMode(id);
+    setAlgoTheme(id);
   };
 
 
   const initSystemColor = () => {
-    const theme = getWithExpiry('theme');
+    const theme = getWithExpiry(SYSTEM_THEME_KEY);
     if (theme === null) {
       setTheme(getSystemColorMode());
       return getSystemColorMode();
     }
+
     return theme;
   };
 
@@ -85,8 +98,8 @@ function App() {
   };
 
   useEffect(() => {
-    setTheme(getWithExpiry('theme'));
-    setAlgoTheme(colorMode);
+    setTheme(getWithExpiry(SYSTEM_THEME_KEY));
+    setAlgoTheme(getWithExpiry(ALGO_THEME_KEY));
   });
 
   return (

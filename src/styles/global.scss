@@ -4,11 +4,9 @@ $sigBlue: #027AFF;
 $red: #DC0707;
 $green: #53DD6C;
 $lightWhite: #F7F7F7;
-
 $yellowLine: #FFDE3C;
-$blueLine: rgba(0, 187, 255, 0.2);
 
-// Global Variables
+// Default Variables
 :root {
 	--system-handle-bg: #f4f4f4;
 	--system-handle-bg-hover: #eeeeee;
@@ -63,7 +61,7 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--mid-control-log-failure: #DC0707;
 
 	--right-header-bg: #FFFFFF;
-	--right-header-font: #454545;
+	--right-header-font: #919191;
 	--right-header-side-btn: #1d1d1d;
 	--right-header-font-active: #027AFF;
 
@@ -127,9 +125,9 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
 
-	--array-graph-row-col-bg: #FFFFFF;
-	--array-graph-row-col-border: #FFFFFF;
-	--array-graph-row-col-value-color: #FFFFFF;
+	--array-graph-row-col-bg: #505050;
+	--array-graph-row-col-border: #505050;
+	--array-graph-row-col-value-color: #cecece;
 	--array-graph-row-col-bg-selected: #067AFF;
 	--array-graph-row-col-bg-patched: #c51162;
 	--array-graph-row-col-bg-index: none;
@@ -151,9 +149,9 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--array-graph-edge-arrow-fill-selected: #067AFF;
 	--array-graph-edge-arrow-fill-visited: #067AFF;
 
-
 }
 
+// Override Data Theme Colors [Dark]
 [data-theme="dark"] {
 	--system-handle-bg: #131313;
 	--system-handle-bg-hover: #101010;
@@ -168,7 +166,6 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--top-setting-btn: #a0a0a0;
 	--top-setting-btn-bg: #212121;
 	--top-setting-btn-bg-active: #1d1d1d;
-
 
 	--left-search-bg-focus: #25272b;
 	--left-cat-bg-hover: #25272b;
@@ -217,7 +214,7 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--right-code-explanation-font: #475164;
 
 	--right-header-bg: #16171B;		
-	--right-header-font: #a9a9a9;
+	--right-header-font: #636363;
 	--right-header-side-btn: #1d1d1d;
 
 	--right-code-line-hg: rgba(2, 88, 125, 0.29);
@@ -238,14 +235,64 @@ $blueLine: rgba(0, 187, 255, 0.2);
 	--right-code-bottom-btn-bg-active: #282a2e;
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-	}
+
+
+// Override Algorithm Theme Colors [Green]
+[algo-theme="green"] {
+	// Graph
+	--graph-node-circle-fill:  #505050;
+	--graph-node-circle-stroke:  #cecece;
+	--graph-node-id-fill: #cecece;
+	--graph-node-weight-fill: #cecece;
+	--graph-node-circle-fill-selected: #067AFF;
+	--graph-node-circle-stroke-selected: #067AFF;
+	--graph-node-circle-fill-visited: #c51162;
+	--graph-node-circle-stroke-visited: #c51162;
+
+	--graph-edge-line-stroke: #cecece;
+	--graph-edge-line-weight-fill: #cecece;
+	--graph-edge-line-stroke-selected: #067AFF;
+	--graph-edge-weight-fill-selected: #067AFF;
+	--graph-edge-line-stroke-visited: #c51162;
+	--graph-edge-weight-fill-visited: #c51162;
+
+	--graph-arrow-fill: #cecece;
+	--graph-arrow-fill-selected: #067AFF;
+	--graph-arrow-fill-visited: #c51162;
+
+	--array-2d-row-col-bg: #505050;
+	--array-2d-row-col-border: #505050;
+	--array-2d-row-col-value-color: #cecece;
+	--array-2d-row-col-bg-selected: #2da01c;
+	--array-2d-row-col-bg-patched: #c51162;
+	--array-2d-row-col-bg-index: none;
+	--array-2d-row-col-border-index: none;
+	--array-2d-row-col-color-index: #505050;
+
+	--array-graph-row-col-bg: #FFFFFF;
+	--array-graph-row-col-border: #FFFFFF;
+	--array-graph-row-col-value-color: #FFFFFF;
+	--array-graph-row-col-bg-selected: #067AFF;
+	--array-graph-row-col-bg-patched: #c51162;
+	--array-graph-row-col-bg-index: none;
+	--array-graph-row-col-border-index: none;
+	--array-graph-row-col-color-index: #505050;
+	--array-graph-node-weight-fill: #FFFFFF;
+	--array-graph-node-circle-fill-selected: #067AFF;
+	--array-graph-node-circle-stroke-selected: #067AFF;
+	--array-graph-node-circle-fill-visited: #c51162;
+	--array-graph-node-circle-stroke-visited: #c51162;
+
+	--array-graph-edge-line-stroke: #505050;
+	--array-graph-edge-weight-fill: #505050;
+	--array-graph-edge-line-stroke-selected: #067AFF;
+	--array-graph-edge-weight-fill-selected: #067AFF;
+	--array-graph-edge-line-stroke-visited: #c51162;
+	--array-graph-edge-weight-fill-visited: #c51162;
+	--array-graph-edge-arrow-fill: #505050;
+	--array-graph-edge-arrow-fill-selected: #067AFF;
+	--array-graph-edge-arrow-fill-visited: #067AFF;
 }
-
-
-
-
 
 
 // Global Functions
