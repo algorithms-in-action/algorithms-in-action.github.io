@@ -129,8 +129,8 @@ export const team = [
   {
     name: 'Nir Palombo',
     photo: Nir,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/nirpalombo',
+    linkedIn: 'https://www.linkedin.com/in/nir-palombo-b513b449/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
