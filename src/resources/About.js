@@ -166,8 +166,8 @@ export const team = [
   {
     name: 'Tianyang Chen',
     photo: Tianyang,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/Allen-Chen-7',
+    linkedIn: 'https://www.linkedin.com/in/tianyang-chen-8208261ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
