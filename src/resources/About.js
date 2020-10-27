@@ -92,8 +92,8 @@ export const team = [
   }, {
     name: 'Luke Ceddia',
     photo: Luke,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/flukiluke',
+    linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
