@@ -120,8 +120,8 @@ export const team = [
   {
     name: 'Bohao Liu',
     photo: Carina,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/lbh-carina',
+    linkedIn: 'https://www.linkedin.com/in/bohao-liu-3218211ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
