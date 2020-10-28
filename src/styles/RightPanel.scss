@@ -35,25 +35,28 @@
   .btnPanel {
     // padding: 0 24px;
     overflow: hidden;
+    display: flex;
 
     .bottomBtn {
       @include removeBtnStyling;
-      padding: 8px 0;
-      width: 200px;
+      padding: 8px;
       background: white;
       text-transform: uppercase;
-      font-size: 0.72em;
-      font-weight: 500;
-      color: rgb(155, 155, 155);
+      font-size: 0.70em;
+      font-weight: 400;
+      color: rgb(147, 147, 147);
       white-space: nowrap;
       border-right: 1px solid $borderCol;
-
-
+      flex: 1;
+      text-overflow: ellipsis;
     }
 
     .bottomBtn:hover {
-      background: rgb(227, 227, 227);
-      color: rgb(114, 114, 114);
+      background: rgb(245, 245, 245);
+    }
+
+    .bottomBtn:active {
+      background: rgb(238, 238, 238);
     }
   }
   

@@ -5,11 +5,10 @@ import PropTypes from 'prop-types';
 
 function ButtonPanel({ onClick, name }) {
   return (
-    <div className="btnPanel">
-      <button className="bottomBtn" type="button" onClick={onClick}>
-        {name}
-      </button>
-    </div>
+    <button className="bottomBtn" type="button" onClick={onClick}>
+      {name}
+    </button>
+
   );
 }
 

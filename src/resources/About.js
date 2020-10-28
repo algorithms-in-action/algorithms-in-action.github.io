@@ -85,15 +85,15 @@ export const team = [
   {
     name: 'Zihan Zhang',
     photo: Zihan,
-    github: 'http://www.google.com',
+    github: 'https://github.com/ZhangzihanGit',
     linkedIn: 'https://www.linkedin.com/in/zihan-zhang-a40855172/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
   }, {
     name: 'Luke Ceddia',
     photo: Luke,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/flukiluke',
+    linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -101,7 +101,7 @@ export const team = [
   {
     name: 'Kenny Lee',
     photo: Kenny,
-    github: 'http://www.google.com',
+    github: 'https://github.com/kennylwx',
     linkedIn: 'https://www.linkedin.com/in/kennylwx/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
@@ -110,8 +110,8 @@ export const team = [
   {
     name: 'Yingsong Chen',
     photo: Yinsong,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/icarusunimelb',
+    linkedIn: 'https://www.linkedin.com/in/yinsong-chen-62707b15b/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -120,8 +120,8 @@ export const team = [
   {
     name: 'Bohao Liu',
     photo: Carina,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/lbh-carina',
+    linkedIn: 'https://www.linkedin.com/in/bohao-liu-3218211ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -129,8 +129,8 @@ export const team = [
   {
     name: 'Nir Palombo',
     photo: Nir,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/nirpalombo',
+    linkedIn: 'https://www.linkedin.com/in/nir-palombo-b513b449/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -139,8 +139,8 @@ export const team = [
   {
     name: 'Boyu Zhou',
     photo: Boyu,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/BOYU0926',
+    linkedIn: 'https://www.linkedin.com/in/boyu-zhou-05487b1a0/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -148,8 +148,8 @@ export const team = [
   {
     name: 'João Pereira',
     photo: Joao,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/jofrancis1997',
+    linkedIn: 'https://www.linkedin.com/in/joão-pereira-574972163/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -157,8 +157,8 @@ export const team = [
   {
     name: 'Lin Fan',
     photo: Linfan,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/tututulillian',
+    linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
@@ -166,8 +166,8 @@ export const team = [
   {
     name: 'Tianyang Chen',
     photo: Tianyang,
-    github: 'http://www.google.com',
-    linkedIn: 'http://www.google.com',
+    github: 'https://github.com/Allen-Chen-7',
+    linkedIn: 'https://www.linkedin.com/in/tianyang-chen-8208261ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
 
