@@ -27,13 +27,17 @@
         background-color: var(--array-2d-row-col-bg-selected);
 
         span {
-          color: orange;
+          color: var(--array-2d-row-col-selected);
         }
       }
 
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);
+
+        span {
+          color: var(--array-2d-row-col-patched);
+        }
 
       }
 

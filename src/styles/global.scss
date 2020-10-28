@@ -94,60 +94,65 @@ $yellowLine: #FFDE3C;
 	--right-code-bottom-btn-bg-hover: rgb(245, 245, 245);
 	--right-code-bottom-btn-bg-active: rgb(238, 238, 238);
 
-
 	// Graph
-	--graph-node-circle-fill:  #e6e6e6;
-	--graph-node-circle-stroke:  #505050;
+	--graph-node-circle-fill:  #ffffff;
+	--graph-node-circle-stroke:  #4f4f4f;
 	--graph-node-id-fill: #6a6a6a;
 	--graph-node-weight-fill: #6a6a6a;
-	--graph-node-circle-fill-selected: #067AFF;
-	--graph-node-circle-stroke-selected: #067AFF;
-	--graph-node-circle-fill-visited: #ff97c6;
-	--graph-node-circle-stroke-visited: #c51162;
+	--graph-node-circle-fill-selected: #2289ff;
+	--graph-node-circle-stroke-selected: #2289ff;
+	--graph-node-id-fill-selected: #FFFFFF;
+	--graph-node-circle-fill-visited: #ee0970;
+	--graph-node-circle-stroke-visited: #ee0970;
+	--graph-node-id-fill-visited: #FFFFFF;
 
-	--graph-edge-line-stroke: #505050;
-	--graph-edge-line-weight-fill: #4b4b4b;
-	--graph-edge-line-stroke-selected: #067AFF;
-	--graph-edge-weight-fill-selected: #067AFF;
-	--graph-edge-line-stroke-visited: #c51162;
-	--graph-edge-weight-fill-visited: #c51162;
+	--graph-edge-line-stroke: #aeaeae;
+	--graph-edge-line-weight-fill: #a4a4a4;
+	--graph-edge-line-stroke-selected: #2289ff;
+	--graph-edge-weight-fill-selected: #2289ff;
+	--graph-edge-line-stroke-visited: #ee0970;
+	--graph-edge-weight-fill-visited: #ee0970;
 
-	--graph-arrow-fill: #505050;
-	--graph-arrow-fill-selected: #067AFF;
-	--graph-arrow-fill-visited: #c51162;
 
-	--array-2d-row-col-bg: #e6e6e6;
-	--array-2d-row-col-border: #505050;
-	--array-2d-row-col-value-color: #505050;
-	--array-2d-row-col-bg-selected: #64acff;
-	--array-2d-row-col-bg-patched: #c51162;
+	--graph-arrow-fill: #aeaeae;
+	--graph-arrow-fill-selected: #2289ff;
+	--graph-arrow-fill-visited: #ee0970;
+
+	--array-2d-row-col-bg: #ffffff;
+	--array-2d-row-col-border: #4f4f4f;
+	--array-2d-row-col-value-color: #3e3e3e;
+	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-selected: #FFFFFF;
+	--array-2d-row-col-bg-patched: #ee0970;
+	--array-2d-row-col-patched: #FFFFFF;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
 
-	--array-graph-row-col-bg: #505050;
-	--array-graph-row-col-border: #505050;
-	--array-graph-row-col-value-color: #cecece;
-	--array-graph-row-col-bg-selected: #067AFF;
-	--array-graph-row-col-bg-patched: #c51162;
+	--array-graph-row-col-bg: #ffffff;
+	--array-graph-row-col-border: #4f4f4f;
+	--array-graph-row-col-value-color: #3e3e3e;
+	--array-graph-row-col-bg-selected: #2289ff;
+	--array-graph-row-col-selected: #FFFFFF;
+	--array-graph-row-col-bg-patched: #ee0970;
 	--array-graph-row-col-bg-index: none;
 	--array-graph-row-col-border-index: none;
 	--array-graph-row-col-color-index: #505050;
 	--array-graph-node-weight-fill: #FFFFFF;
-	--array-graph-node-circle-fill-selected: #067AFF;
-	--array-graph-node-circle-stroke-selected: #067AFF;
-	--array-graph-node-circle-fill-visited: #c51162;
-	--array-graph-node-circle-stroke-visited: #c51162;
+	--array-graph-node-circle-fill-selected: #2289ff;
+	--array-graph-node-circle-stroke-selected: #2289ff;
+	--array-graph-node-circle-fill-visited: #ee0970;
+	--array-graph-node-circle-stroke-visited: #ee0970;
 	
 	--array-graph-edge-line-stroke: #505050;
 	--array-graph-edge-weight-fill: #505050;
-	--array-graph-edge-line-stroke-selected: #067AFF;
-	--array-graph-edge-weight-fill-selected: #067AFF;
-	--array-graph-edge-line-stroke-visited: #c51162;
-	--array-graph-edge-weight-fill-visited: #c51162;
+	--array-graph-edge-line-stroke-selected: #2289ff;
+	--array-graph-edge-weight-fill-selected: #2289ff;
+	--array-graph-edge-line-stroke-visited: #ee0970;
+	--array-graph-edge-weight-fill-visited: #ee0970;
 	--array-graph-edge-arrow-fill: #505050;
-	--array-graph-edge-arrow-fill-selected: #067AFF;
-	--array-graph-edge-arrow-fill-visited: #067AFF;
+	--array-graph-edge-arrow-fill-selected: #2289ff;
+	--array-graph-edge-arrow-fill-visited: #2289ff;
 
 }
 
@@ -235,58 +240,62 @@ $yellowLine: #FFDE3C;
 	--right-code-bottom-btn-bg-active: #282a2e;
 
 	// Graph
-	--graph-node-circle-fill:  #505050;
-	--graph-node-circle-stroke:  #cecece;
-	--graph-node-id-fill: #cecece;
-	--graph-node-weight-fill: #cecece;
-	--graph-node-circle-fill-selected: #067AFF;
-	--graph-node-circle-stroke-selected: #067AFF;
-	--graph-node-circle-fill-visited: #c51162;
-	--graph-node-circle-stroke-visited: #c51162;
+	--graph-node-circle-fill:  #5c5c5c;
+	--graph-node-circle-stroke:  #373737;
+	--graph-node-id-fill: #d5d5d5;
+	--graph-node-weight-fill: #6a6a6a;
+	--graph-node-circle-fill-selected: #2289ff;
+	--graph-node-circle-stroke-selected: #2289ff;
+	--graph-node-id-fill-selected: #FFFFFF;
+	--graph-node-circle-fill-visited: #ee0970;
+	--graph-node-circle-stroke-visited: #ee0970;
+	--graph-node-id-fill-visited: #FFFFFF;
 
-	--graph-edge-line-stroke: #cecece;
-	--graph-edge-line-weight-fill: #cecece;
-	--graph-edge-line-stroke-selected: #067AFF;
-	--graph-edge-weight-fill-selected: #067AFF;
-	--graph-edge-line-stroke-visited: #c51162;
-	--graph-edge-weight-fill-visited: #c51162;
+	--graph-edge-line-stroke: #464646;
+	--graph-edge-line-weight-fill: #717171;
+	--graph-edge-line-stroke-selected: #2289ff;
+	--graph-edge-weight-fill-selected: #2289ff;
+	--graph-edge-line-stroke-visited: #ee0970;
+	--graph-edge-weight-fill-visited: #ee0970;
 
-	--graph-arrow-fill: #cecece;
-	--graph-arrow-fill-selected: #067AFF;
-	--graph-arrow-fill-visited: #c51162;
+	--graph-arrow-fill: #464646;
+	--graph-arrow-fill-selected: #2289ff;
+	--graph-arrow-fill-visited: #ee0970;
 
-	--array-2d-row-col-bg: #505050;
-	--array-2d-row-col-border: #505050;
-	--array-2d-row-col-value-color: #cecece;
-	--array-2d-row-col-bg-selected: #067AFF;
-	--array-2d-row-col-bg-patched: #c51162;
+	--array-2d-row-col-bg: #343434;
+	--array-2d-row-col-border: #212121;
+	--array-2d-row-col-value-color: #d5d5d5;
+	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-selected: #FFFFFF;
+	--array-2d-row-col-bg-patched: #ee0970;
+	--array-2d-row-col-patched: #FFFFFF;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
 
-	--array-graph-row-col-bg: #505050;
-	--array-graph-row-col-border: #505050;
-	--array-graph-row-col-value-color: #cecece;
-	--array-graph-row-col-bg-selected: #067AFF;
-	--array-graph-row-col-bg-patched: #c51162;
+	--array-graph-row-col-bg: #343434;
+	--array-graph-row-col-border: #212121;
+	--array-graph-row-col-value-color: #d5d5d5;
+	--array-graph-row-col-bg-selected: #2289ff;
+	--array-graph-row-col-bg-patched: #ee0970;
 	--array-graph-row-col-bg-index: none;
 	--array-graph-row-col-border-index: none;
 	--array-graph-row-col-color-index: #505050;
 	--array-graph-node-weight-fill: #FFFFFF;
-	--array-graph-node-circle-fill-selected: #067AFF;
-	--array-graph-node-circle-stroke-selected: #067AFF;
-	--array-graph-node-circle-fill-visited: #c51162;
-	--array-graph-node-circle-stroke-visited: #c51162;
+	--array-graph-node-circle-fill-selected: #2289ff;
+	--array-graph-node-circle-stroke-selected: #2289ff;
+	--array-graph-node-circle-fill-visited: #ee0970;
+	--array-graph-node-circle-stroke-visited: #ee0970;
 	
 	--array-graph-edge-line-stroke: #505050;
 	--array-graph-edge-weight-fill: #505050;
-	--array-graph-edge-line-stroke-selected: #067AFF;
-	--array-graph-edge-weight-fill-selected: #067AFF;
-	--array-graph-edge-line-stroke-visited: #c51162;
-	--array-graph-edge-weight-fill-visited: #c51162;
+	--array-graph-edge-line-stroke-selected: #2289ff;
+	--array-graph-edge-weight-fill-selected: #2289ff;
+	--array-graph-edge-line-stroke-visited: #ee0970;
+	--array-graph-edge-weight-fill-visited: #ee0970;
 	--array-graph-edge-arrow-fill: #505050;
-	--array-graph-edge-arrow-fill-selected: #067AFF;
-	--array-graph-edge-arrow-fill-visited: #067AFF;
+	--array-graph-edge-arrow-fill-selected: #2289ff;
+	--array-graph-edge-arrow-fill-visited: #2289ff;
 }
 
 

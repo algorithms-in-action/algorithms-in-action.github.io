@@ -36,8 +36,7 @@
 
       }
       .id {
-        // stroke: orange;
-        fill: black;
+        fill: var(--graph-node-id-fill-selected);
       }
     }
 
@@ -48,8 +47,7 @@
         stroke: var(--graph-node-circle-stroke-visited);
       }
       .id {
-        // stroke: orange;
-        fill: blue;
+        fill: var(--graph-node-id-fill-visited);
       }
     }
   }
@@ -100,7 +98,6 @@
   }
 
   .arrow {
-    // fill: $color-font;
     fill: var(--graph-arrow-fill);
 
     &.selected {

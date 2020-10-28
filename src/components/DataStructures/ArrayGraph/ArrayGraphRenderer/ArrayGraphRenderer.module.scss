@@ -18,26 +18,27 @@
           display: table-cell;
           text-align: center;
           background-color: var(--array-graph-row-col-bg);
-          border: 0.5px solid var(--array-graph-row-col-border);
+          border: thin solid var(--array-graph-row-col-border);
           padding: 0 4px;
           font-size: 8px;
     
           .value {
             font-size: 9px;
             color: var(--array-graph-row-col-value-color);
-            color: orange;
 
           }
     
           &.selected {
             background-color: var(--array-graph-row-col-bg-selected);
-            color: orange;
+
+            span {
+              color: var(--array-graph-row-col-selected);
+            }
        
           }
     
           &.patched {
             background-color: var(--array-graph-row-col-bg-patched);
-            color: orange;
           }
     
           &.index {
