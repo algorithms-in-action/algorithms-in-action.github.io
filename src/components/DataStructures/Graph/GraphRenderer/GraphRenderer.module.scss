@@ -34,12 +34,20 @@
         fill: var(--graph-node-circle-fill-selected);
         stroke: var(--graph-node-circle-stroke-selected);
       }
+      .id {
+        // stroke: orange;
+        fill: black;
+      }
     }
 
     &.visited {
       .circle {
         fill: var(--graph-node-circle-fill-visited);
         stroke: var(--graph-node-circle-stroke-visited);
+      }
+      .id {
+        // stroke: orange;
+        fill: blue;
       }
     }
   }
