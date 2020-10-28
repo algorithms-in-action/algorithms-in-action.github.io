@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable max-len */
 import React, {
   useContext, useState, useEffect, useRef,
@@ -86,7 +88,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
         {
           (displaySearch === null)
             ? AlgorithmCategoryList.map((cat, index) => (
-              <>
+              <div key={cat.id}>
                 <button
                   key={cat.id}
                   id={`category-${index}`}
@@ -99,10 +101,12 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                 <div
                   className="algoItemContainer content"
                   id={itemFontID}
+                  // key={cat.id}
                 >
                   {
-                    cat.algorithms.map((algo) => (
+                    cat.algorithms.map((algo, index) => (
                       <button
+                        key={index}
                         className={algorithm.name === algo.name ? 'algoItem active' : 'algoItem'}
                         type="button"
                         id={`algo-${algo.name}`}
@@ -110,12 +114,12 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                           dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
                         }}
                       >
-                        <div className="algoItemContent">{algo.name}</div>
+                        <div key={algo.id} className="algoItemContent">{algo.name}</div>
                       </button>
                     ))
                   }
                 </div>
-              </>
+              </div>
             ))
             : displaySearch.map((algo) => (
               <button
