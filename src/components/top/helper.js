@@ -88,7 +88,7 @@ export const allColBtn = [
   {
     id: ALGO_THEME_3,
     primary: 'cyan',
-    secondary: 'red',
+    secondary: 'purple',
   },
 ];
 
