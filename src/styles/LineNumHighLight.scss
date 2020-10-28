@@ -117,6 +117,11 @@ $containerTopBottomPad: 2%;
 .active{
   width: 200%;
   background-color: var(--right-code-line-hg);
+
+}
+.active:hover {
+  background-color: var(--right-code-line-hg);
+
 }
 
 .textArea-pseudocode{

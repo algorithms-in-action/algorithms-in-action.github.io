@@ -29,7 +29,9 @@ const RIGHT_FONT_SIZE = 15;
 
 function App() {
   useEffect(() => {
-    window.addEventListener('resize', (event) => { resizeWindow(event); });
+    window.addEventListener('resize', (event) => {
+      resizeWindow(event);
+    });
     // eslint-disable-next-line no-unused-vars
     return (_) => { window.removeEventListener('resize', resizeWindow); };
   });
