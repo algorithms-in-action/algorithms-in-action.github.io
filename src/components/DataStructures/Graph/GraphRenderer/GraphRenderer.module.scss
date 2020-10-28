@@ -35,8 +35,10 @@
         stroke: var(--graph-node-circle-stroke-selected);
 
       }
-
-
+      .id {
+        // stroke: orange;
+        fill: black;
+      }
     }
 
 
@@ -45,9 +47,9 @@
         fill: var(--graph-node-circle-fill-visited);
         stroke: var(--graph-node-circle-stroke-visited);
       }
-
-      text{
-        color: orange !important;
+      .id {
+        // stroke: orange;
+        fill: blue;
       }
     }
   }
