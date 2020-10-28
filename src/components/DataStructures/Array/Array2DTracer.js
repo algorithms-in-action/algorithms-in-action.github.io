@@ -23,6 +23,7 @@ class Element {
     this.value = value;
     this.patched = false;
     this.selected = false;
+    this.sorted = false;
   }
 }
 
@@ -49,6 +50,12 @@ class Array2DTracer extends Tracer {
 
   depatch(x, y) {
     this.data[x][y].patched = false;
+  }
+
+  // used to highlight sorted elements
+  sorted(x, y) {
+    if (!this.data[x][y]) this.data[x][y] = new Element();
+    this.data[x][y].sorted = true;
   }
 
   select(sx, sy, ex = sx, ey = sy) {

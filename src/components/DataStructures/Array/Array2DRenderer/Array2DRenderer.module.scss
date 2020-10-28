@@ -41,6 +41,10 @@
 
       }
 
+      &.sorted {
+        background-color: $color-sorted;
+      }
+
       &.index {
         background: var(--array-2d-row-col-bg-index);
         border: var(--array-2d-row-col-border-index);
