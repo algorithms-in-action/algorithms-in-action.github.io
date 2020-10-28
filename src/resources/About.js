@@ -86,7 +86,7 @@ export const professors = [
     name: 'Dr. Lee Naish',
     desc: 'Honarary',
     department: 'University of Melbourne',
-    link: 'https://findanexpert.unimelb.edu.au/profile/542-lee-naish',
+    link: 'https://people.eng.unimelb.edu.au/lee/',
     img: Lee,
   },
 
