@@ -1,6 +1,7 @@
 # Algorithms in Action
 
-check the live site: [https://algorithms-in-action.github.io/](https://algorithms-in-action.github.io/)
+Check the live site: [https://algorithms-in-action.github.io/](https://algorithms-in-action.github.io/)
+Join the slack channel: [https://algorithms-in-action.slack.com/](https://algorithms-in-action.slack.com/)
 
 ## Development
 Algorithms in Action is written in JavaScript, using the [React](https://reactjs.org/)
