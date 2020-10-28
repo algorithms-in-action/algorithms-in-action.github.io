@@ -9,7 +9,7 @@ import App from './App';
 
 test('Check if the input value is correct', () => {
   const utils = render(<Router><App /></Router>);
-  const input = utils.getByTestId('searchInput').firstChild;
+  const input = utils.getByTestId('searchInput');
 
   fireEvent.change(input, { target: { value: 'quick' } });
   expect(input.value).toBe('quick');

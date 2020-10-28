@@ -4,7 +4,6 @@ import {
   Tabs, Tab, Paper, makeStyles,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { getCSSVariable } from '../top/helper';
 
 function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(0);
@@ -16,8 +15,7 @@ function HeaderButton({ value, onChange }) {
   const globalTheme = createMuiTheme({
     palette: {
       primary: {
-        main: getCSSVariable('--right-header-font-active'),
-        // main: '#027AFF',
+        main: '#027AFF',
       },
     },
   });
@@ -28,14 +26,11 @@ function HeaderButton({ value, onChange }) {
       minHeight: tabHeight,
       height: tabHeight,
       width: '100%',
-      color: getCSSVariable('--right-header-side-btn'),
     },
     tabRoot: {
       minHeight: tabHeight,
       height: tabHeight,
       width: '30px',
-      color: getCSSVariable('--right-header-font'),
-
     },
   }));
 

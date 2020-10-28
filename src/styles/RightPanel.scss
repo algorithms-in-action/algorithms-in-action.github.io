@@ -18,6 +18,13 @@ $rightBtnFontSize: 0.72em;
     button {
       font-size: $rightBtnFontSize;
       font-weight: 400;
+      color: var(--right-header-font);
+    }
+
+
+    .MuiTab-textColorPrimary.Mui-selected {
+      // color: var('--right-header-font-active') !important;
+      color: #027AFF;
     }
   }
 
