@@ -1,5 +1,7 @@
 # Algorithms in Action
 
+check the live site: [https://algorithms-in-action.github.io/](https://algorithms-in-action.github.io/)
+
 ## Development
 Algorithms in Action is written in JavaScript, using the [React](https://reactjs.org/)
 framework. To work on it locally, you will need to install
@@ -52,3 +54,12 @@ Coverage Reporting:
 > `npm test -- --coverage`
 
 It will run tests and generate a [coverage report](https://medium.com/@krishankantsinghal/how-to-read-test-coverage-report-generated-using-jest-c2d1cb70da8b). Note that the `coverageThreshold` can be configured in `package.json`.
+
+
+### Sync the Repository
+To synchronize the repository at [Gitlab](https://gitlab.eng.unimelb.edu.au/lceddia/aia), simply run `git pull upstream master`.
+
+### Deploy the Program
+Simply run `npm run deploy`.
+
+Note that in this repository, `Dev` is the default branch, while `master` is the deployment branch that stores build files.
