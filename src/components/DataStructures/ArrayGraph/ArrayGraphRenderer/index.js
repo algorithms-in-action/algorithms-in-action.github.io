@@ -105,12 +105,6 @@ class GraphRenderer extends Renderer {
       baseHeight * this.zoom,
     ];
 
-    console.log(`View Box: ${viewBox}`);
-
-    console.log(`Center X: ${this.centerX}`);
-    console.log(`Center Y: ${this.centerY}`);
-
-
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
