@@ -19,6 +19,8 @@
 
 import Harald from '../assets/images/Prof_Sondergaard.jpg';
 import Linda from '../assets/images/Dr_Stern.jpg';
+import Lee from '../assets/images/lee_naish.jpg';
+
 import Boyu from '../assets/images/boyu.JPG';
 import Carina from '../assets/images/carina.jpg';
 import Joao from '../assets/images/joao.jpg';
@@ -79,6 +81,15 @@ export const professors = [
     link: 'https://findanexpert.unimelb.edu.au/profile/14535-linda-stern',
     img: Linda,
   },
+  {
+    id: 2,
+    name: 'Dr. Lee Naish',
+    desc: 'Honarary',
+    department: 'University of Melbourne',
+    link: 'https://people.eng.unimelb.edu.au/lee/',
+    img: Lee,
+  },
+
 ];
 
 export const team = [

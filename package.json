@@ -21,6 +21,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-table": "^7.5.0",
+    "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4"
   },

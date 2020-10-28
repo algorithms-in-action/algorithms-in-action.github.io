@@ -7,6 +7,9 @@ body {
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
+$handleLen: 60px;
+$dragBarWidth: 10px;
+
 #page {
 	height: 100vh;
 	background: none;
@@ -33,7 +36,8 @@ body {
 
 #leftcol {
 	overflow: auto;
-  grid-area: leftcol;
+	grid-area: leftcol;
+	background-color: var(--left-bg);
 }
 
 #rightcol {
@@ -45,80 +49,68 @@ body {
 #tabpages {
 	overflow: auto;
 	grid-area: tabpages;
+
 }
 
 #footer {
 	overflow: auto;
 	grid-area: footer;
+	background-color: var(--mid-control-bg);
+
 }
 
 
+.dragbar {
+	background-color: var(--system-handle-bg);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.handle {
+		width: $dragBarWidth;
+		height: $handleLen;
+		// background-color: $handleCol;
+		// cursor: pointer;
+	}
+}
+
+.dragbar:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.dragbar:hover {
+	background-color: var(--system-handle-bg-hover);
+
+}
+
+.dragbar:active {
+	background-color: var(--system-handle-bg-active);
+
+}
+
+// Right Dragbar
 #rightdragbar {
-	background-color: $dragbarCol;
 	grid-area: rightdragbar;
 	cursor: col-resize;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 
-	#draghandle {
-		background-color: $handleCol;
-		width: $dragBarWidth;
-		height: $handleLen;
-		cursor: pointer;
-	}
-	
 }
 
-#rightdragbar:focus {
-  outline-style: none;
-  box-shadow: none;
-  border-color: transparent;
-}
-
+// Left Dragbar
 #leftdragbar {
-	background-color: $dragbarCol;
 	grid-area: leftdragbar;
 	cursor: col-resize;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 
-	#draghandle {
-		background-color: $handleCol;
-		width: $dragBarWidth;
-		height: $handleLen;
-		cursor: pointer;
-	}
 }
 
-#leftdragbar:focus {
-  outline-style: none;
-  box-shadow: none;
-  border-color: transparent;
-}
-
+// Bottom Dragbar
 #bottomdragbar {
-  background-color: $dragbarCol;
-  grid-area: bottomdragbar;
+	grid-area: bottomdragbar;
 	cursor: row-resize;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	
-	#draghandle {
-		background-color: $handleCol;
-		width: $handleLen ;
-		height: $dragBarWidth;
-		cursor: pointer;
-	}
+
 }
 
-#bottomdragbar:focus {
-  outline-style: none;
-  box-shadow: none;
-  border-color: transparent;
-}
 
 
 
