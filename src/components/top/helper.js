@@ -141,9 +141,8 @@ export function getWithExpiry(key) {
   return item.value;
 }
 
-// const EXPIRE_SEC = (86400) * 1000; // 1 day
-const EXPIRE_SEC = 5 * 1000; // 5 sec
-
+const EXPIRE_SEC = (86400) * 1000; // 1 day
+// const EXPIRE_SEC = 5 * 1000; // 5 sec
 
 export function setTheme(theme) {
   if (theme === SYSTEM_THEME_1) {
