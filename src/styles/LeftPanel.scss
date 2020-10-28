@@ -129,6 +129,7 @@ $leftFontSize: 0.89em;
   .algoItemContent {
     border-left: $border solid var(--left-item-border-active);
     color: var(--left-item-font-active);
+    background-color: var(--left-search-bg);
   }
 
   .algoItemContent:hover {

@@ -96,30 +96,30 @@ $yellowLine: #FFDE3C;
 
 
 	// Graph
-	--graph-node-circle-fill:  #505050;
-	--graph-node-circle-stroke:  #cecece;
-	--graph-node-id-fill: #cecece;
-	--graph-node-weight-fill: #cecece;
+	--graph-node-circle-fill:  #e6e6e6;
+	--graph-node-circle-stroke:  #505050;
+	--graph-node-id-fill: #6a6a6a;
+	--graph-node-weight-fill: #6a6a6a;
 	--graph-node-circle-fill-selected: #067AFF;
 	--graph-node-circle-stroke-selected: #067AFF;
-	--graph-node-circle-fill-visited: #c51162;
+	--graph-node-circle-fill-visited: #ff97c6;
 	--graph-node-circle-stroke-visited: #c51162;
 
-	--graph-edge-line-stroke: #cecece;
-	--graph-edge-line-weight-fill: #cecece;
+	--graph-edge-line-stroke: #505050;
+	--graph-edge-line-weight-fill: #4b4b4b;
 	--graph-edge-line-stroke-selected: #067AFF;
 	--graph-edge-weight-fill-selected: #067AFF;
 	--graph-edge-line-stroke-visited: #c51162;
 	--graph-edge-weight-fill-visited: #c51162;
 
-	--graph-arrow-fill: #cecece;
+	--graph-arrow-fill: #505050;
 	--graph-arrow-fill-selected: #067AFF;
 	--graph-arrow-fill-visited: #c51162;
 
-	--array-2d-row-col-bg: #505050;
+	--array-2d-row-col-bg: #e6e6e6;
 	--array-2d-row-col-border: #505050;
-	--array-2d-row-col-value-color: #cecece;
-	--array-2d-row-col-bg-selected: #067AFF;
+	--array-2d-row-col-value-color: #505050;
+	--array-2d-row-col-bg-selected: #64acff;
 	--array-2d-row-col-bg-patched: #c51162;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
@@ -233,6 +233,60 @@ $yellowLine: #FFDE3C;
 	--right-code-bottom-btn-bg: #16171B;
 	--right-code-bottom-btn-bg-hover: #25272b;
 	--right-code-bottom-btn-bg-active: #282a2e;
+
+	// Graph
+	--graph-node-circle-fill:  #505050;
+	--graph-node-circle-stroke:  #cecece;
+	--graph-node-id-fill: #cecece;
+	--graph-node-weight-fill: #cecece;
+	--graph-node-circle-fill-selected: #067AFF;
+	--graph-node-circle-stroke-selected: #067AFF;
+	--graph-node-circle-fill-visited: #c51162;
+	--graph-node-circle-stroke-visited: #c51162;
+
+	--graph-edge-line-stroke: #cecece;
+	--graph-edge-line-weight-fill: #cecece;
+	--graph-edge-line-stroke-selected: #067AFF;
+	--graph-edge-weight-fill-selected: #067AFF;
+	--graph-edge-line-stroke-visited: #c51162;
+	--graph-edge-weight-fill-visited: #c51162;
+
+	--graph-arrow-fill: #cecece;
+	--graph-arrow-fill-selected: #067AFF;
+	--graph-arrow-fill-visited: #c51162;
+
+	--array-2d-row-col-bg: #505050;
+	--array-2d-row-col-border: #505050;
+	--array-2d-row-col-value-color: #cecece;
+	--array-2d-row-col-bg-selected: #067AFF;
+	--array-2d-row-col-bg-patched: #c51162;
+	--array-2d-row-col-bg-index: none;
+	--array-2d-row-col-border-index: none;
+	--array-2d-row-col-color-index: #505050;
+
+	--array-graph-row-col-bg: #505050;
+	--array-graph-row-col-border: #505050;
+	--array-graph-row-col-value-color: #cecece;
+	--array-graph-row-col-bg-selected: #067AFF;
+	--array-graph-row-col-bg-patched: #c51162;
+	--array-graph-row-col-bg-index: none;
+	--array-graph-row-col-border-index: none;
+	--array-graph-row-col-color-index: #505050;
+	--array-graph-node-weight-fill: #FFFFFF;
+	--array-graph-node-circle-fill-selected: #067AFF;
+	--array-graph-node-circle-stroke-selected: #067AFF;
+	--array-graph-node-circle-fill-visited: #c51162;
+	--array-graph-node-circle-stroke-visited: #c51162;
+	
+	--array-graph-edge-line-stroke: #505050;
+	--array-graph-edge-weight-fill: #505050;
+	--array-graph-edge-line-stroke-selected: #067AFF;
+	--array-graph-edge-weight-fill-selected: #067AFF;
+	--array-graph-edge-line-stroke-visited: #c51162;
+	--array-graph-edge-weight-fill-visited: #c51162;
+	--array-graph-edge-arrow-fill: #505050;
+	--array-graph-edge-arrow-fill-selected: #067AFF;
+	--array-graph-edge-arrow-fill-visited: #067AFF;
 }
 
 

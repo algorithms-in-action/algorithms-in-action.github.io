@@ -29,10 +29,12 @@
     
           &.selected {
             background-color: var(--array-graph-row-col-bg-selected);
+            color: orange;
           }
     
           &.patched {
             background-color: var(--array-graph-row-col-bg-patched);
+            color: orange;
           }
     
           &.index {

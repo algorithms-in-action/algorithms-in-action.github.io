@@ -20,6 +20,7 @@
       .value {
         font-size: 12px;
         color: var(--array-2d-row-col-value-color);
+
       }
 
       &.selected {
@@ -28,6 +29,7 @@
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);
+
       }
 
       &.index {

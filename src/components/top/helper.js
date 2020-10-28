@@ -77,8 +77,8 @@ const ALGO_THEME_3 = 'red';
 export const allColBtn = [
   {
     id: ALGO_THEME_1,
-    primary: 'black',
-    secondary: 'white',
+    primary: 'blue',
+    secondary: 'red',
   },
   {
     id: ALGO_THEME_2,
