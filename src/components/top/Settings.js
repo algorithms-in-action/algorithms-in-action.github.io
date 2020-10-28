@@ -8,6 +8,7 @@ import { ReactComponent as Font } from '../../assets/icons/font.svg';
 import {
   allColBtn, allSystemCol,
 } from './helper';
+import Checkbox from './Checkbox';
 
 const DEFAULT_COL = 0;
 
@@ -59,6 +60,10 @@ function Settings({
           ))
         }
         </div>
+      </div>
+      <div className="setContainer">
+        <div className="label">Zoom</div>
+        <Checkbox />
       </div>
       <div className="settingFooter">
         <button className="saveBtn" type="button" onClick={onSetting}>Return</button>
