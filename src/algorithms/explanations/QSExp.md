@@ -1,5 +1,7 @@
 # Quick Sort
 
+---
+
 Quicksort is a divide and conquer algorithm. It first divides the input array into two smaller sub-arrays: the low elements and the high elements. It then recursively sorts the sub-arrays. The steps for Quicksort are:
 
 * Pick the right-most element of the array, called a pivot.

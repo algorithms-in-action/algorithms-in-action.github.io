@@ -1,8 +1,11 @@
 @import './global.scss';
 
+// $playBtn: $sigBlue;
+
+
 .sliderContainer {
   display: flex;
-  background-color: $sliderBg;
+  background-color: var(--mid-control-slider-bg);
   padding: 0 16px;
   @include border-radius(16px);
 
@@ -48,19 +51,19 @@
     height: 12px;
     width: 12px;
     path {
-      fill: $activeCol;
+      fill: var(--mid-control-param-btn-active);
     }
   }
 }
 
 .btnActive:hover {
   transition: .4s;
-  background: #f7f7f7 !important;
+  background: var(--mid-control-param-btn-bg-hover) !important;
   @include border-radius(14px);
 }
 .btnActive:active {
   transition: .2s;
-  background: #E3E2E4 !important;
+  background: var(--mid-control-param-btn-bg-active) !important;
   @include border-radius(14px);
 }
 
@@ -70,7 +73,7 @@
 
   svg {
     path {
-      fill: $disabledCol !important;
+      fill: var(--mid-control-param-btn-disabled) !important;
     }
   }
 
@@ -98,7 +101,7 @@
 .play {
   svg {
     path {
-      fill: $playBtn;
+      fill: var(--mid-control-param-btn-active-col);
     }
   }
 }
@@ -106,14 +109,14 @@
 .pause {
   svg {
     path {
-      fill: $playBtn;
+      fill: var(--mid-control-param-btn-active-col);
     }
   }
 }
 
 .controlButtons {
   display: flex;
-  background-color: $ctrlBtnBg;
+  background-color: var(--mid-control-btn-bg);
   @include border-radius(16px);
 
 }
