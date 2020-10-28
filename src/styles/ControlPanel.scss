@@ -1,5 +1,10 @@
 @import './global.scss';
 
+$ctrlOffset: 16px;
+$paramMinWidth: 420px;
+$paramOffset: 16px;
+$disabledCol: #b5b5b5;
+
 .controlContainer {
   font-size: 0.8em;
   min-width: $paramMinWidth;
@@ -17,7 +22,7 @@
     padding: 16px $paramOffset 16px $paramOffset;
     
     .logContainer {
-      background-color: $paramBg;
+      background-color: var(--mid-control-log-bg);
       padding: 8px 16px;
       border-radius: 4px;
       white-space: nowrap; 
@@ -26,7 +31,7 @@
       margin: 16px auto 0px auto;
       
       .logTag {
-        color: $successCol;
+        color: var(--mid-control-log-success);
         text-transform: uppercase;
         font-weight: 500;
         font-size: 1em;
@@ -36,7 +41,7 @@
       .logText {
         font-size: 1.03em;
         font-weight: 300;
-        color: $paramFontCol;
+        color: var(--mid-control-font);
       }
   
     }

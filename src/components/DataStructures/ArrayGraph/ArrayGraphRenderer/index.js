@@ -186,7 +186,16 @@ class GraphRenderer extends Renderer {
                   <table className={styles.array_2d}>
                     <tbody>
                       <tr className={styles.row}>
-                        {data.map((elem, i) => (<td key={`${i}-${elem.value}`} className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}>{elem.value}</td>))}
+                        {
+                          data.map((elem, i) => (
+                            <td
+                              key={`${i}-${elem.value}`}
+                              className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}
+                            >
+                              <span className={styles.value}>{elem.value}</span>
+                            </td>
+                          ))
+                        }
                       </tr>
                     </tbody>
                   </table>

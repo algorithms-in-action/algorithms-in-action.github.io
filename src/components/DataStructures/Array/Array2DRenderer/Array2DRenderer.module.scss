@@ -13,22 +13,32 @@
       display: table-cell;
       text-align: center;
       min-width: 28px;
-      // background-color: $theme-light;
-      background-color: "#fff";
-      border: 1px solid $theme-light;
+      background-color: var(--array-2d-row-col-bg);
+      border: 1px solid var(--array-2d-row-col-border);
       padding: 0 4px;
 
       .value {
         font-size: 12px;
-        // color: $color-font;
+        color: var(--array-2d-row-col-value-color);
+
       }
 
       &.selected {
-        background-color: $color-selected;
+        background-color: var(--array-2d-row-col-bg-selected);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
       }
 
+
       &.patched {
-        background-color: $color-patched;
+        background-color: var(--array-2d-row-col-bg-patched);
+
+        span {
+          color: var(--array-2d-row-col-patched);
+        }
+
       }
 
       &.sorted {
@@ -36,89 +46,9 @@
       }
 
       &.index {
-        background: none;
-        border: none;
-        color: $theme-light;
-      }
-    }
-  }
-}
-.array_2d_green {
-  flex-shrink: 0;
-  display: table;
-  border-collapse: collapse;
-
-  .row {
-    display: table-row;
-    height: 28px;
-
-    .col {
-      display: table-cell;
-      text-align: center;
-      min-width: 28px;
-      // background-color: $theme-light;
-      background-color: $color-purple;
-      border: 1px solid $theme-light;
-      padding: 0 4px;
-      color: $color-yellow;
-
-      .value {
-        font-size: 12px;
-        // color: $color-yellow;
-      }
-
-      &.selected {
-        background-color:  $color-lightgreen;
-      }
-
-      &.patched {
-        background-color: $color-green;
-      }
-
-      &.index {
-        background: none;
-        border: none;
-        color: $theme-light;
-      }
-    }
-  }
-}
-.array_2d_blue {
-  flex-shrink: 0;
-  display: table;
-  border-collapse: collapse;
-
-  .row {
-    display: table-row;
-    height: 28px;
-
-    .col {
-      display: table-cell;
-      text-align: center;
-      min-width: 28px;
-      // background-color: $theme-light;
-      background-color: $color-red;
-      border: 1px solid $theme-light;
-      padding: 0 4px;
-      color: $color-yellow;
-
-      .value {
-        font-size: 12px;
-        // color: $color-yellow;
-      }
-
-      &.selected {
-        background-color:  $color-blue;
-      }
-
-      &.patched {
-        background-color: $color-green;
-      }
-
-      &.index {
-        background: none;
-        border: none;
-        color: $theme-light;
+        background: var(--array-2d-row-col-bg-index);
+        border: var(--array-2d-row-col-border-index);
+        color: var(--array-2d-row-col-color-index);
       }
     }
   }

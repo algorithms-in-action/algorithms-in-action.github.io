@@ -53,3 +53,125 @@ export function setFontSize(id, fontSize) {
     txt.style.fontSize = `${fontSize}px`;
   }
 }
+
+export function getCSSVariable(cssVar) {
+  let res = getComputedStyle(document.documentElement).getPropertyValue(cssVar);
+  res = res.replace(/\s/g, '');
+  return res;
+}
+
+export function isDarkMode() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return true;
+  }
+
+  return false;
+}
+
+export const ALGO_THEME_KEY = 'algo-theme';
+export const ALGO_THEME_1 = 'default';
+const ALGO_THEME_2 = 'green';
+const ALGO_THEME_3 = 'red';
+
+// Color Scheme
+export const allColBtn = [
+  {
+    id: ALGO_THEME_1,
+    primary: 'blue',
+    secondary: 'red',
+  },
+  {
+    id: ALGO_THEME_2,
+    primary: 'green',
+    secondary: 'pink',
+  },
+  {
+    id: ALGO_THEME_3,
+    primary: 'cyan',
+    secondary: 'purple',
+  },
+];
+
+export const SYSTEM_THEME_KEY = 'data-theme';
+const SYSTEM_THEME_1 = 'light';
+const SYSTEM_THEME_2 = 'dark';
+
+export const allSystemCol = [
+  {
+    id: SYSTEM_THEME_1,
+    primary: 'white',
+    secondary: 'white',
+  },
+  {
+    id: SYSTEM_THEME_2,
+    primary: 'black',
+    secondary: 'black',
+  },
+];
+
+
+function setWithExpiry(key, value, ttl) {
+  const now = new Date();
+  // `item` is an object which contains the original value
+  // as well as the time when it's supposed to expire
+  const item = {
+    value,
+    expiry: now.getTime() + ttl,
+  };
+  localStorage.setItem(key, JSON.stringify(item));
+}
+
+export function getWithExpiry(key) {
+  const itemStr = localStorage.getItem(key);
+  // if the item doesn't exist, return null
+  if (!itemStr) {
+    return null;
+  }
+  const item = JSON.parse(itemStr);
+
+  const now = new Date();
+  // compare the expiry time of the item with the current time
+  if (now.getTime() > item.expiry) {
+    // If the item is expired, delete the item from storage
+    // and return null
+    localStorage.removeItem(key);
+    return null;
+  }
+
+  return item.value;
+}
+
+const EXPIRE_SEC = (86400) * 1000; // 1 day
+// const EXPIRE_SEC = 5 * 1000; // 5 sec
+
+export function setTheme(theme) {
+  if (theme === SYSTEM_THEME_1) {
+    setWithExpiry(SYSTEM_THEME_KEY, SYSTEM_THEME_1, EXPIRE_SEC);
+    document.documentElement.setAttribute(SYSTEM_THEME_KEY, SYSTEM_THEME_1);
+  } else if (theme === SYSTEM_THEME_2) {
+    setWithExpiry(SYSTEM_THEME_KEY, SYSTEM_THEME_2, EXPIRE_SEC);
+    document.documentElement.setAttribute(SYSTEM_THEME_KEY, SYSTEM_THEME_2);
+  }
+}
+
+
+export function getSystemColorMode() {
+  if (window.matchMedia && window.matchMedia(`(prefers-color-scheme: ${SYSTEM_THEME_2})`).matches) {
+    return SYSTEM_THEME_2;
+  }
+  return SYSTEM_THEME_1;
+}
+
+
+export function setAlgoTheme(theme) {
+  if (theme === ALGO_THEME_1) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_1, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_1);
+  } else if (theme === ALGO_THEME_2) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_2, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_2);
+  } else if (theme === ALGO_THEME_3) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_3, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_3);
+  }
+}
