@@ -96,7 +96,6 @@ $maxWidth: 800px;
 .section {
   background-color: white;
   filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.25));
-  // @include border-radii(25px, 25px, 25px,25px );
   @include border-radius(2px);
   padding: 36px 48px 24px;
   max-width: $maxWidth;
@@ -134,12 +133,10 @@ $maxWidth: 800px;
   }
 
   .professors {
-    display: flex;
     margin: 36px 0 12px;
-    overflow-y: hidden;
-    padding: 6px 0;
-    // justify-content: flex-end;
-
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(395px, auto));
+    grid-gap: 10px;
 
     .profile {
       display: flex;
@@ -147,7 +144,7 @@ $maxWidth: 800px;
       @include border-radius(4px);
       padding: 12px 24px;
       min-width: 320px;
-      margin-left: 24px;
+      // margin-left: 24px;
       border: 1px solid #aeaeae;
       background-color: white;
 
@@ -324,9 +321,6 @@ $maxWidth: 800px;
 
     }
   }
-
-
-
 }
 
 

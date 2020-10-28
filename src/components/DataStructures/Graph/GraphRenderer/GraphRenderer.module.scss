@@ -33,13 +33,21 @@
       .circle {
         fill: var(--graph-node-circle-fill-selected);
         stroke: var(--graph-node-circle-stroke-selected);
+
       }
+
+
     }
+
 
     &.visited {
       .circle {
         fill: var(--graph-node-circle-fill-visited);
         stroke: var(--graph-node-circle-stroke-visited);
+      }
+
+      text{
+        color: orange !important;
       }
     }
   }

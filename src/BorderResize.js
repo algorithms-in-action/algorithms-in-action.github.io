@@ -67,28 +67,18 @@ const getDefn = (page, list, status) => {
       tempList = addUnitToList([
         addUnitToNum(list[0], 'px'),
         addUnitToNum([list[1] / (list[1] + list[3])], 'fr'),
-        // addUnitToNum(7, 'fr'),
         addUnitToNum(list[2], 'px'),
         addUnitToNum([list[3] / (list[1] + list[3])], 'fr'),
-        // addUnitToNum(2, 'fr'),
-
       ], '');
 
       break;
     case COL_EXTERNAL:
-      console.log(list);
-
       tempList = addUnitToList([
         addUnitToNum(list[0] / (list[0] + list[2] + list[4]), 'fr'),
-        // addUnitToNum(list[0], 'px'),
         addUnitToNum(list[1], 'px'),
         addUnitToNum(list[2] / (list[0] + list[2] + list[4]), 'fr'),
-        // addUnitToNum(list[2] / (list[2] + list[4]), 'fr'),
-
         addUnitToNum(list[3], 'px'),
         addUnitToNum(list[4] / (list[0] + list[2] + list[4]), 'fr'),
-        // addUnitToNum(list[4] / (list[2] + list[4]), 'fr'),
-
       ], '');
       break;
     case COLLAPSE_LEFT:
@@ -249,13 +239,12 @@ export const collapseBottomDrag = () => {
 // This section pertains to resizing the window
 export const resizeWindow = (event) => {
   const page = document.getElementById('page');
-  const col = getColDefn(page, event, COL_EXTERNAL);
-  const row = getRowDefn(page, event, ROW_EXTERNAL);
-  page.style.gridTemplateColumns = col;
-  page.style.gridTemplateRows = row;
-
-  // console.log(`ROW: ${row}`);
-  // console.log(`COL: ${col}`);
+  if (page !== null) {
+    const col = getColDefn(page, event, COL_EXTERNAL);
+    const row = getRowDefn(page, event, ROW_EXTERNAL);
+    page.style.gridTemplateColumns = col;
+    page.style.gridTemplateRows = row;
+  }
 };
 
 
