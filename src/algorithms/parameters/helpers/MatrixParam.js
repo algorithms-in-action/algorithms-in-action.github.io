@@ -31,7 +31,6 @@ function MatrixParam({
   ALGORITHM_NAME,
   EXAMPLE,
 }) {
-
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
 
