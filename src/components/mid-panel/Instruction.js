@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../../styles/Instruction.scss';
 
 function Instruction({ instruction }) {
   return (
-    <div>
+    <div className="coverShowInstructions" id="coverShowInstructions">
       <div className="instructionTitle">
         {instruction.title}
       </div>
@@ -12,7 +13,7 @@ function Instruction({ instruction }) {
       </div>
       <div className="instructionContent">
         {
-          instruction.content.map(({ str }) => (
+          instruction.content.map((str) => (
             <div className="instructionSubContent">
               {str}
             </div>

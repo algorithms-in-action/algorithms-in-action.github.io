@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
-import '../../styles/InstructionCover.scss';
 import '../../styles/MidPanel.scss';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import Instruction from './Instruction';
@@ -22,11 +21,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
       </div>
       <div className="midPanelBody">
-        <div className="coverShowInstructions" id="coverShowInstructions">
-          {/* The Cover for Instructions */}
-          <Instruction instruction={algorithm.instruction} />
-        </div>
-        {/* Animation Goes here */}
+        <Instruction instruction={algorithm.instruction} />
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
     </div>

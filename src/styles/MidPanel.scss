@@ -36,14 +36,6 @@ $midTitleFontSize: 0.89em;
     background-color: var(--mid-anim-bg);
   }
 
-  // Cover for insturctions
-  .cover-show-instructions{
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 1px; /* Important */
-    min-height: 0;
-    background-color: orangered;
-  }
 
 }
 
