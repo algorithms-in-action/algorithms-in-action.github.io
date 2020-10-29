@@ -8,18 +8,26 @@ $disabledCol: #b5b5b5;
 .controlContainer {
   font-size: 0.8em;
   min-width: $paramMinWidth;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   .controlPanel {
     height: 40px;
-    padding: 0px $ctrlOffset;
+    padding: 4px $ctrlOffset;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: var(--mid-control-bg);
 
   }
 
   .parameterPanel {
     padding: 16px $paramOffset 16px $paramOffset;
+    // flex: 1;
+    overflow-y: auto;
+    // background-color: green;
+
     
     .logContainer {
       background-color: var(--mid-control-log-bg);
