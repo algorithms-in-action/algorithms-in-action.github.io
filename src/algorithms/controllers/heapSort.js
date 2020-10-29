@@ -32,7 +32,9 @@ export default {
 
     chunker.add(1, (vis, array) => {
       vis.heap.setHeap(array);
-      vis.array.set(array);
+      // tell the graph renderer that it is heapsort
+      // so that the array index should start from 1
+      vis.array.set(array, 'heapsort');
     }, [nodes]);
 
     const swapAction = (b1, b2, n1, n2) => {
@@ -75,17 +77,16 @@ export default {
       heap = false;
       chunker.add(7);
 
-      chunker.add(8, (vis, index) => {
-        vis.array.deselect(index);
-        vis.heap.deselect(index + 1);
-      }, [k]);
-      // if current node's left child'index is greater than array length,
+      chunker.add(8);
+      // if current node's left child's index is greater than array length,
       // then current node is a leaf
       while (!(2 * i + 1 >= n || heap)) {
-        chunker.add(10, (vis, index) => {
-          vis.array.select(index);
-          vis.heap.select(index + 1);
-        }, [i]);
+        // chunker.add(10, (vis, index) => {
+        //   vis.array.select(index);
+        //   vis.heap.select(index + 1);
+        // }, [i]);
+        chunker.add(10);
+
         // left child is smaller than right child
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           j = 2 * i + 2;
@@ -123,6 +124,14 @@ export default {
             vis.heap.deselect(c + 1);
           }, [i, j]);
           i = j;
+
+          // if current node is a leaf, then do not highlight the node
+          if (!(2 * i + 1 >= n)) {
+            chunker.add(10, (vis, index) => {
+              vis.array.select(index);
+              vis.heap.select(index + 1);
+            }, [i]);
+          }
         }
       }
     }
@@ -136,8 +145,11 @@ export default {
       A[0] = swap;
       swapAction(21, 21, 0, n - 1);
 
+      // chunker.add(22, (vis, index) => {
+      //   vis.array.patch(index);
+      // }, [n - 1]);
       chunker.add(22, (vis, index) => {
-        vis.array.patch(index);
+        vis.array.sorted(index);
       }, [n - 1]);
       n -= 1;
 
@@ -150,16 +162,15 @@ export default {
       chunker.add(25);
       heap = false;
 
-      chunker.add(26, (vis, index) => {
-        vis.array.deselect(index);
-        vis.heap.deselect(index + 1);
-      }, [i]);
+      chunker.add(26);
       // need to maintain the heap after swap
       while (!(2 * i + 1 >= n || heap)) {
-        chunker.add(28, (vis, index) => {
-          vis.array.select(index);
-          vis.heap.select(index + 1);
-        }, [i]);
+        // chunker.add(28, (vis, index) => {
+        //   vis.array.select(index);
+        //   vis.heap.select(index + 1);
+        // }, [i]);
+        chunker.add(28);
+
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           j = 2 * i + 2;
           chunker.add(29, (vis, index) => {
@@ -195,8 +206,18 @@ export default {
             vis.heap.deselect(c + 1);
           }, [i, j]);
           i = j;
+
+          // if current node is a leaf, then do not highlight the node
+          if (!(2 * i + 1 >= n)) {
+            chunker.add(10, (vis, index) => {
+              vis.array.select(index);
+              vis.heap.select(index + 1);
+            }, [i]);
+          }
         }
       }
     }
+    // for test
+    return A;
   },
 };

@@ -13,9 +13,9 @@ class Array1DTracer extends Array2DTracer {
     this.chartTracer = null;
   }
 
-  set(array1d = []) {
+  set(array1d = [], algo) {
     const array2d = [array1d];
-    super.set(array2d);
+    super.set(array2d, algo);
     this.syncChartTracer();
   }
 
@@ -25,6 +25,11 @@ class Array1DTracer extends Array2DTracer {
 
   depatch(x) {
     super.depatch(0, x);
+  }
+
+  // used to highlight sorted elements
+  sorted(x) {
+    super.sorted(0, x);
   }
 
   select(sx, ex = sx) {

@@ -191,7 +191,6 @@ export default {
         const leftArray = a.slice(left, p);
         const rightArray = a.slice(p + 1, right + 1);
         chunker.add(3, (vis, _a, _left, _p, _right, _parentId, _leftArray, _rightArray) => {
-          console.log(leftArray, rightArray, _parentId);
           if (_leftArray.length !== 0) {
             vis.graph.addNode(`${_left}/${_p - 1}`, _leftArray);
             vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);

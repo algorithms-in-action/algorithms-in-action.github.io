@@ -31,8 +31,11 @@ export default {
     // populate the ArrayTracer using nodes
     chunker.add('1', (vis, elements) => {
       vis.array.set(elements);
-      vis.array.select(0); // the index of root element is 0
+      // vis.array.select(0); // the index of root element is 0
     }, [nodes]);
+    chunker.add('1', (vis) => {
+      vis.array.select(0); // the index of root element is 0
+    });
     chunker.add(2);
     chunker.add(3, (vis, r) => {
       vis.graph.addNode(r);
@@ -99,5 +102,12 @@ export default {
         }
       }
     }
+    // deselect the last element in the array
+    chunker.add(18, (vis, index) => {
+      vis.array.deselect(index);
+    }, [nodes.length - 1]);
+    // for test
+    // eslint-disable-next-line consistent-return
+    return tree;
   },
 };

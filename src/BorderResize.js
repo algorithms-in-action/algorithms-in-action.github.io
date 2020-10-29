@@ -58,7 +58,6 @@ const EXPAND_ROW_BOTTOM_SIZE = 190;
 
 const getDefn = (page, list, status) => {
   let tempList = addUnitToList(list, 'px');
-
   switch (status) {
     case ROW_INTERNAL:
       break;
@@ -148,14 +147,14 @@ const getColDefn = (page, event, status) => {
   const leftDragbar = document.getElementById('leftdragbar');
   const rightDragbar = document.getElementById('rightdragbar');
 
-  const leftColWidth = isLeftDragging ? event.clientX : leftcol.clientWidth;
-  const rightColWidth = isRightDragging ? page.clientWidth - event.clientX : rightcol.clientWidth;
+  const leftColWidth = isLeftDragging ? event.clientX : leftcol.offsetWidth;
+  const rightColWidth = isRightDragging ? page.clientWidth - event.clientX : rightcol.offsetWidth;
 
   const cols = [
     leftColWidth,
-    leftDragbar.clientWidth,
-    page.clientWidth - (leftDragbar.clientWidth + rightDragbar.clientWidth) - leftColWidth - rightColWidth,
-    rightDragbar.clientWidth,
+    leftDragbar.offsetWidth,
+    page.clientWidth - (leftDragbar.offsetWidth + rightDragbar.offsetWidth) - leftColWidth - rightColWidth,
+    rightDragbar.offsetWidth,
     rightColWidth,
   ];
 
@@ -166,12 +165,12 @@ const getRowDefn = (page, event, status) => {
   const footer = document.getElementById('footer');
   const header = document.getElementById('header');
   const bottomDragbar = document.getElementById('bottomdragbar');
-  const bottomRowHeight = isBottomDragging ? page.clientHeight - event.clientY : footer.clientHeight;
+  const bottomRowHeight = isBottomDragging ? page.clientHeight - event.clientY : footer.offsetHeight;
 
   const rows = [
-    header.clientHeight,
-    page.clientHeight - bottomDragbar.clientHeight - bottomRowHeight - header.clientHeight,
-    bottomDragbar.clientHeight,
+    header.offsetHeight,
+    page.clientHeight - bottomDragbar.offsetHeight - bottomRowHeight - header.offsetHeight,
+    bottomDragbar.offsetHeight,
     bottomRowHeight,
   ];
 
@@ -238,12 +237,14 @@ export const collapseBottomDrag = () => {
 };
 
 // This section pertains to resizing the window
-export const resizeWindow = () => {
+export const resizeWindow = (event) => {
   const page = document.getElementById('page');
-  const col = getColDefn(page, null, COL_EXTERNAL);
-  const row = getRowDefn(page, null, ROW_EXTERNAL);
-  page.style.gridTemplateColumns = col;
-  page.style.gridTemplateRows = row;
+  if (page !== null) {
+    const col = getColDefn(page, event, COL_EXTERNAL);
+    const row = getRowDefn(page, event, ROW_EXTERNAL);
+    page.style.gridTemplateColumns = col;
+    page.style.gridTemplateRows = row;
+  }
 };
 
 

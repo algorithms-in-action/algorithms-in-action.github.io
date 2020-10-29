@@ -1,20 +1,25 @@
 $theme-dark: #242424;
 $theme-normal: #393939;
 $theme-light: #505050;
-$color-font: #bbbbbb;
+$color-font: #cecece;
+
 $color-shadow: rgba(#000000, .2);
 $color-overlay: rgba(#ffffff, .1);
+
 $color-alert: #f3bd58;
-$color-selected: #2962ff;
+$color-selected: #067AFF;
 $color-patched: #c51162;
+$color-sorted: rgb(158, 157, 158);
 $color-highlight: #29d;
+
 $color-active: #00e676;
-$color-blue: #28b2e9;
-$color-red: #e02108;
-$color-purple: #e26ff1;
+
+$color-blue: #067AFF;
+$color-red: #d21010;
+$color-purple: #c735da;
 $color-green: #4bb454;
-$color-yellow: #f1f513;
-$color-lightgreen: #39e787;
+$color-yellow: #b3b605;
+$color-lightgreen: #2ec752;
 
 :export {
   themeDark: $theme-dark;

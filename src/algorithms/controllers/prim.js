@@ -114,5 +114,7 @@ export default {
       pqStart += 1;
       PqUpdate(i);
     }
+    // for test
+    return prev;
   },
 };

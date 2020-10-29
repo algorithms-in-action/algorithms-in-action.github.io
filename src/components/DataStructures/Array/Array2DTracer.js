@@ -23,6 +23,7 @@ class Element {
     this.value = value;
     this.patched = false;
     this.selected = false;
+    this.sorted = false;
   }
 }
 
@@ -31,8 +32,13 @@ class Array2DTracer extends Tracer {
     return Array2DRenderer;
   }
 
-  set(array2d = []) {
+  /**
+   * @param {array} array2d
+   * @param {string} algo used to mark if it is a specific algorithm
+   */
+  set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map(value => new Element(value)));
+    this.algo = algo;
     super.set();
   }
 
@@ -44,6 +50,12 @@ class Array2DTracer extends Tracer {
 
   depatch(x, y) {
     this.data[x][y].patched = false;
+  }
+
+  // used to highlight sorted elements
+  sorted(x, y) {
+    if (!this.data[x][y]) this.data[x][y] = new Element();
+    this.data[x][y].sorted = true;
   }
 
   select(sx, sy, ex = sx, ey = sy) {

@@ -1,4 +1,5 @@
 # Binary Search Tree
+---
 
 A binary search tree (bst) is a basic tree data structure that supports a simple searching algorithm. For each node in the binary search tree, with key `k`, all nodes in its left subtree have keys smaller than `k`, while all nodes in its right subtree have keys larger than `k`. Where duplicate keys are allowed in the tree, they usually go into the right subtree by convention.
 
