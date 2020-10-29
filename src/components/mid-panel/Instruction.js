@@ -1,10 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/Instruction.scss';
+import { KEY_WORDS } from '../../algorithms/instructions';
 
 function Instruction({ instructions }) {
   let numOfInstruction = 0;
   let numOfLine = 0;
+
+  const giveKeywordClass = (str) => {
+    for (let i = 0; i < KEY_WORDS.length; i += 1) {
+      if (str.includes(KEY_WORDS[i])) {
+        const after = str.slice(str.indexOf(KEY_WORDS[i]) + KEY_WORDS[i].length);
+        const before = str.slice(0, str.indexOf(KEY_WORDS[i]));
+        return (
+          <div className="lineContent">
+            { before }
+            <span className="instructionKey">{KEY_WORDS[i]}</span>
+            { after }
+          </div>
+        );
+      }
+    }
+
+    return (
+      <div className="lineContent">
+        {str}
+      </div>
+    );
+  };
+
 
   return (
     <div className="coverShowInstructions" id="coverShowInstructions">
@@ -28,7 +52,8 @@ function Instruction({ instructions }) {
                     return (
                       <div className="instructionLine" key={numOfLine}>
                         <div className="lineNumber">{`${index + 1}.`}</div>
-                        <div className="lineContent">{str}</div>
+                        {giveKeywordClass(str)}
+                        {/* <div className="lineContent">{str}</div> */}
                       </div>
                     );
                   })

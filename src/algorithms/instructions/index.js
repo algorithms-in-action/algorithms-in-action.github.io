@@ -5,6 +5,10 @@ const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
 const KEY_RUN = 'RUN';
 
+export const KEY_WORDS = [
+  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_RUN,
+];
+
 const bstInstructions = [
   {
     title: 'Inserting Nodes',
@@ -27,7 +31,7 @@ const bstInstructions = [
 ];
 
 const sortInstructions = [{
-  title: 'Sorting',
+  title: 'Sorting Numbers',
   content: [
     `Click on ${KEY_CODE} on the right panel`,
     'Enter a list of numbers in the sort parameter.',
@@ -37,7 +41,7 @@ const sortInstructions = [{
 }];
 
 const graphInstructions = [{
-  title: 'Graph',
+  title: 'Create Graph ',
   content: [
     `Click on ${KEY_CODE} on the right panel`,
     'Enter a graph in the transition matrix',

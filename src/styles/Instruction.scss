@@ -11,7 +11,6 @@ $padding: 24px;
     background-color: var(--mid-instruction-bg);
     @include border-radius(4px);
     margin: 0 auto $padding;
-    padding: 16px 24px;
     max-width: 500px;
     border: 1px solid var(--system-border);
 
@@ -21,11 +20,14 @@ $padding: 24px;
       font-size: 0.82em;
       font-weight: 500;
       color: var(--mid-instruction-title-col);
-      margin: 10px 0 10px;
+      // margin: 10px 0 10px;
+      padding: 18px $padding 12px;
+      border-bottom: 1px solid var(--system-border);
     }
   
     .instructionContent{
-      
+      padding: 12px $padding 10px;
+
       .instructionLine {
         margin: 0 0 8px;
         display: flex;
@@ -45,8 +47,15 @@ $padding: 24px;
 
         }
 
+      }
+
+      .instructionKey {
+        color: var(--mid-instruction-content-key);
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
+        font-weight: 500;
 
       }
+
     }
   
   }
