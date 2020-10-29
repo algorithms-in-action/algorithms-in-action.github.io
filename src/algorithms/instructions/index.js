@@ -3,10 +3,10 @@ const KEY_INSERT = 'INSERT';
 const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
-const KEY_RUN = 'RUN';
+const KEY_LOAD = 'LOAD';
 
 export const KEY_WORDS = [
-  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_RUN,
+  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
 ];
 
 const bstInstructions = [
@@ -45,7 +45,7 @@ const graphInstructions = [{
   content: [
     `Click on ${KEY_CODE} on the right panel`,
     'Enter a graph in the transition matrix',
-    `Click on ${KEY_RUN} to load the algorithm.`,
+    `Click on ${KEY_LOAD} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
 }];

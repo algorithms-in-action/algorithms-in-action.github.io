@@ -1,6 +1,6 @@
 @import './global.scss';
 
-$greyCol: #717071;
+$greyCol: #717071ba;
 // $lightGreyCol: #B5B5B5;
 
 .btn {
@@ -23,7 +23,7 @@ $greyCol: #717071;
   cursor: pointer;
   text-transform: uppercase;
   padding: 6px;
-  color: $sigBlue;
+  color: var(--mid-control-param-btn-active-col);
 }
 
 .blueWordBtn:hover {

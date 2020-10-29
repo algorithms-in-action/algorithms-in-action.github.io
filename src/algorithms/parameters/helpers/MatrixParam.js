@@ -125,25 +125,6 @@ function MatrixParam({
   return (
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
-        {/* <button
-          className="matrixBtn"
-          disabled={size <= 2}
-          onClick={() => updateTableSize(size - 1)}
-        >
-          -
-        </button>
-        <button
-          className="matrixBtn"
-          onClick={() => updateTableSize(size + 1)}
-        >
-          +
-        </button> */}
-        {/* <button
-          className="matrixBtn"
-          onClick={resetData}
-        >
-          Reset
-        </button> */}
         <ControlButton
           icon={<MinusIcon />}
           className="greyRoundBtn"
@@ -170,13 +151,13 @@ function MatrixParam({
         </button>
       </div>
 
-      <div className="matrixTable">
-        <Table
-          columns={columns}
-          data={data}
-          updateData={updateData}
-        />
-      </div>
+
+      <Table
+        columns={columns}
+        data={data}
+        updateData={updateData}
+      />
+
     </div>
   );
 }
