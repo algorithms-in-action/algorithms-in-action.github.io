@@ -1,0 +1,36 @@
+.matrixContainer {
+  background-color: blue;
+  color: var(--mid-control-font);
+  font-size: 1.05em;
+  display: flex;
+  // justify-content: space-around;
+  // padding: 0 16px;
+  
+   
+
+  .matrixButtonContainer {
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+
+    .matrixBtn {
+      text-transform: uppercase;
+    }
+  }
+
+  .matrixTable {
+    overflow: auto;
+
+    th,
+    td {
+
+      input {
+        width: 20px;
+        text-align: center;
+      }
+    }
+
+    
+  }
+
+}

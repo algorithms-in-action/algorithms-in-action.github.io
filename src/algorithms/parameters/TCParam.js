@@ -12,20 +12,17 @@ function TransitiveClosureParam() {
 
   return (
     <>
-      <div className="matrixForm">
-
-        {/* Matrix input */}
-        <MatrixParam
-          name="transitiveClosure"
-          mode="tc"
-          defaultSize={DEFAULT_SIZE}
-          min={0}
-          max={1}
-          ALGORITHM_NAME={TRANSITIVE_CLOSURE}
-          EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
-          setMessage={setMessage}
-        />
-      </div>
+      {/* Matrix input */}
+      <MatrixParam
+        name="transitiveClosure"
+        mode="tc"
+        defaultSize={DEFAULT_SIZE}
+        min={0}
+        max={1}
+        ALGORITHM_NAME={TRANSITIVE_CLOSURE}
+        EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
+        setMessage={setMessage}
+      />
 
       {/* render success/error message */}
       {message}

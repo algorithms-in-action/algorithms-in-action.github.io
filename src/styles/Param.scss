@@ -122,16 +122,7 @@ $greyCol: #717071;
   }
 }
 
-.matrixForm {
-  color: var(--mid-control-font);
-  font-size: 1.05em;
-  display: flex;
-  justify-content: space-around;
 
-  .singleInput {
-    width: 20%;
-  }
-}
 
 .btnDisabled {
   @extend .blueWordBtn;
@@ -155,18 +146,5 @@ $greyCol: #717071;
   background: none;
 }
 
-.table {
-  th,
-  td {
-    // padding: 10px;
-    // border: solid 1px;
-    // width: 22px;
-    // text-align: center;
 
-    input {
-      width: 20px;
-      text-align: center;
-    }
-  }
-}
 

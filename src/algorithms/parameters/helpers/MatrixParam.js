@@ -16,6 +16,12 @@ import {
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
+import '../../../styles/Matrix.scss';
+import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
+import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
+import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
+
+import ControlButton from '../../../components/common/ControlButton';
 
 
 /**
@@ -117,21 +123,59 @@ function MatrixParam({
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <button onClick={resetData}>Reset</button>
-        <button onClick={handleSearch}>Run</button>
+    <div className="matrixContainer">
+      <div className="matrixButtonContainer">
+        {/* <button
+          className="matrixBtn"
+          disabled={size <= 2}
+          onClick={() => updateTableSize(size - 1)}
+        >
+          -
+        </button>
+        <button
+          className="matrixBtn"
+          onClick={() => updateTableSize(size + 1)}
+        >
+          +
+        </button> */}
+        {/* <button
+          className="matrixBtn"
+          onClick={resetData}
+        >
+          Reset
+        </button> */}
+        <ControlButton
+          icon={<MinusIcon />}
+          className="greyRoundBtn"
+          id="decreaseMatrix"
+          onClick={() => updateTableSize(size - 1)}
+        />
+        <ControlButton
+          icon={<AddIcon />}
+          className="greyRoundBtn"
+          id="increaseMatrix"
+          onClick={() => updateTableSize(size + 1)}
+        />
+        <ControlButton
+          icon={<RefreshIcon />}
+          className="greyRoundBtn"
+          id="refreshMatrix"
+          onClick={resetData}
+        />
+        <button
+          className="matrixBtn"
+          onClick={handleSearch}
+        >
+          Load
+        </button>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+
+      <div className="matrixTable">
         <Table
           columns={columns}
           data={data}
           updateData={updateData}
         />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <button disabled={size <= 2} onClick={() => updateTableSize(size - 1)}>-</button>
-        <button onClick={() => updateTableSize(size + 1)}>+</button>
       </div>
     </div>
   );

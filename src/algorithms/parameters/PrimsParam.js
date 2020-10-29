@@ -12,21 +12,18 @@ function PrimsParam() {
 
   return (
     <>
-      <div className="matrixForm">
-
-        {/* Matrix input */}
-        <MatrixParam
-          name="prim"
-          mode="find"
-          defaultSize={DEFAULT_SIZE}
-          min={0}
-          max={9}
-          symmetric
-          ALGORITHM_NAME={PRIMS}
-          EXAMPLE={PRIMS_EXAMPLE}
-          setMessage={setMessage}
-        />
-      </div>
+      {/* Matrix input */}
+      <MatrixParam
+        name="prim"
+        mode="find"
+        defaultSize={DEFAULT_SIZE}
+        min={0}
+        max={9}
+        symmetric
+        ALGORITHM_NAME={PRIMS}
+        EXAMPLE={PRIMS_EXAMPLE}
+        setMessage={setMessage}
+      />
 
       {/* render success/error message */}
       {message}
