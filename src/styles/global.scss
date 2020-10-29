@@ -21,6 +21,10 @@ $yellowLine: #FFDE3C;
 	--top-setting-btn: #5b5b5b;
 	--top-setting-btn-bg: rgb(237, 237, 237);
 	--top-setting-btn-bg-active: rgb(220, 220, 220);
+	--top-setting-checkbox-bg-active: #EDEDED;
+	--top-setting-checkbox-font: #606060;
+	--top-setting-checkbox-btn: #d7d7d7;
+	--top-setting-checkbox-bg: #EDEDED;
 
 	--left-bg: #FFFFFF;
 	--left-font: #393939;
@@ -48,6 +52,13 @@ $yellowLine: #FFDE3C;
 	--mid-control-slider-bg: #F7F7F7;
 	--mid-control-btn-bg: #F7F7F7;
 	--mid-control-font: #393939;
+
+	--mid-instruction-bg: #ffffff;
+	--mid-instruction-title-col: #505050;
+	--mid-instruction-content-col: #3c3c3c;
+	--mid-instruction-content-number-col: #2d2d2d;
+	--mid-instruction-content-key: #027AFF;
+
 	--mid-control-param-border: #D4D4D4;
 	--mid-control-param-btn-active: #6a6a6a;
 	--mid-control-param-btn-disabled: #b5b5b5;
@@ -172,6 +183,11 @@ $yellowLine: #FFDE3C;
 	--top-setting-btn-bg: #212121;
 	--top-setting-btn-bg-active: #1d1d1d;
 
+	--top-setting-checkbox-bg-active: #212121;
+	--top-setting-checkbox-font: #a0a0a0;
+	--top-setting-checkbox-btn: #747474;
+	--top-setting-checkbox-bg: #212121;
+
 	--left-search-bg-focus: #25272b;
 	--left-cat-bg-hover: #25272b;
 	--left-item-bg-hover: #25272b;
@@ -181,7 +197,6 @@ $yellowLine: #FFDE3C;
 	--left-search-border: #2b2e35;
 	--left-item-border: #2b2e35;
 	--left-cat-border: #2b2e35;
-
 
 	--left-cat-border-hover: #505050;
 	--left-search-border-focus: #505050;
@@ -198,6 +213,13 @@ $yellowLine: #FFDE3C;
 	--mid-header-bg:#16171B;
 	--mid-header-font: #a9a9a9;
 	--mid-anim-bg: #202125;
+
+	--mid-instruction-bg: #16171B;
+	--mid-instruction-title-col: #a0a0a0;
+	--mid-instruction-content-col: #c4c4c4;
+	--mid-instruction-content-number-col: #c2c2c2;
+	--mid-instruction-content-key: #027AFF;
+
 	--mid-control-bg: #16171B;
 	--mid-control-slider-bg: #111215;
 	--mid-control-btn-bg: #111215;

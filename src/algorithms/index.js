@@ -5,6 +5,7 @@ import * as Param from './parameters';
 import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
+import * as Instructions from './instructions';
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -21,6 +22,7 @@ const algorithms = {
     name: 'Binary Search Tree',
     category: 'Searching',
     param: <Param.BSTParam />,
+    instructions: Instructions.BSTInstruction,
     explanation: Explanation.BSTExp,
     extraInfo: ExtraInfo.BSTInfo,
     pseudocode: {
@@ -37,6 +39,7 @@ const algorithms = {
     category: 'Sorting',
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
+    instructions: Instructions.QSInstruction,
     extraInfo: ExtraInfo.QSInfo,
     pseudocode: {
       sort: Pseudocode.quickSort,
@@ -50,6 +53,7 @@ const algorithms = {
     category: 'Sorting',
     explanation: Explanation.HSExp,
     param: <Param.HSParam />,
+    instructions: Instructions.HSInstruction,
     extraInfo: ExtraInfo.HSInfo,
     pseudocode: {
       sort: Pseudocode.heapSort,
@@ -63,6 +67,7 @@ const algorithms = {
     category: 'Greedy',
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
+    instructions: Instructions.PrimsInstruction,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
       find: Pseudocode.prim,
@@ -76,6 +81,7 @@ const algorithms = {
     category: 'Dynamic Programming',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
+    instructions: Instructions.TCInstruction,
     extraInfo: ExtraInfo.TCInfo,
     pseudocode: {
       tc: Pseudocode.transitiveClosure,
