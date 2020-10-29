@@ -6,10 +6,12 @@ function Checkbox() {
 
   const handleChange = (checked) => {
     setCheck(checked);
+    // console.log('Update Global State for Toggling zoom');
   };
 
   const handleClick = () => {
     setCheck(!check);
+    // console.log('Update Global State for Toggling zoom');
   };
 
   return (
@@ -26,8 +28,8 @@ function Checkbox() {
         <span
           className="is_checked"
           aria-hidden="true"
-          onClick={(e) => {
-            handleClick(e);
+          onClick={() => {
+            handleClick();
           }}
         >
           Enabled

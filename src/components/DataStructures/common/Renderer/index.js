@@ -106,16 +106,14 @@ class Renderer extends React.Component {
     return null;
   }
 
-  // const [zoom, setZoom] = useState(true);
-
-
   render() {
     const { className, title } = this.props;
+    const zoomPref = true;
     return (
       <div
         className={classes(styles.renderer, className)}
-        onMouseDown={false ? this.handleMouseDown : null}
-        onWheel={false ? this.handleWheel : null}
+        onMouseDown={zoomPref ? this.handleMouseDown : null}
+        onWheel={zoomPref ? this.handleWheel : null}
       >
         <Ellipsis className={styles.title}>{title}</Ellipsis>
         { this.renderData() }
