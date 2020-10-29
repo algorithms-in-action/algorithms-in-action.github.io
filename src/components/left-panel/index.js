@@ -10,6 +10,7 @@ import { GlobalActions } from '../../context/actions';
 import '../../styles/LeftPanel.scss';
 import { AlgorithmCategoryList, AlgorithmList } from '../../algorithms';
 import { setFontSize } from '../top/helper';
+import openInstructions from '../mid-panel/helper';
 
 const LIST_COLLAPSE = true;
 
@@ -69,12 +70,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
     // increaseFontSize(itemFontID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
 
-  const openCover = () => {
-    algorithm.instructions.forEach((index) => {
-      document.getElementById(`coverShowInstructions-${index}`).style.display = 'block';
-    });
-  };
-
   return (
     <div className="container">
       <span>
@@ -116,7 +111,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         type="button"
                         id={`algo-${algo.name}`}
                         onClick={() => {
-                          openCover();
+                          openInstructions();
                           dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
                         }}
                       >

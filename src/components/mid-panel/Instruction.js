@@ -2,28 +2,44 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/Instruction.scss';
 
-function Instruction({ id, instruction }) {
+function Instruction({ instructions }) {
+  let numOfInstruction = 0;
   let numOfLine = 0;
+
   return (
-    <div className="coverShowInstructions" id={`coverShowInstructions-${id}`}>
-      <div className="instructionContainer">
-        <div className="instructionTitle">
-          {instruction.title}
-        </div>
-        <div className="instructionContent">
-          {
-          instruction.content.map((content, index) => {
-            numOfLine += 1;
-            return (
-              <div className="instructionLine" key={numOfLine}>
-                <div className="lineNumber">{`${index + 1}.`}</div>
-                <div className="lineContent">{content}</div>
+    <div className="coverShowInstructions" id="coverShowInstructions">
+      {
+        instructions.map((ins) => {
+          numOfInstruction += 1;
+
+          return (
+            <div
+              className="instructionContainer"
+              id={`instruction-${numOfInstruction}`}
+              key={numOfInstruction}
+            >
+              <div className="instructionTitle">
+                {ins.title}
               </div>
-            );
-          })
-          }
-        </div>
-      </div>
+              <div className="instructionContent">
+                {
+                  ins.content.map((str, index) => {
+                    numOfLine += 1;
+                    return (
+                      <div className="instructionLine" key={numOfLine}>
+                        <div className="lineNumber">{`${index + 1}.`}</div>
+                        <div className="lineContent">{str}</div>
+                      </div>
+                    );
+                  })
+                }
+              </div>
+            </div>
+          );
+        })
+
+      }
+
     </div>
   );
 }
@@ -31,9 +47,10 @@ function Instruction({ id, instruction }) {
 export default Instruction;
 
 Instruction.propTypes = {
-  id: PropTypes.number.isRequired,
-  instruction: PropTypes.shape({
-    title: PropTypes.string,
-    content: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
+  instructions: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      content: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ).isRequired,
 };

@@ -15,6 +15,8 @@ import {
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
+import { closeInstructions } from '../../../components/mid-panel/helper';
+
 
 /**
  * This matrix param component can be used when
@@ -92,6 +94,7 @@ function MatrixParam({
 
   // Run the animation
   const handleSearch = () => {
+    closeInstructions(); // remove instruction
     setMessage(null);
     const matrix = getMatrix();
 

@@ -13,7 +13,6 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
-  let numOfInstruction = 0;
 
   return (
     <div className="midPanelContainer">
@@ -21,18 +20,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
       </div>
       <div className="midPanelBody">
-        {
-          algorithm.instructions.map((ins, index) => {
-            numOfInstruction += 1;
-            return (
-              <Instruction
-                instruction={ins}
-                id={index}
-                key={numOfInstruction}
-              />
-            );
-          })
-        }
+        <Instruction instructions={algorithm.instructions} />
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
     </div>

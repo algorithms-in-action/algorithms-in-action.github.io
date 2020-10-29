@@ -3,16 +3,14 @@
 $padding: 24px;
 
 .coverShowInstructions{
-  display: flex;
-  flex-direction: column;
-  // flex: 1 1 1px; /* Important */
+  display: block;
   min-height: 0;
-  padding: 0 $padding;
+  padding: ($padding+$padding/2) $padding;
 
   .instructionContainer {
     background-color: var(--mid-instruction-bg);
     @include border-radius(4px);
-    margin: $padding auto;
+    margin: 0 auto $padding;
     padding: 16px 24px;
     max-width: 500px;
     border: 1px solid var(--system-border);
