@@ -1,8 +1,5 @@
 @import './global.scss';
 
-$greyCol: #717071;
-// $lightGreyCol: #B5B5B5;
-
 .btn {
   background: none;
   color: inherit;
@@ -23,7 +20,7 @@ $greyCol: #717071;
   cursor: pointer;
   text-transform: uppercase;
   padding: 6px;
-  color: $sigBlue;
+  color: var(--mid-control-param-blue-btn-col);
 }
 
 .blueWordBtn:hover {
@@ -60,7 +57,7 @@ $greyCol: #717071;
     height: 12px;
 
     path {
-      fill: $greyCol;
+      fill: var(--mid-control-param-grey-btn-col);
     }
   }
 }
@@ -122,16 +119,7 @@ $greyCol: #717071;
   }
 }
 
-.matrixForm {
-  color: var(--mid-control-font);
-  font-size: 1.05em;
-  display: flex;
-  justify-content: space-around;
 
-  .singleInput {
-    width: 20%;
-  }
-}
 
 .btnDisabled {
   @extend .blueWordBtn;
@@ -155,18 +143,5 @@ $greyCol: #717071;
   background: none;
 }
 
-.table {
-  th,
-  td {
-    // padding: 10px;
-    // border: solid 1px;
-    // width: 22px;
-    // text-align: center;
 
-    input {
-      width: 20px;
-      text-align: center;
-    }
-  }
-}
 

@@ -21,7 +21,6 @@ $rightBtnFontSize: 0.72em;
       color: var(--right-header-font);
     }
 
-
     .MuiTab-textColorPrimary.Mui-selected {
       // color: var('--right-header-font-active') !important;
       color: #027AFF;
@@ -31,7 +30,8 @@ $rightBtnFontSize: 0.72em;
   .textArea {
     font-size: 0.9em;
     color: var(--right-text-font);
-    overflow-y: scroll;
+    overflow-y: auto;
+
     height: 100%;
     padding: $sidePad;
     background-color: var(--right-text-bg);
@@ -40,7 +40,7 @@ $rightBtnFontSize: 0.72em;
 
   .line-light {
     font-size: 0.87em;
-    overflow: scroll;
+    overflow: auto;
     height: 100%;
   }
 

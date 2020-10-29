@@ -1,0 +1,81 @@
+@import './global.scss';
+
+.matrixContainer {
+  display: flex;
+  align-items: flex-start;
+
+  .matrixButtonContainer {
+    background-color: var(--mid-control-param-matrix-btn-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px 8px;
+    @include border-radius(6px);
+    margin-right: 16px;
+    border: 1px solid var(--system-border);
+
+    button {
+      margin-top: 4px;
+    }
+
+    .matrixBtn {
+      text-transform: uppercase;
+      @include removeBtnStyling;
+      padding: 6px 6px 12px;
+      height: 32px;
+      margin-top: 4px;
+
+      @include border-radius(1px);
+      text-align: center;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--mid-control-param-btn-active-col);
+
+    }
+
+    .matrixBtn:hover {
+      transition: .4s;
+      background: var(--mid-control-param-btn-bg-col-hover);
+    }
+    .matrixBtn:active {
+      transition: .2s;
+      background: var(--mid-control-param-btn-bg-col-active);
+    }
+    
+  }
+
+  .table {
+    overflow: auto;
+    
+    th {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      padding: 6px 8px;
+      font-size: 1.1em;
+      font-weight: 500;
+      @include border-radius(2px);
+      cursor: default;
+    }
+    th,
+    td {
+      border: 1px solid var(--system-border);
+
+      input {
+        width: 32px;
+        height: 24px;
+        text-align: center;
+        color: var(--mid-control-param-matrix-cell-font);
+        background-color: var(--mid-control-param-matrix-cell-bg);
+        border: none;
+        -webkit-appearance: none;
+        outline: none;
+        @include border-radius(2px);
+
+
+      }
+    }
+
+    
+  }
+
+}
