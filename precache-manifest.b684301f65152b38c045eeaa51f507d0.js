@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2a491a17cafc303e2242affdbe8a020e",
+    "revision": "d99dda55c7950aed11ef9f8ec97e1c06",
     "url": "/index.html"
   },
   {
-    "revision": "c566eab9485d0fe548b2",
-    "url": "/static/css/main.2fe4078b.chunk.css"
+    "revision": "b91951ec4c6f79394600",
+    "url": "/static/css/main.753d42c5.chunk.css"
   },
   {
-    "revision": "e1d47bac0a27671fb10f",
-    "url": "/static/js/2.74ee637f.chunk.js"
+    "revision": "805eaced26f2519e21b2",
+    "url": "/static/js/2.45e2c23c.chunk.js"
   },
   {
     "revision": "301056a7ca16ead6156b38e6917dbb28",
-    "url": "/static/js/2.74ee637f.chunk.js.LICENSE.txt"
+    "url": "/static/js/2.45e2c23c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "c566eab9485d0fe548b2",
-    "url": "/static/js/main.05c8eaae.chunk.js"
+    "revision": "b91951ec4c6f79394600",
+    "url": "/static/js/main.a227f542.chunk.js"
   },
   {
     "revision": "9babd6661312cad45403",
@@ -64,6 +64,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/TCInfo.99ca6e9d.md"
   },
   {
+    "revision": "c767ee9866dfa29af5e41add4d5d3d71",
+    "url": "/static/media/add.c767ee98.svg"
+  },
+  {
     "revision": "958a82bf1f304af451df7e163771eb22",
     "url": "/static/media/arrow.958a82bf.svg"
   },
@@ -97,7 +101,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   },
   {
     "revision": "c9f3ed6cf7b2dda6c6db8068948144fd",
-    "url": "/static/media/lee_naish.c9f3ed6c.jpg"
+    "url": "/static/media/lee_naish.c9f3ed6c.png"
   },
   {
     "revision": "5d5bf984ef552d5d3256b202e6a32a2c",
@@ -106,6 +110,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "0e9d5ca7cf2e7a25202bba66c6c23dc5",
     "url": "/static/media/logo.0e9d5ca7.svg"
+  },
+  {
+    "revision": "abc3a06e601b6ee144115b9c0a0d03ee",
+    "url": "/static/media/minus.abc3a06e.svg"
   },
   {
     "revision": "9d41bd2c7ca57ca3e16d1cd7ee3ce96f",
