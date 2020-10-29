@@ -1,8 +1,5 @@
 @import './global.scss';
 
-$greyCol: #717071ba;
-// $lightGreyCol: #B5B5B5;
-
 .btn {
   background: none;
   color: inherit;
@@ -23,7 +20,7 @@ $greyCol: #717071ba;
   cursor: pointer;
   text-transform: uppercase;
   padding: 6px;
-  color: var(--mid-control-param-btn-active-col);
+  color: var(--mid-control-param-blue-btn-col);
 }
 
 .blueWordBtn:hover {
@@ -60,7 +57,7 @@ $greyCol: #717071ba;
     height: 12px;
 
     path {
-      fill: $greyCol;
+      fill: var(--mid-control-param-grey-btn-col);
     }
   }
 }

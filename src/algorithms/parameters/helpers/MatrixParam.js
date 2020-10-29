@@ -126,16 +126,16 @@ function MatrixParam({
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
         <ControlButton
-          icon={<MinusIcon />}
-          className="greyRoundBtn"
-          id="decreaseMatrix"
-          onClick={() => updateTableSize(size - 1)}
-        />
-        <ControlButton
           icon={<AddIcon />}
           className="greyRoundBtn"
           id="increaseMatrix"
           onClick={() => updateTableSize(size + 1)}
+        />
+        <ControlButton
+          icon={<MinusIcon />}
+          className="greyRoundBtn"
+          id="decreaseMatrix"
+          onClick={() => updateTableSize(size - 1)}
         />
         <ControlButton
           icon={<RefreshIcon />}
