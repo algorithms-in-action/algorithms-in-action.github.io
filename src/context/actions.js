@@ -76,7 +76,7 @@ export const GlobalActions = {
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      param, name, explanation, extraInfo, pseudocode, instruction,
+      param, name, explanation, extraInfo, pseudocode, instructions,
     } = data;
 
     const procedurePseudocode = pseudocode[params.mode];
@@ -86,7 +86,7 @@ export const GlobalActions = {
       id: params,
       name,
       explanation,
-      instruction,
+      instructions,
       extraInfo,
       param,
       pseudocode: procedurePseudocode,
@@ -99,7 +99,7 @@ export const GlobalActions = {
   RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      param, controller, name, explanation, extraInfo, pseudocode, instruction,
+      param, controller, name, explanation, extraInfo, pseudocode, instructions,
     } = data;
     const procedurePseudocode = pseudocode[params.mode];
 
@@ -117,7 +117,7 @@ export const GlobalActions = {
       name,
       explanation,
       extraInfo,
-      instruction,
+      instructions,
       param,
       pseudocode: procedurePseudocode,
       ...bookmarkInfo, // sets bookmark & finished fields

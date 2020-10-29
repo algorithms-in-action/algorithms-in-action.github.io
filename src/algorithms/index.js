@@ -22,7 +22,7 @@ const algorithms = {
     name: 'Binary Search Tree',
     category: 'Searching',
     param: <Param.BSTParam />,
-    instruction: Instructions.BSTInstruction,
+    instructions: Instructions.BSTInstruction,
     explanation: Explanation.BSTExp,
     extraInfo: ExtraInfo.BSTInfo,
     pseudocode: {
@@ -39,7 +39,7 @@ const algorithms = {
     category: 'Sorting',
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
-    instruction: Instructions.QSInstruction,
+    instructions: Instructions.QSInstruction,
     extraInfo: ExtraInfo.QSInfo,
     pseudocode: {
       sort: Pseudocode.quickSort,
@@ -53,7 +53,7 @@ const algorithms = {
     category: 'Sorting',
     explanation: Explanation.HSExp,
     param: <Param.HSParam />,
-    instruction: Instructions.HSInstruction,
+    instructions: Instructions.HSInstruction,
     extraInfo: ExtraInfo.HSInfo,
     pseudocode: {
       sort: Pseudocode.heapSort,
@@ -67,7 +67,7 @@ const algorithms = {
     category: 'Greedy',
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
-    instruction: Instructions.PrimsInstruction,
+    instructions: Instructions.PrimsInstruction,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
       find: Pseudocode.prim,
@@ -81,7 +81,7 @@ const algorithms = {
     category: 'Dynamic Programming',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
-    instruction: Instructions.TCInstruction,
+    instructions: Instructions.TCInstruction,
     extraInfo: ExtraInfo.TCInfo,
     pseudocode: {
       tc: Pseudocode.transitiveClosure,

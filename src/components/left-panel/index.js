@@ -70,7 +70,9 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
   }, [fontSize, fontSizeIncrement]);
 
   const openCover = () => {
-    document.getElementById('coverShowInstructions').style.display = 'block';
+    algorithm.instructions.forEach((index) => {
+      document.getElementById(`coverShowInstructions-${index}`).style.display = 'block';
+    });
   };
 
   return (

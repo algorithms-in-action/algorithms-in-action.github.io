@@ -1,32 +1,50 @@
-const bstInstructions = {
-  title: 'Parameter Instruction',
-  content: [
-    'Enter inputs located in the below middle panel.',
-    'Click on the “INSERT” button to see the validation of the input.',
-    'Enter the input needed to be searched and Click on the “SEARCH” button.',
-    'For valid input, click on the play button to see the behavior of the algorithm with different parameters.',
-  ],
-};
+const KEY_CODE = 'CODE';
+const KEY_INSERT = 'INSERT';
+const KEY_PLAY = 'PLAY';
+const KEY_SEARCH = 'SEARCH';
+const KEY_SORT = 'SORT';
+const KEY_RUN = 'RUN';
 
-const sortInstructions = {
-  title: 'Parameter Instruction',
-  content: [
-    'Enter inputs located in the below middle panel.',
-    'Click on the “SORT” button to see the validation of the input.',
-    'For valid input, click on the play button to see the behavior of the algorithm with different parameters.',
-  ],
-};
+const bstInstructions = [
+  {
+    title: 'Inserting Nodes',
+    content: [
+      `Click on ${KEY_CODE} on the right panel`,
+      'Enter a list of nodes in the insert parameter.',
+      `Click on ${KEY_INSERT} to load the algorithm.`,
+      `Click on ${KEY_PLAY} to watch the algorithm run.`,
+    ],
+  },
+  {
+    title: 'Searching Nodes',
+    content: [
+      `Click on ${KEY_CODE} on the right panel`,
+      'Enter a node in the search parameter.',
+      `Click on ${KEY_SEARCH} to load the algorithm.`,
+      `Click on ${KEY_PLAY} to watch the algorithm run.`,
+    ],
+  },
+];
 
-const graphInstructions = {
-  title: 'Parameter Instruction',
+const sortInstructions = [{
+  title: 'Sorting',
   content: [
-    'Enter SET number located in the below middle panel.',
-    'Click on the “SET” button to change the SET in the right.',
-    'Enter the value in the SET.',
-    'Click on the “Run” buton to generate the graph ',
-    'Click on the play button to see the behavior of the algorithm with different parameters.',
+    `Click on ${KEY_CODE} on the right panel`,
+    'Enter a list of numbers in the sort parameter.',
+    `Click on ${KEY_SORT} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
-};
+}];
+
+const graphInstructions = [{
+  title: 'Graph',
+  content: [
+    `Click on ${KEY_CODE} on the right panel`,
+    'Enter a graph in the transition matrix',
+    `Click on ${KEY_RUN} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+  ],
+}];
 
 export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
