@@ -167,6 +167,25 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   return { index: i, cl: codeLines };
 }
 
+const pseudoCodePadding = (lineNum, limit) => {
+  const codeLines = [];
+
+  for (let i = lineNum; i < (lineNum + limit); i++) {
+    codeLines.push(
+    <p
+      key={i}
+      role="presentation"
+    >
+      <span>{i}</span>
+    </p>,
+    );
+  }
+
+  return codeLines;
+};
+
+const PADDING_LINE = 2;
+
 const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const fontID = 'code-container';
@@ -176,10 +195,14 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
     increaseFontSize(fontID, fontSizeIncrement);
   }, [fontSizeIncrement, fontSize]);
 
+  const { index, cl } = pseudocodeBlock(algorithm, dispatch, 'Main', 0);
+  const pseudoCodePad = pseudoCodePadding(index + 1, PADDING_LINE);
+
   return (
     <div className="line-light">
       <div className="code-container" id={fontID}>
-        {pseudocodeBlock(algorithm, dispatch, 'Main', 0).cl}
+        {cl}
+        {pseudoCodePad}
       </div>
       { algorithm.lineExplanation ? (
         <LineExplanation

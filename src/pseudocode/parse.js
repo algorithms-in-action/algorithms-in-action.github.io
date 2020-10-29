@@ -115,7 +115,7 @@ export default function parse(input) {
   if (Object.keys(rawCodeBlocks).length > 0) {
     const indentedCodeBlocks = {};
     addIndentation(rawCodeBlocks, 'Main', 0, indentedCodeBlocks);
-    console.log(indentedCodeBlocks);
+    // console.log(indentedCodeBlocks);
     return indentedCodeBlocks;
   } else {
     return rawCodeBlocks;
