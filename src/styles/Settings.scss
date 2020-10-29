@@ -28,11 +28,10 @@ $headerHeight: 30px;
   border: 1px solid #ccc;
   border-color: var(--system-border);
   @include border-radius(4px);
-  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.1));
+  // filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.1)); 
   padding: 16px;
   font-size: 0.95em;
 }
-
 
 .setContainer {
   @include borderSeparate;
@@ -46,10 +45,6 @@ $headerHeight: 30px;
 
   }
 }
-
-
-
-
 
 .fontSize {
   display: flex;

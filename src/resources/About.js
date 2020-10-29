@@ -19,7 +19,7 @@
 
 import Harald from '../assets/images/Prof_Sondergaard.jpg';
 import Linda from '../assets/images/Dr_Stern.jpg';
-import Lee from '../assets/images/lee_naish.jpg';
+import Lee from '../assets/images/lee_naish.png';
 
 import Boyu from '../assets/images/boyu.JPG';
 import Carina from '../assets/images/carina.jpg';

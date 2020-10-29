@@ -3,6 +3,7 @@
 import React from 'react';
 import ControlButton from '../../../components/common/ControlButton';
 import '../../../styles/Param.scss';
+import { closeInstructions } from '../../../components/mid-panel/helper';
 
 /**
  * The ParamForm wraps a input, icon(optional) and a button.
@@ -29,6 +30,7 @@ function ParamForm(props) {
           {children}
           <ControlButton
             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
+            onClick={() => closeInstructions()}
             type="submit"
             disabled={disabled}
           >

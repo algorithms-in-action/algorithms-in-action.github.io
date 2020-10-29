@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import '../../styles/MidPanel.scss';
 import { increaseFontSize, setFontSize } from '../top/helper';
+import Instruction from './Instruction';
 
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
@@ -13,14 +14,13 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
     increaseFontSize(fontID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
 
-
   return (
     <div className="midPanelContainer">
       <div className="midPanelHeader">
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
       </div>
       <div className="midPanelBody">
-        {/* Animation Goes here */}
+        <Instruction instructions={algorithm.instructions} />
         {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
     </div>
