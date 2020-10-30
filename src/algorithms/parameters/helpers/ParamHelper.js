@@ -57,18 +57,6 @@ export const errorParamMsg = (
 );
 
 /**
- *
- * @returns {string} success message
- */
-export const finishedAlgorithmMsg = () => (
-  <ParamMsg
-    logWarning={false}
-    logTag="Great success!"
-    logMsg="The algorithm has finished executing."
-  />
-);
-
-/**
  * Populate the Column array, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix
