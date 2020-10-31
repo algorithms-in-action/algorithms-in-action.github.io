@@ -11,7 +11,6 @@ import { ReactComponent as PauseIcon } from '../../assets/icons/pause.svg';
 import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../assets/icons/arrow.svg';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-import ProgressBar from './ProgressBar';
 import '../../styles/ControlPanel.scss';
 
 const muiTheme = createMuiTheme({
@@ -104,10 +103,6 @@ function ControlPanel() {
               </Grid>
             </ThemeProvider>
           </div>
-        </div>
-
-        <div>
-          <ProgressBar disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))} />
         </div>
 
         <div className="controlButtons">
