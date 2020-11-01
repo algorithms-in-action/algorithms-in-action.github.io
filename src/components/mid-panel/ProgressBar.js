@@ -51,8 +51,8 @@ function ProgressBar({ current, max }) {
         </div>
       </div>
       <div className="mux-lpi-buffer" />
-      <div className="mux-lpi-rect mux-lpi-rect--primary" style={{ transform: 'scaleX(0)' }}>
-        <span className="mux-lpi-rect-inner" style={{ transform: 'scaleX(1)' }} />
+      <div className="mux-lpi-rect mux-lpi-rect--primary">
+        <span className="mux-lpi-rect-inner" />
       </div>
     </div>
   );
