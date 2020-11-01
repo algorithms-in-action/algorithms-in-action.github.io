@@ -208,6 +208,7 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
 
   return (
     <div className="line-light">
+       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
       <div className="code-container" id={fontID}>
         {cl}
         {pseudoCodePad}
