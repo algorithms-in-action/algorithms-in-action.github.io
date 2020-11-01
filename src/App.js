@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
 import Header from './components/top/Header';
+import { ReactComponent as Circle } from './assets/icons/circle.svg';
 import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';
 import LeftPanel from './components/left-panel';
@@ -144,7 +145,11 @@ function App() {
           role="button"
           className="dragbar"
         >
-          <div id="draghandle" className="handle" />
+          <div id="draghandle" className="handle">
+            <Circle />
+            <Circle />
+            <Circle />
+          </div>
         </div>
         <div id="tabpages">
           <MidPanel
@@ -161,7 +166,11 @@ function App() {
           role="button"
           className="dragbar"
         >
-          <div id="draghandle" className="handle" />
+          <div id="draghandle" className="handle">
+            <Circle />
+            <Circle />
+            <Circle />
+          </div>
         </div>
         <div id="rightcol">
           <RightPanel
@@ -178,7 +187,11 @@ function App() {
           role="button"
           className="dragbar"
         >
-          <div id="draghandle" className="handle" />
+          <div id="draghandle" className="handle bottomHandle">
+            <Circle />
+            <Circle />
+            <Circle />
+          </div>
         </div>
         <div id="footer">
           <ControlPanel />

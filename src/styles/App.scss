@@ -7,7 +7,7 @@ body {
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
-$handleLen: 60px;
+$handleLen: 40px;
 $dragBarWidth: 10px;
 
 #page {
@@ -66,12 +66,7 @@ $dragBarWidth: 10px;
 	justify-content: center;
 	align-items: center;
 
-	.handle {
-		width: $dragBarWidth;
-		height: $handleLen;
-		// background-color: $handleCol;
-		// cursor: pointer;
-	}
+
 }
 
 .dragbar:focus {
@@ -88,6 +83,33 @@ $dragBarWidth: 10px;
 .dragbar:active {
 	background-color: var(--system-handle-bg-active);
 
+}
+
+
+
+.handle {
+	overflow: hidden;
+	width: $dragBarWidth;
+	// height: $handleLen;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+
+	svg {
+		height: 5px;
+		width: 5px;
+		margin: 4px 0 0;
+
+		circle {
+			fill: var(--system-handle-circle-fill) !important;
+		}
+
+	}
+}
+
+.bottomHandle {
+	transform: rotate(90deg);
 }
 
 // Right Dragbar
