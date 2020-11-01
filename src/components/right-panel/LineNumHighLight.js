@@ -32,6 +32,7 @@ function blockContainsBookmark(algorithm, block) {
 function codeFormatting(codeArray) {
   const keywords = ['for', 'while', 'if', 'else', 'in', 'each', 'do',
     'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or', 'return', 'NotFound'];
+  const arrow = ['<-'];
   let spanItem;
   let codeItem;
   const codeRexItem = [];
@@ -45,6 +46,12 @@ function codeFormatting(codeArray) {
         codeItem += '\xa0';
       }
       spanItem = <span key={key} className="keyword">{codeItem}</span>;
+      codeRexItem.push(spanItem);
+    } else if (arrow.includes(codeItem.trim())) {
+      if (arrayIndex < arrayLength - 1) {
+        codeItem += '\xa0';
+      }
+      spanItem = <span key={key} className="arrow">{codeItem}</span>;
       codeRexItem.push(spanItem);
     } else if (codeItem.indexOf('(') !== -1) {
       let func = codeItem;
@@ -200,6 +207,7 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
 
   return (
     <div className="line-light">
+       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
       <div className="code-container" id={fontID}>
         {cl}
         {pseudoCodePad}
