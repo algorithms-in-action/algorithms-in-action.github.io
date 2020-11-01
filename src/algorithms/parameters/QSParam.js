@@ -4,9 +4,9 @@ import { genRandNumList } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
-const DEFAULT_ARR = genRandNumList(10, 1, 100);
-const QUICK_SORT = 'quick Sort';
-const QUICK_SORT_EXAMPLE = 'Example: 0,1,2,3,4';
+const DEFAULT_ARR = genRandNumList(8, 1, 99);
+const QUICK_SORT = 'Quick Sort';
+const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
 function QuicksortParam() {
   const [message, setMessage] = useState(null);

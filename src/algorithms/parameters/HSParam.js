@@ -6,8 +6,8 @@ import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_ARR = genRandNumList(10, 1, 100);
-const HEAP_SORT = 'heap Sort';
-const HEAP_SORT_EXAMPLE = 'Example: 0,1,2,3,4';
+const HEAP_SORT = 'Heap Sort';
+const HEAP_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
 function HeapsortParam() {
   const [message, setMessage] = useState(null);
