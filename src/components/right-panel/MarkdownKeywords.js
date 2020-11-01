@@ -2,5 +2,6 @@
 export const markdownKeywords = {
   keyword: ['for', 'while', 'if', 'else', 'in', 'each', 'do',
     'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or', 'return', 'NotFound'],
-  operator: ['<-', '<', '>', '+', '-'],
+  operator: ['<', '>', '+', '-'],
+  arrow: ['<-'],
 };
