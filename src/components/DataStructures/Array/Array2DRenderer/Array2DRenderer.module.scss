@@ -42,8 +42,14 @@
       }
 
       &.sorted {
-        background-color: $color-sorted;
+        background-color: var(--array-2d-row-bg-sorted);
+        
+        span {
+          color: var(--array-2d-row-col-sorted);
+        }
       }
+
+
 
       &.index {
         background: var(--array-2d-row-col-bg-index);
