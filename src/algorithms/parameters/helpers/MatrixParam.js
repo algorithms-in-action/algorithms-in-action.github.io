@@ -16,6 +16,12 @@ import {
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
+import '../../../styles/Matrix.scss';
+import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
+import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
+import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
+
+import ControlButton from '../../../components/common/ControlButton';
 
 
 /**
@@ -23,7 +29,7 @@ import { closeInstructions } from '../../../components/mid-panel/helper';
  * the param input accepts a matrix
  */
 function MatrixParam({
-  size,
+  defaultSize,
   min,
   max,
   name,
@@ -33,6 +39,9 @@ function MatrixParam({
   ALGORITHM_NAME,
   EXAMPLE,
 }) {
+  // const [size, setSize] = useState(defaultSize);
+  const [size, setSize] = useState(defaultSize);
+
   const columns = useMemo(
     () => makeColumnArray(size),
     [size],
@@ -52,6 +61,11 @@ function MatrixParam({
   const resetData = () => {
     setMessage(null);
     setData(originalData);
+  };
+
+  const updateTableSize = (newSize) => {
+    setMessage(null);
+    setSize(newSize);
   };
 
   // When cell renderer calls updateData, we'll use
@@ -109,14 +123,41 @@ function MatrixParam({
   };
 
   return (
-    <div>
-      <button onClick={resetData}>Reset Data</button>
-      <button onClick={handleSearch}>Run</button>
+    <div className="matrixContainer">
+      <div className="matrixButtonContainer">
+        <ControlButton
+          icon={<AddIcon />}
+          className="greyRoundBtn"
+          id="increaseMatrix"
+          onClick={() => updateTableSize(size + 1)}
+        />
+        <ControlButton
+          icon={<MinusIcon />}
+          className="greyRoundBtn"
+          id="decreaseMatrix"
+          onClick={() => updateTableSize(size - 1)}
+        />
+        <ControlButton
+          icon={<RefreshIcon />}
+          className="greyRoundBtn"
+          id="refreshMatrix"
+          onClick={resetData}
+        />
+        <button
+          className="matrixBtn"
+          onClick={handleSearch}
+        >
+          Load
+        </button>
+      </div>
+
+
       <Table
         columns={columns}
         data={data}
         updateData={updateData}
       />
+
     </div>
   );
 }
