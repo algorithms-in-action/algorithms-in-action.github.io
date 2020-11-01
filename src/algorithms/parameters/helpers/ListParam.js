@@ -38,8 +38,7 @@ function ListParam({
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    const inputValue = e.target[0].value;
-
+    const inputValue = e.target[0].value.replace(/\s+/g, '');
     if (commaSeparatedNumberListValidCheck(inputValue)) {
       const nodes = inputValue.split`,`.map((x) => +x);
       setParamVal(nodes);
