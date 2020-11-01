@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 /* eslint-disable operator-linebreak */
 /* eslint-disable react/jsx-indent */
@@ -17,6 +18,7 @@ import { GlobalActions } from '../../context/actions';
 import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
+import { markdownKeywords } from './MarkdownKeywords';
 
 
 function blockContainsBookmark(algorithm, block) {
@@ -30,48 +32,54 @@ function blockContainsBookmark(algorithm, block) {
 }
 
 function codeFormatting(codeArray) {
-  const keywords = ['for', 'while', 'if', 'else', 'in', 'each', 'do',
-    'repeat', 'until', 'Empty', 'Locate', 'of', 'not', 'downto', 'and', 'or', 'return', 'NotFound'];
   let spanItem;
   let codeItem;
   const codeRexItem = [];
   let key = 0;
   for (codeItem of codeArray) {
+    let flag = true;
     let arrayIndex = 0;
     key++;
     const arrayLength = codeArray.length;
-    if (keywords.includes(codeItem.trim())) {
-      if (arrayIndex < arrayLength - 1) {
-        codeItem += '\xa0';
-      }
-      spanItem = <span key={key} className="keyword">{codeItem}</span>;
-      codeRexItem.push(spanItem);
-    } else if (codeItem.indexOf('(') !== -1) {
-      let func = codeItem;
-      while (func.indexOf('(') !== -1) {
-        key++;
-        const funcName = func.substring(0, func.indexOf('('));
-        spanItem = <span key={key} className="function">{funcName}</span>;
+    for (const markdownKeyword of Object.keys(markdownKeywords)) {
+      if (markdownKeywords[markdownKeyword].includes(codeItem.trim())) {
+        if (arrayIndex < arrayLength - 1) {
+          codeItem += '\xa0';
+        }
+        spanItem = <span key={key} className={markdownKeyword}>{codeItem}</span>;
         codeRexItem.push(spanItem);
+        flag = false;
+        break;
+      }
+    }
+    if (flag) {
+      if (codeItem.indexOf('(') !== -1) {
+        let func = codeItem;
+        while (func.indexOf('(') !== -1) {
+          key++;
+          const funcName = func.substring(0, func.indexOf('('));
+          spanItem = <span key={key} className="function">{funcName}</span>;
+          codeRexItem.push(spanItem);
+          key++;
+          spanItem = <span key={key}>(</span>;
+          codeRexItem.push(spanItem);
+          const funcContent = func.substring(func.indexOf('(') + 1);
+          func = funcContent;
+        }
+        if (arrayIndex < arrayLength - 1) {
+          func += '\xa0';
+        }
         key++;
-        spanItem = <span key={key}>(</span>;
+        spanItem = <span key={key}>{func}</span>;
         codeRexItem.push(spanItem);
-        const funcContent = func.substring(func.indexOf('(') + 1);
-        func = funcContent;
+      } else {
+        if (arrayIndex < arrayLength - 1) {
+          codeItem += '\xa0';
+        }
+        key++;
+        spanItem = <span key={key}>{codeItem}</span>;
+        codeRexItem.push(spanItem);
       }
-      if (arrayIndex < arrayLength - 1) {
-        func += '\xa0';
-      }
-      key++;
-      spanItem = <span key={key}>{func}</span>;
-      codeRexItem.push(spanItem);
-    } else {
-      if (arrayIndex < arrayLength - 1) {
-        codeItem += '\xa0';
-      }
-      key++;
-      spanItem = <span key={key}>{codeItem}</span>;
-      codeRexItem.push(spanItem);
     }
     arrayIndex += 1;
   }
