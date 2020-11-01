@@ -14,20 +14,22 @@ $disabledCol: #b5b5b5;
 
   .controlPanel {
     height: 40px;
-    padding: 4px $ctrlOffset;
+    padding: 6px $ctrlOffset;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: var(--mid-control-bg);
 
+    .rightControl {
+      display: flex;
+      flex-direction: row;
+    }
+
   }
 
   .parameterPanel {
     padding: 16px $paramOffset 16px $paramOffset;
-    // flex: 1;
     overflow-y: auto;
-    // background-color: green;
-
     
     .logContainer {
       background-color: var(--mid-control-log-bg);

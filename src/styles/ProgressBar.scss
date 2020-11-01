@@ -1,0 +1,323 @@
+@import './global.scss';
+
+@keyframes primary-indeterminate-translate {
+  0% {
+    transform: translateX(-145.166611%);
+  }
+
+  20% {
+    animation-timing-function: cubic-bezier(.5, 0, .701732, .495819);
+    transform: translateX(-145.166611%);
+  }
+
+  59.15% {
+    animation-timing-function: cubic-bezier(.302435, .381352, .55, .956352);
+    transform: translateX(-61.495191%);
+  }
+
+  100% {
+    transform: translateX(55.444446%);
+  }
+}
+
+@keyframes primary-indeterminate-translate-reverse {
+  0% {
+    transform: translateX(145.166611%);
+  }
+
+  20% {
+    animation-timing-function: cubic-bezier(.5, 0, .701732, .495819);
+    transform: translateX(145.166611%);
+  }
+
+  59.15% {
+    animation-timing-function: cubic-bezier(.302435, .381352, .55, .956352);
+    transform: translateX(61.495191%);
+  }
+
+  100% {
+    transform: translateX(-55.4444461%);
+  }
+}
+
+@keyframes primary-indeterminate-scale {
+  0% {
+    transform: scaleX(.08);
+  }
+
+  36.65% {
+    animation-timing-function: cubic-bezier(.334731, .124820, .785844, 1);
+    transform: scaleX(.08);
+  }
+
+  69.15% {
+    animation-timing-function: cubic-bezier(.06, .11, .6, 1);
+    transform: scaleX(.661479);
+  }
+
+  100% {
+    transform: scaleX(.08);
+  }
+}
+
+@keyframes auxiliary-indeterminate-translate {
+  0% {
+    animation-timing-function: cubic-bezier(.15, 0, .515058, .409685);
+    transform: translateX(-54.888891%);
+  }
+
+  25% {
+    animation-timing-function: cubic-bezier(.310330, .284058, .8, .733712);
+    transform: translateX(-17.236978%);
+  }
+
+  48.35% {
+    animation-timing-function: cubic-bezier(.4, .627035, .6, .902026);
+    transform: translateX(29.497274%);
+  }
+
+  100% {
+    transform: translateX(105.388891%);
+  }
+}
+
+@keyframes auxiliary-indeterminate-translate-reverse {
+  0% {
+    animation-timing-function: cubic-bezier(.15, 0, .515058, .409685);
+    transform: translateX(54.888891%);
+  }
+
+  25% {
+    animation-timing-function: cubic-bezier(.310330, .284058, .8, .733712);
+    transform: translateX(17.236978%);
+  }
+
+  48.35% {
+    animation-timing-function: cubic-bezier(.4, .627035, .6, .902026);
+    transform: translateX(-29.497274%);
+  }
+
+  100% {
+    transform: translateX(-105.388891%);
+  }
+}
+
+@keyframes auxiliary-indeterminate-scale {
+  0% {
+    animation-timing-function: cubic-bezier(.205028, .057051, .576610, .453971);
+    transform: scaleX(.08);
+  }
+
+  19.15% {
+    animation-timing-function: cubic-bezier(.152313, .196432, .648374, 1.004315);
+    transform: scaleX(.457104);
+  }
+
+  44.15% {
+    animation-timing-function: cubic-bezier(.257759, -0.003163, .211762, 1.381790);
+    transform: scaleX(.727960);
+  }
+
+  100% {
+    transform: scaleX(.08);
+  }
+}
+
+@keyframes buffering {
+  to {
+    transform: translateX(-10px);
+  }
+}
+
+/**
+ * Safari does not support animation-direction: reverse, so we simply change the
+ * direction in which it's animating. The same rules apply down here as above,
+ * except without the negative.
+ */
+@keyframes buffering-reverse {
+  to {
+    transform: translateX(10px);
+  }
+}
+
+/**
+ * IE-specific rect translation animations. The normal rect translations do not
+ * work properly in IE 10/11 (they do however work properly in Edge) due to a
+ * bug involving resetting an elements position after each animation iteration
+ * (see: https://goo.gl/pquAMA). These are fallback animations that allow us to
+ * gracefully degrade in these browsers.
+ */
+
+@keyframes indeterminate-translate-ie {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes indeterminate-translate-reverse-ie {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+
+$progHeight: 32px;
+$progWidth: 128px;
+
+.mux-lpi {
+  height: $progHeight;
+  min-width: $progWidth;
+  overflow: hidden;
+  position: relative;
+  transform: translateZ(0);
+  transition: opacity 250ms linear;
+  width: 100%;
+  @include border-radius(16px);
+  margin: 0 12px;
+}
+
+$textWidth: 50px;
+$textHeight: 30px;
+$border: 4px;
+
+.progressLable {
+  position: absolute;
+  z-index: 100;
+  top: $border;
+  left: $border;
+  width: $progWidth - ($border + $border);
+  height: $progHeight - ($border + $border);
+  background-color: var(--mid-control-progress-bg); 
+  @include border-radius(24px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: flex-start;
+
+
+  .innerText {
+    overflow: hidden;
+    text-align: center;
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+    width: 80%;
+    color: var(--mid-control-progress-font);
+    text-transform: uppercase;
+  }
+}
+
+
+.mux-lpi-buffer,
+.mux-lpi-rect,
+.mux-lpi-rect-inner,
+.mux-lpi-buffering-dots {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+
+}
+
+.mux-lpi-buffer,
+.mux-lpi-rect {
+  transform-origin: top left;
+  transition: transform 250ms ease;
+}
+
+.mux-lpi-rect,
+.mux-lpi-rect-inner {
+  animation: none;
+}
+
+.mux-lpi-buffer {
+  background-color: var(--mid-control-progress-bg);
+}
+
+.mux-lpi-rect--auxiliary {
+  visibility: hidden;
+}
+
+.mux-lpi-rect-inner {
+  background-color: var(--mid-control-progress-active);
+  display: inline-block;
+}
+
+.mux-lpi--indeterminate .mux-lpi-rect {
+  transition: none;
+}
+
+.mux-lpi--indeterminate .mux-lpi-rect--primary {
+  animation: primary-indeterminate-translate 2s infinite linear;
+}
+
+.mux-lpi--indeterminate .mux-lpi-rect--primary > .mux-lpi-rect-inner {
+  animation: primary-indeterminate-scale 2s infinite linear;
+}
+
+.mux-lpi--indeterminate .mux-lpi-rect--auxiliary {
+  animation: auxiliary-indeterminate-translate 2s infinite linear;
+  visibility: visible;
+}
+
+.mux-lpi--indeterminate .mux-lpi-rect--auxiliary > .mux-lpi-rect-inner {
+  animation: auxiliary-indeterminate-scale 2s infinite linear;
+}
+
+.mux-lpi--indeterminate.mux-lpi--is-ie .mux-lpi-rect-inner {
+  transform: scaleX(0.45);
+}
+
+.mux-lpi--indeterminate.mux-lpi--is-ie .mux-lpi-rect--auxiliary {
+  animation: none;
+  visibility: hidden;
+}
+
+.mux-lpi--indeterminate.mux-lpi--is-ie .mux-lpi-rect--primary {
+  animation: indeterminate-translate-ie 2s infinite ease-out;
+}
+
+.mux-lpi--indeterminate.mux-lpi--is-ie .mux-lpi-rect--primary > .mux-lpi-rect-inner,
+.mux-lpi--indeterminate.mux-lpi--is-ie .mux-lpi-rect--auxiliary > .mux-lpi-rect-inner {
+  animation: none;
+}
+
+.mux-lpi--reversed .mux-lpi-rect,
+.mux-lpi--reversed .mux-lpi-buffer {
+  right: 0;
+  transform-origin: center right;
+}
+
+.mux-lpi--reversed .mux-lpi-rect--primary {
+  animation-name: primary-indeterminate-translate-reverse;
+}
+
+.mux-lpi--reversed .mux-lpi-rect--auxiliary {
+  animation-name: auxiliary-indeterminate-translate-reverse;
+}
+
+.mux-lpi--reversed.mux-lpi--is-ie .mux-lpi-rect--primary {
+  animation-name: indeterminate-translate-reverse-ie;
+}
+
+.mux-lpi--closed {
+  opacity: 0;
+}
+
+.mux-lpi--buffering .mux-lpi-buffering-dots {
+  animation: buffering 250ms infinite linear;
+  visibility: visible;
+}
+
+.mux-lpi--buffering.mux-lpi--reversed .mux-lpi-buffering-dots {
+  /**
+   * We can't use reverse here because it's not supported by safari.
+   * See keyframe def for more info
+   */
+  animation: buffering-reverse 250ms infinite linear;
+}
