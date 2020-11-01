@@ -78,8 +78,6 @@ $containerTopBottomPad: 2%;
 
 .line-light p:hover {
   background-color: var(--right-code-line-hover);
-
-
 }
 
 .line-light p:active {
@@ -120,7 +118,7 @@ $containerTopBottomPad: 2%;
 
 }
 .active:hover {
-  background-color: var(--right-code-line-hg);
+  background-color: var(--right-code-line-hg) !important;
 
 }
 

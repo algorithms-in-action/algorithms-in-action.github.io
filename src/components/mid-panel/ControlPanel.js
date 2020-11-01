@@ -5,6 +5,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import ControlButton from '../common/ControlButton';
+import ProgressBar from './ProgressBar';
 import useInterval from '../../context/useInterval';
 import { ReactComponent as PlayIcon } from '../../assets/icons/play.svg';
 import { ReactComponent as PauseIcon } from '../../assets/icons/pause.svg';
@@ -41,6 +42,7 @@ function ControlPanel() {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
+  const chunkerLength = chunker ? chunker.chunks.length : -1;
 
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [playing, setPlaying] = useState(false);
@@ -98,43 +100,58 @@ function ControlPanel() {
             <ThemeProvider theme={muiTheme}>
               <Grid container spacing={2}>
                 <Grid item xs>
-                  <Slider value={speed} onChange={handleSliderChange} aria-labelledby="continuous-slider" />
+                  <Slider
+                    value={speed}
+                    onChange={handleSliderChange}
+                    aria-labelledby="continuous-slider"
+                  />
                 </Grid>
               </Grid>
             </ThemeProvider>
           </div>
         </div>
 
-        <div className="controlButtons">
-          {/* Prev Button */}
-          <ControlButton
-            icon={<PrevIcon />}
-            type="prev"
-            disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
-            onClick={() => prev()}
+        <div className="rightControl">
+
+          {/* Progress Status Bar */}
+          <ProgressBar
+            current={currentChunk}
+            max={chunkerLength}
           />
 
-          {/* Play/Pause Button */}
-          {playing ? (
-            <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
-          ) : (
+
+          <div className="controlButtons">
+            {/* Prev Button */}
             <ControlButton
-              icon={<PlayIcon />}
-              type="play"
-              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-              onClick={() => play()}
+              icon={<PrevIcon />}
+              type="prev"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
+              onClick={() => prev()}
             />
-          )}
 
-          {/* Next Button */}
-          <ControlButton
-            icon={<NextIcon />}
-            type="next"
-            disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-            onClick={() => next()}
-          />
+            {/* Play/Pause Button */}
+            {playing ? (
+              <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
+            ) : (
+              <ControlButton
+                icon={<PlayIcon />}
+                type="play"
+                disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+                onClick={() => play()}
+              />
+            )}
+
+            {/* Next Button */}
+            <ControlButton
+              icon={<NextIcon />}
+              type="next"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+              onClick={() => next()}
+            />
+          </div>
         </div>
       </div>
+
 
       <div className="parameterPanel">
         { algorithm.param }
