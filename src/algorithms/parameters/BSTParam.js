@@ -19,8 +19,8 @@ const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
-const INSERTION_EXAMPLE = 'Example: 0,1,2,3,4';
-const SEARCH_EXAMPLE = 'Example: 16';
+const INSERTION_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const SEARCH_EXAMPLE = 'Please follow the example provided: 16';
 
 function BSTParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -47,7 +47,7 @@ function BSTParam() {
         setMessage(successParamMsg(SEARCH));
       } else {
         // when the tree is empty
-        setMessage(errorParamMsg(SEARCH, undefined, 'Please insert nodes first.'));
+        setMessage(errorParamMsg(SEARCH, undefined, 'Please fully build the tree before running a search.'));
       }
     } else {
       // when the input cannot be converted to a number

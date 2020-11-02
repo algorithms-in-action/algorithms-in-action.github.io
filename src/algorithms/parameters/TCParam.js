@@ -5,7 +5,7 @@ import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 4;
 const TRANSITIVE_CLOSURE = 'Transitive Closure';
-const TRANSITIVE_CLOSURE_EXAMPLE = 'Example: 0,1';
+const TRANSITIVE_CLOSURE_EXAMPLE = 'Please follow the example provided: 0,1';
 
 function TransitiveClosureParam() {
   const [message, setMessage] = useState(null);
