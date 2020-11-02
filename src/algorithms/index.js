@@ -35,7 +35,7 @@ const algorithms = {
     },
   },
   'quickSort': {
-    name: 'Quick Sort',
+    name: 'Quicksort',
     category: 'Sorting',
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
@@ -49,7 +49,7 @@ const algorithms = {
     },
   },
   'heapSort': {
-    name: 'Heap Sort',
+    name: 'Heapsort',
     category: 'Sorting',
     explanation: Explanation.HSExp,
     param: <Param.HSParam />,
