@@ -34,6 +34,7 @@ jobs:
         run: |
           git config user.email "zhangzihan_96@outlook.com"
           git config user.name "ZhangzihanGit"
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
         
       # Run our deployment command
       - name: Deploying the website to gh-pages
