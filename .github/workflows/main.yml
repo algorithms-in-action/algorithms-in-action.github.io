@@ -31,7 +31,7 @@ jobs:
         run: npm install --save gh-pages
       
       - name: Config user
-        run: 
+        run: |
           git config user.email "zhangzihan_96@outlook.com"
           git config user.name "ZhangzihanGit"
         
