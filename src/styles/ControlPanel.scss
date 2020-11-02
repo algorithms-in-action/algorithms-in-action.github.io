@@ -1,7 +1,7 @@
 @import './global.scss';
 
 $ctrlOffset: 16px;
-$paramMinWidth: 420px;
+$paramMinWidth: 520px;
 $paramOffset: 16px;
 $disabledCol: #b5b5b5;
 
@@ -11,9 +11,10 @@ $disabledCol: #b5b5b5;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: hidden;
 
   .controlPanel {
-    height: 40px;
+    min-height: 40px;
     padding: 6px $ctrlOffset;
     display: flex;
     align-items: center;
@@ -30,7 +31,7 @@ $disabledCol: #b5b5b5;
   .parameterPanel {
     padding: 16px $paramOffset 16px $paramOffset;
     overflow-y: auto;
-    
+
     .logContainer {
       background-color: var(--mid-control-log-bg);
       padding: 8px 16px;
