@@ -29,6 +29,11 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Install gh-pages
         run: npm install --save gh-pages
+      
+      - name: Config user
+        run: 
+          git config user.email "zhangzihan_96@outlook.com"
+          git config user.name "ZhangzihanGit"
         
       # Run our deployment command
       - name: Deploying the website to gh-pages
