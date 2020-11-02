@@ -53,9 +53,9 @@ $dragBarWidth: 10px;
 }
 
 #footer {
-	overflow: auto;
 	grid-area: footer;
 	background-color: var(--mid-control-bg);
+  overflow-y: hidden;
 
 }
 
