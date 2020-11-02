@@ -136,9 +136,11 @@ $containerTopBottomPad: 2%;
   font-weight:500;
 
 }
+
 .arrow{
   color: var(--right-code-operator-font);
   font-family: 'Inter', sans-serif;
+  font-weight: 500;
 }
 
 .variable {
@@ -147,6 +149,8 @@ $containerTopBottomPad: 2%;
 
 .operator {
   color: var(--right-code-operator-font);
+  font-weight: 500;
+
 }
 
 .function{
