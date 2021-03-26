@@ -23,7 +23,6 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 
-
 /**
  * This matrix param component can be used when
  * the param input accepts a matrix
@@ -42,13 +41,11 @@ function MatrixParam({
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
 
-  const columns = useMemo(
-    () => makeColumnArray(size),
-    [size],
-  );
+  const columns = useMemo(() => makeColumnArray(size), [size]);
   const { dispatch } = useParam();
   const [data, setData] = useState(() => makeData(size, min, max, symmetric));
   const [originalData, setOriginalData] = useState(data);
+  const [buttonMessage, setButtonMessage] = useState('Build Graph');
 
   // reset the Table when the size changes
   useEffect(() => {
@@ -115,8 +112,12 @@ function MatrixParam({
     if (matrix.length !== 0) {
       setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
-        name, mode, size, matrix,
+        name,
+        mode,
+        size,
+        matrix,
       });
+      setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
@@ -143,21 +144,12 @@ function MatrixParam({
           id="refreshMatrix"
           onClick={resetData}
         />
-        <button
-          className="matrixBtn"
-          onClick={handleSearch}
-        >
-          Load
+        <button className="matrixBtn" onClick={handleSearch}>
+          {buttonMessage}
         </button>
       </div>
 
-
-      <Table
-        columns={columns}
-        data={data}
-        updateData={updateData}
-      />
-
+      <Table columns={columns} data={data} updateData={updateData} />
     </div>
   );
 }
