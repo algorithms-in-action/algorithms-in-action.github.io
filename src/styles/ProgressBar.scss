@@ -170,7 +170,7 @@
 
 
 $progHeight: 32px;
-$progWidth: 128px;
+$progWidth: 160px;
 
 .mux-lpi {
   height: $progHeight;
@@ -180,7 +180,7 @@ $progWidth: 128px;
   transform: translateZ(0);
   transition: opacity 250ms linear;
   width: 100%;
-  @include border-radius(16px);
+  @include border-radius(16px); // makes the border curvy
   margin: 0 12px;
 }
 
@@ -195,7 +195,7 @@ $border: 4px;
   left: $border;
   width: $progWidth - ($border + $border);
   height: $progHeight - ($border + $border);
-  background-color: var(--mid-control-progress-bg); 
+  background-color: 'blue'; 
   @include border-radius(24px);
   display: flex;
   justify-content: center;
@@ -233,10 +233,6 @@ $border: 4px;
 .mux-lpi-rect,
 .mux-lpi-rect-inner {
   animation: none;
-}
-
-.mux-lpi-buffer {
-  background-color: var(--mid-control-progress-bg);
 }
 
 .mux-lpi-rect--auxiliary {
