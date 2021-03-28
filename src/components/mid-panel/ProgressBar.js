@@ -45,7 +45,7 @@ function ProgressBar({ current, max }) {
         <div className="innerText">
           {
             isInputValid(current, max)
-              ? 'Progress...'
+              ? `Progress: ${Math.round((current / max) * 100, 2)} %`
               : 'Not Loaded'
           }
         </div>
