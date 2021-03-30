@@ -117,7 +117,7 @@ function MatrixParam({
         size,
         matrix,
       });
-      setButtonMessage('Reset');
+    //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
@@ -126,18 +126,12 @@ function MatrixParam({
   return (
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
-        <ControlButton
-          icon={<AddIcon />}
-          className="greyRoundBtn"
-          id="increaseMatrix"
-          onClick={() => updateTableSize(size + 1)}
-        />
-        <ControlButton
-          icon={<MinusIcon />}
-          className="greyRoundBtn"
-          id="decreaseMatrix"
-          onClick={() => updateTableSize(size - 1)}
-        />
+        <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
+          Increase Graph Size
+        </button>
+        <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
+          Decrease Graph Size
+        </button>
         <ControlButton
           icon={<RefreshIcon />}
           className="greyRoundBtn"
