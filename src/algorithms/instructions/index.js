@@ -11,20 +11,20 @@ export const KEY_WORDS = [
 
 const bstInstructions = [
   {
-    title: 'Inserting Nodes',
+    title: 'Insert Mode',
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a list of nodes in the insert parameter.',
-      `Click on ${KEY_INSERT} to load the algorithm.`,
+      `Click on ${KEY_INSERT} to enter insert mode and load the algorithm.`,
       `Click on ${KEY_PLAY} to watch the algorithm run.`,
     ],
   },
   {
-    title: 'Searching Nodes',
+    title: 'Search Mode',
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a node in the search parameter.',
-      `Click on ${KEY_SEARCH} to load the algorithm.`,
+      `Click on ${KEY_SEARCH} to enter search mode and load the algorithm.`,
       `Click on ${KEY_PLAY} to watch the algorithm run.`,
     ],
   },
