@@ -1,0 +1,97 @@
+@import './global.scss';
+
+$ctrlOffset: 16px;
+$paramMinWidth: 520px;
+$paramOffset: 16px;
+$disabledCol: #b5b5b5;
+
+
+$textWidth: 50px;
+$textHeight: 30px;
+$border: 4px;
+
+.controlContainer {
+  font-size: 0.8em;
+  min-width: $paramMinWidth;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
+
+  .controlPanel {
+    min-height: 40px;
+    padding: 6px $ctrlOffset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--mid-control-bg);
+
+
+    $progHeight: 32px;
+    $progWidth: 128px;  
+    $textWidth: 50px;
+    $textHeight: 30px;
+    $border: 4px;
+    
+    .speed {
+      z-index: 100;
+      top: $border;
+      left: $border;
+      width: $progWidth - ($border + $border);
+      height: $progHeight - ($border + $border);
+      background-color: var(--mid-control-progress-bg); 
+      @include border-radius(24px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: flex-start;
+
+      .innerSpeed{
+        overflow: hidden;
+        text-align: center;
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
+        width: 80%;
+        color: var(--mid-control-progress-font);
+        text-transform: uppercase;
+      }
+    }
+
+    .rightControl {
+      display: flex;
+      flex-direction: row;
+    }
+
+  }
+
+  .parameterPanel {
+    padding: 16px $paramOffset 16px $paramOffset;
+    overflow-y: auto;
+
+    .logContainer {
+      background-color: var(--mid-control-log-bg);
+      padding: 8px 16px;
+      border-radius: 4px;
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 16px auto 0px auto;
+      
+      .logTag {
+        color: var(--mid-control-log-success);
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 1em;
+        margin-right: 12px;
+      }
+  
+      .logText {
+        font-size: 1.03em;
+        font-weight: 300;
+        color: var(--mid-control-font);
+      }
+  
+    }
+  
+  }
+
+}
