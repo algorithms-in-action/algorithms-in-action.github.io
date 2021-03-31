@@ -3,7 +3,7 @@ const KEY_INSERT = 'INSERT';
 const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
-const KEY_LOAD = 'LOAD';
+const KEY_LOAD = 'BUILD GRAPH';
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
