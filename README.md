@@ -28,7 +28,7 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
    
    - Confluence space - https://confluence.cis.unimelb.edu.au:8443/pages/viewpage.action?spaceKey=COMP900822021SM1AI&title=Home
    - Trello board of Team 1 - https://trello.com/b/bZg5jbnU/team1-aia
-   - Trello board of Team 2 - 
+   - Trello board of Team 2 - https://trello.com/b/DEmVmKB1/aia
    - Slack channel - https://comp90082-aia.slack.com/archives/C01PYTZKAMA
    
    ## Changelog 
