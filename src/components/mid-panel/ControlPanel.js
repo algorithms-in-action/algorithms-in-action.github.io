@@ -95,6 +95,11 @@ function ControlPanel() {
     <div className="controlContainer">
       <div className="controlPanel">
         {/* Speed Slider */}
+        <div className="speed">
+          <div className="innerSpeed">
+            SPEED
+          </div>
+        </div>
         <div className="sliderContainer">
           <div className="slider">
             <ThemeProvider theme={muiTheme}>
