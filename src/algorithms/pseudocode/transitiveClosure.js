@@ -14,7 +14,7 @@ export default parse(`
     \\Expl}  
     \\In{
       for i <- 1 to n   
-      \\Expl{  Explore and try to add new paths from each source node i.
+      \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
         find all nodes reachable from i via k      \\Ref Reachable  
