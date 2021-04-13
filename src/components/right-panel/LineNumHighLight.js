@@ -87,6 +87,22 @@ function codeFormatting(codeArray) {
 }
 
 
+function getAllBlocksToCollapse(algorithm, parent) {
+  if (parent) {
+    let results = [parent];
+    const line = algorithm.pseudocode[parent];
+    for (let i = 0; i < line.length; i++) {
+      const result = getAllBlocksToCollapse(algorithm, line[i]['ref']);
+      if (result) {
+        results = results.concat(result);
+      }
+    }
+    return results;
+  }
+  return null;
+}
+
+
 function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
   let i = lineNum;
   let codeLines = [];
@@ -140,7 +156,14 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
             <button
               className={algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
-                dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
+                if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
+                  const blocksToCollapse = getAllBlocksToCollapse(algorithm, line.ref);
+                  for (let l = 0; l < blocksToCollapse.length; l++) {
+                    dispatch(GlobalActions.COLLAPSE, { codeblockname: blocksToCollapse[l] });
+                  }
+                } else {
+                  dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
+                }
               }}
             >
               {algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
