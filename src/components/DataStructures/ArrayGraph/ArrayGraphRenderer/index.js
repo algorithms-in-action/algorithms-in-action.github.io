@@ -13,7 +13,8 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+// eslint-disable-next-line
+import React, { useContext } from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './ArrayGraphRenderer.module.scss';
@@ -52,6 +53,10 @@ class GraphRenderer extends Renderer {
 
     this.togglePan(true);
     this.toggleZoom(true);
+  }
+
+  componentWillUnmount() {
+    sessionStorage.removeItem('quicksortPlay');
   }
 
   handleMouseDown(e) {
@@ -96,6 +101,7 @@ class GraphRenderer extends Renderer {
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const quicksortPlay = sessionStorage.getItem('quicksortPlay') === 'true';
     const arrayHeight = -16;
     const arrowLength = 12;
     const viewBox = [
@@ -141,13 +147,13 @@ class GraphRenderer extends Renderer {
 
             return (
               <g className={classes(styles.edge, selectedCount && styles.selected, visitedCount && styles.visited)}
-                 key={`${source}-${target}`}>
+                key={`${source}-${target}`}>
                 <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
                 {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
                     <text className={styles.weight} transform={`rotate(${degree})`}
-                          y={-edgeWeightGap}>{this.toString(weight)}</text>
+                      y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
                 }
               </g>
@@ -180,7 +186,7 @@ class GraphRenderer extends Renderer {
 
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
-                 key={id} transform={`translate(${x},${y})`}>
+                key={id} transform={`translate(${x},${y})`}>
                 <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayHeight}>
                   {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
                   <table className={styles.array_2d}>
@@ -190,7 +196,7 @@ class GraphRenderer extends Renderer {
                           data.map((elem, i) => (
                             <td
                               key={`${i}-${elem.value}`}
-                              className={classes(styles.col, elem.selected && styles.selected, elem.patched && styles.patched)}
+                              className={classes(styles.col, elem.selected && quicksortPlay && styles.selected, elem.patched && styles.patched)}
                             >
                               <span className={styles.value}>{elem.value}</span>
                             </td>
@@ -215,5 +221,4 @@ class GraphRenderer extends Renderer {
 }
 
 export default GraphRenderer;
-
 
