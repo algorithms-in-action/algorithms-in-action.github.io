@@ -39,7 +39,8 @@ const muiTheme = createMuiTheme({
 const DEFAULT_SPEED = 50;
 
 function ControlPanel() {
-  const { algorithm, dispatch } = useContext(GlobalContext);
+  // eslint-disable-next-line
+  const { algorithm, dispatch, setQuicksortPlay } = useContext(GlobalContext);
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
   const chunkerLength = chunker ? chunker.chunks.length : -1;
@@ -75,6 +76,15 @@ function ControlPanel() {
       pause();
     }
   };
+
+  const handleClickPlay = () => {
+    play();
+    if (algorithm.name === 'Quicksort') {
+      // setQuicksortPlay(true)
+      sessionStorage.setItem('quicksortPlay', true);
+    }
+  };
+
 
   /**
    * when click play button, calling play() based on the slider speed.
@@ -142,7 +152,7 @@ function ControlPanel() {
                 icon={<PlayIcon />}
                 type="play"
                 disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-                onClick={() => play()}
+                onClick={handleClickPlay}
               />
             )}
 
@@ -159,7 +169,7 @@ function ControlPanel() {
 
 
       <div className="parameterPanel">
-        { algorithm.param }
+        {algorithm.param}
       </div>
     </div>
   );
