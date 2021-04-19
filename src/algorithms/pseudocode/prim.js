@@ -27,13 +27,13 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
             Other nodes initially assigned the largest possible 
             cost, Infinity, as they have not been considered yet.
     \\Expl}
-    Q <- InitPriorityQueue(n)                                   
+    Q <- InitPriorityQueue(n) \\B 4
     \\Expl{  Nodes are arranged in the priority queue Q according 
             to cost. Smaller cost means higher priority.
     \\Expl}
     while Q not Empty \\B 2
     \\In{
-        i <- RemoveMin(Q)  // i is now part of the spanning tree
+        i <- RemoveMin(Q)  // i is now part of the spanning tree \\B 5
         \\Expl{  Node i is closest to the tree constructed so far.
                 More precisely, for every node k inside the current 
                 tree, and every node j outside of it, the weight of
@@ -62,7 +62,7 @@ for each (i,j) in E
         Cost[j] <- weight(i,j)                                  
         \\Expl{  The new cost for j is its distance to i.
         \\Expl}
-        Update(Q, j, Cost[j])                                   
+        Update(Q, j, Cost[j]) \\B 6
         \\Expl{  Rearrange Q so the priority queue reflects j's new cost.
         \\Expl}
         Prev[j] <- i                                           
