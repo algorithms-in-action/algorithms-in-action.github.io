@@ -34,7 +34,7 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
    
    ## Changelog 
    
-   *SPRINT 1B
+   *SPRINT 1B*
    
    - team1_dev (development branch of team 1)
    - team2_dev (development branch of team2)
