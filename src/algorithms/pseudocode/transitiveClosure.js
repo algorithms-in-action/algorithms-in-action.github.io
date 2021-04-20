@@ -13,11 +13,11 @@ export default parse(`
       used as stepping stones on the way from i to j.
     \\Expl}  
     \\In{
-      for i <- 1 to n   
+      //for i <- 1 to n   
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
-        find all nodes reachable from i via k
+        //find all nodes reachable from i via k
         \\Expl{  Identify target nodes j that are reachable from 
         source node i, whether they were already reachable 
         before now, or whether they are now reachable using 
