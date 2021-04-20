@@ -2,7 +2,6 @@
 
 // $playBtn: $sigBlue;
 
-
 .sliderContainer {
   display: flex;
   background-color: var(--mid-control-slider-bg);
@@ -102,7 +101,9 @@
   svg {
     path {
       fill: var(--mid-control-param-btn-active-col);
+      
     }
+    
   }
 }
 
