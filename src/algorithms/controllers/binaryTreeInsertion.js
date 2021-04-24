@@ -54,9 +54,9 @@ export default {
         vis.array.deselect(index - 1);
         vis.array.select(index);
         for (let j = 1; j < visited.length; j++) {
-          vis.graph.leave(visited[j], visited[j - 1]);
+          vis.graph.deselect(visited[j], visited[j - 1]);
         }
-        vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+        vis.graph.leave(nodes[index - 1], visited[visited.length - 1]);
       }, [i, visitedList]);
       visitedList = [null];
       const element = nodes[i];
@@ -70,7 +70,7 @@ export default {
       parent = root;
       while (ptr) {
         visitedList.push(parent);
-        chunker.add(14, (vis, c, p) => vis.graph.visit(c, p), [parent, prev]);
+        chunker.add(14, (vis, c, p) => vis.graph.select(c, p), [parent, prev]);
         chunker.add(15);
         if (element < parent) {
           chunker.add(16);
@@ -87,7 +87,7 @@ export default {
             chunker.add(10, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
-              vis.graph.select(e, p);
+              vis.graph.visit(e, p);
             }, [element, parent]);
             break;
           }
@@ -106,7 +106,7 @@ export default {
             chunker.add(11, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
-              vis.graph.select(e, p);
+              vis.graph.visit(e, p);
             }, [element, parent]);
             break;
           }
