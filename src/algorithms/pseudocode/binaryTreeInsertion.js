@@ -15,10 +15,7 @@ export default parse(`
 \\Code{
     Insert
     // Insert key k in BST t, maintaining the BST invariant
-    n <- new Node     // create a new node to hold key k \\B 3
-    n.key <- k \\B 4
-    n.left <- Empty   // it will be a leaf, that is, \\B 5
-    n.right <- Empty  // it has empty subtrees \\B 6
+    Create_Node() \\Ref NewNode
 
     if t = Empty \\B 7
     \\In{
@@ -42,6 +39,14 @@ export default parse(`
           p.right <- n      // insert n as p's right child  \\B 11
       \\In}
     \\In}
+\\Code}
+
+\\Code{
+    NewNode
+    n <- new Node     // create a new node to hold key k \\B 3
+    n.key <- k \\B 4
+    n.left <- Empty   // it will be a leaf, that is, \\B 5
+    n.right <- Empty  // it has empty subtrees \\B 6
 \\Code}
   
 \\Code{
