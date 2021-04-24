@@ -42,7 +42,7 @@ export default {
     chunker.add(3, (vis, r) => {
       vis.graph.addNode(r);
       vis.graph.layoutBST(r, true);
-      vis.graph.visit(r, null);
+      vis.graph.select(r, null);
     }, [root]);
     chunker.add(4);
     chunker.add(5);
@@ -54,10 +54,10 @@ export default {
         vis.array.deselect(index - 1);
         vis.array.select(index);
         for (let j = 1; j < visited.length; j++) {
-          vis.graph.deselect(visited[j], visited[j - 1]);
+          vis.graph.leave(visited[j], visited[j - 1]);
         }
         if (nodes[index - 1] !== visited[visited.length - 1]) {
-          vis.graph.leave(nodes[index - 1], visited[visited.length - 1]);
+          vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
         }
       }, [i, visitedList]);
       visitedList = [null];
@@ -72,7 +72,7 @@ export default {
       parent = root;
       while (ptr) {
         visitedList.push(parent);
-        chunker.add(14, (vis, c, p) => vis.graph.select(c, p), [parent, prev]);
+        chunker.add(14, (vis, c, p) => vis.graph.visit(c, p), [parent, prev]);
         chunker.add(15);
         if (element < parent) {
           chunker.add(16);
@@ -89,7 +89,7 @@ export default {
             chunker.add(10, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
-              vis.graph.visit(e, p);
+              vis.graph.select(e, p);
             }, [element, parent]);
             break;
           }
@@ -108,7 +108,7 @@ export default {
             chunker.add(11, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
-              vis.graph.visit(e, p);
+              vis.graph.select(e, p);
             }, [element, parent]);
             break;
           }
@@ -121,10 +121,10 @@ export default {
     chunker.add(2, (vis, index, visited) => {
       vis.array.deselect(index);
       for (let j = 1; j < visited.length; j++) {
-        vis.graph.deselect(visited[j], visited[j - 1]);
+        vis.graph.leave(visited[j], visited[j - 1]);
       }
       if (nodes[index] !== visited[visited.length - 1]) {
-        vis.graph.leave(nodes[index], visited[visited.length - 1]);
+        vis.graph.deselect(nodes[index], visited[visited.length - 1]);
       }
     }, [nodes.length - 1, visitedList]);
     // for test
