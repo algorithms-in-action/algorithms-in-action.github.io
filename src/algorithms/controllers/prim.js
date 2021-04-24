@@ -4,6 +4,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
   initVisualisers() {
@@ -11,6 +12,10 @@ export default {
       graph: {
         instance: new GraphTracer('graph', null, 'Prim'),
         order: 0,
+      },
+      array: {
+        instance: new Array1DTracer('array', null, 'Priority Queue'),
+        order: 1,
       },
     };
   },
@@ -33,6 +38,7 @@ export default {
     const pending = new Array(matrix.length);
     const prev = new Array(matrix.length);
     const pq = new Array(matrix.length);
+    let pqDisplay = [];
     let pqStart;
     let n;
 
@@ -88,6 +94,17 @@ export default {
       }
     };
 
+    const updatePqDisplay = () => {
+      pqDisplay = [];
+
+      for (let i = pqStart; i < n; i++) {
+        if (cost[i] === Infinity) {
+          break;
+        }
+        pqDisplay.push(pq[i] + 1);
+      }
+    };
+
     let i;
     weight = [...E];
     n = vertex;
@@ -101,6 +118,14 @@ export default {
       pq[i] = i;
     }
     pqStart = 0;
+    updatePqDisplay();
+    chunker.add(
+      4,
+      (vis, v) => {
+        vis.array.set(v);
+      },
+      [pqDisplay]
+    );
     while (pqStart < n) {
       i = pq[pqStart];
       chunker.add(
@@ -112,7 +137,23 @@ export default {
       );
       pending[i] = 0;
       pqStart += 1;
+      updatePqDisplay();
+      chunker.add(
+        5,
+        (vis, v) => {
+          vis.array.set(v);
+        },
+        [pqDisplay]
+      );
       PqUpdate(i);
+      updatePqDisplay();
+      chunker.add(
+        6,
+        (vis, v) => {
+          vis.array.set(v);
+        },
+        [pqDisplay]
+      );
     }
     // for test
     return prev;

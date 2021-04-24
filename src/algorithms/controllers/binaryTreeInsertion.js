@@ -41,8 +41,8 @@ export default {
     chunker.add(2);
     chunker.add(3, (vis, r) => {
       vis.graph.addNode(r);
-      vis.graph.layoutTree(r, true);
-      vis.graph.visit(r, null);
+      vis.graph.layoutBST(r, true);
+      vis.graph.select(r, null);
     }, [root]);
     chunker.add(4);
     chunker.add(5);
