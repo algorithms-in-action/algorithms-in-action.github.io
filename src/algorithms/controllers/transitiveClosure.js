@@ -4,7 +4,7 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer2';
 
 export default {
   initVisualisers() {
@@ -28,12 +28,15 @@ export default {
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
         if (nodes[i][k]) {
+          chunker.add(2, (g, i) => {
+            g.graph.visit(i);
+            g.graph.visit(k, i);
+          }, [i, k]);
           for (let j = 0; j < numOfNodes; j++) {
             if (nodes[k][j]) {
               nodes[i][j] = 1;
+              
               chunker.add(2, (g, i, j) => {
-                g.graph.visit(i);
-                g.graph.visit(k, i);
                 g.graph.visit(j, k);
               }, [i, j, k]);
               
