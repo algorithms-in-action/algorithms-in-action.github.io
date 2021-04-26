@@ -32,6 +32,7 @@ export default {
             g.graph.visit(i);
             g.graph.visit(k, i);
           }, [i, k]);
+              
           for (let j = 0; j < numOfNodes; j++) {
             if (nodes[k][j]) {
               nodes[i][j] = 1;
@@ -50,11 +51,13 @@ export default {
               chunker.add(4, (g, i, j, k) => {
                 g.graph.leave(j, i);
                 g.graph.leave(j, k);
-                g.graph.leave(k, i);
-                g.graph.leave(i);
               }, [i, j, k]);
-            }  
+            }
           }
+          chunker.add(4, (g, i, k) => {
+            g.graph.leave(k, i);
+            g.graph.leave(i);
+          }, [i, k]);
         }
       }
     }
