@@ -24,6 +24,8 @@ export default {
   run(chunker, { nodes }) {
     if (nodes.length === 0) return;
     let parent;
+    let prev = null;
+    let visitedList = [null];
     const tree = {};
     const root = nodes[0];
     tree[root] = {};
@@ -39,7 +41,8 @@ export default {
     chunker.add(2);
     chunker.add(3, (vis, r) => {
       vis.graph.addNode(r);
-      vis.graph.layoutTree(r, true);
+      vis.graph.layoutBST(r, true);
+      vis.graph.select(r, null);
     }, [root]);
     chunker.add(4);
     chunker.add(5);
@@ -47,10 +50,15 @@ export default {
     chunker.add(7);
     chunker.add(8);
     for (let i = 1; i < nodes.length; i++) {
-      chunker.add(2, (vis, index) => {
+      chunker.add(2, (vis, index, visited) => {
         vis.array.deselect(index - 1);
         vis.array.select(index);
-      }, [i]);
+        for (let j = 1; j < visited.length; j++) {
+          vis.graph.leave(visited[j], visited[j - 1]);
+        }
+        vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+      }, [i, visitedList]);
+      visitedList = [null];
       const element = nodes[i];
       chunker.add(3);
       chunker.add(4);
@@ -61,13 +69,15 @@ export default {
       let ptr = tree;
       parent = root;
       while (ptr) {
-        chunker.add(14);
+        visitedList.push(parent);
+        chunker.add(14, (vis, c, p) => vis.graph.visit(c, p), [parent, prev]);
         chunker.add(15);
         if (element < parent) {
           chunker.add(16);
           chunker.add(18);
           if (tree[parent].left !== undefined) {
             // if current node has left child
+            prev = parent;
             parent = tree[parent].left;
             ptr = tree[parent];
           } else {
@@ -77,6 +87,7 @@ export default {
             chunker.add(10, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
+              vis.graph.select(e, p);
             }, [element, parent]);
             break;
           }
@@ -85,6 +96,7 @@ export default {
           chunker.add(18);
           if (tree[parent].right !== undefined) {
             // if current node has right child
+            prev = parent;
             parent = tree[parent].right;
             ptr = tree[parent];
           } else {
@@ -94,6 +106,7 @@ export default {
             chunker.add(11, (vis, e, p) => {
               vis.graph.addNode(e);
               vis.graph.addEdge(p, e);
+              vis.graph.select(e, p);
             }, [element, parent]);
             break;
           }

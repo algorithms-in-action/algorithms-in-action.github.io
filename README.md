@@ -13,11 +13,12 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
     3. Ceremonies.pdf
     4. Overall Plan.pdf
     5. Sprint 1A.pdf
-    6. Meetings.pdf
-    7. System Design.pdf
-    8. Coding Standards.pdf
-    9. Releases.pdf
-    10. Decisions.pdf
+    6. Sprint 1B.pdf
+    7. Meetings.pdf
+    8. System Design.pdf
+    9. Coding Standards.pdf
+    10. Releases.pdf
+    11. Decisions.pdf
 - tests/\
     Contains the test documents created for the tests conducted.
     1. Acceptance Testing.pdf
@@ -33,35 +34,22 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
    
    ## Changelog 
    
-   *SPRINT 1A*
+   *SPRINT 1B*
    
-   - US_01_ADD_MODES
-   - US_02_SPEED_SLIDER
-   - US_O3_ADD_PROGRESS_BAR
-   - US_17_CHANGE_LABELS_FOR_VIEWS
-   - US_20_ADD_RESET_BUTTON
-   - Home
-   - Project Overview
-   - Functional Requirements
-   - Non-functional Requirements
-   - Motivational Model
-   - Personas
-   - User Stories
-   - Product Backlog
-   - Ceremonies
-   - Timeline
-   - Sprint 1A Backlog
-   - Sprint 1A Ceremonies
-   - Client Meeting minutes
-   - Team Meeting minutes
-   - High Level Architecture
-   - Component Design
-   - Use Case Diagram
-   - Acceptance Testing
-   - Coding Standards
-   - Communication Tool
-   - Releases
+   - team1_dev (development branch of team 1)
+   - team2_dev (development branch of team2)
+   - US_06_CLOSE_NESTED_BLOCKS
+   - US_07_ADD_POINTERS_BST
+   - US_09_SPLIT_TREE
+   - US_21_DISPLAY_PRIORITY_QUEUE
+   - US_14_HIGHLIGHT_PIVOT
+   - US_22_ADD_FINAL_RESULT
+   - Timeline (updated dates for sprints)
+   - Sprint 1A Ceremonies (added Sprint Retrospective meeting minutes)
+   - Sprint 1B Backlog
+   - Sprint 1B Ceremonies
+   - Team Meeting minutes (added minutes for combined meetings)
+   - Releases (added Sprint 1B release)
 
 ## User Stories implemented in this sprint
-
-<table class="relative-table wrapped confluenceTable"><colgroup><col style="width: 12.7425%;" /><col style="width: 5.6183%;" /><col style="width: 34.6945%;" /><col style="width: 7.52968%;" /><col style="width: 14.596%;" /><col style="width: 24.6742%;" /></colgroup><tbody><tr><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">FEATURE</span></th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">STORY ID</span></th><th class="confluenceTh" style="text-align: center;">TASK</th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">STORY ESTIMATE</span></th><th class="confluenceTh" style="text-align: center;" colspan="1"><span style="color: #172b4d; text-decoration: none;">PRIORITY</span></th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">ASSIGNED TO</span></th></tr><tr><td class="confluenceTd" style="text-align: center;" rowspan="3"><strong style="text-decoration: none; text-align: left;">INTERFACE</strong><br /><br /></td><td class="confluenceTd" style="text-align: center;">01</td><td class="confluenceTd" style="text-align: center;">Clearly indicate the two different modes of Binary Search Tree(<span style="color: #172b4d; text-decoration: none;">Insert and Search</span>).</td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1"><span style="color: #172b4d; text-decoration: none;">Should have</span></td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;">02</td><td class="confluenceTd" style="text-align: center;">Label the speed slider as SPEED.</td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1"><span style="color: #172b4d; text-decoration: none;">Should have</span></td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;">03</td><td class="confluenceTd" style="text-align: center;">Simplified the existing progress component to a progress bar which indicates <span style="color: #172b4d; text-decoration: none;">how long the algorithm is going to take to run.</span>&nbsp;</td><td class="confluenceTd" style="text-align: center;">2</td><td class="confluenceTd" style="text-align: center;" colspan="1"><p>Must have</p></td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;"><strong>PSEUDO CODE</strong></td><td class="confluenceTd" style="text-align: center;">06</td><td class="confluenceTd" style="text-align: center;">Fix bug in existing code to close the nested blocks can&nbsp;<span style="color: #172b4d; text-decoration: none;">recursively so that the system can jump animation of closed blocks.</span></td><td class="confluenceTd" style="text-align: center;">2</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;"><strong style="text-decoration: none; text-align: left;">HEAPSORT</strong></td><td class="confluenceTd" style="text-align: center;">17</td><td class="confluenceTd" style="text-align: center;">Show the array view and&nbsp;<span style="color: #172b4d; text-decoration: none;">tree view&nbsp;distinctly in Heapsort.</span></td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;" rowspan="3"><strong style="text-decoration: none; text-align: left;">GRAPH ALGORITHMS</strong><br /><br /></td><td class="confluenceTd" style="text-align: center;">18</td><td class="confluenceTd" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">Change the '+' and '-' buttons to increasing and decreasing the size of the graph.</span></td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;">19</td><td class="confluenceTd" style="text-align: center;">Change the "Load" label to "Build graph"</td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;">20</td><td class="confluenceTd" style="text-align: center;">Dynamically change the label "Build graph" to "Reset" if there exists loaded graph.</td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 2</td></tr></tbody></table>
+<table class="relative-table wrapped confluenceTable"><colgroup><col style="width: 12.7425%;" /><col style="width: 5.6183%;" /><col style="width: 34.6945%;" /><col style="width: 7.52968%;" /><col style="width: 14.596%;" /><col style="width: 24.6742%;" /></colgroup><tbody><tr><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">FEATURE</span></th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">STORY ID</span></th><th class="confluenceTh" style="text-align: center;">TASK</th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">STORY ESTIMATE</span></th><th class="confluenceTh" style="text-align: center;" colspan="1"><span style="color: #172b4d; text-decoration: none;">PRIORITY</span></th><th class="confluenceTh" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">ASSIGNED TO</span></th></tr><tr><td class="confluenceTd" style="text-align: center;" rowspan="3"><strong style="text-decoration: none; text-align: left;">BINARY SEARCH TREE</strong><br /><br /></td><td class="confluenceTd" style="text-align: center;">07</td><td class="confluenceTd" style="text-align: center;">Label the element "t" and "p" from pseudocode on the tree diagram.</td><td class="confluenceTd" style="text-align: center;">2</td><td class="confluenceTd" style="text-align: center;" colspan="1"><span style="color: #172b4d; text-decoration: none;">Must have</span></td><td class="confluenceTd" style="text-align: center;">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;" colspan="1">09</td><td class="confluenceTd" style="text-align: center;" colspan="1">Left and right branches should be displayed separately.</td><td class="confluenceTd" style="text-align: center;" colspan="1">2</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;" colspan="1">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;" colspan="1">12</td><td class="confluenceTd" style="text-align: center;" colspan="1">Add explanation for each line of pseudocode.</td><td class="confluenceTd" style="text-align: center;" colspan="1">1</td><td class="confluenceTd" style="text-align: center;" colspan="1"><span style="color: #172b4d;">Must have</span></td><td class="confluenceTd" style="text-align: center;" colspan="1">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;"><strong>PRIMS</strong></td><td class="confluenceTd" style="text-align: center;">21</td><td class="confluenceTd" style="text-align: center;">Display a priority queue along with the graph to show the changes.</td><td class="confluenceTd" style="text-align: center;">3</td><td class="confluenceTd" style="text-align: center;">Must have</td><td class="confluenceTd" style="text-align: center;" colspan="1">Team 2</td></tr><tr><td class="confluenceTd" style="text-align: center;" rowspan="3"><strong style="text-decoration: none; text-align: left;">QUICKSORT</strong></td><td class="confluenceTd" style="text-align: center;">14</td><td class="confluenceTd" style="text-align: center;">Highlight the pivot element after it is chosen so it is distinguishable from other elements.</td><td class="confluenceTd" style="text-align: center;">2</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;" colspan="1">15</td><td class="confluenceTd" style="text-align: center;" colspan="1">Label the element "i" and "j" from the pseudocode on the diagram.</td><td class="confluenceTd" style="text-align: center;" colspan="1">2</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;" colspan="1">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;" colspan="1">16</td><td class="confluenceTd" style="text-align: center;" colspan="1">A sorted version of array should be displayed at the bottom of the diagram for comparison.</td><td class="confluenceTd" style="text-align: center;" colspan="1">3</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;" colspan="1">Team 1</td></tr><tr><td class="confluenceTd" style="text-align: center;" rowspan="4"><strong style="text-decoration: none; text-align: left;">TRANSITIVE CLOSURE</strong></td><td class="confluenceTd" style="text-align: center;">22</td><td class="confluenceTd" style="text-align: center;"><span style="color: #172b4d; text-decoration: none;">The result should be shown at the final step of the algorithm.</span></td><td class="confluenceTd" style="text-align: center;">1</td><td class="confluenceTd" style="text-align: center;" colspan="1">Must have</td><td class="confluenceTd" style="text-align: center;">Team 1</td></tr></tbody></table>

@@ -13,7 +13,7 @@
 /* eslint-disable prefer-template */
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
-import GraphRenderer from './GraphRenderer/index';
+import GraphRenderer from './GraphRenderer/index2';
 
 class GraphTracer extends Tracer {
   getRendererClass() {
