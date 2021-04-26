@@ -29,6 +29,7 @@ export default {
     let current = root;
     let parent = null;
 
+    chunker.add(8);
     chunker.add(1, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
     let ptr = tree;
     parent = current;
@@ -36,7 +37,8 @@ export default {
     while (ptr) {
       chunker.add(2);
       if (current === item) {
-        chunker.add(3);
+        chunker.add(2, (vis, c, p) => vis.graph.leave(c, p), [current, parent]);
+        chunker.add(3, (vis, c, p) => vis.graph.select(c, p), [current, parent]);
         // for test
         return 'success';
       }
@@ -64,6 +66,7 @@ export default {
     }
     chunker.add(7);
     // for test
+    chunker.add(7, (vis) => vis.graph.setText('RESULT NOT FOUND'));
     return 'fail';
   },
 };
