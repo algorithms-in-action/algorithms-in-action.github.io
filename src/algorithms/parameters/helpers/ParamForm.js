@@ -14,16 +14,16 @@ function ParamForm(props) {
     onChange, handleSubmit, children, disabled,
   } = props;
   // eslint-disable-next-line
-  const { algorithm, setQuicksortPlay } = useContext(GlobalContext);
+  const { algorithm } = useContext(GlobalContext);
 
   const closeInstructionsFun = () => {
     if (algorithm.name === 'Quicksort') {
       // setQuicksortPlay(false)
+      sessionStorage.setItem('isPivot', false);
       sessionStorage.setItem('quicksortPlay', false);
     }
     closeInstructions();
   };
-
 
   return (
     <form className={formClassName} onSubmit={handleSubmit}>
@@ -49,6 +49,12 @@ function ParamForm(props) {
           </ControlButton>
         </div>
       </div>
+&nbsp;&nbsp;&nbsp;&nbsp;
+      {algorithm.name === 'Quicksort' && <label className="inputText">Choose pivot using:</label>}
+      {algorithm.name === 'Quicksort' && <button type="button" className="rightmost-btn">rightmost</button>}
+      {algorithm.name === 'Quicksort' && <button type="button" className="medianthree-btn">median of three</button>}
+      {' '}
+      {/* TODO change to median of 3 */}
     </form>
   );
 }
