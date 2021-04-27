@@ -132,14 +132,17 @@ function BSTParam() {
       <FormControlLabel
         control={<BlueCheckbox checked={bstCase.random} onChange={handleChange} name="random" />}
         label="Random"
+        className="checkbox"
       />
       <FormControlLabel
         control={<BlueCheckbox checked={bstCase.sorted} onChange={handleChange} name="sorted" />}
         label="Sorted"
+        className="checkbox"
       />
       <FormControlLabel
         control={<BlueCheckbox checked={bstCase.balanced} onChange={handleChange} name="balanced" />}
         label="Balanced"
+        className="checkbox"
       />
       {/* render success/error message */}
       {message}

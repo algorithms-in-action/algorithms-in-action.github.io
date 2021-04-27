@@ -57,7 +57,11 @@ function ListParam({
       buttonName={buttonName}
       value={DEFAULT_VAL}
       disabled={disabled}
-      onChange={(e) => SET_VAL(e.target.value)}
+      onChange={(e) => {
+        // console.log(e.target.value);
+        // console.log(e.target.value.split(','));
+        SET_VAL(e.target.value.split(','));
+      }}
       // If no customized handle function is provided, the default one will be used
       handleSubmit={
         handleSubmit && typeof handleSubmit === 'function'
@@ -71,7 +75,8 @@ function ListParam({
         id={ALGORITHM_NAME}
         disabled={disabled}
         onClick={() => {
-          const list = genRandNumList(10, 1, 100);
+          // console.log(DEFAULT_VAL);
+          const list = genRandNumList(DEFAULT_VAL.length, 1, 100);
           setMessage(null);
           SET_VAL(list);
         }}

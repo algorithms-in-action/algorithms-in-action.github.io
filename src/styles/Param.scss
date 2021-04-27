@@ -44,6 +44,12 @@
 .blueWordBtnDisabled:active {
   background: none;
 }
+.checkbox {
+  color: var(--mid-control-font);
+  font-size: 0.8em;
+  // font: 13px "Roboto", sans-serif !important;
+  font-family: Menlo, "Liberation Mono", Courier, monospace;
+}
 
 .greyRoundBtn {
   @extend .btn;
