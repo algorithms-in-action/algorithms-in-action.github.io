@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable arrow-parens */
@@ -11,7 +13,7 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+import React, { } from 'react';
 import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
@@ -21,15 +23,24 @@ let modename;
 function switchmode(modetype = mode()) {
   switch (modetype) {
     case 1:
-      modename = styles.graphgreen;
+      modename = styles.graph_green;
       break;
     case 2:
-      modename = styles.graphblue;
+      modename = styles.graph_blue;
       break;
     default:
       modename = styles.graph;
   }
   return modename;
+}
+
+
+class Element {
+  constructor(value) {
+    this.value = value;
+    this.patched = false;
+    this.selected = false;
+  }
 }
 
 class GraphRenderer extends Renderer {
@@ -41,6 +52,11 @@ class GraphRenderer extends Renderer {
 
     this.togglePan(true);
     this.toggleZoom(true);
+  }
+
+  componentWillUnmount() {
+    sessionStorage.removeItem('quicksortPlay');
+    sessionStorage.removeItem('isPivot');
   }
 
   handleMouseDown(e) {
@@ -72,15 +88,30 @@ class GraphRenderer extends Renderer {
     return { x, y };
   }
 
+  getArrayCenter(arr) {
+    let l = 0;
+    for (let index = 0; index < arr.length; index += 1) {
+      const elem = arr[index];
+      l += ((elem.toString().length * 8) + 2);
+    }
+
+    return this.toString(-(l / 2));
+  }
+
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const quicksortPlay = sessionStorage.getItem('quicksortPlay') === 'true';
+    const isPivot = sessionStorage.getItem('isPivot') === 'true';
+    const arrayHeight = -16;
+    const arrowLength = 12;
     const viewBox = [
       (this.centerX - baseWidth / 2) * this.zoom,
       (this.centerY - baseHeight / 2) * this.zoom,
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
+
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -103,27 +134,27 @@ class GraphRenderer extends Renderer {
             const { x: sx, y: sy } = sourceNode;
             let { x: ex, y: ey } = targetNode;
             const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
+            const my = (sy + (ey + arrayHeight)) / 2;
             const dx = ex - sx;
-            const dy = ey - sy;
+            const dy = (ey + arrayHeight) - sy;
             const degree = Math.atan2(dy, dx) / Math.PI * 180;
             if (isDirected) {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
                 ex = sx + dx / length * (length - nodeRadius - arrowGap);
-                ey = sy + dy / length * (length - nodeRadius - arrowGap);
+                ey = sy + (dy + arrayHeight) / length * (length - nodeRadius - arrowGap) + arrowLength;
               }
             }
 
             return (
               <g className={classes(styles.edge, selectedCount && styles.selected, visitedCount && styles.visited)}
-                 key={`${source}-${target}`}>
+                key={`${source}-${target}`}>
                 <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
                 {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
                     <text className={styles.weight} transform={`rotate(${degree})`}
-                          y={-edgeWeightGap}>{this.toString(weight)}</text>
+                      y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
                 }
               </g>
@@ -133,13 +164,50 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
-            // only when selectedCount is 1, then highlight the node
-            const selectNode = selectedCount === 1;
+
+            let arr = [];
+            if (typeof value === 'object') {
+              arr = Object.values(value);
+              if (arr.length === 0) {
+                arr.push(' ');
+              }
+            } else {
+              arr.push(value);
+            }
+
+            const data = [];
+            for (let i = 0; i < arr.length; i += 1) {
+              const elem = new Element();
+              if (i === arr.length - 1 && arr[i] !== ' ') {
+                elem.selected = true;
+              }
+              elem.value = arr[i];
+              data.push(elem);
+            }
+
             return (
-              <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
-                 key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
-                <text className={styles.id}>{value}</text>
+              <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}
+                key={id} transform={`translate(${x},${y})`}>
+                <foreignObject width="100%" height="50px" x={this.getArrayCenter(arr)} y={arrayHeight}>
+                  {/* <body xmlns="http://www.w3.org/1999/xhtml"> */}
+                  <table className={styles.array_2d}>
+                    <tbody>
+                      <tr className={styles.row}>
+                        {
+                          data.map((elem, i) => (
+                            <td
+                              key={`${i}-${elem.value}`}
+                              className={classes(styles.col, elem.selected && quicksortPlay && isPivot && styles.selected, elem.patched && styles.patched)}
+                            >
+                              <span className={styles.value}>{elem.value}</span>
+                            </td>
+                          ))
+                        }
+                      </tr>
+                    </tbody>
+                  </table>
+                  {/* </body> */}
+                </foreignObject>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
