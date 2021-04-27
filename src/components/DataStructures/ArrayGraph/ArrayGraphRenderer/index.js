@@ -35,7 +35,6 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
-
 class Element {
   constructor(value) {
     this.value = value;
@@ -57,6 +56,7 @@ class GraphRenderer extends Renderer {
 
   componentWillUnmount() {
     sessionStorage.removeItem('quicksortPlay');
+    sessionStorage.removeItem('isPivot');
   }
 
   handleMouseDown(e) {
@@ -102,6 +102,7 @@ class GraphRenderer extends Renderer {
     const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const quicksortPlay = sessionStorage.getItem('quicksortPlay') === 'true';
+    const isPivot = sessionStorage.getItem('isPivot') === 'true';
     const arrayHeight = -16;
     const arrowLength = 12;
     const viewBox = [
@@ -196,10 +197,11 @@ class GraphRenderer extends Renderer {
                           data.map((elem, i) => (
                             <td
                               key={`${i}-${elem.value}`}
-                              className={classes(styles.col, elem.selected && quicksortPlay && styles.selected, elem.patched && styles.patched)}
+                              className={classes(styles.col, elem.selected && quicksortPlay && isPivot && styles.selected, elem.patched && styles.patched)}
                             >
                               <span className={styles.value}>{elem.value}</span>
                             </td>
+
                           ))
                         }
                       </tr>
@@ -221,4 +223,3 @@ class GraphRenderer extends Renderer {
 }
 
 export default GraphRenderer;
-
