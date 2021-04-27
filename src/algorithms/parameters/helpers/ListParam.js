@@ -21,14 +21,14 @@ import useParam from '../../../context/useParam';
  * the param input accepts a list
  */
 function ListParam({
-  name, buttonName, mode, DEFAULT_VAL, ALGORITHM_NAME,
+  name, buttonName, mode, DEFAULT_VAL, SET_VAL, ALGORITHM_NAME,
   EXAMPLE, formClassName, handleSubmit, setMessage,
 }) {
   const {
     dispatch,
     disabled,
-    paramVal,
-    setParamVal,
+    // paramVal,
+    // setParamVal,
   } = useParam(DEFAULT_VAL);
 
   /**
@@ -41,7 +41,7 @@ function ListParam({
     const inputValue = e.target[0].value.replace(/\s+/g, '');
     if (commaSeparatedNumberListValidCheck(inputValue)) {
       const nodes = inputValue.split`,`.map((x) => +x);
-      setParamVal(nodes);
+      // SET_VAL(nodes);
       // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
       setMessage(successParamMsg(ALGORITHM_NAME));
@@ -55,9 +55,9 @@ function ListParam({
       formClassName={formClassName}
       name={ALGORITHM_NAME}
       buttonName={buttonName}
-      value={paramVal}
+      value={DEFAULT_VAL}
       disabled={disabled}
-      onChange={(e) => setParamVal(e.target.value)}
+      onChange={(e) => SET_VAL(e.target.value)}
       // If no customized handle function is provided, the default one will be used
       handleSubmit={
         handleSubmit && typeof handleSubmit === 'function'
@@ -73,7 +73,7 @@ function ListParam({
         onClick={() => {
           const list = genRandNumList(10, 1, 100);
           setMessage(null);
-          setParamVal(list);
+          SET_VAL(list);
         }}
       />
     </ParamForm>
