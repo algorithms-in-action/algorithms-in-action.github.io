@@ -45,6 +45,7 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
    
    - team1_dev (merged team 1 branches of Sprint 1C)
    - team2_dev (merged team 2 branches of Sprint 1C)
+   - US_05_ADD_BASE_CASES
    - US_08_HIGHLIGHT_FOUND_NODES
    - US_10_NEW_NODE_COLLAPSIBLE
    - US_13_CHOOSE_PIVOT
