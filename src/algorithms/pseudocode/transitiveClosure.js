@@ -8,12 +8,12 @@ export default parse(`
     with nodes 1..n, represented by n x n adjacency matrix A 
   \\Expl}
   \\In{
-    for k <- 1 to n   
+    for k <- 0 to n-1  
     \\Expl{  Consider all possible nodes k that might be
       used as stepping stones on the way from i to j.
     \\Expl}  
     \\In{
-      //for i <- 1 to n   
+      for i <- 0 to n-1   
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
@@ -29,7 +29,7 @@ export default parse(`
           so we do not explore whether there is a path from k to j.
         \\Expl}
         \\In{
-          for j <- 1 to n  
+          for j <- 0 to n-1  
           \\Expl{ Consider paths to all possible target nodes j.
           \\Expl} 
           \\In{

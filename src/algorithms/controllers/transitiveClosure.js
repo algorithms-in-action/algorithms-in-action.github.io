@@ -28,12 +28,16 @@ export default {
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
         if (nodes[i][k]) {
+          chunker.add(2, (g, i) => {
+            g.graph.visit(i);
+            g.graph.visit(k, i);
+          }, [i, k]);
+              
           for (let j = 0; j < numOfNodes; j++) {
             if (nodes[k][j]) {
               nodes[i][j] = 1;
+              
               chunker.add(2, (g, i, j) => {
-                g.graph.visit(i);
-                g.graph.visit(k, i);
                 g.graph.visit(j, k);
               }, [i, j, k]);
               
@@ -47,11 +51,13 @@ export default {
               chunker.add(4, (g, i, j, k) => {
                 g.graph.leave(j, i);
                 g.graph.leave(j, k);
-                g.graph.leave(k, i);
-                g.graph.leave(i);
               }, [i, j, k]);
-            }  
+            }
           }
+          chunker.add(4, (g, i, k) => {
+            g.graph.leave(k, i);
+            g.graph.leave(i);
+          }, [i, k]);
         }
       }
     }

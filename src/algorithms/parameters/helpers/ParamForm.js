@@ -49,6 +49,10 @@ function ParamForm(props) {
           </ControlButton>
         </div>
       </div>
+      {algorithm.name === 'Quicksort' && <button type="button" className="rightmost-btn">rightmost</button>}
+      {algorithm.name === 'Quicksort' && <button type="button" className="medianthree-btn">median of three</button>}
+      {' '}
+      {/* TODO change to median of 3 */}
     </form>
   );
 }
