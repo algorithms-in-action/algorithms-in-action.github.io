@@ -26,7 +26,6 @@ function QuicksortParam() {
           setMessage={setMessage}
         />
       </div>
-
       {/* render success/error message */}
       {message}
     </>
