@@ -116,19 +116,21 @@
     width: 62%;
     display: flex;
     align-items: center;
-    .rightmost-btn {
-      margin-left: 20px;
-      @extend .blueWordBtn;
-    }
-    .medianthree-btn {
-      margin-left: 20px;
-      @extend .blueWordBtn;
-    }
   }
 
   .formRight {
     width: 36%;
   }
+}
+
+.rightmost-btn {
+  margin-left: 20px;
+  @extend .blueWordBtn;
+}
+
+.medianthree-btn {
+  margin-left: 20px;
+  @extend .blueWordBtn;
 }
 
 .btnDisabled {
