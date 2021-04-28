@@ -56,7 +56,9 @@ export default {
         for (let j = 1; j < visited.length; j++) {
           vis.graph.leave(visited[j], visited[j - 1]);
         }
-        vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+        if (nodes[index - 1] !== visited[visited.length - 1]) {
+          vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+        }
       }, [i, visitedList]);
       visitedList = [null];
       const element = nodes[i];
@@ -116,9 +118,15 @@ export default {
       }
     }
     // deselect the last element in the array
-    chunker.add(18, (vis, index) => {
+    chunker.add(2, (vis, index, visited) => {
       vis.array.deselect(index);
-    }, [nodes.length - 1]);
+      for (let j = 1; j < visited.length; j++) {
+        vis.graph.leave(visited[j], visited[j - 1]);
+      }
+      if (nodes[index] !== visited[visited.length - 1]) {
+        vis.graph.deselect(nodes[index], visited[visited.length - 1]);
+      }
+    }, [nodes.length - 1, visitedList]);
     // for test
     // eslint-disable-next-line consistent-return
     return tree;

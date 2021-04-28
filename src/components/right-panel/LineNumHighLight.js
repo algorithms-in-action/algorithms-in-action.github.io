@@ -167,7 +167,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
                   const blocksToCollapse = getAllBlocksToCollapse(algorithm, line.ref);
                   for (let l = 0; l < blocksToCollapse.length; l++) {
-                    dispatch(GlobalActions.COLLAPSE, { codeblockname: blocksToCollapse[l] });
+                    dispatch(GlobalActions.COLLAPSE, { codeblockname: blocksToCollapse[l], expandOrCollapase: false });
                   }
                 } else {
                   dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
