@@ -360,18 +360,18 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	--graph-node-circle-fill-selected: #2289ff;
-	--graph-node-circle-stroke-selected: #2289ff;
-	--graph-node-circle-fill-visited: #ee0970;
-	--graph-node-circle-stroke-visited: #ee0970;
+	--graph-node-circle-fill-selected: #ee0970;
+	--graph-node-circle-stroke-selected: #ee0970;
+	--graph-node-circle-fill-visited: #2289ff;
+	--graph-node-circle-stroke-visited: #2289ff;
 
-	--graph-edge-line-stroke-selected: #2289ff;
-	--graph-edge-weight-fill-selected: #2289ff;
-	--graph-edge-line-stroke-visited: #ee0970;
-	--graph-edge-weight-fill-visited: #ee0970;
+	--graph-edge-line-stroke-selected: #ee0970;
+	--graph-edge-weight-fill-selected: #ee0970;
+	--graph-edge-line-stroke-visited: #2289ff;
+	--graph-edge-weight-fill-visited: #2289ff;
 
-	--graph-arrow-fill-selected: #2289ff;
-	--graph-arrow-fill-visited: #ee0970;
+	--graph-arrow-fill-selected: #ee0970;
+	--graph-arrow-fill-visited: #2289ff;
 
 	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-patched: #ee0970;

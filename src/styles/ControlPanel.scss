@@ -33,21 +33,19 @@ $disabledCol: #b5b5b5;
       left: $border;
       width: $progWidth - ($border + $border);
       height: $progHeight - ($border + $border);
-      background-color: #F7F7F7; 
+      background-color: var(--mid-control-bg); 
       @include border-radius(24px);
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: flex-start;
-​
-      .innerSpeed{
-        overflow: hidden;
-        text-align: center;
-        font-family: Menlo, "Liberation Mono", Courier, monospace;
-        width: 80%;
-        color: black;
-        text-transform: uppercase;
-      }
+      // overflow: hidden;
+      text-align: center;
+      font-family: Menlo, "Liberation Mono", Courier, monospace;
+      width: 80%;
+      color: var(--mid-control-progress-font);
+      text-transform: uppercase;
+
     }
 
     .rightControl {

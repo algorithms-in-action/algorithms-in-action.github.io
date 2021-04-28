@@ -34,6 +34,7 @@ class GraphTracer extends Tracer {
     this.isDirected = true;
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
+    this.text = null;
     this.logTracer = null;
   }
 
@@ -70,7 +71,9 @@ class GraphTracer extends Tracer {
     });
     this.nodes.forEach(node => {
       node.visitedCount = 0;
+      node.selectedCount = 0;
     });
+    this.text = null;
   }
 
   isEmpty() {
@@ -452,6 +455,10 @@ class GraphTracer extends Tracer {
 
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
+  }
+
+  setText(text) {
+    this.text = text;
   }
 }
 

@@ -3,7 +3,7 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    BST_Search(t, k)  // return subtree whose root has key k; or
+    BST_Search(t, k)  // return subtree whose root has key k; or \\B 8
                       // NotFound is no such node is present
     \\In{
         while t not Empty \\B 1
