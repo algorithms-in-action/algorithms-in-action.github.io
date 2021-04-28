@@ -49,8 +49,6 @@ function ParamForm(props) {
           </ControlButton>
         </div>
       </div>
-&nbsp;&nbsp;&nbsp;&nbsp;
-      {algorithm.name === 'Quicksort' && <label className="inputText">Choose pivot using:</label>}
       {algorithm.name === 'Quicksort' && <button type="button" className="rightmost-btn">rightmost</button>}
       {algorithm.name === 'Quicksort' && <button type="button" className="medianthree-btn">median of three</button>}
       {' '}
