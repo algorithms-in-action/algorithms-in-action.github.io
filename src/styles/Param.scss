@@ -8,12 +8,11 @@
   font: inherit;
   cursor: pointer;
   outline: inherit;
-
 }
 
 .blueWordBtn {
   @extend .btn;
-  font: 13px "Roboto", sans-serif !important;
+  font: 13px 'Roboto', sans-serif !important;
   border-radius: 1px;
   text-align: center;
   position: relative;
@@ -24,11 +23,11 @@
 }
 
 .blueWordBtn:hover {
-  transition: .4s;
+  transition: 0.4s;
   background: var(--mid-control-param-btn-bg-col-hover);
 }
 .blueWordBtn:active {
-  transition: .2s;
+  transition: 0.2s;
   background: var(--mid-control-param-btn-bg-col-active);
 }
 
@@ -69,16 +68,14 @@
 }
 
 .greyRoundBtn:hover {
-  transition: .4s;
+  transition: 0.4s;
   background: var(--mid-control-param-btn-bg-hover);
   @include border-radius(14px);
-
 }
 .greyRoundBtn:active {
-  transition: .2s;
+  transition: 0.2s;
   background: var(--mid-control-param-btn-bg-active);
   @include border-radius(14px);
-
 }
 
 .outerInput {
@@ -87,7 +84,7 @@
   display: flex;
   align-items: center;
   padding: 6px 10px;
-  
+
   .inputText {
     width: 100%;
 
@@ -106,7 +103,6 @@
   .btnGrp {
     display: flex;
     justify-content: flex-end;
-
   }
 }
 
@@ -135,9 +131,6 @@
   }
 }
 
-
-
-
 .btnDisabled {
   @extend .blueWordBtn;
   cursor: not-allowed !important;
@@ -159,6 +152,3 @@
 .greyRoundBtnDisabled:active {
   background: none;
 }
-
-
-

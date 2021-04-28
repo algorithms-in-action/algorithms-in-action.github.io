@@ -14,16 +14,16 @@ function ParamForm(props) {
     onChange, handleSubmit, children, disabled,
   } = props;
   // eslint-disable-next-line
-  const { algorithm, setQuicksortPlay } = useContext(GlobalContext);
+  const { algorithm } = useContext(GlobalContext);
 
   const closeInstructionsFun = () => {
     if (algorithm.name === 'Quicksort') {
       // setQuicksortPlay(false)
+      sessionStorage.setItem('isPivot', false);
       sessionStorage.setItem('quicksortPlay', false);
     }
     closeInstructions();
   };
-
 
   return (
     <form className={formClassName} onSubmit={handleSubmit}>

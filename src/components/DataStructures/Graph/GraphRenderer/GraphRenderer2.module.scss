@@ -1,0 +1,111 @@
+@import "../../common/stylesheet/index";
+
+
+// --graph-node-fill: orange;
+
+
+
+.graph {
+  flex: 1;
+  align-self: stretch;
+
+  .node {
+    .circle {
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--graph-node-circle-stroke);
+      stroke-width: 1;
+    }
+
+    .id {
+      fill: var(--graph-node-id-fill);
+      alignment-baseline: central;
+      text-anchor: middle;
+    }
+
+    .weight {
+      fill: var(--graph-node-weight-fill);
+      font-weight: bold;
+      alignment-baseline: central;
+      text-anchor: left;
+    }
+
+    &.selected {
+      .circle {
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
+
+      }
+      .id {
+        fill: var(--graph-node-id-fill-selected);
+      }
+    }
+
+
+    &.visited {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
+      }
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+  }
+
+  .edge {
+    .line {
+      stroke: var(--graph-edge-line-stroke);
+      stroke-width: 3;
+
+      &.directed {
+        marker-end: url(#markerArrow);
+      }
+    }
+
+    .weight {
+      fill: var(--graph-edge-line-weight-fill);
+      alignment-baseline: baseline;
+      text-anchor: middle;
+    }
+
+    &.selected {
+      .line {
+        stroke: var(--graph-edge-line-stroke-selected);
+
+        &.directed {
+          marker-end: url(#markerArrowSelected);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-selected);
+      }
+    }
+
+    &.visited {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited);
+      }
+    }
+  }
+
+  .arrow {
+    fill: var(--graph-arrow-fill);
+
+    &.selected {
+      fill: var(--graph-arrow-fill-selected);
+    }
+
+    &.visited {
+      fill: var(--graph-arrow-fill-visited);
+    }
+  }
+}

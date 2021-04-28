@@ -40,7 +40,7 @@ const DEFAULT_SPEED = 50;
 
 function ControlPanel() {
   // eslint-disable-next-line
-  const { algorithm, dispatch, setQuicksortPlay } = useContext(GlobalContext);
+  const { algorithm, dispatch } = useContext(GlobalContext);
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
   const chunkerLength = chunker ? chunker.chunks.length : -1;
@@ -85,7 +85,6 @@ function ControlPanel() {
     }
   };
 
-
   /**
    * when click play button, calling play() based on the slider speed.
    * Using useInterval, play() now can read fresh states, otherwise play() will
@@ -125,16 +124,12 @@ function ControlPanel() {
             </ThemeProvider>
           </div>
         </div>
-
         <div className="rightControl">
-
           {/* Progress Status Bar */}
           <ProgressBar
             current={currentChunk}
             max={chunkerLength}
           />
-
-
           <div className="controlButtons">
             {/* Prev Button */}
             <ControlButton
@@ -143,7 +138,6 @@ function ControlPanel() {
               disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
               onClick={() => prev()}
             />
-
             {/* Play/Pause Button */}
             {playing ? (
               <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
@@ -155,7 +149,6 @@ function ControlPanel() {
                 onClick={handleClickPlay}
               />
             )}
-
             {/* Next Button */}
             <ControlButton
               icon={<NextIcon />}
@@ -166,8 +159,6 @@ function ControlPanel() {
           </div>
         </div>
       </div>
-
-
       <div className="parameterPanel">
         {algorithm.param}
       </div>
