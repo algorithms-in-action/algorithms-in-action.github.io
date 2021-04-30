@@ -34,6 +34,7 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
    - Trello board of Team 1 - https://trello.com/b/bZg5jbnU/team1-aia
    - Trello board of Team 2 - https://trello.com/b/DEmVmKB1/aia
    - Slack channel - https://comp90082-aia.slack.com/archives/C01PYTZKAMA
+   - Demo of the app - https://algorithms-in-action-staging.herokuapp.com/
 
 ## Deployment
 
@@ -61,7 +62,7 @@ We currently have an accessible link to the application via: https://algorithms-
 
 The link above includes changes made by teams at the end of each sprint and is accessible to anyone who has the link. The version of the algorithm in action web application in the above link tracks the changes made to the `dev` branch in the Github repository. When a pull request is submitted, approved, and merged into the `dev` branch from respective team branches, the application will be redeployed with the updated changes.
    
-   ## Changelog 
+## Changelog 
    
    *SPRINT 1C*
    
