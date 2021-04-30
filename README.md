@@ -77,6 +77,7 @@ The link above includes changes made by teams at the end of each sprint and is a
    - US_16_DISPLAY_SORTED_ARRAY (updated from last sprint)
    - US_23_ADD_POINTERS_TC
    - Overall Plan (updated timeline for Sprint 1C)
+   - Sprint 1B Ceremonies (added team 2 ceremonies)
    - Sprint 1C Backlog
    - Sprint 1C Ceremonies
    - Team meeting minutes (added minutes for combined meetings)
