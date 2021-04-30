@@ -28,7 +28,7 @@ This is the forked repository of algorithms-in-action/algorithms-in-action.githu
 - ui/\
     Contains all the images and graphics used for the project.
     
-   ## Links to Tools
+ ## Links to Tools
    
    - Confluence space - https://confluence.cis.unimelb.edu.au:8443/pages/viewpage.action?spaceKey=COMP900822021SM1AI&title=Home
    - Trello board of Team 1 - https://trello.com/b/bZg5jbnU/team1-aia
