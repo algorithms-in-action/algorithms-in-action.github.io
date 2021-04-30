@@ -1,6 +1,6 @@
 # Algorithms in Action
 
-This is the forked repository of algorithms-in-action/algorithms-in-action.github.io for the teams working on this application during SEM 1 COMP90082_2021 Software Project subject. 
+This is the forked repository of https://github.com/algorithms-in-action/algorithms-in-action.github.io for the teams working on this application during SEM 1 COMP90082_2021 Software Project subject. 
 
 ## Organisation of folders
 
