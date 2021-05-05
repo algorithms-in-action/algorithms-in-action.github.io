@@ -34,7 +34,7 @@ const stringSearchInstructions = [{
   title: 'String Search',
   content: [
     `Click on ${KEY_CODE} on the right panel`,
-    'Enter a list of numbers in the sort parameter.',
+    'Enter a string and a pattern in the search parameter.',
     `Click on ${KEY_SEARCH} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
