@@ -45,11 +45,11 @@ const algorithms = {
     extraInfo: ExtraInfo.BFSSInfo,
     // need to add the pseudocode file
     pseudocode: {
-      search: Pseudocode.BFSSInfo,
+      search: Pseudocode.bruteForceStringSearch,
     },
     // need to set up the controller file and tests for that as well
     controller: {
-      search: Controller.BFSSInfo,
+      search: Controller.bruteForceStringSearch,
     },
   },
   'quickSort': {
