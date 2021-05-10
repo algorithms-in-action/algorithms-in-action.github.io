@@ -4,7 +4,7 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer2';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 
 export default {
   initVisualisers() {

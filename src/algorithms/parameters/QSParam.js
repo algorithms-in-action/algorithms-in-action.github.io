@@ -10,7 +10,7 @@ const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
 function QuicksortParam() {
   const [message, setMessage] = useState(null);
-
+  const [array, setArray] = useState(DEFAULT_ARR);
   return (
     <>
       <div className="form">
@@ -19,13 +19,13 @@ function QuicksortParam() {
           buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
-          DEFAULT_VAL={DEFAULT_ARR}
+          DEFAULT_VAL={array}
+          SET_VAL={setArray}
           ALGORITHM_NAME={QUICK_SORT}
           EXAMPLE={QUICK_SORT_EXAMPLE}
           setMessage={setMessage}
         />
       </div>
-
       {/* render success/error message */}
       {message}
     </>

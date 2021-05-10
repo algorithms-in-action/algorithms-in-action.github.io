@@ -24,8 +24,16 @@ import { markdownKeywords } from './MarkdownKeywords';
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
     if ((line.bookmark !== undefined && line.bookmark === algorithm.bookmark)
-        || (line.ref && blockContainsBookmark(algorithm, line.ref, algorithm.bookmark))) {
+      || (line.ref && blockContainsBookmark(algorithm, line.ref, algorithm.bookmark))) {
+      if (algorithm.name === 'Quicksort' && line.bookmark && parseInt(line.bookmark, 10) === 5) {
+        sessionStorage.setItem('isPivot', true);
+        sessionStorage.setItem('quicksortPlay', true);
+      }
       return true;
+    } if (line.bookmark !== undefined && algorithm.name === 'Quicksort' && algorithm.bookmark === '5' && line.bookmark === '13') {
+      sessionStorage.setItem('isPivot', true);
+      sessionStorage.setItem('quicksortPlay', true);
+      return false;
     }
   }
   return false;
@@ -135,12 +143,12 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     let lineExplanButton = null;
     if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][blockName] && line.lineExplanButton !== undefined) {
       lineExplanButton =
-      <button
-        className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
-        onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
-      >
-        <DescriptionIcon style={{ fontSize: 10 }} />
-      </button>;
+        <button
+          className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
+          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+        >
+          <DescriptionIcon style={{ fontSize: 10 }} />
+        </button>;
     }
 
     if (line.ref) {
@@ -159,7 +167,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
                   const blocksToCollapse = getAllBlocksToCollapse(algorithm, line.ref);
                   for (let l = 0; l < blocksToCollapse.length; l++) {
-                    dispatch(GlobalActions.COLLAPSE, { codeblockname: blocksToCollapse[l] });
+                    dispatch(GlobalActions.COLLAPSE, { codeblockname: blocksToCollapse[l], expandOrCollapase: false });
                   }
                 } else {
                   dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
@@ -203,12 +211,12 @@ const pseudoCodePadding = (lineNum, limit) => {
 
   for (let i = lineNum; i < (lineNum + limit); i++) {
     codeLines.push(
-    <p
-      key={i}
-      role="presentation"
-    >
-      <span>{i}</span>
-    </p>,
+      <p
+        key={i}
+        role="presentation"
+      >
+        <span>{i}</span>
+      </p>,
     );
   }
 
@@ -231,7 +239,7 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
 
   return (
     <div className="line-light">
-       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
       <div className="code-container" id={fontID}>
         {cl}
         {pseudoCodePad}

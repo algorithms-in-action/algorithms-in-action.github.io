@@ -72,14 +72,14 @@ export default {
         w = weight[i][j];
         if (w > 0 && !prev.includes(j) && pqStart < n) {
           chunker.add(
-            3,
+            5,
             (vis, n1, n2) => {
               vis.graph.visit(n1, n2);
             },
             [i, j]
           );
           chunker.add(
-            3,
+            5,
             (vis, n1, n2) => {
               vis.graph.leave(n1, n2);
             },
@@ -120,7 +120,7 @@ export default {
     pqStart = 0;
     updatePqDisplay();
     chunker.add(
-      4,
+      2,
       (vis, v) => {
         vis.array.set(v);
       },
@@ -129,7 +129,7 @@ export default {
     while (pqStart < n) {
       i = pq[pqStart];
       chunker.add(
-        2,
+        3,
         (vis, n1, n2) => {
           vis.graph.visit(n1, n2);
         },
@@ -139,7 +139,7 @@ export default {
       pqStart += 1;
       updatePqDisplay();
       chunker.add(
-        5,
+        4,
         (vis, v) => {
           vis.array.set(v);
         },

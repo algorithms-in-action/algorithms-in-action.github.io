@@ -13,7 +13,7 @@ export default parse(`
       used as stepping stones on the way from i to j.
     \\Expl}  
     \\In{
-      for i <- 0 to n-1  
+      for i <- 0 to n-1   
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
