@@ -107,16 +107,25 @@
   justify-content: space-between;
 
   .formLeft {
-    width: 62%;
+    width: 100%;
     display: flex;
     align-items: center;
     .rightmost-btn {
-      margin-left: 20px;
+      // margin-left: 20px;
       @extend .blueWordBtn;
     }
     .medianthree-btn {
-      margin-left: 20px;
+      // margin-left: 20px;
       @extend .blueWordBtn;
+    }
+    .MuiFormControlLabel-root {
+      color: var(--mid-control-param-blue-btn-col);
+      &:first-of-type {
+        margin-left: 20px;
+      }
+    }
+    .MuiCheckbox-colorPrimary.Mui-checked {
+      color: var(--mid-control-param-blue-btn-col);
     }
   }
 
