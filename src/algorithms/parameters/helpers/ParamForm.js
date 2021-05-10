@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext } from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ControlButton from '../../../components/common/ControlButton';
 import { closeInstructions } from '../../../components/mid-panel/helper';
 import { GlobalContext } from '../../../context/GlobalState';
@@ -51,29 +49,6 @@ function ParamForm(props) {
           </ControlButton>
         </div>
       </div>
-      {algorithm.name === 'Quicksort' && (
-      <FormControlLabel
-        control={(
-          <Checkbox
-            name="checkedB"
-            color="primary"
-          />
-        )}
-        label="Rightmost"
-      />
-      )}
-      {algorithm.name === 'Quicksort' && (
-      <FormControlLabel
-        control={(
-          <Checkbox
-            name="checkedB"
-            color="primary"
-          />
-        )}
-        label="Median of Three"
-      />
-      )}
-      {/* TODO change to median of 3 */}
     </form>
   );
 }
