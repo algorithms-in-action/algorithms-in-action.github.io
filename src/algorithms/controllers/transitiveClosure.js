@@ -51,11 +51,13 @@ export default {
               chunker.add(3, (g, i, j) => {
                 g.graph.addEdge(i, j);
                 g.graph.visit(j, i);
+                g.array.select(i, j);
               }, [i, j]);
 
               
               chunker.add(4, (g, i, j, k) => {
                 g.graph.leave(j, i);
+                g.array.deselect(i, j);
                 g.graph.leave(j, k);
               }, [i, j, k]);
             }
