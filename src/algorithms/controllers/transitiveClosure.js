@@ -37,7 +37,6 @@ export default {
           chunker.add(2, (g, i) => {
             g.graph.visit(i);
             g.graph.visit(k, i);
-            g.array.visit(k,i)
           }, [i, k]);
               
           for (let j = 0; j < numOfNodes; j++) {
