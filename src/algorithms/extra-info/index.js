@@ -3,4 +3,5 @@ export { default as BSTInfo } from './BSTInfo.md';
 export { default as QSInfo } from './QSInfo.md';
 export { default as PrimsInfo } from './PrimsInfo.md';
 export { default as TCInfo } from './TCInfo.md';
-export { default as BFSTInfo } from './BFSTInfo.md';
+export { default as BFSSInfo } from './BFSSInfo.md';
+
