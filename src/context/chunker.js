@@ -55,8 +55,8 @@ export default class {
       this.visualisers = this.init();
       this.doChunk(0);
       this.currentChunk = 0;
-    } else if (this.currentChunk > 0 && this.currentChunk <= this.chunks.length - 1) {
-      this.doChunk(this.currentChunk);
+    } else if (this.currentChunk > 0 && this.currentChunk <= this.chunks.length - 2) {
+      this.doChunk(this.currentChunk + 1);
       this.currentChunk += 1;
     } else if (this.currentChunk === 0) {
       this.currentChunk += 1;
@@ -77,7 +77,7 @@ export default class {
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i < this.currentChunk - (this.currentChunk === 1 ? 0 : 1); i += 1) {
-        this.doChunk(i);
+        this.doChunk(0);
       }
       this.currentChunk -= 1;
     }
