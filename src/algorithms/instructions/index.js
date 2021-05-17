@@ -3,17 +3,9 @@ const KEY_INSERT = 'INSERT';
 const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
-<<<<<<< Updated upstream
-const KEY_LOAD = 'BUILD GRAPH';
-=======
-<<<<<<< Updated upstream
-const KEY_LOAD = 'LOAD';
-=======
 const KEY_LOAD = 'BUILD GRAPH';
 const KEY_FIND = 'FIND STRING';
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,

@@ -49,21 +49,38 @@ export default {
       vis.graph.shift(i, n);
     }, [shift_i, nodes]);
       for(var shift_j=0; shift_j<findString.length; shift_j++){
-        chunker.add('2', (vis, i, j, n) => {
+        chunker.add('3', (vis, i, j, n) => {
           vis.graph.addEdge(searchString.length + j, i + j);
           vis.graph.select(searchString.length + j, i + j)
           vis.graph.select(i+j, null); 
           vis.graph.shift(i, n);
         }, [shift_i, shift_j,nodes]);
-      }
-      chunker.add('2', (vis, i, n) => {
-        for(var j=0; j<findString.length; j++){
-          vis.graph.removeEdge(searchString.length + j, i + j);
-          vis.graph.deselect(searchString.length + j, i + j)
-          vis.graph.deselect(i+j, null); 
-          vis.graph.shift(i, n);
+        if(searchString[shift_i+shift_j] != findString[shift_j]){
+          chunker.add('3', (vis, i,j, n) => {
+            for(var j=0; j<=shift_j; j++){              
+              vis.graph.resetSelect(searchString.length + j, i + j);
+              vis.graph.resetSelect(i+j, null);
+              vis.graph.removeEdge(searchString.length + j, i + j);
+              vis.graph.shift(i, n);
+            }
+          }, [shift_i, shift_j, nodes]);
+          break;
         }
-      }, [shift_i, nodes]);
+        else if (shift_j == findString.length-1){
+          //success, turn all nodes blue
+          chunker.add('5', (vis, i, j, n) => {
+          }, [shift_i, shift_j,nodes]);
+          
+          return;
+        }
+        else{
+          //change color of selected node to green
+          chunker.add('4', (vis, i, j, n) => {
+          }, [shift_i, shift_j,nodes]);
+          
+        }
+      }
+      
       
     }
     return 0;

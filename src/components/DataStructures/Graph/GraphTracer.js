@@ -12,6 +12,7 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 
+import { node } from 'prop-types';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -175,10 +176,10 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape='circle', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape='circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape,weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, shape , color, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -220,6 +221,10 @@ class GraphTracer extends Tracer {
     const index = this.edges.indexOf(edge);
     this.edges.splice(index, 1);
     this.layout();
+  }
+
+  findValue(id){
+    return this.findNode(id).value;
   }
 
   findNode(id) {
@@ -501,6 +506,12 @@ class GraphTracer extends Tracer {
 
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
+  }
+  resetSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
+    const node = this.findNode(target);
+    node.selectedCount = 0;
   }
 
   selectOrDeselect(select, target, source = null) {

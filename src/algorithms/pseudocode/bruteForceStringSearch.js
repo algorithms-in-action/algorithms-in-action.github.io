@@ -12,14 +12,14 @@ export default parse(`
     \\Expl{  The pattern is P[0]..P[m-1] and the text is T[0]..T[n-1]. 
     \\Expl}
     \\In{
-        i <- 0 \\B 2
-        while i+m <= n
+        i <- 0 
+        while i+m <= n 
         \\Expl{  If i plus the length of the pattern exceeds 
                 the length of the text, no match is possible.
         \\Expl}
         \\In{
                 Look for a match starting from T[i]   \\Ref LookForMatch
-                i <- i+1
+                i <- i+1 \\B 2
                 \\Expl{  We got here if there was no match starting at T[i],
                         so we try starting from the next position, i+1, in T.
                 \\Expl}
@@ -32,21 +32,21 @@ export default parse(`
     \\Code{
     LookForMatch
     // Look for a match starting from T[i]
-    j <- 0
-    while j < m and P[j] = T[i+j]
+    j <- 0 
+    while j < m and P[j] = T[i+j] \\B 3
     \\Expl{  We keep progressing the search as long as we have not 
             exhausted the pattern (that is, j<m) and the pattern 
             checked so far matches the string starting from T[i].
     \\Expl}
     \\In{
-            j <- j+1
+            j <- j+1 \\B 4
     \\In}
-    if j = m
+    if j = m 
     \\Expl{  If we have reached the end of the pattern, that means
             we have matched T[i]..T[i+m-1].
     \\Expl}
     \\In{
-            return i
+            return i \\B 5
     \\In}
     \\Code}
     \\Note{  The following is an implementation in C:
