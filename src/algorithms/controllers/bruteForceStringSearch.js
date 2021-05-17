@@ -56,7 +56,7 @@ export default {
           vis.graph.shift(i, n);
         }, [shift_i, shift_j,nodes]);
         if(searchString[shift_i+shift_j] != findString[shift_j]){
-          chunker.add('3', (vis, i,j, n) => {
+          chunker.add('3', (vis, i,shift_j, n) => {
             for(var j=0; j<=shift_j; j++){              
               vis.graph.resetSelect(searchString.length + j, i + j);
               vis.graph.resetSelect(i+j, null);
