@@ -5,6 +5,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 export default {
   initVisualisers() {
@@ -13,6 +14,10 @@ export default {
         instance: new GraphTracer('key', null, 'Transitive Closure'),
         order: 0
       }, 
+      array: {
+        instance: new Array2DTracer('array', null, 'Matrix'),
+        order: 1,
+      },
     };
   },
 
@@ -23,7 +28,8 @@ export default {
     chunker.add(1, (g) => {
       g.graph.set(nodes);
       g.graph.layoutCircle();
-    }, [this.graph]);
+      g.array.set(nodes);
+    }, [this.graph], [this.array]);
 
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
@@ -45,11 +51,13 @@ export default {
               chunker.add(3, (g, i, j) => {
                 g.graph.addEdge(i, j);
                 g.graph.visit(j, i);
+                g.array.select(i, j);
               }, [i, j]);
 
               
               chunker.add(4, (g, i, j, k) => {
                 g.graph.leave(j, i);
+                g.array.deselect(i, j);
                 g.graph.leave(j, k);
               }, [i, j, k]);
             }
