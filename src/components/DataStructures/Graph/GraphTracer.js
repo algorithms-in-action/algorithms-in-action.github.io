@@ -11,6 +11,8 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
+
+import { node } from 'prop-types';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -174,10 +176,10 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape='circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, shape , color, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -219,6 +221,10 @@ class GraphTracer extends Tracer {
     const index = this.edges.indexOf(edge);
     this.edges.splice(index, 1);
     this.layout();
+  }
+
+  findValue(id){
+    return this.findNode(id).value;
   }
 
   findNode(id) {
@@ -281,6 +287,65 @@ class GraphTracer extends Tracer {
       node.y = y;
       angle += unitAngle;
     }
+  }
+
+
+  shift(space = 0, nodes){
+    const searchString = nodes[0];
+    const findString = nodes[1];
+    console.log(space);
+    var string_count = 0;
+    var x_spacing = 25;
+    var y_spacing = 30
+    var startFindString = -1;
+    for (var i=0; i<searchString.length; i++){
+      const thisNode = this.findNode(string_count);
+      thisNode.shape = 'box';
+      thisNode.x = (i - searchString.length/2 ) * x_spacing;
+      if (i == 0){
+        startFindString = thisNode.x;
+      }
+      thisNode.y = y_spacing/2; 
+      string_count +=1;
+    }
+    for (var i=0; i<findString.length; i++){
+      const thisNode = this.findNode(string_count);
+      thisNode.shape = 'box';
+      thisNode.x = startFindString + (i+space)  *(x_spacing );
+      thisNode.y = -1 * (y_spacing/2);
+      string_count +=1;
+    }
+  }
+
+  layoutBFSS(shift = 0, nodes){
+    this.callLayout = { method: this.layoutBFSS, args: arguments };
+    const searchString = nodes[0];
+    const findString = nodes[1];
+    var string_count = 0;
+    var x_spacing = 25;
+    var y_spacing = 30
+    var startFindString = -1;
+    for (var i=0; i<searchString.length; i++){
+      const thisNode = this.findNode(string_count);
+      thisNode.shape = 'square';
+      thisNode.x = (i - searchString.length/2 ) * x_spacing;
+      if (i == 0){
+        startFindString = thisNode.x;
+      }
+      thisNode.y = y_spacing/2; 
+      string_count +=1;
+    }
+    for (var i=0; i<findString.length; i++){
+      const thisNode = this.findNode(string_count);
+      thisNode.shape = 'square';
+      thisNode.x = startFindString + (i  *x_spacing + (shift*25));
+      thisNode.y = -1 * (y_spacing/2);
+      string_count +=1;
+    }
+
+    
+
+
   }
 
   layoutTree(root = 0, sorted = false) {
@@ -441,6 +506,12 @@ class GraphTracer extends Tracer {
 
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
+  }
+  resetSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
+    const node = this.findNode(target);
+    node.selectedCount = 0;
   }
 
   selectOrDeselect(select, target, source = null) {

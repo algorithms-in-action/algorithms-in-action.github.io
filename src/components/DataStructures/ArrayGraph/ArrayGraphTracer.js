@@ -172,7 +172,7 @@ class ArrayGraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape ='circle', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
@@ -280,6 +280,8 @@ class ArrayGraphTracer extends Tracer {
       angle += unitAngle;
     }
   }
+
+
 
   layoutTree(root = 0, sorted = false) {
     this.root = root;

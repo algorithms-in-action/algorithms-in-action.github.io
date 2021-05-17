@@ -1,9 +1,11 @@
 /* eslint-disable class-methods-use-this */
 
+/*draw two arrays in the same box */
+
 import Array2DTracer from './Array2DTracer';
 import Array1DRenderer from './Array1DRenderer/index';
 
-class Array1DTracer extends Array2DTracer {
+class TwoArray1DTracer extends Array2DTracer {
   getRendererClass() {
     return Array1DRenderer;
   }
@@ -13,9 +15,11 @@ class Array1DTracer extends Array2DTracer {
     this.chartTracer = null;
   }
 
-  set(array1d = [], algo) {
-    const array2d = [array1d];
-    super.set(array2d, algo);
+  set(array1d1 = [], array1d2 = [], algo) {
+    const array1d1 = [array1d1];
+    const array1d2 = [array1d2];
+    super.set(array1d1, algo);
+    super.set(array1d2, algo);
     this.syncChartTracer();
   }
 
@@ -54,7 +58,6 @@ class Array1DTracer extends Array2DTracer {
     this.data[0][x].value = this.data[0][y].value;
     this.data[0][y].value = temp;
   }
-  
 }
 
-export default Array1DTracer;
+export default TwoArray1DTracer;
