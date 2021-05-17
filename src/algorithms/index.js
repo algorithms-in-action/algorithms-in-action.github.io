@@ -89,6 +89,22 @@ const algorithms = {
     controller: {
       tc: Controller.transitiveClosure,
     },
+    
+  },
+  //gotta do the next parameters
+  'bruteForceStringSearch': {
+    name: 'Brute Force String Search',
+    category: 'String Search',
+    explanation: Explanation.BFST,
+    param: <Param.BFSTParam />,
+    instructions: Instructions.BFSSInstruction,
+    extraInfo: ExtraInfo.BFSTInfo,
+    pseudocode: {
+      search: Pseudocode.bruteForceStringSearch,
+    },
+    controller: {
+      search: Controller.bruteForceStringSearch,
+    },
   },
 };
 

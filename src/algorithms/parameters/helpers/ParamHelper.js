@@ -9,6 +9,11 @@ export const commaSeparatedNumberListValidCheck = (t) => {
   return t.match(regex);
 };
 
+export const stringListValidCheck = (t) => {
+  const regex = /^[a-zA-Z]+(,[a-zA-Z]+)*$/g;
+  return t.match(regex);
+};
+
 export const singleNumberValidCheck = (t) => {
   const regex = /^\d+$/g;
   return t.match(regex);

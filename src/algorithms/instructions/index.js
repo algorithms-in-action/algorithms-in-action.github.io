@@ -3,7 +3,17 @@ const KEY_INSERT = 'INSERT';
 const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
+<<<<<<< Updated upstream
 const KEY_LOAD = 'BUILD GRAPH';
+=======
+<<<<<<< Updated upstream
+const KEY_LOAD = 'LOAD';
+=======
+const KEY_LOAD = 'BUILD GRAPH';
+const KEY_FIND = 'FIND STRING';
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
@@ -30,6 +40,18 @@ const bstInstructions = [
   },
 ];
 
+
+const stringInstructions = [{
+  title: 'Searching Strings',
+  content: [
+    `Click on ${KEY_CODE} on the right panel`,
+    'Enter a string to search in the "search this string" parameter.',
+    'Enter a string to search for in the "find this string" parameter',
+    `Click on ${KEY_FIND} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+  ],
+}];
+
 const sortInstructions = [{
   title: 'Sorting Numbers',
   content: [
@@ -55,3 +77,4 @@ export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
+export const BFSSInstruction = stringInstructions;
