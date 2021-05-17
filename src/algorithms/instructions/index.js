@@ -30,6 +30,16 @@ const bstInstructions = [
   },
 ];
 
+const stringSearchInstructions = [{
+  title: 'String Search',
+  content: [
+    `Click on ${KEY_CODE} on the right panel`,
+    'Enter a string and a pattern in the search parameter.',
+    `Click on ${KEY_SEARCH} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+  ],
+}];
+
 const sortInstructions = [{
   title: 'Sorting Numbers',
   content: [
@@ -55,3 +65,4 @@ export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
+export const BFSSInstruction = stringSearchInstructions;
