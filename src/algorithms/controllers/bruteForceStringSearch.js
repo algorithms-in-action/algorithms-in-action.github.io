@@ -9,7 +9,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('bst', null, 'Binary tree'),
+        instance: new GraphTracer('bst', null, 'Brute force string search'),
         order: 0,
       },
     };
@@ -69,8 +69,7 @@ export default {
         else if (shift_j == findString.length-1){
           //success, turn all nodes blue
           chunker.add('5', (vis, i, j, n) => {
-          }, [shift_i, shift_j,nodes]);
-          
+          }, [shift_i, shift_j,nodes]);          
           return;
         }
         else{

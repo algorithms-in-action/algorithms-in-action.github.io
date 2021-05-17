@@ -1,3 +1,3 @@
 # Extra Info
 
-<!-- Add any extra info into the info tab on the right panel here -->
+<a href="https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/" target="_blank">Geeks for Geeks/ Brute Force String Search</a>

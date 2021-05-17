@@ -37,8 +37,7 @@ const stringInstructions = [{
   title: 'Searching Strings',
   content: [
     `Click on ${KEY_CODE} on the right panel`,
-    'Enter a string to search in the "search this string" parameter.',
-    'Enter a string to search for in the "find this string" parameter',
+    'Enter a string to search followed by a string to search for, seperated by a comma',
     `Click on ${KEY_FIND} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
@@ -62,6 +61,7 @@ const graphInstructions = [{
     `Click on ${KEY_LOAD} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
+  
 }];
 
 export const BSTInstruction = bstInstructions;
