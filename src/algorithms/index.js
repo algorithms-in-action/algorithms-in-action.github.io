@@ -34,24 +34,6 @@ const algorithms = {
       search: Controller.binaryTreeSearch,
     },
   },
-  'bruteForceStringSearch': {
-    name: 'Brute Force String Search',
-    category: 'Searching',
-    param: <Param.BFSSParam />,
-    instructions: Instructions.BFSSInstruction,
-    // need the explanation file
-    explanation: Explanation.BFSSExp,
-    // need the extra info file
-    extraInfo: ExtraInfo.BFSSInfo,
-    // need to add the pseudocode file
-    pseudocode: {
-      search: Pseudocode.bruteForceStringSearch,
-    },
-    // need to set up the controller file and tests for that as well
-    controller: {
-      search: Controller.bruteForceStringSearch,
-    },
-  },
   'quickSort': {
     name: 'Quicksort',
     category: 'Sorting',
@@ -113,10 +95,10 @@ const algorithms = {
   'bruteForceStringSearch': {
     name: 'Brute Force String Search',
     category: 'String Search',
-    explanation: Explanation.BFST,
-    param: <Param.BFSTParam />,
+    explanation: Explanation.BFSSExp,
+    param: <Param.BFSSParam />,
     instructions: Instructions.BFSSInstruction,
-    extraInfo: ExtraInfo.BFSTInfo,
+    extraInfo: ExtraInfo.BFSSInfo,
     pseudocode: {
       search: Pseudocode.bruteForceStringSearch,
     },

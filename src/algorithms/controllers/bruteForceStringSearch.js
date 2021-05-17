@@ -28,7 +28,7 @@ export default {
     var string_count = 0;
     chunker.add('1', (vis, n) => {
       vis.graph.addNode(string_count,searchString[0],'box' );
-      string_count ++;
+      string_count++;
       for (var i=1; i<searchString.length; i++){
         vis.graph.addNode(string_count, searchString[i], 'box');
         vis.graph.addEdge(string_count, string_count-1);
