@@ -137,7 +137,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new ArrayGraphTracer('graph', null, 'Graph'),
+        instance: new ArrayGraphTracer('graph', null, 'Array'),
         order: 0,
       },
     };
