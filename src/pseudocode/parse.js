@@ -104,7 +104,7 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
     indentedLine = '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) + line['code'];
     outputBlocks[blockName].push({ ...line, code: indentedLine });
     if (line['ref']) {
-      addIndentation(originalBlocks, line['ref'], baseIndent + 1, outputBlocks);
+      addIndentation(originalBlocks, line['ref'], baseIndent + line['indentation'], outputBlocks);
     }
   });
 }

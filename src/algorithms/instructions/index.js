@@ -4,6 +4,8 @@ const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
 const KEY_LOAD = 'BUILD GRAPH';
+const KEY_FIND = 'FIND STRING';
+
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
@@ -30,6 +32,17 @@ const bstInstructions = [
   },
 ];
 
+
+const stringInstructions = [{
+  title: 'Searching Strings',
+  content: [
+    `Click on ${KEY_CODE} on the right panel`,
+    'Enter a string to search followed by a string to search for, seperated by a comma',
+    `Click on ${KEY_FIND} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+  ],
+}];
+
 const sortInstructions = [{
   title: 'Sorting Numbers',
   content: [
@@ -48,6 +61,7 @@ const graphInstructions = [{
     `Click on ${KEY_LOAD} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
+  
 }];
 
 export const BSTInstruction = bstInstructions;
@@ -55,3 +69,5 @@ export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
+export const BFSSInstruction = stringInstructions;
+
