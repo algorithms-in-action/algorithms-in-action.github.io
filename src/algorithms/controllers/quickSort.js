@@ -1,5 +1,6 @@
 import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
 import { QSExp } from '../explanations';
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
 //   pseudocode: parse(`
@@ -140,6 +141,10 @@ export default {
         instance: new ArrayGraphTracer('graph', null, 'Array'),
         order: 0,
       },
+      array: {
+        instance: new ArrayTracer('array', null, 'Sorted Array'),
+        order: 1,
+      },
     };
   },
 
@@ -201,6 +206,12 @@ export default {
           if (_rightArray.length !== 0) {
             vis.graph.addNode(`${_right}/${_p + 1}`, _rightArray);
             vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
+
+            // Sorted array displayed at the end of algorithm
+            // chunker.add(1, (vis, array) => {
+            vis.array.set(array);
+            // tell the array renderer that it is sorted array
+            // }, [nodes]);
           }
         }, [a, left, p, right, parentId, leftArray, rightArray]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
