@@ -13,7 +13,7 @@ export const KEY_WORDS = [
 
 const bstInstructions = [
   {
-    title: 'Insert Mode',
+    title: 'Insert Mode', // Specify BST Insertion as Insert mode
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a list of nodes in the insert parameter.',
@@ -22,7 +22,7 @@ const bstInstructions = [
     ],
   },
   {
-    title: 'Search Mode',
+    title: 'Search Mode', // Specify BST Searching as Search mode
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a node in the search parameter.',

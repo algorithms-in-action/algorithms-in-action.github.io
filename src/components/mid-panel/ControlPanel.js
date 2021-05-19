@@ -106,6 +106,7 @@ function ControlPanel() {
         {/* Speed Slider */}
         <div className="speed">
           <div className="innerSpeed">
+            {/* Label the speed slider as SPEED */}
             SPEED
           </div>
         </div>

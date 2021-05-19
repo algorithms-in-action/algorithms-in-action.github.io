@@ -6,11 +6,11 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new ArrayTracer('array', null, 'Array view'),
+        instance: new ArrayTracer('array', null, 'Array view'), // Label the input array as array view
         order: 0,
       },
       heap: {
-        instance: new GraphTracer('heap', null, 'Tree view'),
+        instance: new GraphTracer('heap', null, 'Tree view'), // Label the animation of the heap as tree view
         order: 1,
       },
     };
