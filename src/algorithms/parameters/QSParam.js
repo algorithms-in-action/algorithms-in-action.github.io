@@ -42,6 +42,8 @@ function QuicksortParam() {
           setMessage={setMessage}
         />
       </div>
+      Choose pivot using : &nbsp;&nbsp;
+      {/* create a checkbox for Rightmost */}
       <FormControlLabel
         control={(
           <BlueCheckbox
@@ -52,6 +54,7 @@ function QuicksortParam() {
         )}
         label="Rightmost"
       />
+      {/* create a checkbox for Median of Three */}
       <FormControlLabel
         control={(
           <BlueCheckbox
