@@ -14,6 +14,11 @@ export const stringListValidCheck = (t) => {
   return t.match(regex);
 };
 
+export const stringValidCheck = (t) => {
+  const regex = /^[a-zA-Z]+$/g;
+  return t.match(regex);
+};
+
 export const singleNumberValidCheck = (t) => {
   const regex = /^\d+$/g;
   return t.match(regex);
