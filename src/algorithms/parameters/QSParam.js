@@ -12,6 +12,10 @@ import '../../styles/Param.scss';
 const DEFAULT_ARR = genRandNumList(8, 1, 99);
 const QUICK_SORT = 'Quick Sort';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const UNCHECKED = {
+  rightmost: false,
+  medianofthree: false,
+};
 
 const BlueCheckbox = withStyles({
   root: {
@@ -27,6 +31,26 @@ const BlueCheckbox = withStyles({
 function QuicksortParam() {
   const [message, setMessage] = useState(null);
   const [array, setArray] = useState(DEFAULT_ARR);
+  const [QSCase, setQSCase] = useState({
+    rightmost: true,
+    medianofthree: false,
+  });
+
+  // function for choosing the type of pivot (median of three)
+  const handleChange = (e) => {
+    switch (e.target.name) {
+      case 'rightmost':
+        //setNodes(shuffleArray(nodes));
+        break;
+      case 'medianofthree':
+        //setNodes([...nodes].sort((a, b) => a - b));
+        break;
+      default:
+    }
+
+    setQSCase({ ...UNCHECKED, [e.target.name]: true });
+  };
+
   return (
     <>
       <div className="form">
@@ -45,24 +69,15 @@ function QuicksortParam() {
       Choose pivot using : &nbsp;&nbsp;
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
-        control={(
-          <BlueCheckbox
-            name="rightmost"
-            className="checkbox"
-            checked
-          />
-        )}
+        control={<BlueCheckbox checked={QSCase.rightmost} onChange={handleChange} name="rightmost" />}
         label="Rightmost"
+        className="checkbox"
       />
       {/* create a checkbox for Median of Three */}
       <FormControlLabel
-        control={(
-          <BlueCheckbox
-            name="medianofthree"
-            className="checkbox"
-          />
-        )}
+        control={<BlueCheckbox checked={QSCase.medianofthree} onChange={handleChange} name="medianofthree" />}
         label="Median of Three"
+        className="checkbox"
       />
       {/* render success/error message */}
       {message}

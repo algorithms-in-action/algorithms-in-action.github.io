@@ -5,4 +5,5 @@ export { default as quickSort } from './quickSort';
 export { default as prim } from './prim';
 export { default as transitiveClosure } from './transitiveClosure';
 export {default as bruteForceStringSearch} from './bruteForceStringSearch';
+export {default as quickSortM3} from './quickSortM3';
 
