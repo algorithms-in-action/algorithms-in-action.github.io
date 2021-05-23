@@ -61,7 +61,6 @@ const graphInstructions = [{
     `Click on ${KEY_LOAD} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
-  
 }];
 
 export const BSTInstruction = bstInstructions;
@@ -70,4 +69,3 @@ export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
-
