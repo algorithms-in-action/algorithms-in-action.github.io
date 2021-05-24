@@ -43,9 +43,25 @@ const algorithms = {
     extraInfo: ExtraInfo.QSInfo,
     pseudocode: {
       sort: Pseudocode.quickSort,
+      //medianSort: Pseudocode.quickSortM3,
     },
     controller: {
       sort: Controller.quickSort,
+      //medianSort: Controller.quickSortM3,
+    },
+  },
+  'quickSortM3': {
+    name: 'Quicksort (Median of 3)',
+    category: 'Sorting',
+    explanation: Explanation.QSM3Exp,
+    param: <Param.QSM3Param />,
+    instructions: Instructions.QSInstruction,
+    extraInfo: ExtraInfo.QSM3Info,
+    pseudocode: {
+      sort: Pseudocode.quickSortM3,
+    },
+    controller: {
+      sort: Controller.quickSortM3,
     },
   },
   'heapSort': {

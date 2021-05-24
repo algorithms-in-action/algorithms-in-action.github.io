@@ -91,7 +91,7 @@ function BSTParam() {
         });
         setMessage(successParamMsg(SEARCH));
       } else {
-        // when the tree is empty
+        // when the tree is &nbsp;&nbsp;empty
         setMessage(errorParamMsg(SEARCH, undefined, 'Please fully build the tree before running a search.'));
       }
     } else {
@@ -129,6 +129,7 @@ function BSTParam() {
           setMessage={setMessage}
         />
       </div>
+      Choose type of tree: &nbsp;&nbsp;
       <FormControlLabel
         control={<BlueCheckbox checked={bstCase.random} onChange={handleChange} name="random" />}
         label="Random"

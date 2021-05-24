@@ -13,7 +13,7 @@ export const KEY_WORDS = [
 
 const bstInstructions = [
   {
-    title: 'Insert Mode',
+    title: 'Insert Mode', // Specify BST Insertion as Insert mode
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a list of nodes in the insert parameter.',
@@ -22,7 +22,7 @@ const bstInstructions = [
     ],
   },
   {
-    title: 'Search Mode',
+    title: 'Search Mode', // Specify BST Searching as Search mode
     content: [
       `Click on ${KEY_CODE} on the right panel`,
       'Enter a node in the search parameter.',
@@ -61,7 +61,6 @@ const graphInstructions = [{
     `Click on ${KEY_LOAD} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
-  
 }];
 
 export const BSTInstruction = bstInstructions;
@@ -70,4 +69,3 @@ export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
-
