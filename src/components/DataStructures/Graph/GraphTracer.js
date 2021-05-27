@@ -176,10 +176,10 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape='circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape , color, weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -223,7 +223,7 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  findValue(id){
+  findValue(id) {
     return this.findNode(id).value;
   }
 
@@ -290,62 +290,58 @@ class GraphTracer extends Tracer {
   }
 
 
-  shift(space = 0, nodes){
+  shift(space = 0, nodes) {
     const searchString = nodes[0];
     const findString = nodes[1];
     console.log(space);
-    var string_count = 0;
-    var x_spacing = 25;
-    var y_spacing = 30
-    var startFindString = -1;
-    for (var i=0; i<searchString.length; i++){
+    let string_count = 0;
+    let x_spacing = 25;
+    let y_spacing = 30
+    let startFindString = -1;
+    for (let i = 0; i < searchString.length; i++) {
       const thisNode = this.findNode(string_count);
       thisNode.shape = 'box';
-      thisNode.x = (i - searchString.length/2 ) * x_spacing;
-      if (i == 0){
+      thisNode.x = (i - searchString.length / 2) * x_spacing;
+      if (i === 0) {
         startFindString = thisNode.x;
       }
-      thisNode.y = y_spacing/2; 
-      string_count +=1;
+      thisNode.y = y_spacing / 2;
+      string_count++;
     }
-    for (var i=0; i<findString.length; i++){
+    for (let i = 0; i < findString.length; i++) {
       const thisNode = this.findNode(string_count);
       thisNode.shape = 'box';
-      thisNode.x = startFindString + (i+space)  *(x_spacing );
-      thisNode.y = -1 * (y_spacing/2);
-      string_count +=1;
+      thisNode.x = startFindString + (i + space) * (x_spacing);
+      thisNode.y = -1 * (y_spacing / 2);
+      string_count++;
     }
   }
 
-  layoutBFSS(shift = 0, nodes){
+  layoutBFSS(shift = 0, nodes) {
     this.callLayout = { method: this.layoutBFSS, args: arguments };
     const searchString = nodes[0];
     const findString = nodes[1];
-    var string_count = 0;
-    var x_spacing = 25;
-    var y_spacing = 30
-    var startFindString = -1;
-    for (var i=0; i<searchString.length; i++){
+    let string_count = 0;
+    let x_spacing = 25;
+    let y_spacing = 30;
+    let startFindString = -1;
+    for (let i = 0; i < searchString.length; i++) {
       const thisNode = this.findNode(string_count);
       thisNode.shape = 'square';
-      thisNode.x = (i - searchString.length/2 ) * x_spacing;
-      if (i == 0){
+      thisNode.x = (i - searchString.length / 2) * x_spacing;
+      if (i === 0) {
         startFindString = thisNode.x;
       }
-      thisNode.y = y_spacing/2; 
-      string_count +=1;
+      thisNode.y = y_spacing / 2;
+      string_count++;
     }
-    for (var i=0; i<findString.length; i++){
+    for (let i = 0; i < findString.length; i++) {
       const thisNode = this.findNode(string_count);
       thisNode.shape = 'square';
-      thisNode.x = startFindString + (i  *x_spacing + (shift*25));
-      thisNode.y = -1 * (y_spacing/2);
-      string_count +=1;
+      thisNode.x = startFindString + (i * x_spacing + (shift * 25));
+      thisNode.y = -1 * (y_spacing / 2);
+      string_count++;
     }
-
-    
-
-
   }
 
   layoutTree(root = 0, sorted = false) {
@@ -507,6 +503,7 @@ class GraphTracer extends Tracer {
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
   }
+
   resetSelect(target, source) {
     const edge = this.findEdge(source, target);
     if (edge) edge.selectedCount = 0;

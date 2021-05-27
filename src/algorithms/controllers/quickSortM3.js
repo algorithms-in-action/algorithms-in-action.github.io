@@ -1,15 +1,16 @@
 import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
-import { QSExp } from '../explanations';
+import { QSM3Exp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
-  explanation: QSExp,
+
+  explanation: QSM3Exp,
 
   initVisualisers() {
     return {
       graph: {
-        instance: new ArrayGraphTracer('graph', null, 'Array'),
+        instance: new ArrayGraphTracer('graph', null, 'Graph'),
         order: 0,
       },
       // create a separate component called 'Sorted Array' to display sorted array separately
@@ -26,6 +27,41 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
+
+    // Method for implementing Median of Three
+    // function SortLMR(arr, left, right) {
+    //     let a = arr;
+
+    //   //Sort the first, middle and last element in ascending order
+    //   let tmp2;
+    //   chunker.add(14);
+    //   let mid = (left+right)/2;
+    //   if(a[left] > a[mid]) {
+    //       tmp2 = a[mid];
+    //       a[mid] = a[left];
+    //       a[left] = tmp2;
+    //   }
+    //   if(a[mid] > a[right]) {
+    //       tmp2 = a[right];
+    //       a[right] = a[mid];
+    //       a[mid] = tmp2;
+
+    //       if(a[left] > a[mid]) {
+    //         tmp2 = a[mid];
+    //         a[mid] = a[left];
+    //         a[left] = tmp2;
+    //       }
+    //   }
+
+    //   //Swap the middle element with second last (right - 1) element
+    //   let tmp3;
+    //   tmp3 = a[right-1];
+    //   a[right-1] = a[mid];
+    //   a[mid] = tmp3;
+
+    //   return a;
+    // }
+
     function partition(values, left, right) {
       const a = values;
       let i = left - 1;
@@ -60,6 +96,7 @@ export default {
     }
 
     function QuickSort(array, left, right, parentId) {
+      //let a = SortLMR(array, left, right);
       let a = array;
       let p;
       chunker.add(2);
@@ -82,8 +119,6 @@ export default {
             // Sorted array displayed at the end of algorithm
             // chunker.add(1, (vis, array) => {
             vis.array.set(array);
-            // tell the array renderer that it is sorted array
-            // }, [nodes]);
           }
         }, [a, left, p, right, parentId, leftArray, rightArray]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);

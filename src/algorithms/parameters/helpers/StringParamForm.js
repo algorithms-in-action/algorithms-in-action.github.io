@@ -10,8 +10,8 @@ import '../../../styles/Param.scss';
  */
 function StringParamForm(props) {
   const {
-    formClassName, name, buttonName, value1, value2,
-    onChange, handleSubmit, children, disabled,
+    formClassName, buttonName, string, stringOnChange,
+    pattern, patternOnChange, handleSubmit, disabled,
   } = props;
   // eslint-disable-next-line
   const { algorithm } = useContext(GlobalContext);
@@ -29,24 +29,34 @@ function StringParamForm(props) {
     <form className={formClassName} onSubmit={handleSubmit}>
       <div className="outerInput">
         <label className="inputText">
-          <input
-            name={name}
-            type="text"
-            value={value1}
-            onChange={onChange}
-          />
+          <div className="stringContainer">
+            String
+          </div>
+          <div className="inputContainer">
+            <input
+              // name={name}
+              type="text"
+              value={string}
+              onChange={stringOnChange}
+            />
+          </div>
         </label>
         <label className="inputText">
-          <input
-            name={name}
-            type="text"
-            value={value2}
-            onChange={onChange}
-          />
+          <div className="stringContainer">
+            Pattern
+          </div>
+          <div className="inputContainer">
+            <input
+              // name={name}
+              type="text"
+              value={pattern}
+              onChange={patternOnChange}
+            />
+          </div>
         </label>
         <div className="btnGrp">
           {/** this children is left to add icons */}
-          {children}
+          {/* {children} */}
           <ControlButton
             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
             onClick={closeInstructionsFun}
@@ -57,10 +67,6 @@ function StringParamForm(props) {
           </ControlButton>
         </div>
       </div>
-      {algorithm.name === 'Quicksort' && <button type="button" className="rightmost-btn">rightmost</button>}
-      {algorithm.name === 'Quicksort' && <button type="button" className="medianthree-btn">median of three</button>}
-      {' '}
-      {/* TODO change to median of 3 */}
     </form>
   );
 }

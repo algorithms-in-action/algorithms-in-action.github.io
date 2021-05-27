@@ -10,7 +10,7 @@ import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_ARR = genRandNumList(8, 1, 99);
-const QUICK_SORT = 'Quick Sort';
+const QUICK_SORT = 'Quick Sort Median of Three';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
   rightmost: false,
@@ -28,15 +28,15 @@ const BlueCheckbox = withStyles({
 // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Checkbox {...props} />);
 
-function QuicksortParam() {
+function QuicksortM3Param() {
   const [message, setMessage] = useState(null);
   const [array, setArray] = useState(DEFAULT_ARR);
-  const [QSCase, setQSCase] = useState({
-    rightmost: true,
-    medianofthree: false,
+  const [QSM3Case, setQSM3Case] = useState({
+    rightmost: false,
+    medianofthree: true,
   });
 
-  // function for choosing the type of pivot (median of three)
+  // function for choosing the type of pivot (rightmost)
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'rightmost':
@@ -48,14 +48,14 @@ function QuicksortParam() {
       default:
     }
 
-    setQSCase({ ...UNCHECKED, [e.target.name]: true });
+    setQSM3Case({ ...UNCHECKED, [e.target.name]: true });
   };
-
+  
   return (
     <>
-      <div className="form">
+    <div className="form">
         <ListParam
-          name="quickSort"
+          name="quickSortM3"
           buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
@@ -69,13 +69,13 @@ function QuicksortParam() {
       Choose pivot using : &nbsp;&nbsp;
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
-        control={<BlueCheckbox checked={QSCase.rightmost} onChange={handleChange} name="rightmost" />}
+        control={<BlueCheckbox checked={QSM3Case.rightmost} onChange={handleChange} name="rightmost" />}
         label="Rightmost"
         className="checkbox"
       />
       {/* create a checkbox for Median of Three */}
       <FormControlLabel
-        control={<BlueCheckbox checked={QSCase.medianofthree} onChange={handleChange} name="medianofthree" />}
+        control={<BlueCheckbox checked={QSM3Case.medianofthree} onChange={handleChange} name="medianofthree" />}
         label="Median of Three"
         className="checkbox"
       />
@@ -85,4 +85,4 @@ function QuicksortParam() {
   );
 }
 
-export default QuicksortParam;
+export default QuicksortM3Param;
