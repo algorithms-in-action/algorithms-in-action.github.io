@@ -293,13 +293,12 @@ class GraphTracer extends Tracer {
   shift(space = 0, nodes){
     const searchString = nodes[0];
     const findString = nodes[1];
-    console.log(space);
     var string_count = 0;
     var x_spacing = 25;
     var y_spacing = 30
     var startFindString = -1;
     for (var i=0; i<searchString.length; i++){
-      const thisNode = this.findNode(string_count);
+      var thisNode = this.findNode(string_count);
       thisNode.shape = 'box';
       thisNode.x = (i - searchString.length/2 ) * x_spacing;
       if (i == 0){
@@ -342,10 +341,6 @@ class GraphTracer extends Tracer {
       thisNode.y = -1 * (y_spacing/2);
       string_count +=1;
     }
-
-    
-
-
   }
 
   layoutTree(root = 0, sorted = false) {

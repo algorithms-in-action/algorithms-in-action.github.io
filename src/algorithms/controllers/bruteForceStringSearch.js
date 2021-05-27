@@ -51,18 +51,30 @@ export default {
       for(var shift_j=0; shift_j<findString.length; shift_j++){
         chunker.add('3', (vis, i, j, n) => {
           vis.graph.addEdge(searchString.length + j, i + j);
-          vis.graph.select(searchString.length + j, i + j)
-          vis.graph.select(i+j, null); 
+          if (searchString[i+j] != findString[j]) {
+            vis.graph.visit(searchString.length + j)
+            vis.graph.visit(i+j, null);
+          }
+          else {
+            vis.graph.select(searchString.length + j, i + j)
+            vis.graph.select(i+j, null);
+          }
           vis.graph.shift(i, n);
         }, [shift_i, shift_j,nodes]);
         if(searchString[shift_i+shift_j] != findString[shift_j]){
           chunker.add('3', (vis, i,shift_j, n) => {
-            for(var j=0; j<=shift_j; j++){              
-              vis.graph.resetSelect(searchString.length + j, i + j);
-              vis.graph.resetSelect(i+j, null);
+            for(var j=0; j<=shift_j; j++){
+              if (j == shift_j) {
+                vis.graph.leave(searchString.length + j)
+                vis.graph.leave(i+j, null)
+              }
+              else {
+                vis.graph.deselect(searchString.length + j)
+                vis.graph.deselect(i+j, null)
+              }
               vis.graph.removeEdge(searchString.length + j, i + j);
-              vis.graph.shift(i, n);
             }
+            vis.graph.shift(i, n);
           }, [shift_i, shift_j, nodes]);
           break;
         }
