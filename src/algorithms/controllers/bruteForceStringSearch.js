@@ -29,6 +29,8 @@ export default {
     const searchString = nodes[0];
     const findString = nodes[1];
     let stringCount = 0;
+    // searchString and findString are stored in the same array
+    // to get element in findString, add the length of searchString to the index
     chunker.add('1', (vis, n) => {
       vis.graph.addNode(stringCount, searchString[0], 'box');
       stringCount++;
@@ -54,10 +56,12 @@ export default {
       for (let shift_j = 0; shift_j < findString.length; shift_j++) {
         chunker.add('3', (vis, i, j, n) => {
           vis.graph.addEdge(searchString.length + j, i + j);
+          // visit - character not match, coloured in blue
           if (searchString[i+j] != findString[j]) {
             vis.graph.visit(searchString.length + j)
             vis.graph.visit(i+j, null);
           }
+          // select - character matches, coloured in red
           else {
             vis.graph.select(searchString.length + j, i + j)
             vis.graph.select(i+j, null);
@@ -67,10 +71,12 @@ export default {
         if(searchString[shift_i+shift_j] != findString[shift_j]){
           chunker.add('3', (vis, i,shift_j, n) => {
             for(var j=0; j<=shift_j; j++){
+              // the current active character is visit (blue)
               if (j == shift_j) {
                 vis.graph.leave(searchString.length + j)
                 vis.graph.leave(i+j, null)
               }
+              // all characters (if exist) before current active character are select (red)
               else {
                 vis.graph.deselect(searchString.length + j)
                 vis.graph.deselect(i+j, null)
@@ -81,12 +87,10 @@ export default {
           }, [shift_i, shift_j, nodes]);
           break;
         } else if (shift_j === findString.length-1) {
-          //success, turn all nodes blue
           chunker.add('5', (vis, i, j, n) => {
           }, [shift_i, shift_j, nodes]);
           return;
         } else {
-          //change color of selected node to green
           chunker.add('4', (vis, i, j, n) => {
           }, [shift_i, shift_j, nodes]);
         }
