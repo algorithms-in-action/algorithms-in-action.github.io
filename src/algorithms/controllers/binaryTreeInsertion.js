@@ -40,7 +40,6 @@ export default {
     });
     chunker.add(2);
     chunker.add(3, (vis, r) => {
-      console.log(r)
       vis.graph.addNode(r);
       vis.graph.layoutBST(r, true);
       vis.graph.select(r, null);
