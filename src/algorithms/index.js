@@ -105,9 +105,7 @@ const algorithms = {
     controller: {
       tc: Controller.transitiveClosure,
     },
-    
   },
-  //gotta do the next parameters
   'bruteForceStringSearch': {
     name: 'Brute Force String Search',
     category: 'String Search',

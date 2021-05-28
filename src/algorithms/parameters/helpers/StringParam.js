@@ -2,17 +2,13 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import ControlButton from '../../../components/common/ControlButton';
 import '../../../styles/Param.scss';
-import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { GlobalActions } from '../../../context/actions';
-import ParamForm from './ParamForm';
+import StringParamForm from './StringParamForm';
 import {
-  commaSeparatedNumberListValidCheck,
-  genRandNumList,
   successParamMsg,
   errorParamMsg,
-  stringListValidCheck,
+  stringValidCheck,
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -22,7 +18,7 @@ import useParam from '../../../context/useParam';
  * the param input accepts a list
  */
 function StringParam({
-  name, buttonName, mode, DEFAULT_VAL, SET_VAL, ALGORITHM_NAME,
+  name, buttonName, mode, DEFAULT_STRING, SET_STRING, DEFAULT_PATTERN, SET_PATTERN, ALGORITHM_NAME,
   EXAMPLE, formClassName, handleSubmit, setMessage,
 }) {
   const {
@@ -30,7 +26,7 @@ function StringParam({
     disabled,
     // paramVal,
     // setParamVal,
-  } = useParam(DEFAULT_VAL);
+  } = useParam([DEFAULT_STRING, DEFAULT_PATTERN]);
 
   /**
    * The default function that uses the list of values to
@@ -39,12 +35,13 @@ function StringParam({
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    const inputValue = e.target[0].value.replace(/\s+/g, '');
-    if (true/*stringListValidCheck(inputValue)*/) {
-      const nodes = inputValue.split`,`.map((x) => ""+x);
+    // check whether both input fields are valid string and patterns
+    const string = e.target[0].value;
+    const pattern = e.target[1].value;
+    if (stringValidCheck(string) && stringValidCheck(pattern)) {
       // SET_VAL(nodes);
       // run animation
-      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
+      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
@@ -52,16 +49,20 @@ function StringParam({
   };
 
   return (
-    <ParamForm
+    <StringParamForm
       formClassName={formClassName}
       name={ALGORITHM_NAME}
       buttonName={buttonName}
-      value={DEFAULT_VAL}
+      string={DEFAULT_STRING}
+      pattern={DEFAULT_PATTERN}
       disabled={disabled}
-      onChange={(e) => {
-        console.log(e.target.value);
-        console.log(e.target.value.split(','));
-        SET_VAL(e.target.value.split(','));
+      stringInputName="String"
+      patternInputName="Pattern"
+      stringOnChange={(e) => {
+        SET_STRING(e.target.value);
+      }}
+      patternOnChange={(e) => {
+        SET_PATTERN(e.target.value);
       }}
       // If no customized handle function is provided, the default one will be used
       handleSubmit={
@@ -69,20 +70,7 @@ function StringParam({
           ? handleSubmit
           : handleDefaultSubmit
       }
-    >
-      <ControlButton
-        icon={<RefreshIcon />}
-        className={disabled ? 'greyRoundBtnDisabled' : 'greyRoundBtn'}
-        id={ALGORITHM_NAME}
-        disabled={disabled}
-        onClick={() => {
-          // console.log(DEFAULT_VAL);
-          const list = genRandNumList(DEFAULT_VAL.length, 1, 100);
-          setMessage(null);
-          SET_VAL(list);
-        }}
-      />
-    </ParamForm>
+    />
   );
 }
 

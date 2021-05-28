@@ -77,6 +77,21 @@
   background: var(--mid-control-param-btn-bg-active);
   @include border-radius(14px);
 }
+.stringContainer {
+  margin-right: 15px;
+  padding: 0px 5px;
+
+  }
+.inputContainer{
+  border: 0.1px solid var(--mid-control-param-border);
+  border-radius: 4px;
+  // display: flex;
+  // align-items: center;
+  margin-top: 4px;
+  margin-right: 15px;
+  padding: 0px 5px;
+}
+
 
 .outerInput {
   border: 1px solid var(--mid-control-param-border);
