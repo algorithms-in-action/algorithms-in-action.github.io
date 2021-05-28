@@ -23,6 +23,7 @@ This is the forked repository of https://github.com/algorithms-in-action/algorit
     13. Coding Standards.pdf
     14. Releases.pdf
     15. Decisions.pdf
+    16. Future work.pdf
 - tests/\
     Contains the test documents created for the tests conducted.
     1. Acceptance Testing.pdf
