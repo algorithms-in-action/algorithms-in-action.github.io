@@ -24,6 +24,7 @@ This is the forked repository of https://github.com/algorithms-in-action/algorit
     14. Releases.pdf
     15. Decisions.pdf
     16. Future work.pdf
+    17. Handover.pdf
 - tests/\
     Contains the test documents created for the tests conducted.
     1. Acceptance Testing.pdf
