@@ -54,7 +54,6 @@ class Array1DTracer extends Array2DTracer {
     this.data[0][x].value = this.data[0][y].value;
     this.data[0][y].value = temp;
   }
-  
 }
 
 export default Array1DTracer;

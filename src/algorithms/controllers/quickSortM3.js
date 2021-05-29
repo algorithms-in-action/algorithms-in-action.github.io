@@ -27,7 +27,6 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-
     // Method for implementing Median of Three
     // function SortLMR(arr, left, right) {
     //     let a = arr;
@@ -96,7 +95,7 @@ export default {
     }
 
     function QuickSort(array, left, right, parentId) {
-      //let a = SortLMR(array, left, right);
+      // let a = SortLMR(array, left, right);
       let a = array;
       let p;
       chunker.add(2);

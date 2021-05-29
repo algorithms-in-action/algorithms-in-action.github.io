@@ -40,20 +40,20 @@ function QuicksortM3Param() {
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'rightmost':
-        //setNodes(shuffleArray(nodes));
+        // setNodes(shuffleArray(nodes));
         break;
       case 'medianofthree':
-        //setNodes([...nodes].sort((a, b) => a - b));
+        // setNodes([...nodes].sort((a, b) => a - b));
         break;
       default:
     }
 
     setQSM3Case({ ...UNCHECKED, [e.target.name]: true });
   };
-  
+
   return (
     <>
-    <div className="form">
+      <div className="form">
         <ListParam
           name="quickSortM3"
           buttonName="Sort"
