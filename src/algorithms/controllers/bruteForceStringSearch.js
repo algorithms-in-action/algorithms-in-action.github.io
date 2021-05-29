@@ -1,9 +1,8 @@
+/* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 /* eslint-disable no-plusplus */
-import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
+
 import { QSExp } from '../explanations';
-import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
-import TwoArray1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 
 export default {
@@ -25,7 +24,7 @@ export default {
    */
   // change from vis.graph to array equivalent
   run(chunker, { nodes }) {
-    //initial state
+    // initial state
     const searchString = nodes[0];
     const findString = nodes[1];
     let stringCount = 0;
@@ -57,40 +56,40 @@ export default {
         chunker.add('3', (vis, i, j, n) => {
           vis.graph.addEdge(searchString.length + j, i + j);
           // visit - character not match, coloured in blue
-          if (searchString[i+j] != findString[j]) {
-            vis.graph.visit(searchString.length + j)
-            vis.graph.visit(i+j, null);
-          }
-          // select - character matches, coloured in red
-          else {
-            vis.graph.select(searchString.length + j, i + j)
-            vis.graph.select(i+j, null);
+          if (searchString[i + j] !== findString[j]) {
+            vis.graph.visit(searchString.length + j);
+            vis.graph.visit(i + j, null);
+          } else {
+            // select - character matches, coloured in red
+            vis.graph.select(searchString.length + j, i + j);
+            vis.graph.select(i + j, null);
           }
           vis.graph.shift(i, n);
-        }, [shift_i, shift_j,nodes]);
-        if(searchString[shift_i+shift_j] != findString[shift_j]){
-          chunker.add('3', (vis, i,shift_j, n) => {
-            for(var j=0; j<=shift_j; j++){
+        }, [shift_i, shift_j, nodes]);
+        if (searchString[shift_i + shift_j] !== findString[shift_j]) {
+          chunker.add('3', (vis, i, shift_j, n) => {
+            for (let j = 0; j <= shift_j; j++) {
               // the current active character is visit (blue)
-              if (j == shift_j) {
-                vis.graph.leave(searchString.length + j)
-                vis.graph.leave(i+j, null)
-              }
-              // all characters (if exist) before current active character are select (red)
-              else {
-                vis.graph.deselect(searchString.length + j)
-                vis.graph.deselect(i+j, null)
+              if (j === shift_j) {
+                vis.graph.leave(searchString.length + j);
+                vis.graph.leave(i + j, null);
+              } else {
+                // all characters (if exist) before current active character are select (red)
+                vis.graph.deselect(searchString.length + j);
+                vis.graph.deselect(i + j, null);
               }
               vis.graph.removeEdge(searchString.length + j, i + j);
             }
             vis.graph.shift(i, n);
           }, [shift_i, shift_j, nodes]);
           break;
-        } else if (shift_j === findString.length-1) {
+        } else if (shift_j === findString.length - 1) {
+          // eslint-disable-next-line no-unused-vars
           chunker.add('5', (vis, i, j, n) => {
           }, [shift_i, shift_j, nodes]);
           return;
         } else {
+          // eslint-disable-next-line no-unused-vars
           chunker.add('4', (vis, i, j, n) => {
           }, [shift_i, shift_j, nodes]);
         }

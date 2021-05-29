@@ -12,7 +12,6 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 
-import { node } from 'prop-types';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -293,27 +292,26 @@ class GraphTracer extends Tracer {
   shift(space = 0, nodes) {
     const searchString = nodes[0];
     const findString = nodes[1];
-    console.log(space);
-    let string_count = 0;
-    let x_spacing = 25;
-    let y_spacing = 30
+    let stringCount = 0;
+    const xSpacing = 25;
+    const ySpacing = 30;
     let startFindString = -1;
     for (let i = 0; i < searchString.length; i++) {
-      const thisNode = this.findNode(string_count);
+      const thisNode = this.findNode(stringCount);
       thisNode.shape = 'box';
-      thisNode.x = (i - searchString.length / 2) * x_spacing;
+      thisNode.x = (i - searchString.length / 2) * xSpacing;
       if (i === 0) {
         startFindString = thisNode.x;
       }
-      thisNode.y = y_spacing / 2;
-      string_count++;
+      thisNode.y = ySpacing / 2;
+      stringCount++;
     }
     for (let i = 0; i < findString.length; i++) {
-      const thisNode = this.findNode(string_count);
+      const thisNode = this.findNode(stringCount);
       thisNode.shape = 'box';
-      thisNode.x = startFindString + (i + space) * (x_spacing);
-      thisNode.y = -1 * (y_spacing / 2);
-      string_count++;
+      thisNode.x = startFindString + (i + space) * (xSpacing);
+      thisNode.y = -1 * (ySpacing / 2);
+      stringCount++;
     }
   }
 
@@ -321,26 +319,26 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutBFSS, args: arguments };
     const searchString = nodes[0];
     const findString = nodes[1];
-    let string_count = 0;
-    let x_spacing = 25;
-    let y_spacing = 30;
+    let stringCount = 0;
+    const xSpacing = 25;
+    const ySpacing = 30;
     let startFindString = -1;
     for (let i = 0; i < searchString.length; i++) {
-      const thisNode = this.findNode(string_count);
+      const thisNode = this.findNode(stringCount);
       thisNode.shape = 'square';
-      thisNode.x = (i - searchString.length / 2) * x_spacing;
+      thisNode.x = (i - searchString.length / 2) * xSpacing;
       if (i === 0) {
         startFindString = thisNode.x;
       }
-      thisNode.y = y_spacing / 2;
-      string_count++;
+      thisNode.y = ySpacing / 2;
+      stringCount++;
     }
     for (let i = 0; i < findString.length; i++) {
-      const thisNode = this.findNode(string_count);
+      const thisNode = this.findNode(stringCount);
       thisNode.shape = 'square';
-      thisNode.x = startFindString + (i * x_spacing + (shift * 25));
-      thisNode.y = -1 * (y_spacing / 2);
-      string_count++;
+      thisNode.x = startFindString + (i * xSpacing + (shift * 25));
+      thisNode.y = -1 * (ySpacing / 2);
+      stringCount++;
     }
   }
 

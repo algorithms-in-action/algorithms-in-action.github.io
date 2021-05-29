@@ -63,6 +63,11 @@
     "react": "^16.13.1",
     "react-test-renderer": "^16.13.1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix src/"
