@@ -164,6 +164,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
             <button
               className={algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
+              
                 // If the block needs to collapse, get reference for all sub-blocks (recursively) and collapse the sub-blocks
                 if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
                   const blocksToCollapse = getAllBlocksToCollapse(algorithm, line.ref);
