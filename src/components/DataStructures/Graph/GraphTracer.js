@@ -11,6 +11,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
+
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -34,6 +35,7 @@ class GraphTracer extends Tracer {
     this.isDirected = true;
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
+    this.text = null;
     this.logTracer = null;
   }
 
@@ -70,7 +72,9 @@ class GraphTracer extends Tracer {
     });
     this.nodes.forEach(node => {
       node.visitedCount = 0;
+      node.selectedCount = 0;
     });
+    this.text = null;
   }
 
   isEmpty() {
@@ -171,10 +175,10 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -216,6 +220,10 @@ class GraphTracer extends Tracer {
     const index = this.edges.indexOf(edge);
     this.edges.splice(index, 1);
     this.layout();
+  }
+
+  findValue(id) {
+    return this.findNode(id).value;
   }
 
   findNode(id) {
@@ -280,6 +288,60 @@ class GraphTracer extends Tracer {
     }
   }
 
+
+  shift(space = 0, nodes) {
+    const searchString = nodes[0];
+    const findString = nodes[1];
+    let stringCount = 0;
+    const xSpacing = 25;
+    const ySpacing = 30;
+    let startFindString = -1;
+    for (let i = 0; i < searchString.length; i++) {
+      const thisNode = this.findNode(stringCount);
+      thisNode.shape = 'box';
+      thisNode.x = (i - searchString.length / 2) * xSpacing;
+      if (i === 0) {
+        startFindString = thisNode.x;
+      }
+      thisNode.y = ySpacing / 2;
+      stringCount++;
+    }
+    for (let i = 0; i < findString.length; i++) {
+      const thisNode = this.findNode(stringCount);
+      thisNode.shape = 'box';
+      thisNode.x = startFindString + (i + space) * (xSpacing);
+      thisNode.y = -1 * (ySpacing / 2);
+      stringCount++;
+    }
+  }
+
+  layoutBFSS(shift = 0, nodes) {
+    this.callLayout = { method: this.layoutBFSS, args: arguments };
+    const searchString = nodes[0];
+    const findString = nodes[1];
+    let stringCount = 0;
+    const xSpacing = 25;
+    const ySpacing = 30;
+    let startFindString = -1;
+    for (let i = 0; i < searchString.length; i++) {
+      const thisNode = this.findNode(stringCount);
+      thisNode.shape = 'square';
+      thisNode.x = (i - searchString.length / 2) * xSpacing;
+      if (i === 0) {
+        startFindString = thisNode.x;
+      }
+      thisNode.y = ySpacing / 2;
+      stringCount++;
+    }
+    for (let i = 0; i < findString.length; i++) {
+      const thisNode = this.findNode(stringCount);
+      thisNode.shape = 'square';
+      thisNode.x = startFindString + (i * xSpacing + (shift * 25));
+      thisNode.y = -1 * (ySpacing / 2);
+      stringCount++;
+    }
+  }
+
   layoutTree(root = 0, sorted = false) {
     this.root = root;
     this.callLayout = { method: this.layoutTree, args: arguments };
@@ -331,6 +393,75 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
+  layoutBST(root = 0, sorted = false) {
+    this.root = root;
+    this.callLayout = { method: this.layoutBST, args: arguments };
+    const rect = this.getRect();
+    // If there is a sole node, it centers it.
+    const middleX = (rect.left + rect.right) / 2;
+    const middleY = (rect.top + rect.bottom) / 2;
+    if (this.nodes.length === 1) {
+      const [node] = this.nodes;
+      node.x = middleX;
+      node.y = middleY;
+      return;
+    }
+
+    // Traversal of the entire tree, counting number of nodes.
+    let maxDepth = 0;
+    const nodeDepth = {};
+    let marked = {};
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(root, 0);
+
+    // Calculates node's x and y.
+    // adjust hGap to some function of node number later//
+    const hGap = 80;
+    const vGap = rect.height / maxDepth;
+    marked = {};
+    const recursivePosition = (node, h, v) => {
+      marked[node.id] = true;
+      // 120 magic number to center root node//
+      node.x = rect.left + h * hGap + 120;
+      node.y = rect.top + v * vGap;
+      /* used to debug, delete in merge
+      console.log(node.x + " " +  node.y + " "  + node.id );
+      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
+      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
+      */
+      const linkedNodes = this.findLinkedNodes(node.id, false);
+      if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
+      for (const linkedNode of linkedNodes) {
+        if (marked[linkedNode.id]) continue;
+        if (linkedNode.id > node.id) {
+          if (node.id > this.root) {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          }
+        } else if (linkedNode.id < node.id) {
+          if (node.id < this.root) {
+            recursivePosition(linkedNode, h - 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h - 1 / (2 * v + 1), v + 1);
+          }
+        }
+      }
+    };
+    const rootNode = this.findNode(root);
+    recursivePosition(rootNode, 0, 0);
+  }
+
+
   layoutRandom() {
     this.callLayout = { method: this.layoutRandom, args: arguments };
     const rect = this.getRect();
@@ -371,6 +502,13 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(false, target, source);
   }
 
+  resetSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
+    const node = this.findNode(target);
+    node.selectedCount = 0;
+  }
+
   selectOrDeselect(select, target, source = null) {
     const edge = this.findEdge(source, target);
     if (edge) edge.selectedCount += select ? 1 : -1;
@@ -383,6 +521,10 @@ class GraphTracer extends Tracer {
 
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
+  }
+
+  setText(text) {
+    this.text = text;
   }
 }
 

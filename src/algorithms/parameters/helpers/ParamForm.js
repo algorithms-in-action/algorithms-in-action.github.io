@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useContext } from 'react';
 import ControlButton from '../../../components/common/ControlButton';
-import '../../../styles/Param.scss';
 import { closeInstructions } from '../../../components/mid-panel/helper';
-
+import { GlobalContext } from '../../../context/GlobalState';
+import '../../../styles/Param.scss';
 /**
  * The ParamForm wraps a input, icon(optional) and a button.
  */
@@ -13,6 +13,17 @@ function ParamForm(props) {
     formClassName, name, buttonName, value,
     onChange, handleSubmit, children, disabled,
   } = props;
+  // eslint-disable-next-line
+  const { algorithm } = useContext(GlobalContext);
+
+  const closeInstructionsFun = () => {
+    if (algorithm.name === 'Quicksort') {
+      // setQuicksortPlay(false)
+      sessionStorage.setItem('isPivot', false);
+      sessionStorage.setItem('quicksortPlay', false);
+    }
+    closeInstructions();
+  };
 
   return (
     <form className={formClassName} onSubmit={handleSubmit}>
@@ -30,7 +41,7 @@ function ParamForm(props) {
           {children}
           <ControlButton
             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
-            onClick={() => closeInstructions()}
+            onClick={closeInstructionsFun}
             type="submit"
             disabled={disabled}
           >

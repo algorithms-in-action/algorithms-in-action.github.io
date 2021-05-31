@@ -73,7 +73,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions } = this.props.data;
+    const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) * this.zoom,
@@ -81,6 +81,13 @@ class GraphRenderer extends Renderer {
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
+    const root = nodes[0];
+    let rootX = 0;
+    let rootY = 0;
+    if (root) {
+      rootX = root.x;
+      rootY = root.y;
+    }
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -148,6 +155,7 @@ class GraphRenderer extends Renderer {
             );
           })
         }
+        <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
       </svg>
     );
   }

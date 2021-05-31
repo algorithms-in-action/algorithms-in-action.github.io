@@ -8,12 +8,11 @@
   font: inherit;
   cursor: pointer;
   outline: inherit;
-
 }
 
 .blueWordBtn {
   @extend .btn;
-  font: 13px "Roboto", sans-serif !important;
+  font: 13px 'Roboto', sans-serif !important;
   border-radius: 1px;
   text-align: center;
   position: relative;
@@ -24,11 +23,11 @@
 }
 
 .blueWordBtn:hover {
-  transition: .4s;
+  transition: 0.4s;
   background: var(--mid-control-param-btn-bg-col-hover);
 }
 .blueWordBtn:active {
-  transition: .2s;
+  transition: 0.2s;
   background: var(--mid-control-param-btn-bg-col-active);
 }
 
@@ -43,6 +42,12 @@
 }
 .blueWordBtnDisabled:active {
   background: none;
+}
+.checkbox {
+  color: var(--mid-control-font);
+  font-size: 0.8em;
+  // font: 13px "Roboto", sans-serif !important;
+  font-family: Menlo, "Liberation Mono", Courier, monospace;
 }
 
 .greyRoundBtn {
@@ -63,17 +68,30 @@
 }
 
 .greyRoundBtn:hover {
-  transition: .4s;
+  transition: 0.4s;
   background: var(--mid-control-param-btn-bg-hover);
   @include border-radius(14px);
-
 }
 .greyRoundBtn:active {
-  transition: .2s;
+  transition: 0.2s;
   background: var(--mid-control-param-btn-bg-active);
   @include border-radius(14px);
-
 }
+.stringContainer {
+  margin-right: 15px;
+  padding: 0px 5px;
+
+  }
+.inputContainer{
+  border: 0.1px solid var(--mid-control-param-border);
+  border-radius: 4px;
+  // display: flex;
+  // align-items: center;
+  margin-top: 4px;
+  margin-right: 15px;
+  padding: 0px 5px;
+}
+
 
 .outerInput {
   border: 1px solid var(--mid-control-param-border);
@@ -81,7 +99,7 @@
   display: flex;
   align-items: center;
   padding: 6px 10px;
-  
+
   .inputText {
     width: 100%;
 
@@ -100,7 +118,6 @@
   .btnGrp {
     display: flex;
     justify-content: flex-end;
-
   }
 }
 
@@ -112,6 +129,24 @@
 
   .formLeft {
     width: 62%;
+    align-items: center;
+    .rightmost-btn {
+      // margin-left: 20px;
+      @extend .blueWordBtn;
+    }
+    .medianthree-btn {
+      // margin-left: 20px;
+      @extend .blueWordBtn;
+    }
+    .MuiFormControlLabel-root {
+      color: var(--mid-control-param-blue-btn-col);
+      &:first-of-type {
+        margin-left: 20px;
+      }
+    }
+    .MuiCheckbox-colorPrimary.Mui-checked {
+      color: var(--mid-control-param-blue-btn-col);
+    }
   }
 
   .formRight {
@@ -119,7 +154,15 @@
   }
 }
 
+.rightmost-btn {
+  margin-left: 20px;
+  @extend .blueWordBtn;
+}
 
+.medianthree-btn {
+  margin-left: 20px;
+  @extend .blueWordBtn;
+}
 
 .btnDisabled {
   @extend .blueWordBtn;
@@ -142,6 +185,3 @@
 .greyRoundBtnDisabled:active {
   background: none;
 }
-
-
-

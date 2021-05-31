@@ -39,6 +39,7 @@ const muiTheme = createMuiTheme({
 const DEFAULT_SPEED = 50;
 
 function ControlPanel() {
+  // eslint-disable-next-line
   const { algorithm, dispatch } = useContext(GlobalContext);
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
@@ -76,6 +77,14 @@ function ControlPanel() {
     }
   };
 
+  const handleClickPlay = () => {
+    play();
+    if (algorithm.name === 'Quicksort') {
+      // setQuicksortPlay(true)
+      sessionStorage.setItem('quicksortPlay', true);
+    }
+  };
+
   /**
    * when click play button, calling play() based on the slider speed.
    * Using useInterval, play() now can read fresh states, otherwise play() will
@@ -95,6 +104,12 @@ function ControlPanel() {
     <div className="controlContainer">
       <div className="controlPanel">
         {/* Speed Slider */}
+        <div className="speed">
+          <div className="innerSpeed">
+            {/* Label the speed slider as SPEED */}
+            SPEED
+          </div>
+        </div>
         <div className="sliderContainer">
           <div className="slider">
             <ThemeProvider theme={muiTheme}>
@@ -110,16 +125,12 @@ function ControlPanel() {
             </ThemeProvider>
           </div>
         </div>
-
         <div className="rightControl">
-
           {/* Progress Status Bar */}
           <ProgressBar
             current={currentChunk}
             max={chunkerLength}
           />
-
-
           <div className="controlButtons">
             {/* Prev Button */}
             <ControlButton
@@ -128,7 +139,6 @@ function ControlPanel() {
               disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
               onClick={() => prev()}
             />
-
             {/* Play/Pause Button */}
             {playing ? (
               <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
@@ -137,10 +147,9 @@ function ControlPanel() {
                 icon={<PlayIcon />}
                 type="play"
                 disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-                onClick={() => play()}
+                onClick={handleClickPlay}
               />
             )}
-
             {/* Next Button */}
             <ControlButton
               icon={<NextIcon />}
@@ -151,10 +160,8 @@ function ControlPanel() {
           </div>
         </div>
       </div>
-
-
       <div className="parameterPanel">
-        { algorithm.param }
+        {algorithm.param}
       </div>
     </div>
   );

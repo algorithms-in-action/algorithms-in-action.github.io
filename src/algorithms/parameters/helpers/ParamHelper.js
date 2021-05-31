@@ -1,9 +1,21 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
+import Denque from 'denque';
 import ParamMsg from './ParamMsg';
+
 
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
+  return t.match(regex);
+};
+
+export const stringListValidCheck = (t) => {
+  const regex = /^[a-zA-Z]+(,[a-zA-Z]+)*$/g;
+  return t.match(regex);
+};
+
+export const stringValidCheck = (t) => {
+  const regex = /^[a-zA-Z]+$/g;
   return t.match(regex);
 };
 
@@ -66,7 +78,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i + 1,
+      Header: i,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -107,4 +119,58 @@ export const makeData = (len, min, max, symmetric) => {
     arr.push(data);
   }
   return arr;
+};
+
+export const balanceBSTArray = (nodes) => {
+  class TreeNode {
+    constructor(value) {
+      this.value = value;
+      this.left = null;
+      this.right = null;
+    }
+  }
+  const insertNode = (array) => {
+    if (array.length === 0) {
+      return null;
+    }
+    const midpoint = Math.floor(array.length / 2);
+    const root = new TreeNode(array[midpoint]);
+    root.left = insertNode(array.slice(0, midpoint));
+    root.right = insertNode(array.slice(midpoint + 1));
+    return root;
+  };
+
+  const buildBalancedBST = (array) => {
+    const root = insertNode(array);
+    return root;
+  };
+
+  const levelOrderTraversal = (root) => {
+    const output = [];
+    const queue = new Denque();
+    queue.push(root);
+    while (!queue.isEmpty()) {
+      const element = queue.shift();
+      if (element !== null) {
+        output.push(element.value);
+        queue.push(element.left);
+        queue.push(element.right);
+      }
+    }
+    return output;
+  };
+  const BST = buildBalancedBST(nodes);
+  const balancedBST = levelOrderTraversal(BST);
+  return balancedBST;
+};
+
+export const shuffleArray = (array) => {
+  // eslint-disable-next-line no-plusplus
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
 };

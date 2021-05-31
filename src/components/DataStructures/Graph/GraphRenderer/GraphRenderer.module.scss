@@ -55,7 +55,7 @@
   .edge {
     .line {
       stroke: var(--graph-edge-line-stroke);
-      stroke-width: 2;
+      stroke-width: 3.5;
 
       &.directed {
         marker-end: url(#markerArrow);

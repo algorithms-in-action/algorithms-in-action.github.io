@@ -281,6 +281,7 @@ class ArrayGraphTracer extends Tracer {
     }
   }
 
+
   layoutTree(root = 0, sorted = false) {
     this.root = root;
     this.callLayout = { method: this.layoutTree, args: arguments };
