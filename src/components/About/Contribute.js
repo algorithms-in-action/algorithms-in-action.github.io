@@ -16,7 +16,7 @@ function Contribute() {
         Join our open-source project now.
       </div>
       <div className="btnContainer">
-        <a className="slack btn" href={`/${slack}`} target="_blank" rel="noopener noreferrer">
+        <a className="slack btn" href={slack} target="_blank" rel="noopener noreferrer">
           <Slack />
           Slack
         </a>
