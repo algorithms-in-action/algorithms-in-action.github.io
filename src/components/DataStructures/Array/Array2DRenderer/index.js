@@ -56,9 +56,7 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => (longestRow.length < row.length ? row : longestRow), []);
     let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
-    let scale = function (largest, columnValue) {
-      return (columnValue / largest) * 100;
-    }.bind(null, largestColumnValue);
+    let scaleY = ((largest, columnValue) => (columnValue / largest) * 100).bind(null, largestColumnValue);
 
     return (
       <table
@@ -97,7 +95,8 @@ class Array2DRenderer extends Renderer {
                   style={{
                     borderLeft: '0',
                     borderRight: '0',
-                    borderTop: `${this.toString(scale(largestColumnValue - col.value))}px #f9f9f9 solid`,
+                    borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px #f9f9f9 solid`,
+                    backgroundColor: '#d1d1d1',
                   }}
                   className={classes(
                     styles.col,
