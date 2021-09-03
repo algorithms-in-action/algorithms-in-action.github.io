@@ -160,10 +160,13 @@ class GraphTracer extends Tracer {
 
   swapNodes(nodeId1, nodeId2) {
     const node1 = this.findNode(nodeId1);
-    const temp = node1.value;
+    const temp = { value: node1.value, key: node1.key };
     const node2 = this.findNode(nodeId2);
+    // Swap both the value and key (key is what animates swapping action)
     node1.value = node2.value;
-    node2.value = temp;
+    node1.key = node2.key;
+    node2.value = temp.value;
+    node2.key = temp.key;
     this.layoutTree(this.root);
   }
 
@@ -178,7 +181,9 @@ class GraphTracer extends Tracer {
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
+    const key = id; // the key is a unique id which stays with the value (rather than the node)
+    // so to assist with animation of swapping nodes (see swapNodes)
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key });
     this.layout();
   }
 
