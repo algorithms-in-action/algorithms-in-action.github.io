@@ -95,8 +95,10 @@ class Array2DRenderer extends Renderer {
                   style={{
                     borderLeft: '0',
                     borderRight: '0',
-                    borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px #f9f9f9 solid`,
-                    backgroundColor: '#d1d1d1',
+                    borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
+                    backgroundColor: col.selected === false ? '#d1d1d1' : null,
+                    backgroundClip: 'content-box',
+                    padding: '0',
                   }}
                   className={classes(
                     styles.col,
