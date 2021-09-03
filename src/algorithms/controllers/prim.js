@@ -78,13 +78,6 @@ export default {
             },
             [i, j]
           );
-          chunker.add(
-            5,
-            (vis, n1, n2) => {
-              vis.graph.leave(n1, n2);
-            },
-            [i, j]
-          );
         }
         if (w > 0 && pending[j] && w < cost[j]) {
           cost[j] = w;
@@ -153,6 +146,32 @@ export default {
           vis.array.set(v);
         },
         [pqDisplay]
+      );
+      
+      const newEdges = [];
+      for (let j = 0; j < n; j += 1) {
+        if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n) {
+          if (j === pq[pqStart] && prev[pq[pqStart]] === i) {
+            continue;
+          }
+          newEdges.push(j);
+        }
+      }
+      if (pq[pqStart]) {
+        chunker.add(
+          3,
+          (vis, n1, n2) => {
+            vis.graph.visit(n1, n2);
+          },
+          [prev[pq[pqStart]], pq[pqStart]]
+        );
+      }
+      chunker.add(
+        5,
+        (vis, n1, n2) => {
+          vis.graph.allLeave(n1, n2);
+        },
+        [i, newEdges]
       );
     }
     // for test
