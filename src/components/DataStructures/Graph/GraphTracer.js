@@ -24,10 +24,10 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 320,
+      baseWidth: 500,
       baseHeight: 320,
       padding: 32,
-      nodeRadius: 12,
+      nodeRadius: 15,
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -380,6 +380,9 @@ class GraphTracer extends Tracer {
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      if (this.nodes.length === 2 && h === 0 && v === 1) {
+        node.x = rect.left + (h + leafCounts[node.id] / 4) * hGap;
+      }
       node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
