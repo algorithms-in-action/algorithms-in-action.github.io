@@ -66,6 +66,7 @@ class Array2DRenderer extends Renderer {
           marginTop: -this.centerY * 2,
           transform: `scale(${this.zoom})`,
           borderCollapse: 'separate',
+          display: 'block',
         }}
       >
         <tbody>
@@ -96,9 +97,9 @@ class Array2DRenderer extends Renderer {
                     borderLeft: '0',
                     borderRight: '0',
                     borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
-                    backgroundColor: col.selected === false ? '#d1d1d1' : null,
                     backgroundClip: 'content-box',
                     padding: '0',
+                    position: 'relative',
                   }}
                   className={classes(
                     styles.col,
@@ -109,6 +110,17 @@ class Array2DRenderer extends Renderer {
                   key={j}
                 >
                   <span className={styles.value}>{this.toString(col.value)}</span>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '95%',
+                      top: 0,
+                      border: '0.1px solid gray',
+                      borderBottom: 0,
+                      height: '100%',
+                      borderCollapse: 'separate',
+                    }}
+                   />
                 </td>
               ))}
             </tr>
