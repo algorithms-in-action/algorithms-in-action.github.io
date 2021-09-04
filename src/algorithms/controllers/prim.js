@@ -101,7 +101,7 @@ export default {
           break;
         }
         pqDisplay.push(pq[i] + 1);
-        pqCost.push(cost[i]);
+        pqCost.push(cost[pq[i]]);
       }
     };
 
@@ -119,6 +119,7 @@ export default {
     }
     pqStart = 0;
     updatePqDisplay();
+    pqCost.sort();
     chunker.add(
       2,
       (vis, v) => {
@@ -146,6 +147,7 @@ export default {
       pending[i] = 0;
       pqStart += 1;
       updatePqDisplay();
+      pqCost.sort();
       chunker.add(
         4,
         (vis, v) => {
@@ -162,6 +164,7 @@ export default {
       );
       PqUpdate(i);
       updatePqDisplay();
+      pqCost.sort();
       chunker.add(
         6,
         (vis, v) => {
