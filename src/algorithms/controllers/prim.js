@@ -41,6 +41,7 @@ export default {
     let pqDisplay = [];
     let pqStart;
     let n;
+    const closed = [];
 
     chunker.add(
       1,
@@ -70,7 +71,7 @@ export default {
       let w;
       for (j = 0; j < n; j += 1) {
         w = weight[i][j];
-        if (w > 0 && !prev.includes(j) && pqStart < n) {
+        if (w > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
           chunker.add(
             5,
             (vis, n1, n2) => {
@@ -151,10 +152,7 @@ export default {
       
       const newEdges = [];
       for (let j = 0; j < n; j += 1) {
-        if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n) {
-          if (j === pq[pqStart] && prev[pq[pqStart]] === i) {
-            continue;
-          }
+        if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
           newEdges.push(j);
         }
       }
@@ -174,6 +172,7 @@ export default {
         },
         [i, newEdges]
       );
+      closed.push(i);
     }
     // for test
     return prev;
