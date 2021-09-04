@@ -4,7 +4,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
+import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 // merge test 
 
@@ -16,12 +16,8 @@ export default {
         order: 0,
       },
       array: {
-        instance: new Array1DTracer('array', null, 'Priority Queue'),
+        instance: new Array2DTracer('array', null, 'Priority Queue'),
         order: 1,
-      },
-      array1: {
-        instance: new Array1DTracer('array', null, 'Cost Queue'),
-        order: 2,
       },
     };
   },
@@ -123,12 +119,11 @@ export default {
     updatePqDisplay();
     pqCost.sort();
     chunker.add(
-      2,
-      (vis, v, u) => {
-        vis.array.set(v);
-        vis.array1.set(u);
-      },
-      [pqDisplay, pqCost]
+        2,
+        (vis, v) => {
+          vis.array.set(v);
+        },
+        [[pqDisplay, pqCost]]
     );
 
     while (pqStart < n) {
@@ -146,24 +141,22 @@ export default {
       updatePqDisplay();
       pqCost.sort();
       chunker.add(
-          2,
-          (vis, v, u) => {
+          4,
+          (vis, v) => {
             vis.array.set(v);
-            vis.array1.set(u);
           },
-          [pqDisplay, pqCost]
+          [[pqDisplay, pqCost]]
       );
 
       PqUpdate(i);
       updatePqDisplay();
       pqCost.sort();
       chunker.add(
-          2,
-          (vis, v, u) => {
+          5,
+          (vis, v) => {
             vis.array.set(v);
-            vis.array1.set(u);
           },
-          [pqDisplay, pqCost]
+          [[pqDisplay, pqCost]]
       );
 
       const newEdges = [];
