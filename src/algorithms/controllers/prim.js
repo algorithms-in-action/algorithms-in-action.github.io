@@ -46,6 +46,7 @@ export default {
     let pqStart;
     let n;
     const closed = [];
+    let pqCost = [];
 
     chunker.add(
       1,
@@ -88,25 +89,19 @@ export default {
           cost[j] = w;
           PqSort();
           prev[j] = i;
-          chunker.add(
-              2,
-              (vis, v) => {
-                vis.array1.set(v);
-              },
-              [cost]
-          );
         }
       }
     };
 
     const updatePqDisplay = () => {
       pqDisplay = [];
-
+      pqCost = [];
       for (let i = pqStart; i < n; i++) {
         if (cost[i] === Infinity) {
           break;
         }
         pqDisplay.push(pq[i] + 1);
+        pqCost.push(cost[i]);
       }
     };
 
@@ -136,7 +131,7 @@ export default {
         (vis, v) => {
           vis.array1.set(v);
         },
-        [cost]
+        [pqCost]
     );
     while (pqStart < n) {
       i = pq[pqStart];
@@ -158,6 +153,13 @@ export default {
         },
         [pqDisplay]
       );
+      chunker.add(
+          4,
+          (vis, v) => {
+            vis.array1.set(v);
+          },
+          [pqCost]
+      );
       PqUpdate(i);
       updatePqDisplay();
       chunker.add(
@@ -167,7 +169,13 @@ export default {
         },
         [pqDisplay]
       );
-      
+      chunker.add(
+          6,
+          (vis, v) => {
+            vis.array1.set(v);
+          },
+          [pqCost]
+      );
       const newEdges = [];
       for (let j = 0; j < n; j += 1) {
         if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
