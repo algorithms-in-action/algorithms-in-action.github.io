@@ -88,6 +88,13 @@ export default {
           cost[j] = w;
           PqSort();
           prev[j] = i;
+          chunker.add(
+              2,
+              (vis, v) => {
+                vis.array1.set(v);
+              },
+              [cost]
+          );
         }
       }
     };
