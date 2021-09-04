@@ -17,6 +17,10 @@ export default {
         instance: new Array1DTracer('array', null, 'Priority Queue'),
         order: 1,
       },
+      array1: {
+        instance: new Array1DTracer('array', null, 'Cost Queue'),
+        order: 2,
+      },
     };
   },
 
@@ -119,6 +123,13 @@ export default {
         vis.array.set(v);
       },
       [pqDisplay]
+    );
+    chunker.add(
+        2,
+        (vis, v) => {
+          vis.array1.set(v);
+        },
+        [cost]
     );
     while (pqStart < n) {
       i = pq[pqStart];
