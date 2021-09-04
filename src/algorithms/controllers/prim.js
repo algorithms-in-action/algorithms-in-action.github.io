@@ -125,6 +125,7 @@ export default {
         3,
         (vis, n1, n2) => {
           vis.graph.visit(n1, n2);
+          vis.graph.select(n1, n2);
         },
         [i, prev[i]]
       );
