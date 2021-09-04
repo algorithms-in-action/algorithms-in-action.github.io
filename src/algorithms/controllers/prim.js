@@ -124,18 +124,13 @@ export default {
     pqCost.sort();
     chunker.add(
       2,
-      (vis, v) => {
+      (vis, v, u) => {
         vis.array.set(v);
+        vis.array1.set(u);
       },
-      [pqDisplay]
+      [pqDisplay, pqCost]
     );
-    chunker.add(
-        2,
-        (vis, v) => {
-          vis.array1.set(v);
-        },
-        [pqCost]
-    );
+
     while (pqStart < n) {
       i = pq[pqStart];
       chunker.add(
@@ -151,36 +146,26 @@ export default {
       updatePqDisplay();
       pqCost.sort();
       chunker.add(
-        4,
-        (vis, v) => {
-          vis.array.set(v);
-        },
-        [pqDisplay]
-      );
-      chunker.add(
-          4,
-          (vis, v) => {
-            vis.array1.set(v);
+          2,
+          (vis, v, u) => {
+            vis.array.set(v);
+            vis.array1.set(u);
           },
-          [pqCost]
+          [pqDisplay, pqCost]
       );
+
       PqUpdate(i);
       updatePqDisplay();
       pqCost.sort();
       chunker.add(
-        6,
-        (vis, v) => {
-          vis.array.set(v);
-        },
-        [pqDisplay]
-      );
-      chunker.add(
-          6,
-          (vis, v) => {
-            vis.array1.set(v);
+          2,
+          (vis, v, u) => {
+            vis.array.set(v);
+            vis.array1.set(u);
           },
-          [pqCost]
+          [pqDisplay, pqCost]
       );
+
       const newEdges = [];
       for (let j = 0; j < n; j += 1) {
         if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
