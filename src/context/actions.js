@@ -30,21 +30,21 @@ function getChildren(blockName, pseudocode, acc) {
 }
 
 /**
- *
+ * Looks at the parent for a pseudocode node, and recursively builds the tree of enclosed code paths (i.e. all the children of all the parents up to Main)
  * @param {*} blockName
  * @param {*} collapse
  * @param {*} pseudocode
  * @param {*} acc - array to [] results
  * @returns
  */
-function getReverseTree(blockName, collapse, pseudocode, acc) {
+function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
   if (blockName === undefined || blockName === 'Main') {
     return [];
   }
   for (const name of Object.keys(pseudocode)) {
     for (let i = 0; i < pseudocode[name].length; i += 1) {
       if (Object.prototype.hasOwnProperty.call(pseudocode[name][i], 'ref') !== undefined && pseudocode[name][i].ref === blockName) {
-        return acc.concat([name].concat(getReverseTree(name, collapse, pseudocode, acc))).concat(getChildren(name, pseudocode, []));
+        return acc.concat([name].concat(getFullPseudocodeTree(name, collapse, pseudocode, acc))).concat(getChildren(name, pseudocode, []));
       }
     }
   }
@@ -62,17 +62,18 @@ function isBookmarkVisible(pseudocode, collapse, bookmark) {
       if (pseudocode[blockName][i].bookmark === bookmark) {
         containingBlock = blockName;
         if (collapse[containingBlock]) {
-          // i.e. if open
+          // i.e. if this node is open, then we need to step into its children for highlighting purposes once again
           previousState = [];
           return true;
         }
         const children = getChildren(containingBlock, pseudocode, []);
-        const result = getReverseTree(containingBlock, collapse, pseudocode, [containingBlock]);
+        const result = getFullPseudocodeTree(containingBlock, collapse, pseudocode, [containingBlock]);
+        const newState = [...new Set(previousState.concat(result).concat(children))];
         if (previousState.includes(containingBlock)) {
-          previousState = [...new Set(previousState.concat(result).concat(children))];
+          previousState = newState;
           return false; // already visited
         }
-        previousState = [...new Set(previousState.concat(result).concat(children))];
+        previousState = newState;
         return true;
       }
     }
