@@ -31,6 +31,14 @@
         }
       }
 
+      &.selected1 {
+        background-color: var(--array-2d-row-col-bg-selected1);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);

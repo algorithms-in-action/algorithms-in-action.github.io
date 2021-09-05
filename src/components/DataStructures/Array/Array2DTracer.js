@@ -48,8 +48,9 @@ class Array2DTracer extends Tracer {
     this.data[x][y].patched = true;
   }
 
-  depatch(x, y) {
+  depatch(x, y, v = this.data[x][y].value) {
     this.data[x][y].patched = false;
+    this.data[x][y].value = v;
   }
 
   // used to highlight sorted elements
@@ -66,6 +67,14 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  select1(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].selected1 = true;
+      }
+    }
+  }
+
   selectRow(x, sy, ey) {
     this.select(x, sy, x, ey);
   }
@@ -78,6 +87,7 @@ class Array2DTracer extends Tracer {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         this.data[x][y].selected = false;
+        this.data[x][y].selected1 = false;
       }
     }
   }
