@@ -2,6 +2,9 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Note{  REAL specification of Horspool's algorithm
+Draft Harald 15 Aug 2021
+Edited Linda 31 Aug 2021
+Linda added AlphabetSize explanation 1 Sept 2021
 \\Note}
 
 \\Note{  Provide a visualisation in which a "shift table" is first
@@ -10,22 +13,34 @@ export default parse(`
 \\Note}
 
 \\Overview{
-    Horspool's algorithm uses a pre-analysis of the pattern P to limit
-    the number of partial matches attempted (compared to the brute-force
-    method). As with the brute-force method, we can think of P as 
+    Horspool's algorithm uses a preprocessing of the pattern P to limit
+    the number of partial matches attempted, compared to the brute-force
+    method. As with the brute-force method, we can think of P as 
     "sliding along" the text T. Horspool's method, however, matches the
-    pattern P from right to left. Its pre-analysis generates a "shift"
-    table which gives, for each character, the number of places to shift
-    the pattern along, in case of a failed partial match. For an example,
+    pattern P from right to left. Its preprocessing generates a Shift
+    Table which gives, for each character, the number of places to shift
+    the pattern along, in case of a failed partial match. The shift table has a value
+    for every character in the alphabet, including characters that are not in pattern P, 
+   but could be in text T. The alphabet contains all characters that might possibly be in the 
+   text and pattern.  In this visualization, the alphabet contains all letters in the 
+   Roman alphabet (A-Z) plus the Space character.  Alphabets might be smaller, e.g. for DNA 
+   sequences the alphabet would be the four bases, or they might be larger, e.g. the characters
+   found in English literature, which would include both upper and lower case letters, space,
+   punctuation, numbers, etc.
+
+     As an example of how the Shift Table is used:
     if the pattern is "wally" and matching fails (immediately) because the
-    'y' gets compared against an 'x' in the text, the pattern can be slid
-    5 characters forward. This is because it contains no x at all. Even 
-    if the failure was due to comparing 'y' against an 'a' (a character
-    that does appear in the pattern), the pattern can still be slid 
-    forward by more than a single character, namely three. Where some
-    character appears repeatedly in the pattern (as 'l' does in the 
-    example), it is the last occurrence that counts, so in the example, 
-    the shift corresponding to 'l' should be 1, not 2.
+    'y' gets compared against an 'x' in the text, a character not found in the pattern,
+    the pattern can be slid 5 characters forward because there is not chance of a match.  So the value for 
+   character 'x' in the shift table is 5.
+\t 
+    If the failure was due to comparing 'y' against an 'a', a character
+    that does appear in the pattern, the pattern can be slid 
+    forward by 3 characters, to where the 'a' in the text is aligned with the last 'a' in the pattern. At this point 
+    we need to start another attempted match from the rightmost end of the pattern. Where a
+    character appears repeatedly in the pattern, as 'l' does in the "wally"
+    example, it is the last occurrence that counts, so in this example
+    the shift therefore will be 1, not 2.\t 
 \\Overview}
 
 \\Code{
@@ -33,41 +48,54 @@ Main
 Horspool(T, n, P, m) 
   // Look for pattern P (of length m) in text T (of length n).
   // If found, return the index of P's first occurrence in T.
-  // Otherwise return -1.
 \\Expl{  The pattern is P[1]..P[m] and the text is T[1]..T[n].
 \\Expl}
 \\In{
-    find the shift value for each character          \\Ref FindShifts
-    perform the search                               \\Ref Search
+    CreateShiftTable          \t\t\t\t \\Ref CreateShiftTable
+    Search \t\t                              \\Ref Search
 \\In}
 \\Code}
 
 \\Code{
-FindShifts
-// Ignoring the text T, calculate, from P, a suitable shift value 
-// for each character in the alphabet. 
-for k in a..z
+CreateShiftTable
+//Initialize ShiftTable
+for k <- 1 to AlphabetSize
+\\Expl{  The Alphabet contains all characters from which the
+text or pattern may be drawn, and AlphabetSize is the
+number of characters in the Alphabet.  
+\\Expl}        
 \\In{
     Shift[k] <- m
-    \\Expl{  Set the default shift to be m.
+    \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
+     the current character in the text is not in the pattern at all, we do not have
+     to try any more possible matches that contain this character, so we make a large skip. 
     \\Expl}
 \\In}
+//Put in values for characters in pattern P
 for j <- 1 to m-1
 \\In{
     Shift[P[j]] <- m - j
+    \\Expl{ For characters that are in pattern P, overwrite the default shift to something smaller.
+    \\Expl}\t \t
 \\In}
 \\Code}
 
 \\Code{
 Search
 i <- m
-while i <= n
+while i <= n 
+\\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
+\\Expl}
 \\In{
     j <- 0
     while j < m and P[m-j] = T[i-j]
+    \\Expl{ These characters match.
+    \\Expl} \t\t
     \\In{
         j <= j + 1
     \\In}
+    \\Expl{  So move back one character and keep trying to match.
+    \\Expl} 
     if j = m
     \\In{
         // we have a match
@@ -80,7 +108,7 @@ while i <= n
             far, given the attempted match starting with T[i] failed.
     \\Expl}
     \\In}
-return -1  // signal there was no match
+return NOT FOUND  // Signal that there was no match
 \\Code}
 
 \\Note{  The following is an implementation in C:
