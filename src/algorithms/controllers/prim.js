@@ -75,6 +75,35 @@ export default {
       }
     };
 
+    const sortNullRight = () =>  function (a, b) {
+      if (a === b) {
+        return 0;
+      }
+      if (a === null) {
+        return 1;
+      }
+      if (b === null) {
+        return -1;
+      }
+      
+        return a < b ? -1 : 1;
+    };
+
+    const updatePqDisplay = () => {
+      pqDisplay = new Array(matrix.length).fill('');
+      pqCost = new Array(matrix.length).fill('');
+      let index = 0;
+      for (let i = pqStart; i < n; i++) {
+        if (cost[i] === Infinity) {
+          break;
+        }
+        pqDisplay[index] = pq[i] + 1;
+        pqCost[index] = cost[pq[i]];
+        index++;
+      }
+      pqCost.sort(sortNullRight);
+    };
+
     const PqUpdate = (i) => {
       let j;
       let w;
@@ -93,37 +122,16 @@ export default {
           cost[j] = w;
           PqSort();
           prev[j] = i;
+          updatePqDisplay();
+          chunker.add(
+              4,
+              (vis, v) => {
+                vis.array.set(v);
+              },
+              [[pqDisplay, pqCost]]
+          );
         }
       }
-    };
-
-    const sortNullRight = () =>  function (a, b) {
-        if (a === b) {
-            return 0;
-        }
-        if (a === null) {
-            return 1;
-        }
-        if (b === null) {
-            return -1;
-        }
-        
-            return a < b ? -1 : 1;
-      };
-
-    const updatePqDisplay = () => {
-      pqDisplay = new Array(matrix.length).fill('');
-      pqCost = new Array(matrix.length).fill('');
-      let index = 0;
-      for (let i = pqStart; i < n; i++) {
-        if (cost[i] === Infinity) {
-          break;
-        }
-        pqDisplay[index] = pq[i] + 1;
-        pqCost[index] = cost[pq[i]];
-        index++;
-      }
-      pqCost.sort(sortNullRight);
     };
 
     let i;
