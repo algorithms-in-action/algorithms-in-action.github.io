@@ -39,6 +39,12 @@ function blockContainsBookmark(algorithm, block) {
   return false;
 }
 
+//SIM Event - DanistyWuKids
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+function simulateMouseClick(element){
+  mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
+}
+
 function codeFormatting(codeArray) {
   let spanItem;
   let codeItem;
@@ -144,6 +150,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][blockName] && line.lineExplanButton !== undefined) {
       lineExplanButton =
         <button
+          id={"buttonexpl"+i}
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
@@ -180,7 +187,9 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
-          <span>{lineExplanButton}</span>
+          <span
+            id={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'activebtn' : ''}>
+              {lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -198,7 +207,8 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
         >
           <span>{i}</span>
           <span>{null}</span>
-          <span>{lineExplanButton}</span>
+          <span id={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'activebtn' : ''}>
+            {lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -220,7 +230,6 @@ const pseudoCodePadding = (lineNum, limit) => {
       </p>,
     );
   }
-
   return codeLines;
 };
 

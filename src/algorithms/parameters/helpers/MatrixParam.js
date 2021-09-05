@@ -23,6 +23,13 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 
+//SIM Event - DanistyWuKids
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+function simulateMouseClick(element){
+  mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
+}
+
+
 /**
  * This matrix param component can be used when
  * the param input accepts a matrix
@@ -53,6 +60,8 @@ function MatrixParam({
     setData(newData);
     setOriginalData(newData);
   }, [size, min, max, symmetric]);
+
+  useEffect(() => {var element = document.querySelector('button[id="startBtnGrp"]');simulateMouseClick(element);},[]);
 
   // Reset the matrix to the inital set
   const resetData = () => {
@@ -138,7 +147,7 @@ function MatrixParam({
           id="refreshMatrix"
           onClick={resetData}
         />
-        <button className="matrixBtn" onClick={handleSearch}>
+        <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
           {buttonMessage}
         </button>
       </div>
