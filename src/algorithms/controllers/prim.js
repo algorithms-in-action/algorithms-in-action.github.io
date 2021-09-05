@@ -46,6 +46,17 @@ export default {
     const closed = [];
     let pqCost = [];
 
+    const updatePqDisplay = () => {
+      pqDisplay = [];
+      pqCost = [];
+      for (let i = pqStart; i < n; i++) {
+        if (cost[i] === Infinity) {
+          break;
+        }
+        pqDisplay.push(pq[i] + 1);
+        pqCost.push(cost[pq[i]]);
+      }
+    };
     chunker.add(
       1,
       (vis, array) => {
@@ -87,22 +98,17 @@ export default {
           cost[j] = w;
           PqSort();
           prev[j] = i;
+          updatePqDisplay();
+          chunker.add(
+              4,
+              (vis, v) => {
+                vis.array.set(v);
+              },
+              [[pqDisplay, pqCost]]
+          );
         }
       }
     };
-
-    const updatePqDisplay = () => {
-      pqDisplay = [];
-      pqCost = [];
-      for (let i = pqStart; i < n; i++) {
-        if (cost[i] === Infinity) {
-          break;
-        }
-        pqDisplay.push(pq[i] + 1);
-        pqCost.push(cost[pq[i]]);
-      }
-    };
-
     let i;
     weight = [...E];
     n = vertex;
