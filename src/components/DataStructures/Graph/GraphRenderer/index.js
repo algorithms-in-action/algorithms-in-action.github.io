@@ -139,14 +139,14 @@ class GraphRenderer extends Renderer {
         }
         {
           nodes.map(node => {
-            const { id, x, y, weight, visitedCount, selectedCount, value } = node;
+            const { id, x, y, weight, visitedCount, selectedCount, value, style } = node;
             // only when selectedCount is 1, then highlight the node
             const selectNode = selectedCount === 1;
             return (
               <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
                  key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
-                <text className={styles.id}>{value}</text>
+                <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
+                <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>

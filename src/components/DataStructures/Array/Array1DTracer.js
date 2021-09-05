@@ -36,6 +36,10 @@ class Array1DTracer extends Array2DTracer {
     super.select(0, sx, 0, ex);
   }
 
+  styledSelect(style, sx, ex = sx) {
+    super.styledSelect(style, 0, sx, 0, ex);
+  }
+
   deselect(sx, ex = sx) {
     super.deselect(0, sx, 0, ex);
   }
