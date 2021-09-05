@@ -4,6 +4,7 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 // merge test 
@@ -19,6 +20,10 @@ export default {
         instance: new Array2DTracer('array', null, 'Priority Queue'),
         order: 1,
       },
+      prevArray: {
+        instance: new Array1DTracer('array', null, 'Prev Array'),
+        order: 1,
+      }
     };
   },
 
@@ -41,6 +46,7 @@ export default {
     const prev = new Array(matrix.length);
     const pq = new Array(matrix.length);
     let pqDisplay = [];
+    const prevDisplay = new Array(matrix.length).fill('');
     let pqStart;
     let n;
     const closed = [];
@@ -91,16 +97,33 @@ export default {
       }
     };
 
+    const sortNullRight = () =>  function (a, b) {
+        if (a === b) {
+            return 0;
+        }
+        if (a === null) {
+            return 1;
+        }
+        if (b === null) {
+            return -1;
+        }
+        
+            return a < b ? -1 : 1;
+      };
+
     const updatePqDisplay = () => {
-      pqDisplay = [];
-      pqCost = [];
+      pqDisplay = new Array(matrix.length).fill('');
+      pqCost = new Array(matrix.length).fill('');
+      let index = 0;
       for (let i = pqStart; i < n; i++) {
         if (cost[i] === Infinity) {
           break;
         }
-        pqDisplay.push(pq[i] + 1);
-        pqCost.push(cost[pq[i]]);
+        pqDisplay[index] = pq[i] + 1;
+        pqCost[index] = cost[pq[i]];
+        index++;
       }
+      pqCost.sort(sortNullRight);
     };
 
     let i;
@@ -117,17 +140,18 @@ export default {
     }
     pqStart = 0;
     updatePqDisplay();
-    pqCost.sort();
     chunker.add(
         2,
-        (vis, v) => {
+        (vis, v, u) => {
           vis.array.set(v);
+          vis.prevArray.set(u);
         },
-        [[pqDisplay, pqCost]]
+        [[pqDisplay, pqCost], prevDisplay]
     );
 
     while (pqStart < n) {
       i = pq[pqStart];
+      prevDisplay[pqStart] = i + 1;
       chunker.add(
         3,
         (vis, n1, n2) => {
@@ -139,24 +163,24 @@ export default {
       pending[i] = 0;
       pqStart += 1;
       updatePqDisplay();
-      pqCost.sort();
       chunker.add(
           4,
-          (vis, v) => {
+          (vis, v, u) => {
             vis.array.set(v);
+            vis.prevArray.set(u);
           },
-          [[pqDisplay, pqCost]]
+          [[pqDisplay, pqCost], prevDisplay]
       );
 
       PqUpdate(i);
       updatePqDisplay();
-      pqCost.sort();
       chunker.add(
           5,
-          (vis, v) => {
+          (vis, v, u) => {
             vis.array.set(v);
+            vis.prevArray.set(u);
           },
-          [[pqDisplay, pqCost]]
+          [[pqDisplay, pqCost], prevDisplay]
       );
 
       const newEdges = [];
