@@ -50,9 +50,9 @@ class Array1DTracer extends Array2DTracer {
   }
 
   swapElements(x, y) {
-    const temp = this.data[0][x].value;
-    this.data[0][x].value = this.data[0][y].value;
-    this.data[0][y].value = temp;
+    const temp = this.data[0][x];
+    this.data[0][x] = this.data[0][y];
+    this.data[0][y] = temp;
   }
 }
 

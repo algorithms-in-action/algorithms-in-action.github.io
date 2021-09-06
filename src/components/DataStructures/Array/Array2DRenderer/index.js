@@ -21,6 +21,7 @@
 
 import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
+import { motion } from 'framer-motion';
 import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
@@ -41,7 +42,6 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
-
 class Array2DRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -55,20 +55,24 @@ class Array2DRenderer extends Renderer {
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
-    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
-
+    let longestRow = data.reduce(
+      (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
+      [],
+    );
 
     return (
-      <table className={switchmode(mode())}
-             style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
+      <table
+        className={switchmode(mode())}
+        style={{
+          marginLeft: -this.centerX * 2,
+          marginTop: -this.centerY * 2,
+          transform: `scale(${this.zoom})`,
+        }}
+      >
         <tbody>
-        <tr className={styles.row}>
-          {
-            !isArray1D &&
-            <td className={classes(styles.col, styles.index)} />
-          }
-          {
-            longestRow.map((_, i) => {
+          <tr className={styles.row}>
+            {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+            {longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
               if (algo === 'heapsort') {
                 i += 1;
@@ -78,29 +82,34 @@ class Array2DRenderer extends Renderer {
                   <span className={styles.value}>{i}</span>
                 </td>
               );
-            })
-          }
-        </tr>
-        {
-          data.map((row, i) => (
+            })}
+          </tr>
+          {data.map((row, i) => (
             <tr className={styles.row} key={i}>
-              {
-                !isArray1D &&
+              {!isArray1D && (
                 <td className={classes(styles.col, styles.index)}>
                   <span className={styles.value}>{i}</span>
                 </td>
-              }
-              {
-                row.map((col, j) => (
-                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched, col.sorted && styles.sorted)}
-                      key={j}>
-                    <span className={styles.value}>{this.toString(col.value)}</span>
-                  </td>
-                ))
-              }
+              )}
+              {row.map((col) => (
+                <motion.td
+                  layout
+                  transition={{ duration: 0.6 }}
+                  className={classes(
+                    styles.col,
+                    col.selected && styles.selected,
+                    col.patched && styles.patched,
+                    col.sorted && styles.sorted,
+                  )}
+                  key={col.key}
+                >
+                  <span className={styles.value}>
+                    {this.toString(col.value)}
+                  </span>
+                </motion.td>
+              ))}
             </tr>
-          ))
-        }
+          ))}
         </tbody>
       </table>
     );
@@ -108,4 +117,3 @@ class Array2DRenderer extends Renderer {
 }
 
 export default Array2DRenderer;
-
