@@ -209,7 +209,7 @@ export default {
 
           // if current node is a leaf, then do not highlight the node
           if (!(2 * i + 1 >= n)) {
-            chunker.add(10, (vis, index) => {
+            chunker.add(28, (vis, index) => {
               vis.array.select(index);
               vis.heap.select(index + 1);
             }, [i]);
