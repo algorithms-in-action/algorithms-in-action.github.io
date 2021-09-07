@@ -19,13 +19,13 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 
-import React from 'react';
+import React from "react";
 // import Array1DRenderer from '../Array1DRenderer/index';
-import { motion } from 'framer-motion';
-import Renderer from '../../common/Renderer/index';
-import styles from './Array2DRenderer.module.scss';
-import { classes } from '../../common/util';
-import { mode } from '../../../top/Settings';
+import { motion, AnimateSharedLayout } from "framer-motion";
+import Renderer from "../../common/Renderer/index";
+import styles from "./Array2DRenderer.module.scss";
+import { classes } from "../../common/util";
+import { mode } from "../../../top/Settings";
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -52,12 +52,11 @@ class Array2DRenderer extends Renderer {
 
   renderData() {
     const { data, algo } = this.props.data;
-
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce(
       (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
-      [],
+      []
     );
 
     return (
@@ -70,11 +69,12 @@ class Array2DRenderer extends Renderer {
         }}
       >
         <tbody>
+          {/* Indexes */}
           <tr className={styles.row}>
             {!isArray1D && <td className={classes(styles.col, styles.index)} />}
             {longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === 'heapsort') {
+              if (algo === "heapsort") {
                 i += 1;
               }
               return (
@@ -84,6 +84,7 @@ class Array2DRenderer extends Renderer {
               );
             })}
           </tr>
+          {/* Values */}
           {data.map((row, i) => (
             <tr className={styles.row} key={i}>
               {!isArray1D && (
@@ -99,7 +100,7 @@ class Array2DRenderer extends Renderer {
                     styles.col,
                     col.selected && styles.selected,
                     col.patched && styles.patched,
-                    col.sorted && styles.sorted,
+                    col.sorted && styles.sorted
                   )}
                   key={col.key}
                 >
@@ -110,6 +111,32 @@ class Array2DRenderer extends Renderer {
               ))}
             </tr>
           ))}
+          {/* Variable pointers */}
+          {data.map(
+            (row, i) =>
+              isArray1D && ( // variable pointer only working for 1D arrays
+                <AnimateSharedLayout>
+                  <tr layout className={styles.row} key={i}>
+                    {row.map((col) => (
+                      <td
+                        className={classes(styles.col, styles.variables)}
+                        key={`vars-${col.key}`}
+                      >
+                        {col.variables.map((v) => (
+                          <motion.p
+                            layoutId={v}
+                            key={v}
+                            className={styles.variable}
+                          >
+                            {v}
+                          </motion.p>
+                        ))}
+                      </td>
+                    ))}
+                  </tr>
+                </AnimateSharedLayout>
+              )
+          )}
         </tbody>
       </table>
     );
