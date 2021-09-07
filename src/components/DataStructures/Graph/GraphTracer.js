@@ -379,26 +379,34 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    const hGap = rect.width / leafCounts[root];
-    const vGap = rect.height / maxDepth;
     marked = {};
-    const recursivePosition = (node, h, v) => {
+    const leafNodeSizeAlloc = 30; // horizontal size allocated per leaf node under a subtree node
+    const verticalGap = 80; // vertical gap between nodes. incremented every level.
+    const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
-      if (this.nodes.length === 2 && h === 0 && v === 1) {
-        node.x = rect.left + (h + leafCounts[node.id] / 4) * hGap;
-      }
-      node.y = rect.top + v * vGap;
+      node.x = x;
+      node.y = y;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
         if (marked[linkedNode.id]) continue;
-        recursivePosition(linkedNode, h, v + 1);
+        let x1 = x;
+        let y1 = y;
+        // For left child
+        if (linkedNode.id === 2 * node.id) {
+          x1 -= leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        // For right child
+        if (linkedNode.id === (2 * node.id + 1)) {
+          x1 += leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        y1 += verticalGap;
+        recursivePosition(linkedNode, h, v + 1, x1, y1);
         h += leafCounts[linkedNode.id];
       }
     };
     const rootNode = this.findNode(root);
-    recursivePosition(rootNode, 0, 0);
+    recursivePosition(rootNode, 0, 0, 0, rect.top);
   }
 
   layoutBST(root = 0, sorted = false) {
