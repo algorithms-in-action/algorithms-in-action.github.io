@@ -52,6 +52,7 @@ export default {
         vis.array.swapElements(_n1, _n2);
         vis.array.depatch(_n2);
         vis.array.depatch(_n1);
+        
       }, [n1, n2]);
     };
 
@@ -69,11 +70,16 @@ export default {
       chunker.add(4, (vis, index) => {
         vis.array.select(index);
         vis.heap.select(index + 1);
+        vis.array.assignVariable('k', index)
       }, [k]);
 
       let j;
       i = k;
-      chunker.add(6);
+
+      chunker.add(6, (vis, index) => {
+        vis.array.assignVariable('i', index)
+      }, [i]);
+
       heap = false;
       chunker.add(7);
 
@@ -93,12 +99,14 @@ export default {
           chunker.add(11, (vis, index) => {
             vis.array.select(index);
             vis.heap.select(index + 1);
+            vis.array.assignVariable('j', index)
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(13, (vis, index) => {
             vis.array.select(index);
             vis.heap.select(index + 1);
+            vis.array.assignVariable('j', index)
           }, [j]);
         }
 
@@ -122,6 +130,7 @@ export default {
             vis.array.deselect(c);
             vis.heap.deselect(p + 1);
             vis.heap.deselect(c + 1);
+            vis.array.assignVariable('i', c)
           }, [i, j]);
           i = j;
 
@@ -137,8 +146,14 @@ export default {
     }
 
     // sort heap
-    chunker.add(20);
     while (n > 0) {
+      chunker.add(20, (vis, nVal) => {
+        // if first iteration of while loop - clear variables & start fresh
+        if (nVal === nodes.length) vis.array.clearVariables();
+        // else only clear 'j'
+        else vis.array.removeVariable('j')
+      }, [n]); 
+
       let j;
       swap = A[n - 1];
       A[n - 1] = A[0];
@@ -150,6 +165,7 @@ export default {
       // }, [n - 1]);
       chunker.add(22, (vis, index) => {
         vis.array.sorted(index);
+        vis.array.assignVariable('n', index);
       }, [n - 1]);
       n -= 1;
 
@@ -157,6 +173,7 @@ export default {
       chunker.add(24, (vis, index) => {
         vis.array.select(index);
         vis.heap.select(index + 1);
+        vis.array.assignVariable('i', index)
       }, [i]);
 
       chunker.add(25);
@@ -176,12 +193,14 @@ export default {
           chunker.add(29, (vis, index) => {
             vis.array.select(index);
             vis.heap.select(index + 1);
+            vis.array.assignVariable('j', index)
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(31, (vis, index) => {
             vis.array.select(index);
             vis.heap.select(index + 1);
+            vis.array.assignVariable('j', index)
           }, [j]);
         }
 
@@ -204,6 +223,7 @@ export default {
             vis.array.deselect(c);
             vis.heap.deselect(p + 1);
             vis.heap.deselect(c + 1);
+            vis.array.assignVariable('i', c)
           }, [i, j]);
           i = j;
 
