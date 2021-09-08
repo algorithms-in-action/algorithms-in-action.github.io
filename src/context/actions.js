@@ -8,18 +8,73 @@ import findBookmark from '../pseudocode/findBookmark';
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
 
+let previousState = [];
+
+/**
+ *
+ * @param {*} blockName
+ * @param {*} pseudocode
+ * @param {*} acc
+ * @returns
+ */
+function getChildren(blockName, pseudocode, acc) {
+  let accumulator;
+  const current = pseudocode[blockName].filter((val) => val.ref !== undefined);
+  if (current.length === 0 || blockName === 'Main') {
+    return [];
+  }
+  for (let i = 0; i < current.length; i += 1) {
+    accumulator = acc.concat(getChildren(current[i].ref, pseudocode, [])).concat([current[i].ref]);
+  }
+  return accumulator;
+}
+
+/**
+ * Looks at the parent for a pseudocode node, and recursively builds the tree of enclosed code paths (i.e. all the children of all the parents up to Main)
+ * @param {*} blockName
+ * @param {*} collapse
+ * @param {*} pseudocode
+ * @param {*} acc - array to [] results
+ * @returns
+ */
+function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
+  if (blockName === undefined || blockName === 'Main') {
+    return [];
+  }
+  for (const name of Object.keys(pseudocode)) {
+    for (let i = 0; i < pseudocode[name].length; i += 1) {
+      if (Object.prototype.hasOwnProperty.call(pseudocode[name][i], 'ref') !== undefined && pseudocode[name][i].ref === blockName) {
+        return acc.concat([name].concat(getFullPseudocodeTree(name, collapse, pseudocode, acc))).concat(getChildren(name, pseudocode, []));
+      }
+    }
+  }
+  return [];
+}
 
 // Given some pseudocode and a block collapse state, is bookmark visible on screen?
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
+  // collapse contains names of the sections and their collapsed state
   let containingBlock = false;
+
   for (const blockName of Object.keys(pseudocode)) {
     for (let i = 0; i < pseudocode[blockName].length; i += 1) {
+      // looking at all the pseudocode elements
       if (pseudocode[blockName][i].bookmark === bookmark) {
         containingBlock = blockName;
-        if (i === 0) {
+        if (collapse[containingBlock]) {
+          // i.e. if this node is open, then we need to step into its children for highlighting purposes once again
+          previousState = [];
           return true;
         }
-        return collapse[containingBlock];
+        const children = getChildren(containingBlock, pseudocode, []);
+        const result = getFullPseudocodeTree(containingBlock, collapse, pseudocode, [containingBlock]);
+        const newState = [...new Set(previousState.concat(result).concat(children))];
+        if (previousState.includes(containingBlock)) {
+          previousState = newState;
+          return false; // already visited
+        }
+        previousState = newState;
+        return true;
       }
     }
   }
@@ -48,7 +103,9 @@ function getCollapseController(procedureAlgorithms) {
   for (const algorithmName of Object.keys(procedureAlgorithms)) {
     const algorithmCollapseController = {};
     for (const modeName of Object.keys(procedureAlgorithms[algorithmName].pseudocode)) {
-      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(procedureAlgorithms[algorithmName].pseudocode[modeName]);
+      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(
+        procedureAlgorithms[algorithmName].pseudocode[modeName],
+      );
     }
     collapseController[algorithmName] = algorithmCollapseController;
   }
@@ -71,14 +128,13 @@ function addLineExplanation(procedurePseudocode) {
 // the following functions. Each comment shows the expected properties in the
 // params argument.
 export const GlobalActions = {
-
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
       param, name, explanation, extraInfo, pseudocode, instructions,
     } = data;
-
+    previousState = [];
     const procedurePseudocode = pseudocode[params.mode];
     addLineExplanation(procedurePseudocode);
 
@@ -109,7 +165,7 @@ export const GlobalActions = {
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
     const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
-
+    previousState = [];
 
     return {
       ...state,
@@ -135,7 +191,9 @@ export const GlobalActions = {
     do {
       result = state.chunker.next();
     } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
-
+    if (result.finished) {
+      previousState = [];
+    }
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
     return {
@@ -189,8 +247,6 @@ export const GlobalActions = {
     ...state,
     lineExplanation: updateLineExplan,
   }),
-
-
 };
 
 export function dispatcher(state, setState) {
