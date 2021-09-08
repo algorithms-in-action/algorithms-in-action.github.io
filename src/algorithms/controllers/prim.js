@@ -165,6 +165,8 @@ export default {
         (vis, n1, n2) => {
           vis.graph.visit(n1, n2);
           vis.graph.select(n1, n2);
+          vis.array.select(0, 0);
+          vis.array.select(1, 0);
         },
         [i, prev[i]]
       );
