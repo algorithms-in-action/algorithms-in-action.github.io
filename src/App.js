@@ -10,7 +10,7 @@ import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 import Settings from './components/top/Settings';
 import {
-  resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
+  resizeWindow, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
 import {
   setTheme,
@@ -140,8 +140,7 @@ function App() {
           id="leftdragbar"
           tabIndex="-1"
           aria-label="Move left drag bar"
-          onDoubleClick={collapseLeftDrag}
-          onMouseDown={startLeftDrag}
+          onClick={collapseLeftDrag}
           role="button"
           className="dragbar"
         >
