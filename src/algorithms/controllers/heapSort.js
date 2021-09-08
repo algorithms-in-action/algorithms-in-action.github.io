@@ -37,21 +37,35 @@ export default {
       vis.array.set(array, 'heapsort');
     }, [nodes]);
 
-    const swapAction = (b1, b2, n1, n2) => {
-      chunker.add(b1, (vis, _n1, _n2) => {
-        vis.heap.visit(_n1 + 1);
-        vis.heap.visit(_n2 + 1);
-        vis.array.patch(_n1);
-        vis.array.patch(_n2);
-      }, [n1, n2]);
 
+    const highlight = (vis, index, primaryColor = true) => {
+      if (primaryColor) {
+        vis.heap.visit(index + 1);
+        vis.array.select(index);
+      } else {
+        vis.heap.select(index + 1);
+        vis.array.patch(index);
+      }
+    };
+
+    const unhighlight = (vis, index, primaryColor = true) => {
+      if (primaryColor) {
+        vis.heap.leave(index + 1);
+        vis.array.deselect(index);
+      } else {
+        vis.heap.deselect(index + 1);
+        vis.array.depatch(index);
+      }
+    };
+
+    const swapAction = (b1, b2, n1, n2) => {
       chunker.add(b2, (vis, _n1, _n2) => {
         vis.heap.swapNodes(_n1 + 1, _n2 + 1);
-        vis.heap.leave(_n1 + 1);
-        vis.heap.leave(_n2 + 1);
         vis.array.swapElements(_n1, _n2);
-        vis.array.depatch(_n2);
-        vis.array.depatch(_n1);
+        unhighlight(vis, _n1);
+        highlight(vis, _n1, false);
+        unhighlight(vis, _n2, false);
+        highlight(vis, _n2);
       }, [n1, n2]);
     };
 
@@ -67,8 +81,7 @@ export default {
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
       chunker.add(4, (vis, index) => {
-        vis.array.select(index);
-        vis.heap.select(index + 1);
+        highlight(vis, index);
       }, [k]);
 
       let j;
@@ -91,14 +104,12 @@ export default {
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           j = 2 * i + 2;
           chunker.add(11, (vis, index) => {
-            vis.array.select(index);
-            vis.heap.select(index + 1);
+            highlight(vis, index, false);
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(13, (vis, index) => {
-            vis.array.select(index);
-            vis.heap.select(index + 1);
+            highlight(vis, index, false);
           }, [j]);
         }
 
@@ -107,10 +118,8 @@ export default {
         if (A[i] >= A[j]) {
           heap = true;
           chunker.add(15, (vis, p, c) => {
-            vis.array.deselect(p);
-            vis.array.deselect(c);
-            vis.heap.deselect(p + 1);
-            vis.heap.deselect(c + 1);
+            unhighlight(vis, p);
+            unhighlight(vis, c, false);
           }, [i, j]);
         } else {
           swap = A[i];
@@ -118,18 +127,15 @@ export default {
           A[j] = swap;
           swapAction(17, 17, i, j);
           chunker.add(18, (vis, p, c) => {
-            vis.array.deselect(p);
-            vis.array.deselect(c);
-            vis.heap.deselect(p + 1);
-            vis.heap.deselect(c + 1);
+            unhighlight(vis, p, false);
+            unhighlight(vis, c);
           }, [i, j]);
           i = j;
 
           // if current node is a leaf, then do not highlight the node
           if (!(2 * i + 1 >= n)) {
             chunker.add(10, (vis, index) => {
-              vis.array.select(index);
-              vis.heap.select(index + 1);
+              highlight(vis, index);
             }, [i]);
           }
         }
@@ -143,20 +149,25 @@ export default {
       swap = A[n - 1];
       A[n - 1] = A[0];
       A[0] = swap;
+      chunker.add(21, (vis, index) => {
+        highlight(vis, 0);
+        highlight(vis, index, false);
+      }, [n - 1]);
       swapAction(21, 21, 0, n - 1);
 
       // chunker.add(22, (vis, index) => {
       //   vis.array.patch(index);
       // }, [n - 1]);
       chunker.add(22, (vis, index) => {
+        unhighlight(vis, index);
+        unhighlight(vis, 0, false);
         vis.array.sorted(index);
       }, [n - 1]);
       n -= 1;
 
       i = 0;
       chunker.add(24, (vis, index) => {
-        vis.array.select(index);
-        vis.heap.select(index + 1);
+        highlight(vis, index);
       }, [i]);
 
       chunker.add(25);
@@ -174,14 +185,12 @@ export default {
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
           j = 2 * i + 2;
           chunker.add(29, (vis, index) => {
-            vis.array.select(index);
-            vis.heap.select(index + 1);
+            highlight(vis, index, false);
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(31, (vis, index) => {
-            vis.array.select(index);
-            vis.heap.select(index + 1);
+            highlight(vis, index, false);
           }, [j]);
         }
 
@@ -189,10 +198,8 @@ export default {
         if (A[i] >= A[j]) {
           heap = true;
           chunker.add(33, (vis, p, c) => {
-            vis.array.deselect(p);
-            vis.array.deselect(c);
-            vis.heap.deselect(p + 1);
-            vis.heap.deselect(c + 1);
+            unhighlight(vis, p);
+            unhighlight(vis, c, false);
           }, [i, j]);
         } else {
           swap = A[i];
@@ -200,18 +207,15 @@ export default {
           A[j] = swap;
           swapAction(35, 35, i, j);
           chunker.add(36, (vis, p, c) => {
-            vis.array.deselect(p);
-            vis.array.deselect(c);
-            vis.heap.deselect(p + 1);
-            vis.heap.deselect(c + 1);
+            unhighlight(vis, p, false);
+            unhighlight(vis, c);
           }, [i, j]);
           i = j;
 
           // if current node is a leaf, then do not highlight the node
           if (!(2 * i + 1 >= n)) {
             chunker.add(10, (vis, index) => {
-              vis.array.select(index);
-              vis.heap.select(index + 1);
+              highlight(vis, index);
             }, [i]);
           }
         }
