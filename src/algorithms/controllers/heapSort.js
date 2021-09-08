@@ -79,16 +79,18 @@ export default {
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
-      chunker.add(4, (vis, p, c) => {
-        highlight(vis, p);
-        if (c != null) {
-          unhighlight(vis, c);
-        }
-      }, [k, i]);
+      chunker.add(4, (vis, index) => {
+        highlight(vis, index);
+        vis.array.assignVariable('k', index);
+      }, [k]);
 
       let j;
       i = k;
-      chunker.add(6);
+
+      chunker.add(6, (vis, index) => {
+        vis.array.assignVariable('i', index);
+      }, [i]);
+
       heap = false;
       chunker.add(7);
 
@@ -103,11 +105,13 @@ export default {
           j = 2 * i + 2;
           chunker.add(11, (vis, index) => {
             highlight(vis, index, false);
+            vis.array.assignVariable('j', index);
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(13, (vis, index) => {
             highlight(vis, index, false);
+            vis.array.assignVariable('j', index);
           }, [j]);
         }
 
@@ -123,9 +127,10 @@ export default {
           A[i] = A[j];
           A[j] = swap;
           swapAction(17, i, j);
-          chunker.add(18, (vis, index) => {
-            unhighlight(vis, index, false);
-          }, [i]);
+          chunker.add(18, (vis, p, c) => {
+            unhighlight(vis, p, false);
+            vis.array.assignVariable('i', c);
+          }, [i, j]);
           i = j;
         }
       }
@@ -136,6 +141,13 @@ export default {
       unhighlight(vis, index);
     }, [i]);
     while (n > 0) {
+      chunker.add(20, (vis, nVal) => {
+        // if first iteration of while loop - clear variables & start fresh
+        if (nVal === nodes.length) vis.array.clearVariables();
+        // else only clear 'j'
+        else vis.array.removeVariable('j');
+      }, [n]);
+
       let j;
       swap = A[n - 1];
       A[n - 1] = A[0];
@@ -151,12 +163,14 @@ export default {
         unhighlight(vis, index);
         unhighlight(vis, 0, false);
         vis.array.sorted(index);
+        vis.array.assignVariable('n', index);
       }, [n - 1]);
       n -= 1;
 
       i = 0;
       chunker.add(24, (vis, index) => {
         highlight(vis, index);
+        vis.array.assignVariable('i', index);
       }, [i]);
 
       chunker.add(25);
@@ -171,11 +185,13 @@ export default {
           j = 2 * i + 2;
           chunker.add(29, (vis, index) => {
             highlight(vis, index, false);
+            vis.array.assignVariable('j', index);
           }, [j]);
         } else {
           j = 2 * i + 1;
           chunker.add(31, (vis, index) => {
             highlight(vis, index, false);
+            vis.array.assignVariable('j', index);
           }, [j]);
         }
 
@@ -194,6 +210,7 @@ export default {
           chunker.add(36, (vis, p, c) => {
             unhighlight(vis, p, false);
             unhighlight(vis, c);
+            vis.array.assignVariable('i', c);
           }, [i, j]);
           i = j;
 

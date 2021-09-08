@@ -10,13 +10,13 @@ function RightPanel({ fontSize, fontSizeIncrement }) {
   const buttons = [
     {
       id: 0,
-      label: 'Background',
-      display: <Explanation fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
+      label: 'Code',
+      display: <Pseudocode fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
     {
       id: 1,
-      label: 'Code',
-      display: <Pseudocode fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
+      label: 'Background',
+      display: <Explanation fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
     {
       id: 2,

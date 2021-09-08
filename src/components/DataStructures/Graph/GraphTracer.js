@@ -24,10 +24,10 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 320,
+      baseWidth: 500,
       baseHeight: 320,
       padding: 32,
-      nodeRadius: 12,
+      nodeRadius: 15,
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -160,10 +160,13 @@ class GraphTracer extends Tracer {
 
   swapNodes(nodeId1, nodeId2) {
     const node1 = this.findNode(nodeId1);
-    const temp = node1.value;
+    const temp = { value: node1.value, key: node1.key };
     const node2 = this.findNode(nodeId2);
+    // Swap both the value and key (key is what animates swapping action)
     node1.value = node2.value;
-    node2.value = temp;
+    node1.key = node2.key;
+    node2.value = temp.value;
+    node2.key = temp.key;
     this.layoutTree(this.root);
   }
 
@@ -178,7 +181,9 @@ class GraphTracer extends Tracer {
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
+    const key = id; // the key is a unique id which stays with the value (rather than the node)
+    // so to assist with animation of swapping nodes (see swapNodes)
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key });
     this.layout();
   }
 
@@ -380,6 +385,9 @@ class GraphTracer extends Tracer {
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      if (this.nodes.length === 2 && h === 0 && v === 1) {
+        node.x = rect.left + (h + leafCounts[node.id] / 4) * hGap;
+      }
       node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);

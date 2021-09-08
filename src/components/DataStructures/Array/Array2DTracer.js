@@ -18,12 +18,14 @@
 import Tracer from '../common/Tracer';
 import Array2DRenderer from './Array2DRenderer';
 
-class Element {
-  constructor(value) {
+export class Element {
+  constructor(value, key) {
     this.value = value;
     this.patched = false;
     this.selected = false;
     this.sorted = false;
+    this.key = key;
+    this.variables = [];
   }
 }
 
@@ -37,7 +39,7 @@ class Array2DTracer extends Tracer {
    * @param {string} algo used to mark if it is a specific algorithm
    */
   set(array2d = [], algo) {
-    this.data = array2d.map(array1d => [...array1d].map(value => new Element(value)));
+    this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
     super.set();
   }
