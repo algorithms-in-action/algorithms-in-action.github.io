@@ -108,7 +108,8 @@ export const makeData = (len, min, max, symmetric) => {
       rows.push(row);
     }
   }
-  const arr = [];
+  // const arr = [];
+  let arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
@@ -118,6 +119,32 @@ export const makeData = (len, min, max, symmetric) => {
     }
     arr.push(data);
   }
+  arr = [
+    {
+      col0: '0',
+      col1: '0',
+      col2: '0',
+      col3: '1',
+    },
+    {
+      col0: '1',
+      col1: '0',
+      col2: '0',
+      col3: '1',
+    },
+    {
+      col0: '1',
+      col1: '1',
+      col2: '0',
+      col3: '0',
+    },
+    {
+      col0: '0',
+      col1: '0',
+      col2: '1',
+      col3: '0',
+    },
+  ];
   return arr;
 };
 

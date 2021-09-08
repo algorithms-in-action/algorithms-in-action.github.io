@@ -24,6 +24,7 @@ export default class {
     this.chunks = [];
     this.visualisers = {};
     this.init = initfn;
+
     this.currentChunk = null;
   }
 

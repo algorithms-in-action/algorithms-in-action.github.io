@@ -175,10 +175,13 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
+    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
+    // eslint-disable-next-line max-len
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, visitedCount1, isPointer, pointerText });
     this.layout();
   }
 
@@ -199,9 +202,9 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0) {
+  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
     if (this.findEdge(source, target)) return;
-    this.edges.push({ source, target, weight, visitedCount, selectedCount });
+    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
     this.layout();
   }
 
@@ -502,11 +505,36 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(false, target, source);
   }
 
-  resetSelect(target, source) {
+  visit1(target, source, colorIndex, weight) {
+    this.visitOrLeave1(true, target, source, weight, colorIndex);
+  }
+
+  leave1(target, source, colorIndex, weight) {
+    this.visitOrLeave1(false, target, source, weight, colorIndex);
+  }
+
+  visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount = 0;
+    if (edge) edge.visitedCount1 = visit ? colorIndex : 0;
     const node = this.findNode(target);
-    node.selectedCount = 0;
+    if (weight !== undefined || weight !== null) node.weight = weight;
+    node.visitedCount1 = visit ? colorIndex : 0;
+    const node1 = this.findNode(source);
+    if (node1 !== undefined || node1 !== null) node1.visitedCount1 = visit ? colorIndex : 0;
+    if (this.logTracer) {
+      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+    }
+  }
+
+  setPointerNode(source, sText, target = null, tText = null) {
+    const node1 = this.findNode(source);
+    node1.isPointer = 1;
+    node1.pointerText = sText;
+    const node2 = this.findNode(target);
+    if (node2 !== undefined || node2 !== null) {
+      node2.isPointer = 1;
+      node2.pointerText = tText;
+    }
   }
 
   selectOrDeselect(select, target, source = null) {
@@ -517,6 +545,13 @@ class GraphTracer extends Tracer {
     if (this.logTracer) {
       this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
+  }
+
+  resetSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
+    const node = this.findNode(target);
+    node.selectedCount = 0;
   }
 
   log(key) {

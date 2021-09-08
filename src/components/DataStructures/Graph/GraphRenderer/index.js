@@ -32,6 +32,23 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
+function switchColor(visitedCount1) {
+  let fillStyle = '';
+  switch (visitedCount1) {
+    case 1:
+      fillStyle = styles.visited1;
+      break;
+    case 2:
+      fillStyle = styles.visited2;
+      break;
+    case 3:
+      fillStyle = styles.visited;
+      break;
+    default:
+      break;
+  }
+  return fillStyle;
+}
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -100,10 +117,16 @@ class GraphRenderer extends Renderer {
           <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
           </marker>
+          <marker id="markerArrowVisited1" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited1)} />
+          </marker>
+          <marker id="markerArrowVisited2" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          </marker>
         </defs>
         {
-          edges.sort((a, b) => a.visitedCount - b.visitedCount).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount } = edge;
+          edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
+            const { source, target, weight, visitedCount, selectedCount, visitedCount1 } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -123,7 +146,7 @@ class GraphRenderer extends Renderer {
             }
 
             return (
-              <g className={classes(styles.edge, selectedCount && styles.selected, visitedCount && styles.visited)}
+              <g className={classes(styles.edge, selectedCount && styles.selected, visitedCount && styles.visited, switchColor(visitedCount1))}
                  key={`${source}-${target}`}>
                 <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
                 {
@@ -139,17 +162,21 @@ class GraphRenderer extends Renderer {
         }
         {
           nodes.map(node => {
-            const { id, x, y, weight, visitedCount, selectedCount, value } = node;
+            const { id, x, y, weight, visitedCount, selectedCount, value, visitedCount1, isPointer, pointerText } = node;
             // only when selectedCount is 1, then highlight the node
             const selectNode = selectedCount === 1;
             return (
-              <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
+              <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited, switchColor(visitedCount1))}
                  key={id} transform={`translate(${x},${y})`}>
                 <circle className={styles.circle} r={nodeRadius} />
                 <text className={styles.id}>{value}</text>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
+                }
+                {
+                  isPointer &&
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
                 }
               </g>
             );

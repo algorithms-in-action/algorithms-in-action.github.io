@@ -54,8 +54,10 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       for (let i = 0; i < numOfNodes; i++) {
-        chunker.add(3, (g, i, k) => {
+        chunker.add(2, (g, i, k) => {
           g.array.select(i, k);
+          // g.graph.setPointerNode(i, 'i', k, 'k');
+          // g.graph.visit(k);
         }, [i, k]); // move along columns
 
         if (nodes[k][i][k]) {
@@ -68,62 +70,73 @@ export default {
           for (let j = 0; j < numOfNodes; j++) {
             chunker.add(3, (g, k, j) => {
               g.array.select1(k, j);
-            }, [k, j]); // move along rows
+            }, [k, j]); // move along rows (green)
+
             if (nodes[k][k][j]) {
+              chunker.add(3, (g, j, k) => {
+                // if a path between j and k is found, highlight the edge in green
+                g.graph.visit1(j, k, 1);
+              }, [j, k]);
+
               chunker.add(3, (g, i, j) => {
+                // orange
                 if (!g.array.data[i][j].value) {
                   g.array.patch(i, j, '0->1');
+                // there is a path between i and j, add a new edge and highlight the edge in orange
+                  g.graph.addEdge(i, j);
+                  g.graph.visit1(j, i, 2); // orange
+                  // highlight the node (i,j) in the matrix when a path is found
                 }
               }, [i, j]);
 
-              for (let a = k; a < numOfNodes; a++) {
-                nodes[a][i][j] = 1;
-              }
-
-              chunker.add(2, (g, j, k) => {
-                // if a path between j and k is found, highlight the edge in blue
-                g.graph.visit(j, k);
-              }, [j, k]);
-
-              chunker.add(2, (g, i, j) => {
-                // there is a path between i and j, add a new edge and highlight the edge in blue
-                g.graph.addEdge(i, j);
-                g.graph.visit(j, i);
-                // highlight the node (i,j) in the matrix when a path is found
-                // g.array.select(i, j);
-              }, [i, j]);
-
               if (i !== j || j !== k) {
-                chunker.add(3, (g, k, j) => {
+                chunker.add(3, (g, i, k, j) => {
+                  // remove green
                   g.array.deselect(k, j);
-                }, [k, j]);
+                  // g.graph.leave1(j, k);
+                }, [i, k, j]);
               }
+              chunker.add(3, (g, i, k, j) => {
+                // remove green
+                // g.array.deselect(k, j);
+                g.graph.leave1(j, k);
+              }, [i, k, j]);
 
-              chunker.add(4, (g, i, j, k) => {
+              chunker.add(3, (g, i, j, k) => {
                 // leave the node (i,j) to move to the next node
-                g.graph.leave(j, i);
+                // g.graph.leave(j, i);
                 // remove highlighting from the node (i,j) in the matrix to move to the next element
                 if (j !== k) {
                   // g.array.deselect(i, j);
                   g.array.depatch(i, j, 1);
+                  g.graph.leave1(j, i); // remove orange
                 }
-                g.graph.leave(j, k);
               }, [i, j, k]);
+
+              for (let a = k; a < numOfNodes; a++) {
+                nodes[a][i][j] = 1;
+              }
             }
+
             if (i !== j || j !== k) {
-              chunker.add(3, (g, k, j) => {
+              chunker.add(3, (g, i, k, j) => {
+                // remove green
                 g.array.deselect(k, j);
-              }, [k, j]);
+                g.graph.leave1(j, k);
+              }, [i, k, j]);
             }
           }
           chunker.add(4, (g, i, k) => {
             // leave the node (i,k) to move to the next node
+            // remove blue
             g.graph.leave(k, i);
             g.graph.leave(i);
+            // g.graph.leave1(j, k);
           }, [i, k]);
         }
-        chunker.add(3, (g, i, k) => {
+        chunker.add(4, (g, i, k) => {
           g.array.deselect(i, k);
+          // g.graph.leave1(k);
         }, [i, k]);
       }
     }
