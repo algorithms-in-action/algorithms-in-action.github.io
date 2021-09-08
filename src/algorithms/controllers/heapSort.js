@@ -85,11 +85,16 @@ export default {
       }, [k]);
 
       let j;
+      const tmp = i;
       i = k;
 
-      chunker.add(6, (vis, index) => {
-        vis.array.assignVariable('i', index);
-      }, [i]);
+      chunker.add(6, (vis, index1, index2) => {
+        if (tmp != null) {
+          unhighlight(vis, index2);
+          vis.array.removeVariable('j');
+        }
+        vis.array.assignVariable('i', index1);
+      }, [i, tmp]);
 
       heap = false;
       chunker.add(7);
@@ -137,16 +142,14 @@ export default {
     }
 
     // sort heap
-    chunker.add(20, (vis, index) => {
-      unhighlight(vis, index);
-    }, [i]);
     while (n > 0) {
-      chunker.add(20, (vis, nVal) => {
+      chunker.add(20, (vis, nVal, index) => {
         // if first iteration of while loop - clear variables & start fresh
         if (nVal === nodes.length) vis.array.clearVariables();
         // else only clear 'j'
         else vis.array.removeVariable('j');
-      }, [n]);
+        unhighlight(vis, index);
+      }, [n, i]);
 
       let j;
       swap = A[n - 1];
@@ -168,15 +171,19 @@ export default {
       n -= 1;
 
       i = 0;
-      chunker.add(24, (vis, index) => {
-        highlight(vis, index);
-        vis.array.assignVariable('i', index);
-      }, [i]);
+      chunker.add(24, (vis, index1, nVal) => {
+        if (nVal > 0) {
+          highlight(vis, index1);
+        }
+        vis.array.assignVariable('i', index1);
+      }, [i, n]);
 
       chunker.add(25);
       heap = false;
 
-      chunker.add(26);
+      chunker.add(26, (vis, nVal) => {
+        if (nVal === 0) vis.array.clearVariables();
+      }, [n]);
       // need to maintain the heap after swap
       while (!(2 * i + 1 >= n || heap)) {
         chunker.add(28);
@@ -198,10 +205,9 @@ export default {
         chunker.add(32);
         if (A[i] >= A[j]) {
           heap = true;
-          chunker.add(33, (vis, p, c) => {
-            unhighlight(vis, p);
-            unhighlight(vis, c, false);
-          }, [i, j]);
+          chunker.add(33, (vis, index) => {
+            unhighlight(vis, index, false);
+          }, [j]);
         } else {
           swap = A[i];
           A[i] = A[j];
@@ -209,17 +215,9 @@ export default {
           swapAction(35, i, j);
           chunker.add(36, (vis, p, c) => {
             unhighlight(vis, p, false);
-            unhighlight(vis, c);
             vis.array.assignVariable('i', c);
           }, [i, j]);
           i = j;
-
-          // if current node is a leaf, then do not highlight the node
-          if (!(2 * i + 1 >= n)) {
-            chunker.add(28, (vis, index) => {
-              highlight(vis, index);
-            }, [i]);
-          }
         }
       }
     }
