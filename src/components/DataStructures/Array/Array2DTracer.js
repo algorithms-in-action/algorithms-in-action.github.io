@@ -18,13 +18,14 @@
 import Tracer from '../common/Tracer';
 import Array2DRenderer from './Array2DRenderer';
 
-class Element {
+export class Element {
   constructor(value, key) {
     this.value = value;
     this.patched = false;
     this.selected = false;
     this.sorted = false;
     this.key = key;
+    this.variables = [];
   }
 }
 
@@ -90,6 +91,8 @@ class Array2DTracer extends Tracer {
   deselectCol(y, sx, ex) {
     this.deselect(sx, y, ex, y);
   }
+
+
 }
 
 export default Array2DTracer;
