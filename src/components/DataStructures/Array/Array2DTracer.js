@@ -68,16 +68,6 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  // style = { backgroundStyle: , textStyle: }
-  styledSelect(style, sx, sy, ex = sx, ey = sy) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
-        this.data[x][y].style = style;
-      }
-    }
-  }
-
   selectRow(x, sy, ey) {
     this.select(x, sy, x, ey);
   }
@@ -90,7 +80,6 @@ class Array2DTracer extends Tracer {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         this.data[x][y].selected = false;
-        this.data[x][y].style = undefined;
       }
     }
   }
@@ -102,6 +91,8 @@ class Array2DTracer extends Tracer {
   deselectCol(y, sx, ex) {
     this.deselect(sx, y, ex, y);
   }
+
+
 }
 
 export default Array2DTracer;
