@@ -146,10 +146,13 @@ export default {
     }
 
     // sort heap
-    while (n > 0) {
+    while (n > 1) {
       chunker.add(20, (vis, nVal) => {
-        // if first iteration of while loop - clear variables & start fresh
-        if (nVal === nodes.length) vis.array.clearVariables();
+        // if first iteration of while loop - clear variables & show 'n' 
+        if (nVal === nodes.length) { 
+          vis.array.clearVariables();
+          vis.array.assignVariable('n', nVal-1)
+        }
         // else only clear 'j'
         else vis.array.removeVariable('j')
       }, [n]); 
@@ -165,7 +168,7 @@ export default {
       // }, [n - 1]);
       chunker.add(22, (vis, index) => {
         vis.array.sorted(index);
-        vis.array.assignVariable('n', index);
+        vis.array.assignVariable('n', index-1);
       }, [n - 1]);
       n -= 1;
 
@@ -180,12 +183,9 @@ export default {
       heap = false;
 
       chunker.add(26);
+
       // need to maintain the heap after swap
       while (!(2 * i + 1 >= n || heap)) {
-        // chunker.add(28, (vis, index) => {
-        //   vis.array.select(index);
-        //   vis.heap.select(index + 1);
-        // }, [i]);
         chunker.add(28);
 
         if (2 * i + 2 < n && A[2 * i + 1] < A[2 * i + 2]) {
@@ -235,8 +235,14 @@ export default {
             }, [i]);
           }
         }
-      }
+      }   
     }
+    chunker.add(37, (vis) => {
+      // Put in done state
+      vis.array.clearVariables();
+      vis.array.deselect(0);
+      vis.array.sorted(0);
+    });
     // for test
     return A;
   },
