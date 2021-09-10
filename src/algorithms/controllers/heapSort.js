@@ -142,10 +142,14 @@ export default {
     }
 
     // sort heap
-    while (n > 0) {
-      chunker.add(20, (vis, nVal, index) => {
-        // if first iteration of while loop - clear variables & start fresh
-        if (nVal === nodes.length) vis.array.clearVariables();
+
+    while (n > 1) {
+      chunker.add(20, (vis, nVal) => {
+        // if first iteration of while loop - clear variables & show 'n' 
+        if (nVal === nodes.length) { 
+          vis.array.clearVariables();
+          vis.array.assignVariable('n', nVal-1)
+        }
         // else only clear 'j'
         else vis.array.removeVariable('j');
         unhighlight(vis, index);
@@ -166,7 +170,7 @@ export default {
         unhighlight(vis, index);
         unhighlight(vis, 0, false);
         vis.array.sorted(index);
-        vis.array.assignVariable('n', index);
+        vis.array.assignVariable('n', index-1);
       }, [n - 1]);
       n -= 1;
 
@@ -219,8 +223,14 @@ export default {
           }, [i, j]);
           i = j;
         }
-      }
+      }   
     }
+    chunker.add(37, (vis) => {
+      // Put in done state
+      vis.array.clearVariables();
+      vis.array.deselect(0);
+      vis.array.sorted(0);
+    });
     // for test
     return A;
   },
