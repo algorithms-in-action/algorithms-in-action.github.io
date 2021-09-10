@@ -209,10 +209,9 @@ class GraphRenderer extends Renderer {
             );
           })}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, selectedCount, value, key, style } = node;
+          const { x, y, weight, visitedCount, selectedCount, value, key } = node;
           // only when selectedCount is 1, then highlight the node
-          const selectNode = selectedCount === 1; const
-            visitedNode = visitedCount === 1;
+          const selectNode = selectedCount === 1;
           return (
             <motion.g
               animate={{ x, y }}
@@ -220,26 +219,13 @@ class GraphRenderer extends Renderer {
               className={classes(
                 styles.node,
                 selectNode && styles.selected,
-                visitedNode && styles.visited,
+                visitedCount && styles.visited,
               )}
               key={key}
               // transform={`translate(${x},${y})`}
             >
-              <circle
-                className={classes(
-                  styles.circle,
-                  style && style.backgroundStyle,
-                )}
-                r={nodeRadius}
-              />
-              <text
-                className={classes(
-                  styles.id,
-                  style && style.textStyle,
-                )}
-              >
-                {value}
-              </text>
+              <circle className={styles.circle} r={nodeRadius} />
+              <text className={styles.id}>{value}</text>
               {isWeighted && (
                 <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
                   {this.toString(weight)}
