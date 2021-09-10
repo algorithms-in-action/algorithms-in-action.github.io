@@ -23,7 +23,7 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 
-//SIM Event - DanistyWuKids
+//SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
 function simulateMouseClick(element){
   mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
@@ -60,8 +60,11 @@ function MatrixParam({
     setData(newData);
     setOriginalData(newData);
   }, [size, min, max, symmetric]);
-
-  useEffect(() => {var element = document.querySelector('button[id="startBtnGrp"]');simulateMouseClick(element);},[]);
+  
+  useEffect(() => {
+    var element = document.querySelector('button[id="startBtnGrp"]');
+    simulateMouseClick(element);
+  },[]);
 
   // Reset the matrix to the inital set
   const resetData = () => {
