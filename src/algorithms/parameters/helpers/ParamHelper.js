@@ -38,15 +38,11 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
-/**
- *
- * @param {string} type algorithm type
- */
 export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}
-    // logTag="Great success!"
-    // logMsg={`The ${type} algorithm is now ready for execution.`}
+    logTag=""
+    logMsg={``}
   />
 );
 

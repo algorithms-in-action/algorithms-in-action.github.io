@@ -127,10 +127,12 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         className={algorithm.name === algo.name ? 'algoItem active' : 'algoItem'}
                         type="button"
                         id={`algo-${algo.name}`}
-                        onClick={algorithm.name === algo.name? '#': () => {
-                          openInstructions();
-                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
-                        }
+                        onClick={algorithm.name === algo.name? ()=>{
+                          const button = document.getElementById('startBtnGrp');}
+                          : () => {
+                            openInstructions();
+                            dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
+                          }
                         }
                       >
                         <div key={algo.id} className="algoItemContent">{algo.name}</div>
