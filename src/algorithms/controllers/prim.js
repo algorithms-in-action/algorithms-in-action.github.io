@@ -107,11 +107,14 @@ export default {
     const PqUpdate = (i) => {
       let j;
       let w;
+      chunker.add(5);
       for (j = 0; j < n; j += 1) {
         w = weight[i][j];
+        chunker.add(6);
         if (w > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
+          chunker.add(7);
           chunker.add(
-            5,
+            8,
             (vis, n1, n2) => {
               vis.graph.visit(n1, n2);
             },
@@ -124,7 +127,7 @@ export default {
           prev[j] = i;
           updatePqDisplay();
           chunker.add(
-              4,
+              8,
               (vis, v) => {
                 vis.array.set(v);
               },
@@ -185,7 +188,7 @@ export default {
       PqUpdate(i);
       updatePqDisplay();
       chunker.add(
-          5,
+          9,
           (vis, v, u) => {
             vis.array.set(v);
             vis.prevArray.set(u);
@@ -201,7 +204,7 @@ export default {
       }
       if (pq[pqStart]) {
         chunker.add(
-          3,
+          9,
           (vis, n1, n2) => {
             vis.graph.visit(n1, n2);
           },
@@ -209,7 +212,7 @@ export default {
         );
       }
       chunker.add(
-        5,
+        9,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
         },
