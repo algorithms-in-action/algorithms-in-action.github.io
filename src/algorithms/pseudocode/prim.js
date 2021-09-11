@@ -49,7 +49,6 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
 
 \\Code{
 Update
-    \\In{
         for each (i,j) in E 
         \\Expl{  Now that i gets included in the tree, we need to check the edge 
                 to each of its neighbours j.
@@ -72,6 +71,5 @@ Update
                 \\Expl}
         \\In}
         \\In}
-    \\In}
 \\Code}
 `);
