@@ -25,14 +25,16 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
       }
     });
   };
-  if(algorithm.pseudocode.Locate){
-  algorithm.pseudocode.Locate.forEach(element => { //at algorithm
-    if(algorithm.bookmark){if(element.bookmark === algorithm.bookmark){
-        explanation = element.explanation
-    }}
-  });
-}
 
+  if(algorithm.pseudocode){
+    for(var eachpart in algorithm.pseudocode){
+      algorithm.pseudocode[eachpart].forEach(element =>{
+        if(algorithm.bookmark && element.bookmark === algorithm.bookmark){
+          explanation = element.explanation
+        }
+      })
+    }
+  }
 
   return (
     show ? (
