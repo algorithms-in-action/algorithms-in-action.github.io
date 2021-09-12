@@ -144,7 +144,7 @@ export default {
     // sort heap
 
     while (n > 1) {
-      chunker.add(20, (vis, nVal) => {
+      chunker.add(20, (vis, nVal, index) => {
         // if first iteration of while loop - clear variables & show 'n' 
         if (nVal === nodes.length) { 
           vis.array.clearVariables();
