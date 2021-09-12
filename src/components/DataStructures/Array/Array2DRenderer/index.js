@@ -19,13 +19,13 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 
-import React from "react";
+import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
-import { motion, AnimateSharedLayout } from "framer-motion";
-import Renderer from "../../common/Renderer/index";
-import styles from "./Array2DRenderer.module.scss";
-import { classes } from "../../common/util";
-import { mode } from "../../../top/Settings";
+import { motion, AnimateSharedLayout } from 'framer-motion';
+import Renderer from '../../common/Renderer/index';
+import styles from './Array2DRenderer.module.scss';
+import { classes } from '../../common/util';
+import { mode } from '../../../top/Settings';
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -56,7 +56,7 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce(
       (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
-      []
+      [],
     );
 
     return (
@@ -74,7 +74,7 @@ class Array2DRenderer extends Renderer {
             {!isArray1D && <td className={classes(styles.col, styles.index)} />}
             {longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === "heapsort") {
+              if (algo === 'heapsort') {
                 i += 1;
               }
               return (
@@ -100,11 +100,15 @@ class Array2DRenderer extends Renderer {
                     styles.col,
                     col.selected && styles.selected,
                     col.patched && styles.patched,
-                    col.sorted && styles.sorted
+                    col.sorted && styles.sorted,
+                    col.style && col.style.backgroundStyle,
                   )}
                   key={col.key}
                 >
-                  <span className={styles.value}>
+                  <span className={classes(
+                    styles.value,
+                    col.style && col.style.textStyle,
+                  )}>
                     {this.toString(col.value)}
                   </span>
                 </motion.td>
@@ -113,8 +117,7 @@ class Array2DRenderer extends Renderer {
           ))}
           {/* Variable pointers */}
           {data.map(
-            (row, i) =>
-              isArray1D && ( // variable pointer only working for 1D arrays
+            (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
                 <AnimateSharedLayout>
                   <tr layout className={styles.row} key={i}>
                     {row.map((col) => (
@@ -135,7 +138,7 @@ class Array2DRenderer extends Renderer {
                     ))}
                   </tr>
                 </AnimateSharedLayout>
-              )
+            ),
           )}
         </tbody>
       </table>

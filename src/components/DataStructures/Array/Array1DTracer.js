@@ -1,8 +1,10 @@
 /* eslint-disable class-methods-use-this */
-import Array2DTracer from "./Array2DTracer";
-import { Element } from "./Array2DTracer";
-import Array1DRenderer from "./Array1DRenderer/index";
-import { cloneDeepWith } from "lodash";
+/* eslint-disable consistent-return */
+/* eslint-disable no-plusplus */
+/* eslint-disable max-len */
+import { cloneDeepWith } from 'lodash';
+import Array2DTracer, { Element } from './Array2DTracer';
+import Array1DRenderer from './Array1DRenderer/index';
 
 class Array1DTracer extends Array2DTracer {
   getRendererClass() {
@@ -35,6 +37,10 @@ class Array1DTracer extends Array2DTracer {
 
   select(sx, ex = sx) {
     super.select(0, sx, 0, ex);
+  }
+
+  styledSelect(style, sx, ex = sx) {
+    super.styledSelect(style, 0, sx, 0, ex);
   }
 
   deselect(sx, ex = sx) {
@@ -78,7 +84,7 @@ class Array1DTracer extends Array2DTracer {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     function customizer(val) {
       if (val instanceof Element) {
-        let newEl = new Element(val.value, val.key);
+        const newEl = new Element(val.value, val.key);
         if (val.patched) newEl.patched = true;
         if (val.selected) newEl.selected = true;
         if (val.sorted) newEl.sorted = true;

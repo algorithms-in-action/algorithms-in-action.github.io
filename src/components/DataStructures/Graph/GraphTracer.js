@@ -514,8 +514,16 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(true, target, source);
   }
 
+  styledSelect(style, target, source) {
+    this.styledSelectOrDeselect(style, true, target, source);
+  }
+
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
+  }
+
+  styledDeselect(style, target, source) {
+    this.styledSelectOrDeselect(style, false, target, source);
   }
 
   resetSelect(target, source) {
@@ -533,6 +541,13 @@ class GraphTracer extends Tracer {
     if (this.logTracer) {
       this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
+  }
+
+  // style = { backgroundStyle: , textStyle: }
+  styledSelectOrDeselect(style, select, target, source) {
+    this.selectOrDeselect(select, target, source);
+    const node = this.findNode(target);
+    node.style = style;
   }
 
   log(key) {
