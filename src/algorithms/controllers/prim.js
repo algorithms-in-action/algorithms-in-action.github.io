@@ -45,12 +45,14 @@ export default {
     const pending = new Array(matrix.length);
     const prev = new Array(matrix.length);
     const pq = new Array(matrix.length);
-    let pqDisplay = [];
+    const pqDisplay = [];
     const prevDisplay = new Array(matrix.length).fill('');
     let pqStart;
     let n;
+    let miniIndex;
     const closed = [];
-    let pqCost = [];
+    const pqCost = [];
+
 
     chunker.add(
       1,
@@ -75,35 +77,44 @@ export default {
       }
     };
 
-    const sortNullRight = () =>  function (a, b) {
-      if (a === b) {
-        return 0;
-      }
-      if (a === null) {
-        return 1;
-      }
-      if (b === null) {
-        return -1;
-      }
-      
-        return a < b ? -1 : 1;
-    };
+    // const sortNullRight = () =>  function (a, b) {
+    //   if (a === b) {
+    //     return 0;
+    //   }
+    //   if (a === null) {
+    //     return 1;
+    //   }
+    //   if (b === null) {
+    //     return -1;
+    //   }
+    //
+    //     return a < b ? -1 : 1;
+    // };
 
-    const updatePqDisplay = () => {
-      pqDisplay = new Array(matrix.length).fill('');
-      pqCost = new Array(matrix.length).fill('');
-      let index = 0;
-      for (let i = pqStart; i < n; i++) {
-        if (cost[i] === Infinity) {
-          break;
+    // const updatePqDisplay = () => {
+    //   pqDisplay = new Array(matrix.length).fill('');
+    //   pqCost = new Array(matrix.length).fill('');
+    //   let index = 0;
+    //   for (let i = pqStart; i < n; i++) {
+    //     if (cost[i] === Infinity) {
+    //       break;
+    //     }
+    //     pqDisplay[index] = pq[i] + 1;
+    //     pqCost[index] = cost[pq[i]];
+    //     index++;
+    //   }
+    //   pqCost.sort(sortNullRight);
+    // };
+    const findMinimum = () => {
+        let tmp = Infinity;
+      // eslint-disable-next-line no-unused-vars
+        for (let c = 1; c < pqCost.length; c++) {
+          if (pqCost[c] != null && pqCost[c] < tmp) {
+            tmp = pqCost[c];
+            miniIndex = c;
+          }
         }
-        pqDisplay[index] = pq[i] + 1;
-        pqCost[index] = cost[pq[i]];
-        index++;
-      }
-      pqCost.sort(sortNullRight);
     };
-
     const PqUpdate = (i) => {
       let j;
       let w;
@@ -123,11 +134,23 @@ export default {
         }
         if (w > 0 && pending[j] && w < cost[j]) {
           cost[j] = w;
+          pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
+          chunker.add(
+              7,
+              (vis, v) => {
+                vis.array.set(v);
+              },
+              [[pqDisplay, pqCost]]
+          );
           PqSort();
           prev[j] = i;
-          updatePqDisplay();
+          // updatePqDisplay();
+          pqCost[j + 1] = cost[j];
+        }
+        if (w > 0 && pending[j] && w > cost[j]) {
+          pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
           chunker.add(
-              8,
+              7,
               (vis, v) => {
                 vis.array.set(v);
               },
@@ -146,52 +169,68 @@ export default {
       pending[i] = 1;
     }
     cost[0] = 0;
+    pqCost.push('Cost');
+    pqDisplay.push('Node');
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
+      pqDisplay[i + 1] = i + 1;
+      pqCost.push(Infinity);
     }
     pqStart = 0;
-    updatePqDisplay();
+    miniIndex = 1;
+
+    pqCost[1] = cost[0];
+    // updatePqDisplay();
     chunker.add(
         2,
-        (vis, v, u) => {
+        (vis, v, u, w) => {
           vis.array.set(v);
           vis.prevArray.set(u);
+          vis.array.select(1, w);
         },
-        [[pqDisplay, pqCost], prevDisplay]
+        [[pqDisplay, pqCost], prevDisplay, miniIndex]
     );
+
 
     while (pqStart < n) {
       i = pq[pqStart];
       prevDisplay[pqStart] = i + 1;
       chunker.add(
         3,
-        (vis, n1, n2) => {
+        (vis, n1, n2, index) => {
           vis.graph.visit(n1, n2);
           vis.graph.select(n1, n2);
-          vis.array.select(0, 0);
-          vis.array.select(1, 0);
+          vis.array.deselect(index);
         },
-        [i, prev[i]]
+        [i, prev[i], miniIndex]
       );
       pending[i] = 0;
       pqStart += 1;
-      updatePqDisplay();
+
+      pqCost[miniIndex] = null;
+      pqDisplay[miniIndex] = null;
+      // updatePqDisplay();
+
       chunker.add(
-          4,
+          5,
           (vis, v, u) => {
             vis.array.set(v);
             vis.prevArray.set(u);
+            // vis.array.deselect(1, miniIndex);
           },
           [[pqDisplay, pqCost], prevDisplay]
       );
 
       PqUpdate(i);
-      updatePqDisplay();
+      findMinimum();
+      // updatePqDisplay();
       chunker.add(
           9,
+          // eslint-disable-next-line no-loop-func
           (vis, v, u) => {
             vis.array.set(v);
             vis.prevArray.set(u);
+            vis.array.select(1, miniIndex);
           },
           [[pqDisplay, pqCost], prevDisplay]
       );
