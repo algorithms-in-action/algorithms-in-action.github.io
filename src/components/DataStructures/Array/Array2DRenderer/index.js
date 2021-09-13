@@ -60,12 +60,13 @@ class Array2DRenderer extends Renderer {
     );
 
     return (
-      <table
+      <motion.table
+      animate={{scale: this.zoom}}
         className={switchmode(mode())}
         style={{
           marginLeft: -this.centerX * 2,
           marginTop: -this.centerY * 2,
-          transform: `scale(${this.zoom})`,
+          // transform: `scale(${this.zoom})`,
         }}
       >
         <tbody>
@@ -138,7 +139,7 @@ class Array2DRenderer extends Renderer {
               )
           )}
         </tbody>
-      </table>
+      </motion.table>
     );
   }
 }
