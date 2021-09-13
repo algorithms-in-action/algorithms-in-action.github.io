@@ -53,11 +53,14 @@ export default {
     }
 
     for (let k = 0; k < numOfNodes; k++) {
+      chunker.add(2, (g, k) => {
+        g.array.selectCol(k, 0, numOfNodes - 1, '2');
+        g.array.selectRow(k, 0, numOfNodes - 1, '3');
+      }, [k]);
       for (let i = 0; i < numOfNodes; i++) {
         chunker.add(2, (g, i, k) => {
+          g.array.deselect(i, k, i, k);
           g.array.select(i, k);
-          // g.graph.setPointerNode(i, 'i', k, 'k');
-          // g.graph.visit(k);
         }, [i, k]); // move along columns
 
         if (nodes[k][i][k]) {
@@ -69,7 +72,8 @@ export default {
 
           for (let j = 0; j < numOfNodes; j++) {
             chunker.add(3, (g, k, j) => {
-              g.array.select1(k, j);
+              g.array.deselect(k, j, k, j);
+              g.array.select(k, j, k, j, '1');
             }, [k, j]); // move along rows (green)
 
             if (nodes[k][k][j]) {
@@ -92,7 +96,8 @@ export default {
               if (i !== j || j !== k) {
                 chunker.add(3, (g, i, k, j) => {
                   // remove green
-                  g.array.deselect(k, j);
+                  g.array.deselect(k, j, k, j);
+                  g.array.select(k, j, k, j, '3');
                   // g.graph.leave1(j, k);
                 }, [i, k, j]);
               }
@@ -121,7 +126,8 @@ export default {
             if (i !== j || j !== k) {
               chunker.add(3, (g, i, k, j) => {
                 // remove green
-                g.array.deselect(k, j);
+                g.array.deselect(k, j, k, j);
+                g.array.select(k, j, k, j, '3');
                 g.graph.leave1(j, k);
               }, [i, k, j]);
             }
@@ -134,11 +140,16 @@ export default {
             // g.graph.leave1(j, k);
           }, [i, k]);
         }
-        chunker.add(4, (g, i, k) => {
+        chunker.add(3, (g, i, k) => {
           g.array.deselect(i, k);
+          g.array.select(i, k, i, k, '2');
           // g.graph.leave1(k);
         }, [i, k]);
       }
+      chunker.add(2, (g, k) => {
+        g.array.deselectRow(k, 0, numOfNodes - 1);
+        g.array.deselectCol(k, 0, numOfNodes - 1);
+      }, [k]);
     }
   },
 };

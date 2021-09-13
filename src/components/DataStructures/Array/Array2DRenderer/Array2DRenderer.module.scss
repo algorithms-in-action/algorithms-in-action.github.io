@@ -39,6 +39,21 @@
         }
       }
 
+      &.selected2 {
+        background-color: var(--array-2d-row-col-bg-selected2);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.selected3 {
+        background-color: var(--array-2d-row-col-bg-selected3);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);

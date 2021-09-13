@@ -59,28 +59,37 @@ class Array2DTracer extends Tracer {
     this.data[x][y].sorted = true;
   }
 
-  select(sx, sy, ex = sx, ey = sy) {
+
+  select(sx, sy, ex = sx, ey = sy, c = '0') { // Color blue
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
+        switch (c) {
+          case '0':
+            this.data[x][y].selected = true;
+            break;
+          case '1':
+            this.data[x][y].selected1 = true;
+            break;
+          case '2':
+            this.data[x][y].selected2 = true;
+            break;
+          case '3':
+            this.data[x][y].selected3 = true;
+            break;
+          default:
+            this.data[x][y].selected = true;
+            break;
+        }
       }
     }
   }
 
-  select1(sx, sy, ex = sx, ey = sy) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected1 = true;
-      }
-    }
+  selectRow(x, sy, ey, c = '0') {
+    this.select(x, sy, x, ey, c);
   }
 
-  selectRow(x, sy, ey) {
-    this.select(x, sy, x, ey);
-  }
-
-  selectCol(y, sx, ex) {
-    this.select(sx, y, ex, y);
+  selectCol(y, sx, ex, c = '0') {
+    this.select(sx, y, ex, y, c);
   }
 
   deselect(sx, sy, ex = sx, ey = sy) {
@@ -88,6 +97,8 @@ class Array2DTracer extends Tracer {
       for (let y = sy; y <= ey; y++) {
         this.data[x][y].selected = false;
         this.data[x][y].selected1 = false;
+        this.data[x][y].selected2 = false;
+        this.data[x][y].selected3 = false;
       }
     }
   }
