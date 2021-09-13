@@ -76,35 +76,9 @@ export default {
         pq[j + 1] = v;
       }
     };
-
-    // const sortNullRight = () =>  function (a, b) {
-    //   if (a === b) {
-    //     return 0;
-    //   }
-    //   if (a === null) {
-    //     return 1;
-    //   }
-    //   if (b === null) {
-    //     return -1;
-    //   }
-    //
-    //     return a < b ? -1 : 1;
-    // };
-
-    // const updatePqDisplay = () => {
-    //   pqDisplay = new Array(matrix.length).fill('');
-    //   pqCost = new Array(matrix.length).fill('');
-    //   let index = 0;
-    //   for (let i = pqStart; i < n; i++) {
-    //     if (cost[i] === Infinity) {
-    //       break;
-    //     }
-    //     pqDisplay[index] = pq[i] + 1;
-    //     pqCost[index] = cost[pq[i]];
-    //     index++;
-    //   }
-    //   pqCost.sort(sortNullRight);
-    // };
+    /*
+    * find minimum function would loop the pq cost and point to the minimum element
+    * */
     const findMinimum = () => {
         let tmp = Infinity;
       // eslint-disable-next-line no-unused-vars
@@ -132,6 +106,9 @@ export default {
             [i, j]
           );
         }
+        /*
+        * this function would compared the new cost with the pq cost and update the pq cost
+        * */
         if (w > 0 && pending[j] && w < cost[j]) {
           cost[j] = w;
           pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
@@ -169,18 +146,17 @@ export default {
       pending[i] = 1;
     }
     cost[0] = 0;
-    pqCost.push('Cost');
-    pqDisplay.push('Node');
+    pqCost.push('Cost');  // initialize the pq cost
+    pqDisplay.push('Node');// initialize the pq display
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
       pqCost.push(Infinity);
     }
     pqStart = 0;
-    miniIndex = 1;
-
-    pqCost[1] = cost[0];
-    // updatePqDisplay();
+    pqCost[1] = cost[0]; // add the minimum cost to pq cost
+    miniIndex = 1; // point the mini index in the pq cost
+    /* the chunker add select the minimum cost one */
     chunker.add(
         2,
         (vis, v, u, w) => {
@@ -195,6 +171,7 @@ export default {
     while (pqStart < n) {
       i = pq[pqStart];
       prevDisplay[pqStart] = i + 1;
+      /* pop the miniIndex one and add it to spinning tree to extend more connections */
       chunker.add(
         3,
         (vis, n1, n2, index) => {
@@ -206,33 +183,30 @@ export default {
       );
       pending[i] = 0;
       pqStart += 1;
-
+      /* change the miniIndex to null */
       pqCost[miniIndex] = null;
       pqDisplay[miniIndex] = null;
-      // updatePqDisplay();
 
       chunker.add(
           5,
           (vis, v, u) => {
             vis.array.set(v);
             vis.prevArray.set(u);
-            // vis.array.deselect(1, miniIndex);
           },
           [[pqDisplay, pqCost], prevDisplay]
       );
 
       PqUpdate(i);
-      findMinimum();
-      // updatePqDisplay();
+      findMinimum();// once update the cost, find the next minimum cost in pq cost and select it
+
       chunker.add(
           9,
-          // eslint-disable-next-line no-loop-func
-          (vis, v, u) => {
+          (vis, v, u, w) => {
             vis.array.set(v);
             vis.prevArray.set(u);
-            vis.array.select(1, miniIndex);
+            vis.array.select(1, w);
           },
-          [[pqDisplay, pqCost], prevDisplay]
+          [[pqDisplay, pqCost], prevDisplay, miniIndex]
       );
 
       const newEdges = [];
