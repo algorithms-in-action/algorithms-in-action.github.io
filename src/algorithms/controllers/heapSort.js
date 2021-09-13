@@ -1,4 +1,4 @@
-/* eslint-disable no-multi-spaces,indent,prefer-destructuring */
+/* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
@@ -84,7 +84,6 @@ export default {
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
       chunker.add(4, (vis, index) => {
-        highlight(vis, index);
         vis.array.assignVariable('k', index);
       }, [k]);
 
@@ -97,6 +96,7 @@ export default {
           unhighlight(vis, index2);
           vis.array.removeVariable('j');
         }
+        highlight(vis, index1);
         vis.array.assignVariable('i', index1);
       }, [i, tmp]);
 
@@ -149,10 +149,10 @@ export default {
 
     while (n > 1) {
       chunker.add(20, (vis, nVal, index) => {
-        // if first iteration of while loop - clear variables & show 'n' 
-        if (nVal === nodes.length) { 
+        // if first iteration of while loop - clear variables & show 'n'
+        if (nVal === nodes.length) {
           vis.array.clearVariables();
-          vis.array.assignVariable('n', nVal-1)
+          vis.array.assignVariable('n', nVal - 1);
         }
         // else only clear 'j'
         else vis.array.removeVariable('j');
@@ -174,7 +174,7 @@ export default {
         unhighlight(vis, index);
         unhighlight(vis, 0, false);
         vis.array.sorted(index);
-        vis.array.assignVariable('n', index-1);
+        vis.array.assignVariable('n', index - 1);
       }, [n - 1]);
       n -= 1;
 
@@ -227,7 +227,7 @@ export default {
           }, [i, j]);
           i = j;
         }
-      }   
+      }
     }
     chunker.add(37, (vis) => {
       // Put in done state
