@@ -115,10 +115,14 @@ export default {
           pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
           chunker.add(
               7,
-              (vis, v) => {
+              // eslint-disable-next-line no-loop-func
+              (vis, v, u) => {
                 vis.array.set(v);
+                if (v[1][u] != null) {
+                  vis.array.select(1, u);
+                }
               },
-              [[pqDisplay, pqCost]]
+              [[pqDisplay, pqCost], miniIndex]
           );
           PqSort();
           prev[j] = i;
@@ -192,11 +196,12 @@ export default {
 
       chunker.add(
           5,
-          (vis, v, u) => {
+          (vis, v, u, w) => {
             vis.array.set(v);
             vis.prevArray.set(u);
+            vis.array.select(w);
           },
-          [[pqDisplay, pqCost], prevDisplay]
+          [[pqDisplay, pqCost], prevDisplay, miniIndex]
       );
 
       PqUpdate(i);
