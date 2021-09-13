@@ -92,6 +92,7 @@ export default {
     const PqUpdate = (i) => {
       let j;
       let w;
+      let preIndex;
       chunker.add(5);
       for (j = 0; j < n; j += 1) {
         w = weight[i][j];
@@ -123,16 +124,18 @@ export default {
           prev[j] = i;
           // updatePqDisplay();
           pqCost[j + 1] = cost[j];
-        }
-        if (w > 0 && pending[j] && w > cost[j]) {
-          pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
-          chunker.add(
-              7,
-              (vis, v) => {
-                vis.array.set(v);
-              },
-              [[pqDisplay, pqCost]]
-          );
+          preIndex = miniIndex;
+          findMinimum();
+          if (preIndex !== miniIndex) {
+            chunker.add(
+                7,
+                (vis, u, v) => {
+                  vis.array.deselect(1, u);
+                  vis.array.select(1, v);
+                },
+                [preIndex, miniIndex]
+            );
+          }
         }
       }
     };
