@@ -57,7 +57,7 @@ class Array2DRenderer extends Renderer {
     let longestRow = data.reduce((longestRow, row) => (longestRow.length < row.length ? row : longestRow), []);
     let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
     let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
-    if (algo !== 'heapsort') {
+    if (!this.props.data.arrayItemMagnitudes) {
       scaleY = () => 0;
     }
 
