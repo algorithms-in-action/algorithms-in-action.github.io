@@ -54,10 +54,12 @@ class Array2DRenderer extends Renderer {
     const { data, algo } = this.props.data;
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
-    let longestRow = data.reduce(
-      (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
-      [],
-    );
+    let longestRow = data.reduce((longestRow, row) => (longestRow.length < row.length ? row : longestRow), []);
+    let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
+    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
+    if (!this.props.data.arrayItemMagnitudes) {
+      scaleY = () => 0;
+    }
 
     return (
       <motion.table
@@ -66,7 +68,9 @@ class Array2DRenderer extends Renderer {
         style={{
           marginLeft: -this.centerX * 2,
           marginTop: -this.centerY * 2,
-          // transform: `scale(${this.zoom})`,
+          transform: `scale(${this.zoom})`,
+          borderCollapse: 'separate',
+          display: 'block',
         }}
       >
         <tbody>
@@ -93,10 +97,20 @@ class Array2DRenderer extends Renderer {
                   <span className={styles.value}>{i}</span>
                 </td>
               )}
-              {row.map((col) => (
+              {row.map((col, j) => (
                 <motion.td
                   layout
                   transition={{ duration: 0.6 }}
+                  style={{
+                    borderLeft: '0',
+                    borderRight: '0',
+                    borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
+                    borderBottom: 0,
+                    backgroundClip: 'content-box',
+                    padding: '0',
+                    position: 'relative',
+                  }}
+
                   className={classes(
                     styles.col,
                     col.selected && styles.selected,
@@ -112,6 +126,16 @@ class Array2DRenderer extends Renderer {
                   )}>
                     {this.toString(col.value)}
                   </span>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '95%',
+                      top: 0,
+                      border: '0.1px solid gray',
+                      height: '100%',
+                      borderCollapse: 'separate',
+                    }}
+                  />
                 </motion.td>
               ))}
             </tr>

@@ -6,7 +6,7 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new ArrayTracer('array', null, 'Array view'), // Label the input array as array view
+        instance: new ArrayTracer('array', null, 'Array view', { arrayItemMagnitudes: true }), // Label the input array as array view
         order: 0,
       },
       heap: {
@@ -30,12 +30,16 @@ export default {
     let heap;
     let swap;
 
-    chunker.add(1, (vis, array) => {
-      vis.heap.setHeap(array);
-      // tell the graph renderer that it is heapsort
-      // so that the array index should start from 1
-      vis.array.set(array, 'heapsort');
-    }, [nodes]);
+    chunker.add(
+      1,
+      (vis, array) => {
+        vis.heap.setHeap(array);
+        // tell the graph renderer that it is heapsort
+        // so that the array index should start from 1
+        vis.array.set(array, 'heapsort');
+      },
+      [nodes],
+    );
 
     const highlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
@@ -74,7 +78,7 @@ export default {
      * parent = k , left child = 2*k + 1, right child = 2*k + 2
      * index start from 1:
      * parent = k , left child = 2*k, right child = 2*k + 1
-    */
+     */
 
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
