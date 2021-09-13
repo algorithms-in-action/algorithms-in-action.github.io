@@ -24,10 +24,10 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 320,
+      baseWidth: 500,
       baseHeight: 320,
       padding: 32,
-      nodeRadius: 12,
+      nodeRadius: 15,
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -160,10 +160,13 @@ class GraphTracer extends Tracer {
 
   swapNodes(nodeId1, nodeId2) {
     const node1 = this.findNode(nodeId1);
-    const temp = node1.value;
+    const temp = { value: node1.value, key: node1.key };
     const node2 = this.findNode(nodeId2);
+    // Swap both the value and key (key is what animates swapping action)
     node1.value = node2.value;
-    node2.value = temp;
+    node1.key = node2.key;
+    node2.value = temp.value;
+    node2.key = temp.key;
     this.layoutTree(this.root);
   }
 
@@ -178,7 +181,9 @@ class GraphTracer extends Tracer {
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
+    const key = id; // the key is a unique id which stays with the value (rather than the node)
+    // so to assist with animation of swapping nodes (see swapNodes)
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key });
     this.layout();
   }
 
@@ -374,23 +379,34 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    const hGap = rect.width / leafCounts[root];
-    const vGap = rect.height / maxDepth;
     marked = {};
-    const recursivePosition = (node, h, v) => {
+    const leafNodeSizeAlloc = 30; // horizontal size allocated per leaf node under a subtree node
+    const verticalGap = 80; // vertical gap between nodes. incremented every level.
+    const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
-      node.y = rect.top + v * vGap;
+      node.x = x;
+      node.y = y;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
         if (marked[linkedNode.id]) continue;
-        recursivePosition(linkedNode, h, v + 1);
+        let x1 = x;
+        let y1 = y;
+        // For left child
+        if (linkedNode.id === 2 * node.id) {
+          x1 -= leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        // For right child
+        if (linkedNode.id === (2 * node.id + 1)) {
+          x1 += leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        y1 += verticalGap;
+        recursivePosition(linkedNode, h, v + 1, x1, y1);
         h += leafCounts[linkedNode.id];
       }
     };
     const rootNode = this.findNode(root);
-    recursivePosition(rootNode, 0, 0);
+    recursivePosition(rootNode, 0, 0, 0, rect.top);
   }
 
   layoutBST(root = 0, sorted = false) {
@@ -498,8 +514,16 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(true, target, source);
   }
 
+  styledSelect(style, target, source) {
+    this.styledSelectOrDeselect(style, true, target, source);
+  }
+
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
+  }
+
+  styledDeselect(style, target, source) {
+    this.styledSelectOrDeselect(style, false, target, source);
   }
 
   resetSelect(target, source) {
@@ -517,6 +541,13 @@ class GraphTracer extends Tracer {
     if (this.logTracer) {
       this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
+  }
+
+  // style = { backgroundStyle: , textStyle: }
+  styledSelectOrDeselect(style, select, target, source) {
+    this.selectOrDeselect(select, target, source);
+    const node = this.findNode(target);
+    node.style = style;
   }
 
   log(key) {
