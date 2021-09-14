@@ -543,6 +543,11 @@ class GraphTracer extends Tracer {
     }
   }
 
+  sorted(target) {
+    const node = this.findNode(target);
+    node.sorted = true;
+  }
+
   // style = { backgroundStyle: , textStyle: }
   styledSelectOrDeselect(style, select, target, source) {
     this.selectOrDeselect(select, target, source);
