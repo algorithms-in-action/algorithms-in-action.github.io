@@ -117,11 +117,11 @@ export default {
               6,
               (vis, v, u) => {
                 vis.array.set(v, 'prim');
-                if (v[1][u] != null) {
-                  vis.array.select(1, u);
+                if (v[2][u] != null) {
+                  vis.array.select(2, u);
                 }
               },
-              [[pqDisplay, pqCost, prevNode], miniIndex]
+              [[pqDisplay, prevNode, pqCost], miniIndex]
           );
           
           // update cost[j]
@@ -130,11 +130,11 @@ export default {
               7,
               (vis, v, u) => {
                 vis.array.set(v, 'prim');
-                if (v[1][u] != null) {
-                  vis.array.select(1, u);
+                if (v[2][u] != null) {
+                  vis.array.select(2, u);
                 }
               },
-              [[pqDisplay, pqCost, prevNode], miniIndex]
+              [[pqDisplay, prevNode, pqCost], miniIndex]
           );
 
           // show the process of updating PQ
@@ -146,9 +146,9 @@ export default {
             8,
             // eslint-disable-next-line no-shadow
             (vis, u, v, w) => {
-              vis.array.deselect(1, u);
+              vis.array.deselect(2, u);
               if (w[v] !== null) {
-                vis.array.select(1, v);
+                vis.array.select(2, v);
               }
             },
             [preIndex, miniIndex, pqCost]
@@ -160,9 +160,9 @@ export default {
             9,
             (vis, u, v) => {
               vis.array.set(u, 'prim');
-              vis.array.select(1, v);
+              vis.array.select(2, v);
             },
-            [[pqDisplay, pqCost, prevNode], miniIndex]
+            [[pqDisplay, prevNode, pqCost], miniIndex]
           );
         }
       }
@@ -194,9 +194,9 @@ export default {
         2,
         (vis, v, w) => {
           vis.array.set(v, 'prim');
-          vis.array.select(1, w);
+          vis.array.select(2, w);
         },
-        [[pqDisplay, pqCost, prevNode], miniIndex]
+        [[pqDisplay, prevNode, pqCost], miniIndex]
     );
 
     
@@ -218,12 +218,12 @@ export default {
             vis.graph.select(n1, n2);
             vis.array.deselect(index);
             vis.array.set(v, 'prim');
-            vis.array.deselect(1, u);
-            if (u !== w && v[1][w] !== null) {
-              vis.array.select(1, w);
+            vis.array.deselect(2, u);
+            if (u !== w && v[2][w] !== null) {
+              vis.array.select(2, w);
             }
           },
-          [[pqDisplay, pqCost, prevNode], miniIndex, prevIndex, i, prev[i], miniIndex]
+          [[pqDisplay, prevNode, pqCost], miniIndex, prevIndex, i, prev[i], miniIndex]
       );
 
       PqUpdate(i);
