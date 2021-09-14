@@ -106,8 +106,8 @@ export default {
         * this function would compared the new cost with the pq cost and update the pq cost
         * */
         if (w > 0 && pending[j] && w < cost[j]) {
+          // show the comparison between weight(i,j) and cost[j]
           cost[j] = w;
-          const tmpCost = pqCost[j + 1];
           if (pqCost[j + 1] === Infinity) {
             pqCost[j + 1] = `${cost[j].toString()}<∞`;
           } else {
@@ -123,12 +123,9 @@ export default {
               },
               [[pqDisplay, pqCost, prevNode], miniIndex]
           );
-          pqCost[j + 1] = tmpCost;
-          if (pqCost[j + 1] === Infinity) {
-            pqCost[j + 1] = `${cost[j].toString()}<-∞`;
-          } else {
-            pqCost[j + 1] = `${cost[j].toString()}<-${pqCost[j + 1].toString()}`;
-          }
+          
+          // update cost[j]
+          pqCost[j + 1] = cost[j];
           chunker.add(
               7,
               (vis, v, u) => {
@@ -139,34 +136,26 @@ export default {
               },
               [[pqDisplay, pqCost, prevNode], miniIndex]
           );
-          prevNode[j + 1] = i + 1;
+
+          // show the process of updating PQ
           PqSort();
           prev[j] = i;
-          pqCost[j + 1] = cost[j];
-          chunker.add(
-              8,
-              (vis, v, u) => {
-                if (v[1][u] !== null) {
-                  vis.array.select(1, u);
-                }
-              },
-              [[pqDisplay, pqCost, prevNode], miniIndex]
-          );
           preIndex = miniIndex;
           findMinimum();
-          if (preIndex !== miniIndex) {
-            chunker.add(
-                8,
-                // eslint-disable-next-line no-shadow
-                (vis, u, v, w) => {
-                  vis.array.deselect(1, u);
-                  if (w[v] !== null) {
-                    vis.array.select(1, v);
-                  }
-                },
-                [preIndex, miniIndex, pqCost]
-            );
-          }
+          chunker.add(
+            8,
+            // eslint-disable-next-line no-shadow
+            (vis, u, v, w) => {
+              vis.array.deselect(1, u);
+              if (w[v] !== null) {
+                vis.array.select(1, v);
+              }
+            },
+            [preIndex, miniIndex, pqCost]
+          ); 
+
+          // update prev[j]
+          prevNode[j + 1] = i + 1;
           chunker.add(
             9,
             (vis, u, v) => {
@@ -174,7 +163,7 @@ export default {
               vis.array.select(1, v);
             },
             [[pqDisplay, pqCost, prevNode], miniIndex]
-        );
+          );
         }
       }
     };
@@ -215,15 +204,6 @@ export default {
       i = pq[pqStart];
       prevDisplay[pqStart] = i + 1;
       /* pop the miniIndex one and add it to spinning tree to extend more connections */
-      chunker.add(
-        4,
-        (vis, n1, n2, index) => {
-          vis.graph.visit(n1, n2);
-          vis.graph.select(n1, n2);
-          vis.array.deselect(index);
-        },
-        [i, prev[i], miniIndex]
-      );
       pending[i] = 0;
       pqStart += 1;
       /* change the miniIndex to null */
@@ -233,29 +213,21 @@ export default {
       findMinimum();
       chunker.add(
           4,
-          (vis, v, w, u) => {
+          (vis, v, w, u, n1, n2, index) => {
+            vis.graph.visit(n1, n2);
+            vis.graph.select(n1, n2);
+            vis.array.deselect(index);
             vis.array.set(v, 'prim');
             vis.array.deselect(1, u);
             if (u !== w && v[1][w] !== null) {
               vis.array.select(1, w);
             }
           },
-          [[pqDisplay, pqCost, prevNode], miniIndex, prevIndex]
+          [[pqDisplay, pqCost, prevNode], miniIndex, prevIndex, i, prev[i], miniIndex]
       );
 
       PqUpdate(i);
       findMinimum();// once update the cost, find the next minimum cost in pq cost and select it
-
-      // chunker.add(
-      //     9,
-      //     (vis, v, w) => {
-      //       vis.array.set(v, 'prim');
-      //       if (v[1][w] !== null) {
-      //         vis.array.select(1, w);
-      //       }
-      //     },
-      //     [[pqDisplay, pqCost, prevNode], miniIndex]
-      // );
 
       const newEdges = [];
       for (let j = 0; j < n; j += 1) {
