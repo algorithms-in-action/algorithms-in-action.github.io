@@ -5,6 +5,7 @@ import HeaderButton from './HeaderButton';
 import Explanation from './Explanation';
 import Pseudocode from './Pseudocode';
 import ExtraInfo from './ExtraInfo';
+import Instruction from './Instructions';
 
 function RightPanel({ fontSize, fontSizeIncrement }) {
   const buttons = [
@@ -23,6 +24,11 @@ function RightPanel({ fontSize, fontSizeIncrement }) {
       label: 'More',
       display: <ExtraInfo fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />,
     },
+    {
+      id: 3,
+      label: 'Instructions',
+      display: <Instruction fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />
+    }
 
   ];
 
