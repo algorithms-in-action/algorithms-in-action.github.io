@@ -4,7 +4,6 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 // merge test 
@@ -20,10 +19,6 @@ export default {
         instance: new Array2DTracer('array', null, 'Priority Queue'),
         order: 1,
       },
-      prevArray: {
-        instance: new Array1DTracer('array', null, 'Prev Array'),
-        order: 1,
-      }
     };
   },
 
@@ -50,6 +45,7 @@ export default {
     let pqStart;
     let n;
     let miniIndex;
+    let prevIndex;
     const closed = [];
     const pqCost = [];
     const prevNode = [];
@@ -173,12 +169,11 @@ export default {
     /* the chunker add select the minimum cost one */
     chunker.add(
         2,
-        (vis, v, u, w) => {
+        (vis, v, w) => {
           vis.array.set(v);
-          vis.prevArray.set(u);
           vis.array.select(1, w);
         },
-        [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
+        [[pqDisplay, pqCost, prevNode], miniIndex]
     );
 
 
@@ -201,15 +196,19 @@ export default {
       pqCost[miniIndex] = null;
       pqDisplay[miniIndex] = null;
       prevNode[miniIndex] = null;
-
+      /* get the next minimum value index and select it */
+      prevIndex = miniIndex;
+      findMinimum();
       chunker.add(
           5,
-          (vis, v, u, w) => {
+          (vis, v, w, u) => {
             vis.array.set(v);
-            vis.prevArray.set(u);
-            vis.array.select(w);
+            vis.array.deselect(1, u);
+            if (u !== w) {
+              vis.array.select(1, w);
+            }
           },
-          [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
+          [[pqDisplay, pqCost, prevNode], miniIndex, prevIndex]
       );
 
       PqUpdate(i);
@@ -217,12 +216,11 @@ export default {
 
       chunker.add(
           9,
-          (vis, v, u, w) => {
+          (vis, v, w) => {
             vis.array.set(v);
-            vis.prevArray.set(u);
             vis.array.select(1, w);
           },
-          [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
+          [[pqDisplay, pqCost, prevNode], miniIndex]
       );
 
       const newEdges = [];
