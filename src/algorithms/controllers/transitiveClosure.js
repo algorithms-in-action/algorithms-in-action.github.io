@@ -101,13 +101,13 @@ export default {
                   // g.graph.leave1(j, k);
                 }, [i, k, j]);
               }
-              chunker.add(3, (g, i, k, j) => {
+              chunker.add(7, (g, i, k, j) => {
                 // remove green
                 // g.array.deselect(k, j);
                 g.graph.leave1(j, k);
               }, [i, k, j]);
 
-              chunker.add(3, (g, i, j, k) => {
+              chunker.add(7, (g, i, j, k) => {
                 // leave the node (i,j) to move to the next node
                 // g.graph.leave(j, i);
                 // remove highlighting from the node (i,j) in the matrix to move to the next element
@@ -124,7 +124,7 @@ export default {
             }
 
             if (i !== j || j !== k) {
-              chunker.add(3, (g, i, k, j) => {
+              chunker.add(5, (g, i, k, j) => {
                 // remove green
                 g.array.deselect(k, j, k, j);
                 g.array.select(k, j, k, j, '3');
@@ -132,7 +132,7 @@ export default {
               }, [i, k, j]);
             }
           }
-          chunker.add(4, (g, i, k) => {
+          chunker.add(3, (g, i, k) => {
             // leave the node (i,k) to move to the next node
             // remove blue
             g.graph.leave(k, i);
