@@ -145,7 +145,6 @@ export default {
           chunker.add(
               8,
               (vis, v, u) => {
-                vis.array.set(v, 'prim');
                 if (v[1][u] != null) {
                   vis.array.select(1, u);
                 }
@@ -167,6 +166,14 @@ export default {
                 [preIndex, miniIndex, pqCost]
             );
           }
+          chunker.add(
+            9,
+            (vis, u, v) => {
+              vis.array.set(u, 'prim');
+              vis.array.select(1, v);
+            },
+            [[pqDisplay, pqCost, prevNode], miniIndex]
+        );
         }
       }
     };
