@@ -57,7 +57,6 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
-
     return (
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
@@ -70,12 +69,12 @@ class Array2DRenderer extends Renderer {
           {
             longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === 'heapsort') {
+              if (algo === 'heapsort' || algo === 'tc') {
                 i += 1;
               }
               return (
                 <td className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{i}</span>
+                  <span className={styles.value}>{ i }</span>
                 </td>
               );
             })
@@ -85,7 +84,13 @@ class Array2DRenderer extends Renderer {
           data.map((row, i) => (
             <tr className={styles.row} key={i}>
               {
-                !isArray1D &&
+                algo === 'tc' &&
+                <td className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{i + 1}</span>
+                </td>
+              }
+              {
+                !isArray1D && algo !== 'tc' &&
                 <td className={classes(styles.col, styles.index)}>
                   <span className={styles.value}>{i}</span>
                 </td>

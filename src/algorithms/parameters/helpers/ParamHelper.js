@@ -78,7 +78,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i,
+      Header: i + 1,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
