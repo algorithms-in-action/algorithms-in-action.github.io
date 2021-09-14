@@ -67,15 +67,19 @@ class Array2DRenderer extends Renderer {
             <td className={classes(styles.col, styles.index)} />
           }
           {
+            algo === 'tc' && // Leave a blank cell at the first row
+            <td />
+          }
+          {
             longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
               if (algo === 'heapsort' || algo === 'tc') {
                 i += 1;
               }
               return (
-                <td className={classes(styles.col, styles.index)} key={i}>
+                <th className={classes(styles.col, styles.index)} key={i}>
                   <span className={styles.value}>{ i }</span>
-                </td>
+                </th>
               );
             })
           }
@@ -84,10 +88,10 @@ class Array2DRenderer extends Renderer {
           data.map((row, i) => (
             <tr className={styles.row} key={i}>
               {
-                algo === 'tc' &&
-                <td className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{i + 1}</span>
-                </td>
+                algo === 'tc' && // generate vertical index, which starts from 1
+                <th className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{ i + 1 }</span>
+                </th>
               }
               {
                 !isArray1D && algo !== 'tc' &&
