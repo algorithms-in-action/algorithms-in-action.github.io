@@ -24,7 +24,7 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 500,
+      baseWidth: 320,
       baseHeight: 320,
       padding: 32,
       nodeRadius: 15,

@@ -153,7 +153,9 @@ export default {
         if (nVal === nodes.length) {
           vis.array.clearVariables();
           vis.array.assignVariable('n', nVal - 1);
-        } else vis.array.removeVariable('j'); // else only clear 'j'
+        } else vis.array.removeVariable('j');
+        // else only clear 'j'
+
         unhighlight(vis, index);
       }, [n, i]);
 
