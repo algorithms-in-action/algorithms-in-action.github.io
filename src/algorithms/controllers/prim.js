@@ -90,14 +90,11 @@ export default {
       let j;
       let w;
       let preIndex;
-      chunker.add(5);
       for (j = 0; j < n; j += 1) {
         w = weight[i][j];
-        chunker.add(6);
         if (w > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
-          chunker.add(7);
           chunker.add(
-            8,
+            5,
             (vis, n1, n2) => {
               vis.graph.visit(n1, n2);
             },
@@ -108,12 +105,28 @@ export default {
         * this function would compared the new cost with the pq cost and update the pq cost
         * */
         if (w > 0 && pending[j] && w < cost[j]) {
-          prevNode[j + 1] = i + 1;
           cost[j] = w;
+          const tmpCost = pqCost[j + 1];
           if (pqCost[j + 1] === Infinity) {
-            pqCost[j + 1] = `${cost[j].toString()}<=∞`;
+            pqCost[j + 1] = `${cost[j].toString()}<∞`;
           } else {
-            pqCost[j + 1] = `${cost[j].toString()}<=${pqCost[j + 1].toString()}`;
+            pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
+          }
+          chunker.add(
+              6,
+              (vis, v, u) => {
+                vis.array.set(v, 'prim');
+                if (v[1][u] != null) {
+                  vis.array.select(1, u);
+                }
+              },
+              [[pqDisplay, pqCost, prevNode], miniIndex]
+          );
+          pqCost[j + 1] = tmpCost;
+          if (pqCost[j + 1] === Infinity) {
+            pqCost[j + 1] = `${cost[j].toString()}<-∞`;
+          } else {
+            pqCost[j + 1] = `${cost[j].toString()}<-${pqCost[j + 1].toString()}`;
           }
           chunker.add(
               7,
@@ -125,20 +138,33 @@ export default {
               },
               [[pqDisplay, pqCost, prevNode], miniIndex]
           );
+          prevNode[j + 1] = i + 1;
           PqSort();
           prev[j] = i;
-          // updatePqDisplay();
           pqCost[j + 1] = cost[j];
+          chunker.add(
+              8,
+              (vis, v, u) => {
+                vis.array.set(v, 'prim');
+                if (v[1][u] != null) {
+                  vis.array.select(1, u);
+                }
+              },
+              [[pqDisplay, pqCost, prevNode], miniIndex]
+          );
           preIndex = miniIndex;
           findMinimum();
           if (preIndex !== miniIndex) {
             chunker.add(
-                7,
-                (vis, u, v) => {
+                8,
+                // eslint-disable-next-line no-shadow
+                (vis, u, v, w) => {
                   vis.array.deselect(1, u);
-                  vis.array.select(1, v);
+                  if (w[v] != null) {
+                    vis.array.select(1, v);
+                  }
                 },
-                [preIndex, miniIndex, prevNode]
+                [preIndex, miniIndex, pqCost]
             );
           }
         }
@@ -204,7 +230,7 @@ export default {
           (vis, v, w, u) => {
             vis.array.set(v, 'prim');
             vis.array.deselect(1, u);
-            if (u !== w) {
+            if (u !== w && v[1][w] !== null) {
               vis.array.select(1, w);
             }
           },
@@ -218,7 +244,9 @@ export default {
           9,
           (vis, v, w) => {
             vis.array.set(v, 'prim');
-            vis.array.select(1, w);
+            if (v[1][w] !== null) {
+              vis.array.select(1, w);
+            }
           },
           [[pqDisplay, pqCost, prevNode], miniIndex]
       );
