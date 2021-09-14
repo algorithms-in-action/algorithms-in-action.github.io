@@ -78,7 +78,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i,
+      Header: i + 1,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -89,6 +89,9 @@ export const makeColumnArray = (len) => {
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix
+ * @param min
+ * @param max
+ * @param symmetric
  * @return array of object
  */
 export const makeData = (len, min, max, symmetric) => {
@@ -119,32 +122,34 @@ export const makeData = (len, min, max, symmetric) => {
     }
     arr.push(data);
   }
-  arr = [
-    {
-      col0: '0',
-      col1: '0',
-      col2: '0',
-      col3: '1',
-    },
-    {
-      col0: '1',
-      col1: '0',
-      col2: '0',
-      col3: '1',
-    },
-    {
-      col0: '1',
-      col1: '1',
-      col2: '0',
-      col3: '0',
-    },
-    {
-      col0: '0',
-      col1: '0',
-      col2: '1',
-      col3: '0',
-    },
-  ];
+  if (len === 4) {
+    arr = [
+      {
+        col0: '0',
+        col1: '0',
+        col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '0',
+        col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '1',
+        col2: '0',
+        col3: '0',
+      },
+      {
+        col0: '0',
+        col1: '0',
+        col2: '1',
+        col3: '0',
+      },
+    ];
+  }
   return arr;
 };
 

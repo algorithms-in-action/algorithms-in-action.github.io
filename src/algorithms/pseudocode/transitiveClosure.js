@@ -29,7 +29,7 @@ export default parse(`
           so we do not explore whether there is a path from k to j.
         \\Expl}
         \\In{
-          for j <- 0 to n-1  \\B 5
+          for j <- 0 to n-1   \\B 5
           \\Expl{ Consider paths to all possible target nodes j.
           \\Expl} 
           \\In{

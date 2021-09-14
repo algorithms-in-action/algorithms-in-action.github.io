@@ -42,6 +42,7 @@ function MatrixParam({
   const [size, setSize] = useState(defaultSize);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
+  // window.alert(columns.Header);
   const { dispatch } = useParam();
   const [data, setData] = useState(() => makeData(size, min, max, symmetric));
   const [originalData, setOriginalData] = useState(data);

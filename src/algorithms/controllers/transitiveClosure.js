@@ -53,35 +53,36 @@ export default {
     }
 
     for (let k = 0; k < numOfNodes; k++) {
+      chunker.add(2, (g, k) => {
+        g.array.selectCol(k, 0, numOfNodes - 1, '2');
+        g.array.selectRow(k, 0, numOfNodes - 1, '3');
+      }, [k]);
       for (let i = 0; i < numOfNodes; i++) {
-        if (!nodes[k][i][k]) {
-          chunker.add(4, (g, i, k) => {
-            g.array.select(i, k);
-          }, [i, k]); // move along columns
-        } else {
+        chunker.add(2, (g, i, k) => {
+          g.array.deselect(i, k, i, k);
+          g.array.select(i, k);
+        }, [i, k]); // move along columns
+
+        if (nodes[k][i][k]) {
           chunker.add(4, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
-            g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
           }, [i, k]);
 
-          chunker.add(5, (g, i, k) => {
-          }, [i, k]);
-
           for (let j = 0; j < numOfNodes; j++) {
-            if (!nodes[k][k][j]) {
-              chunker.add(6, (g, k, j) => {
-                g.array.select1(k, j);
-              }, [k, j]); // move along rows (green)
-            } else {
+            chunker.add(5, (g, k, j) => {
+              g.array.deselect(k, j, k, j);
+              g.array.select(k, j, k, j, '1');
+            }, [k, j]); // move along rows (green)
+
+            if (nodes[k][k][j]) {
               chunker.add(6, (g, j, k) => {
                 // if a path between j and k is found, highlight the edge in green
-                g.array.select1(k, j);
                 g.graph.visit1(j, k, 1);
               }, [j, k]);
 
-              chunker.add(7, (g, i, j) => {
+              chunker.add(6, (g, i, j) => {
                 // orange
                 if (!g.array.data[i][j].value) {
                   g.array.patch(i, j, '0->1');
@@ -95,12 +96,18 @@ export default {
               if (i !== j || j !== k) {
                 chunker.add(7, (g, i, k, j) => {
                   // remove green
-                  g.array.deselect(k, j);
-                  g.graph.leave1(j, k);
+                  g.array.deselect(k, j, k, j);
+                  g.array.select(k, j, k, j, '3');
+                  // g.graph.leave1(j, k);
                 }, [i, k, j]);
               }
+              chunker.add(3, (g, i, k, j) => {
+                // remove green
+                // g.array.deselect(k, j);
+                g.graph.leave1(j, k);
+              }, [i, k, j]);
 
-              chunker.add(7, (g, i, j, k) => {
+              chunker.add(3, (g, i, j, k) => {
                 // leave the node (i,j) to move to the next node
                 // g.graph.leave(j, i);
                 // remove highlighting from the node (i,j) in the matrix to move to the next element
@@ -109,36 +116,40 @@ export default {
                   g.array.depatch(i, j, 1);
                   g.graph.leave1(j, i); // remove orange
                 }
-                // g.graph.leave(j, k);
-                // if(j === size - 1)return 5
               }, [i, j, k]);
 
               for (let a = k; a < numOfNodes; a++) {
                 nodes[a][i][j] = 1;
               }
             }
+
             if (i !== j || j !== k) {
-              chunker.add(5, (g, i, k, j) => {
+              chunker.add(3, (g, i, k, j) => {
                 // remove green
-                g.array.deselect(k, j);
+                g.array.deselect(k, j, k, j);
+                g.array.select(k, j, k, j, '3');
                 g.graph.leave1(j, k);
-                // if(j === size - 1)return 3
               }, [i, k, j]);
             }
           }
-          chunker.add(3, (g, i, k) => {
+          chunker.add(4, (g, i, k) => {
             // leave the node (i,k) to move to the next node
             // remove blue
             g.graph.leave(k, i);
             g.graph.leave(i);
-            // if(i === size-1) return 2
+            // g.graph.leave1(j, k);
           }, [i, k]);
         }
         chunker.add(3, (g, i, k) => {
           g.array.deselect(i, k);
-          // if(i === size-1) return 2
+          g.array.select(i, k, i, k, '2');
+          // g.graph.leave1(k);
         }, [i, k]);
       }
+      chunker.add(2, (g, k) => {
+        g.array.deselectRow(k, 0, numOfNodes - 1);
+        g.array.deselectCol(k, 0, numOfNodes - 1);
+      }, [k]);
     }
   },
 };
