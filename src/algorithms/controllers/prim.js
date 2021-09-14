@@ -86,6 +86,7 @@ export default {
           }
         }
     };
+
     const PqUpdate = (i) => {
       let j;
       let w;
@@ -215,7 +216,7 @@ export default {
       prevDisplay[pqStart] = i + 1;
       /* pop the miniIndex one and add it to spinning tree to extend more connections */
       chunker.add(
-        3,
+        4,
         (vis, n1, n2, index) => {
           vis.graph.visit(n1, n2);
           vis.graph.select(n1, n2);
@@ -231,7 +232,7 @@ export default {
       prevIndex = miniIndex;
       findMinimum();
       chunker.add(
-          5,
+          4,
           (vis, v, w, u) => {
             vis.array.set(v, 'prim');
             vis.array.deselect(1, u);
@@ -245,16 +246,16 @@ export default {
       PqUpdate(i);
       findMinimum();// once update the cost, find the next minimum cost in pq cost and select it
 
-      chunker.add(
-          9,
-          (vis, v, w) => {
-            vis.array.set(v, 'prim');
-            if (v[1][w] !== null) {
-              vis.array.select(1, w);
-            }
-          },
-          [[pqDisplay, pqCost, prevNode], miniIndex]
-      );
+      // chunker.add(
+      //     9,
+      //     (vis, v, w) => {
+      //       vis.array.set(v, 'prim');
+      //       if (v[1][w] !== null) {
+      //         vis.array.select(1, w);
+      //       }
+      //     },
+      //     [[pqDisplay, pqCost, prevNode], miniIndex]
+      // );
 
       const newEdges = [];
       for (let j = 0; j < n; j += 1) {
@@ -264,7 +265,7 @@ export default {
       }
       if (pq[pqStart]) {
         chunker.add(
-          9,
+          5,
           (vis, n1, n2) => {
             vis.graph.visit(n1, n2);
           },
@@ -272,7 +273,7 @@ export default {
         );
       }
       chunker.add(
-        9,
+        3,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
         },
