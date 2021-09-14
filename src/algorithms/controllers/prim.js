@@ -52,6 +52,7 @@ export default {
     let miniIndex;
     const closed = [];
     const pqCost = [];
+    const prevNode = [];
 
 
     chunker.add(
@@ -111,18 +112,22 @@ export default {
         * this function would compared the new cost with the pq cost and update the pq cost
         * */
         if (w > 0 && pending[j] && w < cost[j]) {
+          prevNode[j + 1] = i + 1;
           cost[j] = w;
-          pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
+          if (pqCost[j + 1] === Infinity) {
+            pqCost[j + 1] = `${cost[j].toString()}<=∞`;
+          } else {
+            pqCost[j + 1] = `${cost[j].toString()}<=${pqCost[j + 1].toString()}`;
+          }
           chunker.add(
               7,
-              // eslint-disable-next-line no-loop-func
               (vis, v, u) => {
                 vis.array.set(v);
                 if (v[1][u] != null) {
                   vis.array.select(1, u);
                 }
               },
-              [[pqDisplay, pqCost], miniIndex]
+              [[pqDisplay, pqCost, prevNode], miniIndex]
           );
           PqSort();
           prev[j] = i;
@@ -137,7 +142,7 @@ export default {
                   vis.array.deselect(1, u);
                   vis.array.select(1, v);
                 },
-                [preIndex, miniIndex]
+                [preIndex, miniIndex, prevNode]
             );
           }
         }
@@ -154,11 +159,13 @@ export default {
     }
     cost[0] = 0;
     pqCost.push('Cost');  // initialize the pq cost
-    pqDisplay.push('Node');// initialize the pq display
+    pqDisplay.push('Node'); // initialize the pq display
+    prevNode.push('Prev'); // initialize the prev list
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
       pqCost.push(Infinity);
+      prevNode.push(null);
     }
     pqStart = 0;
     pqCost[1] = cost[0]; // add the minimum cost to pq cost
@@ -171,7 +178,7 @@ export default {
           vis.prevArray.set(u);
           vis.array.select(1, w);
         },
-        [[pqDisplay, pqCost], prevDisplay, miniIndex]
+        [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
     );
 
 
@@ -193,6 +200,7 @@ export default {
       /* change the miniIndex to null */
       pqCost[miniIndex] = null;
       pqDisplay[miniIndex] = null;
+      prevNode[miniIndex] = null;
 
       chunker.add(
           5,
@@ -201,7 +209,7 @@ export default {
             vis.prevArray.set(u);
             vis.array.select(w);
           },
-          [[pqDisplay, pqCost], prevDisplay, miniIndex]
+          [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
       );
 
       PqUpdate(i);
@@ -214,7 +222,7 @@ export default {
             vis.prevArray.set(u);
             vis.array.select(1, w);
           },
-          [[pqDisplay, pqCost], prevDisplay, miniIndex]
+          [[pqDisplay, pqCost, prevNode], prevDisplay, miniIndex]
       );
 
       const newEdges = [];
