@@ -3,12 +3,10 @@
 
 // --graph-node-fill: orange;
 
-
-
 .graph {
   flex: 1;
   align-self: stretch;
-
+  
   .node {
     .circle {
       fill: var(--graph-node-circle-fill);
@@ -33,7 +31,7 @@
       alignment-baseline: central;
       text-anchor: left;
     }
-
+    
     &.selected {
       .circle {
         fill: var(--graph-node-circle-fill-selected);
@@ -120,4 +118,5 @@
       fill: var(--graph-arrow-fill-visited);
     }
   }
+
 }

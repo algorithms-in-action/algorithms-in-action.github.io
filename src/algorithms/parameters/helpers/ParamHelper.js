@@ -42,7 +42,7 @@ export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}
     logTag=""
-    logMsg={`The ${type} algorithm is now ready for execution.`}
+    logMsg={``}
   />
 );
 

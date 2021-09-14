@@ -6,7 +6,7 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function HeaderButton({ value, onChange }) {
-  const [state, setState] = useState(0);
+  const [state, setState] = useState(1);
   const handleChange = (event, newValue) => {
     setState(newValue);
     onChange(newValue);
@@ -57,6 +57,7 @@ function HeaderButton({ value, onChange }) {
             {
               value.map((item) => (
                 <Tab
+                  
                   key={item.id}
                   label={item.label}
                   disableRipple

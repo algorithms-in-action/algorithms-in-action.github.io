@@ -122,7 +122,7 @@ function MatrixParam({
     const matrix = getMatrix();
 
     if (matrix.length !== 0) {
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      //setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,

@@ -11,7 +11,7 @@
 import React, { useContext, useEffect } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import HelpOutlineIcon from '@material-ui/icons/Help';
+import DescriptionIcon from '@material-ui/icons/Description';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -19,6 +19,7 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 import { markdownKeywords } from './MarkdownKeywords';
+
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -153,7 +154,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
-          <HelpOutlineIcon style={{ fontSize: 14 }} />
+          <DescriptionIcon style={{ fontSize: 10 }} />
         </button>;
     }
 

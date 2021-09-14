@@ -26,7 +26,7 @@ function RightPanel({ fontSize, fontSizeIncrement }) {
 
   ];
 
-  const [state, setState] = React.useState(0);
+  const [state, setState] = React.useState(1);
 
   const getBtnState = (val) => {
     setState(val);

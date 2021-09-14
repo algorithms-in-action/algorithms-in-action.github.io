@@ -99,7 +99,74 @@ function ControlPanel() {
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
-
+  return (
+    <div className="controlContainer">
+      <div className="controlPanel">
+        <div className="rightControl">
+          <div className="controlButtons">
+            {/* Prev Button */}
+            <ControlButton
+              icon={<PrevIcon />}
+              type="prev"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
+              onClick={() => prev()}
+            />
+            {/* Play/Pause Button */}
+            {playing ? (
+              <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
+            ) : (
+              <ControlButton
+                icon={<PlayIcon />}
+                type="play"
+                disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+                onClick={handleClickPlay}
+              />
+            )}
+            {/* Next Button */}
+            <ControlButton
+              icon={<NextIcon />}
+              type="next"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+              onClick={() => next()}
+            />
+          </div>
+        </div>
+        {/* Speed Slider */}
+        <div className="speed">
+          <div className="innerSpeed">
+            {/* Label the speed slider as SPEED */}
+            SPEED
+          </div>
+        </div>
+        <div className="sliderContainer">
+          <div className="slider">
+            <ThemeProvider theme={muiTheme}>
+              <Grid container spacing={2}>
+                <Grid item xs>
+                  <Slider
+                    value={speed}
+                    onChange={handleSliderChange}
+                    aria-labelledby="continuous-slider"
+                  />
+                </Grid>
+              </Grid>
+            </ThemeProvider>
+          </div>
+        </div>
+        <div className='prcessbar'>
+          {/* Progress Status Bar */}
+          <ProgressBar
+              current={currentChunk}
+              max={chunkerLength}
+            />
+        </div>
+        
+      </div>
+      <div className="parameterPanel">
+        {algorithm.param}
+      </div>
+    </div>
+  );
   return (
     <div className="controlContainer">
       <div className="controlPanel">
