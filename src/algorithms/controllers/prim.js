@@ -118,7 +118,7 @@ export default {
           chunker.add(
               7,
               (vis, v, u) => {
-                vis.array.set(v);
+                vis.array.set(v, 'prim');
                 if (v[1][u] != null) {
                   vis.array.select(1, u);
                 }
@@ -170,7 +170,7 @@ export default {
     chunker.add(
         2,
         (vis, v, w) => {
-          vis.array.set(v);
+          vis.array.set(v, 'prim');
           vis.array.select(1, w);
         },
         [[pqDisplay, pqCost, prevNode], miniIndex]
@@ -202,7 +202,7 @@ export default {
       chunker.add(
           5,
           (vis, v, w, u) => {
-            vis.array.set(v);
+            vis.array.set(v, 'prim');
             vis.array.deselect(1, u);
             if (u !== w) {
               vis.array.select(1, w);
@@ -217,7 +217,7 @@ export default {
       chunker.add(
           9,
           (vis, v, w) => {
-            vis.array.set(v);
+            vis.array.set(v, 'prim');
             vis.array.select(1, w);
           },
           [[pqDisplay, pqCost, prevNode], miniIndex]

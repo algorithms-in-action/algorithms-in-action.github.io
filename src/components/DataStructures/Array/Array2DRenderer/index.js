@@ -73,6 +73,9 @@ class Array2DRenderer extends Renderer {
               if (algo === 'heapsort') {
                 i += 1;
               }
+              if (algo === 'prim') {
+                i = ' ';
+              }
               return (
                 <td className={classes(styles.col, styles.index)} key={i}>
                   <span className={styles.value}>{i}</span>
