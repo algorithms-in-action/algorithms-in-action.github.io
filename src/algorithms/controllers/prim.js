@@ -145,7 +145,7 @@ export default {
           chunker.add(
               8,
               (vis, v, u) => {
-                if (v[1][u] != null) {
+                if (v[1][u] !== null) {
                   vis.array.select(1, u);
                 }
               },
@@ -159,7 +159,7 @@ export default {
                 // eslint-disable-next-line no-shadow
                 (vis, u, v, w) => {
                   vis.array.deselect(1, u);
-                  if (w[v] != null) {
+                  if (w[v] !== null) {
                     vis.array.select(1, v);
                   }
                 },
@@ -194,7 +194,7 @@ export default {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
       pqCost.push(Infinity);
-      prevNode.push(null);
+      prevNode.push('-');
     }
     pqStart = 0;
     pqCost[1] = cost[0]; // add the minimum cost to pq cost
@@ -209,7 +209,7 @@ export default {
         [[pqDisplay, pqCost, prevNode], miniIndex]
     );
 
-
+    
     while (pqStart < n) {
       i = pq[pqStart];
       prevDisplay[pqStart] = i + 1;
@@ -227,8 +227,6 @@ export default {
       pqStart += 1;
       /* change the miniIndex to null */
       pqCost[miniIndex] = null;
-      pqDisplay[miniIndex] = null;
-      prevNode[miniIndex] = null;
       /* get the next minimum value index and select it */
       prevIndex = miniIndex;
       findMinimum();
