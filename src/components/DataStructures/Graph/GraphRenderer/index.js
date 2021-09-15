@@ -216,6 +216,7 @@ class GraphRenderer extends Renderer {
           return (
             <motion.g
               animate={{ x, y }}
+              initial={false}
               transition={{ duration: 1 }}
               className={classes(
                 styles.node,
