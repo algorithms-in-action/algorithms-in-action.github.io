@@ -26,16 +26,6 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
     });
   };
 
-  if(algorithm.pseudocode){
-    for(var eachpart in algorithm.pseudocode){
-      algorithm.pseudocode[eachpart].forEach(element =>{
-        if(algorithm.bookmark && element.bookmark === algorithm.bookmark){
-          explanation = element.explanation
-        }
-      })
-    }
-  }
-
   return (
     show ? (
       <>
