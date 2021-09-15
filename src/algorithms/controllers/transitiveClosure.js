@@ -43,7 +43,7 @@ export default {
 
     chunker.add(1, (g) => {
       g.array.set([...matrix], 'tc');
-      g.graph.set(nodes, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+      g.graph.set([...matrix], Array.from({ length: matrix.length }, (v, k) => (k + 1)));
       g.graph.layoutCircle();
       // initialise the matrix in the 'Matrix' component
     }, [this.graph], [this.array]);
