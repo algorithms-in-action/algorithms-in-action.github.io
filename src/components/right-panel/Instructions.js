@@ -16,15 +16,12 @@ function Instruction({ fontSize, fontSizeIncrement }) {
 
 
   useEffect(() => {
-    console.log(algorithm.instructions)
     var text = '# Instructions \n\n\n';
     for(var i=0;i<algorithm.instructions.length;i++){
-        console.log(algorithm.instructions[i])
-        text = text+"## "+algorithm.instructions[i].title+"\n\n\n";
-        for(var j=0;j<algorithm.instructions[i].content.length;j++){
-            console.log(algorithm.instructions[i].content[j])
-            text = text +(j+1)+".\t"+algorithm.instructions[i].content[j]+"\n\n";
-        }
+      text = text+"## "+algorithm.instructions[i].title+"\n\n\n";
+      for(var j=0;j<algorithm.instructions[i].content.length;j++){
+        text = text +(j+1)+".\t"+algorithm.instructions[i].content[j]+"\n\n";
+      }
     }
     
     setExplanation(text);
