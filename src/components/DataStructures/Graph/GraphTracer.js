@@ -486,6 +486,12 @@ class GraphTracer extends Tracer {
     this.visitOrLeave(false, target, source, weight);
   }
 
+  allLeave(target, sources, weight) {
+    for (let i = 0; i < sources.length; i += 1) {
+      this.visitOrLeave(false, target, sources[i], weight);
+    }
+  }
+
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount += visit ? 1 : -1;

@@ -146,7 +146,7 @@ class GraphRenderer extends Renderer {
             }
 
             return (
-              <g className={classes(styles.edge, selectedCount && styles.selected, visitedCount && styles.visited, switchColor(visitedCount1))}
+              <g className={classes(styles.edge, selectedCount && styles.selected, !selectedCount && visitedCount && styles.visited, switchColor(visitedCount1))}
                  key={`${source}-${target}`}>
                 <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
                 {
