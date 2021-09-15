@@ -11,7 +11,7 @@
 import React, { useContext, useEffect } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DescriptionIcon from '@material-ui/icons/Description';
+import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -154,7 +154,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
-          <DescriptionIcon style={{ fontSize: 10 }} />
+          <HelpIcon style={{ color: '#f7c679', fontSize: 'small' }} />
         </button>;
     }
 
