@@ -63,7 +63,7 @@ class Array2DRenderer extends Renderer {
 
     return (
       <motion.table
-      animate={{scale: this.zoom}}
+      animate={{ scale: this.zoom }}
         className={switchmode(mode())}
         style={{
           marginLeft: -this.centerX * 2,
@@ -97,7 +97,7 @@ class Array2DRenderer extends Renderer {
                   <span className={styles.value}>{i}</span>
                 </td>
               )}
-              {row.map((col, j) => (
+              {row.map((col) => (
                 <motion.td
                   layout
                   transition={{ duration: 0.6 }}

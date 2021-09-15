@@ -1,4 +1,4 @@
-/* eslint-disable no-multi-spaces,indent,prefer-destructuring */
+/* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
@@ -84,7 +84,6 @@ export default {
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
       chunker.add(4, (vis, index) => {
-        highlight(vis, index);
         vis.array.assignVariable('k', index);
       }, [k]);
 
@@ -97,6 +96,7 @@ export default {
           unhighlight(vis, index2);
           vis.array.removeVariable('j');
         }
+        highlight(vis, index1);
         vis.array.assignVariable('i', index1);
       }, [i, tmp]);
 
@@ -154,6 +154,7 @@ export default {
           vis.array.clearVariables();
           vis.array.assignVariable('n', nVal - 1);
         } else vis.array.removeVariable('j');
+
         // else only clear 'j'
 
         unhighlight(vis, index);
@@ -175,6 +176,7 @@ export default {
         unhighlight(vis, 0, false);
         vis.array.sorted(index);
         vis.heap.sorted(index + 1);
+
         vis.array.assignVariable('n', index - 1);
       }, [n - 1]);
       n -= 1;
