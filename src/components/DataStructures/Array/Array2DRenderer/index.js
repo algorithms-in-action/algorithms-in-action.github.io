@@ -129,8 +129,8 @@ class Array2DRenderer extends Renderer {
                   <div
                     style={{
                       position: 'absolute',
-                      width: '95%',
-                      top: 0,
+                      width: '98%',
+                      top: '-0.4px',
                       border: '0.1px solid gray',
                       height: '100%',
                       borderCollapse: 'separate',

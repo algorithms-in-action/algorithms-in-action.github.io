@@ -209,17 +209,19 @@ class GraphRenderer extends Renderer {
             );
           })}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, selectedCount, value, key, style } = node;
+          const { x, y, weight, visitedCount, selectedCount, value, key, style, sorted } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1; const
             visitedNode = visitedCount === 1;
           return (
             <motion.g
               animate={{ x, y }}
+              initial={false}
               transition={{ duration: 1 }}
               className={classes(
                 styles.node,
                 selectNode && styles.selected,
+                sorted && styles.sorted,
                 visitedNode && styles.visited,
               )}
               key={key}

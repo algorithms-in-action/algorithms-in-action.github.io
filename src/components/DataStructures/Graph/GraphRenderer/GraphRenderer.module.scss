@@ -41,6 +41,7 @@
     }
 
 
+
     &.visited {
       .circle {
         fill: var(--graph-node-circle-fill-visited);
@@ -48,6 +49,12 @@
       }
       .id {
         fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.sorted {
+      .id {
+        fill: var(--graph-node-id-fill-sorted);
       }
     }
   }

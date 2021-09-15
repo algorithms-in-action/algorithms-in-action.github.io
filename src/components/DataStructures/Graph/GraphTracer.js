@@ -24,7 +24,7 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 500,
+      baseWidth: 320,
       baseHeight: 320,
       padding: 32,
       nodeRadius: 15,
@@ -380,8 +380,8 @@ class GraphTracer extends Tracer {
 
     // Calculates node's x and y.
     marked = {};
-    const leafNodeSizeAlloc = 30; // horizontal size allocated per leaf node under a subtree node
-    const verticalGap = 80; // vertical gap between nodes. incremented every level.
+    const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length; // horizontal size allocated per leaf node under a subtree node
+    const verticalGap = (this.dimensions.baseHeight - 100) / maxDepth; // vertical gap between nodes. incremented every level.
     const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
       node.x = x;
@@ -541,6 +541,11 @@ class GraphTracer extends Tracer {
     if (this.logTracer) {
       this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
+  }
+
+  sorted(target) {
+    const node = this.findNode(target);
+    node.sorted = true;
   }
 
   // style = { backgroundStyle: , textStyle: }
