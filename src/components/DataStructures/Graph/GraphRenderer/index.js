@@ -17,6 +17,8 @@ import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
 
+
+
 let modename;
 function switchmode(modetype = mode()) {
   switch (modetype) {
@@ -74,6 +76,7 @@ class GraphRenderer extends Renderer {
 
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
+    
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) * this.zoom,
@@ -89,6 +92,7 @@ class GraphRenderer extends Renderer {
       rootY = root.y;
     }
     return (
+      
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
           <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
@@ -137,26 +141,51 @@ class GraphRenderer extends Renderer {
             );
           })
         }
-        {
-          nodes.map(node => {
-            const { id, x, y, weight, visitedCount, selectedCount, value } = node;
+
+        {/* node graph */}
+        {nodes.map(node => {
+            const { id, x, y, weight, visitedCount, selectedCount, value,Result } = node;
             // only when selectedCount is 1, then highlight the node
             const selectNode = selectedCount === 1;
             return (
               <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
-                 key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
+                key={id} transform={`translate(${x},${y})`}>
+                <rect className={styles.circle} width={2 * nodeRadius} height={2 * nodeRadius} x={-nodeRadius} y={-nodeRadius} />
                 <text className={styles.id}>{value}</text>
                 {
                   isWeighted &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
                 }
               </g>
+              
             );
+            
           })
         }
+        
+        {/* Result message */}
+        {nodes.map(node => {
+        const { id, x, y, weight, visitedCount, selectedCount, value,Result } = node;
+        // only when selectedCount is 1, then highlight the node
+        const selectNode = visitedCount;
+      
+
+        return (
+          <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
+             key={id} transform={`translate(${x},${y})`}>
+          <text x="-60%" y="20%" dy=".2em" >{this.toString(Result)}</text>
+          </g>
+        );
+        
+       
+        })
+      }
         <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
       </svg>
+      
+      
+      
+      
     );
   }
 }

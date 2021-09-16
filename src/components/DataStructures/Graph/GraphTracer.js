@@ -15,6 +15,14 @@
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
+import { cloneDeepWith } from "lodash";
+
+
+export class Element {
+  constructor() {
+    this.variables = [];
+  }
+}
 
 class GraphTracer extends Tracer {
   getRendererClass() {
@@ -24,8 +32,8 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 320,
-      baseHeight: 320,
+      baseWidth: 480,
+      baseHeight: 480,
       padding: 32,
       nodeRadius: 12,
       arrowGap: 4,
@@ -175,12 +183,19 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
+  
+
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
+
+  addResult(text,id) {
+    this.findNode(id).Result = text;
+  }
+  
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
@@ -525,6 +540,7 @@ class GraphTracer extends Tracer {
 
   setText(text) {
     this.text = text;
+    this.text.push({text});
   }
 }
 

@@ -122,8 +122,12 @@ $dragBarWidth: 10px;
 // Left Dragbar
 #leftdragbar {
 	grid-area: leftdragbar;
-	cursor: col-resize;
-
+	
+	svg {
+		height: 14px;
+		width: 14px;
+		margin-left: 7px;
+	}
 }
 
 // Bottom Dragbar
@@ -132,6 +136,7 @@ $dragBarWidth: 10px;
 	cursor: row-resize;
 
 }
+
 
 
 

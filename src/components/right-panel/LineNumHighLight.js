@@ -11,7 +11,7 @@
 import React, { useContext, useEffect } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DescriptionIcon from '@material-ui/icons/Description';
+import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -37,6 +37,12 @@ function blockContainsBookmark(algorithm, block) {
     }
   }
   return false;
+}
+
+//SIM Event - DanistyWuKids
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+function simulateMouseClick(element){
+  mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
 }
 
 function codeFormatting(codeArray) {
@@ -144,10 +150,11 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][blockName] && line.lineExplanButton !== undefined) {
       lineExplanButton =
         <button
+          id={"buttonexpl"+i}
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
-          <DescriptionIcon style={{ fontSize: 10 }} />
+          <HelpIcon style={{ color: '#f7c679', fontSize: 'small' }} />
         </button>;
     }
 
@@ -180,7 +187,9 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                 : <ChevronRightIcon style={{ fontSize: 12 }} />}
             </button>
           </span>
-          <span>{lineExplanButton}</span>
+          <span
+            id={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'activebtn' : ''}>
+              {lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -198,7 +207,8 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
         >
           <span>{i}</span>
           <span>{null}</span>
-          <span>{lineExplanButton}</span>
+          <span id={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'activebtn' : ''}>
+            {lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -220,7 +230,6 @@ const pseudoCodePadding = (lineNum, limit) => {
       </p>,
     );
   }
-
   return codeLines;
 };
 
