@@ -14,7 +14,7 @@
     "denque": "^1.5.0",
     "framer-motion": "^4.1.17",
     "history": "^5.0.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
