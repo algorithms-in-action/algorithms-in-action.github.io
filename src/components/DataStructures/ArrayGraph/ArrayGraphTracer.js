@@ -385,6 +385,7 @@ class ArrayGraphTracer extends Tracer {
     }
   }
 
+
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
   }
