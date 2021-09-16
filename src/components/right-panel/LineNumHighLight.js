@@ -39,12 +39,6 @@ function blockContainsBookmark(algorithm, block) {
   return false;
 }
 
-//SIM Event - DanistyWuKids
-const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
-function simulateMouseClick(element){
-  mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
-}
-
 function codeFormatting(codeArray) {
   let spanItem;
   let codeItem;

@@ -104,7 +104,7 @@ function ControlPanel() {
     }
     
     setExplanation(text);
-  }, [algorithm.explanation]);
+  }, [algorithm.instructions]);
 
   /**
    * when click play button, calling play() based on the slider speed.
