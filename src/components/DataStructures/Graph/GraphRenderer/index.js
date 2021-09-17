@@ -182,6 +182,7 @@ class GraphRenderer extends Renderer {
               <g
                 className={classes(
                   styles.edge,
+                  targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
                   visitedCount && styles.visited,
                 )}
