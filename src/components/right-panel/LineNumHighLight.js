@@ -159,6 +159,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           className={(!algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
             && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
           role="presentation"
+          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
           <span>
@@ -198,6 +199,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           key={i}
           className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
+          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
           <span>{null}</span>
