@@ -67,8 +67,6 @@ class Array2DRenderer extends Renderer {
         className={switchmode(mode())}
         style={{
           marginLeft: -this.centerX * 2,
-          marginTop: -this.centerY * 2,
-          transform: `scale(${this.zoom})`,
           borderCollapse: 'separate',
           display: 'block',
         }}
