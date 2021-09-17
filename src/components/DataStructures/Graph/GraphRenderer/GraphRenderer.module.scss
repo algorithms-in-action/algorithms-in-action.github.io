@@ -89,6 +89,12 @@
       }
     }
 
+    &.sorted {
+      .line {
+        stroke-width: 0;
+      }
+    }
+
     &.visited {
       .line {
         stroke: var(--graph-edge-line-stroke-visited);
