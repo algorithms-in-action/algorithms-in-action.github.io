@@ -36,6 +36,15 @@
             }
        
           }
+
+          &.sorted {
+            span {
+              color: var(--array-graph-row-col-sorted);
+            }
+       
+          }
+
+
     
           &.patched {
             background-color: var(--array-graph-row-col-bg-patched);
