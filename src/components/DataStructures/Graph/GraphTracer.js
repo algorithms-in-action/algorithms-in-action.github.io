@@ -496,7 +496,7 @@ class GraphTracer extends Tracer {
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
-    if (weight !== undefined) node.weight = weight;
+    if (weight) node.weight = weight;
     node.visitedCount += visit ? 1 : -1;
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
@@ -523,10 +523,10 @@ class GraphTracer extends Tracer {
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount1 = visit ? colorIndex : 0;
     const node = this.findNode(target);
-    if (weight !== undefined || weight !== null) node.weight = weight;
+    if (weight) node.weight = weight;
     node.visitedCount1 = visit ? colorIndex : 0;
     const node1 = this.findNode(source);
-    if (node1 !== undefined || node1 !== null) node1.visitedCount1 = visit ? colorIndex : 0;
+    if (node1) node1.visitedCount1 = visit ? colorIndex : 0;
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
@@ -535,11 +535,24 @@ class GraphTracer extends Tracer {
   setPointerNode(source, sText, target = null, tText = null) {
     const node1 = this.findNode(source);
     node1.isPointer = 1;
-    node1.pointerText = sText;
+    if (!node1.pointerText.includes(sText)) {
+      node1.pointerText = node1.pointerText.concat(' ', sText);
+    }
     const node2 = this.findNode(target);
-    if (node2 !== undefined || node2 !== null) {
+    if (node2) {
       node2.isPointer = 1;
-      node2.pointerText = tText;
+      if (!node2.pointerText.includes(tText)) {
+        node2.pointerText = node2.pointerText.concat(' ', tText);
+      }
+    }
+  }
+
+  unsetPointerNode(source, sText, target = null, tText = null) {
+    const node1 = this.findNode(source);
+    node1.pointerText = node1.pointerText.replace(sText, '');
+    const node2 = this.findNode(target);
+    if (node2) {
+      node2.pointerText = node2.pointerText.replace(tText, '');
     }
   }
 
