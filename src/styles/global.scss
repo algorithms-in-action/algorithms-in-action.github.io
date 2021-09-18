@@ -92,7 +92,7 @@ $yellowLine: #FFDE3C;
 
 	--right-text-font: #343434;
 	--right-text-bg: #FFFFFF;
-	
+
 	--right-code-font: #383A43;
 	--right-code-explanation-font: #A0A1A8;
 	--right-code-keyword-font: #ce1ac2;
@@ -127,10 +127,11 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-fill-selected: #2289ff;
 	--graph-node-circle-stroke-selected: #2289ff;
 	--graph-node-id-fill-selected: #FFFFFF;
+	--graph-node-id-fill-sorted: #2289ff;
 	--graph-node-circle-fill-visited: #ee0970;
 	--graph-node-circle-stroke-visited: #ee0970;
 	--graph-node-id-fill-visited: #FFFFFF;
-	
+
 
 	--graph-edge-line-stroke: #aeaeae;
 	--graph-edge-line-weight-fill: #a4a4a4;
@@ -171,7 +172,7 @@ $yellowLine: #FFDE3C;
 	--array-graph-node-circle-stroke-selected: #2289ff;
 	--array-graph-node-circle-fill-visited: #ee0970;
 	--array-graph-node-circle-stroke-visited: #ee0970;
-	
+
 	--array-graph-edge-line-stroke: #505050;
 	--array-graph-edge-weight-fill: #505050;
 	--array-graph-edge-line-stroke-selected: #2289ff;
@@ -224,7 +225,7 @@ $yellowLine: #FFDE3C;
 
 	--left-bg:#16171B;
 	--left-item-bg: #16171B;
-	--left-cat-bg: #16171B;		
+	--left-cat-bg: #16171B;
 
 	--left-font: #bfbfbf;
 	--left-cat-font: #a9a9a9;
@@ -239,7 +240,7 @@ $yellowLine: #FFDE3C;
 	--mid-instruction-content-col: #c4c4c4;
 	--mid-instruction-content-number-col: #c2c2c2;
 	--mid-instruction-content-key: #027AFF;
-	
+
 	--mid-control-progress-bg: #111215;
 	--mid-control-progress-active: #027AFF;
 	--mid-control-progress-font: #a0a0a0;
@@ -279,7 +280,7 @@ $yellowLine: #FFDE3C;
 	--right-code-operator-font: #20b7c2;
 	--right-code-function-font: #3a7ae9;
 
-	--right-header-bg: #16171B;		
+	--right-header-bg: #16171B;
 	--right-header-font: #636363;
 	--right-header-side-btn: #1d1d1d;
 
@@ -349,7 +350,7 @@ $yellowLine: #FFDE3C;
 	--array-graph-node-circle-stroke-selected: #2289ff;
 	--array-graph-node-circle-fill-visited: #ee0970;
 	--array-graph-node-circle-stroke-visited: #ee0970;
-	
+
 	--array-graph-edge-line-stroke: #505050;
 	--array-graph-edge-weight-fill: #505050;
 	--array-graph-edge-line-stroke-selected: #2289ff;
@@ -401,18 +402,18 @@ $yellowLine: #FFDE3C;
 
 // Override Algorithm Theme Colors [Green]
 [algo-theme="green"] {
-	--graph-node-circle-fill-selected: #059847;
-	--graph-node-circle-stroke-selected: #059847;
-	--graph-node-circle-fill-visited: #e42fd5;
-	--graph-node-circle-stroke-visited: #e42fd5;
+	--graph-node-circle-fill-selected: #e42fd5;
+	--graph-node-circle-stroke-selected: #e42fd5;
+	--graph-node-circle-fill-visited: #059847;
+	--graph-node-circle-stroke-visited: #059847;
 
-	--graph-edge-line-stroke-selected: #059847;
-	--graph-edge-weight-fill-selected: #059847;
-	--graph-edge-line-stroke-visited: #e42fd5;
-	--graph-edge-weight-fill-visited: #e42fd5;
+	--graph-edge-line-stroke-selected: #e42fd5;
+	--graph-edge-weight-fill-selected: #e42fd5;
+	--graph-edge-line-stroke-visited: #059847;
+	--graph-edge-weight-fill-visited: #059847;
 
-	--graph-arrow-fill-selected: #059847;
-	--graph-arrow-fill-visited: #e42fd5;
+	--graph-arrow-fill-selected: #e42fd5;
+	--graph-arrow-fill-visited: #059847;
 
 	--array-2d-row-col-bg-selected: #059847;
 	--array-2d-row-col-bg-patched: #e42fd5;
@@ -425,29 +426,29 @@ $yellowLine: #FFDE3C;
 	--array-graph-node-circle-stroke-selected: #059847;
 	--array-graph-node-circle-fill-visited: #e42fd5;
 	--array-graph-node-circle-stroke-visited: #e42fd5;
-	
+
 	--array-graph-edge-line-stroke-selected: #059847;
 	--array-graph-edge-weight-fill-selected: #059847;
 	--array-graph-edge-line-stroke-visited: #e42fd5;
 	--array-graph-edge-weight-fill-visited: #e42fd5;
 	--array-graph-edge-arrow-fill-selected: #059847;
-	--array-graph-edge-arrow-fill-visited: #059847;
+	--array-graph-edge-arrow-fill-visited: #e42fd5;
 }
 
 // Override Algorithm Theme Colors [Green]
 [algo-theme="red"] {
-	--graph-node-circle-fill-selected: #0d9eae;
-	--graph-node-circle-stroke-selected: #0d9eae;
-	--graph-node-circle-fill-visited: #9f2fe4;
-	--graph-node-circle-stroke-visited: #9f2fe4;
+	--graph-node-circle-fill-selected: #9f2fe4;
+	--graph-node-circle-stroke-selected: #9f2fe4;
+	--graph-node-circle-fill-visited: #0d9eae;
+	--graph-node-circle-stroke-visited: #0d9eae;
 
-	--graph-edge-line-stroke-selected: #0d9eae;
-	--graph-edge-weight-fill-selected: #0d9eae;
-	--graph-edge-line-stroke-visited: #9f2fe4;
-	--graph-edge-weight-fill-visited: #9f2fe4;
+	--graph-edge-line-stroke-selected: #9f2fe4;
+	--graph-edge-weight-fill-selected: #9f2fe4;
+	--graph-edge-line-stroke-visited: #0d9eae;
+	--graph-edge-weight-fill-visited: #0d9eae;
 
-	--graph-arrow-fill-selected: #0d9eae;
-	--graph-arrow-fill-visited: #9f2fe4;
+	--graph-arrow-fill-selected: #9f2fe4;
+	--graph-arrow-fill-visited: #0d9eae;
 
 	--array-2d-row-col-bg-selected: #0d9eae;
 	--array-2d-row-col-bg-patched: #9f2fe4;
@@ -460,7 +461,7 @@ $yellowLine: #FFDE3C;
 	--array-graph-node-circle-stroke-selected: #0d9eae;
 	--array-graph-node-circle-fill-visited: #9f2fe4;
 	--array-graph-node-circle-stroke-visited: #9f2fe4;
-	
+
 	--array-graph-edge-line-stroke-selected: #0d9eae;
 	--array-graph-edge-weight-fill-selected: #0d9eae;
 	--array-graph-edge-line-stroke-visited: #9f2fe4;
@@ -509,12 +510,12 @@ $yellowLine: #FFDE3C;
 	-moz-border-radius: $radius;
 }
 
-@mixin calc($property, $expression...) { 
-  #{$property}: -moz-calc(#{$expression}); 
-  #{$property}: -o-calc(#{$expression}); 
-  #{$property}: -webkit-calc(#{$expression}); 
-  #{$property}: calc(#{$expression}); 
-} 
+@mixin calc($property, $expression...) {
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -o-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: calc(#{$expression});
+}
 
 
 @mixin removeBtnStyling {

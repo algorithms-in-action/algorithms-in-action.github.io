@@ -111,12 +111,19 @@ $containerTopBottomPad: 2%;
   align-items: center;
   padding-right: 12px;  
 }
-
-.active{
-  width: 200%;
-  background-color: var(--right-code-line-hg);
+ @keyframes line-tweening {
+  0% {opacity:0.8;background-color: var(--right-code-line-hg);font-size: 102%;}
+  100%{opacity:1;background-color:rgba(0, 162, 255, 0.2);}
 
 }
+  
+  .active{
+    width: 200%;
+    background-color: var(--right-code-line-hg);
+    animation-name:line-tweening;
+    animation-duration:2s;
+  }
+
 .active:hover {
   background-color: var(--right-code-line-hg) !important;
 

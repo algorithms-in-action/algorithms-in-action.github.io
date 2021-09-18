@@ -23,6 +23,11 @@
 
       }
 
+      .variable {
+        font-size: 18px;
+        color: var(--array-2d-row-col-sorted);
+      }
+
       &.selected {
         background-color: var(--array-2d-row-col-bg-selected);
 
@@ -55,7 +60,18 @@
         background: var(--array-2d-row-col-bg-index);
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
+        
       }
+
+      &.variables {
+        background: var(--array-2d-row-col-bg-index);
+        border: var(--array-2d-row-col-border-index);
+        color: var(--array-2d-row-col-color-index);
+        vertical-align: text-top;
+        
+      }
+
+      
     }
   }
 }
