@@ -13,6 +13,11 @@
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
     }
+    .rect{
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--graph-node-circle-stroke);
+      stroke-width: 1;
+    }
 
     .id {
       fill: var(--graph-node-id-fill);
@@ -32,11 +37,14 @@
         fill: var(--graph-node-circle-fill-selected);
         stroke: var(--graph-node-circle-stroke-selected);
       }
+      .rect {
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
+      }
       .id {
         fill: var(--graph-node-id-fill-selected);
       }
     }
-
 
 
     &.visited {
@@ -44,14 +52,12 @@
         fill: var(--graph-node-circle-fill-visited);
         stroke: var(--graph-node-circle-stroke-visited);
       }
+      .rect {
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
+      }
       .id {
         fill: var(--graph-node-id-fill-visited);
-      }
-    }
-
-    &.sorted {
-      .id {
-        fill: var(--graph-node-id-fill-sorted);
       }
     }
   }
@@ -83,12 +89,6 @@
 
       .weight {
         fill: var(--graph-edge-weight-fill-selected);
-      }
-    }
-
-    &.sorted {
-      .line {
-        stroke-width: 0;
       }
     }
 
