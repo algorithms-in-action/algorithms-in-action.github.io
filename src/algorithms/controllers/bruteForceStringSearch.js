@@ -3,7 +3,7 @@
 /* eslint-disable no-plusplus */
 
 import { QSExp } from '../explanations';
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
@@ -12,7 +12,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('bst', null, 'Brute force string search'),
+        instance: new GraphTracerRect('bst', null, 'Brute force string search'),
         order: 0,
       },
     };
