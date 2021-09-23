@@ -13,11 +13,7 @@ import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../as
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/ControlPanel.scss';
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import ReactMarkDown from 'react-markdown/with-html';
-import CodeBlock from '../../markdown/code-block';
-import toc from 'remark-toc';
 
 const muiTheme = createMuiTheme({
   overrides: {
@@ -188,23 +184,6 @@ function ControlPanel() {
       <div className="parameterPanel">
         {algorithm.param}
       </div>
-
-      <div>
-      <button type="button" className="button" onClick={() => setOpen(o => !o)}>
-        Instructions
-      </button>
-      <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-        <div className="modal">
-          <a className="close" onClick={closeModal}>
-            &times;
-          </a>
-          <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]}/>
-        </div>
-      </Popup>
-    </div>
-
-
-
     </div>
   );
   return (
