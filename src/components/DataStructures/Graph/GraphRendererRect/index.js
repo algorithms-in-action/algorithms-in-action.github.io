@@ -173,7 +173,7 @@ class GraphRenderer extends Renderer {
         return (
           <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
              key={id} transform={`translate(${x},${y})`}>
-          <text x="-60%" y="20%" dy=".2em" >{this.toString(Result)}</text>
+            <text className={styles.Result} x="-60%" y="20%" dy=".2em" >{this.toString(Result)}</text>
           </g>
         );
         

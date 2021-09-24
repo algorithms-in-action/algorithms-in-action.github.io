@@ -31,7 +31,10 @@
       alignment-baseline: central;
       text-anchor: left;
     }
-    
+    .Result{
+      fill: var(--graph-text-fill);
+      stroke: var(--graph-text-stroke);
+    }
     &.selected {
       .circle {
         fill: var(--graph-node-circle-fill-selected);
