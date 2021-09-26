@@ -58,6 +58,11 @@ export default {
         g.array.selectRow(k, 0, numOfNodes - 1, '3');
       }, [k]);
 
+      // run the second for loop
+      chunker.add(3, (g, k) => {
+
+      }, [k]);
+
       for (let i = 0; i < numOfNodes; i++) {
         if (!nodes[k][i][k]) {
           chunker.add(4, (g, i, k) => {
@@ -74,6 +79,11 @@ export default {
             g.graph.visit(k, i);
             g.graph.setPointerNode(i, 'i', k, 'k');
           }, [i, k]);
+
+          // run the third for loop
+          chunker.add(5, (g, k) => {
+
+          }, [k]);
 
           for (let j = 0; j < numOfNodes; j++) {
             if (!nodes[k][k][j]) {
