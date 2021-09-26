@@ -90,6 +90,20 @@ class GraphRendererRect extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
+
+    let nodeid=0;
+    let smlx=999;
+    let smly=0;
+    for (let ii = 0; ii < nodes.length; ii++) {
+      if(nodes[ii].y<=smly){
+        if(nodes[ii].x<=smlx){
+          smlx = nodes[ii].x;
+          smly = nodes[ii].y
+          nodeid = nodes[ii].id
+        }
+      }
+    }
+
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -178,16 +192,14 @@ class GraphRendererRect extends Renderer {
           const { id, x, y, weight, visitedCount, selectedCount, value, Result } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = visitedCount;
-
           return (
             <g
               className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
               key={id}
               transform={`translate(${x},${y})`}
             >
-              <text x="-60%" y="20%" dy=".2em">
-                {this.toString(Result)}
-              </text>
+              <text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>
+              {nodeid==id ?(<text y={smly*1.5} dy=".2em">i</text>) : (<text/>)}
             </g>
           );
         })}
