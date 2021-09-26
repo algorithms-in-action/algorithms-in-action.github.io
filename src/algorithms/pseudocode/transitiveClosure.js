@@ -17,7 +17,6 @@ export default parse(`
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
-        //find all nodes reachable from i via k
         \\Expl{  Identify target nodes j that are reachable from 
         source node i, whether they were already reachable 
         before now, or whether they are now reachable using 
@@ -28,28 +27,34 @@ export default parse(`
           cannot possibly be a stepping stone in the path from i to j,
           so we do not explore whether there is a path from k to j.
         \\Expl}
-        \\In{
-          for j <- 0 to n-1   \\B 5
-          \\Expl{ Consider paths to all possible target nodes j.
-          \\Expl} 
-          \\In{
-            if A[k,j]   \\B 6
-            \\Expl{  Check if there is a path from this intermediate 
-            node k to target node j.
-            \\Expl} 
-            \\In{
-              A[i,j] <- 1     \\B 7
-              \\Expl{  Record the new path from i to j (through k) in the 
-              reachability matrix by setting A[i,j] to 1 (if there
-              was already a path from i to j in the reachability
-              matrix, then it remains there, whether or not that
-              path goes through k.
-              \\Expl} 
-            \\In}
-          \\In}
-        \\In}
+        //find all nodes reachable from i via k
+        Reachable \\Ref Collapse
       \\In}
     \\In}
+  \\In}
+\\Code}
+
+\\Code{
+  Collapse
+  \\In{
+  for j <- 0 to n-1   \\B 5
+  \\Expl{ Consider paths to all possible target nodes j.
+  \\Expl} 
+  \\In{
+    if A[k,j]   \\B 6
+    \\Expl{  Check if there is a path from this intermediate 
+    node k to target node j.
+    \\Expl} 
+    \\In{
+      A[i,j] <- 1     \\B 7
+      \\Expl{  Record the new path from i to j (through k) in the 
+      reachability matrix by setting A[i,j] to 1 (if there
+      was already a path from i to j in the reachability
+      matrix, then it remains there, whether or not that
+      path goes through k.
+      \\Expl} 
+    \\In}
+  \\In}
   \\In}
 \\Code}
 `);
