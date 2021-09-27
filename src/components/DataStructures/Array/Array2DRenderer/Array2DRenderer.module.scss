@@ -12,7 +12,8 @@
     .col {
       display: table-cell;
       text-align: center;
-      min-width: 28px;
+      min-width: 8px;
+      width: 28px;
       background-color: var(--array-2d-row-col-bg);
       border: 1px solid var(--array-2d-row-col-border);
       padding: 0 4px;
