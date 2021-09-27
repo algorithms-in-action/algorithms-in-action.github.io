@@ -104,7 +104,7 @@ class Array2DRenderer extends Renderer {
                     borderRight: '0',
                     borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
                     borderBottom: 0,
-                    backgroundClip: 'content-box',
+                    backgroundClip: 'padding-box',
                     padding: '0',
                     position: 'relative',
                   }}
