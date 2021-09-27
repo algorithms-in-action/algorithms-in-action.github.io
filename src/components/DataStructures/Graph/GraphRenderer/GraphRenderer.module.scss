@@ -22,7 +22,7 @@
 
     .id {
       fill: var(--graph-node-id-fill);
-      alignment-baseline: central;
+      dominant-baseline: central;
       text-anchor: middle;
     }
 
