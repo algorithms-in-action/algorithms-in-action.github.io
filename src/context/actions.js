@@ -55,7 +55,6 @@ function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
   // collapse contains names of the sections and their collapsed state
   let containingBlock = false;
-
   for (const blockName of Object.keys(pseudocode)) {
     for (let i = 0; i < pseudocode[blockName].length; i += 1) {
       // looking at all the pseudocode elements

@@ -1,4 +1,3 @@
-import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
 import { QSM3Exp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
@@ -24,13 +23,49 @@ export default {
   run(chunker, { nodes }) {
     function partition(values, left, right) {
       const a = values;
-      let i = left - 1;
-      let j = right;
       let tmp;
+      
+
+
+      // Find median of 3 to assign as pivot
+      const mid = Math.floor((left+right)/2);
+      chunker.add(14);
+      if (a[left] > a[mid]) {
+        // Swap a[left] and a[mid]
+        tmp = a[left];
+        a[left] = a[mid];
+        a[mid] = tmp;
+        chunker.add(15);
+      }
+      if (a[mid] > a[right]) {
+        // Swap a[right] and a[mid]
+        tmp = a[right];
+        a[right] = a[mid];
+        a[mid] = tmp;
+        chunker.add(16);
+        if (a[left] > a[mid]) {
+          // Swap a[left] and a[mid]
+          tmp = a[left];
+          a[left] = a[mid];
+          a[mid] = tmp;
+          chunker.add(17);
+        }
+      }
+      // Swap a[mid] and a[right-1]
+      tmp = a[mid];
+      a[mid] = a[right-1];
+      a[right-1] = tmp;
+      chunker.add(18);
+      //assign pivot 
+      const pivot = a[right-1];
       chunker.add(5);
+
+
+      // Partition array segment 
+      let i = left-1;
       chunker.add(11);
+      let j = right-1;
       chunker.add(12);
-      const pivot = a[right];
       chunker.add(6);
       while (i < j) {
         chunker.add(7);
@@ -50,9 +85,9 @@ export default {
         }
       }
       chunker.add(13);
-      a[right] = a[i];
+      a[right-1] = a[i];
       a[i] = pivot;
-      return [i, a]; // Return [pivot location, array values]
+      return [i, a]; // Return [pivot index, array values]
     }
 
     function QuickSort(array, left, right, parentId) {
