@@ -9,14 +9,9 @@ export default {
 
   initVisualisers() {
     return {
-      graph: {
-        instance: new ArrayGraphTracer('graph', null, 'Graph'),
-        order: 0,
-      },
-      // create a separate component called 'Sorted Array' to display sorted array separately
       array: {
-        instance: new ArrayTracer('array', null, 'Sorted Array'),
-        order: 1,
+        instance: new ArrayTracer('array', null, 'Array view', { arrayItemMagnitudes: true }), // Label the input array as array view
+        order: 0,
       },
     };
   },
@@ -27,40 +22,6 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    // Method for implementing Median of Three
-    // function SortLMR(arr, left, right) {
-    //     let a = arr;
-
-    //   //Sort the first, middle and last element in ascending order
-    //   let tmp2;
-    //   chunker.add(14);
-    //   let mid = (left+right)/2;
-    //   if(a[left] > a[mid]) {
-    //       tmp2 = a[mid];
-    //       a[mid] = a[left];
-    //       a[left] = tmp2;
-    //   }
-    //   if(a[mid] > a[right]) {
-    //       tmp2 = a[right];
-    //       a[right] = a[mid];
-    //       a[mid] = tmp2;
-
-    //       if(a[left] > a[mid]) {
-    //         tmp2 = a[mid];
-    //         a[mid] = a[left];
-    //         a[left] = tmp2;
-    //       }
-    //   }
-
-    //   //Swap the middle element with second last (right - 1) element
-    //   let tmp3;
-    //   tmp3 = a[right-1];
-    //   a[right-1] = a[mid];
-    //   a[mid] = tmp3;
-
-    //   return a;
-    // }
-
     function partition(values, left, right) {
       const a = values;
       let i = left - 1;
@@ -103,23 +64,7 @@ export default {
         [p, a] = partition(a, left, right);
         const leftArray = a.slice(left, p);
         const rightArray = a.slice(p + 1, right + 1);
-        chunker.add(3, (vis, _a, _left, _p, _right, _parentId, _leftArray, _rightArray) => {
-          if (_leftArray.length !== 0) {
-            vis.graph.addNode(`${_left}/${_p - 1}`, _leftArray);
-            vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);
-          }
-          vis.graph.addNode(`p${_parentId}`, _a[_p]);
-          vis.graph.addEdge(_parentId, `p${_parentId}`);
-
-          if (_rightArray.length !== 0) {
-            vis.graph.addNode(`${_right}/${_p + 1}`, _rightArray);
-            vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
-
-            // Sorted array displayed at the end of algorithm
-            // chunker.add(1, (vis, array) => {
-            vis.array.set(array);
-          }
-        }, [a, left, p, right, parentId, leftArray, rightArray]);
+        chunker.add(3);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
@@ -127,10 +72,13 @@ export default {
       return a; // Facilitates testing
     }
 
-    chunker.add(1, (vis, _nodes) => {
-      vis.graph.addNode(`0/${_nodes.length - 1}`, _nodes);
-      vis.graph.layoutTree(`0/${_nodes.length - 1}`, false);
-    }, [nodes]);
+    chunker.add(
+      1,
+      (vis, array) => {
+        vis.array.set(array, 'quicksort');
+      },
+      [nodes],
+    );
     return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
   },
 };
