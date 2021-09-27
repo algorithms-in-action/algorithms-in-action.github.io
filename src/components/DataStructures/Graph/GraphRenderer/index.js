@@ -11,12 +11,12 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from "react";
-import { motion } from "framer-motion";
-import Renderer from "../../common/Renderer/index";
-import { classes, distance } from "../../common/util";
-import styles from "./GraphRenderer.module.scss";
-import { mode } from "../../../top/Settings";
+import React from 'react';
+import { motion } from 'framer-motion';
+import Renderer from '../../common/Renderer/index';
+import { classes, distance } from '../../common/util';
+import styles from './GraphRenderer.module.scss';
+import { mode } from '../../../top/Settings';
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -31,6 +31,24 @@ function switchmode(modetype = mode()) {
       modename = styles.graph;
   }
   return modename;
+}
+
+function switchColor(visitedCount1) {
+  let fillStyle = '';
+  switch (visitedCount1) {
+    case 1:
+      fillStyle = styles.visited1;
+      break;
+    case 2:
+      fillStyle = styles.visited2;
+      break;
+    case 3:
+      fillStyle = styles.visited;
+      break;
+    default:
+      break;
+  }
+  return fillStyle;
 }
 
 class GraphRenderer extends Renderer {
@@ -49,7 +67,7 @@ class GraphRenderer extends Renderer {
     const coords = this.computeCoords(e);
     const { nodes, dimensions } = this.props.data;
     const { nodeRadius } = dimensions;
-    this.selectedNode = nodes.find((node) => distance(coords, node) <= nodeRadius);
+    this.selectedNode = nodes.find(node => distance(coords, node) <= nodeRadius);
   }
 
   handleMouseMove(e) {
@@ -75,7 +93,6 @@ class GraphRenderer extends Renderer {
 
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
-
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) / this.zoom,
@@ -102,11 +119,16 @@ class GraphRenderer extends Renderer {
           <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
             <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
           </marker>
+          <marker id="markerArrowVisited1" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited1)} />
+          </marker>
+          <marker id="markerArrowVisited2" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          </marker>
         </defs>
-        {edges
-          .sort((a, b) => a.visitedCount - b.visitedCount)
-          .map((edge) => {
-            const { source, target, weight, visitedCount, selectedCount } = edge;
+        {
+          edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
+            const { source, target, weight, visitedCount, selectedCount, visitedCount1 } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -131,22 +153,23 @@ class GraphRenderer extends Renderer {
                   styles.edge,
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
-                  visitedCount && styles.visited,
+                  !selectedCount && visitedCount && styles.visited,
+                  switchColor(visitedCount1),
                 )}
                 key={`${source}-${target}`}
               >
                 <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
-                {isWeighted && (
+                {
+                  isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
-                    <text className={styles.weight} transform={`rotate(${degree})`} y={-edgeWeightGap}>
-                      {this.toString(weight)}
-                    </text>
+                    <text className={styles.weight} transform={`rotate(${degree})`}
+                          y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
-                )}
+                }
               </g>
             );
-          })}
-
+          })
+        }
         {/* node graph */}
         {nodes.map((node) => {
           const { id, x, y, weight, visitedCount, selectedCount, value, Result, key, style, sorted } = node;
@@ -155,45 +178,49 @@ class GraphRenderer extends Renderer {
           const visitedNode = visitedCount === 1;
           return (
             <motion.g
-              animate={{ x, y }}
-              initial={false}
-              transition={{ duration: 1 }}
-              className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited)}
-              key={key}
-              // transform={`translate(${x},${y})`}
+                animate={{ x, y }}
+                initial={false}
+                transition={{ duration: 1 }}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited)}
+                key={key}
+                // transform={`translate(${x},${y})`}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
               <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
-              {isWeighted && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(weight)}
-                </text>
-              )}
+              {
+                isWeighted && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(weight)}
+                  </text>
+                )
+              }
             </motion.g>
           );
         })}
 
-        {/* Result message */}
-        {nodes.map((node) => {
-          const { id, x, y, weight, visitedCount, selectedCount, value, Result } = node;
-          // only when selectedCount is 1, then highlight the node
-          const selectNode = visitedCount;
-
-          return (
-            <g
-              className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited)}
-              key={id}
-              transform={`translate(${x},${y})`}
-            >
-              <text x="-60%" y="20%" dy=".2em">
-                {this.toString(Result)}
-              </text>
-            </g>
-          );
-        })}
-        <text style={{ fill: "#ff0000" }} textAnchor="middle" x={rootX} y={rootY - 20}>
-          {text}
-        </text>
+        {
+          nodes.map(node => {
+            const { id, x, y, weight, visitedCount, selectedCount, value, visitedCount1, isPointer, pointerText } = node;
+            // only when selectedCount is 1, then highlight the node
+            const selectNode = selectedCount === 1;
+            return (
+              <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited, switchColor(visitedCount1))}
+                 key={id} transform={`translate(${x},${y})`}>
+                <circle className={styles.circle} r={nodeRadius} />
+                <text className={styles.id}>{value}</text>
+                {
+                  isWeighted &&
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
+                }
+                {
+                  isPointer &&
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
+                }
+              </g>
+            );
+          })
+        }
+        <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
       </svg>
     );
   }

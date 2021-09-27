@@ -52,16 +52,17 @@ class Array2DRenderer extends Renderer {
 
   renderData() {
     const { data, algo } = this.props.data;
+
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
-    let longestRow = data.reduce((longestRow, row) => (longestRow.length < row.length ? row : longestRow), []);
-    let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
-    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
-    if (!this.props.data.arrayItemMagnitudes) {
-      scaleY = () => 0;
-    }
-
-    return (
+    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
+    if (algo === 'heapsort') {
+      let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
+      let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
+      if (!this.props.data.arrayItemMagnitudes) {
+        scaleY = () => 0;
+      }
+      return (
       <motion.table
       animate={{ scale: this.zoom }}
         className={switchmode(mode())}
@@ -71,7 +72,7 @@ class Array2DRenderer extends Renderer {
           display: 'block',
         }}
       >
-        <tbody>
+            <tbody>
           {/* Indexes */}
           <tr className={styles.row}>
             {!isArray1D && <td className={classes(styles.col, styles.index)} />}
@@ -81,19 +82,19 @@ class Array2DRenderer extends Renderer {
                 i += 1;
               }
               return (
-                <td className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{i}</span>
-                </td>
+                      <td className={classes(styles.col, styles.index)} key={i}>
+                        <span className={styles.value}>{i}</span>
+                      </td>
               );
             })}
           </tr>
           {/* Values */}
           {data.map((row, i) => (
-            <tr className={styles.row} key={i}>
+                  <tr className={styles.row} key={i}>
               {!isArray1D && (
-                <td className={classes(styles.col, styles.index)}>
-                  <span className={styles.value}>{i}</span>
-                </td>
+                      <td className={classes(styles.col, styles.index)}>
+                        <span className={styles.value}>{i}</span>
+                      </td>
               )}
               {row.map((col) => (
                 <motion.td
@@ -109,6 +110,7 @@ class Array2DRenderer extends Renderer {
                     position: 'relative',
                   }}
 
+                  /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                   className={classes(
                     styles.col,
                     col.selected && styles.selected,
@@ -163,10 +165,70 @@ class Array2DRenderer extends Renderer {
                 </AnimateSharedLayout>
             ),
           )}
-        </tbody>
+            </tbody>
       </motion.table>
+      );
+    }
+    return (
+      <table className={switchmode(mode())}
+             style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
+        <tbody>
+        <tr className={styles.row}>
+          {
+            !isArray1D &&
+            <td className={classes(styles.col, styles.index)} />
+          }
+          {
+            algo === 'tc' && // Leave a blank cell at the first row
+            <td />
+          }
+          {
+            longestRow.map((_, i) => {
+              // if the graph instance is heapsort, then the array index starts from 1
+              if (algo === 'tc') {
+                i += 1;
+              }
+              if (algo === 'prim') {
+                i = ' ';
+              }
+              return (
+                <th className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{ i }</span>
+                </th>
+              );
+            })
+          }
+        </tr>
+        {
+          data.map((row, i) => (
+            <tr className={styles.row} key={i}>
+              {
+                algo === 'tc' && // generate vertical index, which starts from 1
+                <th className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{ i + 1 }</span>
+                </th>
+              }
+              {
+                !isArray1D && algo !== 'tc' &&
+                <td className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}>{i}</span>
+                </td>
+              }
+              {
+                row.map((col, j) => (
+                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched,
+                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, col.selected3 && styles.selected3)}
+                      key={j}>
+                    <span className={styles.value}>{this.toString(col.value)}</span>
+                  </td>
+                ))
+              }
+            </tr>
+          ))
+        }
+        </tbody>
+      </table>
     );
   }
 }
-
 export default Array2DRenderer;
