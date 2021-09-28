@@ -191,7 +191,7 @@ class GraphTracer extends Tracer {
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, visitedCount1, isPointer, pointerText });
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
     this.layout();
   }
 

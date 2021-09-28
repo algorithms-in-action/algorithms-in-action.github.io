@@ -172,7 +172,7 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { id, x, y, weight, visitedCount, selectedCount, value, Result, key, style, sorted } = node;
+          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText  } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
@@ -181,9 +181,8 @@ class GraphRenderer extends Renderer {
                 animate={{ x, y }}
                 initial={false}
                 transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited)}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited, switchColor(visitedCount1))}
                 key={key}
-                // transform={`translate(${x},${y})`}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
               <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
@@ -194,32 +193,13 @@ class GraphRenderer extends Renderer {
                   </text>
                 )
               }
-            </motion.g>
-          );
-        })}
-
-        {
-          nodes.map(node => {
-            const { id, x, y, weight, visitedCount, selectedCount, value, visitedCount1, isPointer, pointerText } = node;
-            // only when selectedCount is 1, then highlight the node
-            const selectNode = selectedCount === 1;
-            return (
-              <g className={classes(styles.node, selectNode && styles.selected, visitedCount && styles.visited, switchColor(visitedCount1))}
-                 key={id} transform={`translate(${x},${y})`}>
-                <circle className={styles.circle} r={nodeRadius} />
-                <text className={styles.id}>{value}</text>
-                {
-                  isWeighted &&
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(weight)}</text>
-                }
-                {
+              {
                   isPointer &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
                 }
-              </g>
-            );
-          })
-        }
+            </motion.g>
+          );
+        })}
         <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
       </svg>
     );
