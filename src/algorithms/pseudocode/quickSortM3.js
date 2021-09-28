@@ -62,7 +62,7 @@ Put the left, right and middle elements in increasing order    \\Ref SortLMR
         plus A[left] and A[right] are in their correct partitions, so 
         they can be skipped in the rest of the partitioning.
 \\Expl}
-Swap(A[mid], A[right-1]) // put median in A[right-1]
+Swap(A[mid], A[right-1]) // put median in A[right-1] \\B 18
 
 pivot <- A[right-1] \\B 5
 \\Expl{  Using the median of the left, right and middle elements for the
@@ -76,14 +76,14 @@ SortLMR
 mid <- (left+right)/2 // index of middle element \\B 14
 if A[left] > A[mid]
 \\In{
-    Swap(A[left], A[mid])
+    Swap(A[left], A[mid]) \\B 15
 \\In}
 if A[mid] > A[right]
 \\In{
-    Swap(A[right], A[mid])
+    Swap(A[right], A[mid]) \\B 16
     if A[left] > A[mid]
     \\In{
-        Swap(A[left], A[mid])
+        Swap(A[left], A[mid]) \\B 17
     \\In}
     // now A[left] <= A[mid] <= A[right]
 \\In}
