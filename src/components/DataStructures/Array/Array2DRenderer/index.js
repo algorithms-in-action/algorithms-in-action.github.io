@@ -52,8 +52,13 @@ class Array2DRenderer extends Renderer {
 
   renderData() {
     const { data, algo } = this.props.data;
-
     const isArray1D = true;
+    // eslint-disable-next-line camelcase
+    let data_T;
+    if (algo === 'tc') {
+      // eslint-disable-next-line camelcase
+      data_T = data[0].map((col, i) => data.map((row) => row[i]));
+    }
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     if (algo === 'heapsort') {
@@ -179,12 +184,11 @@ class Array2DRenderer extends Renderer {
             <td className={classes(styles.col, styles.index)} />
           }
           {
-            algo === 'tc' && // Leave a blank cell at the first row
+            algo === 'tc' && // Leave a blank cell at the header row
             <td />
           }
           {
             longestRow.map((_, i) => {
-              // if the graph instance is heapsort, then the array index starts from 1
               if (algo === 'tc') {
                 i += 1;
               }
@@ -200,7 +204,15 @@ class Array2DRenderer extends Renderer {
           }
         </tr>
         {
-          data.map((row, i) => (
+          data.map((row, i) => {
+            let pointer = false;
+            // eslint-disable-next-line no-plusplus
+            for (let j = 0; j < row.length; j++) {
+              if (row[j].selected) {
+                pointer = true;
+              }
+            }
+            return (
             <tr className={styles.row} key={i}>
               {
                 algo === 'tc' && // generate vertical index, which starts from 1
@@ -223,8 +235,38 @@ class Array2DRenderer extends Renderer {
                   </td>
                 ))
               }
+              {
+                (pointer &&
+                <th className={classes(styles.col, styles.index)}>
+                    <span className={styles.value}> i </span>
+                </th>) || <td className={classes(styles.col, styles.index)} />
+              }
             </tr>
-          ))
+            );
+          })
+        }
+        {
+        algo === 'tc' &&
+        <tr className={styles.row}>
+          <td />
+          {
+            data_T.map((row) => {
+              let pointer = false;
+              // eslint-disable-next-line no-plusplus
+              for (let j = 0; j < row.length; j++) {
+                if (row[j].selected1) {
+                  pointer = true;
+                }
+              }
+              return (
+                (pointer &&
+                <th className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}> j </span>
+                </th>) || <td className={classes(styles.col, styles.index)} />
+              );
+            })
+          }
+        </tr>
         }
         </tbody>
       </table>

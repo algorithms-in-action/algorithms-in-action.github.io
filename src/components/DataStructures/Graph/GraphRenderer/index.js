@@ -172,7 +172,7 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText  } = node;
+          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
