@@ -45,7 +45,7 @@ Linda added AlphabetSize explanation 1 Sept 2021
 
 \\Code{
 Main
-Horspool(T, n, P, m) 
+Horspool(T, n, P, m)  \\B 1
   // Look for pattern P (of length m) in text T (of length n).
   // If found, return the index of P's first occurrence in T.
 \\Expl{  The pattern is P[1]..P[m] and the text is T[1]..T[n].
@@ -65,7 +65,7 @@ text or pattern may be drawn, and AlphabetSize is the
 number of characters in the Alphabet.  
 \\Expl}        
 \\In{
-    Shift[k] <- m
+    Shift[k] <- m  \\B 2
     \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
      the current character in the text is not in the pattern at all, we do not have
      to try any more possible matches that contain this character, so we make a large skip. 
@@ -74,7 +74,7 @@ number of characters in the Alphabet.
 //Put in values for characters in pattern P
 for j <- 1 to m-1
 \\In{
-    Shift[P[j]] <- m - j
+    Shift[P[j]] <- m - j  \\B 3
     \\Expl{ For characters that are in pattern P, overwrite the default shift to something smaller.
     \\Expl}\t \t
 \\In}
@@ -83,7 +83,7 @@ for j <- 1 to m-1
 \\Code{
 Search
 i <- m
-while i <= n 
+while i <= n   \\B 4
 \\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
 \\Expl}
 \\In{
@@ -103,7 +103,7 @@ while i <= n
     \\In}
     else
     \\In{
-    i <- i + Shift[T[i]]
+    i <- i + Shift[T[i]] \\B 5
     \\Expl{  Advance the pattern, consulting the shift table to see how
             far, given the attempted match starting with T[i] failed.
     \\Expl}

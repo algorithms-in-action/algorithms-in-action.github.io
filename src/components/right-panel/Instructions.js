@@ -27,7 +27,7 @@ function Instruction({ fontSize, fontSizeIncrement }) {
     setExplanation(text);
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
-  }, [algorithm.explanation, fontSizeIncrement, fontSize]);
+  }, [algorithm.instructions,fontSizeIncrement, fontSize]);
 
 
   return (

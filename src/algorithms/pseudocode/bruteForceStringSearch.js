@@ -31,7 +31,6 @@ export default parse(`
     \\Code}
     \\Code{
     LookForMatch
-    // Look for a match starting from T[i]
     j <- 0 
     while j < m and P[j] = T[i+j] \\B 3
     \\Expl{  We keep progressing the search as long as we have not 

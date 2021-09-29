@@ -128,7 +128,7 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         type="button"
                         id={`algo-${algo.name}`}
                         onClick={algorithm.name === algo.name? ()=>{
-                          const button = document.getElementById('startBtnGrp');}
+                          document.getElementById('startBtnGrp');}
                           : () => {
                             openInstructions();
                             dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
