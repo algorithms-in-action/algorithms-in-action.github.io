@@ -25,26 +25,16 @@ export default {
         };
     },
 
-    
     // change from vis.graph to array equivalent
     run(chunker, { nodes }) {
         // initial state
         const searchString = nodes[0];
         const findString = nodes[1];
         let stringCount = 0;
+        const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
         // searchString and findString are stored in the same array
         // to get element in findString, add the length of searchString to the index
         chunker.add('1', (vis, n) => {
-            const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
-            vis.array.set([shiftTable.slice(0,13),new Array(13).fill(findString.length)],
-                          [shiftTable.slice(13,27),new Array(14).fill(findString.length)],
-                          'horspools');
-            //temp,this block should be in chunker 2 with dispatch
-            for (let i=0;i<findString.length-1;i++)
-            {
-              vis.array.patch(shiftTable.indexOf(findString[i].toUpperCase()),1,findString.length-(i+1));
-            }
-
             vis.graph.addNode(stringCount, searchString[0], 'box');
             stringCount++;
             for (let i = 1; i < searchString.length; i++) {
@@ -61,5 +51,24 @@ export default {
             }
             vis.graph.shift(0, n);
         }, [nodes]);
+
+        chunker.add('2', (vis, n) => {
+            vis.array.set([shiftTable.slice(0,13),new Array(13).fill(findString.length)],
+            [shiftTable.slice(13,27),new Array(14).fill(findString.length)],
+            'horspools');
+        }, [nodes]);
+
+        for (let shift_i=0;shift_i<findString.length-1;shift_i++)
+        {
+            chunker.add('3', (vis,shift_i) => {
+                vis.array.patch(shiftTable.indexOf(findString[shift_i].toUpperCase()),1,findString.length-(shift_i+1));
+            },[shift_i]);
+
+            chunker.add('4', (vis,shift_i) => {
+                vis.array.depatch(shiftTable.indexOf(findString[shift_i].toUpperCase()),1);
+            },[shift_i]);
+          
+        }
+
     }
 }

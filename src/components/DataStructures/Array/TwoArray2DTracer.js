@@ -73,8 +73,22 @@ class TwoArray2DTracer extends Tracer {
   }
 
   depatch(x, y) {
-    x=this.getposition(x,y);
-    this.data[x][y].patched = false;
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
+    var xx = rr[2];//x is actually the vertical one.... need to refactor here.
+    var yy = rr[1];
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
+
+      this.data[xx][yy].patched = false;
+    }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
+
+      this.data1[xx][yy].patched = false;
+    }
   }
 
   // used to highlight sorted elements
