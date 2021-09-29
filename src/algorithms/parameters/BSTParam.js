@@ -122,7 +122,14 @@ function BSTParam() {
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={nodes}
+          DEFAULT_VAL={(() => {
+            if (bstCase.balanced) {
+              return balanceBSTArray([...nodes].sort((a, b) => a - b));
+            } else if (bstCase.sorted) {
+              return [...nodes].sort((a, b) => a - b)
+            }
+            return nodes;
+          })()}
           SET_VAL={setNodes}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
