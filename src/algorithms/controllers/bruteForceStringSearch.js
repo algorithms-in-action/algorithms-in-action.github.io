@@ -40,6 +40,7 @@ export default {
         stringCount++;
         vis.graph.addStringLen(searchString.length,i);
         vis.graph.addPatternLen(findString.length,i);
+        vis.graph.addAlgorithm("bfsSearch",i);
       }
       vis.graph.addNode(stringCount, findString[0]);
       stringCount++;
@@ -49,6 +50,7 @@ export default {
         stringCount++;
         vis.graph.addStringLen(searchString.length,i);
         vis.graph.addPatternLen(findString.length,i);
+        vis.graph.addAlgorithm("bfsSearch",i);
       }
       vis.graph.shift(0, n);
       

@@ -100,6 +100,7 @@ class GraphRendererRect extends Renderer {
     let PatternLen = 0;
     let FinalPostion = 0;
     let startpostion = nodes[0].x;
+    let algorithmName = "";
     for (let ii = 0; ii < nodes.length; ii++) {
       if(ii==1){
         StringLen=nodes[ii].StringLen;
@@ -112,8 +113,13 @@ class GraphRendererRect extends Renderer {
           nodeid = nodes[ii].id
         }
       }
+      if(nodes[ii].algorithmName=="bfsSearch"){
+        algorithmName = nodes[ii].algorithmName;
+        FinalPostion = nodes[StringLen-PatternLen].x;
+      }
     }
-    FinalPostion = nodes[StringLen-PatternLen].x;
+    
+    
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
