@@ -1,4 +1,3 @@
-import ArrayGraphTracer from '../../components/DataStructures/ArrayGraph/ArrayGraphTracer';
 import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
@@ -21,6 +20,12 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
+    const swapAction = (b, n1, n2) => {
+      chunker.add(b, (vis, _n1, _n2) => {
+        vis.array.swapElements(_n1, _n2);
+      }, [n1, n2]);
+    };
+
     function partition(values, left, right) {
       const a = values;
       let i = left - 1;
@@ -42,27 +47,28 @@ export default {
         } while (i <= j && pivot < a[j]);
         chunker.add(9);
         if (i < j) {
-          chunker.add(10);
           tmp = a[j];
           a[j] = a[i];
           a[i] = tmp;
+          swapAction(10, i, j);
         }
       }
-      chunker.add(13);
       a[right] = a[i];
       a[i] = pivot;
+      swapAction(13, i, right);
       return [i, a]; // Return [pivot location, array values]
     }
 
-    function QuickSort(array, left, right, parentId) {
+
+    function QuickSort(array, left, right) {
       let a = array;
       let p;
       chunker.add(2);
       if (left < right) {
         [p, a] = partition(a, left, right);
-        const leftArray = a.slice(left, p);
-        const rightArray = a.slice(p + 1, right + 1);
-        chunker.add(3)
+        // const leftArray = a.slice(left, p);
+        // const rightArray = a.slice(p + 1, right + 1);
+        chunker.add(3);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);

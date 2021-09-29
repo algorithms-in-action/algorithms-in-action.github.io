@@ -21,50 +21,55 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
+    const swapAction = (b, n1, n2) => {
+      chunker.add(b, (vis, _n1, _n2) => {
+        vis.array.swapElements(_n1, _n2);
+      }, [n1, n2]);
+    };
+
     function partition(values, left, right) {
       const a = values;
       let tmp;
-      
 
 
       // Find median of 3 to assign as pivot
-      const mid = Math.floor((left+right)/2);
+      const mid = Math.floor((left + right) / 2);
       chunker.add(14);
       if (a[left] > a[mid]) {
         // Swap a[left] and a[mid]
         tmp = a[left];
         a[left] = a[mid];
         a[mid] = tmp;
-        chunker.add(15);
+        swapAction(15, left, mid);
       }
       if (a[mid] > a[right]) {
         // Swap a[right] and a[mid]
         tmp = a[right];
         a[right] = a[mid];
         a[mid] = tmp;
-        chunker.add(16);
+        swapAction(16, right, mid);
         if (a[left] > a[mid]) {
           // Swap a[left] and a[mid]
           tmp = a[left];
           a[left] = a[mid];
           a[mid] = tmp;
-          chunker.add(17);
+          swapAction(17, left, mid);
         }
       }
       // Swap a[mid] and a[right-1]
       tmp = a[mid];
-      a[mid] = a[right-1];
-      a[right-1] = tmp;
-      chunker.add(18);
-      //assign pivot 
-      const pivot = a[right-1];
+      a[mid] = a[right - 1];
+      a[right - 1] = tmp;
+      swapAction(18, mid, right - 1);
+      // assign pivot
+      const pivot = a[right - 1];
       chunker.add(5);
 
 
-      // Partition array segment 
-      let i = left-1;
+      // Partition array segment
+      let i = left - 1;
       chunker.add(11);
-      let j = right-1;
+      let j = right - 1;
       chunker.add(12);
       chunker.add(6);
       while (i < j) {
@@ -78,27 +83,28 @@ export default {
         } while (i <= j && pivot < a[j]);
         chunker.add(9);
         if (i < j) {
-          chunker.add(10);
           tmp = a[j];
           a[j] = a[i];
           a[i] = tmp;
+          swapAction(10, i, j);
         }
       }
-      chunker.add(13);
-      a[right-1] = a[i];
+      a[right - 1] = a[i];
       a[i] = pivot;
+      swapAction(13, i, right - 1);
       return [i, a]; // Return [pivot index, array values]
     }
 
-    function QuickSort(array, left, right, parentId) {
+
+    function QuickSort(array, left, right) {
       // let a = SortLMR(array, left, right);
       let a = array;
       let p;
       chunker.add(2);
       if (left < right) {
         [p, a] = partition(a, left, right);
-        const leftArray = a.slice(left, p);
-        const rightArray = a.slice(p + 1, right + 1);
+        // const leftArray = a.slice(left, p);
+        // const rightArray = a.slice(p + 1, right + 1);
         chunker.add(3);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
