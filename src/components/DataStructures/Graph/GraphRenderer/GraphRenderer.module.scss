@@ -6,13 +6,14 @@
 .graph {
   flex: 1;
   align-self: stretch;
-  
+
   .node {
     .circle {
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
     }
+
     .rect{
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
@@ -21,7 +22,7 @@
 
     .id {
       fill: var(--graph-node-id-fill);
-      alignment-baseline: central;
+      dominant-baseline: central;
       text-anchor: middle;
     }
 
@@ -31,7 +32,7 @@
       alignment-baseline: central;
       text-anchor: left;
     }
-    
+
     &.selected {
       .circle {
         fill: var(--graph-node-circle-fill-selected);
@@ -45,8 +46,6 @@
         fill: var(--graph-node-id-fill-selected);
       }
     }
-
-
 
     &.visited {
       .circle {
@@ -65,6 +64,26 @@
     &.sorted {
       .id {
         fill: var(--graph-node-id-fill-sorted);
+      }
+    }
+
+    &.visited1 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited1);
+        stroke: var(--graph-node-circle-stroke-visited1);
+      }
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.visited2 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited2);
+        stroke: var(--graph-node-circle-stroke-visited2);
+      }
+      .id {
+        fill: var(--graph-node-id-fill-visited);
       }
     }
   }
@@ -118,6 +137,34 @@
         fill: var(--graph-edge-weight-fill-visited);
       }
     }
+
+    &.visited1 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited1);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited1);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited1);
+      }
+    }
+
+    &.visited2 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited2);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited2);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited2);
+      }
+    }
   }
 
   .arrow {
@@ -130,6 +177,13 @@
     &.visited {
       fill: var(--graph-arrow-fill-visited);
     }
-  }
 
+    &.visited1 {
+      fill: var(--graph-arrow-fill-visited1);
+    }
+
+    &.visited2 {
+      fill: var(--graph-arrow-fill-visited2);
+    }
+  }
 }

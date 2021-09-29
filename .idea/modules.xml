@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/aia.iml" filepath="$PROJECT_DIR$/aia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Infomation Visualization/Asst-2/iv-asst-2/.idea/iv-asst-2.iml" filepath="$PROJECT_DIR$/../../Infomation Visualization/Asst-2/iv-asst-2/.idea/iv-asst-2.iml" />
     </modules>
   </component>
 </project>

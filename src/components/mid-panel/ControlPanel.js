@@ -4,6 +4,9 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import Popup from 'reactjs-popup';
+import ReactMarkDown from 'react-markdown/with-html';
+import toc from 'remark-toc';
 import ControlButton from '../common/ControlButton';
 import ProgressBar from './ProgressBar';
 import useInterval from '../../context/useInterval';
@@ -14,6 +17,7 @@ import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/ControlPanel.scss';
 import 'reactjs-popup/dist/index.css';
+import CodeBlock from '../../markdown/code-block';
 
 const muiTheme = createMuiTheme({
   overrides: {
@@ -91,16 +95,18 @@ function ControlPanel() {
   };
 
   useEffect(() => {
-    var text = '# Instructions \n\n\n';
-    for(var i=0;i<algorithm.instructions.length;i++){
-      text = text+"## "+algorithm.instructions[i].title+"\n\n\n";
-      for(var j=0;j<algorithm.instructions[i].content.length;j++){
-          text = text +(j+1)+".\t"+algorithm.instructions[i].content[j]+"\n\n";
+    let text = '# Instructions \n\n\n';
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < algorithm.instructions.length; i++) {
+      text = `${text}## ${algorithm.instructions[i].title}\n\n\n`;
+      // eslint-disable-next-line no-plusplus
+      for (let j = 0; j < algorithm.instructions[i].content.length; j++) {
+        text = `${text + (j + 1)}.\t${algorithm.instructions[i].content[j]}\n\n`;
       }
     }
-    
+
     setExplanation(text);
-  }, [algorithm.instructions]);
+  }, [algorithm.explanation, algorithm.instructions]);
 
   /**
    * when click play button, calling play() based on the slider speed.
@@ -116,7 +122,6 @@ function ControlPanel() {
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
-
 
   return (
     <div className="controlContainer">
@@ -172,20 +177,36 @@ function ControlPanel() {
             </ThemeProvider>
           </div>
         </div>
-        <div className='prcessbar'>
+        <div className="prcessbar">
           {/* Progress Status Bar */}
           <ProgressBar
-              current={currentChunk}
-              max={chunkerLength}
-            />
+            current={currentChunk}
+            max={chunkerLength}
+          />
         </div>
-        
+
       </div>
       <div className="parameterPanel">
         {algorithm.param}
       </div>
+
+      <div>
+        <button type="button" className="button" onClick={() => setOpen((o) => !o)}>
+          Instructions
+        </button>
+        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <a className="close" onClick={closeModal}>
+              &times;
+            </a>
+            {/* eslint-disable-next-line max-len */}
+            <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+          </div>
+        </Popup>
+      </div>
     </div>
   );
+  // eslint-disable-next-line no-unreachable
   return (
     <div className="controlContainer">
       <div className="controlPanel">

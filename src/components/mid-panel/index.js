@@ -20,9 +20,9 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   const [explanation, setExplanation] = useState('');
 
   useEffect(() => {
-    setFontSize(fontID, fontSize);
-    increaseFontSize(fontID, fontSizeIncrement);
-  }, [fontSize, fontSizeIncrement]);
+    setFontSize(fontID, fontSize)
+    increaseFontSize(fontID, fontSizeIncrement)
+  }, [fontSize, fontSizeIncrement])
 
   useEffect(() => {
     var text = '# Instructions \n\n\n';
@@ -52,18 +52,18 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         </div>
 
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
+
       </div>
       <div className="midPanelBody">
-        <Instruction instructions={algorithm.instructions} />
-        {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
+        {algorithm.chunker &&
+          algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
     </div>
-  );
+  )
 }
 
-
-export default MidPanel;
+export default MidPanel
 MidPanel.propTypes = {
   fontSize: PropTypes.number.isRequired,
   fontSizeIncrement: PropTypes.number.isRequired,
-};
+}

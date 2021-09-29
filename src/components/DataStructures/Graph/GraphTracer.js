@@ -12,10 +12,10 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 
-import Tracer from "../common/Tracer";
-import { distance } from "../common/util";
-import GraphRenderer from "./GraphRenderer/index";
-import { cloneDeepWith } from "lodash";
+import Tracer from '../common/Tracer';
+import { distance } from '../common/util';
+import GraphRenderer from './GraphRenderer/index';
+import { cloneDeepWith } from 'lodash';
 
 export class Element {
   constructor() {
@@ -72,11 +72,11 @@ class GraphTracer extends Tracer {
    * nodes and edges remain unchanged
    */
   clear() {
-    this.edges.forEach((edge) => {
+    this.edges.forEach(edge => {
       edge.visitedCount = 0;
       edge.selectedCount = 0;
     });
-    this.nodes.forEach((node) => {
+    this.nodes.forEach(node => {
       node.visitedCount = 0;
       node.selectedCount = 0;
     });
@@ -104,7 +104,7 @@ class GraphTracer extends Tracer {
       }
     };
 
-    this.edges.forEach((obj) => {
+    this.edges.forEach(obj => {
       if (!tree.hasOwnProperty(obj.source)) {
         tree[obj.source] = {};
         setLeftOrRightChild(tree, obj.source, obj.target);
@@ -116,7 +116,7 @@ class GraphTracer extends Tracer {
       }
     });
 
-    this.nodes.forEach((obj) => {
+    this.nodes.forEach(obj => {
       if (!tree.hasOwnProperty(obj.id)) {
         tree[obj.id] = {};
       }
@@ -134,11 +134,11 @@ class GraphTracer extends Tracer {
     if (this.edges.length === 0 && this.nodes.length === 1) {
       return this.nodes[0].id;
     }
-    const sources = this.edges.map((obj) => obj.source);
-    const targets = this.edges.map((obj) => obj.target);
+    const sources = this.edges.map(obj => obj.source);
+    const targets = this.edges.map(obj => obj.target);
     const nodes = [...new Set([...sources, ...targets])];
     // the node that does not a source is the root
-    return nodes.find((node) => !targets.includes(node));
+    return nodes.find(node => !targets.includes(node));
   }
 
   setHeap(nodes) {
@@ -148,12 +148,12 @@ class GraphTracer extends Tracer {
     for (let i = 1; i <= nodes.length; i++) {
       this.addNode(i, nodes[i - 1]);
       // left child
-      if (2 * i <= nodes.length) {
+      if ((2 * i) <= nodes.length) {
         this.addEdge(i, 2 * i);
       }
       // right child
-      if (2 * i + 1 <= nodes.length) {
-        this.addEdge(i, 2 * i + 1);
+      if (((2 * i) + 1) <= nodes.length) {
+        this.addEdge(i, (2 * i) + 1);
       }
     }
 
@@ -184,12 +184,14 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape = "circle", color = "blue", weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
+    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
-    value = value === undefined ? id : value;
-    const key = id; // the key is a unique id which stays with the value (rather than the node)
-    // so to assist with animation of swapping nodes (see swapNodes)
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key });
+    value = (value === undefined ? id : value);
+    const key = id;
+    // eslint-disable-next-line max-len
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
     this.layout();
   }
 
@@ -206,7 +208,7 @@ class GraphTracer extends Tracer {
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
     const update = { value, weight, x, y, visitedCount, selectedCount };
-    Object.keys(update).forEach((key) => {
+    Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(node, update);
@@ -220,16 +222,16 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0) {
+  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
     if (this.findEdge(source, target)) return;
-    this.edges.push({ source, target, weight, visitedCount, selectedCount });
+    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
     this.layout();
   }
 
   updateEdge(source, target, weight, visitedCount, selectedCount) {
     const edge = this.findEdge(source, target);
     const update = { weight, visitedCount, selectedCount };
-    Object.keys(update).forEach((key) => {
+    Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(edge, update);
@@ -248,35 +250,35 @@ class GraphTracer extends Tracer {
   }
 
   findNode(id) {
-    return this.nodes.find((node) => node.id === id);
+    return this.nodes.find(node => node.id === id);
   }
 
   findEdge(source, target, isDirected = this.isDirected) {
     if (isDirected) {
-      return this.edges.find((edge) => edge.source === source && edge.target === target);
+      return this.edges.find(edge => edge.source === source && edge.target === target);
     } else {
-      return this.edges.find(
-        (edge) => (edge.source === source && edge.target === target) || (edge.source === target && edge.target === source)
-      );
+      return this.edges.find(edge =>
+        (edge.source === source && edge.target === target) ||
+        (edge.source === target && edge.target === source));
     }
   }
 
   findLinkedEdges(source, isDirected = this.isDirected) {
     if (isDirected) {
-      return this.edges.filter((edge) => edge.source === source);
+      return this.edges.filter(edge => edge.source === source);
     } else {
-      return this.edges.filter((edge) => edge.source === source || edge.target === source);
+      return this.edges.filter(edge => edge.source === source || edge.target === source);
     }
   }
 
   findLinkedNodeIds(source, isDirected = this.isDirected) {
     const edges = this.findLinkedEdges(source, isDirected);
-    return edges.map((edge) => (edge.source === source ? edge.target : edge.source));
+    return edges.map(edge => edge.source === source ? edge.target : edge.source);
   }
 
   findLinkedNodes(source, isDirected = this.isDirected) {
     const ids = this.findLinkedNodeIds(source, isDirected);
-    return ids.map((id) => this.findNode(id));
+    return ids.map(id => this.findNode(id));
   }
 
   getRect() {
@@ -318,7 +320,7 @@ class GraphTracer extends Tracer {
     let startFindString = -1;
     for (let i = 0; i < searchString.length; i++) {
       const thisNode = this.findNode(stringCount);
-      thisNode.shape = "box";
+      thisNode.shape = 'box';
       thisNode.x = (i - searchString.length / 2) * xSpacing;
       if (i === 0) {
         startFindString = thisNode.x;
@@ -328,8 +330,8 @@ class GraphTracer extends Tracer {
     }
     for (let i = 0; i < findString.length; i++) {
       const thisNode = this.findNode(stringCount);
-      thisNode.shape = "box";
-      thisNode.x = startFindString + (i + space) * xSpacing;
+      thisNode.shape = 'box';
+      thisNode.x = startFindString + (i + space) * (xSpacing);
       thisNode.y = -1 * (ySpacing / 2);
       stringCount++;
     }
@@ -345,7 +347,7 @@ class GraphTracer extends Tracer {
     let startFindString = -1;
     for (let i = 0; i < searchString.length; i++) {
       const thisNode = this.findNode(stringCount);
-      thisNode.shape = "square";
+      thisNode.shape = 'square';
       thisNode.x = (i - searchString.length / 2) * xSpacing;
       if (i === 0) {
         startFindString = thisNode.x;
@@ -355,8 +357,8 @@ class GraphTracer extends Tracer {
     }
     for (let i = 0; i < findString.length; i++) {
       const thisNode = this.findNode(stringCount);
-      thisNode.shape = "square";
-      thisNode.x = startFindString + (i * xSpacing + shift * 25);
+      thisNode.shape = 'square';
+      thisNode.x = startFindString + (i * xSpacing + (shift * 25));
       thisNode.y = -1 * (ySpacing / 2);
       stringCount++;
     }
@@ -394,6 +396,8 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
+    const hGap = rect.width / leafCounts[root];
+    const vGap = rect.height / maxDepth;
     marked = {};
     // horizontal size allocated per leaf node under a subtree node
     const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length;
@@ -401,6 +405,8 @@ class GraphTracer extends Tracer {
     const verticalGap = (this.dimensions.baseHeight - 100) / maxDepth;
     const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
+      // node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      // node.y = rect.top + v * vGap;
       node.x = x;
       node.y = y;
       const linkedNodes = this.findLinkedNodes(node.id, false);
@@ -502,7 +508,7 @@ class GraphTracer extends Tracer {
       do {
         node.x = rect.left + Math.random() * rect.width;
         node.y = rect.top + Math.random() * rect.height;
-      } while (placedNodes.find((placedNode) => distance(node, placedNode) < 48));
+      } while (placedNodes.find(placedNode => distance(node, placedNode) < 48));
       placedNodes.push(node);
     }
   }
@@ -515,14 +521,20 @@ class GraphTracer extends Tracer {
     this.visitOrLeave(false, target, source, weight);
   }
 
+  allLeave(target, sources, weight) {
+    for (let i = 0; i < sources.length; i += 1) {
+      this.visitOrLeave(false, target, sources[i], weight);
+    }
+  }
+
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
-    if (weight !== undefined) node.weight = weight;
+    if (weight) node.weight = weight;
     node.visitedCount += visit ? 1 : -1;
     if (this.logTracer) {
-      this.logTracer.println(visit ? (source || "") + " -> " + target : (source || "") + " <- " + target);
+      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
   }
 
@@ -534,19 +546,57 @@ class GraphTracer extends Tracer {
     this.styledSelectOrDeselect(style, true, target, source);
   }
 
-  deselect(target, source) {
-    this.selectOrDeselect(false, target, source);
-  }
-
   styledDeselect(style, target, source) {
     this.styledSelectOrDeselect(style, false, target, source);
   }
 
-  resetSelect(target, source) {
+  deselect(target, source) {
+    this.selectOrDeselect(false, target, source);
+  }
+
+  visit1(target, source, colorIndex, weight) {
+    this.visitOrLeave1(true, target, source, weight, colorIndex);
+  }
+
+  leave1(target, source, colorIndex, weight) {
+    this.visitOrLeave1(false, target, source, weight, colorIndex);
+  }
+
+  visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount = 0;
+    if (edge) edge.visitedCount1 = visit ? colorIndex : 0;
     const node = this.findNode(target);
-    node.selectedCount = 0;
+    if (weight) node.weight = weight;
+    node.visitedCount1 = visit ? colorIndex : 0;
+    const node1 = this.findNode(source);
+    if (node1) node1.visitedCount1 = visit ? colorIndex : 0;
+    if (this.logTracer) {
+      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+    }
+  }
+
+  setPointerNode(source, sText, target = null, tText = null) {
+    const node1 = this.findNode(source);
+    node1.isPointer = 1;
+    if (!node1.pointerText.includes(sText)) {
+      node1.pointerText = node1.pointerText.concat(' ', sText);
+    }
+    const node2 = this.findNode(target);
+    if (node2) {
+      node2.isPointer = 1;
+      if (!node2.pointerText.includes(tText)) {
+        node2.pointerText = node2.pointerText.concat(' ', tText);
+      }
+    }
+  }
+
+  unsetPointerNode(source, sText, target = null, tText = null) {
+    const node1 = this.findNode(source);
+    node1.pointerText = node1.pointerText.replace(sText, '');
+    const node2 = this.findNode(target);
+    if (node2) {
+      node2.pointerText = node2.pointerText.replace(tText, '');
+    }
   }
 
   selectOrDeselect(select, target, source = null) {
@@ -555,7 +605,7 @@ class GraphTracer extends Tracer {
     const node = this.findNode(target);
     node.selectedCount += select ? 1 : -1;
     if (this.logTracer) {
-      this.logTracer.println(select ? (source || "") + " => " + target : (source || "") + " <= " + target);
+      this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
   }
 
@@ -569,6 +619,13 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(select, target, source);
     const node = this.findNode(target);
     node.style = style;
+  }
+
+  resetSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
+    const node = this.findNode(target);
+    node.selectedCount = 0;
   }
 
   log(key) {
