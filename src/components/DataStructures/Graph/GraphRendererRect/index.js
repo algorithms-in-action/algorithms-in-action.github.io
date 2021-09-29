@@ -17,6 +17,7 @@ import Renderer from "../../common/Renderer/index";
 import { classes, distance } from "../../common/util";
 import styles from "./GraphRenderer.module.scss";
 import { mode } from "../../../top/Settings";
+import { fromPairs } from "lodash";
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -39,6 +40,7 @@ class GraphRendererRect extends Renderer {
 
     this.elementRef = React.createRef();
     this.selectedNode = null;
+    this.ShowMsg=0;
 
     this.togglePan(true);
     this.toggleZoom(true);
@@ -94,7 +96,15 @@ class GraphRendererRect extends Renderer {
     let nodeid=0;
     let smlx=999;
     let smly=0;
+    let StringLen = 0;
+    let PatternLen = 0;
+    let FinalPostion = 0;
+    let startpostion = nodes[0].x;
     for (let ii = 0; ii < nodes.length; ii++) {
+      if(ii==1){
+        StringLen=nodes[ii].StringLen;
+        PatternLen=nodes[ii].PatternLen;
+      }
       if(nodes[ii].y<=smly){
         if(nodes[ii].x<=smlx){
           smlx = nodes[ii].x;
@@ -103,7 +113,7 @@ class GraphRendererRect extends Renderer {
         }
       }
     }
-
+    FinalPostion = nodes[StringLen-PatternLen].x;
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -198,7 +208,14 @@ class GraphRendererRect extends Renderer {
               key={id}
               transform={`translate(${x},${y})`}
             >
-              <text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>
+              {
+              this.toString(Result) != null ? 
+                (this.ShowMsg +=1,this.ShowMsg=1,<text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>)
+                :
+                (this.ShowMsg ==0&& smlx!=FinalPostion&&smlx>startpostion&&nodeid==id?(<text x="-10%" y="20%" dy=".2em">Keep Seaching</text>):(<text/>))
+              }
+              {smlx==startpostion?(this.ShowMsg=0):(<text/>)}
+              {this.ShowMsg ==0 && smlx==FinalPostion&&nodeid==id?(<text x="-10%" y="20%" dy=".2em">Seaching Fail</text>):(<text/>)}
               {nodeid==id ?(<text y={smly*1.5} dy=".2em">i</text>) : (<text/>)}
             </g>
           );

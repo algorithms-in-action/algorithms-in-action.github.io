@@ -38,6 +38,8 @@ export default {
         vis.graph.addNode(stringCount, searchString[i], 'box');
         vis.graph.addEdge(stringCount, stringCount - 1);
         stringCount++;
+        vis.graph.addStringLen(searchString.length,i);
+        vis.graph.addPatternLen(findString.length,i);
       }
       vis.graph.addNode(stringCount, findString[0]);
       stringCount++;
@@ -45,8 +47,11 @@ export default {
         vis.graph.addNode(stringCount, findString[i], 'box');
         vis.graph.addEdge(stringCount, stringCount - 1);
         stringCount++;
+        vis.graph.addStringLen(searchString.length,i);
+        vis.graph.addPatternLen(findString.length,i);
       }
       vis.graph.shift(0, n);
+      
     }, [nodes]);
 
     for (let shift_i = 0; shift_i < searchString.length - findString.length + 1; shift_i++) {
