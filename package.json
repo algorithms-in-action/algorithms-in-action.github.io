@@ -5,7 +5,7 @@
   "homepage": "https://algorithms-in-action.github.io",
   "dependencies": {
     "@material-ui/core": "^4.9.13",
-    "@material-ui/icons": "latest",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "latest",
     "@material-ui/styles": "^4.10.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -24,6 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "react-table": "^7.5.0",
+    "reactjs-popup": "^2.0.5",
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4"
@@ -52,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "electron": "^15.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",

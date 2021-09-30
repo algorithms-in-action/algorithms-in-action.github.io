@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-  Tabs, Tab, Paper, makeStyles,
-} from '@material-ui/core';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Tabs, Tab, Paper, makeStyles } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(0);
@@ -15,22 +13,22 @@ function HeaderButton({ value, onChange }) {
   const globalTheme = createMuiTheme({
     palette: {
       primary: {
-        main: '#027AFF',
+        main: "#027AFF",
       },
     },
   });
 
-  const tabHeight = '42px'; // default: '48px'
+  const tabHeight = "42px"; // default: '48px'
   const useStyles = makeStyles(() => ({
     tabsRoot: {
       minHeight: tabHeight,
       height: tabHeight,
-      width: '100%',
+      width: "100%",
     },
     tabRoot: {
       minHeight: tabHeight,
       height: tabHeight,
-      width: '30px',
+      width: "30px",
     },
   }));
 
@@ -39,7 +37,6 @@ function HeaderButton({ value, onChange }) {
   return (
     <>
       <ThemeProvider theme={globalTheme}>
-
         <Paper square elevation={0} className="rightPanelButtons">
           <Tabs
             value={state}
@@ -53,20 +50,17 @@ function HeaderButton({ value, onChange }) {
               root: classes.tabsRoot,
             }}
           >
-
-            {
-              value.map((item) => (
-                <Tab
-                  key={item.id}
-                  label={item.label}
-                  disableRipple
-                  value={item.id}
-                  classes={{
-                    root: classes.tabRoot,
-                  }}
-                />
-              ))
-            }
+            {value.map((item) => (
+              <Tab
+                key={item.id}
+                label={item.label}
+                disableRipple
+                value={item.id}
+                classes={{
+                  root: classes.tabRoot,
+                }}
+              />
+            ))}
           </Tabs>
         </Paper>
       </ThemeProvider>
@@ -75,11 +69,13 @@ function HeaderButton({ value, onChange }) {
 }
 
 HeaderButton.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    label: PropTypes.string,
-    display: PropTypes.element,
-  })).isRequired,
+  value: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      label: PropTypes.string,
+      display: PropTypes.element,
+    })
+  ).isRequired,
   onChange: PropTypes.func.isRequired,
 };
 export default HeaderButton;

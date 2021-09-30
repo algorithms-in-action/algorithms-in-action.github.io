@@ -3,7 +3,8 @@
 /* eslint-disable no-plusplus */
 
 import { QSExp } from '../explanations';
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
   explanation: QSExp,
@@ -11,7 +12,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('bst', null, 'Brute force string search'),
+        instance: new GraphTracerRect('bst', null, 'Brute force string search'),
         order: 0,
       },
     };
@@ -86,6 +87,14 @@ export default {
         } else if (shift_j === findString.length - 1) {
           // eslint-disable-next-line no-unused-vars
           chunker.add('5', (vis, i, j, n) => {
+            const ResultStr = "Search Successful : The pattern("+findString+") is placed at postion "+ i +" of Search String("+searchString+")";
+            //method1
+            vis.graph.addResult(ResultStr,i);
+            //method 2：
+            //vis.array.addResult(ResultStr,i);
+            //method 3：
+            //const array1 = ["The pattern string("+findString+") is placed at postion "+ i +" of Search String ("+searchString+")"];
+            //vis.array.set2(array1);
           }, [shift_i, shift_j, nodes]);
           return;
         } else {

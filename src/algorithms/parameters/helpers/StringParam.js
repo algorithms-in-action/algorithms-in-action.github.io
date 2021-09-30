@@ -42,7 +42,7 @@ function StringParam({
       // SET_VAL(nodes);
       // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      //setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }

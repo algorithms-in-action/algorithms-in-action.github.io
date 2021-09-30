@@ -33,10 +33,11 @@ $disabledCol: #b5b5b5;
       left: $border;
       width: $progWidth - ($border + $border);
       height: $progHeight - ($border + $border);
+      margin-right: 8px;
       background-color: var(--mid-control-bg); 
       @include border-radius(24px);
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
       flex-direction: flex-start;
       // overflow: hidden;
@@ -45,7 +46,6 @@ $disabledCol: #b5b5b5;
       width: 80%;
       color: var(--mid-control-progress-font);
       text-transform: uppercase;
-
     }
 
     .rightControl {
@@ -86,4 +86,24 @@ $disabledCol: #b5b5b5;
   
   }
 
+}
+.my-popup-content {
+  margin: auto;
+  background: rgb(255, 255, 255);
+  width: 85%;
+  padding: 5px;
+}
+.my-popup-arrow {
+  color: rgb(255, 255, 255);
+}
+[role='tooltip'].my-popup-content {
+  width: 600px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.my-popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+[data-popup='tooltip'].my-popup-overlay {
+  background: transparent;
 }

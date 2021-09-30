@@ -23,6 +23,15 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 
+// SIM Mouse click
+const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
+function simulateMouseClick(element) {
+  // eslint-disable-next-line max-len
+  mouseClickEvents.forEach((mouseEventType) => element.dispatchEvent(new MouseEvent(mouseEventType, {
+    view: window, bubbles: true, cancelable: true, buttons: 1,
+  })));
+}
+
 /**
  * This matrix param component can be used when
  * the param input accepts a matrix
@@ -42,6 +51,7 @@ function MatrixParam({
   const [size, setSize] = useState(defaultSize);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
+  // window.alert(columns.Header);
   const { dispatch } = useParam();
   const [data, setData] = useState(() => makeData(size, min, max, symmetric));
   const [originalData, setOriginalData] = useState(data);
@@ -53,6 +63,11 @@ function MatrixParam({
     setData(newData);
     setOriginalData(newData);
   }, [size, min, max, symmetric]);
+
+  useEffect(() => {
+    const element = document.querySelector('button[id="startBtnGrp"]');
+    simulateMouseClick(element);
+  }, []);
 
   // Reset the matrix to the inital set
   const resetData = () => {
@@ -110,7 +125,7 @@ function MatrixParam({
     const matrix = getMatrix();
 
     if (matrix.length !== 0) {
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
@@ -138,7 +153,7 @@ function MatrixParam({
           id="refreshMatrix"
           onClick={resetData}
         />
-        <button className="matrixBtn" onClick={handleSearch}>
+        <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
           {buttonMessage}
         </button>
       </div>

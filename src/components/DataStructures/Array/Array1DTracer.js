@@ -22,6 +22,7 @@ class Array1DTracer extends Array2DTracer {
     this.syncChartTracer();
   }
 
+
   patch(x, v) {
     super.patch(0, x, v);
   }
@@ -106,6 +107,10 @@ class Array1DTracer extends Array2DTracer {
     // update this.data
     this.data = newData;
   }
+  stringTheContent(){
+    return this.data;
+  }
+
 }
 
 export default Array1DTracer;

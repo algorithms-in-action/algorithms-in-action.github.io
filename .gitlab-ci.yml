@@ -1,6 +1,6 @@
 variables:
-  NODE_VERSION: v12.16.3
-  APPS_DOMAIN: aia.cis.unimelb.edu.au
+  NODE_VERSION: v14.17.5
+  APPS_DOMAIN: aia.testingstar.top
 
 stages:
   - test
