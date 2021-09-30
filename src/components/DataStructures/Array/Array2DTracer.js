@@ -21,8 +21,8 @@ import Array2DRenderer from './Array2DRenderer';
 export class Element {
   constructor(value, key) {
     this.value = value;
-    this.patched = false;
-    this.selected = false;
+    this.patched = 0;
+    this.selected = 0;
     this.sorted = false;
     this.key = key;
     this.variables = [];
@@ -47,11 +47,11 @@ class Array2DTracer extends Tracer {
   patch(x, y, v = this.data[x][y].value) {
     if (!this.data[x][y]) this.data[x][y] = new Element();
     this.data[x][y].value = v;
-    this.data[x][y].patched = true;
+    this.data[x][y].patched++;
   }
 
   depatch(x, y) {
-    this.data[x][y].patched = false;
+    this.data[x][y].patched--;
   }
 
   // used to highlight sorted elements
@@ -63,7 +63,7 @@ class Array2DTracer extends Tracer {
   select(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
+        this.data[x][y].selected++;
       }
     }
   }
@@ -72,7 +72,7 @@ class Array2DTracer extends Tracer {
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
+        this.data[x][y].selected++;
         this.data[x][y].style = style;
       }
     }
@@ -89,7 +89,7 @@ class Array2DTracer extends Tracer {
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = false;
+        this.data[x][y].selected--;
         this.data[x][y].style = undefined;
       }
     }

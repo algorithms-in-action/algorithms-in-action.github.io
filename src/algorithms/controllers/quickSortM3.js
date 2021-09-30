@@ -21,6 +21,22 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
+    const highlight = (vis, index, primaryColor = true) => {
+      if (primaryColor) {
+        vis.array.select(index);
+      } else {
+        vis.array.patch(index);
+      }
+    };
+
+    const unhighlight = (vis, index, primaryColor = true) => {
+      if (primaryColor) {
+        vis.array.deselect(index);
+      } else {
+        vis.array.depatch(index);
+      }
+    };
+
     const swapAction = (b, n1, n2) => {
       chunker.add(b, (vis, _n1, _n2) => {
         vis.array.swapElements(_n1, _n2);
@@ -34,13 +50,29 @@ export default {
 
       // Find median of 3 to assign as pivot
       const mid = Math.floor((left + right) / 2);
-      chunker.add(14);
+      chunker.add(14, (vis, index) => {
+        highlight(vis, index);
+      }, [mid]);
+      chunker.add(19, (vis, index) => {
+        highlight(vis, index, false);
+      }, [left]);
       if (a[left] > a[mid]) {
         // Swap a[left] and a[mid]
         tmp = a[left];
         a[left] = a[mid];
         a[mid] = tmp;
         swapAction(15, left, mid);
+        chunker.add(20, (vis, index1, index2, index3) => {
+          unhighlight(vis, index1);
+          unhighlight(vis, index2, false);
+          highlight(vis, index2);
+          highlight(vis, index3, false);
+        }, [left, mid, right]);
+      } else {
+        chunker.add(20, (vis, index1, index2) => {
+          unhighlight(vis, index1, false);
+          highlight(vis, index2, false);
+        }, [left, right]);
       }
       if (a[mid] > a[right]) {
         // Swap a[right] and a[mid]
@@ -48,13 +80,35 @@ export default {
         a[right] = a[mid];
         a[mid] = tmp;
         swapAction(16, right, mid);
+        chunker.add(21, (vis, index1, index2, index3) => {
+          unhighlight(vis, index1, false);
+          unhighlight(vis, index2);
+          highlight(vis, index1);
+          highlight(vis, index3, false);
+        }, [mid, right, left]);
         if (a[left] > a[mid]) {
           // Swap a[left] and a[mid]
           tmp = a[left];
           a[left] = a[mid];
           a[mid] = tmp;
           swapAction(17, left, mid);
+          chunker.add(18, (vis, index1, index2, index3) => {
+            unhighlight(vis, index2);
+            unhighlight(vis, index3, false);
+            highlight(vis, index1, false);
+            highlight(vis, index3);
+          }, [right - 1, left, mid]);
+        } else {
+          chunker.add(18, (vis, index1, index2) => {
+            unhighlight(vis, index1, false);
+            highlight(vis, index2, false);
+          }, [left, right - 1]);
         }
+      } else {
+        chunker.add(18, (vis, index1, index2) => {
+          unhighlight(vis, index1, false);
+          highlight(vis, index2, false);
+        }, [right, right - 1]);
       }
       // Swap a[mid] and a[right-1]
       tmp = a[mid];
@@ -63,24 +117,40 @@ export default {
       swapAction(18, mid, right - 1);
       // assign pivot
       const pivot = a[right - 1];
-      chunker.add(5);
+      chunker.add(5, (vis, index) => {
+        unhighlight(vis, index, false);
+      }, [mid]);
 
 
       // Partition array segment
       let i = left - 1;
-      chunker.add(11);
+      chunker.add(11, (vis, index) => {
+        highlight(vis, index, false);
+      }, [i + 1]);
       let j = right - 1;
-      chunker.add(12);
-      chunker.add(6);
+      chunker.add(12, (vis, index) => {
+        highlight(vis, index, false);
+      }, [j - 1]);
       while (i < j) {
-        chunker.add(7);
+        chunker.add(6);
+        if (i < left) tmp = i + 1;
+        else tmp = i;
         do {
           i += 1;
         } while (a[i] < pivot);
-        chunker.add(8);
+        chunker.add(7, (vis, prev, curr) => {
+          unhighlight(vis, prev, false);
+          highlight(vis, curr, false);
+        }, [tmp, i]);
+        if (j === right - 1) tmp = j - 1;
+        else tmp = j;
         do {
           j -= 1;
         } while (i <= j && pivot < a[j]);
+        chunker.add(8, (vis, prev, curr) => {
+          unhighlight(vis, prev, false);
+          if (curr >= left) highlight(vis, curr, false);
+        }, [tmp, j]);
         chunker.add(9);
         if (i < j) {
           tmp = a[j];
@@ -92,6 +162,11 @@ export default {
       a[right - 1] = a[i];
       a[i] = pivot;
       swapAction(13, i, right - 1);
+      chunker.add(13, (vis, index1, index2, index3) => {
+        unhighlight(vis, index1);
+        if (index2 >= left) unhighlight(vis, index2, false);
+        unhighlight(vis, index3, false);
+      }, [i, j, right - 1]);
       return [i, a]; // Return [pivot index, array values]
     }
 

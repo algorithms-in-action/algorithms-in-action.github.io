@@ -111,8 +111,8 @@ class Array2DRenderer extends Renderer {
 
                   className={classes(
                     styles.col,
-                    col.selected && styles.selected,
-                    col.patched && styles.patched,
+                    col.selected > 0 && styles.selected,
+                    col.patched > 0 && styles.patched,
                     col.sorted && styles.sorted,
                     col.style && col.style.backgroundStyle,
                   )}
