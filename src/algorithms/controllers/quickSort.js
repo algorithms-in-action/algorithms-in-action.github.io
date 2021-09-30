@@ -39,10 +39,12 @@ export default {
       const pivot = a[right];
       chunker.add(6, (vis, p, i1, j1) => {
         vis.array.assignVariable('p', p);
-        if (i >= 0) {
+        if (i1 >= 0) {
           vis.array.assignVariable('i', i1);
         }
-        vis.array.assignVariable('j', j1);
+        if (j1 >= 0) {
+          vis.array.assignVariable('j', j1);
+        }
       }, [right, i, j]);
       // chunker.add(6);
       while (i < j) {
@@ -66,7 +68,9 @@ export default {
           if (i1 >= 0) {
             vis.array.assignVariable('i', i1);
           }
-          vis.array.assignVariable('j', j1);
+          if (j1 >= 0) {
+            vis.array.assignVariable('j', j1);
+          }
         }, [i, j]);
         // chunker.add(9);
         if (i < j) {
