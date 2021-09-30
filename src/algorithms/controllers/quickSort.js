@@ -109,7 +109,6 @@ export default {
       },
       [nodes],
     );
-    // return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
     const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
     chunker.add(50, (vis) => {
       // Put in done state
