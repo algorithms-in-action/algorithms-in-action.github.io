@@ -48,14 +48,17 @@ export default {
       const pivot = a[right];
       chunker.add(5, (vis, index) => {
         highlight(vis, index);
+        vis.array.assignVariable('p', index);
       }, [right]);
       let i = left - 1;
       chunker.add(11, (vis, index) => {
         highlight(vis, index, false);
+        vis.array.assignVariable('i', index);
       }, [i + 1]);
       let j = right;
       chunker.add(12, (vis, index) => {
         highlight(vis, index, false);
+        vis.array.assignVariable('j', index);
       }, [j - 1]);
       // chunker.add(6, (vis, p, i1, j1) => {
       //   vis.array.assignVariable('p', p);
@@ -86,6 +89,7 @@ export default {
         chunker.add(7, (vis, prev, curr) => {
           unhighlight(vis, prev, false);
           highlight(vis, curr, false);
+          vis.array.assignVariable('i', curr);
         }, [tmp, i]);
         if (j === right) tmp = j - 1;
         else tmp = j;
@@ -94,16 +98,20 @@ export default {
         } while (i <= j && pivot < a[j]);
         chunker.add(8, (vis, prev, curr) => {
           unhighlight(vis, prev, false);
-          if (curr >= left) highlight(vis, curr, false);
+          if (curr >= left) {
+            highlight(vis, curr, false);
+            vis.array.assignVariable('j', curr);
+          }
         }, [tmp, j]);
-        chunker.add(9, (vis, i1, j1) => {
-          if (i1 >= 0) {
-            vis.array.assignVariable('i', i1);
-          }
-          if (j1 >= 0) {
-            vis.array.assignVariable('j', j1);
-          }
-        }, [i, j]);
+        // chunker.add(9, (vis, i1, j1) => {
+        //   if (i1 >= 0) {
+        //     vis.array.assignVariable('i', i1);
+        //   }
+        //   if (j1 >= 0) {
+        //     vis.array.assignVariable('j', j1);
+        //   }
+        // }, [i, j]);
+        chunker.add(9);
         if (i < j) {
           tmp = a[j];
           a[j] = a[i];
