@@ -30,24 +30,27 @@ export default {
         // initial state
         const searchString = nodes[0];
         const findString = nodes[1];
-        let stringCount = 0;
+        
         const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
         // searchString and findString are stored in the same array
         // to get element in findString, add the length of searchString to the index
         chunker.add('1', (vis, n) => {
-            vis.graph.addNode(stringCount, searchString[0], 'box');
-            stringCount++;
+            vis.graph.addNode(0, searchString[0], 'box');
+            
             for (let i = 1; i < searchString.length; i++) {
-                vis.graph.addNode(stringCount, searchString[i], 'box');
-                vis.graph.addEdge(stringCount, stringCount - 1);
-                stringCount++;
+                vis.graph.addNode(i, searchString[i], 'box');
+                vis.graph.addEdge(i, i - 1);
+                vis.graph.addStringLen(searchString.length, i);
+                vis.graph.addPatternLen(findString.length, i);
+                vis.graph.addAlgorithm('horspools', i);
+                
             }
-            vis.graph.addNode(stringCount, findString[0]);
-            stringCount++;
+            vis.graph.addNode(searchString.length, findString[0]);
+            const j = searchString.length;
             for (let i = 1; i < findString.length; i++) {
-                vis.graph.addNode(stringCount, findString[i], 'box');
-                vis.graph.addEdge(stringCount, stringCount - 1);
-                stringCount++;
+                vis.graph.addNode(j+i, findString[i], 'box');
+                vis.graph.addEdge(j + i, j + i - 1);
+                
             }
             vis.graph.shift(0, n);
         }, [nodes]);
@@ -58,15 +61,15 @@ export default {
             'horspools');
         }, [nodes]);
 
-        for (let shift_i=0;shift_i<findString.length-1;shift_i++)
+        for (let j=0;j<findString.length-1;j++)
         {
-            chunker.add('3', (vis,shift_i) => {
-                vis.array.patch(shiftTable.indexOf(findString[shift_i].toUpperCase()),1,findString.length-(shift_i+1));
-            },[shift_i]);
+            chunker.add('4', (vis,j) => {
+                vis.array.patch(shiftTable.indexOf(findString[j].toUpperCase()),1,findString.length-(j+1));
+            },[j]);
 
-            chunker.add('4', (vis,shift_i) => {
-                vis.array.depatch(shiftTable.indexOf(findString[shift_i].toUpperCase()),1);
-            },[shift_i]);
+            chunker.add('3', (vis,j) => {
+                vis.array.depatch(shiftTable.indexOf(findString[j].toUpperCase()),1);
+            },[j]);
           
         }
 

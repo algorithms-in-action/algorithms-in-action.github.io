@@ -59,22 +59,22 @@ Horspool(T, n, P, m)  \\B 1
 \\Code{
 CreateShiftTable
 //Initialize ShiftTable
-for k <- 1 to AlphabetSize
+for k <- 1 to AlphabetSize \\B 2
 \\Expl{  The Alphabet contains all characters from which the
 text or pattern may be drawn, and AlphabetSize is the
 number of characters in the Alphabet.  
 \\Expl}        
 \\In{
-    Shift[k] <- m  \\B 2
+    Shift[k] <- m  
     \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
      the current character in the text is not in the pattern at all, we do not have
      to try any more possible matches that contain this character, so we make a large skip. 
     \\Expl}
 \\In}
 //Put in values for characters in pattern P
-for j <- 1 to m-1
+for j <- 1 to m-1  \\B 3
 \\In{
-    Shift[P[j]] <- m - j  \\B 3
+    Shift[P[j]] <- m - j  \\B 4
     \\Expl{ For characters that are in pattern P, overwrite the default shift to something smaller.
     \\Expl}\t \t
 \\In}
@@ -83,7 +83,7 @@ for j <- 1 to m-1
 \\Code{
 Search
 i <- m
-while i <= n   \\B 4
+while i <= n   \\B 5
 \\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
 \\Expl}
 \\In{
@@ -103,7 +103,7 @@ while i <= n   \\B 4
     \\In}
     else
     \\In{
-    i <- i + Shift[T[i]] \\B 5
+    i <- i + Shift[T[i]] \\B 6
     \\Expl{  Advance the pattern, consulting the shift table to see how
             far, given the attempted match starting with T[i] failed.
     \\Expl}
