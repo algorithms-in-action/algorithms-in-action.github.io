@@ -111,6 +111,7 @@ class Array2DRenderer extends Renderer {
 
                   className={classes(
                     styles.col,
+                    col.faded && styles.faded,
                     col.selected && styles.selected,
                     col.patched && styles.patched,
                     col.sorted && styles.sorted,

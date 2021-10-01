@@ -31,10 +31,12 @@ export default {
       let i = left - 1;
       let j = right;
       let tmp;
+      const pivot = a[right];
+      
       chunker.add(5);
       chunker.add(11);
       chunker.add(12);
-      const pivot = a[right];
+      
       chunker.add(6);
       while (i < j) {
         chunker.add(7);
@@ -68,9 +70,25 @@ export default {
         [p, a] = partition(a, left, right);
         // const leftArray = a.slice(left, p);
         // const rightArray = a.slice(p + 1, right + 1);
-        chunker.add(3);
+
+        chunker.add(3, (vis, pivot, arrayLen) => {
+          // fade out the part of the array that is not being sorted (i.e. right side)
+          for (let i=pivot; i < arrayLen; i++){
+            vis.array.fadeOut(i)
+          } 
+        }, [p, right+1]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
-        chunker.add(4);
+        
+        chunker.add(4, (vis, pivot, arrayLen) => {
+          // fade out the part of the array that is not being sorted (i.e. left side)
+          for (let i=0; i <= pivot; i++){
+            vis.array.fadeOut(i)
+          } 
+          // fade in part of the array that is now being sorted (i.e. right side)
+          for (let i=pivot+1; i < arrayLen; i++){
+            vis.array.fadeIn(i)
+          } 
+        }, [p, right+1]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
       }
       return a; // Facilitates testing
@@ -83,6 +101,10 @@ export default {
       },
       [nodes],
     );
-    return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    // Fade out final node 
+    chunker.add(19, (vis, idx) => {
+      vis.array.fadeOut(idx)
+    }, [nodes.length - 1]);
   },
 };
