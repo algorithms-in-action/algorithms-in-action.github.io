@@ -49,29 +49,26 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
 
 \\Code{
 Update
-    \\In{
-        for each (i,j) in E 
+        for each (i,j) in E \\B 5
         \\Expl{  Now that i gets included in the tree, we need to check the edge 
                 to each of its neighbours j.
         \\Expl}
         \\In{
-        if j is in Q and weight(i,j) < Cost[j] \\B 5
+        if j is in Q and weight(i,j) < Cost[j] \\B 6
         \\Expl{  The inclusion of i may have brought i's neighbour j closer 
                 to the tree; if so, update the information we have about j.
         \\Expl}
         \\In{
-                Cost[j] <- weight(i,j)                                  
+                Cost[j] <- weight(i,j) \\B 7                                 
                 \\Expl{  The new cost for j is its distance to i.
                 \\Expl}
-                Update(Q, j, Cost[j]) \\B 6
+                Update(Q, j, Cost[j]) \\B 8
                 \\Expl{  Rearrange Q so the priority queue reflects j's new cost.
                 \\Expl}
-                Prev[j] <- i                                           
+                Prev[j] <- i \\B 9                                          
                 \\Expl{  Record the fact that j's closest neighbour in the 
                         spanning tree (so far) was i.
                 \\Expl}
         \\In}
-        \\In}
-    \\In}
 \\Code}
 `);

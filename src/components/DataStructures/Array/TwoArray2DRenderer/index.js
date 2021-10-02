@@ -22,12 +22,12 @@
 import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
 import Renderer from '../../common/Renderer/index';
-import styles from './Array2DRenderer.module.scss';
+import styles from './TwoArray2DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 
 let modename;
-export function switchmode(modetype = mode()) {
+function switchmode(modetype = mode()) {
   switch (modetype) {
     case 1:
       modename = styles.array_2d_green;
@@ -41,7 +41,8 @@ export function switchmode(modetype = mode()) {
   return modename;
 }
 
-class Array2DRenderer extends Renderer {
+
+class TwoArray2DRenderer extends Renderer {
   constructor(props) {
     super(props);
 
@@ -50,11 +51,12 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo } = this.props.data;
+    const { data, data1,algo } = this.props.data;
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
+
     return (
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
@@ -65,22 +67,15 @@ class Array2DRenderer extends Renderer {
             <td className={classes(styles.col, styles.index)} />
           }
           {
-            algo === 'tc' && // Leave a blank cell at the first row
-            <td />
-          }
-          {
             longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === 'tc') {
-                i += 1;
-              }
-              if (algo === 'prim') {
-                i = ' ';
+              if (algo === 'horspools') {
+                i = '';
               }
               return (
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i }</span>
-                </th>
+                <td className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{i}</span>
+                </td>
               );
             })
           }
@@ -89,21 +84,36 @@ class Array2DRenderer extends Renderer {
           data.map((row, i) => (
             <tr className={styles.row} key={i}>
               {
-                algo === 'tc' && // generate vertical index, which starts from 1
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i + 1 }</span>
-                </th>
-              }
-              {
-                !isArray1D && algo !== 'tc' &&
+                !isArray1D &&
                 <td className={classes(styles.col, styles.index)}>
                   <span className={styles.value}>{i}</span>
                 </td>
               }
               {
                 row.map((col, j) => (
-                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched,
-                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, col.selected3 && styles.selected3)}
+                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched, col.sorted && styles.sorted)}
+                      key={j}>
+                    <span className={styles.value}>{this.toString(col.value)}</span>
+                  </td>
+                ))
+              }
+            </tr>
+            )
+          )
+        }
+        <td></td>
+        {
+          data1.map((row, i) => (
+            <tr className={styles.row} key={i}>
+              {
+                !isArray1D &&
+                <td className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}>{i}</span>
+                </td>
+              }
+              {
+                row.map((col, j) => (
+                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched, col.sorted && styles.sorted)}
                       key={j}>
                     <span className={styles.value}>{this.toString(col.value)}</span>
                   </td>
@@ -117,4 +127,6 @@ class Array2DRenderer extends Renderer {
     );
   }
 }
-export default Array2DRenderer;
+
+export default TwoArray2DRenderer;
+

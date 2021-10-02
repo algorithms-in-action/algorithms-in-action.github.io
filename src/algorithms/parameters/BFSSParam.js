@@ -32,8 +32,9 @@ function BFSSParam() {
         />
       </div>
       {/* render success/error message */}
-      {message}
+      <text className="message">{message}</text>
     </>
+    
   );
 }
 

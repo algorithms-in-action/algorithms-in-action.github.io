@@ -12,8 +12,7 @@
     .col {
       display: table-cell;
       text-align: center;
-      min-width: 8px;
-      width: 28px;
+      min-width: 28px;
       background-color: var(--array-2d-row-col-bg);
       border: 1px solid var(--array-2d-row-col-border);
       padding: 0 4px;
@@ -24,11 +23,6 @@
 
       }
 
-      .variable {
-        font-size: 18px;
-        color: var(--array-2d-row-col-sorted);
-      }
-
       &.selected {
         background-color: var(--array-2d-row-col-bg-selected);
 
@@ -37,29 +31,6 @@
         }
       }
 
-      &.selected1 {
-        background-color: var(--array-2d-row-col-bg-selected1);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected2 {
-        background-color: var(--array-2d-row-col-bg-selected2);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected3 {
-        background-color: var(--array-2d-row-col-bg-selected3);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);
@@ -84,18 +55,7 @@
         background: var(--array-2d-row-col-bg-index);
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
-        
       }
-
-      &.variables {
-        background: var(--array-2d-row-col-bg-index);
-        border: var(--array-2d-row-col-border-index);
-        color: var(--array-2d-row-col-color-index);
-        vertical-align: text-top;
-        
-      }
-
-      
     }
   }
 }
