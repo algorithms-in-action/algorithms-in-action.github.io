@@ -14,7 +14,7 @@ export const stringListValidCheck = (t) => {
 };
 
 export const stringValidCheck = (t) => {
-  const regex = /^[a-zA-Z]+$/g;
+  const regex = /^[a-zA-Z\s]+$/g;
   return t.match(regex);
 };
 
