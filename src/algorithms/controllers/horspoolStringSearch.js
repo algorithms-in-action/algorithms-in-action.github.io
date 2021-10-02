@@ -32,6 +32,7 @@ export default {
         const findString = nodes[1];
         
         const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
+        const shiftTableValue=new Array(shiftTable.length).fill(findString.length);
         // searchString and findString are stored in the same array
         // to get element in findString, add the length of searchString to the index
         chunker.add('1', (vis, n) => {
@@ -56,6 +57,7 @@ export default {
         }, [nodes]);
 
         chunker.add('2', (vis, n) => {
+            //initialize shift table
             vis.array.set([shiftTable.slice(0,13),new Array(13).fill(findString.length)],
             [shiftTable.slice(13,27),new Array(14).fill(findString.length)],
             'horspools');
@@ -63,6 +65,11 @@ export default {
 
         for (let j=0;j<findString.length-1;j++)
         {
+            //assign value for shift table
+            
+            //【j pointer】
+            //【Pattern select】
+            shiftTableValue[shiftTable.indexOf(findString[j].toUpperCase())]=findString.length-(j+1);
             chunker.add('4', (vis,j) => {
                 vis.array.patch(shiftTable.indexOf(findString[j].toUpperCase()),1,findString.length-(j+1));
             },[j]);
@@ -72,6 +79,48 @@ export default {
             },[j]);
           
         }
+        let m = findString.length;
+        let i = m;
+        //【i pointer】
 
+        while (i-1<searchString.length)
+        {
+            let j = 0;
+            //【del j pointer, create j value】
+            while ((j<m) && (findString[(m-j-1)] == searchString[(i-j-1)] ))
+            {
+                //【[m-j]pointer】
+                //【[i-j]pointer】
+                //【String[i-j] and Pattern[m-j] do select(), matched color】
+                j=j+1
+                //【j value】
+            }
+            
+            if (j == m)
+            {
+                
+                //【succ msg here, return result=(i-m+1)】
+                return;
+            }
+            else
+            {
+                //【String[i-j] and Pattern[m-j] do select(), unmatched color】
+
+                chunker.add('6', (vis,i) => {
+                    vis.array.select(shiftTable.indexOf(searchString[i-1].toUpperCase()),0);
+                    vis.array.select(shiftTable.indexOf(searchString[i-1].toUpperCase()),1);
+                },[i]);
+                chunker.add('6', (vis,i) => {
+                    vis.array.deselect(shiftTable.indexOf(searchString[i-1].toUpperCase()),0);
+                    vis.array.deselect(shiftTable.indexOf(searchString[i-1].toUpperCase()),1);
+                },[i]); 
+
+                i=i+shiftTableValue[shiftTable.indexOf(searchString[i-1].toUpperCase())]
+                //【ij pointer】
+                //【Pattern move】
+            }
+        }
+        //【fail msg 】
+        return;
     }
 }
