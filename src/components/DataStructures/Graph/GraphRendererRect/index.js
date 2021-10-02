@@ -20,6 +20,8 @@ import { mode } from "../../../top/Settings";
 import { fromPairs } from "lodash";
 
 let modename;
+let lastx=-1;
+let repeatx=false;
 function switchmode(modetype = mode()) {
   switch (modetype) {
     case 1:
@@ -92,33 +94,41 @@ class GraphRendererRect extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
-
-    let nodeid=0;
-    let smlx=999;
-    let smly=0;
     let StringLen = 0;
     let PatternLen = 0;
     let FinalPostion = 0;
-    let startpostion = nodes[0].x;
+    let startpostion = nodes[0].x-2*nodeRadius;
     let algorithmName = "";
-    for (let ii = 0; ii < nodes.length; ii++) {
-      if(ii==1){
-        StringLen=nodes[ii].StringLen;
-        PatternLen=nodes[ii].PatternLen;
-      }
-      if(nodes[ii].y<=smly){
-        if(nodes[ii].x<=smlx){
-          smlx = nodes[ii].x;
-          smly = nodes[ii].y
-          nodeid = nodes[ii].id
-        }
-      }
-      if(nodes[ii].algorithmName=="bfsSearch"){
-        algorithmName = nodes[ii].algorithmName;
+
+    if(nodes.length>1){
+      StringLen = nodes[1].StringLen;
+      PatternLen = nodes[1].PatternLen;
+      if(nodes[1].algorithmName==="bfsSearch"){
+        algorithmName = "bfsSearch";
         FinalPostion = nodes[StringLen-PatternLen].x;
       }
     }
     
+    let nodeid=0;
+    let smlx= FinalPostion;
+    let smly= nodes[StringLen+1].y;
+
+    for (let ii = 0; ii < nodes.length; ii++) { 
+      if(nodes[ii].y<=smly){
+        if(nodes[ii].x<=smlx){
+          smlx = nodes[ii].x;
+          smly = nodes[ii].y;
+          nodeid = nodes[ii].id;
+        }
+      }
+    }
+    if (smlx === lastx && repeatx) {
+      nodeid++;
+    } else if (smlx === lastx && !repeatx){      
+      repeatx = true
+    } else {
+      repeatx = false;
+    }
     
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
@@ -184,6 +194,7 @@ class GraphRendererRect extends Renderer {
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
           return (
+            <>
             <motion.g
               animate={{ x, y }}
               initial={false}
@@ -199,7 +210,16 @@ class GraphRendererRect extends Renderer {
                   {this.toString(weight)}
                 </text>
               )}
+              {
+              this.toString(Result) !== null ? 
+                (nodeid === id ? <><text style={{ fill: "#2986CC" }} y={-smly * 4} dy=".2em">i</text><text style={{ fill: "#2986CC" }} y={smly * 2} dy=".2em">j</text></>
+                :<></>)
+              :
+              (<></>)
+              }
+              {nodeid === id ? console.log(x+"\t"+y): console.log()}
             </motion.g>
+            </>
           );
         })}
 
@@ -215,14 +235,13 @@ class GraphRendererRect extends Renderer {
               transform={`translate(${x},${y})`}
             >
               {
-              this.toString(Result) != null ? 
+              this.toString(Result) !== null ? 
                 (this.ShowMsg +=1,this.ShowMsg=1,<text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>)
                 :
-                (this.ShowMsg ==0&& smlx!=FinalPostion&&smlx>startpostion&&nodeid==id?(<text x="-10%" y="20%" dy=".2em">Keep Seaching</text>):(<text/>))
+                (this.ShowMsg ===0&& smlx!==FinalPostion&&smlx>startpostion&&nodeid===id?(<text x="-10%" y="20%" dy=".2em">Keep Seaching</text>):(<text/>))
               }
-              {smlx==startpostion?(this.ShowMsg=0):(<text/>)}
-              {this.ShowMsg ==0 && smlx==FinalPostion&&nodeid==id?(<text x="-10%" y="20%" dy=".2em">Seaching Fail</text>):(<text/>)}
-              {nodeid==id ?(<text y={smly*1.5} dy=".2em">i</text>) : (<text/>)}
+              {smlx===startpostion?(this.ShowMsg=0):(<text/>)}
+              {this.ShowMsg ===0 && smlx===FinalPostion&&nodeid===id?(<text x="-10%" y="20%" dy=".2em">Seaching Fail</text>):(<text/>)}
             </g>
           );
         })}

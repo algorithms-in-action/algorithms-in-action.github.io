@@ -87,7 +87,7 @@ export default {
         {
             let j = 0;
             //【del j pointer, create j value】
-            while ((j<m) && (findString[(m-j-1)] == searchString[(i-j-1)] ))
+            while ((j<m) && (findString[(m-j-1)] === searchString[(i-j-1)] ))
             {
                 //【[m-j]pointer】
                 //【[i-j]pointer】
@@ -96,7 +96,7 @@ export default {
                 //【j value】
             }
             
-            if (j == m)
+            if (j === m)
             {
                 
                 //【succ msg here, return result=(i-m+1)】
