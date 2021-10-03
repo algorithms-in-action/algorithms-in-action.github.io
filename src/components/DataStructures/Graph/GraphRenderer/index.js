@@ -138,7 +138,6 @@ class GraphRenderer extends Renderer {
             const my = (sy + ey) / 2;
             const dx = ex - sx;
             const dy = ey - sy;
-            const degree = (Math.atan2(dy, dx) / Math.PI) * 180;
             if (isDirected) {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
@@ -162,7 +161,7 @@ class GraphRenderer extends Renderer {
                 {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
-                    <text className={styles.weight} transform={`rotate(${degree})`}
+                    <text className={styles.weight} transform="rotate(0)"
                           y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
                 }
@@ -172,7 +171,7 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText  } = node;
+          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
