@@ -12,11 +12,11 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Prim'),
+        instance: new GraphTracer('graph', null, 'Graph view'),
         order: 0,
       },
       array: {
-        instance: new Array2DTracer('array', null, 'Priority Queue'),
+        instance: new Array2DTracer('array', null, 'Parent array & Priority Queue'),
         order: 1,
       },
     };
@@ -176,9 +176,9 @@ export default {
       pending[i] = 1;
     }
     cost[0] = 0;
-    pqCost.push('Cost');  // initialize the pq cost
-    pqDisplay.push('Node'); // initialize the pq display
-    prevNode.push('Prev'); // initialize the prev list
+    pqCost.push('Priority Queue[i]');  // initialize the pq cost
+    pqDisplay.push('i'); // initialize the pq display
+    prevNode.push('Parent[i]'); // initialize the prev list
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
