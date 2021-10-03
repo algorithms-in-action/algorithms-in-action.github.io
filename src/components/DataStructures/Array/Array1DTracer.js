@@ -97,6 +97,7 @@ class Array1DTracer extends Array2DTracer {
         if (val.patched) newEl.patched = true;
         if (val.selected) newEl.selected = true;
         if (val.sorted) newEl.sorted = true;
+        if (val.faded) newEl.faded = true;
         newEl.variables = val.variables;
         return newEl;
       }
