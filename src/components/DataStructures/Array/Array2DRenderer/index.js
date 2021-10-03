@@ -25,6 +25,7 @@ import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
+import { motion } from 'framer-motion';
 
 let modename;
 export function switchmode(modetype = mode()) {
@@ -54,6 +55,12 @@ class Array2DRenderer extends Renderer {
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
+    let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
+    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
+    if (!this.props.data.arrayItemMagnitudes) {
+      scaleY = () => 0;
+    }
+
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     return (
       <table className={switchmode(mode())}
@@ -99,7 +106,7 @@ class Array2DRenderer extends Renderer {
                 <td className={classes(styles.col, styles.index)}>
                   <span className={styles.value}>{i}</span>
                 </td>
-              )}
+              }
               {row.map((col) => (
                 <motion.td
                   layout
