@@ -99,6 +99,7 @@ class Array1DRenderer extends Array2DRenderer {
                 /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                 className={classes(
                   styles.col,
+                  col.faded && styles.faded,
                   col.selected && styles.selected,
                   col.patched && styles.patched,
                   col.sorted && styles.sorted,
