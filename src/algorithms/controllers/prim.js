@@ -197,6 +197,14 @@ export default {
         },
         [[pqDisplay, prevNode, pqCost], miniIndex]
     );
+    chunker.add(
+        3,
+        (vis, v, w) => {
+          vis.array.set(v, 'prim');
+          vis.array.select(2, w);
+        },
+        [[pqDisplay, prevNode, pqCost], miniIndex]
+    );
 
     while (pqStart < n) {
       i = pq[pqStart];
