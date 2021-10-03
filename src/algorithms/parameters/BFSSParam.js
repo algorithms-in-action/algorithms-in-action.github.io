@@ -8,7 +8,7 @@ import '../../styles/Param.scss';
 const DEFAULT_STRING = 'abcdefgh';
 const DEFAULT_PATTERN = 'efg';
 const BFSS_SEARCH = 'Brute force String Search';
-const BFSS_EXAMPLE = 'Please follow the example provided: abcdefg, egh (Spaces are allowed, numbers are not allowed)';
+const BFSS_EXAMPLE = 'Please follow the example provided: abcdefgh, efg (Spaces are allowed, numbers are not allowed)';
 
 function BFSSParam() {
   const [message, setMessage] = useState(null);
