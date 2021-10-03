@@ -11,7 +11,7 @@ import {
   makeData,
   singleNumberValidCheck,
   errorParamMsg,
-  successParamMsg,
+  successParamMsg, matrixValidCheck,
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -114,6 +114,13 @@ function MatrixParam({
     });
 
     if (matrix.length !== size || matrix[0].length !== size) return [];
+    if (name === 'prim') {
+      if (matrixValidCheck(matrix) === false) {
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+        // eslint-disable-next-line consistent-return
+        return [];
+      }
+    }
 
     return matrix;
   };
