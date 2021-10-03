@@ -1,35 +1,69 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import '../../styles/MidPanel.scss';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import Instruction from './Instruction';
-
+import Popup from 'reactjs-popup';
+import ReactMarkDown from 'react-markdown/with-html';
+import CodeBlock from '../../markdown/code-block';
+import toc from 'remark-toc';
+import { SvgIcon } from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/HelpOutlineOutlined';
+import ControlButton from '../common/ControlButton';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm } = useContext(GlobalContext);
   const fontID = 'algorithmTitle';
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+  const [explanation, setExplanation] = useState('');
+
   useEffect(() => {
-    setFontSize(fontID, fontSize);
-    increaseFontSize(fontID, fontSizeIncrement);
-  }, [fontSize, fontSizeIncrement]);
+    setFontSize(fontID, fontSize)
+    increaseFontSize(fontID, fontSizeIncrement)
+  }, [fontSize, fontSizeIncrement])
+
+  useEffect(() => {
+    var text = '# Instructions \n\n\n';
+    for (var i = 0; i < algorithm.instructions.length; i++) {
+      text = text + "## " + algorithm.instructions[i].title + "\n\n\n";
+      for (var j = 0; j < algorithm.instructions[i].content.length; j++) {
+        text = text + (j + 1) + ".\t" + algorithm.instructions[i].content[j] + "\n\n";
+      }
+    }
+
+    setExplanation(text);
+  }, [algorithm.instructions]);
 
   return (
     <div className="midPanelContainer">
       <div className="midPanelHeader">
+        <div>
+          <ControlButton icon={<HelpIcon/>} onClick={() => setOpen(o => !o)}/>
+          <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+            <div className="textArea">
+              <a className="close" onClick={closeModal}>
+                &times;
+              </a>
+              <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+            </div>
+          </Popup>
+        </div>
+
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
+
       </div>
       <div className="midPanelBody">
-        <Instruction instructions={algorithm.instructions} />
-        {algorithm.chunker && algorithm.chunker.getVisualisers().map((o) => o.render())}
+        {algorithm.chunker &&
+          algorithm.chunker.getVisualisers().map((o) => o.render())}
       </div>
     </div>
-  );
+  )
 }
 
-
-export default MidPanel;
+export default MidPanel
 MidPanel.propTypes = {
   fontSize: PropTypes.number.isRequired,
   fontSizeIncrement: PropTypes.number.isRequired,
-};
+}

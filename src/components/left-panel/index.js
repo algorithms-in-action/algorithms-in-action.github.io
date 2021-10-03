@@ -70,6 +70,23 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
     // increaseFontSize(itemFontID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
 
+  const mouseEvs=['mousedown','click','mouseup']
+  
+  useEffect(() => {
+    startButtonClick()
+  }, [])
+  const startButtonClick = () =>{  
+    const startButton = document.getElementById('startBtnGrp');
+    console.log(startButton)
+    if(startButton !== null){
+      mouseEvs.forEach(
+        mouseEventType => startButton.dispatchEvent(
+          new MouseEvent(mouseEventType,
+            {view: window, bubbles: true, cancelable: true, buttons:1}))
+      )
+    }
+  };
+
   return (
     <div className="container">
       <span>
@@ -110,10 +127,13 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         className={algorithm.name === algo.name ? 'algoItem active' : 'algoItem'}
                         type="button"
                         id={`algo-${algo.name}`}
-                        onClick={() => {
-                          openInstructions();
-                          dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
-                        }}
+                        onClick={algorithm.name === algo.name? ()=>{
+                          document.getElementById('startBtnGrp');}
+                          : () => {
+                            openInstructions();
+                            dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
+                          }
+                        }
                       >
                         <div key={algo.id} className="algoItemContent">{algo.name}</div>
                       </button>
@@ -135,7 +155,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
               </button>
             ))
         }
-
       </div>
     </div>
   );

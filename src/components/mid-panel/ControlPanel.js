@@ -1,9 +1,12 @@
 /* eslint-disable no-prototype-builtins */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Slider } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import Popup from 'reactjs-popup';
+import ReactMarkDown from 'react-markdown/with-html';
+import toc from 'remark-toc';
 import ControlButton from '../common/ControlButton';
 import ProgressBar from './ProgressBar';
 import useInterval from '../../context/useInterval';
@@ -13,6 +16,8 @@ import { ReactComponent as PrevIcon, ReactComponent as NextIcon } from '../../as
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/ControlPanel.scss';
+import 'reactjs-popup/dist/index.css';
+import CodeBlock from '../../markdown/code-block';
 
 const muiTheme = createMuiTheme({
   overrides: {
@@ -47,6 +52,10 @@ function ControlPanel() {
 
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [playing, setPlaying] = useState(false);
+  const [explanation, setExplanation] = useState('');
+
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
 
   const prev = (isPlaying = false) => {
     dispatch(GlobalActions.PREV_LINE, isPlaying);
@@ -85,6 +94,20 @@ function ControlPanel() {
     }
   };
 
+  useEffect(() => {
+    let text = '# Instructions \n\n\n';
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < algorithm.instructions.length; i++) {
+      text = `${text}## ${algorithm.instructions[i].title}\n\n\n`;
+      // eslint-disable-next-line no-plusplus
+      for (let j = 0; j < algorithm.instructions[i].content.length; j++) {
+        text = `${text + (j + 1)}.\t${algorithm.instructions[i].content[j]}\n\n`;
+      }
+    }
+
+    setExplanation(text);
+  }, [algorithm.explanation, algorithm.instructions]);
+
   /**
    * when click play button, calling play() based on the slider speed.
    * Using useInterval, play() now can read fresh states, otherwise play() will
@@ -100,6 +123,90 @@ function ControlPanel() {
     setSpeed(newSpeed);
   };
 
+  return (
+    <div className="controlContainer">
+      <div className="controlPanel">
+        <div className="rightControl">
+          <div className="controlButtons">
+            {/* Prev Button */}
+            <ControlButton
+              icon={<PrevIcon />}
+              type="prev"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
+              onClick={() => prev()}
+            />
+            {/* Play/Pause Button */}
+            {playing ? (
+              <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
+            ) : (
+              <ControlButton
+                icon={<PlayIcon />}
+                type="play"
+                disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+                onClick={handleClickPlay}
+              />
+            )}
+            {/* Next Button */}
+            <ControlButton
+              icon={<NextIcon />}
+              type="next"
+              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
+              onClick={() => next()}
+            />
+          </div>
+        </div>
+        {/* Speed Slider */}
+        <div className="speed">
+          <div className="innerSpeed">
+            {/* Label the speed slider as SPEED */}
+            SPEED
+          </div>
+        </div>
+        <div className="sliderContainer">
+          <div className="slider">
+            <ThemeProvider theme={muiTheme}>
+              <Grid container spacing={2}>
+                <Grid item xs>
+                  <Slider
+                    value={speed}
+                    onChange={handleSliderChange}
+                    aria-labelledby="continuous-slider"
+                  />
+                </Grid>
+              </Grid>
+            </ThemeProvider>
+          </div>
+        </div>
+        <div className="prcessbar">
+          {/* Progress Status Bar */}
+          <ProgressBar
+            current={currentChunk}
+            max={chunkerLength}
+          />
+        </div>
+
+      </div>
+      <div className="parameterPanel">
+        {algorithm.param}
+      </div>
+
+      <div>
+        <button type="button" className="button" onClick={() => setOpen((o) => !o)}>
+          Instructions
+        </button>
+        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <a className="close" onClick={closeModal}>
+              &times;
+            </a>
+            {/* eslint-disable-next-line max-len */}
+            <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+          </div>
+        </Popup>
+      </div>
+    </div>
+  );
+  // eslint-disable-next-line no-unreachable
   return (
     <div className="controlContainer">
       <div className="controlPanel">

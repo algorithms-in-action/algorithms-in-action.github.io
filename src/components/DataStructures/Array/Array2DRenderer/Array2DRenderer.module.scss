@@ -12,7 +12,8 @@
     .col {
       display: table-cell;
       text-align: center;
-      min-width: 28px;
+      min-width: 8px;
+      width: 28px;
       background-color: var(--array-2d-row-col-bg);
       border: 1px solid var(--array-2d-row-col-border);
       padding: 0 4px;
@@ -36,6 +37,29 @@
         }
       }
 
+      &.selected1 {
+        background-color: var(--array-2d-row-col-bg-selected1);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.selected2 {
+        background-color: var(--array-2d-row-col-bg-selected2);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.selected3 {
+        background-color: var(--array-2d-row-col-bg-selected3);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);

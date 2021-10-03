@@ -132,6 +132,8 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke-visited: #ee0970;
 	--graph-node-id-fill-visited: #FFFFFF;
 
+	--graph-text-fill:#1809ee;
+	--graph-text-stroke:#1809ee;
 
 	--graph-edge-line-stroke: #aeaeae;
 	--graph-edge-line-weight-fill: #a4a4a4;
@@ -149,6 +151,9 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-border: #4f4f4f;
 	--array-2d-row-col-value-color: #3e3e3e;
 	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-selected: #FFFFFF;
 	--array-2d-row-col-bg-patched: #ee0970;
 	--array-2d-row-col-patched: #FFFFFF;
@@ -163,7 +168,6 @@ $yellowLine: #FFDE3C;
 	--array-graph-row-col-value-color: #3e3e3e;
 	--array-graph-row-col-bg-selected: #2289ff;
 	--array-graph-row-col-selected: #FFFFFF;
-	--array-graph-row-col-bg-patched: #ee0970;
 	--array-graph-row-col-bg-index: none;
 	--array-graph-row-col-border-index: none;
 	--array-graph-row-col-color-index: #505050;
@@ -328,8 +332,11 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-border: #212121;
 	--array-2d-row-col-value-color: #d5d5d5;
 	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-selected: #FFFFFF;
-	--array-2d-row-col-bg-patched: #ee0970;
+	--array-2d-row-col-bg-patched: #FFFFFF;
 	--array-2d-row-col-patched: #FFFFFF;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
@@ -367,17 +374,31 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke-selected: #ee0970;
 	--graph-node-circle-fill-visited: #2289ff;
 	--graph-node-circle-stroke-visited: #2289ff;
+	--graph-node-circle-fill-visited1: #11cc77;
+	--graph-node-circle-stroke-visited1: #11cc77;
+	--graph-node-circle-fill-visited2: #f58b2f;
+	--graph-node-circle-stroke-visited2: #f58b2f;
 
 	--graph-edge-line-stroke-selected: #ee0970;
 	--graph-edge-weight-fill-selected: #ee0970;
 	--graph-edge-line-stroke-visited: #2289ff;
+	--graph-edge-line-stroke-visited1: #11cc77;
+	--graph-edge-line-stroke-visited2: #f58b2f;
 	--graph-edge-weight-fill-visited: #2289ff;
+	--graph-edge-weight-fill-visited1: #11cc77;
+	--graph-edge-weight-fill-visited2: #f58b2f;
+
 
 	--graph-arrow-fill-selected: #ee0970;
 	--graph-arrow-fill-visited: #2289ff;
+	--graph-arrow-fill-visited1: #11cc77;
+	--graph-arrow-fill-visited2: #f58b2f;
 
 	--array-2d-row-col-bg-selected: #2289ff;
-	--array-2d-row-col-bg-patched: #ee0970;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #2289ff;
 
 
@@ -416,7 +437,10 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited: #059847;
 
 	--array-2d-row-col-bg-selected: #059847;
-	--array-2d-row-col-bg-patched: #e42fd5;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #059847;
 
 
@@ -451,7 +475,10 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited: #0d9eae;
 
 	--array-2d-row-col-bg-selected: #0d9eae;
-	--array-2d-row-col-bg-patched: #9f2fe4;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #0d9eae;
 
 

@@ -39,26 +39,25 @@ function ProgressBar({ current, max }) {
     setBuffer(node.buffer, 1);
   }, [node, current, max]);
 
+
   return (
-    <div role="progressbar" className="mux-lpi">
-      <div className="progressLable">
-        <div className="innerText">
-          {
-            isInputValid(current, max)
-            // if the user enters a valid input and clicks on LOAD
-            // the progress bar displays the percentage of progress
-            // convert the lines of code to percentge by multiplying the division by 100
-              ? `Progress: ${Math.round((current / max) * 100, 2)} %`
+      <div role="progressbar" className="mux-lpi">
+        <div className="progressLable" id="progressLabel">
+          <div className="innerText">
+            {
+              // if the user enters a valid input and clicks on LOAD
+              // the progress bar displays the percentage of progress
+              // convert the lines of code to percentge by multiplying the division by 100
+              `Progress: ${Math.round((current / max) * 100, 2)} %`
               // if the user does not enter a valid input, initialise the progress bar as not loaded
-              : 'Not Loaded'
-          }
+            }
+          </div>
+        </div>
+        <div className="mux-lpi-buffer" />
+        <div className="mux-lpi-rect mux-lpi-rect--primary">
+          <span className="mux-lpi-rect-inner" />
         </div>
       </div>
-      <div className="mux-lpi-buffer" />
-      <div className="mux-lpi-rect mux-lpi-rect--primary">
-        <span className="mux-lpi-rect-inner" />
-      </div>
-    </div>
   );
 }
 

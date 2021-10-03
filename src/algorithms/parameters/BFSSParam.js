@@ -19,7 +19,7 @@ function BFSSParam() {
       <div className="form">
         <StringParam
           name="bruteForceStringSearch"
-          buttonName="Search"
+          buttonName="Start"
           mode="search"
           formClassName="formLeft"
           DEFAULT_STRING={string}
