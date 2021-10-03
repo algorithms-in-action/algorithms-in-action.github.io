@@ -112,6 +112,22 @@ class Array2DRenderer extends Renderer {
             </tr>
           ))
         }
+        {
+          algo === 'prim' &&
+          data.map((row, i) => (
+            i === 2 &&
+            <tr className={styles.row} key={i}>
+              {
+                row.map((col, j) => (
+                  <td className={classes(styles.col, styles.index)} key={j}>
+                    {col.selected && <span className={styles.value}>Min</span>}
+                  </td>
+
+                ))
+              }
+            </tr>
+          ))
+        }
         </tbody>
       </table>
     );
