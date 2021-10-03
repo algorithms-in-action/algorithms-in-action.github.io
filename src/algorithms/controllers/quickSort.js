@@ -58,17 +58,17 @@ export default {
             }
           }, [i]);
         } while (a[i] < pivot);
-        chunker.add(8);
+        // chunker.add(8);
         do {
           j -= 1;
-          chunker.add(9, (vis, j1) => {
+          chunker.add(8, (vis, j1) => {
             if (j1 >= 0) {
               vis.array.assignVariable('j', j1);
             }
           }, [j]);
         } while (i <= j && pivot < a[j]);
 
-        // chunker.add(9);
+        chunker.add(9);
         if (i < j) {
           tmp = a[j];
           a[j] = a[i];
