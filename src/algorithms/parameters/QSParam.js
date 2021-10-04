@@ -10,7 +10,7 @@ import { GlobalActions } from '../../context/actions'
 import ListParam from './helpers/ListParam'
 import '../../styles/Param.scss'
 
-const DEFAULT_ARR = genRandNumList(8, 1, 99)
+const DEFAULT_ARR = genRandNumList(12, 1, 99)
 const QUICK_SORT = 'Quick Sort'
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4'
 const UNCHECKED = {
@@ -67,7 +67,7 @@ function QuicksortParam() {
           setMessage={setMessage}
         />
       </div>
-      Choose pivot using : &nbsp;&nbsp;
+      <span className="generalText">Choose pivot using : &nbsp;&nbsp;</span>
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
         control={

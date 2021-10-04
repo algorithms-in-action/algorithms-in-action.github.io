@@ -67,7 +67,7 @@ function QuicksortM3Param() {
           setMessage={setMessage}
         />
       </div>
-      Choose pivot using : &nbsp;&nbsp;
+      <span className="generalText">Choose pivot using : &nbsp;&nbsp;</span>
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
         control={
