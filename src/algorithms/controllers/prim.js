@@ -109,7 +109,7 @@ export default {
           cost[j] = w;
           if (pqCost[j + 1] === Infinity) {
             pqCost[j + 1] = `${cost[j].toString()}<∞`;
-          } else {
+          } else if (cost[j] !== null && pqCost[j + 1] != null) {
             pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
           }
           chunker.add(
