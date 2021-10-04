@@ -23,6 +23,24 @@ export const singleNumberValidCheck = (t) => {
   return t.match(regex);
 };
 
+// eslint-disable-next-line consistent-return
+export const matrixValidCheck = (m) => {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < m.length; i++) {
+    // eslint-disable-next-line no-plusplus
+    for (let j = 0; j < i; j++) {
+      if (m[i][j] !== m[j][i]) {
+        return false;
+      }
+    }
+    if (m[i][i] !== 0) {
+      return false;
+    }
+  }
+  return true;
+};
+
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);

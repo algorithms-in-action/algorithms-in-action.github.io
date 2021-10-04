@@ -204,7 +204,6 @@ function ControlPanel() {
           </div>
         </Popup>
       </div>
-
     </div>
   );
   // eslint-disable-next-line no-unreachable

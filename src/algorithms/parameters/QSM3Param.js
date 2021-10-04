@@ -1,23 +1,24 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { withStyles } from '@material-ui/core/styles';
-import { genRandNumList } from './helpers/ParamHelper';
-import { GlobalContext } from '../../context/GlobalState';
-import { GlobalActions } from '../../context/actions';
-import ListParam from './helpers/ListParam';
-import '../../styles/Param.scss';
+import React, { useState } from 'react'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Radio from '@material-ui/core/Radio'
+import { withStyles } from '@material-ui/core/styles'
+import { genRandNumList } from './helpers/ParamHelper'
+import { GlobalContext } from '../../context/GlobalState'
+import { GlobalActions } from '../../context/actions'
+import ListParam from './helpers/ListParam'
+import '../../styles/Param.scss'
 
-const DEFAULT_ARR = genRandNumList(8, 1, 99);
-const QUICK_SORT = 'Quick Sort Median of Three';
-const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const DEFAULT_ARR = genRandNumList(8, 1, 99)
+const QUICK_SORT = 'Quick Sort Median of Three'
+const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4'
 const UNCHECKED = {
   rightmost: false,
   medianofthree: false,
-};
+}
 
-const BlueCheckbox = withStyles({
+const BlueRadio = withStyles({
   root: {
     color: '#2289ff',
     '&$checked': {
@@ -25,31 +26,31 @@ const BlueCheckbox = withStyles({
     },
   },
   checked: {},
-// eslint-disable-next-line react/jsx-props-no-spreading
-})((props) => <Checkbox {...props} />);
+  // eslint-disable-next-line react/jsx-props-no-spreading
+})((props) => <Radio {...props} />)
 
 function QuicksortM3Param() {
-  const [message, setMessage] = useState(null);
-  const [array, setArray] = useState(DEFAULT_ARR);
+  const [message, setMessage] = useState(null)
+  const [array, setArray] = useState(DEFAULT_ARR)
   const [QSM3Case, setQSM3Case] = useState({
     rightmost: false,
     medianofthree: true,
-  });
+  })
 
   // function for choosing the type of pivot (rightmost)
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'rightmost':
         // setNodes(shuffleArray(nodes));
-        break;
+        break
       case 'medianofthree':
         // setNodes([...nodes].sort((a, b) => a - b));
-        break;
+        break
       default:
     }
 
-    setQSM3Case({ ...UNCHECKED, [e.target.name]: true });
-  };
+    setQSM3Case({ ...UNCHECKED, [e.target.name]: true })
+  }
 
   return (
     <>
@@ -69,20 +70,32 @@ function QuicksortM3Param() {
       Choose pivot using : &nbsp;&nbsp;
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
-        control={<BlueCheckbox checked={QSM3Case.rightmost} onChange={handleChange} name="rightmost" />}
+        control={
+          <BlueRadio
+            checked={QSM3Case.rightmost}
+            onChange={handleChange}
+            name="rightmost"
+          />
+        }
         label="Rightmost"
         className="checkbox"
       />
       {/* create a checkbox for Median of Three */}
       <FormControlLabel
-        control={<BlueCheckbox checked={QSM3Case.medianofthree} onChange={handleChange} name="medianofthree" />}
+        control={
+          <BlueRadio
+            checked={QSM3Case.medianofthree}
+            onChange={handleChange}
+            name="medianofthree"
+          />
+        }
         label="Median of Three"
         className="checkbox"
       />
       {/* render success/error message */}
       {message}
     </>
-  );
+  )
 }
 
-export default QuicksortM3Param;
+export default QuicksortM3Param

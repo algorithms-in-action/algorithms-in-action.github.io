@@ -146,7 +146,7 @@ function App() {
           className="dragbar"
         >
           <div id="draghandle" className="handle">
-            <Direction />
+            <Direction id="leftdraghandle"/>
           </div>
         </div>
         <div id="tabpages">

@@ -58,6 +58,7 @@ const EXPAND_ROW_BOTTOM_SIZE = 190;
 
 const getDefn = (page, list, status) => {
   let tempList = addUnitToList(list, 'px');
+  const leftdraghandle = document.getElementById('leftdraghandle');
   switch (status) {
     case ROW_INTERNAL:
       break;
@@ -89,6 +90,7 @@ const getDefn = (page, list, status) => {
         addUnitToNum(list[3], 'px'),
         addUnitToNum(list[4] / (list[2] + list[4]), 'fr'),
       ], '');
+      leftdraghandle.style.transform = 'rotate(180deg)';
       break;
     case COLLAPSE_RIGHT:
       tempList = addUnitToList([
@@ -115,6 +117,7 @@ const getDefn = (page, list, status) => {
         addUnitToNum(list[3], 'px'),
         addUnitToNum(list[4] / (list[2] + list[4]), 'fr'),
       ], '');
+      leftdraghandle.style.transform = 'rotate(0deg)';
       break;
     case EXPAND_RIGHT:
       tempList = addUnitToList([

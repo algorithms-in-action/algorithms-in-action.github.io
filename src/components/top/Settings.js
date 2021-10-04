@@ -37,11 +37,21 @@ function Settings({
         <div className="label">Data Structures</div>
         <div className="algoCol">
           {
-          allColBtn.map(({ primary, secondary, id }) => (
+          allColBtn.map(({ primary, secondary, third,fourth,id }) => (
             <button key={id} id={id} type="button" className={colorMode === id ? 'colorBtn active' : 'colorBtn'} onClick={(e) => handleColorModeChange(e.target.id)}>
-              <span id={id} className={`left ${primary}`}> </span>
-              <span id={id} className={`right ${secondary}`}> </span>
-            </button>
+              <table border="0">
+                <tr>
+                  <th id={id} className={`top-left ${primary}`}></th>
+                  <th id={id} className={`top-right ${secondary}`}></th>
+                </tr>
+                <tr>
+                  <td id={id} className={`bottom-left ${third}`}></td>
+                  <td id={id} className={`bottom-right ${fourth}`}></td>
+                </tr>
+              </table>
+              
+              
+            </button>   
           ))
         }
         </div>
