@@ -17,6 +17,7 @@ function Table({
   columns,
   data,
   updateData,
+  algo,
 }) {
   const {
     getTableProps,
@@ -29,6 +30,7 @@ function Table({
     data,
     defaultColumn,
     updateData,
+    algo,
   });
 
   // Render the table

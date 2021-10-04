@@ -166,7 +166,7 @@ function MatrixParam({
         </button>
       </div>
 
-      <Table columns={columns} data={data} updateData={updateData} />
+      <Table columns={columns} data={data} updateData={updateData} algo={name} />
     </div>
   );
 }
