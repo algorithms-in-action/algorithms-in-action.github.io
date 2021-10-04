@@ -57,6 +57,15 @@
       cursor: default;
     }
     th,
+    td2 {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      padding: 6px 8px;
+      font-size: 1.1em;
+      font-weight: 500;
+      @include border-radius(2px);
+      cursor: default;
+    }td2,
     td {
       border: 1px solid var(--system-border);
 
