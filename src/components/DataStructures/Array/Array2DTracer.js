@@ -15,6 +15,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 
+import { cloneDeepWith } from 'lodash';
 import Tracer from '../common/Tracer';
 import Array2DRenderer from './Array2DRenderer';
 
@@ -113,6 +114,33 @@ class Array2DTracer extends Tracer {
         this.data[x][y].style = undefined;
       }
     }
+  }
+
+  assignVariable(v, row, idx) {
+    // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
+    // eslint-disable-next-line consistent-return
+    function customizer(val) {
+      if (val instanceof Element) {
+        const newEl = new Element(val.value, val.key);
+        if (val.patched) newEl.patched = true;
+        if (val.selected) newEl.selected = true;
+        if (val.sorted) newEl.sorted = true;
+        newEl.variables = val.variables;
+        return newEl;
+      }
+    }
+    const newData = cloneDeepWith(this.data, customizer);
+
+    // remove all current occurences of the variable
+    for (let y = 0; y < newData[row].length; y++) {
+      newData[row][y].variables = newData[row][y].variables.filter((val) => val !== v);
+    }
+
+    // add variable to item
+    newData[row][idx].variables.push(v);
+
+    // update this.data
+    this.data = newData;
   }
 
   deselectRow(x, sy, ey) {
