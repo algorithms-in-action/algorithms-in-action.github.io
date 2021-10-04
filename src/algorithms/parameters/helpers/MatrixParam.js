@@ -46,6 +46,7 @@ function MatrixParam({
   setMessage,
   ALGORITHM_NAME,
   EXAMPLE,
+  EXAMPLE2,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -116,7 +117,7 @@ function MatrixParam({
     if (matrix.length !== size || matrix[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(matrix) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
         // eslint-disable-next-line consistent-return
         return [];
       }
