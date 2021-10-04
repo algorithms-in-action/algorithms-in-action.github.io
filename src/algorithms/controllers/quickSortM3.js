@@ -93,6 +93,9 @@ export default {
       a[right - 1] = a[i];
       a[i] = pivot;
       swapAction(13, i, right - 1);
+      chunker.add(13, (vis, i) => {
+        vis.array.sorted(i);
+      }, [i]);
       return [i, a]; // Return [pivot index, array values]
     }
 
@@ -125,6 +128,12 @@ export default {
           } 
         }, [p, right+1]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
+      }
+      // array of size 1, already sorted
+      else if (left < array.length) {
+        chunker.add(2, (vis, left) => {
+          vis.array.sorted(left);
+        }, [left]);
       }
       return a; // Facilitates testing
     }
