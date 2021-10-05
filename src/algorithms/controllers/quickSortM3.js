@@ -117,40 +117,24 @@ export default {
       swapAction(18, mid, right - 1);
       // assign pivot
       const pivot = a[right - 1];
-      chunker.add(5, (vis, index) => {
-        unhighlight(vis, index, false);
-      }, [mid]);
+      chunker.add(5);
 
 
       // Partition array segment
       let i = left - 1;
-      chunker.add(11, (vis, index) => {
-        highlight(vis, index, false);
-      }, [i + 1]);
+      chunker.add(11);
       let j = right - 1;
-      chunker.add(12, (vis, index) => {
-        highlight(vis, index, false);
-      }, [j - 1]);
+      chunker.add(12);
+      chunker.add(6);
       while (i < j) {
-        chunker.add(6);
-        if (i < left) tmp = i + 1;
-        else tmp = i;
+        chunker.add(7);
         do {
           i += 1;
         } while (a[i] < pivot);
-        chunker.add(7, (vis, prev, curr) => {
-          unhighlight(vis, prev, false);
-          highlight(vis, curr, false);
-        }, [tmp, i]);
-        if (j === right - 1) tmp = j - 1;
-        else tmp = j;
+        chunker.add(8);
         do {
           j -= 1;
         } while (i <= j && pivot < a[j]);
-        chunker.add(8, (vis, prev, curr) => {
-          unhighlight(vis, prev, false);
-          if (curr >= left) highlight(vis, curr, false);
-        }, [tmp, j]);
         chunker.add(9);
         if (i < j) {
           tmp = a[j];
@@ -162,11 +146,9 @@ export default {
       a[right - 1] = a[i];
       a[i] = pivot;
       swapAction(13, i, right - 1);
-      chunker.add(13, (vis, index1, index2, index3) => {
-        unhighlight(vis, index1);
-        if (index2 >= left) unhighlight(vis, index2, false);
-        unhighlight(vis, index3, false);
-      }, [i, j, right - 1]);
+      chunker.add(13, (vis, i1) => {
+        vis.array.sorted(i1);
+      }, [i]);
       return [i, a]; // Return [pivot index, array values]
     }
 
@@ -184,6 +166,12 @@ export default {
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         chunker.add(4);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
+      }
+      // array of size 1, already sorted
+      else if (left < array.length) {
+        chunker.add(2, (vis, l) => {
+          vis.array.sorted(l);
+        }, [left]);
       }
       return a; // Facilitates testing
     }
