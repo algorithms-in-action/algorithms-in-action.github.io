@@ -118,7 +118,6 @@ export default {
                 vis.array.set(v, 'prim');
                 if (v[2][u] != null) {
                   vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
                 }
               },
               [[pqDisplay, prevNode, pqCost], miniIndex]
@@ -132,7 +131,6 @@ export default {
                 vis.array.set(v, 'prim');
                 if (v[2][u] != null) {
                   vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
                 }
               },
               [[pqDisplay, prevNode, pqCost], miniIndex]
@@ -150,7 +148,6 @@ export default {
               vis.array.deselect(2, u);
               if (w[v] !== null) {
                 vis.array.select(2, v);
-                vis.array.assignVariable('Min', 2, v);
               }
             },
             [preIndex, miniIndex, pqCost]
@@ -163,7 +160,6 @@ export default {
             (vis, u, v) => {
               vis.array.set(u, 'prim');
               vis.array.select(2, v);
-              vis.array.assignVariable('Min', 2, v);
             },
             [[pqDisplay, prevNode, pqCost], miniIndex]
           );
@@ -198,7 +194,6 @@ export default {
         (vis, v, w) => {
           vis.array.set(v, 'prim');
           vis.array.select(2, w);
-          vis.array.assignVariable('Min', 2, w);
         },
         [[pqDisplay, prevNode, pqCost], miniIndex]
     );
@@ -232,7 +227,6 @@ export default {
             vis.array.deselect(2, u);
             if (u !== w && v[2][w] !== null) {
               vis.array.select(2, w);
-              vis.array.assignVariable('Min', 2, w);
             }
           },
           [[pqDisplay, prevNode, pqCost], miniIndex, prevIndex, i, prev[i], miniIndex]
