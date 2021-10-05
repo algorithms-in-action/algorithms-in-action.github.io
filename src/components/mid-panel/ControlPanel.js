@@ -190,8 +190,8 @@ function ControlPanel() {
         {algorithm.param}
       </div>
 
-      <div>
-        <button type="button" className="button" onClick={() => setOpen((o) => !o)}>
+      <div className ="InstructionPanel">
+        <button type="button" className="Instructionbutton" onClick={() => setOpen((o) => !o)}>
           Instructions
         </button>
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
