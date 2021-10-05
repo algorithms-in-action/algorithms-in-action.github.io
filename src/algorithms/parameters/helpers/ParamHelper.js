@@ -135,7 +135,7 @@ export const makeData = (len, min, max, symmetric) => {
     }
     arr.push(data);
   }
-  if (len === 4) {
+  if (len === 4 && symmetric !== true) {
     arr = [
       {
         col0: '0',
