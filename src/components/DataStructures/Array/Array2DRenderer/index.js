@@ -21,6 +21,7 @@
 
 import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
+import { motion, AnimateSharedLayout } from 'framer-motion';
 import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
@@ -157,17 +158,27 @@ class Array2DRenderer extends Renderer {
         {
           algo === 'prim' &&
           data.map((row, i) => (
-            i === 2 &&
-            <tr className={styles.row} key={i}>
-              {
-                row.map((col, j) => (
-                  <td className={classes(styles.col, styles.index)} key={j}>
-                    {col.selected && <span className={styles.value}>Min</span>}
-                  </td>
-
-                ))
-              }
-            </tr>
+            i === 2 && (
+                <AnimateSharedLayout>
+                <tr layout className={styles.row} key={i}>
+                {row.map((col, j) => (
+                    <td
+                    className={classes(styles.col, styles.variables)}
+                    key={j}>
+                    {col.variables.map((v) => (
+                        <motion.p
+                        layoutId={v}
+                        key={v}
+                        className={styles.variable}
+                        >
+                        {v}
+                        </motion.p>
+                    ))}
+                    </td>
+                ))}
+                </tr>
+            </AnimateSharedLayout>
+            )
           ))
         }
         </tbody>
