@@ -51,6 +51,7 @@ Quicksort(A, left, i - 1) \\B 3
 \\Code{
 QuicksortSecondHalf
 Quicksort(A, i + 1, right) \\B 4
+// Done \\B 19
 \\Code}
     
 \\Code{
