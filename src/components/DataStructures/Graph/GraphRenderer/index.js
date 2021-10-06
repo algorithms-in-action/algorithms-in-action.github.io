@@ -55,9 +55,10 @@ function calculateControlCord(x1, y1, x2, y2) {
   // Slope for line that perpendicular to (x1,y1) (x2,y2)
   const slope = -(x2 - x1) / (y2 - y1);
   let cx; let cy;
-  const direction = (x1 > y1) ? 1 : -1;
+  let direction = (y1 > y2) ? 1 : -1;
 
-  if (y1 - y2 < 1) {
+  if (Math.abs(y1 - y2) < 1) {
+    direction = (x1 > x2) ? 1 : -1;
     cx = (x2 + x1) / 2;
     cy = (y1 + y2) / 2 + direction * 30;
   } else {
