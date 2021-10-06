@@ -108,6 +108,7 @@ while i <= n  \\B 6
             far, given the attempted match starting with T[i] failed.
     \\Expl}
     \\In}
+\\In}  
 return NOT FOUND  // Signal that there was no match   \\B 10
 \\Code}
 
