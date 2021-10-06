@@ -70,22 +70,7 @@ class Array1DRenderer extends Array2DRenderer {
     animate={{ scale: this.zoom }}
     className={switchmode(mode())}
     >
-        <div>
-        {/* Indexes */}
-        <div className={styles.row} style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
-        {longestRow.map((_, i) => {
-          // if the graph instance is heapsort, then the array index starts from 1
-          if (algo === 'heapsort') {
-            i += 1;
-          }
-          return (
-                    <div className={classes(styles.col, styles.index)} key={i}>
-                    <span className={styles.value}>{i}</span>
-                    </div>
-          );
-        })}
-        </div>
+       
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
@@ -124,6 +109,25 @@ class Array1DRenderer extends Array2DRenderer {
             ))}
         </div>
         ))}
+
+<div>
+        {/* Indexes */}
+        <div className={styles.row} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+        {longestRow.map((_, i) => {
+          // if the graph instance is heapsort, then the array index starts from 1
+          if (algo === 'heapsort') {
+            i += 1;
+          }
+          return (
+                    <div className={classes(styles.col, styles.index)} key={i}>
+                    <span className={styles.value}>{i}</span>
+                    </div>
+          );
+        })}
+        </div>
+
+      
         {/* Variable pointers */}
         {data.map(
           (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
@@ -136,13 +140,13 @@ class Array1DRenderer extends Array2DRenderer {
                     key={`vars-${col.key}`}
                     >
                     {col.variables.map((v) => (
-                        <motion.p
+                        <motion.div
                         layoutId={v}
                         key={v}
                         className={styles.variable}
                         >
                         {v}
-                        </motion.p>
+                        </motion.div>
                     ))}
                     </div>
                 ))}
