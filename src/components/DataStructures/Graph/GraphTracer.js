@@ -458,7 +458,7 @@ class GraphTracer extends Tracer {
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
-    const hGap = 80;
+    const hGap = rect.width - 150;
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
