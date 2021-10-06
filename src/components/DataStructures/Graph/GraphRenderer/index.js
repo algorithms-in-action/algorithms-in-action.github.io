@@ -57,7 +57,7 @@ function calculateControlCord(x1, y1, x2, y2) {
   let cx; let cy;
   let direction = (y1 > y2) ? 1 : -1;
 
-  if (Math.abs(y1 - y2) < 1) {
+  if (Math.abs(y1 - y2) / Math.abs(x1 - x2) < 0.5) {
     direction = (x1 > x2) ? 1 : -1;
     cx = (x2 + x1) / 2;
     cy = (y1 + y2) / 2 + direction * 30;
