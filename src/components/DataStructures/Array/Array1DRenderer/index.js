@@ -22,10 +22,26 @@
 import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
 import { motion, AnimateSharedLayout } from 'framer-motion';
-import Array2DRenderer, { switchmode } from '../Array2DRenderer/index';
-import styles from '../Array2DRenderer/Array2DRenderer.module.scss';
+import Array2DRenderer, { } from '../Array2DRenderer/index';
+import styles from './Array1DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
+
+
+let modename;
+function switchmode(modetype = mode()) {
+  switch (modetype) {
+    case 1:
+      modename = styles.array_1d_green;
+      break;
+    case 2:
+      modename = styles.array_1d_blue;
+      break;
+    default:
+      modename = styles.array_1d;
+  }
+  return modename;
+}
 
 
 class Array1DRenderer extends Array2DRenderer {
@@ -40,65 +56,52 @@ class Array1DRenderer extends Array2DRenderer {
     const { data, algo } = this.props.data;
 
     const isArray1D = true;
-    // const isArray1D = this instanceof Array1DRenderer;
+    const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
+
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
     let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
-    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
+    let scaleY = ((largest, columnValue) => columnValue / largest * arrayMagnitudeScaleValue).bind(null, largestColumnValue);
     if (!this.props.data.arrayItemMagnitudes) {
       scaleY = () => 0;
     }
     return (
-    <motion.table
+    <motion.div
     animate={{ scale: this.zoom }}
     className={switchmode(mode())}
-    style={{
-      marginLeft: -this.centerX * 2,
-      borderCollapse: 'separate',
-      display: 'block',
-    }}
     >
-        <tbody>
-        {/* Indexes */}
-        <tr className={styles.row}>
-        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
-        {longestRow.map((_, i) => {
-          // if the graph instance is heapsort, then the array index starts from 1
-          if (algo === 'heapsort') {
-            i += 1;
-          }
-          return (
-                    <td className={classes(styles.col, styles.index)} key={i}>
-                    <span className={styles.value}>{i}</span>
-                    </td>
-          );
-        })}
-        </tr>
+
         {/* Values */}
         {data.map((row, i) => (
-                <tr className={styles.row} key={i}>
+                <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
             {!isArray1D && (
-                    <td className={classes(styles.col, styles.index)}>
+                    <div className={classes(styles.col, styles.index)}>
                     <span className={styles.value}>{i}</span>
-                    </td>
+                    </div>
             )}
+                {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
+            position: 'absolute',
+            width: '100%',
+            backgroundColor:
+            'orange',
+            opacity: 0.4,
+            height: '3px',
+            marginRight: '4px',
+            zIndex: 1,
+            bottom: `max(20px, ${this.toString(scaleY(col.value))}vh)`}}></div>)}
             {row.map((col) => (
-            <motion.td
+            <motion.div
                 layout
                 transition={{ duration: 0.6 }}
                 style={{
-                  borderLeft: '0',
-                  borderRight: '0',
-                  borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
-                  borderBottom: 0,
-                  backgroundClip: 'padding-box',
-                  padding: '0',
-                  position: 'relative',
+                  height: `${this.toString(scaleY(col.value))}vh`,
+                  display: 'flex',
                 }}
 
                 /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                 className={classes(
                   styles.col,
+                  col.faded && styles.faded,
                   col.selected && styles.selected,
                   col.patched && styles.patched,
                   col.sorted && styles.sorted,
@@ -106,53 +109,64 @@ class Array1DRenderer extends Array2DRenderer {
                 )}
                 key={col.key}
             >
-                <span className={classes(
-                  styles.value,
-                  col.style && col.style.textStyle,
-                )}>
+               <motion.span layout="position" className={classes(
+                 styles.value,
+                 col.style && col.style.textStyle,
+               )}>
                 {this.toString(col.value)}
-                </span>
-                <div
-                style={{
-                  position: 'absolute',
-                  width: '98%',
-                  top: '-0.4px',
-                  border: '0.1px solid gray',
-                  height: '100%',
-                  borderCollapse: 'separate',
-                }}
-                />
-            </motion.td>
+                </motion.span>
+
+            </motion.div>
             ))}
-        </tr>
+        </div>
         ))}
+
+<div>
+        {/* Indexes */}
+        <div className={styles.row} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+        {longestRow.map((_, i) => {
+          // if the graph instance is heapsort, then the array index starts from 1
+          if (algo === 'heapsort') {
+            i += 1;
+          }
+          return (
+                    <div className={classes(styles.col, styles.index)} key={i}>
+                    <span className={styles.value}>{i}</span>
+                    </div>
+          );
+        })}
+        </div>
+
+
         {/* Variable pointers */}
         {data.map(
           (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
             <AnimateSharedLayout>
-                <tr layout className={styles.row} key={i}>
+                <div layout className={styles.row} key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
+
                 {row.map((col) => (
-                    <td
+                    <div
                     className={classes(styles.col, styles.variables)}
                     key={`vars-${col.key}`}
                     >
                     {col.variables.map((v) => (
-                        <motion.p
+                        <motion.div
                         layoutId={v}
                         key={v}
                         className={styles.variable}
                         >
                         {v}
-                        </motion.p>
+                        </motion.div>
                     ))}
-                    </td>
+                    </div>
                 ))}
-                </tr>
+                </div>
             </AnimateSharedLayout>
           ),
         )}
-        </tbody>
-    </motion.table>
+        </div>
+    </motion.div>
     );
   }
 }

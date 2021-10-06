@@ -48,6 +48,14 @@ class Array1DTracer extends Array2DTracer {
     super.deselect(0, sx, 0, ex);
   }
 
+  fadeOut(sx, ex = sx) {
+    super.fadeOut(0, sx, 0, ex);
+  }
+
+  fadeIn(sx, ex = sx) {
+    super.fadeIn(0, sx, 0, ex);
+  }
+
   chart(key) {
     this.chartTracer = key ? this.getObject(key) : null;
     this.syncChartTracer();
@@ -89,6 +97,7 @@ class Array1DTracer extends Array2DTracer {
         newEl.patched = val.patched;
         newEl.selected = val.selected;
         newEl.sorted = val.sorted;
+        newEl.faded = val.faded;
         newEl.variables = val.variables;
         return newEl;
       }
