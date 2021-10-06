@@ -53,7 +53,7 @@ export default {
       chunker.add(14, (vis, index) => {
         highlight(vis, index);
       }, [mid]);
-      chunker.add(19, (vis, index) => {
+      chunker.add(20, (vis, index) => {
         highlight(vis, index, false);
       }, [left]);
       if (a[left] > a[mid]) {
@@ -62,14 +62,14 @@ export default {
         a[left] = a[mid];
         a[mid] = tmp;
         swapAction(15, left, mid);
-        chunker.add(20, (vis, index1, index2, index3) => {
+        chunker.add(21, (vis, index1, index2, index3) => {
           unhighlight(vis, index1);
           unhighlight(vis, index2, false);
           highlight(vis, index2);
           highlight(vis, index3, false);
         }, [left, mid, right]);
       } else {
-        chunker.add(20, (vis, index1, index2) => {
+        chunker.add(21, (vis, index1, index2) => {
           unhighlight(vis, index1, false);
           highlight(vis, index2, false);
         }, [left, right]);
@@ -80,7 +80,7 @@ export default {
         a[right] = a[mid];
         a[mid] = tmp;
         swapAction(16, right, mid);
-        chunker.add(21, (vis, index1, index2, index3) => {
+        chunker.add(22, (vis, index1, index2, index3) => {
           unhighlight(vis, index1, false);
           unhighlight(vis, index2);
           highlight(vis, index1);
@@ -117,6 +117,7 @@ export default {
       swapAction(18, mid, right - 1);
       // assign pivot
       const pivot = a[right - 1];
+
       chunker.add(5);
 
 
@@ -162,9 +163,24 @@ export default {
         [p, a] = partition(a, left, right);
         // const leftArray = a.slice(left, p);
         // const rightArray = a.slice(p + 1, right + 1);
-        chunker.add(3);
+        chunker.add(3, (vis, pivot, arrayLen) => {
+          // fade out the part of the array that is not being sorted (i.e. right side)
+          for (let i=pivot; i < arrayLen; i++){
+            vis.array.fadeOut(i)
+          }
+        }, [p, right+1]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
-        chunker.add(4);
+
+        chunker.add(4, (vis, pivot, arrayLen) => {
+          // fade out the part of the array that is not being sorted (i.e. left side)
+          for (let i=0; i <= pivot; i++){
+            vis.array.fadeOut(i)
+          }
+          // fade in part of the array that is now being sorted (i.e. right side)
+          for (let i=pivot+1; i < arrayLen; i++){
+            vis.array.fadeIn(i)
+          }
+        }, [p, right+1]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
       }
       // array of size 1, already sorted
@@ -183,6 +199,10 @@ export default {
       },
       [nodes],
     );
-    return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    // Fade out final node
+    chunker.add(19, (vis, idx) => {
+      vis.array.fadeOut(idx)
+    }, [nodes.length - 1]);
   },
 };

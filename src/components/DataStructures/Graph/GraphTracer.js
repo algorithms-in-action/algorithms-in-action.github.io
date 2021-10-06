@@ -194,8 +194,8 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+          x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+          isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
@@ -467,7 +467,7 @@ class GraphTracer extends Tracer {
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
-    const hGap = 80;
+    const hGap = rect.width - 150;
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {

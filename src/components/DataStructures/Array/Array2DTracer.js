@@ -85,6 +85,24 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  // Set opacity to 0.3
+  fadeOut(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].faded = true;
+      }
+    }
+  }
+
+  // Set opacity to 1
+  fadeIn(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].faded = false;
+      }
+    }
+  }
+
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {

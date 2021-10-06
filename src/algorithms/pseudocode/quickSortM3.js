@@ -51,6 +51,7 @@ Quicksort(A, left, i - 1) \\B 3
 \\Code{
 QuicksortSecondHalf
 Quicksort(A, i + 1, right) \\B 4
+// Done \\B 19
 \\Code}
     
 \\Code{
@@ -74,14 +75,14 @@ pivot <- A[right-1] \\B 5
 \\Code{
 SortLMR
 mid <- (left+right)/2 // index of middle element \\B 14
-if A[left] > A[mid] \\B 19
+if A[left] > A[mid] \\B 20
 \\In{
     Swap(A[left], A[mid]) \\B 15
 \\In}
-if A[mid] > A[right] \\B 20
+if A[mid] > A[right] \\B 21
 \\In{
     Swap(A[right], A[mid]) \\B 16
-    if A[left] > A[mid] \\B 21
+    if A[left] > A[mid] \\B 22
     \\In{
         Swap(A[left], A[mid]) \\B 17
     \\In}
