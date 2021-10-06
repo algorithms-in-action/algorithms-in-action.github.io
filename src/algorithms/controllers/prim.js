@@ -261,6 +261,7 @@ export default {
         3,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
+          vis.graph.visit(n1, n1);
         },
         [i, newEdges]
       );
