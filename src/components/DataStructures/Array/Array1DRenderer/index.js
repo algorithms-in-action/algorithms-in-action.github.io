@@ -79,6 +79,16 @@ class Array1DRenderer extends Array2DRenderer {
                     <span className={styles.value}>{i}</span>
                     </div>
             )}
+                {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
+            position: 'absolute', 
+            width: '100%',
+            backgroundColor: 
+            'orange',
+            opacity: 0.4,
+            height: '3px',
+            marginRight: '4px',
+            zIndex: 1,
+            bottom: `max(20px, ${this.toString(scaleY(col.value))}vh)`}}></div>)}
             {row.map((col) => (
             <motion.div
                 layout

@@ -5,6 +5,7 @@
 
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
+        position: relative;
 
         .col {
             justify-content: center;
@@ -100,7 +101,7 @@
 
             &.faded {
                 opacity: 0.2
-              }
+            }
 
 
         }
