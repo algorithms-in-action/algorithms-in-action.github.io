@@ -149,7 +149,7 @@ function BSTParam() {
           setMessage={setMessage}
         />
       </div>
-      Choose type of tree: &nbsp;&nbsp;
+      <span className="generalText">Choose type of tree: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={
           <BlueRadio

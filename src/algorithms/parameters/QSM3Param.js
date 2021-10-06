@@ -42,14 +42,14 @@ function QuicksortM3Param() {
     switch (e.target.name) {
       case 'rightmost':
         // setNodes(shuffleArray(nodes));
-        break
+        break;
       case 'medianofthree':
         // setNodes([...nodes].sort((a, b) => a - b));
-        break
+        break;
       default:
     }
 
-    setQSM3Case({ ...UNCHECKED, [e.target.name]: true })
+    setQSM3Case({ ...UNCHECKED, [e.target.name]: true });
   }
 
   return (
@@ -67,7 +67,7 @@ function QuicksortM3Param() {
           setMessage={setMessage}
         />
       </div>
-      Choose pivot using : &nbsp;&nbsp;
+      <span className="generalText">Choose pivot using : &nbsp;&nbsp;</span>
       {/* create a checkbox for Rightmost */}
       <FormControlLabel
         control={
