@@ -100,11 +100,13 @@ class GraphRendererRect extends Renderer {
     let PatternLen = 0;
     let FinalPostion = 0;
     let startpostion = nodes[0].x-2*nodeRadius;
+    let algorithmName = "";
 
     if(nodes.length>1){
       StringLen = nodes[1].StringLen;
       PatternLen = nodes[1].PatternLen;
       if(nodes[1].algorithmName==="bfsSearch"){
+        algorithmName = "bfsSearch";
         FinalPostion = nodes[StringLen-PatternLen].x;
       }
     }
@@ -143,8 +145,8 @@ class GraphRendererRect extends Renderer {
     }
 
     let highlightid = -1;
-    let highlighty = smly 
-    
+    let horspoolid = nodes[nodes.length-1].id;
+    let highlighty = smly;
     for (let ii = 0; ii < nodes.length; ii++) {    // hl with lgr visit / lgr selectlimit
       // if (nodes[ii].visitedCount === 1){
       //   highlightid = nodes[ii].id
@@ -155,9 +157,8 @@ class GraphRendererRect extends Renderer {
       if(highlightid>=0){
         highlighty = nodes[highlightid].y
       }
-    }    
+    }
 
-    
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -237,15 +238,10 @@ class GraphRendererRect extends Renderer {
                   {this.toString(weight)}
                 </text>
               )}
-              {(id === nodeid && highlightid <0?
-              <><text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text>
-                <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text></>
-                :<></>)}
-              {
-              (id === highlightid && highlightid >=0? 
-              <><text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text>
-                <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text></>
-                :<></>)
+              {(id === nodeid && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
+              {(id === horspoolid && algorithmName !== "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
+              {(id === nodeid && highlightid <0?<text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
+              {(id === highlightid && highlightid >=0? <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)
               }
             </motion.g>
           );
