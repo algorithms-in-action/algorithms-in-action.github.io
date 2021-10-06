@@ -30,8 +30,7 @@ export default {
         // initial state
         const searchString = nodes[0];
         const findString = nodes[1];
-        
-        const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
+        const shiftTable=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','space'];
         const shiftTableValue=new Array(shiftTable.length).fill(findString.length);
         // searchString and findString are stored in the same array
         // to get element in findString, add the length of searchString to the index
@@ -69,13 +68,22 @@ export default {
             
             //【j pointer】
             //【Pattern select】
-            shiftTableValue[shiftTable.indexOf(findString[j].toUpperCase())]=findString.length-(j+1);
+            let c = findString[j].toLowerCase()
+            if (c===" ")
+            {
+                c='space';
+            }
+            
+            shiftTableValue[shiftTable.indexOf(c)]=findString.length-(j+1);
+            
             chunker.add('4', (vis,j) => {
-                vis.array.patch(shiftTable.indexOf(findString[j].toUpperCase()),1,findString.length-(j+1));
+                vis.graph.select(searchString.length+j);
+                vis.array.patch(shiftTable.indexOf(c),1,findString.length-(j+1));
             },[j]);
 
             chunker.add('3', (vis,j) => {
-                vis.array.depatch(shiftTable.indexOf(findString[j].toUpperCase()),1);
+                vis.graph.deselect(searchString.length+j);
+                vis.array.depatch(shiftTable.indexOf(c),1);
             },[j]);
           
         }
@@ -94,8 +102,12 @@ export default {
 
         
         for (let shift_i = m;shift_i < searchString.length + 1;shift_i +=shift_distance) {
-            
-            shift_distance = shiftTableValue[shiftTable.indexOf(searchString[shift_i-1].toUpperCase())];
+            let c =searchString[shift_i-1].toLowerCase();
+            if (c===" ")
+            {
+                c="space";
+            }
+            shift_distance = shiftTableValue[shiftTable.indexOf(c)];
             shift_list.push(shift_cur+shift_distance);
             shift_ilist.push(shift_distance);
             shift_cur=shift_cur+shift_distance;
