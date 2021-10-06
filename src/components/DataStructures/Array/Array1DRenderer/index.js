@@ -72,7 +72,7 @@ class Array1DRenderer extends Array2DRenderer {
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                {row.filter((col) => col.variables.includes('p')).map((col)=><div className={styles.test} style={{
+                {row.filter((col) => col.variables.includes('p')).map((col)=><div className={styles.pivotLine} style={{
                 bottom: `max(20px, ${this.toString(scaleY(col.value))}vh)`}}/>)}
             {row.map((col) => (
             <motion.div
