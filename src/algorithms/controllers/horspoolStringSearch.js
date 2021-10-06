@@ -144,7 +144,7 @@ export default {
                     // select - character matches, coloured in red
                     chunker.add('9', (vis, i, j, n) => {
                         //window.alert("it is a equal2");
-                        const ResultStr = `Search Successful : The pattern(${findString}) is placed at postion ${i-j} of Search String(${searchString})`;
+                        const ResultStr = `Success: pattern found position ${i-j}`;
                         // method1
                         vis.graph.addResult(ResultStr, i);
                     }, [shift_i, shift_j, nodes]);
@@ -165,7 +165,7 @@ export default {
 
         }
         chunker.add('10', (vis) => {
-            const ResultStr = `Search Fail `;
+            const ResultStr = "Pattern not found";
             vis.graph.addResult(ResultStr, i);
         }, []);
     }

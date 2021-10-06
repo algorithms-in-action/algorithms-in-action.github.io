@@ -86,7 +86,7 @@ export default {
         } else if (shift_j === findString.length - 1) {
           // eslint-disable-next-line no-unused-vars
           chunker.add('5', (vis, i, j, n) => {
-            const ResultStr = `Search Successful : The pattern(${findString}) is placed at postion ${i} of Search String(${searchString})`;
+            const ResultStr = `Success: pattern found position ${i}`;
             // method1
             vis.graph.addResult(ResultStr, i);
             // method 2：
@@ -106,7 +106,7 @@ export default {
     }
     let i=findString.length;
     chunker.add('6', (vis, i, n) => {
-      const ResultStr = "Search Fail ";
+      const ResultStr = "Pattern not found";
       vis.graph.addResult(ResultStr, i);
     }, [i, nodes]);
   },
