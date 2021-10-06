@@ -82,24 +82,24 @@ for j <- 1 to m-1  \\B 3
 
 \\Code{
 Search
-i <- m
-while i <= n   \\B 5
+i <- m  \\B 5
+while i <= n  \\B 6
 \\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
 \\Expl}
 \\In{
     j <- 0
-    while j < m and P[m-j] = T[i-j]
+    while j < m and P[m-j] = T[i-j] \\B 7
     \\Expl{ These characters match.
     \\Expl} \t\t
     \\In{
-        j <= j + 1
+        j <= j + 1 \\B 8
     \\In}
     \\Expl{  So move back one character and keep trying to match.
     \\Expl} 
     if j = m
     \\In{
         // we have a match
-        return i - m + 1  // start of the match
+        return i - m + 1  // start of the match \\B 9
     \\In}
     else
     \\In{
@@ -108,7 +108,7 @@ while i <= n   \\B 5
             far, given the attempted match starting with T[i] failed.
     \\Expl}
     \\In}
-return NOT FOUND  // Signal that there was no match
+return NOT FOUND  // Signal that there was no match   \\B 10
 \\Code}
 
 \\Note{  The following is an implementation in C:

@@ -104,5 +104,10 @@ export default {
         }
       }
     }
+    let i=findString.length;
+    chunker.add('6', (vis, i, n) => {
+      const ResultStr = "Search Fail ";
+      vis.graph.addResult(ResultStr, i);
+    }, [i, nodes]);
   },
 };
