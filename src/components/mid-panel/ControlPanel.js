@@ -191,9 +191,7 @@ function ControlPanel() {
       </div>
 
       <div className ="InstructionPanel">
-        <button type="button" className="Instructionbutton" onClick={() => setOpen((o) => !o)}>
-          Instructions
-        </button>
+        
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
             <a className="close" onClick={closeModal}>
