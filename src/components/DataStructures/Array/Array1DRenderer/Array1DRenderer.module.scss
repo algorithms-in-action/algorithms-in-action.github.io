@@ -6,6 +6,7 @@
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
         position: relative;
+        --array-1d-minimum-height: 10px;
 
         .pivotLine {
             position: absolute;
@@ -24,7 +25,7 @@
             text-align: center;
             min-width: 8px;
             width: 28px;
-            min-height: 20px;
+            min-height: var(--array-1d-minimum-height);
             background-color: var(--array-2d-row-col-bg);
             border: 1px solid var(--array-2d-row-col-border);
             padding: 0 4px;
