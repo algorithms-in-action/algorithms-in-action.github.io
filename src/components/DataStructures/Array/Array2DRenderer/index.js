@@ -25,7 +25,6 @@ import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
-import { motion } from 'framer-motion';
 
 let modename;
 export function switchmode(modetype = mode()) {
@@ -55,12 +54,6 @@ class Array2DRenderer extends Renderer {
 
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
-    let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
-    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
-    if (!this.props.data.arrayItemMagnitudes) {
-      scaleY = () => 0;
-    }
-
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     return (
       <table className={switchmode(mode())}
@@ -107,51 +100,15 @@ class Array2DRenderer extends Renderer {
                   <span className={styles.value}>{i}</span>
                 </td>
               }
-              {row.map((col) => (
-                <motion.td
-                  layout
-                  transition={{ duration: 0.6 }}
-                  style={{
-                    borderLeft: '0',
-                    borderRight: '0',
-                    borderTop: `${this.toString(scaleY(largestColumnValue - col.value))}px rgba(0,0,0,0) solid`,
-                    borderBottom: 0,
-                    backgroundClip: 'content-box',
-                    padding: '0',
-                    position: 'relative',
-                  }}
-
-                  className={classes(
-                    styles.col,
-                    col.faded && styles.faded,
-                    col.selected && styles.selected,
-                    col.patched && styles.patched,
-                    col.sorted && styles.sorted,
-                    col.style && col.style.backgroundStyle,
-                    col.selected1 && styles.selected1,
-                    col.selected2 && styles.selected2,
-                    col.selected3 && styles.selected3
-                  )}
-                  key={col.key}
-                >
-                  <span className={classes(
-                    styles.value,
-                    col.style && col.style.textStyle,
-                  )}>
-                    {this.toString(col.value)}
-                  </span>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '98%',
-                      top: '-0.4px',
-                      border: '0.1px solid gray',
-                      height: '100%',
-                      borderCollapse: 'separate',
-                    }}
-                  />
-                </motion.td>
-              ))}
+              {
+                row.map((col, j) => (
+                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched,
+                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, col.selected3 && styles.selected3)}
+                      key={j}>
+                    <span className={styles.value}>{this.toString(col.value)}</span>
+                  </td>
+                ))
+              }
             </tr>
           ))
         }
