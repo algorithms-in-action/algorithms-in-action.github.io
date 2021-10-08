@@ -21,8 +21,8 @@ import Array2DRenderer from './Array2DRenderer';
 export class Element {
   constructor(value, key) {
     this.value = value;
-    this.patched = false;
-    this.selected = false;
+    this.patched = 0;
+    this.selected = 0;
     this.sorted = false;
     this.key = key;
     this.variables = [];
@@ -47,11 +47,11 @@ class Array2DTracer extends Tracer {
   patch(x, y, v = this.data[x][y].value) {
     if (!this.data[x][y]) this.data[x][y] = new Element();
     this.data[x][y].value = v;
-    this.data[x][y].patched = true;
+    this.data[x][y].patched++;
   }
 
   depatch(x, y, v = this.data[x][y].value) {
-    this.data[x][y].patched = false;
+    this.data[x][y].patched--;
     this.data[x][y].value = v;
   }
 
@@ -66,7 +66,7 @@ class Array2DTracer extends Tracer {
       for (let y = sy; y <= ey; y++) {
         switch (c) {
           case '0':
-            this.data[x][y].selected = true;
+            this.data[x][y].selected++;
             break;
           case '1':
             this.data[x][y].selected1 = true;
@@ -93,7 +93,7 @@ class Array2DTracer extends Tracer {
       }
     }
   }
-  
+
   // Set opacity to 1
   fadeIn(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
@@ -103,15 +103,11 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  
-
-
-
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
+        this.data[x][y].selected++;
         this.data[x][y].style = style;
       }
     }
@@ -128,7 +124,7 @@ class Array2DTracer extends Tracer {
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = false;
+        this.data[x][y].selected--;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
