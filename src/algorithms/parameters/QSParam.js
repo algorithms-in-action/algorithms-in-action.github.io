@@ -10,13 +10,13 @@ import { GlobalActions } from '../../context/actions'
 import ListParam from './helpers/ListParam'
 import '../../styles/Param.scss'
 
-const DEFAULT_ARR = genRandNumList(12, 1, 99)
-const QUICK_SORT = 'Quick Sort'
-const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4'
+const DEFAULT_ARR = genRandNumList(12, 1, 99);
+const QUICK_SORT = 'Quick Sort';
+const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
   rightmost: false,
   medianofthree: false,
-}
+};
 
 const BlueRadio = withStyles({
   root: {
