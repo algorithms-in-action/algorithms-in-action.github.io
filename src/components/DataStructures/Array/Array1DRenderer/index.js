@@ -79,8 +79,8 @@ class Array1DRenderer extends Array2DRenderer {
                     <span className={styles.value}>{i}</span>
                     </div>
             )}
-                {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
-            position: 'absolute',
+                {row.filter((col) => col.variables.includes('pivot')).map((col)=><div style={{
+            position: 'absolute', 
             width: '100%',
             backgroundColor:
             'orange',
@@ -155,6 +155,7 @@ class Array1DRenderer extends Array2DRenderer {
                         layoutId={v}
                         key={v}
                         className={styles.variable}
+                        style={{fontSize: v.length > 2 ? '12px' : null}}
                         >
                         {v}
                         </motion.div>

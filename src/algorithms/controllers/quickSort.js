@@ -51,7 +51,7 @@ export default {
       const pivot = a[right];
       chunker.add(5, (vis, p) => {
         highlight(vis, p);
-        vis.array.assignVariable('p', p);
+        vis.array.assignVariable('pivot', p);
       }, [right]);
       chunker.add(11, (vis, i1) => {
         if (i1 >= 0) {
