@@ -70,7 +70,7 @@ class Array1DRenderer extends Array2DRenderer {
     animate={{ scale: this.zoom }}
     className={switchmode(mode())}
     >
-       
+
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
@@ -82,7 +82,7 @@ class Array1DRenderer extends Array2DRenderer {
                 {row.filter((col) => col.variables.includes('pivot')).map((col)=><div style={{
             position: 'absolute', 
             width: '100%',
-            backgroundColor: 
+            backgroundColor:
             'orange',
             opacity: 0.4,
             height: '3px',
@@ -138,7 +138,7 @@ class Array1DRenderer extends Array2DRenderer {
         })}
         </div>
 
-      
+
         {/* Variable pointers */}
         {data.map(
           (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
