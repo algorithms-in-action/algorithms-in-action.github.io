@@ -94,10 +94,10 @@ class Array1DTracer extends Array2DTracer {
     function customizer(val) {
       if (val instanceof Element) {
         const newEl = new Element(val.value, val.key);
-        if (val.patched) newEl.patched = true;
-        if (val.selected) newEl.selected = true;
-        if (val.sorted) newEl.sorted = true;
-        if (val.faded) newEl.faded = true;
+        newEl.patched = val.patched;
+        newEl.selected = val.selected;
+        newEl.sorted = val.sorted;
+        newEl.faded = val.faded;
         newEl.variables = val.variables;
         return newEl;
       }
@@ -116,10 +116,9 @@ class Array1DTracer extends Array2DTracer {
     // update this.data
     this.data = newData;
   }
-  stringTheContent(){
+  stringTheContent() {
     return this.data;
   }
-
 }
 
 export default Array1DTracer;

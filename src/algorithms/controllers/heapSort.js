@@ -65,10 +65,6 @@ export default {
       chunker.add(b, (vis, _n1, _n2) => {
         vis.heap.swapNodes(_n1 + 1, _n2 + 1);
         vis.array.swapElements(_n1, _n2);
-        unhighlight(vis, _n1);
-        highlight(vis, _n1, false);
-        unhighlight(vis, _n2, false);
-        highlight(vis, _n2);
       }, [n1, n2]);
     };
 
