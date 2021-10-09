@@ -7,6 +7,16 @@
         margin-bottom: m#{i}n(8px, 1vh);
         position: relative;
 
+        .pivotLine {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background-color: orange;
+            opacity: 0.4;
+            margin-right: 4px;
+            z-index: 1;
+        }
+
         .col {
             justify-content: center;
             align-items: center;
