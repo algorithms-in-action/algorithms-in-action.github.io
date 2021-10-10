@@ -18,12 +18,13 @@
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
     }
-
+    
     .id {
       fill: var(--graph-node-id-fill);
-      alignment-baseline: central;
+      dominant-baseline: central;
       text-anchor: middle;
     }
+    
 
     .weight {
       fill: var(--graph-node-weight-fill);
