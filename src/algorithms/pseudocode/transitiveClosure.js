@@ -26,9 +26,8 @@ export default parse(`
         \\Expl{ When A[i,k] is 0 (that is, there is no path from i to k), k
           cannot possibly be a stepping stone in the path from i to j,
           so we do not explore whether there is a path from k to j.
-        \\Expl}
-        //find all nodes reachable from i via k
-        Reachable \\Ref Collapse
+        \\Expl}      
+        Find all nodes reachable from i via k \\Ref Collapse
       \\In}
     \\In}
   \\In}

@@ -631,6 +631,11 @@ class GraphTracer extends Tracer {
     node.selectedCount = 0;
   }
 
+  isInterConnected(source, target) {
+    return this.edges.find(edge => edge.source === source && edge.target === target)
+        && this.edges.find(edge => edge.source === target && edge.target === source);
+  }
+
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
   }

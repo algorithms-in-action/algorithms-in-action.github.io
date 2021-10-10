@@ -12,11 +12,11 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Prim'),
+        instance: new GraphTracer('graph', null, 'Graph view'),
         order: 0,
       },
       array: {
-        instance: new Array2DTracer('array', null, 'Priority Queue'),
+        instance: new Array2DTracer('array', null, 'Parent array & Priority Queue'),
         order: 1,
       },
     };
@@ -109,7 +109,7 @@ export default {
           cost[j] = w;
           if (pqCost[j + 1] === Infinity) {
             pqCost[j + 1] = `${cost[j].toString()}<∞`;
-          } else {
+          } else if (cost[j] !== null && pqCost[j + 1] != null) {
             pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
           }
           chunker.add(
@@ -118,6 +118,7 @@ export default {
                 vis.array.set(v, 'prim');
                 if (v[2][u] != null) {
                   vis.array.select(2, u);
+                  vis.array.assignVariable('Min', 2, u);
                 }
               },
               [[pqDisplay, prevNode, pqCost], miniIndex]
@@ -131,6 +132,7 @@ export default {
                 vis.array.set(v, 'prim');
                 if (v[2][u] != null) {
                   vis.array.select(2, u);
+                  vis.array.assignVariable('Min', 2, u);
                 }
               },
               [[pqDisplay, prevNode, pqCost], miniIndex]
@@ -148,6 +150,7 @@ export default {
               vis.array.deselect(2, u);
               if (w[v] !== null) {
                 vis.array.select(2, v);
+                vis.array.assignVariable('Min', 2, v);
               }
             },
             [preIndex, miniIndex, pqCost]
@@ -160,6 +163,7 @@ export default {
             (vis, u, v) => {
               vis.array.set(u, 'prim');
               vis.array.select(2, v);
+              vis.array.assignVariable('Min', 2, v);
             },
             [[pqDisplay, prevNode, pqCost], miniIndex]
           );
@@ -176,9 +180,9 @@ export default {
       pending[i] = 1;
     }
     cost[0] = 0;
-    pqCost.push('Cost');  // initialize the pq cost
-    pqDisplay.push('Node'); // initialize the pq display
-    prevNode.push('Prev'); // initialize the prev list
+    pqCost.push('Priority Queue[i]');  // initialize the pq cost
+    pqDisplay.push('i'); // initialize the pq display
+    prevNode.push('Parent[i]'); // initialize the prev list
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
@@ -194,6 +198,16 @@ export default {
         (vis, v, w) => {
           vis.array.set(v, 'prim');
           vis.array.select(2, w);
+          vis.array.assignVariable('Min', 2, w);
+        },
+        [[pqDisplay, prevNode, pqCost], miniIndex]
+    );
+    chunker.add(
+        3,
+        (vis, v, w) => {
+          vis.array.set(v, 'prim');
+          vis.array.select(2, w);
+          vis.array.assignVariable('Min', 2, w);
         },
         [[pqDisplay, prevNode, pqCost], miniIndex]
     );
@@ -219,6 +233,7 @@ export default {
             vis.array.deselect(2, u);
             if (u !== w && v[2][w] !== null) {
               vis.array.select(2, w);
+              vis.array.assignVariable('Min', 2, w);
             }
           },
           [[pqDisplay, prevNode, pqCost], miniIndex, prevIndex, i, prev[i], miniIndex]

@@ -187,9 +187,23 @@ export const GlobalActions = {
   // run next line of code
   NEXT_LINE: (state, playing) => {
     let result;
+
+    let triggerPauseInCollapse = false;
+    if(typeof playing === 'object'){
+      triggerPauseInCollapse = playing.triggerPauseInCollapse;
+      playing = playing.playing;
+    }
+
     do {
-      result = state.chunker.next();
-    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
+      result = state.chunker.next(triggerPauseInCollapse);
+      if(!triggerPauseInCollapse){
+        result.pauseInCollapse = false;
+      }
+    } while (
+      !result.pauseInCollapse &&
+      !result.finished && 
+      !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark)
+    );
     if (result.finished) {
       previousState = [];
     }

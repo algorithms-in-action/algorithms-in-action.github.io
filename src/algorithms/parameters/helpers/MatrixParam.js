@@ -11,7 +11,7 @@ import {
   makeData,
   singleNumberValidCheck,
   errorParamMsg,
-  successParamMsg,
+  successParamMsg, matrixValidCheck,
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -46,6 +46,7 @@ function MatrixParam({
   setMessage,
   ALGORITHM_NAME,
   EXAMPLE,
+  EXAMPLE2,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -114,6 +115,13 @@ function MatrixParam({
     });
 
     if (matrix.length !== size || matrix[0].length !== size) return [];
+    if (name === 'prim') {
+      if (matrixValidCheck(matrix) === false) {
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+        // eslint-disable-next-line consistent-return
+        return [];
+      }
+    }
 
     return matrix;
   };
@@ -158,7 +166,7 @@ function MatrixParam({
         </button>
       </div>
 
-      <Table columns={columns} data={data} updateData={updateData} />
+      <Table columns={columns} data={data} updateData={updateData} algo={name} />
     </div>
   );
 }
