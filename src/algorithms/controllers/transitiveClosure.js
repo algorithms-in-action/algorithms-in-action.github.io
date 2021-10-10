@@ -7,8 +7,8 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 // import the 2D tracer to generate an array that stores the matrix in 2D format
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import './transitiveClosureCollapseChunkPlugin';
-import {runChunkWithCheckCollapseState, releaseChunkCache, runChunkWithEnterCollapse} from './transitiveClosureCollapseChunkPlugin';
+import { runChunkWithCheckCollapseState, releaseChunkCache, runChunkWithEnterCollapse } from './transitiveClosureCollapseChunkPlugin';
+
 
 export default {
   initVisualisers() {
@@ -67,7 +67,7 @@ export default {
           chunker.add(4, (g, i, k) => {
             g.array.deselect(i, k, i, k);
             g.array.select(i, k);
-            g.graph.setPointerNode(i, 'i', k, 'k');
+            // g.graph.setPointerNode(i, 'i', k, 'k');
           }, [i, k]); // move along columns
         } else {
           chunker.add(4, (g, i, k) => {
@@ -76,7 +76,7 @@ export default {
             g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
-            g.graph.setPointerNode(i, 'i', k, 'k');
+            // g.graph.setPointerNode(i, 'i', k, 'k');
           }, [i, k]);
 
           // run the third for loop
@@ -89,7 +89,7 @@ export default {
               chunker.add(6, (g, k, j) => {
                 g.array.deselect(k, j, k, j);
                 g.array.select(k, j, k, j, '1');
-                g.graph.setPointerNode(j, 'j');
+                // g.graph.setPointerNode(j, 'j');
               }, [k, j]); // move along rows (green)
             } else {
               chunker.add(6, (g, j, k) => {
@@ -97,7 +97,7 @@ export default {
                 g.array.deselect(k, j, k, j);
                 g.array.select(k, j, k, j, '1');
                 g.graph.visit1(j, k, 1);
-                g.graph.setPointerNode(j, 'j');
+                // g.graph.setPointerNode(j, 'j');
               }, [j, k]);
 
               chunker.add(7, (g, i, j) => {
@@ -114,20 +114,21 @@ export default {
 
               if (i !== j || j !== k) {
                 chunker.add(7, (g, i, k, j) => {
-                  runChunkWithCheckCollapseState(()=>{
+                  runChunkWithCheckCollapseState(() => {
                     // remove green
                     g.array.deselect(k, j, k, j);
                     g.array.select(k, j, k, j, '3');
                     g.graph.leave1(j, k);
-                    g.graph.unsetPointerNode(j, 'j');
-                  })
+                    // g.graph.unsetPointerNode(j, 'j');
+                  });
                 }, [i, k, j]);
               }
 
               chunker.add(7, (g, i, j, k) => {
-                runChunkWithCheckCollapseState(()=>{
+                runChunkWithCheckCollapseState(() => {
                   // leave the node (i,j) to move to the next node
                   // g.graph.leave(j, i);
+                  // eslint-disable-next-line max-len
                   // remove highlighting from the node (i,j) in the matrix to move to the next element
                   if (j !== k) {
                     // g.array.deselect(i, j);
@@ -136,7 +137,7 @@ export default {
                   }
                   // g.graph.leave(j, k);
                   // if(j === size - 1)return 5
-                })
+                });
               }, [i, j, k]);
 
               for (let a = k; a < numOfNodes; a++) {
@@ -145,38 +146,38 @@ export default {
             }
             if (i !== j || j !== k) {
               chunker.add(5, (g, i, k, j) => {
-                runChunkWithCheckCollapseState(()=>{
+                runChunkWithCheckCollapseState(() => {
                   // remove green
                   g.array.deselect(k, j, k, j);
                   g.array.select(k, j, k, j, '3');
                   g.graph.leave1(j, k);
-                  g.graph.unsetPointerNode(j, 'j');
+                  // g.graph.unsetPointerNode(j, 'j');
                   // if(j === size - 1) {return true}
-                })
+                });
               }, [i, k, j]);
             }
           }
-          chunker.add({bookmark: 3, pauseInCollapse: true}, (g, i, k) => {
+          chunker.add({ bookmark: 3, pauseInCollapse: true }, (g, i, k) => {
             releaseChunkCache();
             // leave the node (i,k) to move to the next node
             // remove blue
             g.graph.leave(k, i);
             g.graph.leave(i);
-            g.graph.unsetPointerNode(i, 'i');
+            // g.graph.unsetPointerNode(i, 'i');
             // if(i === size-1) return 2
           }, [i, k]);
         }
         chunker.add(3, (g, i, k) => {
           g.array.deselect(i, k);
           g.array.select(i, k, i, k, '2');
-          g.graph.unsetPointerNode(i, 'i');
+          // g.graph.unsetPointerNode(i, 'i');
           // if(i === size-1) return 2
         }, [i, k]);
       }
       chunker.add(2, (g, k) => {
         g.array.deselectRow(k, 0, numOfNodes - 1);
         g.array.deselectCol(k, 0, numOfNodes - 1);
-        g.graph.unsetPointerNode(k, 'k');
+        // g.graph.unsetPointerNode(k, 'k');
       }, [k]);
     }
   },
