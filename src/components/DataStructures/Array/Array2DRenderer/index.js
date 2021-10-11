@@ -123,10 +123,14 @@ class Array2DRenderer extends Renderer {
                 ))
               }
               {
-                (pointer &&
+                pointer && algo === 'tc' &&
                 <th className={classes(styles.col, styles.index)}>
                     <span className={styles.value}> i </span>
-                </th>) || <td className={classes(styles.col, styles.index)} />
+                </th> || algo === 'prim' && i === 2 &&
+                <th className={classes(styles.col, styles.index)}>
+                    <span className={styles.value}> Priority Queue </span>
+                </th> ||
+                <td className={classes(styles.col, styles.index)} />
               }
             </tr>
             );
