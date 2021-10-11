@@ -180,7 +180,7 @@ export default {
       pending[i] = 1;
     }
     cost[0] = 0;
-    pqCost.push('Priority Queue[i]');  // initialize the pq cost
+    pqCost.push('Cost[i]');  // initialize the pq cost
     pqDisplay.push('i'); // initialize the pq display
     prevNode.push('Parent[i]'); // initialize the prev list
     for (i = 0; i < n; i += 1) {
@@ -261,6 +261,7 @@ export default {
         3,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
+          vis.graph.visit(n1, n1);
         },
         [i, newEdges]
       );
