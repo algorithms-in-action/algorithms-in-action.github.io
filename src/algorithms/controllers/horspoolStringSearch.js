@@ -91,6 +91,7 @@ export default {
         let shift_list = new Array();
         let shift_ilist= new Array();
         let shift_cur=0;
+        let shift_pre=0;
 
         
         for (let shift_i = m;shift_i < searchString.length + 1;shift_i +=shift_distance) {
@@ -100,11 +101,14 @@ export default {
             shift_ilist.push(shift_distance);
             shift_cur=shift_cur+shift_distance;
           }
-        
-        //window.alert("the ilist is : "+shift_ilist); 
+
         //Start Searching
         for (let shift_i = m; shift_i < searchString.length + 1; shift_i+=shift_ilist.shift()) {
-            
+            chunker.add('10', (vis,j) => {
+                if(j !== -1){
+                    vis.array.depatch(shiftTable.indexOf(searchString[j].toUpperCase()),1);
+                }
+            }, [shift_pre-1]);
             
             for (let shift_j = 0; shift_j < findString.length; shift_j++) {
                 
@@ -155,16 +159,17 @@ export default {
                     }, [shift_i, shift_j, nodes]);
                 }
             }
-            chunker.add('6', (vis, i, n) => {
+            chunker.add('6', (vis, i, j, n) => {
                 if(i+m<=searchString.length){
                      //window.alert("the i is:"+i);
                      vis.graph.shift(i, n);
                 }
+                vis.array.patch(shiftTable.indexOf(searchString[j].toUpperCase()),1,searchString.length-(j+1));
                 
-            }, [shift_list.shift(), nodes]);
-
+            }, [shift_list.shift(),shift_i-1, nodes]);
+            shift_pre=shift_i;
         }
-        chunker.add('10', (vis) => {
+        chunker.add('11', (vis) => {
             const ResultStr = "Pattern not found";
             vis.graph.addResult(ResultStr, i);
         }, []);

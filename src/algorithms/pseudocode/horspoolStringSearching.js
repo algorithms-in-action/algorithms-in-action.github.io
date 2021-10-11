@@ -83,7 +83,7 @@ for j <- 1 to m-1  \\B 3
 \\Code{
 Search
 i <- m  \\B 5
-while i <= n  \\B 6
+while i <= n  \\B 10
 \\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
 \\Expl}
 \\In{
@@ -108,7 +108,7 @@ while i <= n  \\B 6
             far, given the attempted match starting with T[i] failed.
     \\Expl}
     \\In}
-return NOT FOUND  // Signal that there was no match   \\B 10
+return NOT FOUND  // Signal that there was no match   \\B 11
 \\Code}
 
 \\Note{  The following is an implementation in C:
