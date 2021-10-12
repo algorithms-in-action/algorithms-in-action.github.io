@@ -54,7 +54,7 @@ Quicksort(A, left, right) \\B 1
 
 \\Code{
 QuicksortFirstHalf
-Quicksort(A, left, i) \\B 3
+Quicksort(A, left, i - 1) \\B 3
 \\Code}
 
 \\Code{
@@ -113,7 +113,7 @@ Put the pivot in its final place    \\Ref SwapP
 
 \\Code{
 init_iAndj
-i <- left + 1 \\B 11
+i <- left - 1 \\B 11
 \\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
 \\Expl}
 j <- right \\B 12
