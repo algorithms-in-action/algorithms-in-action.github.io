@@ -86,6 +86,8 @@ export default {
             if (j1 >= 0) {
               highlight(vis, j1, false);
               vis.array.assignVariable('j', j1);
+            } else {
+              vis.array.removeVariable('j');
             }
           }, [j]);
         } while (i <= j && pivot < a[j]);
@@ -103,7 +105,13 @@ export default {
       swapAction(13, i, right);
       chunker.add(13, (vis, i1, j1, r) => {
         unhighlight(vis, i1);
-        if (j1 >= 0) unhighlight(vis, j1, false);
+        if (j1 >= 0) {
+          if (j1 === i1) {
+            unhighlight(vis, r, false);
+          } else {
+            unhighlight(vis, j1, false);
+          }
+        }
         unhighlight(vis, r, false);
         vis.array.sorted(i1);
       }, [i, j, right]);
