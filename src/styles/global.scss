@@ -370,10 +370,10 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	--graph-node-circle-fill-selected: #ee0970;
-	--graph-node-circle-stroke-selected: #ee0970;
-	--graph-node-circle-fill-visited: #2289ff;
-	--graph-node-circle-stroke-visited: #2289ff;
+	--graph-node-circle-fill-selected: #83d489;
+	--graph-node-circle-stroke-selected: #83d489;
+	--graph-node-circle-fill-visited: #e85c49;
+	--graph-node-circle-stroke-visited: #e85c49;
 	--graph-node-circle-fill-visited1: #11cc77;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
@@ -423,10 +423,10 @@ $yellowLine: #FFDE3C;
 
 // Override Algorithm Theme Colors [Green]
 [algo-theme="green"] {
-	--graph-node-circle-fill-selected: #e42fd5;
-	--graph-node-circle-stroke-selected: #e42fd5;
-	--graph-node-circle-fill-visited: #059847;
-	--graph-node-circle-stroke-visited: #059847;
+	--graph-node-circle-fill-selected: #258bff;
+	--graph-node-circle-stroke-selected: #258bff;
+	--graph-node-circle-fill-visited: #ec0a70;
+	--graph-node-circle-stroke-visited: #ec0a70;
 
 	--graph-edge-line-stroke-selected: #e42fd5;
 	--graph-edge-weight-fill-selected: #e42fd5;

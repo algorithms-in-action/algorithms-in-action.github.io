@@ -92,6 +92,7 @@
     .line {
       stroke: var(--graph-edge-line-stroke);
       stroke-width: 3.5;
+      fill: none;
 
       &.directed {
         marker-end: url(#markerArrow);

@@ -101,7 +101,7 @@ class TwoArray2DRenderer extends Renderer {
             )
           )
         }
-        <td></td>
+        <td style={{ paddingBottom: '15px' }} />
         {
           data1.map((row, i) => (
             <tr className={styles.row} key={i}>

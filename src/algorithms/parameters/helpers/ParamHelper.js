@@ -14,7 +14,7 @@ export const stringListValidCheck = (t) => {
 };
 
 export const stringValidCheck = (t) => {
-  const regex = /^[a-zA-Z]+$/g;
+  const regex = /^[a-z\s]+$/g;
   return t.match(regex);
 };
 
@@ -22,6 +22,24 @@ export const singleNumberValidCheck = (t) => {
   const regex = /^\d+$/g;
   return t.match(regex);
 };
+
+// eslint-disable-next-line consistent-return
+export const matrixValidCheck = (m) => {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < m.length; i++) {
+    // eslint-disable-next-line no-plusplus
+    for (let j = 0; j < i; j++) {
+      if (m[i][j] !== m[j][i]) {
+        return false;
+      }
+    }
+    if (m[i][i] !== 0) {
+      return false;
+    }
+  }
+  return true;
+};
+
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -59,7 +77,7 @@ export const errorParamMsg = (
   <ParamMsg
     logWarning
     logTag="Oops..."
-    logMsg={`${reason} ${example || ''}`}
+    logMsg={`${example || ''}`}
   />
 );
 
@@ -117,7 +135,7 @@ export const makeData = (len, min, max, symmetric) => {
     }
     arr.push(data);
   }
-  if (len === 4) {
+  if (len === 4 && symmetric !== true) {
     arr = [
       {
         col0: '0',

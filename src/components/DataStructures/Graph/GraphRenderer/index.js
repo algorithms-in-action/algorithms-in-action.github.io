@@ -51,6 +51,22 @@ function switchColor(visitedCount1) {
   return fillStyle;
 }
 
+function calculateControlCord(x1, y1, x2, y2) {
+  // Slope for line that perpendicular to (x1,y1) (x2,y2)
+  const slope = -(x2 - x1) / (y2 - y1);
+  let cx; let cy;
+  const direction = (x1 > y1) ? 1 : -1;
+
+  if (y1 - y2 < 1) {
+    cx = (x2 + x1) / 2;
+    cy = (y1 + y2) / 2 + direction * 30;
+  } else {
+    cx = (x2 + x1) / 2 + direction * 30;
+    cy = slope * (cx - (x1 + x2) / 2) + (y1 + y2) / 2;
+  }
+  return { cx, cy };
+}
+
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -138,7 +154,6 @@ class GraphRenderer extends Renderer {
             const my = (sy + ey) / 2;
             const dx = ex - sx;
             const dy = ey - sy;
-            const degree = (Math.atan2(dy, dx) / Math.PI) * 180;
             if (isDirected) {
               const length = Math.sqrt(dx * dx + dy * dy);
               if (length !== 0) {
@@ -146,7 +161,14 @@ class GraphRenderer extends Renderer {
                 ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
               }
             }
-
+            let pathSvg = null;
+            if (this.props.data.isInterConnected(source, target)) {
+              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+            } else {
+              pathSvg = `M${sx},${sy} L${ex},${ey}`;
+            }
+            // console.log(sx,sy,ex,ey,cx,cy);
             return (
               <g
                 className={classes(
@@ -158,11 +180,11 @@ class GraphRenderer extends Renderer {
                 )}
                 key={`${source}-${target}`}
               >
-                <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
+                <path d={pathSvg} className={classes(styles.line, isDirected && styles.directed)} />
                 {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
-                    <text className={styles.weight} transform={`rotate(${degree})`}
+                    <text className={styles.weight} transform="rotate(0)"
                           y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
                 }
@@ -172,7 +194,7 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText  } = node;
+          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;

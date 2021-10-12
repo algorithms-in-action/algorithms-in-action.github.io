@@ -7,6 +7,8 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 // import the 2D tracer to generate an array that stores the matrix in 2D format
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import './transitiveClosureCollapseChunkPlugin';
+import {runChunkWithCheckCollapseState, releaseChunkCache, runChunkWithEnterCollapse} from './transitiveClosureCollapseChunkPlugin';
 
 export default {
   initVisualisers() {
@@ -39,7 +41,6 @@ export default {
     // eslint-disable-next-line no-unused-expressions
     const numOfNodes = size;
     const nodes = new Array(numOfNodes);
-
     chunker.add(1, (g) => {
       g.array.set([...matrix], 'tc');
       g.graph.set([...matrix], Array.from({ length: matrix.length }, (v, k) => (k + 1)));
@@ -59,7 +60,6 @@ export default {
 
       // run the second for loop
       chunker.add(3, (g, k) => {
-
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
@@ -81,7 +81,7 @@ export default {
 
           // run the third for loop
           chunker.add(5, (g, k) => {
-
+            runChunkWithEnterCollapse();
           }, [k]);
 
           for (let j = 0; j < numOfNodes; j++) {
@@ -114,25 +114,29 @@ export default {
 
               if (i !== j || j !== k) {
                 chunker.add(7, (g, i, k, j) => {
-                  // remove green
-                  g.array.deselect(k, j, k, j);
-                  g.array.select(k, j, k, j, '3');
-                  g.graph.leave1(j, k);
-                  g.graph.unsetPointerNode(j, 'j');
+                  runChunkWithCheckCollapseState(()=>{
+                    // remove green
+                    g.array.deselect(k, j, k, j);
+                    g.array.select(k, j, k, j, '3');
+                    g.graph.leave1(j, k);
+                    g.graph.unsetPointerNode(j, 'j');
+                  })
                 }, [i, k, j]);
               }
 
               chunker.add(7, (g, i, j, k) => {
-                // leave the node (i,j) to move to the next node
-                // g.graph.leave(j, i);
-                // remove highlighting from the node (i,j) in the matrix to move to the next element
-                if (j !== k) {
-                  // g.array.deselect(i, j);
-                  g.array.depatch(i, j, 1);
-                  g.graph.leave1(j, i); // remove orange
-                }
-                // g.graph.leave(j, k);
-                // if(j === size - 1)return 5
+                runChunkWithCheckCollapseState(()=>{
+                  // leave the node (i,j) to move to the next node
+                  // g.graph.leave(j, i);
+                  // remove highlighting from the node (i,j) in the matrix to move to the next element
+                  if (j !== k) {
+                    // g.array.deselect(i, j);
+                    g.array.depatch(i, j, 1);
+                    g.graph.leave1(j, i); // remove orange
+                  }
+                  // g.graph.leave(j, k);
+                  // if(j === size - 1)return 5
+                })
               }, [i, j, k]);
 
               for (let a = k; a < numOfNodes; a++) {
@@ -141,16 +145,19 @@ export default {
             }
             if (i !== j || j !== k) {
               chunker.add(5, (g, i, k, j) => {
-                // remove green
-                g.array.deselect(k, j, k, j);
-                g.array.select(k, j, k, j, '3');
-                g.graph.leave1(j, k);
-                g.graph.unsetPointerNode(j, 'j');
-                // if(j === size - 1)return 3
+                runChunkWithCheckCollapseState(()=>{
+                  // remove green
+                  g.array.deselect(k, j, k, j);
+                  g.array.select(k, j, k, j, '3');
+                  g.graph.leave1(j, k);
+                  g.graph.unsetPointerNode(j, 'j');
+                  // if(j === size - 1) {return true}
+                })
               }, [i, k, j]);
             }
           }
-          chunker.add(3, (g, i, k) => {
+          chunker.add({bookmark: 3, pauseInCollapse: true}, (g, i, k) => {
+            releaseChunkCache();
             // leave the node (i,k) to move to the next node
             // remove blue
             g.graph.leave(k, i);

@@ -28,6 +28,10 @@ class Element {
 }
 
 class TwoArray2DTracer extends Tracer {
+  /*
+  This class is for Horspool's shift table
+  Reading Array2DTracer is advised if you need to modify this class
+  */
   getRendererClass() {
     return TwoArray2DRenderer;
   }
@@ -55,7 +59,7 @@ class TwoArray2DTracer extends Tracer {
   patch(x, y, v = this.data[x][y].value) {
     let rr=this.getposition(x,y);
     var pos=rr[0];
-    var xx = rr[2];//x is actually the vertical one.... need to refactor here.
+    var xx = rr[2];//x is actually the vertical one
     var yy = rr[1];
     if (pos===0)
     {
@@ -73,47 +77,57 @@ class TwoArray2DTracer extends Tracer {
   }
 
   depatch(x, y) {
-    x=this.getposition(x,y);
-    this.data[x][y].patched = false;
-  }
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
+    var xx = rr[2];//x is actually the vertical one
+    var yy = rr[1];
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
 
-  // used to highlight sorted elements
-  sorted(x, y) {
-    if (!this.data[x][y]) this.data[x][y] = new Element();
-    this.data[x][y].sorted = true;
-  }
+      this.data[xx][yy].patched = false;
+    }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
 
-  select(sx, sy, ex = sx, ey = sy) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
-      }
+      this.data1[xx][yy].patched = false;
     }
   }
-
-  selectRow(x, sy, ey) {
-    this.select(x, sy, x, ey);
-  }
-
-  selectCol(y, sx, ex) {
-    this.select(sx, y, ex, y);
-  }
-
-  deselect(sx, sy, ex = sx, ey = sy) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = false;
-      }
+  select(x, y) {
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
+    var xx = rr[2];//x is actually the vertical one
+    var yy = rr[1];
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
+      this.data[xx][yy].selected = true;
     }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
+      this.data1[xx][yy].selected = true;
+    }
+
   }
 
-  deselectRow(x, sy, ey) {
-    this.deselect(x, sy, x, ey);
+  deselect(x, y) {
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
+    var xx = rr[2];//x is actually the vertical one
+    var yy = rr[1];
+    if (pos===0)
+    {
+      this.data[xx][yy].selected = false;
+    }
+    else
+    {
+      this.data1[xx][yy].selected = false;
+    }
+
   }
 
-  deselectCol(y, sx, ex) {
-    this.deselect(sx, y, ex, y);
-  }
 }
 
 export default TwoArray2DTracer;

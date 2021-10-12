@@ -17,8 +17,11 @@ import Renderer from "../../common/Renderer/index";
 import { classes, distance } from "../../common/util";
 import styles from "./GraphRenderer.module.scss";
 import { mode } from "../../../top/Settings";
+import { fromPairs } from "lodash";
 
 let modename;
+let lastnode=-1;
+let repeatx=false;
 function switchmode(modetype = mode()) {
   switch (modetype) {
     case 1:
@@ -39,6 +42,9 @@ class GraphRendererRect extends Renderer {
 
     this.elementRef = React.createRef();
     this.selectedNode = null;
+    this.ShowMsg=0;
+    this.shiftcount = 0;
+    this.lastvisited = -1;
 
     this.togglePan(true);
     this.toggleZoom(true);
@@ -90,17 +96,66 @@ class GraphRendererRect extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
+    let StringLen = 0;
+    let PatternLen = 0;
+    let FinalPostion = 0;
+    let startpostion = nodes[0].x-2*nodeRadius;
+    let algorithmName = "";
 
+    if(nodes.length>1){
+      StringLen = nodes[1].StringLen;
+      PatternLen = nodes[1].PatternLen;
+      if(nodes[1].algorithmName==="bfsSearch"){
+        algorithmName = "bfsSearch";
+        FinalPostion = nodes[StringLen-PatternLen].x;
+      }
+    }
+    
     let nodeid=0;
-    let smlx=999;
-    let smly=0;
-    for (let ii = 0; ii < nodes.length; ii++) {
+    let smlx= FinalPostion;
+    let smly= nodes[StringLen+1].y;
+
+    for (let ii = 0; ii < nodes.length; ii++) { 
       if(nodes[ii].y<=smly){
         if(nodes[ii].x<=smlx){
           smlx = nodes[ii].x;
-          smly = nodes[ii].y
-          nodeid = nodes[ii].id
+          smly = nodes[ii].y;
+          nodeid = nodes[ii].id;
         }
+      }
+    }
+
+    for (let ii = 0; ii < nodes.length; ii++) {
+      if(nodes[ii].y>0){
+        if(nodes[ii].x === smlx){
+          if (nodes[ii].id === lastnode && repeatx) {
+            this.shiftcount++;
+            repeatx=false;
+          } else if (nodes[ii].id === lastnode && !repeatx){      
+            repeatx = true
+          } else {
+            lastnode = nodes[ii].id
+            repeatx = false;
+          }
+          if(this.shiftcount>PatternLen){
+            this.shiftcount = PatternLen
+          }
+        }
+      }
+    }
+
+    let highlightid = -1;
+    let horspoolid = nodes[nodes.length-1].id;
+    let highlighty = smly;
+    for (let ii = 0; ii < nodes.length; ii++) {    // hl with lgr visit / lgr selectlimit
+      // if (nodes[ii].visitedCount === 1){
+      //   highlightid = nodes[ii].id
+      // }
+      if(nodes[ii].selectedCount === 1){
+        highlightid = nodes[ii].id
+      }
+      if(highlightid>=0){
+        highlighty = nodes[highlightid].y
       }
     }
 
@@ -160,13 +215,13 @@ class GraphRendererRect extends Renderer {
               </g>
             );
           })}
-
         {/* node graph */}
         {nodes.map((node) => {
-          const { id, x, y, weight, visitedCount, selectedCount, value, Result, key, style, sorted } = node;
+          const { id, x, y, weight, visitedCount, selectedCount, value, key, style, sorted } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
+
           return (
             <motion.g
               animate={{ x, y }}
@@ -183,10 +238,15 @@ class GraphRendererRect extends Renderer {
                   {this.toString(weight)}
                 </text>
               )}
+              {(id === nodeid && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
+              {(id === horspoolid && algorithmName !== "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
+              {(id === nodeid && highlightid <0?<text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
+              {(id === highlightid && highlightid >=0? <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)
+              }
             </motion.g>
           );
         })}
-
+        
         {/* Result message */}
         {nodes.map((node) => {
           const { id, x, y, weight, visitedCount, selectedCount, value, Result } = node;
@@ -198,8 +258,14 @@ class GraphRendererRect extends Renderer {
               key={id}
               transform={`translate(${x},${y})`}
             >
-              <text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>
-              {nodeid==id ?(<text y={smly*1.5} dy=".2em">i</text>) : (<text/>)}
+              {
+              this.toString(Result) !== null ? 
+                (this.ShowMsg +=1,this.ShowMsg=1,<text x="-20%" y="20%" dy=".2em">{this.toString(Result)}</text>)
+                :
+                (this.ShowMsg ===0&& smlx!==FinalPostion&&smlx>startpostion&&nodeid===id?(<text x="-10%" y="20%" dy=".2em">Keep Seaching</text>):(<text/>))
+              }
+              {smlx===startpostion?(this.ShowMsg=0):(<text/>)}
+              {this.ShowMsg ===0 && smlx===FinalPostion&&nodeid===id?(<text x="-10%" y="20%" dy=".2em">Seaching Fail</text>):(<text/>)}
             </g>
           );
         })}

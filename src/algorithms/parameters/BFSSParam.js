@@ -8,7 +8,7 @@ import '../../styles/Param.scss';
 const DEFAULT_STRING = 'abcdefgh';
 const DEFAULT_PATTERN = 'efg';
 const BFSS_SEARCH = 'Brute force String Search';
-const BFSS_EXAMPLE = 'Please follow the example provided: abcd, ab';
+const BFSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
 function BFSSParam() {
   const [message, setMessage] = useState(null);
@@ -32,8 +32,9 @@ function BFSSParam() {
         />
       </div>
       {/* render success/error message */}
-      {message}
+      <text className="message">{message}</text>
     </>
+    
   );
 }
 

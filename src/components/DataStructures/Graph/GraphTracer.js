@@ -207,6 +207,12 @@ class GraphTracer extends Tracer {
   addResult(text, id) {
     this.findNode(id).Result = text;
   }
+  addStringLen(len,id){
+    this.findNode(id).StingLen = len;
+  }
+  addPatternLen(len,id){
+    this.findNode(id).PatternLen = len;
+  }
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
@@ -629,6 +635,11 @@ class GraphTracer extends Tracer {
     if (edge) edge.selectedCount = 0;
     const node = this.findNode(target);
     node.selectedCount = 0;
+  }
+
+  isInterConnected(source, target) {
+    return this.edges.find(edge => edge.source === source && edge.target === target)
+        && this.edges.find(edge => edge.source === target && edge.target === source);
   }
 
   log(key) {
