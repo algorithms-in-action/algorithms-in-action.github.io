@@ -14,7 +14,7 @@ export const stringListValidCheck = (t) => {
 };
 
 export const stringValidCheck = (t) => {
-  const regex = /^[a-zA-Z\s]+$/g;
+  const regex = /^[a-z\s]+$/g;
   return t.match(regex);
 };
 
@@ -59,7 +59,7 @@ export const errorParamMsg = (
   <ParamMsg
     logWarning
     logTag="Oops..."
-    logMsg={`${reason} ${example || ''}`}
+    logMsg={`${example || ''}`}
   />
 );
 

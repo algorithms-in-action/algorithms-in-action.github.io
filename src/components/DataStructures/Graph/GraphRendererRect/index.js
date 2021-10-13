@@ -260,7 +260,7 @@ class GraphRendererRect extends Renderer {
             >
               {
               this.toString(Result) !== null ? 
-                (this.ShowMsg +=1,this.ShowMsg=1,<text x="-60%" y="20%" dy=".2em">{this.toString(Result)}</text>)
+                (this.ShowMsg +=1,this.ShowMsg=1,<text x="-20%" y="20%" dy=".2em">{this.toString(Result)}</text>)
                 :
                 (this.ShowMsg ===0&& smlx!==FinalPostion&&smlx>startpostion&&nodeid===id?(<text x="-10%" y="20%" dy=".2em">Keep Seaching</text>):(<text/>))
               }
