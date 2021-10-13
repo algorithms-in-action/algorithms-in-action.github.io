@@ -19,6 +19,7 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 import { markdownKeywords } from './MarkdownKeywords';
+import {DirectionsOutlined} from '@material-ui/icons';
 
 
 function blockContainsBookmark(algorithm, block) {
@@ -151,7 +152,6 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <HelpIcon style={{ color: '#f7c679', fontSize: 'small' }} />
         </button>;
     }
-
     if (line.ref) {
       codeLines.push(
         <p

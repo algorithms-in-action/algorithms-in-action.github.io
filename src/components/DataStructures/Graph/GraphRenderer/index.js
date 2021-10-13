@@ -51,6 +51,23 @@ function switchColor(visitedCount1) {
   return fillStyle;
 }
 
+function calculateControlCord(x1, y1, x2, y2) {
+  // Slope for line that perpendicular to (x1,y1) (x2,y2)
+  const slope = -(x2 - x1) / (y2 - y1);
+  let cx; let cy;
+  let direction = (y1 > y2) ? 1 : -1;
+
+  if (Math.abs(y1 - y2) / Math.abs(x1 - x2) < 0.5) {
+    direction = (x1 > x2) ? 1 : -1;
+    cx = (x2 + x1) / 2;
+    cy = (y1 + y2) / 2 + direction * 30;
+  } else {
+    cx = (x2 + x1) / 2 + direction * 30;
+    cy = slope * (cx - (x1 + x2) / 2) + (y1 + y2) / 2;
+  }
+  return { cx, cy };
+}
+
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -110,20 +127,20 @@ class GraphRenderer extends Renderer {
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
-          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
+          <marker id="markerArrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={styles.arrow} />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.selected)} />
+          <marker id="markerArrowSelected" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.selected)} />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
+          <marker id="markerArrowVisited" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited)} />
           </marker>
-          <marker id="markerArrowVisited1" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited1)} />
+          <marker id="markerArrowVisited1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited1)} />
           </marker>
-          <marker id="markerArrowVisited2" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          <marker id="markerArrowVisited2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
           </marker>
         </defs>
         {
@@ -145,7 +162,14 @@ class GraphRenderer extends Renderer {
                 ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
               }
             }
-
+            let pathSvg = null;
+            if (this.props.data.isInterConnected(source, target)) {
+              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+            } else {
+              pathSvg = `M${sx},${sy} L${ex},${ey}`;
+            }
+            // console.log(sx,sy,ex,ey,cx,cy);
             return (
               <g
                 className={classes(
@@ -157,7 +181,7 @@ class GraphRenderer extends Renderer {
                 )}
                 key={`${source}-${target}`}
               >
-                <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
+                <path d={pathSvg} className={classes(styles.line, isDirected && styles.directed)} />
                 {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
