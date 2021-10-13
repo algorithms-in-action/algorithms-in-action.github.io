@@ -13,36 +13,48 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
     for i <- 1 to n                                             
     \\In{
         Cost[i] <- Infinity                                     
-        Prev[i] <- Null
-        \\Expl{  The array Prev will be used to track how nodes are 
-                connected into the resulting spanning tree. 
-                Whenever an edge (j,i) is added to the tree, this 
-                is captured by setting Prev[i] to j.
+        \\Expl{  The Cost of each node is initially set to Infinity to
+                indicate we do not (yet) know how node i can be added
+                to the spanning tree
+        \\Expl}
+        Parent[i] <- Null
+        \\Expl{  The array Parent will be used to track how nodes are 
+                connected into the resulting spanning tree. Node 1
+                will be the root of the spanning tree and an edge (j,i)
+                is added to the tree by setting Parent[i] to j.
+                Eventually all nodes except 1 have a (non-Null) Parent,
+                thus all nodes are in the spanning tree.
         \\Expl}
     \\In}
     Cost[1] <- 0
-    \\Expl{  We arrange for the tree construction to start with
-            node 1; this is achieved by setting the cost of node
-            1 to 0 (to get from node 1 to itself costs nothing).
-            Other nodes initially assigned the largest possible 
-            cost, Infinity, as they have not been considered yet.
+    \\Expl{  We arrange for the tree construction to start with node 1;
+            this is achieved by setting the cost of node 1 to 0 (to get
+            from node 1 to itself costs nothing).  Other nodes are 
+            initially assigned the largest possible cost.
     \\Expl}
-    Q <- InitPriorityQueue(n) \\B 2
-    \\Expl{  Nodes are arranged in the priority queue Q according 
-            to cost. Smaller cost means higher priority.
+    PQ <- InitPriorityQueue(n) \\B 2
+    \\Expl{  Nodes are put in a priority queue PQ according to their
+            Cost. Smaller cost means higher priority and initially 
+            node 1 has the minimum cost.
     \\Expl}
-    while Q not Empty \\B 3
+    while PQ not Empty \\B 3
     \\In{
-        i <- RemoveMin(Q)  // i is now part of the spanning tree \\B 4
+        i <- RemoveMin(PQ)  // i is now part of the spanning tree \\B 4
         \\Expl{  Node i is closest to the tree constructed so far.
                 More precisely, for every node k inside the current 
                 tree, and every node j outside of it, the weight of
                 (k,i) is smaller than (or possibly equal to) the weight
                 of (k,j) for all outside nodes j. So i is picked as 
-                the next node to add to the tree. Note that, unless 
-                i = 1, prev[i] has already been determined.
+                the next node to add to the tree. The array Parent keeps
+                track of the connections: Parent[i] is the spanning tree
+                node that i is connected to. Note that, unless i = 1, 
+                Parent[i] has already been determined.
         \\Expl}
-        update priority queue Q    \\Ref Update
+        update priority queue PQ    \\Ref Update
+        \\Expl{  Adding node i to the tree may reduce the costs of nodes
+                neighbouring i, affecting PQ. The node with minumum cost 
+                may also change.
+        \\Expl}
     \\In}
 \\In}
 \\Code}
@@ -54,18 +66,18 @@ Update
                 to each of its neighbours j.
         \\Expl}
         \\In{
-        if j is in Q and weight(i,j) < Cost[j] \\B 6
+        if j is in PQ and weight(i,j) < Cost[j] \\B 6
         \\Expl{  The inclusion of i may have brought i's neighbour j closer 
-                to the tree; if so, update the information we have about j.
+            to the tree; if so, update the information we have about j.
         \\Expl}
         \\In{
                 Cost[j] <- weight(i,j) \\B 7                                 
                 \\Expl{  The new cost for j is its distance to i.
                 \\Expl}
-                Update(Q, j, Cost[j]) \\B 8
-                \\Expl{  Rearrange Q so the priority queue reflects j's new cost.
+                Update(PQ, j, Cost[j]) \\B 8
+                \\Expl{  Rearrange PQ so the priority queue reflects j's new cost.
                 \\Expl}
-                Prev[j] <- i \\B 9                                          
+                Parent[j] <- i \\B 9                                          
                 \\Expl{  Record the fact that j's closest neighbour in the 
                         spanning tree (so far) was i.
                 \\Expl}
