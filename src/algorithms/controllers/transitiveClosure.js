@@ -16,10 +16,10 @@ export default {
       graph: {
         instance: new GraphTracer('key', null, 'Transitive Closure'),
         order: 0
-      }, 
+      },
       // create a separate component for displaying the matrix as a 2D array
       array: {
-        instance: new Array2DTracer('array', null, 'Matrix'), 
+        instance: new Array2DTracer('array', null, 'Matrix'),
         order: 1,
       },
     };
@@ -27,8 +27,8 @@ export default {
 
   copyArr(obj) {
     const out = [];
-        let i = 0;
-        const len = obj.length;
+    let i = 0;
+    const len = obj.length;
     for (; i < len; i++) {
       if (obj[i] instanceof Array) {
         out[i] = this.copyArr(obj[i]);
@@ -53,11 +53,6 @@ export default {
     }
 
     for (let k = 0; k < numOfNodes; k++) {
-      chunker.add(2, (g, k) => {
-        g.array.selectCol(k, 0, numOfNodes - 1, '2');
-        g.array.selectRow(k, 0, numOfNodes - 1, '3');
-      }, [k]);
-
       // run the second for loop
       chunker.add(3, (g, k) => {
       }, [k]);
@@ -67,7 +62,6 @@ export default {
           chunker.add(4, (g, i, k) => {
             g.array.deselect(i, k, i, k);
             g.array.select(i, k);
-            // g.graph.setPointerNode(i, 'i', k, 'k');
           }, [i, k]); // move along columns
         } else {
           chunker.add(4, (g, i, k) => {
@@ -76,7 +70,6 @@ export default {
             g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
-            // g.graph.setPointerNode(i, 'i', k, 'k');
           }, [i, k]);
 
           // run the third for loop
@@ -86,19 +79,26 @@ export default {
 
           for (let j = 0; j < numOfNodes; j++) {
             if (!nodes[k][k][j]) {
-              chunker.add(6, (g, k, j) => {
+              chunker.add(6, (g, k, j, i) => {
                 g.array.deselect(k, j, k, j);
                 g.array.select(k, j, k, j, '1');
-                // g.graph.setPointerNode(j, 'j');
-              }, [k, j]); // move along rows (green)
+                if (i === k && k === j) {
+                  g.array.select(k, j);
+                }
+                if (k === j) {
+                  window.alert(k);
+                }
+              }, [k, j, i]); // move along rows (green)
             } else {
-              chunker.add(6, (g, j, k) => {
+              chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
                 g.array.deselect(k, j, k, j);
                 g.array.select(k, j, k, j, '1');
+                if (i === k && k === j) {
+                  g.array.select(k, j);
+                }
                 g.graph.visit1(j, k, 1);
-                // g.graph.setPointerNode(j, 'j');
-              }, [j, k]);
+              }, [j, k, i]);
 
               chunker.add(7, (g, i, j) => {
                 // orange
@@ -116,10 +116,7 @@ export default {
                 chunker.add(7, (g, i, k, j) => {
                   runChunkWithCheckCollapseState(() => {
                     // remove green
-                    g.array.deselect(k, j, k, j);
-                    g.array.select(k, j, k, j, '3');
                     g.graph.leave1(j, k);
-                    // g.graph.unsetPointerNode(j, 'j');
                   });
                 }, [i, k, j]);
               }
@@ -136,7 +133,6 @@ export default {
                     g.graph.leave1(j, i); // remove orange
                   }
                   // g.graph.leave(j, k);
-                  // if(j === size - 1)return 5
                 });
               }, [i, j, k]);
 
@@ -144,18 +140,19 @@ export default {
                 nodes[a][i][j] = 1;
               }
             }
-            if (i !== j || j !== k) {
-              chunker.add(5, (g, i, k, j) => {
-                runChunkWithCheckCollapseState(() => {
-                  // remove green
+            chunker.add(5, (g, i, k, j) => {
+              runChunkWithCheckCollapseState(() => {
+                // remove green
+                if (i !== k || j !== k) {
                   g.array.deselect(k, j, k, j);
-                  g.array.select(k, j, k, j, '3');
                   g.graph.leave1(j, k);
-                  // g.graph.unsetPointerNode(j, 'j');
-                  // if(j === size - 1) {return true}
-                });
-              }, [i, k, j]);
-            }
+                } else {
+                  g.array.deselect(k, j, k, j);
+                  g.array.select(k, j);
+                  g.graph.leave1(j, k);
+                }
+              });
+            }, [i, k, j]);
           }
           chunker.add({ bookmark: 3, pauseInCollapse: true }, (g, i, k) => {
             releaseChunkCache();
@@ -163,22 +160,12 @@ export default {
             // remove blue
             g.graph.leave(k, i);
             g.graph.leave(i);
-            // g.graph.unsetPointerNode(i, 'i');
-            // if(i === size-1) return 2
           }, [i, k]);
         }
         chunker.add(3, (g, i, k) => {
           g.array.deselect(i, k);
-          g.array.select(i, k, i, k, '2');
-          // g.graph.unsetPointerNode(i, 'i');
-          // if(i === size-1) return 2
         }, [i, k]);
       }
-      chunker.add(2, (g, k) => {
-        g.array.deselectRow(k, 0, numOfNodes - 1);
-        g.array.deselectCol(k, 0, numOfNodes - 1);
-        // g.graph.unsetPointerNode(k, 'k');
-      }, [k]);
     }
   },
 };
