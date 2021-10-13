@@ -106,7 +106,7 @@ export default {
         for (let shift_i = m; shift_i < searchString.length + 1; shift_i+=shift_ilist.shift()) {
             chunker.add('10', (vis,j) => {
                 if(j !== -1){
-                    vis.array.depatch(shiftTable.indexOf(searchString[j].toUpperCase()),1);
+                    vis.array.deselect(shiftTable.indexOf(searchString[j].toUpperCase()),1);
                 }
             }, [shift_pre-1]);
             
@@ -164,7 +164,7 @@ export default {
                      //window.alert("the i is:"+i);
                      vis.graph.shift(i, n);
                 }
-                vis.array.patch(shiftTable.indexOf(searchString[j].toUpperCase()),1,searchString.length-(j+1));
+                vis.array.select(shiftTable.indexOf(searchString[j].toUpperCase()),1);
                 
             }, [shift_list.shift(),shift_i-1, nodes]);
             shift_pre=shift_i;
