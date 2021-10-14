@@ -101,17 +101,24 @@ class GraphRendererRect extends Renderer {
     let FinalPostion = 0;
     let startpostion = nodes[0].x-2*nodeRadius;
     let algorithmName = "";
+    let strStart = nodes[0];
+    let strEnd = nodes[StringLen-1];
 
     if(nodes.length>1){
       StringLen = nodes[1].StringLen;
       PatternLen = nodes[1].PatternLen;
       if(nodes[1].algorithmName==="bfsSearch"){
         algorithmName = "bfsSearch";
-        FinalPostion = nodes[StringLen-PatternLen].x;
+        FinalPostion = nodes[StringLen-PatternLen-1].x;
+      }
+      if(nodes[1].algorithmName==="horspools"){
+        algorithmName = "horspools";
+        FinalPostion = nodes[StringLen-1].x;
       }
     }
     
     let nodeid=0;
+    let textStart = nodes[0];
     let smlx= FinalPostion;
     let smly= nodes[StringLen+1].y;
 
@@ -157,6 +164,29 @@ class GraphRendererRect extends Renderer {
       if(highlightid>=0){
         highlighty = nodes[highlightid].y
       }
+    }
+
+    let testing=[];
+    let currentPatStart = nodes[StringLen];
+    let currentPatEnd = nodes[StringLen+PatternLen-1];
+    let lasthighlightj=nodes[StringLen];
+    let lasthighlighti=nodes[PatternLen-1];
+    if(algorithmName === "horspools"){
+      for(let ii = 0; ii<StringLen ; ii++){
+        if(nodes[ii].selectedCount === 1 || nodes[ii].visitedCount === 1){
+          lasthighlighti = nodes[ii]
+          testing.push(nodes[ii])
+          break;
+        }
+      }
+      for(let ii = StringLen; ii>=StringLen && ii<StringLen+PatternLen;ii++){
+        if(nodes[ii].selectedCount === 1 || nodes[ii].visitedCount === 1){
+          lasthighlightj = nodes[ii]
+          testing.push(nodes[ii])
+          break;
+        }
+      }
+      console.log("i="+lasthighlighti.id+"\tj="+lasthighlightj.id)
     }
 
     return (
@@ -221,30 +251,34 @@ class GraphRendererRect extends Renderer {
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
-
-          return (
-            <motion.g
-              animate={{ x, y }}
-              initial={false}
-              transition={{ duration: 1 }}
-              className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited)}
-              key={key}
-              // transform={`translate(${x},${y})`}
-            >
-              <rect className={styles.circle} width={2 * nodeRadius} height={2 * nodeRadius} x={-nodeRadius} y={-nodeRadius} />
-              <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
-              {isWeighted && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(weight)}
-                </text>
-              )}
-              {(id === nodeid && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
-              {(id === horspoolid && algorithmName !== "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
-              {(id === nodeid && highlightid <0?<text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
-              {(id === highlightid && highlightid >=0? <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)
-              }
-            </motion.g>
-          );
+            return (
+              <motion.g
+                animate={{ x, y }}
+                initial={false}
+                transition={{ duration: 1 }}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited)}
+                key={key}
+                // transform={`translate(${x},${y})`}
+              >
+                <rect className={styles.circle} width={2 * nodeRadius} height={2 * nodeRadius} x={-nodeRadius} y={-nodeRadius} />
+                <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
+                {isWeighted && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(weight)}
+                  </text>
+                )}
+                {/* BFS */}
+                {(id === nodeid && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={-smly * 4} dy=".2em">i</text> : <></>)}
+                {(id === nodeid && highlightid <0 && algorithmName === "bfsSearch" ?<text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
+                {(id === highlightid && highlightid >=0 && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
+                {/* HFS */}
+                {/* {(testing.length === 0 && id = )} */}
+                {(id === currentPatEnd.id && currentPatStart.x != strStart.x && testing.length<=0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)}
+                {(id === currentPatEnd.id && testing.length<=0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)} {/* Showing I when not highlighting */}
+                {(id === lasthighlighti.id && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 2} dy=".2em">i</text> : <></>)}
+                {(id === lasthighlightj.id && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> :<></> )}
+              </motion.g>
+            );
         })}
         
         {/* Result message */}
