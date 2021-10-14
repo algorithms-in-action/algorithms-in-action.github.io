@@ -57,15 +57,19 @@ export default {
     }
 
     for (let k = 0; k < numOfNodes; k++) {
-      // run the second for loop
-      chunker.add(3, (g, k) => {
-        g.array.showKth(k + 1);
+      // run the first for loop
+      chunker.add(2, (g, k) => {
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
+        // run the second for loop
+        chunker.add(3, (g, k) => {
+          g.array.showKth(k + 1);
+        }, [k]);
+
         if (!nodes[k][i][k]) {
           // eslint-disable-next-line no-loop-func
-          chunker.add(3, (g, i, k) => {
+          chunker.add(4, (g, i, k) => {
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
             if (i > 0) {
@@ -80,7 +84,7 @@ export default {
           }, [i, k]); // move along columns
         } else {
           // eslint-disable-next-line no-loop-func
-          chunker.add(3, (g, i, k) => {
+          chunker.add(4, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
@@ -100,9 +104,13 @@ export default {
           }, [i, k]);
 
           for (let j = 0; j < numOfNodes; j++) {
+            // run the third for loop
+            chunker.add(5, (g, k) => {
+            }, [k]);
+
             if (!nodes[k][k][j]) {
               // eslint-disable-next-line no-loop-func
-              chunker.add(4, (g, k, j, i) => {
+              chunker.add(6, (g, k, j, i) => {
                 g.graph.leave1(prevJ, prevK);
                 if (j > 0) {
                   g.array.deselect(k, j - 1);
@@ -125,7 +133,7 @@ export default {
               }, [k, j, i]); // move along rows (green)
             } else {
               // eslint-disable-next-line no-loop-func
-              chunker.add(4, (g, j, k, i) => {
+              chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
                 g.graph.leave1(prevJ, prevK);
                 if (j > 0) {
@@ -152,7 +160,7 @@ export default {
                 prevK = k;
               }, [j, k, i]);
 
-              chunker.add(5, (g, i, j) => {
+              chunker.add(7, (g, i, j) => {
                 // orange
                 if (!g.array.data[i][j].value) {
                   g.array.patch(i, j, '0->1');
@@ -163,20 +171,18 @@ export default {
                   // highlight the node (i,j) in the matrix when a path is found
                 }
               }, [i, j]);
-              chunker.add(5, (g, i, j, k) => {
-                runChunkWithCheckCollapseState(() => {
+
+              if (!nodes[k][i][j]) {
+                chunker.add(7, (g, i, j, k) => {
                   // leave the node (i,j) to move to the next node
                   // g.graph.leave(j, i);
                   // eslint-disable-next-line max-len
                   // remove highlighting from the node (i,j) in the matrix to move to the next element
-                  if (j !== k) {
-                    // g.array.deselect(i, j);
-                    g.array.depatch(i, j, 1);
-                    g.graph.leave1(j, i, 2); // remove orange
-                  }
-                  // g.graph.leave(j, k);
-                });
-              }, [i, j, k]);
+                  g.array.depatch(i, j, 1);
+                  g.graph.leave1(j, i, 2); // remove orange
+                }, [i, j, k]);
+              }
+
               for (let a = k; a < numOfNodes; a++) {
                 nodes[a][i][j] = 1;
               }
