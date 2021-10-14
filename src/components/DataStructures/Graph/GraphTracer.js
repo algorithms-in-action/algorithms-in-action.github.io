@@ -44,6 +44,7 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
     this.logTracer = null;
+    this.istc = false;
   }
 
   /**
@@ -523,10 +524,13 @@ class GraphTracer extends Tracer {
 
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
     if (weight) node.weight = weight;
     node.visitedCount += visit ? 1 : -1;
+    if (!this.istc) {
+      if (edge) edge.visitedCount += visit ? 1 : -1;
+      node.visitedCount = visit ? 1 : 0;
+    } else if (edge) edge.visitedCount = visit ? 1 : 0;
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
@@ -634,6 +638,10 @@ class GraphTracer extends Tracer {
   setText(text) {
     this.text = text;
     this.text.push({ text });
+  }
+
+  setIstc() {
+    this.istc = true;
   }
 }
 

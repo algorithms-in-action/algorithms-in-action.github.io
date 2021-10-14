@@ -41,11 +41,15 @@ export default {
     // eslint-disable-next-line no-unused-expressions
     const numOfNodes = size;
     const nodes = new Array(numOfNodes);
+    let prevI = 0;
+    let prevJ = 0;
+    let prevK = 0;
     chunker.add(1, (g) => {
       g.array.set([...matrix], 'tc');
       g.graph.set([...matrix], Array.from({ length: matrix.length }, (v, k) => (k + 1)));
       g.graph.layoutCircle();
       // initialise the matrix in the 'Matrix' component
+      g.graph.setIstc();
     }, [this.graph], [this.array]);
 
     for (let i = 0; i < numOfNodes; i++) {
@@ -55,53 +59,99 @@ export default {
     for (let k = 0; k < numOfNodes; k++) {
       // run the second for loop
       chunker.add(3, (g, k) => {
-        g.array.showKth(k+1);
+        g.array.showKth(k + 1);
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
         if (!nodes[k][i][k]) {
-          chunker.add(4, (g, i, k) => {
-            g.array.deselect(i, k, i, k);
+          chunker.add(3, (g, i, k) =>
+          {
+            g.array.deselect(i, k);
+            g.graph.leave(prevK, prevI);
+            g.graph.leave(prevI);
+            prevK = k;
+            prevI = i;
+            if (i > 0) {
+              g.array.deselect(i - 1, k);
+            }
+            if (i === 0 && k > 0) {
+              g.array.deselect(k - 1, numOfNodes - 1);
+              g.array.deselect(numOfNodes - 1, k - 1);
+            }
             g.array.select(i, k);
           }, [i, k]); // move along columns
         } else {
-          chunker.add(4, (g, i, k) => {
+          chunker.add(3, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
-            g.array.deselect(i, k, i, k);
+            g.array.deselect(i, k);
+            g.graph.leave(prevK, prevI);
+            g.graph.leave(prevI);
+            prevK = k;
+            prevI = i;
+            if (i > 0) {
+              g.array.deselect(i - 1, k);
+            }
+            if (i === 0 && k > 0) {
+              g.array.deselect(k - 1, numOfNodes - 1);
+              g.array.deselect(numOfNodes - 1, k - 1);
+            }
             g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
           }, [i, k]);
 
-          // run the third for loop
-          chunker.add(5, (g, k) => {
-            runChunkWithEnterCollapse();
-          }, [k]);
-
           for (let j = 0; j < numOfNodes; j++) {
             if (!nodes[k][k][j]) {
-              chunker.add(6, (g, k, j, i) => {
-                g.array.deselect(k, j, k, j);
+              chunker.add(4, (g, k, j, i) => {
+                g.graph.leave1(prevJ, prevK);
+                g.array.deselect(k, j);
+                if (j > 0) {
+                  g.array.deselect(k, j - 1);
+                  if (i === k && k === (j - 1)) {
+                    g.array.select(k, j - 1);
+                    g.graph.visit(i);
+                  }
+                }
+                if (j === 0) {
+                  g.array.deselect(k, numOfNodes - 1);
+                }
                 g.array.select(k, j, k, j, '1');
                 if (i === k && k === j) {
                   g.array.select(k, j);
-                }
-                if (k === j) {
-                  window.alert(k);
+                  g.graph.visit(i);
                 }
               }, [k, j, i]); // move along rows (green)
             } else {
-              chunker.add(6, (g, j, k, i) => {
+              // eslint-disable-next-line no-loop-func
+              chunker.add(4, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                g.array.deselect(k, j, k, j);
+                g.array.deselect(k, j);
+                g.graph.leave1(prevJ, prevK);
+                if (j > 0) {
+                  g.array.deselect(k, j - 1);
+                  if (i === k && k === (j - 1)) {
+                    g.array.select(k, j - 1);
+                    g.graph.visit(i);
+                  }
+                }
+                if (j === 0) {
+                  g.array.deselect(k, numOfNodes - 1);
+                  if (i === k && k === (numOfNodes - 1)) {
+                    g.array.select(k, numOfNodes - 1);
+                    g.graph.visit(i);
+                  }
+                }
                 g.array.select(k, j, k, j, '1');
                 if (i === k && k === j) {
                   g.array.select(k, j);
+                  g.graph.visit(i);
                 }
                 g.graph.visit1(j, k, 1);
+                prevJ = j;
+                prevK = k;
               }, [j, k, i]);
 
-              chunker.add(7, (g, i, j) => {
+              chunker.add(5, (g, i, j) => {
                 // orange
                 if (!g.array.data[i][j].value) {
                   g.array.patch(i, j, '0->1');
@@ -113,16 +163,7 @@ export default {
                 }
               }, [i, j]);
 
-              if (i !== j || j !== k) {
-                chunker.add(7, (g, i, k, j) => {
-                  runChunkWithCheckCollapseState(() => {
-                    // remove green
-                    g.graph.leave1(j, k);
-                  });
-                }, [i, k, j]);
-              }
-
-              chunker.add(7, (g, i, j, k) => {
+              chunker.add(5, (g, i, j, k) => {
                 runChunkWithCheckCollapseState(() => {
                   // leave the node (i,j) to move to the next node
                   // g.graph.leave(j, i);
@@ -141,31 +182,8 @@ export default {
                 nodes[a][i][j] = 1;
               }
             }
-            chunker.add(5, (g, i, k, j) => {
-              runChunkWithCheckCollapseState(() => {
-                // remove green
-                if (i !== k || j !== k) {
-                  g.array.deselect(k, j, k, j);
-                  g.graph.leave1(j, k);
-                } else {
-                  g.array.deselect(k, j, k, j);
-                  g.array.select(k, j);
-                  g.graph.leave1(j, k);
-                }
-              });
-            }, [i, k, j]);
           }
-          chunker.add({ bookmark: 3, pauseInCollapse: true }, (g, i, k) => {
-            releaseChunkCache();
-            // leave the node (i,k) to move to the next node
-            // remove blue
-            g.graph.leave(k, i);
-            g.graph.leave(i);
-          }, [i, k]);
         }
-        chunker.add(3, (g, i, k) => {
-          g.array.deselect(i, k);
-        }, [i, k]);
       }
     }
   },
