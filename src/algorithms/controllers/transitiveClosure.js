@@ -59,6 +59,7 @@ export default {
     for (let k = 0; k < numOfNodes; k++) {
       // run the first for loop
       chunker.add(2, (g, k) => {
+        g.array.showKth(k + 1);
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
@@ -75,6 +76,7 @@ export default {
             if (i > 0) {
               g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
+              g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
               g.array.deselect(k - 1, numOfNodes - 1);
@@ -89,11 +91,10 @@ export default {
             // if a path between i and k is found, highlight the edge in blue
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
-            prevK = k;
-            prevI = i;
             if (i > 0) {
               g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
+              g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
               g.array.deselect(k - 1, numOfNodes - 1);
@@ -103,6 +104,8 @@ export default {
             g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
+            prevK = k;
+            prevI = i;
           }, [i, k]);
 
           for (let j = 0; j < numOfNodes; j++) {
