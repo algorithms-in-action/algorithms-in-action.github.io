@@ -62,6 +62,10 @@
     }
 
     &.sorted {
+      .circle {
+        fill: var(--graph-node-circle-fill-sorted);
+        
+      }
       .id {
         fill: var(--graph-node-id-fill-sorted);
       }
