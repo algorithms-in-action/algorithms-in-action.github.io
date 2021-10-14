@@ -124,7 +124,7 @@ export default {
 
       chunker.add(5, (vis, m, p) => {
         unhighlight(vis, m, false);
-        vis.array.assignVariable('p', p);
+        vis.array.assignVariable('pivot', p);
       }, [mid, right - 1]);
       chunker.add(11, (vis, i1) => {
         if (i1 >= 0) {
