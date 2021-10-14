@@ -55,7 +55,7 @@ export default {
     for (let k = 0; k < numOfNodes; k++) {
       // run the second for loop
       chunker.add(3, (g, k) => {
-        g.array.showKth(k);
+        g.array.showKth(k+1);
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
