@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Radio from '@material-ui/core/Radio'
@@ -54,7 +54,7 @@ function QuicksortParam() {
         setArray(array.sort(function(a,b) {
           return (+b) - (+a)
          }));
-         break;      
+         break;
       case 'random':
         setArray(genRandNumList(12, 1, 50));
         break;
@@ -66,7 +66,15 @@ function QuicksortParam() {
     }
 
     setQSCase({ ...UNCHECKED, [e.target.name]: true })
+
   }
+
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [QSCase],
+  );
 
   return (
     <>
