@@ -58,7 +58,7 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       // run the second for loop
-      chunker.add(3, (g, k) => {
+      chunker.add(2, (g, k) => {
         g.array.showKth(k + 1);
       }, [k]);
 
@@ -84,8 +84,6 @@ export default {
             // if a path between i and k is found, highlight the edge in blue
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
-            prevK = k;
-            prevI = i;
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
@@ -97,6 +95,8 @@ export default {
             g.array.select(i, k);
             g.graph.visit(i);
             g.graph.visit(k, i);
+            prevK = k;
+            prevI = i;
           }, [i, k]);
 
           for (let j = 0; j < numOfNodes; j++) {
@@ -152,31 +152,31 @@ export default {
                 prevK = k;
               }, [j, k, i]);
 
-              chunker.add(5, (g, i, j) => {
-                // orange
-                if (!g.array.data[i][j].value) {
+              if (!nodes[k][i][j]) {
+                chunker.add(5, (g, i, j) => {
+                  // orange
                   g.array.patch(i, j, '0->1');
                   // eslint-disable-next-line max-len
                   // there is a path between i and j, add a new edge and highlight the edge in orange
                   g.graph.addEdge(i, j);
                   g.graph.visit1(j, i, 2); // orange
                   // highlight the node (i,j) in the matrix when a path is found
+                }, [i, j]);
+                if (j !== k) {
+                  chunker.add(5, (g, i, j, k) => {
+                    runChunkWithCheckCollapseState(() => {
+                      // leave the node (i,j) to move to the next node
+                      // g.graph.leave(j, i);
+                      // eslint-disable-next-line max-len
+                      // remove highlighting from the node (i,j) in the matrix to move to the next element
+                      // g.array.deselect(i, j);
+                      g.array.depatch(i, j, 1);
+                      g.graph.leave1(j, i, 2); // remove orange
+                      // g.graph.leave(j, k);
+                    });
+                  }, [i, j, k]);
                 }
-              }, [i, j]);
-              chunker.add(5, (g, i, j, k) => {
-                runChunkWithCheckCollapseState(() => {
-                  // leave the node (i,j) to move to the next node
-                  // g.graph.leave(j, i);
-                  // eslint-disable-next-line max-len
-                  // remove highlighting from the node (i,j) in the matrix to move to the next element
-                  if (j !== k) {
-                    // g.array.deselect(i, j);
-                    g.array.depatch(i, j, 1);
-                    g.graph.leave1(j, i, 2); // remove orange
-                  }
-                  // g.graph.leave(j, k);
-                });
-              }, [i, j, k]);
+              }
               for (let a = k; a < numOfNodes; a++) {
                 nodes[a][i][j] = 1;
               }
