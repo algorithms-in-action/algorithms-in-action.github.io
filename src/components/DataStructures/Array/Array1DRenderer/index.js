@@ -193,7 +193,7 @@ function stackRenderer(stack, nodeCount, stackDepth) {
     );
   }
   return (<div className={styles.stack}>
-            <p>{stack.length > 0 && stackDepth > 0 ? stackDepth : ''}</p>
+            <p>{stack.length > 0 && stackDepth !== undefined ? `Current stack depth: ${stackDepth + 1}` : ''}</p>
             {stackItems}
           </div>);
 }

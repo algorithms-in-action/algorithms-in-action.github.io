@@ -103,7 +103,9 @@ export default {
       a[right] = a[i];
       a[i] = pivot;
       swapAction(13, i, right);
+      
       chunker.add(13, (vis, i1, j1, r) => {
+        vis.array.assignVariable('pivot', i);
         unhighlight(vis, i1);
         if (j1 >= 0) {
           if (j1 === i1) {
@@ -118,7 +120,7 @@ export default {
       return [i, a]; // Return [pivot location, array values]
     }
 
-    function QuickSort(array, left, right,r, depth) {
+    function QuickSort(array, left, right, _, depth) {
       let a = array;
       let p;
       chunker.add(2, (vis) => {
@@ -143,6 +145,7 @@ export default {
         [p, a] = partition(a, left, right);
 
         chunker.add(3, (vis, pivot, arrayLen) => {
+          vis.array.stack[depth][p] = 0;
           // fade out the part of the array that is not being sorted (i.e. right side)
           for (let i = pivot; i < arrayLen; i++) {
             vis.array.fadeOut(i);
@@ -151,6 +154,8 @@ export default {
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth+1);
 
         chunker.add(4, (vis, pivot, arrayLen) => {
+          vis.array.setStackDepth(depth);
+
           // fade out the part of the array that is not being sorted (i.e. left side)
           for (let i = 0; i <= pivot; i++) {
             vis.array.fadeOut(i);
@@ -168,7 +173,6 @@ export default {
               else if(i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0 }
             }
           }
-          vis.array.setStackDepth(depth);
 
         }, [p, right + 1]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth+1);

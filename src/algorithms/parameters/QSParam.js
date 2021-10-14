@@ -4,13 +4,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Radio from '@material-ui/core/Radio'
 import { withStyles } from '@material-ui/core/styles'
-import { genRandNumList } from './helpers/ParamHelper'
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper'
 import { GlobalContext } from '../../context/GlobalState'
 import { GlobalActions } from '../../context/actions'
 import ListParam from './helpers/ListParam'
 import '../../styles/Param.scss'
 
-const DEFAULT_ARR = genRandNumList(12, 1, 99);
+const DEFAULT_ARR = genRandNumList(12, 1, 50);
 const QUICK_SORT = 'Quick Sort';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
@@ -33,20 +33,34 @@ function QuicksortParam() {
   const [message, setMessage] = useState(null)
   const [array, setArray] = useState(DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
-    rightmost: true,
-    medianofthree: false,
-  })
+    random: false,
+    sortedAsc: false,
+    bestCase: false,
+    sortedDesc: false
+  });
+
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
     switch (e.target.name) {
-      case 'rightmost':
-        // setNodes(shuffleArray(nodes));
-        break
-      case 'medianofthree':
-        // setNodes([...nodes].sort((a, b) => a - b));
-        break
+      case 'sortedAsc':
+        setArray(array.sort(function(a,b) {
+         return (+a) - (+b)
+        }));
+        break;
+      case 'sortedDesc':
+        setArray(array.sort(function(a,b) {
+          return (+b) - (+a)
+         }));
+         break;      
+      case 'random':
+        setArray(genRandNumList(12, 1, 50));
+        break;
+      case 'bestCase':
+        setArray(quicksortPerfectPivotArray(1,50));
+        break;
       default:
+        break;
     }
 
     setQSCase({ ...UNCHECKED, [e.target.name]: true })
@@ -67,29 +81,51 @@ function QuicksortParam() {
           setMessage={setMessage}
         />
       </div>
-      <span className="generalText">Choose pivot using : &nbsp;&nbsp;</span>
-      {/* create a checkbox for Rightmost */}
+      <span className="generalText">Choose input format: &nbsp;&nbsp;</span>
+      {/* create a checkbox for Random array elements */}
       <FormControlLabel
         control={
           <BlueRadio
-            checked={QSCase.rightmost}
+            checked={QSCase.random}
             onChange={handleChange}
-            name="rightmost"
+            name="random"
           />
         }
-        label="Rightmost"
+        label="Random"
+        className="checkbox"
+      />
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={QSCase.sortedAsc}
+            onChange={handleChange}
+            name="sortedAsc"
+          />
+        }
+        label="Sorted (ascending)"
+        className="checkbox"
+      />
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={QSCase.sortedDesc}
+            onChange={handleChange}
+            name="sortedDesc"
+          />
+        }
+        label="Sorted (descending)"
         className="checkbox"
       />
       {/* create a checkbox for Median of Three */}
       <FormControlLabel
         control={
           <BlueRadio
-            checked={QSCase.medianofthree}
+            checked={QSCase.bestCase}
             onChange={handleChange}
-            name="medianofthree"
+            name="bestCase"
           />
         }
-        label="Median of Three"
+        label="Ideal"
         className="checkbox"
       />
       {/* render success/error message */}
