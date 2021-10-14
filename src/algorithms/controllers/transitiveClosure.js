@@ -73,6 +73,7 @@ export default {
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
             if (i > 0) {
+              g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
             }
             if (i === 0 && k > 0) {
@@ -91,6 +92,7 @@ export default {
             prevK = k;
             prevI = i;
             if (i > 0) {
+              g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
             }
             if (i === 0 && k > 0) {
