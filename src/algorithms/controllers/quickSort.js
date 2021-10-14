@@ -118,10 +118,27 @@ export default {
       return [i, a]; // Return [pivot location, array values]
     }
 
-    function QuickSort(array, left, right) {
+    function QuickSort(array, left, right,r, depth) {
       let a = array;
       let p;
-      chunker.add(2);
+      chunker.add(2, (vis) => {
+        let updatedStack = vis.array.stack;
+        if (depth > vis.array.stack.length - 1) {
+          updatedStack = updatedStack.concat([new Array(nodes.length).fill(0)]);
+        }
+
+        updatedStack = updateStackElements(updatedStack, depth, 1, left, right);
+        for(let i=0;i<updatedStack.length;i++) {
+          for(let j=0;j<updatedStack[i].length;j++) {
+            if(updatedStack[i][j] == 0) continue;
+            if(i !== depth && updatedStack[i][j] != 0 && (j <left || j > right)) {updatedStack[i][j] = -1}
+            if(i !== depth && (j >=left && j <= right)) {updatedStack[i][j] = 0 }
+          }
+        }
+
+        vis.array.setStack(updatedStack);
+        vis.array.setStackDepth(depth);
+      });
       if (left < right) {
         [p, a] = partition(a, left, right);
 
@@ -131,7 +148,7 @@ export default {
             vis.array.fadeOut(i);
           }
         }, [p, right + 1]);
-        QuickSort(a, left, p - 1, `${left}/${p - 1}`);
+        QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth+1);
 
         chunker.add(4, (vis, pivot, arrayLen) => {
           // fade out the part of the array that is not being sorted (i.e. left side)
@@ -142,8 +159,19 @@ export default {
           for (let i = pivot + 1; i < arrayLen; i++) {
             vis.array.fadeIn(i);
           }
+
+          let updatedStack = updateStackElements(vis.array.stack, depth, 1, left, right);
+          for(let i=0;i<updatedStack.length;i++) {
+            for(let j=0;j<updatedStack[i].length;j++) {
+              if(j <= pivot) { updatedStack[i][j] = 0 }
+              else if(i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right )) { updatedStack[i][j] = -1}
+              else if(i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0 }
+            }
+          }
+          vis.array.setStackDepth(depth);
+
         }, [p, right + 1]);
-        QuickSort(a, p + 1, right, `${right}/${p + 1}`);
+        QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth+1);
       }
       // array of size 1, already sorted
       else if (left < array.length) {
@@ -158,16 +186,30 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
+        vis.array.setStack([new Array(nodes.length).fill(0)]); // used for a custom stack visualisation
       },
       [nodes],
     );
 
-    const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`, 0);
     // Fade out final node
     chunker.add(19, (vis, idx) => {
       vis.array.fadeOut(idx);
+      // fade all elements back in for final sorted state
+      for (let i = 0; i < nodes.length; i += 1) {
+        vis.array.fadeIn(i);
+      }
       vis.array.clearVariables();
+      vis.array.setStack([]);
     }, [nodes.length - 1]);
     return result;
   },
 };
+
+
+function updateStackElements(arr, depth, stateVal, left, right) {
+  for(let i=left;i<=right;i++) {
+    arr[depth][i] = stateVal;
+  }
+  return arr;
+}

@@ -99,6 +99,8 @@ class Array1DTracer extends Array2DTracer {
         newEl.sorted = val.sorted;
         newEl.faded = val.faded;
         newEl.variables = val.variables;
+        newEl.stack = val.stack;
+        newEl.stackDepth = val.stackDepth;
         return newEl;
       }
     }
@@ -116,9 +118,20 @@ class Array1DTracer extends Array2DTracer {
     // update this.data
     this.data = newData;
   }
+
+  setStack(val) {
+    this.stack = val;
+  }
+
+  setStackDepth(depth) {
+    this.stackDepth = depth;
+  }
+
   stringTheContent() {
     return this.data;
   }
 }
+
+
 
 export default Array1DTracer;
