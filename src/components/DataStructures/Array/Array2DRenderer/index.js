@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo } = this.props.data;
+    const { data, algo, kth } = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -186,6 +186,12 @@ class Array2DRenderer extends Renderer {
           ))
         }
         </tbody>
+        {
+          algo === 'tc' &&
+          <caption>
+            k = { kth }
+          </caption>
+        }
       </table>
     );
   }
