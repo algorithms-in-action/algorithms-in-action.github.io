@@ -64,23 +64,22 @@ export default {
 
       for (let i = 0; i < numOfNodes; i++) {
         if (!nodes[k][i][k]) {
-          chunker.add(3, (g, i, k) =>
-          {
+          // eslint-disable-next-line no-loop-func
+          chunker.add(3, (g, i, k) => {
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
-            prevK = k;
-            prevI = i;
-          chunker.add(3, (g, i, k) => {
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
             if (i === 0 && k > 0) {
               g.array.deselect(k - 1, numOfNodes - 1);
               g.array.deselect(numOfNodes - 1, k - 1);
+              g.graph.leave1(prevJ, prevK);
             }
             g.array.select(i, k);
           }, [i, k]); // move along columns
         } else {
+          // eslint-disable-next-line no-loop-func
           chunker.add(3, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
             g.graph.leave(prevK, prevI);
@@ -93,6 +92,7 @@ export default {
             if (i === 0 && k > 0) {
               g.array.deselect(k - 1, numOfNodes - 1);
               g.array.deselect(numOfNodes - 1, k - 1);
+              g.graph.leave1(prevJ, prevK);
             }
             g.array.select(i, k);
             g.graph.visit(i);
@@ -101,6 +101,7 @@ export default {
 
           for (let j = 0; j < numOfNodes; j++) {
             if (!nodes[k][k][j]) {
+              // eslint-disable-next-line no-loop-func
               chunker.add(4, (g, k, j, i) => {
                 g.graph.leave1(prevJ, prevK);
                 if (j > 0) {
@@ -162,7 +163,6 @@ export default {
                   // highlight the node (i,j) in the matrix when a path is found
                 }
               }, [i, j]);
-
               chunker.add(5, (g, i, j, k) => {
                 runChunkWithCheckCollapseState(() => {
                   // leave the node (i,j) to move to the next node
@@ -172,12 +172,11 @@ export default {
                   if (j !== k) {
                     // g.array.deselect(i, j);
                     g.array.depatch(i, j, 1);
-                    g.graph.leave1(j, i); // remove orange
+                    g.graph.leave1(j, i, 2); // remove orange
                   }
                   // g.graph.leave(j, k);
                 });
               }, [i, j, k]);
-
               for (let a = k; a < numOfNodes; a++) {
                 nodes[a][i][j] = 1;
               }

@@ -526,11 +526,14 @@ class GraphTracer extends Tracer {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
     if (weight) node.weight = weight;
-    node.visitedCount += visit ? 1 : -1;
     if (!this.istc) {
+      node.visitedCount += visit ? 1 : -1;
       if (edge) edge.visitedCount += visit ? 1 : -1;
+    } else {
       node.visitedCount = visit ? 1 : 0;
-    } else if (edge) edge.visitedCount = visit ? 1 : 0;
+      if (edge) edge.visitedCount = visit ? 1 : 0;
+      
+    } 
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
@@ -556,18 +559,25 @@ class GraphTracer extends Tracer {
     this.visitOrLeave1(true, target, source, weight, colorIndex);
   }
 
-  leave1(target, source, colorIndex, weight) {
+  leave1(target, source, colorIndex = 1, weight) {
     this.visitOrLeave1(false, target, source, weight, colorIndex);
   }
 
   visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.visitedCount1 = visit ? colorIndex : 0;
     const node = this.findNode(target);
     if (weight) node.weight = weight;
-    node.visitedCount1 = visit ? colorIndex : 0;
+
     const node1 = this.findNode(source);
-    if (node1) node1.visitedCount1 = visit ? colorIndex : 0;
+    if (colorIndex === 1) {
+      if (edge) edge.visitedCount1 = visit ? 1 : 0;
+      node.visitedCount1 = visit ? 1 : 0;
+      if (node1) node1.visitedCount1 = visit ? 1 : 0;
+    } else if (colorIndex === 2) {
+      if (edge) edge.visitedCount2 = visit ? 1 : 0;
+      node.visitedCount2 = visit ? 1 : 0;
+      if (node1) node1.visitedCount2 = visit ? 1 : 0;
+    }
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
