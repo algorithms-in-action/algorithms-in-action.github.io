@@ -14,8 +14,10 @@ const DEFAULT_ARR = genRandNumList(12, 1, 50);
 const QUICK_SORT = 'Quick Sort';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
-  rightmost: false,
-  medianofthree: false,
+  random: false,
+  sortedAsc: false,
+  bestCase: false,
+  sortedDesc: false
 };
 
 const BlueRadio = withStyles({
@@ -33,7 +35,7 @@ function QuicksortParam() {
   const [message, setMessage] = useState(null)
   const [array, setArray] = useState(DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
-    random: false,
+    random: true,
     sortedAsc: false,
     bestCase: false,
     sortedDesc: false
