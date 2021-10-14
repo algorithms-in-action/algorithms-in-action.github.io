@@ -58,7 +58,6 @@ export default {
       for (let i = 0; i < numOfNodes; i++) {
         if (!nodes[k][i][k]) {
           chunker.add(3, (g, i, k) => {
-            g.array.deselect(i, k);
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
@@ -71,7 +70,6 @@ export default {
         } else {
           chunker.add(3, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
-            g.array.deselect(i, k);
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
@@ -87,7 +85,6 @@ export default {
           for (let j = 0; j < numOfNodes; j++) {
             if (!nodes[k][k][j]) {
               chunker.add(4, (g, k, j, i) => {
-                g.array.deselect(k, j);
                 if (j > 0) {
                   g.array.deselect(k, j - 1);
                   if (i === k && k === (j - 1)) {
@@ -96,6 +93,9 @@ export default {
                 }
                 if (j === 0) {
                   g.array.deselect(k, numOfNodes - 1);
+                  if (i === k && k === (numOfNodes - 1)) {
+                    g.array.select(k, numOfNodes - 1);
+                  }
                 }
                 g.array.select(k, j, k, j, '1');
                 if (i === k && k === j) {
@@ -105,7 +105,6 @@ export default {
             } else {
               chunker.add(4, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                g.array.deselect(k, j);
                 if (j > 0) {
                   g.array.deselect(k, j - 1);
                   if (i === k && k === (j - 1)) {
