@@ -136,6 +136,7 @@ export default {
                         c='space';
                     }
                     vis.array.deselect(shiftTable.indexOf(c),1);
+                    vis.graph.deselect(j, null);
                 }
             }, [shift_pre-1]);
 
@@ -205,6 +206,7 @@ export default {
                     c='space';
                 }
                 vis.array.select(shiftTable.indexOf(c),1);
+                vis.graph.select(j, null);   
                 
             }, [shift_list.shift(),shift_i-1, nodes]);
             shift_pre=shift_i;
