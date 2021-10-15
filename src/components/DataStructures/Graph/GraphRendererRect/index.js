@@ -45,6 +45,8 @@ class GraphRendererRect extends Renderer {
     this.ShowMsg=0;
     this.shiftcount = 0;
     this.lastvisited = -1;
+    this.hasGraph = false;
+    this.graphFinished = false;
 
     this.togglePan(true);
     this.toggleZoom(true);
@@ -171,12 +173,14 @@ class GraphRendererRect extends Renderer {
     let currentPatEnd = nodes[StringLen+PatternLen-1];
     let lasthighlightj=nodes[StringLen];
     let lasthighlighti=nodes[PatternLen-1];
+    let highlighting = false;
     let accumj=0;
     if(algorithmName === "horspools"){
       for(let ii = 0; ii<StringLen ; ii++){
         if(nodes[ii].selectedCount === 1 || nodes[ii].visitedCount === 1){
           lasthighlighti = nodes[ii]
           testing.push(nodes[ii])
+          highlighting = true;
           break;
         }
       }
@@ -278,8 +282,9 @@ class GraphRendererRect extends Renderer {
                 {(id === lasthighlightj.id && currentPatStart.x === strStart.x && testing.length >0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)}
                 {(id === lasthighlightj.id && currentPatStart.x !== strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre"}}  y={lasthighlightj.y * 2} dy=".2em">m-j</text> :<></> )}
                 {(id === lasthighlightj.id && currentPatStart.x !== strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre" }}  y={-lasthighlightj.y * 6} dy=".2em">i-j</text> : <></>)}
-                {(id === currentPatEnd.id && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)}
-                {(id === strEnd.id && currentPatStart.x != strStart.x && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 8} dy=".2em">j={accumj}</text> : <></>)}
+                {(id === currentPatEnd.id && currentPatStart.x !== strStart.x && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)}
+                {(id === currentPatEnd.id && currentPatStart.x === strStart.x && highlighting && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)}
+                {(id === strEnd.id && currentPatStart.x === strStart.x && highlighting && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 8} dy=".2em">j={accumj}</text> : <></>)}
               </motion.g>
             );
         })}
