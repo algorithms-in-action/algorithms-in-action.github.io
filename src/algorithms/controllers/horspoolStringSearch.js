@@ -204,7 +204,6 @@ export default {
                 {
                     c='space';
                 }
-                window.alert(c)
                 vis.array.select(shiftTable.indexOf(c),1);
                 
             }, [shift_list.shift(),shift_i-1, nodes]);
