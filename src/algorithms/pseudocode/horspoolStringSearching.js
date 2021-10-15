@@ -65,7 +65,7 @@ text or pattern may be drawn, and AlphabetSize is the
 number of characters in the Alphabet.  
 \\Expl}        
 \\In{
-    Shift[k] <- m  
+    Shift[k] <- m  \\B 12
     \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
      the current character in the text is not in the pattern at all, we do not have
      to try any more possible matches that contain this character, so we make a large skip. 

@@ -57,10 +57,23 @@ export default {
 
         chunker.add('2', (vis, n) => {
             //initialize shift table
-            vis.array.set([shiftTable.slice(0,13),new Array(13).fill(findString.length)],
-            [shiftTable.slice(13,27),new Array(14).fill(findString.length)],
+            vis.array.set([shiftTable.slice(0,13),new Array(13)],
+            [shiftTable.slice(13,27),new Array(14)],
             'horspools');
         }, [nodes]);
+
+        //incrementally fill inital shifttable
+        for (let a=0; a<shiftTable.length-1; a++)
+        {
+            chunker.add('12', (vis, n) => {
+                vis.array.patch(shiftTable.indexOf(shiftTable[a]),1,findString.length);
+            }, [nodes]);
+            chunker.add('2', (vis, n) => {
+                vis.array.depatch(shiftTable.indexOf(shiftTable[a]),1,findString.length);
+            }, [nodes]);
+            
+        }
+
         //initial the shifttable with searchstring
         for (let j=0;j<findString.length-1;j++)
         {
