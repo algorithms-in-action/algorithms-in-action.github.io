@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Radio from '@material-ui/core/Radio'
-import { withStyles } from '@material-ui/core/styles'
-import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper'
-import { GlobalContext } from '../../context/GlobalState'
-import { GlobalActions } from '../../context/actions'
-import ListParam from './helpers/ListParam'
-import '../../styles/Param.scss'
+import React, { useState, useEffect } from 'react';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { withStyles } from '@material-ui/core/styles';
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import ListParam from './helpers/ListParam';
+import '../../styles/Param.scss';
 
 const DEFAULT_ARR = genRandNumList(12, 1, 50);
 const QUICK_SORT = 'Quick Sort';
@@ -41,6 +38,7 @@ function QuicksortParam() {
     sortedDesc: false
   });
 
+    
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
@@ -59,7 +57,7 @@ function QuicksortParam() {
         setArray(genRandNumList(12, 1, 50));
         break;
       case 'bestCase':
-        setArray(quicksortPerfectPivotArray(1,50));
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25))));
         break;
       default:
         break;
@@ -84,7 +82,28 @@ function QuicksortParam() {
           buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
-          DEFAULT_VAL={array}
+          DEFAULT_VAL={
+            (()=>{
+              if(QSCase.sortedAsc) {
+                return (array.sort(function(a,b) {
+                  return (+a) - (+b)
+                 }));
+              }
+              else if(QSCase.sortedDesc) {
+                return (array.sort(function(a,b) {
+                  return (+b) - (+a)
+                 }));
+              }
+              else if(QSCase.random) {
+                return genRandNumList(12, 1, 50)
+              } 
+              else if(QSCase.bestCase) {
+                return quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
+              } else {
+                return array;
+              }
+            })()
+          }
           SET_VAL={setArray}
           ALGORITHM_NAME={QUICK_SORT}
           EXAMPLE={QUICK_SORT_EXAMPLE}
