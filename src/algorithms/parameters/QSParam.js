@@ -82,29 +82,29 @@ function QuicksortParam() {
           buttonName="Sort"
           mode="sort"
           formClassName="formLeft"
-          DEFAULT_VAL={
-            (()=>{
-              if(QSCase.sortedAsc) {
-                return (array.sort(function(a,b) {
-                  return (+a) - (+b)
+          DEFAULT_VAL={array}
+          SET_VAL={setArray}
+          REFRESH_FUNCTION={
+            (() => {
+              if (QSCase.sortedAsc) {
+                return () => {
+                  return (genRandNumList(12, 1, 50).sort(function (a,b) {
+                    return (+a) - (+b)
                  }));
+                }
               }
-              else if(QSCase.sortedDesc) {
-                return (array.sort(function(a,b) {
-                  return (+b) - (+a)
+              else if (QSCase.sortedDesc) {
+                return () => {
+                  return (genRandNumList(12, 1, 50).sort(function (a,b) {
+                    return (+b) - (+a)
                  }));
+                }
               }
-              else if(QSCase.random) {
-                return genRandNumList(12, 1, 50)
-              } 
               else if(QSCase.bestCase) {
-                return quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
-              } else {
-                return array;
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
               }
             })()
           }
-          SET_VAL={setArray}
           ALGORITHM_NAME={QUICK_SORT}
           EXAMPLE={QUICK_SORT_EXAMPLE}
           setMessage={setMessage}
