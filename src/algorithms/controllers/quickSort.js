@@ -165,6 +165,8 @@ export default {
             vis.array.fadeIn(i);
           }
 
+          // do some somewhat hacky changes to the 'stack' array
+          // note that this is just setting the state of elements in a 2D array which represents a stack and corresponding elements in the real array positionally in a row
           let updatedStack = updateStackElements(vis.array.stack, depth, 1, left, right);
           for(let i=0;i<updatedStack.length;i++) {
             for(let j=0;j<updatedStack[i].length;j++) {
@@ -175,7 +177,7 @@ export default {
           }
 
         }, [p, right + 1]);
-        QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth+1);
+        QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
       // array of size 1, already sorted
       else if (left < array.length) {
@@ -211,7 +213,7 @@ export default {
 };
 
 
-function updateStackElements(arr, depth, stateVal, left, right) {
+export function updateStackElements(arr, depth, stateVal, left, right) {
   for(let i=left;i<=right;i++) {
     arr[depth][i] = stateVal;
   }

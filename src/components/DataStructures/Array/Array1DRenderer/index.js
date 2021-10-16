@@ -186,9 +186,11 @@ function stackRenderer(stack, nodeCount, stackDepth) {
     stackItems.push(
       <div style={{ display: 'flex',
         justifyContent: 'space-between' }}>
-                    {stack[i].map(val => <div className={styles.stackElement} style={{
+                    {stack[i].map((val, index) => <div className={styles.stackElement} style={{
                       width: `calc(100%/${nodeCount})`,
-                      backgroundColor: stackFrameColour(val) }} />)}
+                      backgroundColor: stackFrameColour(val) }}>{
+                      (()=>{})()
+                      }</div>)}
   </div>,
     );
   }
