@@ -7,7 +7,8 @@ import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelpe
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
-const DEFAULT_ARR = genRandNumList(12, 1, 50);
+const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
+const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
 const QUICK_SORT = 'Quick Sort Median of Three';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
@@ -44,17 +45,17 @@ function QuicksortParam() {
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
-        setArray(array.sort(function(a,b) {
+        setArray([...array].sort(function(a,b) {
          return (+a) - (+b)
         }));
         break;
       case 'sortedDesc':
-        setArray(array.sort(function(a,b) {
+        setArray([...array].sort(function(a,b) {
           return (+b) - (+a)
          }));
          break;
       case 'random':
-        setArray(genRandNumList(12, 1, 50));
+        setArray(DEFAULT_ARRAY_GENERATOR());
         break;
       case 'bestCase':
         setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25))));
@@ -88,14 +89,14 @@ function QuicksortParam() {
             (() => {
               if (QSM3Case.sortedAsc) {
                 return () => {
-                  return (genRandNumList(12, 1, 50).sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
                     return (+a) - (+b)
                  }));
                 }
               }
               else if (QSM3Case.sortedDesc) {
                 return () => {
-                  return (genRandNumList(12, 1, 50).sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
                     return (+b) - (+a)
                  }));
                 }
@@ -143,18 +144,6 @@ function QuicksortParam() {
           />
         }
         label="Sorted (descending)"
-        className="checkbox"
-      />
-      {/* create a checkbox for Median of Three */}
-      <FormControlLabel
-        control={
-          <BlueRadio
-            checked={QSM3Case.bestCase}
-            onChange={handleChange}
-            name="bestCase"
-          />
-        }
-        label="Ideal"
         className="checkbox"
       />
       {/* render success/error message */}
