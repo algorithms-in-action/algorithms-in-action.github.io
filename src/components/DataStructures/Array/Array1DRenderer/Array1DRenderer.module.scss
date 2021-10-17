@@ -6,7 +6,7 @@
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
         position: relative;
-        --array-1d-minimum-height: 10px;
+        --array-1d-minimum-height: 1em;
 
         .pivotLine {
             position: absolute;
@@ -122,15 +122,15 @@
         .stackElement {
             height: 0.6em;
             transition-duration: 0.1s;
-            margin-bottom: 1em;
+            margin-bottom: m#{i}n(1vh, 1em);
 
-            --active-stack-section: rgb(255, 36, 7);
-            --future-stack-section: rgba(0, 0, 0, 0.2);
+            --active-stack-section: var(--array-1d-row-col-bg-selected);
+            --future-stack-section: var(--array-1d-future-stack-todo-section);
             --completed-stack-section: rgba(0, 0, 0, 0);
         }
 
         p {
-            color: rgb(99, 99, 99);
+            color: rgb(133, 133, 133);
             font-size: 0.8em;
         }
     }
