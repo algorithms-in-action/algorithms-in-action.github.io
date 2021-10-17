@@ -53,9 +53,12 @@ export default {
       }
     };
 
-    const swapAction = (b, n1, n2) => {
+    const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(b, (vis, _n1, _n2) => {
         vis.array.swapElements(_n1, _n2);
+        if (isPivotSwap) {
+          vis.array.assignVariable('pivot', n1);
+        }
       }, [n1, n2]);
     };
 
@@ -114,13 +117,15 @@ export default {
           tmp = a[j];
           a[j] = a[i];
           a[i] = tmp;
-          swapAction(10, i, j);
+          swapAction(10, i, j, { isPivotSwap: false });
         }
       }
+
+      // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      swapAction(13, i, right);
-      
+      swapAction(13, i, right, { isPivotSwap: true });
+
       chunker.add(13, (vis, i1, j1, r) => {
         vis.array.assignVariable('pivot', i);
         unhighlight(vis, i1);
