@@ -2,6 +2,22 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
+/**
+ * Updates elements in our 'stack' which is just an array of arrays. Probably a good idea to make this a more principled implementation...!
+ * @param {*} arr
+ * @param {*} depth
+ * @param {*} stateVal
+ * @param {*} left
+ * @param {*} right
+ * @returns
+ */
+export function updateStackElements(arr, depth, stateVal, left, right) {
+  for (let i = left; i <= right; i += 1) {
+    arr[depth][i] = stateVal;
+  }
+  return arr;
+}
+
 export default {
   explanation: QSExp,
 
@@ -14,6 +30,7 @@ export default {
     };
   },
 
+  
   /**
    *
    * @param {object} chunker
@@ -130,11 +147,11 @@ export default {
         }
 
         updatedStack = updateStackElements(updatedStack, depth, 1, left, right);
-        for(let i=0;i<updatedStack.length;i++) {
-          for(let j=0;j<updatedStack[i].length;j++) {
-            if(updatedStack[i][j] == 0) continue;
-            if(i !== depth && updatedStack[i][j] != 0 && (j <left || j > right)) {updatedStack[i][j] = -1}
-            if(i !== depth && (j >=left && j <= right)) {updatedStack[i][j] = 0 }
+        for (let i = 0; i < updatedStack.length; i += 1) {
+          for (let j = 0; j < updatedStack[i].length; j += 1) {
+            if (updatedStack[i][j] === 0) continue;
+            if (i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right)) { updatedStack[i][j] = -1; }
+            if (i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0; }
           }
         }
 
@@ -211,11 +228,3 @@ export default {
     return result;
   },
 };
-
-
-export function updateStackElements(arr, depth, stateVal, left, right) {
-  for(let i=left;i<=right;i++) {
-    arr[depth][i] = stateVal;
-  }
-  return arr;
-}
