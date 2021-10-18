@@ -149,17 +149,14 @@ export const makeData = (len, min, max, symmetric) => {
       data[`col${j}`] = symmetric
         ? `${rows[i][j]}`
         : `${getRandomInt(min, max)}`;
+      if (i === j && !symmetric) {
+        data[`col${j}`] = '1';
+      }
     }
     arr.push(data);
   }
   if (len === 4 && symmetric !== true) {
     arr = [
-      {
-        col0: '0',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
       {
         col0: '1',
         col1: '0',
@@ -170,13 +167,19 @@ export const makeData = (len, min, max, symmetric) => {
         col0: '1',
         col1: '1',
         col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '1',
+        col2: '1',
         col3: '0',
       },
       {
         col0: '0',
         col1: '0',
         col2: '1',
-        col3: '0',
+        col3: '1',
       },
     ];
   }
