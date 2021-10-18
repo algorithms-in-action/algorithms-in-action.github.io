@@ -87,6 +87,7 @@ export default {
     };
 
     const PqUpdate = (i) => {
+      chunker.add(5);
       let j;
       let w;
       let preIndex;
@@ -258,13 +259,14 @@ export default {
         );
       }
       chunker.add(
-        3,
+        5,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
           vis.graph.visit(n1, n1);
         },
         [i, newEdges]
       );
+      chunker.add(3);
       closed.push(i);
     }
     // for test
