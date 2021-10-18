@@ -63,9 +63,9 @@ export default {
         }, [nodes]);
 
         //incrementally fill inital shifttable
-        for (let a=0; a<shiftTable.length-1; a++)
+        for (let a=0; a<shiftTable.length; a++)
         {
-            chunker.add('12', (vis, n) => {
+            chunker.add('3', (vis, n) => {
                 vis.array.patch(shiftTable.indexOf(shiftTable[a]),1,findString.length);
             }, [nodes]);
             chunker.add('2', (vis, n) => {
@@ -89,12 +89,12 @@ export default {
             
             shiftTableValue[shiftTable.indexOf(c)]=findString.length-(j+1);
             
-            chunker.add('4', (vis,j) => {
+            chunker.add('5', (vis,j) => {
                 vis.graph.select(searchString.length+j);
                 vis.array.patch(shiftTable.indexOf(c),1,findString.length-(j+1));
             },[j]);
 
-            chunker.add('3', (vis,j) => {
+            chunker.add('4', (vis,j) => {
                 vis.graph.deselect(searchString.length+j);
                 vis.array.depatch(shiftTable.indexOf(c),1);
             },[j]);
@@ -102,7 +102,7 @@ export default {
         }
         let m = findString.length;//m=3
         let i = m;
-        chunker.add('5', (vis, n) => {
+        chunker.add('6', (vis, n) => {
             //window.alert("findString is : "+findString.length);
             //window.alert("searchString is : "+searchString.length);//n=8
             //TODO:move i pointer
@@ -129,15 +129,23 @@ export default {
 
         //Start Searching
         for (let shift_i = m; shift_i < searchString.length + 1; shift_i+=shift_ilist.shift()) {
-            chunker.add('10', (vis,j) => {
+            chunker.add('11', (vis,j) => {
                 if(j !== -1){
-                    vis.array.deselect(shiftTable.indexOf(searchString[j].toUpperCase()),1);
+                    const c = searchString[j];
+                    if (c===" "){
+                        c='space';
+                    }
+                    vis.array.deselect(shiftTable.indexOf(c),1);
+                    vis.graph.deselect(j, null);
                 }
             }, [shift_pre-1]);
-            
+
+            chunker.add('13', (vis, n) => {
+            }, [nodes]);
+
             for (let shift_j = 0; shift_j < findString.length; shift_j++) {
                 
-                chunker.add('7', (vis, i, j, n) => {
+                chunker.add('8', (vis, i, j, n) => {
                     //window.alert("the shift_i is:"+shift_i+" the character is"+searchString[shift_i-shift_j-1]);
                     //window.alert("j is : "+(findString.length-shift_j)+" the character is"+findString[findString.length-shift_j-1]);
                     // visit - character not match, coloured in blue
@@ -153,7 +161,7 @@ export default {
                     
                 }, [shift_i, shift_j, nodes]);
                 if (searchString[shift_i - shift_j-1] !== findString[m-shift_j-1]) {
-                    chunker.add('7', (vis, i, j, n) => {
+                    chunker.add('8', (vis, i, j, n) => {
                         for (let j = 0; j <= shift_j; j++){
                             if (j === shift_j) {
                                 vis.graph.leave(searchString.length + m-j-1);
@@ -171,7 +179,7 @@ export default {
                 } else if (shift_j === findString.length - 1)  {
                   
                     // select - character matches, coloured in red
-                    chunker.add('9', (vis, i, j, n) => {
+                    chunker.add('10', (vis, i, j, n) => {
                         //window.alert("it is a equal2");
                         const ResultStr = `Success: pattern found position ${i-j}`;
                         // method1
@@ -180,21 +188,30 @@ export default {
                     return;
                 }else{
                     // eslint-disable-next-line no-unused-vars
-                    chunker.add('8', (vis, i, j, n) => {
+                    chunker.add('9', (vis, i, j, n) => {
                     }, [shift_i, shift_j, nodes]);
                 }
             }
-            chunker.add('6', (vis, i, j, n) => {
+            chunker.add('14', (vis, n) => {
+            }, [nodes]);
+            chunker.add('15', (vis, n) => {
+            }, [nodes]);
+            chunker.add('7', (vis, i, j, n) => {
+                const c = searchString[j];
                 if(i+m<=searchString.length){
-                     //window.alert("the i is:"+i);
                      vis.graph.shift(i, n);
                 }
-                vis.array.select(shiftTable.indexOf(searchString[j].toUpperCase()),1);
+                if (c===" ")
+                {
+                    c='space';
+                }
+                vis.array.select(shiftTable.indexOf(c),1);
+                vis.graph.select(j, null);   
                 
             }, [shift_list.shift(),shift_i-1, nodes]);
             shift_pre=shift_i;
         }
-        chunker.add('11', (vis) => {
+        chunker.add('12', (vis) => {
             const ResultStr = "Pattern not found";
             vis.graph.addResult(ResultStr, i);
         }, []);

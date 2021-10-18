@@ -65,16 +65,16 @@ text or pattern may be drawn, and AlphabetSize is the
 number of characters in the Alphabet.  
 \\Expl}        
 \\In{
-    Shift[k] <- m  \\B 12
+    Shift[k] <- m  \\B 3
     \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
      the current character in the text is not in the pattern at all, we do not have
      to try any more possible matches that contain this character, so we make a large skip. 
     \\Expl}
 \\In}
 //Put in values for characters in pattern P
-for j <- 1 to m-1  \\B 3
+for j <- 1 to m-1  \\B 4
 \\In{
-    Shift[P[j]] <- m - j  \\B 4
+    Shift[P[j]] <- m - j  \\B 5
     \\Expl{ For characters that are in pattern P, overwrite the default shift to something smaller.
     \\Expl}\t \t
 \\In}
@@ -82,34 +82,34 @@ for j <- 1 to m-1  \\B 3
 
 \\Code{
 Search
-i <- m  \\B 5
-while i <= n  \\B 6
+i <- m  \\B 6
+while i <= n  \\B 11
 \\Expl{ Until matching has gone beyond the length n of text T, start another attempted match. 
 \\Expl}
 \\In{
-    j <- 0
-    while j < m and P[m-j] = T[i-j] \\B 7
+    j <- 0  \\B 13
+    while j < m and P[m-j] = T[i-j] \\B 8
     \\Expl{ These characters match.
     \\Expl} \t\t
     \\In{
-        j <= j + 1 \\B 8
+        j <= j + 1 \\B 9
     \\In}
     \\Expl{  So move back one character and keep trying to match.
     \\Expl} 
-    if j = m
+    if j = m  \\B 14
     \\In{
         // we have a match
-        return i - m + 1  // start of the match \\B 9
+        return i - m + 1  // start of the match \\B 10
     \\In}
-    else
+    else  \\B 15
     \\In{
-    i <- i + Shift[T[i]] \\B 6
+    i <- i + Shift[T[i]] \\B 7
     \\Expl{  Advance the pattern, consulting the shift table to see how
             far, given the attempted match starting with T[i] failed.
     \\Expl}
     \\In}
 \\In}  
-return NOT FOUND  // Signal that there was no match   \\B 10
+return NOT FOUND  // Signal that there was no match   \\B 12
 \\Code}
 
 \\Note{  The following is an implementation in C:
