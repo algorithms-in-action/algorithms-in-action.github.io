@@ -107,7 +107,6 @@ export const team = [
     linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'Kenny Lee',
@@ -116,7 +115,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/kennylwx/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'Yingsong Chen',
@@ -125,8 +123,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/yinsong-chen-62707b15b/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
-
   },
   {
     name: 'Bohao Liu',
@@ -135,7 +131,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/bohao-liu-3218211ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'Nir Palombo',
@@ -144,8 +139,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/nir-palombo-b513b449/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
-
   },
   {
     name: 'Boyu Zhou',
@@ -154,7 +147,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/boyu-zhou-05487b1a0/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'João Pereira',
@@ -163,7 +155,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/joão-pereira-574972163/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'Lin Fan',
@@ -172,7 +163,6 @@ export const team = [
     linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
   {
     name: 'Tianyang Chen',
@@ -181,6 +171,49 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/tianyang-chen-8208261ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-
   },
+];
+
+export const team2021s2 = [// Order by Group 
+// Bluering
+
+// Boxjelly
+  {
+    name: 'Tianjing Ruan',
+    photo: "https://ui-avatars.com/api/?name=Tianjing+Ruan&background=0D8ABC&color=fff",
+    github: '#',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MEng (Software)',
+  }, {
+    name: 'Wenkai Gong',
+    photo: "https://ui-avatars.com/api/?name=Wenkai+Gong&background=0D8ABC&color=fff",
+    github: 'https://github.com/DanistyWuKids',
+    linkedIn: 'https://www.linkedin.com/in/wgong0001/',
+    desc: 'University of Melbourne',
+    title: 'MEng (Software)',
+  },{
+    name: 'Xuan Yin',
+    photo: "https://ui-avatars.com/api/?name=Xuan+Yin&background=0D8ABC&color=fff",
+    github: '#',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MEng (Software)',
+  },{
+    name: 'Yuqi Song',
+    photo: "https://ui-avatars.com/api/?name=Yuqi+Song&background=0D8ABC&color=fff",
+    github: '#',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MEng (Software)',
+  },{
+    name: 'Yifei Yang',
+    photo: "https://ui-avatars.com/api/?name=Yifei+Yang&background=0D8ABC&color=fff",
+    github: '#',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MEng (Software)',
+  },
+// Redback
+
 ];
