@@ -138,7 +138,8 @@ class Array2DRenderer extends Renderer {
         }
         {
         algo === 'tc' &&
-        <tr className={styles.row}>
+        // Don't remove "j-tag='transitive_closure'"
+        <tr j-tag='transitive_closure' className={styles.row}>
           <td />
           {
             data_T.map((row) => {

@@ -64,8 +64,9 @@ export default {
 
       for (let i = 0; i < numOfNodes; i++) {
         // run the second for loop
-        chunker.add(3, (g, k) => {
+        chunker.add({bookmark: 3, pauseInCollapse: true}, (g, k) => {
           g.array.showKth(k + 1);
+          releaseChunkCache();
         }, [k]);
 
         if (!nodes[k][i][k]) {
@@ -111,21 +112,28 @@ export default {
           for (let j = 0; j < numOfNodes; j++) {
             // run the third for loop
             chunker.add(5, (g, k) => {
+              runChunkWithEnterCollapse();
             }, [k]);
 
             if (!nodes[k][k][j]) {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, k, j, i) => {
-                g.graph.leave1(prevJ, prevK);
+                runChunkWithCheckCollapseState(()=>{
+                  g.graph.leave1(prevJ, prevK);
+                })
                 if (j > 0) {
-                  g.array.deselect(k, j - 1);
+                  runChunkWithCheckCollapseState(()=>{
+                    g.array.deselect(k, j - 1);
+                  })
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
                     g.graph.visit(i);
                   }
                 }
                 if (j === 0) {
-                  g.array.deselect(k, numOfNodes - 1);
+                  runChunkWithCheckCollapseState(()=>{
+                    g.array.deselect(k, numOfNodes - 1);
+                  })
                   if (i === k && k === (numOfNodes - 1)) {
                     g.array.select(k, numOfNodes - 1);
                   }
@@ -140,9 +148,13 @@ export default {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                g.graph.leave1(prevJ, prevK);
+                runChunkWithCheckCollapseState(()=>{
+                  g.graph.leave1(prevJ, prevK);
+                })
                 if (j > 0) {
-                  g.array.deselect(k, j - 1);
+                  runChunkWithCheckCollapseState(()=>{
+                    g.array.deselect(k, j - 1);
+                  })
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
                     g.graph.visit(i);
@@ -179,12 +191,15 @@ export default {
 
               if (!nodes[k][i][j]) {
                 chunker.add(7, (g, i, j, k) => {
-                  // leave the node (i,j) to move to the next node
-                  // g.graph.leave(j, i);
-                  // eslint-disable-next-line max-len
-                  // remove highlighting from the node (i,j) in the matrix to move to the next element
-                  g.array.depatch(i, j, 1);
-                  g.graph.leave1(j, i, 2); // remove orange
+                    // leave the node (i,j) to move to the next node
+                    // g.graph.leave(j, i);
+                    // eslint-disable-next-line max-len
+                    // remove highlighting from the node (i,j) in the matrix to move to the next element
+                  
+                  runChunkWithCheckCollapseState(()=>{
+                    g.array.depatch(i, j, 1);
+                    g.graph.leave1(j, i, 2); // remove orange
+                  })
                 }, [i, j, k]);
               }
 

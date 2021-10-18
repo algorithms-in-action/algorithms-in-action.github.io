@@ -4,6 +4,7 @@
 import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
+import {onCollapseStateChange} from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
@@ -250,6 +251,8 @@ export const GlobalActions = {
     } else {
       result[state.id.name][state.id.mode][codeblockname] = false; // collapase
     }
+
+    onCollapseStateChange();
 
     return {
       ...state,
