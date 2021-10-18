@@ -195,8 +195,15 @@ class GraphTracer extends Tracer {
   addResult(text,id) {
     this.findNode(id).Result = text;
   }
-  
-
+  addStringLen(len,id){
+    this.findNode(id).StringLen = len;
+  }
+  addPatternLen(len,id){
+    this.findNode(id).PatternLen = len;
+  }
+  addAlgorithm(name,id){
+    this.findNode(id).algorithmName =name;
+  }
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
     const update = { value, weight, x, y, visitedCount, selectedCount };
