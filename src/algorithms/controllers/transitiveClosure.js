@@ -68,6 +68,7 @@ export default {
           g.array.showKth(k + 1);
           if (i > 0) {
             g.array.deselect(k, numOfNodes - 1);
+            g.graph.leave1(prevJ, prevK);
           }
           if (i === 0 && k > 0) {
             g.array.deselect(k - 1, numOfNodes - 1);
@@ -82,7 +83,6 @@ export default {
             g.graph.leave(prevI);
             if (i > 0) {
               g.array.deselect(i - 1, k);
-              g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
               g.array.deselect(numOfNodes - 1, k - 1);
@@ -98,7 +98,6 @@ export default {
             g.graph.leave(prevI);
             if (i > 0) {
               g.array.deselect(i - 1, k);
-              g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
               g.array.deselect(numOfNodes - 1, k - 1);
