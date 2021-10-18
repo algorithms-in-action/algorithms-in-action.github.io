@@ -64,10 +64,16 @@ export default {
 
       for (let i = 0; i < numOfNodes; i++) {
         // run the second for loop
-        chunker.add({bookmark: 3, pauseInCollapse: true}, (g, k) => {
+        chunker.add({ bookmark: 3, pauseInCollapse: true }, (g, k, i) => {
           g.array.showKth(k + 1);
+          if (i > 0) {
+            g.array.deselect(k, numOfNodes - 1);
+          }
+          if (i === 0 && k > 0) {
+            g.array.deselect(k - 1, numOfNodes - 1);
+          }
           releaseChunkCache();
-        }, [k]);
+        }, [k, i]);
 
         if (!nodes[k][i][k]) {
           // eslint-disable-next-line no-loop-func
@@ -75,12 +81,10 @@ export default {
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
             if (i > 0) {
-              g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
               g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
-              g.array.deselect(k - 1, numOfNodes - 1);
               g.array.deselect(numOfNodes - 1, k - 1);
               g.graph.leave1(prevJ, prevK);
             }
@@ -93,12 +97,10 @@ export default {
             g.graph.leave(prevK, prevI);
             g.graph.leave(prevI);
             if (i > 0) {
-              g.array.deselect(k, numOfNodes - 1);
               g.array.deselect(i - 1, k);
               g.graph.leave1(prevJ, prevK);
             }
             if (i === 0 && k > 0) {
-              g.array.deselect(k - 1, numOfNodes - 1);
               g.array.deselect(numOfNodes - 1, k - 1);
               g.graph.leave1(prevJ, prevK);
             }
@@ -118,22 +120,22 @@ export default {
             if (!nodes[k][k][j]) {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, k, j, i) => {
-                runChunkWithCheckCollapseState(()=>{
+                runChunkWithCheckCollapseState(() => {
                   g.graph.leave1(prevJ, prevK);
-                })
+                });
                 if (j > 0) {
-                  runChunkWithCheckCollapseState(()=>{
+                  runChunkWithCheckCollapseState(() => {
                     g.array.deselect(k, j - 1);
-                  })
+                  });
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
                     g.graph.visit(i);
                   }
                 }
                 if (j === 0) {
-                  runChunkWithCheckCollapseState(()=>{
+                  runChunkWithCheckCollapseState(() => {
                     g.array.deselect(k, numOfNodes - 1);
-                  })
+                  });
                   if (i === k && k === (numOfNodes - 1)) {
                     g.array.select(k, numOfNodes - 1);
                   }
@@ -148,13 +150,13 @@ export default {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                runChunkWithCheckCollapseState(()=>{
+                runChunkWithCheckCollapseState(() => {
                   g.graph.leave1(prevJ, prevK);
-                })
+                });
                 if (j > 0) {
-                  runChunkWithCheckCollapseState(()=>{
+                  runChunkWithCheckCollapseState(() => {
                     g.array.deselect(k, j - 1);
-                  })
+                  });
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
                     g.graph.visit(i);
@@ -196,10 +198,10 @@ export default {
                     // eslint-disable-next-line max-len
                     // remove highlighting from the node (i,j) in the matrix to move to the next element
                   
-                  runChunkWithCheckCollapseState(()=>{
+                  runChunkWithCheckCollapseState(() => {
                     g.array.depatch(i, j, 1);
                     g.graph.leave1(j, i, 2); // remove orange
-                  })
+                  });
                 }, [i, j, k]);
               }
 
