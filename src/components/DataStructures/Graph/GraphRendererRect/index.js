@@ -278,13 +278,16 @@ class GraphRendererRect extends Renderer {
                 {(id === nodeid && highlightid <0 && algorithmName === "bfsSearch" ?<text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
                 {(id === highlightid && highlightid >=0 && algorithmName === "bfsSearch" ? <text style={{ fill: "#2986CC" }}  y={smly * 2} dy=".2em">j</text>:<></>)}
                 {/* HFS */}
-                {(id === currentPatEnd.id && currentPatStart.x !== strStart.x && testing.length <=0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)}
-                {(id === lasthighlightj.id && currentPatStart.x === strStart.x && testing.length >0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)}
+                {/* {(id === currentPatEnd.id && currentPatStart.x !== strStart.x && testing.length <=0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)} */}
+                {/* {(id === lasthighlightj.id && currentPatStart.x === strStart.x && !highlighting && testing.length >0 && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 2} dy=".2em">j</text> : <></>)} */}
                 {(id === lasthighlightj.id && currentPatStart.x !== strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre"}}  y={lasthighlightj.y * 2} dy=".2em">m-j</text> :<></> )}
                 {(id === lasthighlightj.id && currentPatStart.x !== strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre" }}  y={-lasthighlightj.y * 6} dy=".2em">i-j</text> : <></>)}
+                {(id === lasthighlightj.id && id == currentPatEnd.id && currentPatStart.x === strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre"}}  y={lasthighlightj.y * 2} dy=".2em">m-j</text> :<></> )}
+                {(id === lasthighlightj.id && id == currentPatEnd.id && currentPatStart.x === strStart.x && testing.length >0 && algorithmName === "horspools" ? <text style={{ fill: "#2986CC", textAlign:"centre" }}  y={-lasthighlightj.y * 6} dy=".2em">i-j</text> : <></>)}
                 {(id === currentPatEnd.id && currentPatStart.x !== strStart.x && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)}
                 {(id === currentPatEnd.id && currentPatStart.x === strStart.x && highlighting && algorithmName === "horspools" ? <text style={{ fill: "#2986CC" }}  y={-lasthighlightj.y * 4} dy=".2em">i</text> : <></>)}
-                {(id === strEnd.id && currentPatStart.x !== strStart.x && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }}  y={lasthighlightj.y * 8} dy=".2em">j={accumj}</text> : <></>)}
+                {(id === currentPatEnd.id && (currentPatStart.x !== strStart.x || currentPatStart.x === strStart.x && highlighting) && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }} x={strEnd.x} y={lasthighlightj.y * 8} dy=".2em">j={accumj}</text> : <></>)}
+                {/* {(id === currentPatEnd.id && currentPatStart.x === strStart.x && highlighting && algorithmName === "horspools"? <text style={{ fill: "#2986CC" }} x={strEnd.x} y={lasthighlightj.y * 8} dy=".2em">j={accumj}</text> : <></>)} */}
               </motion.g>
             );
         })}
