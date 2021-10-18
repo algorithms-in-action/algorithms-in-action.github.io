@@ -17,27 +17,32 @@ export default parse(`
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
+        if A[i,k]  \\B 4
+        \\Expl{ When A[i,k] is 0 (that is, there is no path from i to k), k
+          cannot possibly be a stepping stone in the path from i to j,
+          so we do not explore whether there is a path from k to j.
+        \\Expl}  
+        // Consider all paths from i to j, either already reachable (using 
+        // nodes 1 to k-1 as intermediates), or now reachable using k as an 
+        // intermediate.   
+        Find all nodes reachable from i via k \\Ref Reachable
         \\Expl{  Identify target nodes j that are reachable from 
         source node i, whether they were already reachable 
         before now, or whether they are now reachable using 
         node k as a stepping stone.
         \\Expl}
-        if A[i,k]  \\B 4
-        \\Expl{ When A[i,k] is 0 (that is, there is no path from i to k), k
-          cannot possibly be a stepping stone in the path from i to j,
-          so we do not explore whether there is a path from k to j.
-        \\Expl}      
-        Find all nodes reachable from i via k \\Ref Collapse
       \\In}
     \\In}
   \\In}
 \\Code}
 
 \\Code{
-  Collapse
+  Reachable
   \\In{
   for j <- 0 to n-1   \\B 5
   \\Expl{ Consider paths to all possible target nodes j.
+  The effect of this innermost loop is to update row i
+  to become its binary "or" with row k.
   \\Expl} 
   \\In{
     if A[k,j]   \\B 6

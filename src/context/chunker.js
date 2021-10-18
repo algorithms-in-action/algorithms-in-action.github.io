@@ -121,4 +121,14 @@ export default class {
       finished: false,
     };
   }
+
+  refresh(){
+    if (this.currentChunk > 0) {
+      this.visualisers = this.init();
+      for (let i = 0; i <= this.currentChunk; i += 1) {
+        this.doChunk(i);
+      }
+      this.currentChunk -= 1;
+    }
+  }
 }

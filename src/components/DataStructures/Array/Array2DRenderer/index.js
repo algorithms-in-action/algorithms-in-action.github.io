@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo } = this.props.data;
+    const { data, algo, kth } = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -138,7 +138,8 @@ class Array2DRenderer extends Renderer {
         }
         {
         algo === 'tc' &&
-        <tr className={styles.row}>
+        // Don't remove "j-tag='transitive_closure'"
+        <tr j-tag='transitive_closure' className={styles.row}>
           <td />
           {
             data_T.map((row) => {
@@ -186,6 +187,12 @@ class Array2DRenderer extends Renderer {
           ))
         }
         </tbody>
+        {
+          algo === 'tc' &&
+          <caption>
+            k = { kth }
+          </caption>
+        }
       </table>
     );
   }
