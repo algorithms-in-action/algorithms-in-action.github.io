@@ -180,11 +180,11 @@ export const team2021s2 = [// Order by Group
 // Boxjelly
   {
     name: 'Tianjing Ruan',
-    photo: "https://ui-avatars.com/api/?name=Tianjing+Ruan&background=0D8ABC&color=fff",
-    github: '#',
-    linkedIn: '#',
+    photo: "https://media-exp1.licdn.com/dms/image/C5603AQHYyAHvoTMVnA/profile-displayphoto-shrink_400_400/0/1634538882547?e=1640217600&v=beta&t=gnCJL7gD-PK3ERdfrXuVePdY2nfIIQErmlmeFX-zi9o",
+    github: 'https://github.com/TianjingRuan',
+    linkedIn: 'https://www.linkedin.com/in/tianjingruan/',
     desc: 'University of Melbourne',
-    title: 'MEng (Software)',
+    title: 'MIT (Artificial Intelligence)',
   }, {
     name: 'Wenkai Gong',
     photo: "https://ui-avatars.com/api/?name=Wenkai+Gong&background=0D8ABC&color=fff",
