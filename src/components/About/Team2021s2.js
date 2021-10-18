@@ -3,10 +3,10 @@ import React from 'react';
 import TeamMember from './TeamMember';
 import '../../styles/About.scss';
 
-const Team = ({ teammembers }) => (
+const Team2021s2 = ({ teammembers }) => (
   <div className="projectContainer">
     <div className="heading" variant="h4" display="block">
-      Team 2021s1
+      Team 2021s2
     </div>
     <div className="teamMembers">
 
@@ -25,4 +25,4 @@ const Team = ({ teammembers }) => (
   </div>
 );
 
-export default Team;
+export default Team2021s2;

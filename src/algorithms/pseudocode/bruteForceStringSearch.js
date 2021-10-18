@@ -24,7 +24,7 @@ export default parse(`
                         so we try starting from the next position, i+1, in T.
                 \\Expl}
         \\In}
-        return (-1)
+        return (-1)  \\B 6
         \\Expl{  We use -1 to indicate that there was no match.
         \\Expl}
     \\In}
@@ -64,7 +64,7 @@ export default parse(`
                 return i; //   we had a match T[i]..T[i+m-1]
             i = i+1;
         }
-        return (-1);
+        return (-1);  
     }
     int
     main() {

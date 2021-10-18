@@ -6,7 +6,7 @@ import '../../styles/Param.scss';
 const DEFAULT_STRING = 'abcdefgh';
 const DEFAULT_PATTERN = 'efg';
 const HSS_SEARCH = 'Horspool String Search';
-const HSS_EXAMPLE = 'Please follow the example provided: abcd, ab';
+const HSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
 function HSSParam() {
   const [message, setMessage] = useState(null);
