@@ -55,6 +55,23 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
+export const quicksortPerfectPivotArray = (minA, maxA) => {
+  function idealOrder(min, max, v, step) {
+    if (max <= min) {
+      return [];
+    }
+    const midDivider = Math.floor(((max - min) / 2) + min);
+    const left = idealOrder(min, midDivider - step, v, step);
+    const right = idealOrder(midDivider + step, max, -1, step);
+
+    if (v === 1) {
+      return left.concat(right).concat([midDivider]);
+    }
+    return [midDivider].concat(left).concat(right);
+  }
+  return idealOrder(minA, maxA, 1, 2);
+};
+
 export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}

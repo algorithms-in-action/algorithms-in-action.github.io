@@ -6,13 +6,13 @@
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
         position: relative;
-        --array-1d-minimum-height: 10px;
+        --array-1d-minimum-height: 1em;
 
         .pivotLine {
             position: absolute;
             width: 100%;
             height: 3px;
-            background-color: orange;
+            background-color: var(--array-1d-row-col-bg-selected);
             opacity: 0.4;
             margin-right: 4px;
             z-index: 1;
@@ -111,10 +111,27 @@
             }
 
             &.faded {
-                opacity: 0.2
+                opacity: 0.5;
             }
 
 
+        }
+    }
+
+    .stack {
+        .stackElement {
+            height: 0.6em;
+            transition-duration: 0.1s;
+            margin-bottom: m#{i}n(1vh, 1em);
+
+            --active-stack-section: var(--array-1d-row-col-bg-selected);
+            --future-stack-section: var(--array-1d-future-stack-todo-section);
+            --completed-stack-section: rgba(0, 0, 0, 0);
+        }
+
+        p {
+            color: rgb(133, 133, 133);
+            font-size: 0.8em;
         }
     }
 }
