@@ -44,6 +44,8 @@ export default {
       }, [n1, n2]);
     };
 
+    const noOp = () => {}; // no operation
+
     function partition(values, left, right) {
       const a = values;
       let tmp;
@@ -122,7 +124,7 @@ export default {
       // Partition array segment
       let i = left - 1;
       let j = right - 1;
-
+      chunker.add(5, noOp);
       chunker.add(5, (vis, m, p) => {
         unhighlight(vis, m, false);
         vis.array.assignVariable('pivot', p);

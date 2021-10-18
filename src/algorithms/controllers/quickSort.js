@@ -62,6 +62,8 @@ export default {
       }, [n1, n2]);
     };
 
+    const noOp = () => {}; // no operation
+
     function partition(values, left, right) {
       const a = values;
       let i = left - 1;
@@ -69,6 +71,9 @@ export default {
       let tmp;
 
       const pivot = a[right];
+      
+      chunker.add(5, noOp); // prevent early highlight
+
       chunker.add(5, (vis, p) => {
         highlight(vis, p);
         vis.array.assignVariable('pivot', p);
