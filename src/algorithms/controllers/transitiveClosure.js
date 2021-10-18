@@ -72,6 +72,7 @@ export default {
           }
           if (i === 0 && k > 0) {
             g.array.deselect(k - 1, numOfNodes - 1);
+            g.graph.leave1(prevJ, prevK);
           }
           releaseChunkCache();
         }, [k, i]);
@@ -86,7 +87,6 @@ export default {
             }
             if (i === 0 && k > 0) {
               g.array.deselect(numOfNodes - 1, k - 1);
-              g.graph.leave1(prevJ, prevK);
             }
             g.array.select(i, k);
           }, [i, k]); // move along columns
@@ -101,7 +101,6 @@ export default {
             }
             if (i === 0 && k > 0) {
               g.array.deselect(numOfNodes - 1, k - 1);
-              g.graph.leave1(prevJ, prevK);
             }
             g.array.select(i, k);
             g.graph.visit(i);
