@@ -30,8 +30,7 @@ export default {
         // initial state
         const searchString = nodes[0];
         const findString = nodes[1];
-        
-        const shiftTable=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','space'];
+        const shiftTable=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','space'];
         const shiftTableValue=new Array(shiftTable.length).fill(findString.length);
         // searchString and findString are stored in the same array
         // to get element in findString, add the length of searchString to the index
@@ -58,10 +57,23 @@ export default {
 
         chunker.add('2', (vis, n) => {
             //initialize shift table
-            vis.array.set([shiftTable.slice(0,13),new Array(13).fill(findString.length)],
-            [shiftTable.slice(13,27),new Array(14).fill(findString.length)],
+            vis.array.set([shiftTable.slice(0,13),new Array(13)],
+            [shiftTable.slice(13,27),new Array(14)],
             'horspools');
         }, [nodes]);
+
+        //incrementally fill inital shifttable
+        for (let a=0; a<shiftTable.length-1; a++)
+        {
+            chunker.add('12', (vis, n) => {
+                vis.array.patch(shiftTable.indexOf(shiftTable[a]),1,findString.length);
+            }, [nodes]);
+            chunker.add('2', (vis, n) => {
+                vis.array.depatch(shiftTable.indexOf(shiftTable[a]),1,findString.length);
+            }, [nodes]);
+            
+        }
+
         //initial the shifttable with searchstring
         for (let j=0;j<findString.length-1;j++)
         {
@@ -69,13 +81,22 @@ export default {
             
             //【j pointer】
             //【Pattern select】
-            shiftTableValue[shiftTable.indexOf(findString[j].toUpperCase())]=findString.length-(j+1);
+            let c = findString[j].toLowerCase()
+            if (c===" ")
+            {
+                c='space';
+            }
+            
+            shiftTableValue[shiftTable.indexOf(c)]=findString.length-(j+1);
+            
             chunker.add('4', (vis,j) => {
-                vis.array.patch(shiftTable.indexOf(findString[j].toUpperCase()),1,findString.length-(j+1));
+                vis.graph.select(searchString.length+j);
+                vis.array.patch(shiftTable.indexOf(c),1,findString.length-(j+1));
             },[j]);
 
             chunker.add('3', (vis,j) => {
-                vis.array.depatch(shiftTable.indexOf(findString[j].toUpperCase()),1);
+                vis.graph.deselect(searchString.length+j);
+                vis.array.depatch(shiftTable.indexOf(c),1);
             },[j]);
           
         }
@@ -91,20 +112,28 @@ export default {
         let shift_list = new Array();
         let shift_ilist= new Array();
         let shift_cur=0;
+        let shift_pre=0;
 
         
         for (let shift_i = m;shift_i < searchString.length + 1;shift_i +=shift_distance) {
-            
-            shift_distance = shiftTableValue[shiftTable.indexOf(searchString[shift_i-1].toUpperCase())];
+            let c =searchString[shift_i-1].toLowerCase();
+            if (c===" ")
+            {
+                c="space";
+            }
+            shift_distance = shiftTableValue[shiftTable.indexOf(c)];
             shift_list.push(shift_cur+shift_distance);
             shift_ilist.push(shift_distance);
             shift_cur=shift_cur+shift_distance;
           }
-        
-        //window.alert("the ilist is : "+shift_ilist); 
+
         //Start Searching
         for (let shift_i = m; shift_i < searchString.length + 1; shift_i+=shift_ilist.shift()) {
-            
+            chunker.add('10', (vis,j) => {
+                if(j !== -1){
+                    vis.array.deselect(shiftTable.indexOf(searchString[j].toUpperCase()),1);
+                }
+            }, [shift_pre-1]);
             
             for (let shift_j = 0; shift_j < findString.length; shift_j++) {
                 
@@ -155,16 +184,17 @@ export default {
                     }, [shift_i, shift_j, nodes]);
                 }
             }
-            chunker.add('6', (vis, i, n) => {
+            chunker.add('6', (vis, i, j, n) => {
                 if(i+m<=searchString.length){
                      //window.alert("the i is:"+i);
                      vis.graph.shift(i, n);
                 }
+                vis.array.select(shiftTable.indexOf(searchString[j].toUpperCase()),1);
                 
-            }, [shift_list.shift(), nodes]);
-
+            }, [shift_list.shift(),shift_i-1, nodes]);
+            shift_pre=shift_i;
         }
-        chunker.add('10', (vis) => {
+        chunker.add('11', (vis) => {
             const ResultStr = "Pattern not found";
             vis.graph.addResult(ResultStr, i);
         }, []);
