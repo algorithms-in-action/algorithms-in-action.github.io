@@ -58,19 +58,8 @@ Horspool(T, n, P, m)  \\B 1
 
 \\Code{
 CreateShiftTable
-//Initialize ShiftTable
-for k <- 1 to AlphabetSize \\B 2
-\\Expl{  The Alphabet contains all characters from which the
-text or pattern may be drawn, and AlphabetSize is the
-number of characters in the Alphabet.  
-\\Expl}        
-\\In{
-    Shift[k] <- m  \\B 3
-    \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
-     the current character in the text is not in the pattern at all, we do not have
-     to try any more possible matches that contain this character, so we make a large skip. 
-    \\Expl}
-\\In}
+Initialize ShiftTable   \\Ref InitializeShiftTable
+
 //Put in values for characters in pattern P
 for j <- 1 to m-1  \\B 4
 \\In{
@@ -111,7 +100,21 @@ while i <= n  \\B 11
 \\In}  
 return NOT FOUND  // Signal that there was no match   \\B 12
 \\Code}
-
+\\Code{
+InitializeShiftTable
+for k <- 1 to AlphabetSize \\B 2
+\\Expl{  The Alphabet contains all characters from which the
+text or pattern may be drawn, and AlphabetSize is the
+number of characters in the Alphabet.  
+\\Expl}        
+\\In{
+    Shift[k] <- m  \\B 3
+    \\Expl{  Set the default shift to be length m of pattern P.  That is, whenever
+     the current character in the text is not in the pattern at all, we do not have
+     to try any more possible matches that contain this character, so we make a large skip. 
+    \\Expl}
+\\In}
+\\Code}
 \\Note{  The following is an implementation in C:
 
 // Horspool's string matching algorithm
