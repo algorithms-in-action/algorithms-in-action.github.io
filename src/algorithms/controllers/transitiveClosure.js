@@ -58,7 +58,7 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       // run the first for loop
-      chunker.add(2, (g, k) => {
+      chunker.add({ bookmark: 2, pauseInCollapse: true }, (g, k) => {
         g.array.showKth(k + 1);
       }, [k]);
 
@@ -148,9 +148,9 @@ export default {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                runChunkWithCheckCollapseState(() => {
-                  g.graph.leave1(prevJ, prevK);
-                });
+                runChunkWithCheckCollapseState(((pj, pk) => {
+                  return () => { g.graph.leave1(pj, pk); }
+                })(prevJ, prevK))
                 if (j > 0) {
                   runChunkWithCheckCollapseState(() => {
                     g.array.deselect(k, j - 1);
@@ -161,7 +161,9 @@ export default {
                   }
                 }
                 if (j === 0) {
-                  g.array.deselect(k, numOfNodes - 1);
+                  runChunkWithCheckCollapseState(() => {
+                    g.array.deselect(k, numOfNodes - 1);
+                  })
                   if (i === k && k === (numOfNodes - 1)) {
                     g.array.select(k, numOfNodes - 1);
                     g.graph.visit(i);
