@@ -154,17 +154,12 @@ class GraphRendererRect extends Renderer {
     }
 
     let highlightid = -1;
-    let horspoolid = nodes[nodes.length-1].id;
-    let highlighty = smly;
     for (let ii = 0; ii < nodes.length; ii++) {    // hl with lgr visit / lgr selectlimit
       // if (nodes[ii].visitedCount === 1){
       //   highlightid = nodes[ii].id
       // }
       if(nodes[ii].selectedCount === 1){
         highlightid = nodes[ii].id
-      }
-      if(highlightid>=0){
-        highlighty = nodes[highlightid].y
       }
     }
 
@@ -188,7 +183,7 @@ class GraphRendererRect extends Renderer {
         if(nodes[ii].selectedCount === 1 || nodes[ii].visitedCount === 1){
           lasthighlightj = nodes[ii]
           testing.push(nodes[ii])
-          accumj=StringLen+PatternLen-ii
+          if(nodes[ii].selectedCount === 1){accumj=StringLen+PatternLen-ii}
           break;
         }
       }
