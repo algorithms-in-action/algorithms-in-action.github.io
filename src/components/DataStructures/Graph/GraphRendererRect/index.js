@@ -86,10 +86,10 @@ class GraphRendererRect extends Renderer {
 
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
-      (this.centerX - baseWidth / 2) / this.zoom,
-      (this.centerY - baseHeight / 2) / this.zoom,
-      baseWidth / this.zoom,
-      baseHeight / this.zoom,
+      (this.centerX - baseWidth / 4) / this.zoom,
+      (this.centerY - baseHeight / 4) / this.zoom,
+      baseWidth/2 / this.zoom,
+      baseHeight /2 / this.zoom,
     ];
     const root = nodes[0];
     let rootX = 0;
