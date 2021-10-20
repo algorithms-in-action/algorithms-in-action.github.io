@@ -216,9 +216,17 @@ export default {
             }, [shift_move_i,shift_i-1, nodes]);
             shift_pre=shift_i;
         }
-        chunker.add('12', (vis) => {
+        chunker.add('12', (vis,j) => {
+            if(j !== -1){
+                const c = searchString[j];
+                if (c===" "){
+                    c='space';
+                }
+                vis.array.deselect(shiftTable.indexOf(c),1);
+                vis.graph.deselect(j, null);
+            }
             const ResultStr = "Pattern not found";
             vis.graph.addResult(ResultStr, i);
-        }, []);
+        }, [shift_pre-1]);
     }
 }
