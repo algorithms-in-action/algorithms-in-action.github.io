@@ -9,10 +9,26 @@ const EditableCell = ({
   row: { index },
   column: { id },
   updateData,
+  algo,
 }) => {
   const [value, setValue] = useState(initialValue || 0);
 
   const onChange = (e) => {
+    if (algo === 'transitiveClosure') {
+      // eslint-disable-next-line radix
+      if (parseInt(e.target.value) > 1) {
+        e.target.value = '1';
+      }
+      // eslint-disable-next-line radix
+      if (parseInt(e.target.value) < 0) {
+        e.target.value = '0';
+      }
+      // window.alert(id[3]);
+      // eslint-disable-next-line radix
+      if (index === parseInt(id[3])) {
+        e.target.value = '1';
+      }
+    }
     setValue(e.target.value);
   };
 
@@ -22,7 +38,7 @@ const EditableCell = ({
   };
 
   // If the initialValue is changed external,
-  // sync it up with the inital state
+  // sync it up with the initial state
   useEffect(() => {
     setValue(initialValue || 0);
   }, [initialValue]);

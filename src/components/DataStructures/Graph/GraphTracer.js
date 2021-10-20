@@ -166,13 +166,22 @@ class GraphTracer extends Tracer {
 
   swapNodes(nodeId1, nodeId2) {
     const node1 = this.findNode(nodeId1);
-    const temp = { value: node1.value, key: node1.key };
+    const temp = {
+      value: node1.value,
+      key: node1.key,
+      visitedCount: node1.visitedCount,
+      selectedCount: node1.selectedCount,
+    };
     const node2 = this.findNode(nodeId2);
     // Swap both the value and key (key is what animates swapping action)
     node1.value = node2.value;
     node1.key = node2.key;
+    node1.visitedCount = node2.visitedCount;
+    node1.selectedCount = node2.selectedCount;
     node2.value = temp.value;
     node2.key = temp.key;
+    node2.visitedCount = temp.visitedCount;
+    node2.selectedCount = temp.selectedCount;
     this.layoutTree(this.root);
   }
 
@@ -185,8 +194,8 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+          x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+          isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
@@ -464,7 +473,7 @@ class GraphTracer extends Tracer {
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
-    const hGap = 80;
+    const hGap = rect.width - 150;
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
@@ -626,6 +635,11 @@ class GraphTracer extends Tracer {
     if (edge) edge.selectedCount = 0;
     const node = this.findNode(target);
     node.selectedCount = 0;
+  }
+
+  isInterConnected(source, target) {
+    return this.edges.find(edge => edge.source === source && edge.target === target)
+        && this.edges.find(edge => edge.source === target && edge.target === source);
   }
 
   log(key) {

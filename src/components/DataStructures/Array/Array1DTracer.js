@@ -48,6 +48,14 @@ class Array1DTracer extends Array2DTracer {
     super.deselect(0, sx, 0, ex);
   }
 
+  fadeOut(sx, ex = sx) {
+    super.fadeOut(0, sx, 0, ex);
+  }
+
+  fadeIn(sx, ex = sx) {
+    super.fadeIn(0, sx, 0, ex);
+  }
+
   chart(key) {
     this.chartTracer = key ? this.getObject(key) : null;
     this.syncChartTracer();
@@ -86,10 +94,13 @@ class Array1DTracer extends Array2DTracer {
     function customizer(val) {
       if (val instanceof Element) {
         const newEl = new Element(val.value, val.key);
-        if (val.patched) newEl.patched = true;
-        if (val.selected) newEl.selected = true;
-        if (val.sorted) newEl.sorted = true;
+        newEl.patched = val.patched;
+        newEl.selected = val.selected;
+        newEl.sorted = val.sorted;
+        newEl.faded = val.faded;
         newEl.variables = val.variables;
+        newEl.stack = val.stack;
+        newEl.stackDepth = val.stackDepth;
         return newEl;
       }
     }
@@ -107,10 +118,20 @@ class Array1DTracer extends Array2DTracer {
     // update this.data
     this.data = newData;
   }
-  stringTheContent(){
-    return this.data;
+
+  setStack(val) {
+    this.stack = val;
   }
 
+  setStackDepth(depth) {
+    this.stackDepth = depth;
+  }
+
+  stringTheContent() {
+    return this.data;
+  }
 }
+
+
 
 export default Array1DTracer;

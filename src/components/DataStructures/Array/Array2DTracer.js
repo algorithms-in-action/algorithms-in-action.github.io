@@ -15,17 +15,19 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 
+import { cloneDeepWith } from 'lodash';
 import Tracer from '../common/Tracer';
 import Array2DRenderer from './Array2DRenderer';
 
 export class Element {
   constructor(value, key) {
     this.value = value;
-    this.patched = false;
-    this.selected = false;
+    this.patched = 0;
+    this.selected = 0;
     this.sorted = false;
     this.key = key;
     this.variables = [];
+    this.stack = [];
   }
 }
 
@@ -47,11 +49,11 @@ class Array2DTracer extends Tracer {
   patch(x, y, v = this.data[x][y].value) {
     if (!this.data[x][y]) this.data[x][y] = new Element();
     this.data[x][y].value = v;
-    this.data[x][y].patched = true;
+    this.data[x][y].patched++;
   }
 
   depatch(x, y, v = this.data[x][y].value) {
-    this.data[x][y].patched = false;
+    this.data[x][y].patched--;
     this.data[x][y].value = v;
   }
 
@@ -66,7 +68,7 @@ class Array2DTracer extends Tracer {
       for (let y = sy; y <= ey; y++) {
         switch (c) {
           case '0':
-            this.data[x][y].selected = true;
+            this.data[x][y].selected++;
             break;
           case '1':
             this.data[x][y].selected1 = true;
@@ -85,11 +87,57 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  // Set opacity to 0.3
+  fadeOut(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].faded = true;
+      }
+    }
+  }
+
+  // Set opacity to 1
+  fadeIn(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].faded = false;
+      }
+    }
+  }
+
+  assignVariable(v, row, idx) {
+    // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
+    // eslint-disable-next-line consistent-return
+    function customizer(val) {
+      if (val instanceof Element) {
+        const newEl = new Element(val.value, val.key);
+        if (val.patched) newEl.patched = true;
+        if (val.selected) newEl.selected = true;
+        if (val.sorted) newEl.sorted = true;
+        newEl.variables = val.variables;
+        return newEl;
+      }
+    }
+    const newData = cloneDeepWith(this.data, customizer);
+
+    // remove all current occurences of the variable
+    for (let y = 0; y < newData[row].length; y++) {
+      newData[row][y].variables = newData[row][y].variables.filter((val) => val !== v);
+    }
+
+    // add variable to item
+    newData[row][idx].variables.push(v);
+
+    // update this.data
+    this.data = newData;
+  }
+
+
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = true;
+        this.data[x][y].selected++;
         this.data[x][y].style = style;
       }
     }
@@ -106,7 +154,7 @@ class Array2DTracer extends Tracer {
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = false;
+        this.data[x][y].selected--;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
