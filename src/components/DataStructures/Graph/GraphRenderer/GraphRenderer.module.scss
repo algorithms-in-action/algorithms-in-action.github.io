@@ -62,6 +62,10 @@
     }
 
     &.sorted {
+      .circle {
+        fill: var(--graph-node-circle-fill-sorted);
+        
+      }
       .id {
         fill: var(--graph-node-id-fill-sorted);
       }
@@ -92,6 +96,7 @@
     .line {
       stroke: var(--graph-edge-line-stroke);
       stroke-width: 3.5;
+      fill: none;
 
       &.directed {
         marker-end: url(#markerArrow);
@@ -102,6 +107,7 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
+      font-size: 24px;
     }
 
     &.selected {

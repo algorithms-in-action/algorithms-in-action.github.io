@@ -16,7 +16,7 @@ $yellowLine: #FFDE3C;
 
 	--top-header-bg: #01233F;
 	--top-header-btn: #d7d7d7;
-	--top-header-btn-hg:  #027AFF;
+	--top-header-btn-hg: #027AFF;
 	--top-setting-bg: #FFFFFF;
 	--top-setting-label: #606060;
 	--top-setting-btn: #5b5b5b;
@@ -81,7 +81,7 @@ $yellowLine: #FFDE3C;
 	--mid-control-param-matrix-cell-bg: #FFFFFF;
 	--mid-control-param-matrix-cell-font: #6f6f6f;
 
-	--mid-control-log-bg:#F7F7F7;
+	--mid-control-log-bg: #F7F7F7;
 	--mid-control-log-success: #53DD6C;
 	--mid-control-log-failure: #DC0707;
 
@@ -102,8 +102,8 @@ $yellowLine: #FFDE3C;
 
 	--right-code-bg: #F9F9F9;
 	--right-code-line-hg: rgba(0, 187, 255, 0.2);
-	--right-code-line-hover: rgba(0,0,0,0.03);
-	--right-code-line-active: rgba(0,0,0,0.05);
+	--right-code-line-hover: rgba(0, 0, 0, 0.03);
+	--right-code-line-active: rgba(0, 0, 0, 0.05);
 	--right-code-line-num: #9DA9AD;
 	--right-code-line-explain-btn-active: #575757;
 	--right-code-line-explain-btn-inactive: #c9c9c9;
@@ -120,20 +120,21 @@ $yellowLine: #FFDE3C;
 	--right-code-bottom-btn-bg-active: rgb(238, 238, 238);
 
 	// Graph
-	--graph-node-circle-fill:  #ffffff;
-	--graph-node-circle-stroke:  #4f4f4f;
+	--graph-node-circle-fill: #ffffff;
+	--graph-node-circle-stroke: #4f4f4f;
 	--graph-node-id-fill: #6a6a6a;
 	--graph-node-weight-fill: #6a6a6a;
 	--graph-node-circle-fill-selected: #2289ff;
 	--graph-node-circle-stroke-selected: #2289ff;
 	--graph-node-id-fill-selected: #FFFFFF;
-	--graph-node-id-fill-sorted: #2289ff;
+	--graph-node-circle-fill-sorted: #aeaeae;
+	--graph-node-id-fill-sorted: #FFFFFF;
 	--graph-node-circle-fill-visited: #ee0970;
 	--graph-node-circle-stroke-visited: #ee0970;
 	--graph-node-id-fill-visited: #FFFFFF;
 
-	--graph-text-fill:#1809ee;
-	--graph-text-stroke:#1809ee;
+	--graph-text-fill: #1809ee;
+	--graph-text-stroke: #1809ee;
 
 	--graph-edge-line-stroke: #aeaeae;
 	--graph-edge-line-weight-fill: #a4a4a4;
@@ -160,8 +161,11 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
-	--array-2d-row-bg-sorted: #ffffff;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-bg-sorted: #aeaeae;
+	--array-2d-row-col-sorted: #FFFFFF;
+
+	--array-1d-future-stack-todo-section: rgba(0, 0, 0, 0.2);
+
 
 	--array-graph-row-col-bg: #ffffff;
 	--array-graph-row-col-border: #4f4f4f;
@@ -227,7 +231,7 @@ $yellowLine: #FFDE3C;
 	--left-search-border-focus: #505050;
 	--left-item-border-hover: #505050;
 
-	--left-bg:#16171B;
+	--left-bg: #16171B;
 	--left-item-bg: #16171B;
 	--left-cat-bg: #16171B;
 
@@ -235,7 +239,7 @@ $yellowLine: #FFDE3C;
 	--left-cat-font: #a9a9a9;
 	--left-item-font: #bababa;
 
-	--mid-header-bg:#16171B;
+	--mid-header-bg: #16171B;
 	--mid-header-font: #a9a9a9;
 	--mid-anim-bg: #202125;
 
@@ -270,7 +274,7 @@ $yellowLine: #FFDE3C;
 
 
 
-	--mid-control-log-bg:#111215;
+	--mid-control-log-bg: #111215;
 	--mid-control-font: #bfbfbf;
 
 	--right-text-bg: #16171B;
@@ -306,8 +310,8 @@ $yellowLine: #FFDE3C;
 	--right-code-bottom-btn-bg-active: #282a2e;
 
 	// Graph
-	--graph-node-circle-fill:  #5c5c5c;
-	--graph-node-circle-stroke:  #373737;
+	--graph-node-circle-fill: #5c5c5c;
+	--graph-node-circle-stroke: #373737;
 	--graph-node-id-fill: #d5d5d5;
 	--graph-node-weight-fill: #6a6a6a;
 	--graph-node-circle-fill-selected: #2289ff;
@@ -329,9 +333,9 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited: #ee0970;
 
 	--array-2d-row-col-bg: #343434;
-	--array-2d-row-col-border: #212121;
+	--array-2d-row-col-border: #c0c0c0;
 	--array-2d-row-col-value-color: #d5d5d5;
-	--array-2d-row-col-bg-selected: #83d489;
+	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
@@ -341,8 +345,10 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
-	--array-2d-row-bg-sorted: #343434;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-bg-sorted: #aeaeae;
+	--array-2d-row-col-sorted: #FFFFFF;
+
+	--array-1d-future-stack-todo-section: rgba(255, 255, 255, 0.4);
 
 	--array-graph-row-col-bg: #343434;
 	--array-graph-row-col-border: #212121;
@@ -394,12 +400,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
 
-	--array-2d-row-col-bg-selected: #83d489;
+	--array-1d-row-col-bg-selected: #e85c49;
+	--array-1d-row-col-bg-patched: #83d489;
+	--array-1d-row-col-variable: #e85c49;
+
+	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-patched: #83d489;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-col-bg-patched: #f58b2f;
+	--array-2d-row-col-sorted: #FFFFFF;
 
 
 	--array-graph-row-col-bg-selected: #2289ff;
@@ -436,12 +446,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-selected: #e42fd5;
 	--graph-arrow-fill-visited: #059847;
 
-	--array-2d-row-col-bg-selected: #258bff;
+	--array-1d-row-col-bg-selected: #ec0a70;
+	--array-1d-row-col-bg-patched: #258bff;
+	--array-1d-row-col-variable: #ec0a70;
+
+	--array-2d-row-col-bg-selected: #059847;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-patched: #258bff;
-	--array-2d-row-col-sorted: #059847;
+	--array-2d-row-col-bg-patched: #f58b2f;
+	--array-2d-row-col-sorted: #ffffff;
 
 
 	--array-graph-row-col-bg-selected: #059847;
@@ -461,10 +475,10 @@ $yellowLine: #FFDE3C;
 
 // Override Algorithm Theme Colors [Green]
 [algo-theme="red"] {
-	--graph-node-circle-fill-selected: #0d9eae;
-	--graph-node-circle-stroke-selected: #0d9eae;
-	--graph-node-circle-fill-visited: #9f2fe4;
-	--graph-node-circle-stroke-visited: #9f2fe4;
+	--graph-node-circle-fill-selected: #9f2fe4;
+	--graph-node-circle-stroke-selected: #9f2fe4;
+	--graph-node-circle-fill-visited: #0d9eae;
+	--graph-node-circle-stroke-visited: #0d9eae;
 
 	--graph-edge-line-stroke-selected: #9f2fe4;
 	--graph-edge-weight-fill-selected: #9f2fe4;
@@ -474,12 +488,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-selected: #9f2fe4;
 	--graph-arrow-fill-visited: #0d9eae;
 
+	--array-1d-row-col-bg-selected: #0d9eae;
+	--array-1d-row-col-bg-patched: #9f2fe4;
+	--array-1d-row-col-variable: #0d9eae;
+
 	--array-2d-row-col-bg-selected: #0d9eae;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-patched: #0d9eae;
-	--array-2d-row-col-sorted: #0d9eae;
+	--array-2d-row-col-bg-patched: #f58b2f;
+	--array-2d-row-col-sorted: #ffffff;
 
 
 	--array-graph-row-col-bg-selected: #0d9eae;
@@ -538,10 +556,10 @@ $yellowLine: #FFDE3C;
 }
 
 @mixin calc($property, $expression...) {
-  #{$property}: -moz-calc(#{$expression});
-  #{$property}: -o-calc(#{$expression});
-  #{$property}: -webkit-calc(#{$expression});
-  #{$property}: calc(#{$expression});
+	#{$property}: -moz-calc(#{$expression});
+	#{$property}: -o-calc(#{$expression});
+	#{$property}: -webkit-calc(#{$expression});
+	#{$property}: calc(#{$expression});
 }
 
 
@@ -565,6 +583,6 @@ $yellowLine: #FFDE3C;
 
 @mixin preventWrap {
 	white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

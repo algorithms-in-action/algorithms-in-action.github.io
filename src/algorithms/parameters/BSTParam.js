@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Radio from '@material-ui/core/Radio'
@@ -113,6 +113,13 @@ function BSTParam() {
     }
   }
 
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [bstCase],
+  );
+
   return (
     <>
       <div className="form">
@@ -149,7 +156,7 @@ function BSTParam() {
           setMessage={setMessage}
         />
       </div>
-      Choose type of tree: &nbsp;&nbsp;
+      <span className="generalText">Choose type of tree: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={
           <BlueRadio

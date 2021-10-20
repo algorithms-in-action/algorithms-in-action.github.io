@@ -55,7 +55,6 @@ function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
 function isBookmarkVisible(pseudocode, collapse, bookmark) {
   // collapse contains names of the sections and their collapsed state
   let containingBlock = false;
-
   for (const blockName of Object.keys(pseudocode)) {
     for (let i = 0; i < pseudocode[blockName].length; i += 1) {
       // looking at all the pseudocode elements
@@ -188,9 +187,23 @@ export const GlobalActions = {
   // run next line of code
   NEXT_LINE: (state, playing) => {
     let result;
+
+    let triggerPauseInCollapse = false;
+    if(typeof playing === 'object'){
+      triggerPauseInCollapse = playing.triggerPauseInCollapse;
+      playing = playing.playing;
+    }
+
     do {
-      result = state.chunker.next();
-    } while (!result.finished && !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
+      result = state.chunker.next(triggerPauseInCollapse);
+      if(!triggerPauseInCollapse){
+        result.pauseInCollapse = false;
+      }
+    } while (
+      !result.pauseInCollapse &&
+      !result.finished && 
+      !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark)
+    );
     if (result.finished) {
       previousState = [];
     }

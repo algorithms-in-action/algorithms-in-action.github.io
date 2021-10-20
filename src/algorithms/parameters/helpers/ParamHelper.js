@@ -23,6 +23,24 @@ export const singleNumberValidCheck = (t) => {
   return t.match(regex);
 };
 
+// eslint-disable-next-line consistent-return
+export const matrixValidCheck = (m) => {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < m.length; i++) {
+    // eslint-disable-next-line no-plusplus
+    for (let j = 0; j < i; j++) {
+      if (m[i][j] !== m[j][i]) {
+        return false;
+      }
+    }
+    if (m[i][i] !== 0) {
+      return false;
+    }
+  }
+  return true;
+};
+
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -35,6 +53,23 @@ export const genRandNumList = (num, min, max) => {
     list.push(getRandomInt(min, max));
   }
   return list;
+};
+
+export const quicksortPerfectPivotArray = (minA, maxA) => {
+  function idealOrder(min, max, v, step) {
+    if (max <= min) {
+      return [];
+    }
+    const midDivider = Math.floor(((max - min) / 2) + min);
+    const left = idealOrder(min, midDivider - step, v, step);
+    const right = idealOrder(midDivider + step, max, -1, step);
+
+    if (v === 1) {
+      return left.concat(right).concat([midDivider]);
+    }
+    return [midDivider].concat(left).concat(right);
+  }
+  return idealOrder(minA, maxA, 1, 2);
 };
 
 export const successParamMsg = (type) => (
@@ -114,17 +149,14 @@ export const makeData = (len, min, max, symmetric) => {
       data[`col${j}`] = symmetric
         ? `${rows[i][j]}`
         : `${getRandomInt(min, max)}`;
+      if (i === j && !symmetric) {
+        data[`col${j}`] = '1';
+      }
     }
     arr.push(data);
   }
-  if (len === 4) {
+  if (len === 4 && symmetric !== true) {
     arr = [
-      {
-        col0: '0',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
       {
         col0: '1',
         col1: '0',
@@ -135,13 +167,19 @@ export const makeData = (len, min, max, symmetric) => {
         col0: '1',
         col1: '1',
         col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '1',
+        col2: '1',
         col3: '0',
       },
       {
         col0: '0',
         col1: '0',
         col2: '1',
-        col3: '0',
+        col3: '1',
       },
     ];
   }

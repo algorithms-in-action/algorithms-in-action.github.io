@@ -20,7 +20,7 @@ $dragBarWidth: 10px;
     'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
     'leftcol leftdragbar footer rightdragbar rightcol';
 	grid-template-rows: min-content 7fr $dragBarWidth 2fr;
-	grid-template-columns: 2fr $dragBarWidth 6fr $dragBarWidth 4fr;	
+	grid-template-columns: min-content $dragBarWidth 6fr $dragBarWidth 4fr;	
 }
 
 #page:focus {
