@@ -196,6 +196,7 @@ export default {
             }, [nodes]);
             chunker.add('15', (vis, n) => {
             }, [nodes]);
+            let shift_move_i = shift_list.shift();
             chunker.add('7', (vis, i, j, n) => {
                 const c = searchString[j];
                 if (c===" ")
@@ -204,16 +205,15 @@ export default {
                 }
                 vis.array.select(shiftTable.indexOf(c),1);
                 vis.graph.select(j, null);   
-                
-            }, [shift_list.shift(),shift_i-1, nodes]);
+        
+            }, [shift_move_i,shift_i-1, nodes]);
+
             chunker.add('7', (vis, i, j, n) => {
-                const c = searchString[j];
                 if(i+m<=searchString.length){
                      vis.graph.shift(i, n);
                 }
                 
-            }, [shift_list.shift(),shift_i-1, nodes]);
-
+            }, [shift_move_i,shift_i-1, nodes]);
             shift_pre=shift_i;
         }
         chunker.add('12', (vis) => {
