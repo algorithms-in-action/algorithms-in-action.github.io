@@ -56,7 +56,7 @@ function MatrixParam({
   const { dispatch } = useParam();
   const [data, setData] = useState(() => makeData(size, min, max, symmetric));
   const [originalData, setOriginalData] = useState(data);
-  const [buttonMessage, setButtonMessage] = useState('Build Graph');
+  const [buttonMessage, setButtonMessage] = useState('Start');
 
   // reset the Table when the size changes
   useEffect(() => {
