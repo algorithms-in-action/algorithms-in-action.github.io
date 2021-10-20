@@ -198,9 +198,6 @@ export default {
             }, [nodes]);
             chunker.add('7', (vis, i, j, n) => {
                 const c = searchString[j];
-                if(i+m<=searchString.length){
-                     vis.graph.shift(i, n);
-                }
                 if (c===" ")
                 {
                     c='space';
@@ -209,6 +206,14 @@ export default {
                 vis.graph.select(j, null);   
                 
             }, [shift_list.shift(),shift_i-1, nodes]);
+            chunker.add('7', (vis, i, j, n) => {
+                const c = searchString[j];
+                if(i+m<=searchString.length){
+                     vis.graph.shift(i, n);
+                }
+                
+            }, [shift_list.shift(),shift_i-1, nodes]);
+
             shift_pre=shift_i;
         }
         chunker.add('12', (vis) => {
