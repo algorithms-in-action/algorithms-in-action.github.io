@@ -41,7 +41,7 @@ export function isCurrentLineInCollapseState() {
 }
 // window.isCurrentLineInCollapseState = isCurrentLineInCollapseState;
 
-function isInCollapseState() {
+export function isInCollapseState() {
     const algorithm = getGlobalAlgotithm();
     if(!isInTransitiveClosure(algorithm)) return false;
     return !algorithm.collapse.transitiveClosure.tc.Reachable;
@@ -59,14 +59,14 @@ export function runChunkWithCheckCollapseState(chunkFn) {
     }
     if(!initedHideJTag) {
         initedHideJTag = true;
-        hideJTag();
+        setJTagVisible(false);
     }
 }
 
 export function onCollapseStateChange() {
     if(!isInTransitiveClosure()) return false;
     const collapseState = isInCollapseState();
-    collapseState?hideJTag():showJTag();
+    setJTagVisible(!collapseState)
     const algorithm = getGlobalAlgotithm();
     algorithm.chunker.refresh()
 }
@@ -95,20 +95,26 @@ export function runChunkWithEnterCollapse() {
     }
 }
 
-function hideJTag() {
+function setJTagVisible(visible = true) {
     const jTagDom = getJTagDom();
     if (jTagDom) {
-        jTagDom.style.opacity = 0;
+        jTagDom.style.opacity = visible?1:0;
     }
 }
 
-function showJTag() {
-    const jTagDom = getJTagDom();
-    if (jTagDom) {
-        jTagDom.style.opacity = 1;
-    }
-}
 
 function getJTagDom() {
     return document.querySelectorAll('[j-tag=transitive_closure]')[0];
+}
+
+export function setKthVisible(visible = true) {
+    const kthDom = getKthDom();
+
+    if(kthDom){
+        kthDom.style.opacity = visible?1:0;
+    }
+}
+
+function getKthDom(){
+    return document.querySelectorAll('[kth-tag=transitive_closure]')[0];
 }

@@ -34,6 +34,9 @@ export default parse(`
       \\In}
     \\In}
   \\In}
+  \\In{
+  return A  \\B 8
+  \\In}
 \\Code}
 
 \\Code{

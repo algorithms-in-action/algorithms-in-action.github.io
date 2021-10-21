@@ -7,8 +7,13 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 // import the 2D tracer to generate an array that stores the matrix in 2D format
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import { runChunkWithCheckCollapseState, releaseChunkCache, runChunkWithEnterCollapse } from './transitiveClosureCollapseChunkPlugin';
-
+import {
+  runChunkWithCheckCollapseState,
+  releaseChunkCache,
+  runChunkWithEnterCollapse,
+  isInCollapseState,
+  setKthVisible,
+} from './transitiveClosureCollapseChunkPlugin';
 
 export default {
   initVisualisers() {
@@ -45,6 +50,8 @@ export default {
     let prevJ = 0;
     let prevK = 0;
     chunker.add(1, (g) => {
+      // show kth tag when step back
+      setKthVisible(true);
       g.array.set([...matrix], 'tc');
       g.graph.set([...matrix], Array.from({ length: matrix.length }, (v, k) => (k + 1)));
       g.graph.layoutCircle();
@@ -60,6 +67,7 @@ export default {
       // run the first for loop
       chunker.add({ bookmark: 2, pauseInCollapse: true }, (g, k) => {
         g.array.showKth(k + 1);
+        releaseChunkCache();
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
@@ -213,5 +221,18 @@ export default {
         }
       }
     }
+
+    // remove all the highlighting on graph and matrix when finish for both collapse and expansion status
+    chunker.add({bookmark: 8, pauseInCollapse: true}, (g) => {
+      let n = numOfNodes - 1;
+      g.graph.leave(n);
+      setKthVisible(false);
+      if (!isInCollapseState()) {
+        g.graph.leave1(n, n);
+        g.array.deselect(n, n);
+      } else {
+        releaseChunkCache();
+      }
+    }, [])
   },
 };

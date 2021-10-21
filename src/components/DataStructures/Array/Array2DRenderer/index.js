@@ -189,7 +189,7 @@ class Array2DRenderer extends Renderer {
         </tbody>
         {
           algo === 'tc' &&
-          <caption>
+          <caption kth-tag='transitive_closure'>
             k = { kth }
           </caption>
         }
