@@ -10,33 +10,19 @@ Main
 Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \\B 1
            // find a minimum spanning tree for G.
 \\In{
-    for i <- 1 to n                                             
-    \\In{
-        Cost[i] <- Infinity                                     
-        \\Expl{  The Cost of each node is initially set to Infinity to
-                indicate we do not (yet) know how node i can be added
-                to the spanning tree
-        \\Expl}
-        Parent[i] <- Null
-        \\Expl{  The array Parent will be used to track how nodes are 
-                connected into the resulting spanning tree. Node 1
-                will be the root of the spanning tree and an edge (j,i)
-                is added to the tree by setting Parent[i] to j.
-                Eventually all nodes except 1 have a (non-Null) Parent,
-                thus all nodes are in the spanning tree.
-        \\Expl}
-    \\In}
+    PQ <- InitPriorityQueue(n) \\Ref InitPQ
+    \\Expl{  Nodes are put in a priority queue PQ according to their
+            Cost. Smaller cost means higher priority and initially 
+            node 1 has the minimum cost.
+    \\Expl}
+
     Cost[1] <- 0
     \\Expl{  We arrange for the tree construction to start with node 1;
             this is achieved by setting the cost of node 1 to 0 (to get
             from node 1 to itself costs nothing).  Other nodes are 
             initially assigned the largest possible cost.
     \\Expl}
-    PQ <- InitPriorityQueue(n) \\B 2
-    \\Expl{  Nodes are put in a priority queue PQ according to their
-            Cost. Smaller cost means higher priority and initially 
-            node 1 has the minimum cost.
-    \\Expl}
+
     while PQ not Empty \\B 3
     \\In{
         i <- RemoveMin(PQ)  // i is now part of the spanning tree \\B 4
@@ -57,6 +43,26 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
         \\Expl}
     \\In}
 \\In}
+\\Code}
+
+\\Code{
+InitPQ
+        for i <- 1 to n    \\B 2                                           
+        \\In{
+            Cost[i] <- Infinity                                     
+            \\Expl{  The Cost of each node is initially set to Infinity to
+                    indicate we do not (yet) know how node i can be added
+                    to the spanning tree
+            \\Expl}
+            Parent[i] <- Null
+            \\Expl{  The array Parent will be used to track how nodes are 
+                    connected into the resulting spanning tree. Node 1
+                    will be the root of the spanning tree and an edge (j,i)
+                    is added to the tree by setting Parent[i] to j.
+                    Eventually all nodes except 1 have a (non-Null) Parent,
+                    thus all nodes are in the spanning tree.
+            \\Expl}
+        \\In}
 \\Code}
 
 \\Code{
