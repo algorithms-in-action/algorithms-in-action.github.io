@@ -30,7 +30,7 @@ function isInTransitiveClosure(algorithm){
     return algorithm.id.name === TC_NAME;
 }
 
-export function isCurrentLineInCollapseState(){
+export function isCurrentLineInCollapseState() {
     const algorithm = getGlobalAlgotithm();
     if(!isInTransitiveClosure(algorithm)) return false;
     // , playing, chunker
@@ -41,7 +41,7 @@ export function isCurrentLineInCollapseState(){
 }
 // window.isCurrentLineInCollapseState = isCurrentLineInCollapseState;
 
-function isInCollapseState(){
+function isInCollapseState() {
     const algorithm = getGlobalAlgotithm();
     if(!isInTransitiveClosure(algorithm)) return false;
     return !algorithm.collapse.transitiveClosure.tc.Reachable;
@@ -49,12 +49,17 @@ function isInCollapseState(){
 
 let chunkCache = [];
 let inCollapseStateFlag = false;
+let initedHideJTag = false;
 
 export function runChunkWithCheckCollapseState(chunkFn) {
-    if(isInCollapseState()){
+    if(isInCollapseState()) {
         chunkCache.push(chunkFn);
-    }else{
+    }else {
         chunkFn();
+    }
+    if(!initedHideJTag) {
+        initedHideJTag = true;
+        hideJTag();
     }
 }
 
@@ -66,46 +71,44 @@ export function onCollapseStateChange() {
     algorithm.chunker.refresh()
 }
 
-export function releaseChunkCache(){
-    chunkCache.forEach(fn=>{fn()});
+export function releaseChunkCache() {
+    chunkCache.forEach(fn => {fn()});
     chunkCache = [];
     inCollapseStateFlag = false;
-    showJTag();
 }
 
-export function runChunkWithEnterCollapse(){
-    if(isInCollapseState()){
+export function runChunkWithEnterCollapse() {
+    if (isInCollapseState()) {
         const algorithm = getGlobalAlgotithm();
         const dispatch = getGlobalDispatch();
         // const algorithm = getGlobalAlgotithm();
         // algorithm.chunker.next();
-        if(!algorithm.chunker._inPrevState && !inCollapseStateFlag){
-            setTimeout(()=>{
+        if (!algorithm.chunker._inPrevState && !inCollapseStateFlag) {
+            setTimeout(() => {
                 dispatch(GlobalActions.NEXT_LINE, {
                     triggerPauseInCollapse: true,
                     playing: algorithm.playing
                 });
             })
-            hideJTag();
         }
         inCollapseStateFlag = true;
     }
 }
 
-function hideJTag(){
+function hideJTag() {
     const jTagDom = getJTagDom();
-    if(jTagDom){
+    if (jTagDom) {
         jTagDom.style.opacity = 0;
     }
 }
 
-function showJTag(){
+function showJTag() {
     const jTagDom = getJTagDom();
-    if(jTagDom){
+    if (jTagDom) {
         jTagDom.style.opacity = 1;
     }
 }
 
-function getJTagDom(){
+function getJTagDom() {
     return document.querySelectorAll('[j-tag=transitive_closure]')[0];
 }

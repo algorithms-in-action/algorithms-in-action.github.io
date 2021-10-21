@@ -58,12 +58,13 @@ export default {
 
     for (let k = 0; k < numOfNodes; k++) {
       // run the first for loop
-      chunker.add(2, (g, k) => {
+      chunker.add({ bookmark: 2, pauseInCollapse: true }, (g, k) => {
         g.array.showKth(k + 1);
       }, [k]);
 
       for (let i = 0; i < numOfNodes; i++) {
         // run the second for loop
+        // eslint-disable-next-line no-loop-func
         chunker.add({ bookmark: 3, pauseInCollapse: true }, (g, k, i) => {
           g.array.showKth(k + 1);
           if (i > 0) {
@@ -148,9 +149,8 @@ export default {
               // eslint-disable-next-line no-loop-func
               chunker.add(6, (g, j, k, i) => {
                 // if a path between j and k is found, highlight the edge in green
-                runChunkWithCheckCollapseState(() => {
-                  g.graph.leave1(prevJ, prevK);
-                });
+                // eslint-disable-next-line max-len
+                runChunkWithCheckCollapseState(((pj, pk) => () => { g.graph.leave1(pj, pk); })(prevJ, prevK));
                 if (j > 0) {
                   runChunkWithCheckCollapseState(() => {
                     g.array.deselect(k, j - 1);
@@ -161,7 +161,9 @@ export default {
                   }
                 }
                 if (j === 0) {
-                  g.array.deselect(k, numOfNodes - 1);
+                  runChunkWithCheckCollapseState(() => {
+                    g.array.deselect(k, numOfNodes - 1);
+                  });
                   if (i === k && k === (numOfNodes - 1)) {
                     g.array.select(k, numOfNodes - 1);
                     g.graph.visit(i);
@@ -190,7 +192,7 @@ export default {
               }, [i, j]);
 
               if (!nodes[k][i][j]) {
-                chunker.add(7, (g, i, j, k) => {
+                chunker.add(7, (g, i, j) => {
                     // leave the node (i,j) to move to the next node
                     // g.graph.leave(j, i);
                     // eslint-disable-next-line max-len
@@ -200,7 +202,7 @@ export default {
                     g.array.depatch(i, j, 1);
                     g.graph.leave1(j, i, 2); // remove orange
                   });
-                }, [i, j, k]);
+                }, [i, j]);
               }
 
               for (let a = k; a < numOfNodes; a++) {
