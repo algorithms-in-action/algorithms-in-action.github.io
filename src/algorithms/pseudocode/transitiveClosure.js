@@ -8,12 +8,12 @@ export default parse(`
     with nodes 1..n, represented by n x n adjacency matrix A 
   \\Expl}
   \\In{
-    for k <- 0 to n-1  \\B 2
+    for k <- 1 to n  \\B 2
     \\Expl{  Consider all possible nodes k that might be
       used as stepping stones on the way from i to j.
     \\Expl}  
     \\In{
-      for i <- 0 to n-1   \\B 3
+      for i <- 1 to n   \\B 3
       \\Expl{ Explore and try to add new paths from each source node i.
       \\Expl} 
       \\In{
@@ -39,7 +39,7 @@ export default parse(`
 \\Code{
   Reachable
   \\In{
-  for j <- 0 to n-1   \\B 5
+  for j <- 1 to n   \\B 5
   \\Expl{ Consider paths to all possible target nodes j.
   The effect of this innermost loop is to update row i
   to become its binary "or" with row k.
