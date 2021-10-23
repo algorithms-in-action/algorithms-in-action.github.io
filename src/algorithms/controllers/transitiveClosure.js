@@ -120,9 +120,9 @@ export default {
 
           for (let j = 0; j < numOfNodes; j++) {
             // run the third for loop
-            chunker.add(5, (g, k) => {
+            chunker.add(5, () => {
               runChunkWithEnterCollapse();
-            }, [k]);
+            }, []);
 
             if (!nodes[k][k][j]) {
               // eslint-disable-next-line no-loop-func

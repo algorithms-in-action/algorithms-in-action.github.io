@@ -11,8 +11,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
-
-import { cloneDeepWith } from 'lodash';
+/* eslint-disable-next-line max-classes-per-file */
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -408,8 +407,8 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    const hGap = rect.width / leafCounts[root];
-    const vGap = rect.height / maxDepth;
+    // const hGap = rect.width / leafCounts[root];
+    // const vGap = rect.height / maxDepth;
     marked = {};
     // horizontal size allocated per leaf node under a subtree node
     const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length;
