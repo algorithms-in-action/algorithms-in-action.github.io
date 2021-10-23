@@ -89,8 +89,8 @@ export default {
         if (!nodes[k][i][k]) {
           // eslint-disable-next-line no-loop-func
           chunker.add(4, (g, i, k) => {
-            g.graph.leave(prevK, prevI);
-            g.graph.leave(prevI);
+            g.graph.leave0(prevK, prevI);
+            g.graph.leave0(prevI);
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
@@ -103,8 +103,8 @@ export default {
           // eslint-disable-next-line no-loop-func
           chunker.add(4, (g, i, k) => {
             // if a path between i and k is found, highlight the edge in blue
-            g.graph.leave(prevK, prevI);
-            g.graph.leave(prevI);
+            g.graph.leave0(prevK, prevI);
+            g.graph.leave0(prevI);
             if (i > 0) {
               g.array.deselect(i - 1, k);
             }
@@ -226,7 +226,7 @@ export default {
     // remove all the highlighting on graph and matrix when finish for both collapse and expansion status
     chunker.add({ bookmark: 8, pauseInCollapse: true }, (g) => {
       const n = numOfNodes - 1;
-      g.graph.leave(n);
+      g.graph.leave0(n);
       setKthVisible(false);
       if (!isInCollapseState()) {
         g.graph.leave1(n, n);

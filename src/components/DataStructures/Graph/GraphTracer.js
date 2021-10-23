@@ -595,6 +595,10 @@ class GraphTracer extends Tracer {
     this.visitOrLeave1(true, target, source, weight, colorIndex);
   }
 
+  leave0(target, source, colorIndex = 1, weight) {
+    this.visitOrLeave0(false, target, source, weight, colorIndex);
+  }
+
   leave1(target, source, colorIndex = 1, weight) {
     this.visitOrLeave1(false, target, source, weight, colorIndex);
   }
