@@ -43,6 +43,7 @@ class Array2DTracer extends Tracer {
   set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
+    this.kth = '1';
     super.set();
   }
 
@@ -154,7 +155,7 @@ class Array2DTracer extends Tracer {
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected--;
+        this.data[x][y].selected = false;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
@@ -169,6 +170,10 @@ class Array2DTracer extends Tracer {
 
   deselectCol(y, sx, ex) {
     this.deselect(sx, y, ex, y);
+  }
+
+  showKth(k = '0') {
+    this.kth = k;
   }
 }
 

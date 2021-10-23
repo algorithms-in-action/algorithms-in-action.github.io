@@ -145,7 +145,7 @@ class GraphRenderer extends Renderer {
         </defs>
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount, visitedCount1 } = edge;
+            const { source, target, weight, visitedCount, selectedCount, visitedCount1, visitedCount2 } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -177,7 +177,7 @@ class GraphRenderer extends Renderer {
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
                   !selectedCount && visitedCount && styles.visited,
-                  switchColor(visitedCount1),
+                  visitedCount1 && styles.visited1, visitedCount2 && styles.visited2,
                 )}
                 key={`${source}-${target}`}
               >
@@ -195,16 +195,18 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
+          const { x, y, weight, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode = visitedCount === 1;
+          const visitedNode1 = visitedCount1 === 1;
+          const visitedNode2 = visitedCount2 === 1;
           return (
             <motion.g
                 animate={{ x, y }}
                 initial={false}
                 transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited, switchColor(visitedCount1))}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
                 key={key}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
