@@ -33,24 +33,6 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
-function switchColor(visitedCount1) {
-  let fillStyle = '';
-  switch (visitedCount1) {
-    case 1:
-      fillStyle = styles.visited1;
-      break;
-    case 2:
-      fillStyle = styles.visited2;
-      break;
-    case 3:
-      fillStyle = styles.visited;
-      break;
-    default:
-      break;
-  }
-  return fillStyle;
-}
-
 function calculateControlCord(x1, y1, x2, y2) {
   // Slope for line that perpendicular to (x1,y1) (x2,y2)
   const slope = -(x2 - x1) / (y2 - y1);
@@ -145,7 +127,7 @@ class GraphRenderer extends Renderer {
         </defs>
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount, visitedCount1, visitedCount2 } = edge;
+            const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -176,7 +158,7 @@ class GraphRenderer extends Renderer {
                   styles.edge,
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
-                  !selectedCount && visitedCount && styles.visited,
+                  !selectedCount && visitedCount && styles.visited, visitedCount0 && styles.visited,
                   visitedCount1 && styles.visited1, visitedCount2 && styles.visited2,
                 )}
                 key={`${source}-${target}`}
