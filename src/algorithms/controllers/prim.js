@@ -97,7 +97,7 @@ export default {
           chunker.add(
             5,
             (vis, n1, n2) => {
-              vis.graph.visit(n1, n2);
+              vis.graph.visit0(n1, n2);
             },
             [i, j]
           );
@@ -227,7 +227,7 @@ export default {
       chunker.add(
           4,
           (vis, v, w, u, n1, n2, index) => {
-            vis.graph.visit(n1, n2);
+            vis.graph.visit0(n1, n2);
             vis.graph.select(n1, n2);
             vis.array.deselect(index);
             vis.array.set(v, 'prim');
@@ -253,7 +253,7 @@ export default {
         chunker.add(
           5,
           (vis, n1, n2) => {
-            vis.graph.visit(n1, n2);
+            vis.graph.visit0(n1, n2);
           },
           [prev[pq[pqStart]], pq[pqStart]]
         );
@@ -262,7 +262,7 @@ export default {
         5,
         (vis, n1, n2) => {
           vis.graph.allLeave(n1, n2);
-          vis.graph.visit(n1, n1);
+          vis.graph.visit0(n1, n1);
         },
         [i, newEdges]
       );
