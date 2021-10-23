@@ -222,9 +222,10 @@ export default {
       }
     }
 
+    // eslint-disable-next-line max-len
     // remove all the highlighting on graph and matrix when finish for both collapse and expansion status
-    chunker.add({bookmark: 8, pauseInCollapse: true}, (g) => {
-      let n = numOfNodes - 1;
+    chunker.add({ bookmark: 8, pauseInCollapse: true }, (g) => {
+      const n = numOfNodes - 1;
       g.graph.leave(n);
       setKthVisible(false);
       if (!isInCollapseState()) {
@@ -233,6 +234,6 @@ export default {
       } else {
         releaseChunkCache();
       }
-    }, [])
+    }, []);
   },
 };
