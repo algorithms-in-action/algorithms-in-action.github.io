@@ -47,6 +47,20 @@
       }
     }
 
+    &.visited0 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited0);
+        stroke: var(--graph-node-circle-stroke-visited0);
+      }
+      .rect {
+        fill: var(--graph-node-circle-fill-visited0);
+        stroke: var(--graph-node-circle-stroke-visited0);
+      }
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
     &.visited {
       .circle {
         fill: var(--graph-node-circle-fill-visited);

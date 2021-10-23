@@ -12,10 +12,10 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 
+import { cloneDeepWith } from 'lodash';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
-import { cloneDeepWith } from 'lodash';
 
 export class Element {
   constructor() {
@@ -195,8 +195,8 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-          x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-          isPointer = 0, pointerText = '') {
+    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
@@ -208,10 +208,12 @@ class GraphTracer extends Tracer {
   addResult(text, id) {
     this.findNode(id).Result = text;
   }
-  addStringLen(len,id){
+
+  addStringLen(len, id) {
     this.findNode(id).StingLen = len;
   }
-  addPatternLen(len,id){
+
+  addPatternLen(len, id) {
     this.findNode(id).PatternLen = len;
   }
 
@@ -523,6 +525,10 @@ class GraphTracer extends Tracer {
     }
   }
 
+  visit0(target, source, weight) {
+    this.visitOrLeave0(true, target, source, weight);
+  }
+
   visit(target, source, weight) {
     this.visitOrLeave(true, target, source, weight);
   }
@@ -537,6 +543,22 @@ class GraphTracer extends Tracer {
     }
   }
 
+  visitOrLeave0(visit, target, source = null, weight) {
+    const edge = this.findEdge(source, target);
+    const node = this.findNode(target);
+    if (weight) node.weight = weight;
+    if (!this.istc) {
+      node.visitedCount0 += visit ? 1 : -1;
+      if (edge) edge.visitedCount0 += visit ? 1 : -1;
+    } else {
+      node.visitedCount0 = visit ? 1 : 0;
+      if (edge) edge.visitedCount0 = visit ? 1 : 0;
+    }
+    if (this.logTracer) {
+      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+    }
+  }
+
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
@@ -547,8 +569,7 @@ class GraphTracer extends Tracer {
     } else {
       node.visitedCount = visit ? 1 : 0;
       if (edge) edge.visitedCount = visit ? 1 : 0;
-      
-    } 
+    }
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }

@@ -346,7 +346,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg: #343434;
 	--array-2d-row-col-border: #c0c0c0;
 	--array-2d-row-col-value-color: #d5d5d5;
-	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-bg-selected: #83d489;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
@@ -387,10 +387,12 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	--graph-node-circle-fill-selected: #ee0970;
-	--graph-node-circle-stroke-selected: #ee0970;
-	--graph-node-circle-fill-visited: #2289ff;
-	--graph-node-circle-stroke-visited: #2289ff;
+	--graph-node-circle-fill-selected: #83d489;
+	--graph-node-circle-stroke-selected: #83d489;
+	--graph-node-circle-fill-visited: #e85c49;
+	--graph-node-circle-fill-visited0: #2289ff;
+	--graph-node-circle-stroke-visited0: #2289ff;
+	--graph-node-circle-stroke-visited: #e85c49;
 	--graph-node-circle-fill-visited1: #11cc77;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
@@ -411,12 +413,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
 
+	--array-1d-row-col-bg-selected: #e85c49;
+	--array-1d-row-col-bg-patched: #83d489;
+	--array-1d-row-col-variable: #e85c49;
+
 	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-bg-patched: #f58b2f;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-col-sorted: #FFFFFF;
 
 
 	--array-graph-row-col-bg-selected: #2289ff;
@@ -503,7 +509,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-patched: #f58b2f;
+	--array-2d-row-col-bg-patched: #9f2fe4;
 	--array-2d-row-col-sorted: #ffffff;
 
 

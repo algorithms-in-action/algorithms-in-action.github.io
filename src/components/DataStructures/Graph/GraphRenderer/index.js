@@ -195,9 +195,10 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
+          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
+          const visitedNode0 = visitedCount0 === 1;
           const visitedNode = visitedCount === 1;
           const visitedNode1 = visitedCount1 === 1;
           const visitedNode2 = visitedCount2 === 1;
@@ -206,7 +207,7 @@ class GraphRenderer extends Renderer {
                 animate={{ x, y }}
                 initial={false}
                 transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
                 key={key}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />

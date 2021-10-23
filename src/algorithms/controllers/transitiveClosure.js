@@ -112,8 +112,8 @@ export default {
               g.array.deselect(numOfNodes - 1, k - 1);
             }
             g.array.select(i, k);
-            g.graph.visit(i);
-            g.graph.visit(k, i);
+            g.graph.visit0(i);
+            g.graph.visit0(k, i);
             prevK = k;
             prevI = i;
           }, [i, k]);
@@ -136,7 +136,7 @@ export default {
                   });
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
-                    g.graph.visit(i);
+                    g.graph.visit0(i);
                   }
                 }
                 if (j === 0) {
@@ -150,7 +150,7 @@ export default {
                 g.array.select(k, j, k, j, '1');
                 if (i === k && k === j) {
                   g.array.select(k, j);
-                  g.graph.visit(i);
+                  g.graph.visit0(i);
                 }
               }, [k, j, i]); // move along rows (green)
             } else {
@@ -165,7 +165,7 @@ export default {
                   });
                   if (i === k && k === (j - 1)) {
                     g.array.select(k, j - 1);
-                    g.graph.visit(i);
+                    g.graph.visit0(i);
                   }
                 }
                 if (j === 0) {
@@ -174,13 +174,13 @@ export default {
                   });
                   if (i === k && k === (numOfNodes - 1)) {
                     g.array.select(k, numOfNodes - 1);
-                    g.graph.visit(i);
+                    g.graph.visit0(i);
                   }
                 }
                 g.array.select(k, j, k, j, '1');
                 if (i === k && k === j) {
                   g.array.select(k, j);
-                  g.graph.visit(i);
+                  g.graph.visit0(i);
                 }
                 g.graph.visit1(j, k, 1);
                 prevJ = j;
