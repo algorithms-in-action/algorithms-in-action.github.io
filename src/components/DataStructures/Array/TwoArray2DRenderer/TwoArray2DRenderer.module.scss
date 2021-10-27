@@ -24,19 +24,19 @@
       }
 
       &.selected {
-        background-color: var(--array-2d-row-col-bg-selected);
+        background-color: var(--two-array-2d-row-col-bg-selected);
 
         span {
-          color: var(--array-2d-row-col-selected);
+          color: var(--two-array-2d-row-col-selected);
         }
       }
 
 
       &.patched {
-        background-color: var(--array-2d-row-col-bg-patched);
+        background-color: var(--two-array-2d-row-col-bg-patched);
 
         span {
-          color: var(--array-2d-row-col-patched);
+          color: var(--two-array-2d-row-col-patched);
         }
 
       }
