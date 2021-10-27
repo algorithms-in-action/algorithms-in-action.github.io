@@ -177,43 +177,43 @@ export const team = [
 export const team2021s2 = [// Order by Group 
 // Bluering
 
-// Boxjelly
+  // Boxjelly
   {
     name: 'Tianjing Ruan',
-    photo: "https://media-exp1.licdn.com/dms/image/C5603AQHYyAHvoTMVnA/profile-displayphoto-shrink_400_400/0/1634538882547?e=1640217600&v=beta&t=gnCJL7gD-PK3ERdfrXuVePdY2nfIIQErmlmeFX-zi9o",
+    photo: 'https://media-exp1.licdn.com/dms/image/C5603AQHYyAHvoTMVnA/profile-displayphoto-shrink_400_400/0/1634538882547?e=1640217600&v=beta&t=gnCJL7gD-PK3ERdfrXuVePdY2nfIIQErmlmeFX-zi9o',
     github: 'https://github.com/TianjingRuan',
     linkedIn: 'https://www.linkedin.com/in/tianjingruan/',
     desc: 'University of Melbourne',
     title: 'MIT (Artificial Intelligence)',
   }, {
     name: 'Wenkai Gong',
-    photo: "https://ui-avatars.com/api/?name=Wenkai+Gong&background=0D8ABC&color=fff",
+    photo: 'https://ui-avatars.com/api/?name=Wenkai+Gong&background=0D8ABC&color=fff',
     github: 'https://github.com/DanistyWuKids',
     linkedIn: 'https://www.linkedin.com/in/wgong0001/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-  },{
+  }, {
     name: 'Xuan Yin',
-    photo: "https://ui-avatars.com/api/?name=Xuan+Yin&background=0D8ABC&color=fff",
+    photo: 'https://ui-avatars.com/api/?name=Xuan+Yin&background=0D8ABC&color=fff',
     github: '#',
     linkedIn: '#',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-  },{
+  }, {
     name: 'Yuqi Song',
-    photo: "https://ui-avatars.com/api/?name=Yuqi+Song&background=0D8ABC&color=fff",
-    github: '#',
+    photo: 'https://ui-avatars.com/api/?name=Yuqi+Song&background=0D8ABC&color=fff',
+    github: 'https://github.com/irissong49',
     linkedIn: '#',
     desc: 'University of Melbourne',
-    title: 'MEng (Software)',
-  },{
+    title: 'MIT (Artificial Intelligence)',
+  }, {
     name: 'Yifei Yang',
-    photo: "https://ui-avatars.com/api/?name=Yifei+Yang&background=0D8ABC&color=fff",
+    photo: 'https://ui-avatars.com/api/?name=Yifei+Yang&background=0D8ABC&color=fff',
     github: '#',
     linkedIn: '#',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
   },
-// Redback
+  // Redback
 
 ];
