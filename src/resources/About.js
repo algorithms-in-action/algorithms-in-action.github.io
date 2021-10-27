@@ -195,10 +195,10 @@ export const team2021s2 = [// Order by Group
   }, {
     name: 'Xuan Yin',
     photo: 'https://ui-avatars.com/api/?name=Xuan+Yin&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
+    github: 'https://github.com/XuanYin2020',
+    linkedIn: 'https://www.linkedin.com/in/xuan-yin-b09a20224/',
     desc: 'University of Melbourne',
-    title: 'MEng (Software)',
+    title: 'MIT (Distributed Computing)',
   }, {
     name: 'Yuqi Song',
     photo: 'https://ui-avatars.com/api/?name=Yuqi+Song&background=0D8ABC&color=fff',
