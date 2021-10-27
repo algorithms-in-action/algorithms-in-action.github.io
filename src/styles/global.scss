@@ -500,6 +500,7 @@ $yellowLine: #FFDE3C;
 }
 
 // Override Algorithm Theme Colors [Green]
+//Notice: 2021-s2 teams haven't actually designed/altered the colors in this color scheme.
 [algo-theme="red"] {
 	--graph-node-circle-fill-selected: #9f2fe4;
 	--graph-node-circle-stroke-selected: #9f2fe4;
@@ -525,9 +526,9 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-patched: #9f2fe4;
 	--array-2d-row-col-sorted: #ffffff;
 
-	--two-array-2d-row-col-bg-selected: #0d9eae;
+	--two-array-2d-row-col-bg-selected: #9f2fe4;
 	--two-array-2d-row-col-selected: #FFFFFF;
-	--two-array-2d-row-col-bg-patched: #0d9eae;
+	--two-array-2d-row-col-bg-patched: #9f2fe4;
 	--two-array-2d-row-col-patched: #FFFFFF;
 
 

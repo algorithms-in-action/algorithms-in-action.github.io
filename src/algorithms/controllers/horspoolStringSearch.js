@@ -17,10 +17,6 @@ export default {
                 instance: new GraphTracerRect('hsp', null, 'Horspool String Search'),
                 order: 1,
             },
-            /*array: {
-                instance: new Array2DTracer('array', null, 'Matrix'),
-                order: 1,
-            },*/
 
         };
     },
@@ -103,9 +99,6 @@ export default {
         let m = findString.length;//m=3
         let i = m;
         chunker.add('6', (vis, n) => {
-            //window.alert("findString is : "+findString.length);
-            //window.alert("searchString is : "+searchString.length);//n=8
-            //TODO:move i pointer
         }, [nodes]);
 
         let shift_distance = 0;
@@ -146,14 +139,11 @@ export default {
             for (let shift_j = 0; shift_j < findString.length; shift_j++) {
                 
                 chunker.add('8', (vis, i, j, n) => {
-                    //window.alert("the shift_i is:"+shift_i+" the character is"+searchString[shift_i-shift_j-1]);
-                    //window.alert("j is : "+(findString.length-shift_j)+" the character is"+findString[findString.length-shift_j-1]);
                     // visit - character not match, coloured in blue
                     if (searchString[i - j-1] !== findString[m-j-1]) {
                         vis.graph.visit(searchString.length + m-j-1);
                         vis.graph.visit(i - j-1, null);
                     } else {
-                        //window.alert("it is a equal");
                         // select - character matches, coloured in red
                         vis.graph.select(searchString.length + m-j-1,i - j-1);
                         vis.graph.select(i - j-1, null);      
@@ -178,11 +168,9 @@ export default {
                     break;
                 } else if (shift_j === findString.length - 1)  {
                   
-                    // select - character matches, coloured in red
+                    // select - character matches
                     chunker.add('10', (vis, i, j, n) => {
-                        //window.alert("it is a equal2");
                         const ResultStr = `Success: pattern found position ${i-j}`;
-                        // method1
                         vis.graph.addResult(ResultStr, i);
                     }, [shift_i, shift_j, nodes]);
                     return;
