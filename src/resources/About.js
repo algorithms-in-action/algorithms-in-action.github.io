@@ -31,6 +31,9 @@ import Linfan from '../assets/images/linfan.jpeg';
 import Yinsong from '../assets/images/yinsong.jpg';
 import Zihan from '../assets/images/zihan.jpg';
 import Nir from '../assets/images/nir.png';
+import Ziyi from '../assets/images/ziyi.jpg';
+import Jiajun from '../assets/images/jiajun.jpg';
+import Hantong from '../assets/images/hantong.jpeg';
 
 
 export const content = {
@@ -215,5 +218,47 @@ export const team2021s2 = [// Order by Group
     title: 'MEng (Software)',
   },
   // Redback
-
+  {
+    name: 'Zhenhao Chen',
+    photo: 'https://ui-avatars.com/api/?name=Zhenhao+Chen&background=0D8ABC&color=fff',
+    github: 'https://github.com/xcorrnner',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MIT (Artificial Intelligence)',
+  }, {
+    name: 'Ziyi Zhang',
+    photo: Ziyi,
+    github: 'http://github.com/ZIYIZHANG2',
+    linkedIn: 'https://www.linkedin.com/in/stevie-cheung-84931818b/',
+    desc: 'University of Melbourne',
+    title: 'MIT (Artificial Intelligence)',
+  }, {
+    name: 'Jiajun Liu',
+    photo: Jiajun,
+    github: 'https://github.com/jiajunliu0024',
+    linkedIn: 'https://www.linkedin.com/in/jiajun-liu-8a9b681b4/',
+    desc: 'University of Melbourne',
+    title: 'MIT (Artificial Intelligence)',
+  }, {
+    name: 'Hantong Xing',
+    photo: Hantong,
+    github: 'https://github.com/xinghantong',
+    linkedIn: 'https://www.linkedin.com/in/hantong/',
+    desc: 'University of Melbourne',
+    title: 'MIT (Artificial Intelligence)',
+  }, {
+    name: 'Zisong Liao',
+    photo: 'https://ui-avatars.com/api/?name=Zisong+Liao&background=0D8ABC&color=fff',
+    github: 'https://github.com/ZisongLiao',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MIT (Artificial Intelligence)',
+  }, {
+    name: 'Huimin Huang',
+    photo: 'https://ui-avatars.com/api/?name=Huimin+Huang&background=0D8ABC&color=fff',
+    github: 'https://github.com/huimin5',
+    linkedIn: '#',
+    desc: 'University of Melbourne',
+    title: 'MIT (Distributed Computing)',
+  },
 ];
