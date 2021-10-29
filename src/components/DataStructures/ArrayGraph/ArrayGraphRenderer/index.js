@@ -40,6 +40,7 @@ class Element {
     this.value = value;
     this.patched = false;
     this.selected = false;
+    this.sorted = false;
   }
 }
 
