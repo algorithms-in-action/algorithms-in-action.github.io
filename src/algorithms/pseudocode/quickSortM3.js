@@ -51,7 +51,6 @@ Quicksort(A, left, i - 1) \\B 3
 \\Code{
 QuicksortSecondHalf
 Quicksort(A, i + 1, right) \\B 4
-// Done \\B 19
 \\Code}
     
 \\Code{
@@ -63,9 +62,9 @@ Put the left, right and middle elements in increasing order    \\Ref SortLMR
         plus A[left] and A[right] are in their correct partitions, so 
         they can be skipped in the rest of the partitioning.
 \\Expl}
-Swap(A[mid], A[right - 1]) // put median in A[right-1] \\B 18
+Swap(A[mid], A[right-1]) // put median in A[right-1]
 
-pivot <- A[right - 1] \\B 5
+pivot <- A[right-1] \\B 5
 \\Expl{  Using the median of the left, right and middle elements for the
         pivot leads to very good performance for sorted and reverse sorted
         inputs, and the theoretical worse case is rarely encountered.
@@ -74,17 +73,17 @@ pivot <- A[right - 1] \\B 5
     
 \\Code{
 SortLMR
-mid <- (left + right) / 2 // index of middle element \\B 14
-if A[left] > A[mid] \\B 20
+mid <- (left+right)/2 // index of middle element \\B 14
+if A[left] > A[mid]
 \\In{
-    Swap(A[left], A[mid]) \\B 15
+    Swap(A[left], A[mid])
 \\In}
-if A[mid] > A[right] \\B 21
+if A[mid] > A[right]
 \\In{
-    Swap(A[right], A[mid]) \\B 16
-    if A[left] > A[mid] \\B 22
+    Swap(A[right], A[mid])
+    if A[left] > A[mid]
     \\In{
-        Swap(A[left], A[mid]) \\B 17
+        Swap(A[left], A[mid])
     \\In}
     // now A[left] <= A[mid] <= A[right]
 \\In}
@@ -142,8 +141,8 @@ j <- right - 1 \\B 12
     
 \\Code{
 SwapP
-swap(A[i], A[right - 1]) \\B 13
-\\Expl{  The pivot element, in A[right-1], is swapped with A[i]. All
+swap(A[i], A[right]) \\B 13
+\\Expl{  The pivot element, in A[right], is swapped with A[i]. All
         elements to the left of A[i] must be less then or equal to
         the pivot and A[i] plus all elements to its right must be
         greater than or equal to the pivot.

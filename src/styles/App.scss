@@ -20,7 +20,7 @@ $dragBarWidth: 10px;
     'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
     'leftcol leftdragbar footer rightdragbar rightcol';
 	grid-template-rows: min-content 7fr $dragBarWidth 2fr;
-	grid-template-columns: min-content $dragBarWidth 6fr $dragBarWidth 4fr;	
+	grid-template-columns: 2fr $dragBarWidth 6fr $dragBarWidth 4fr;	
 }
 
 #page:focus {
@@ -122,15 +122,8 @@ $dragBarWidth: 10px;
 // Left Dragbar
 #leftdragbar {
 	grid-area: leftdragbar;
+	cursor: col-resize;
 
-}
-
-#leftdraghandle {
-	position: absolute;
-	height: 20px;
-	width: 20px;
-	margin: auto;
-	filter: brightness(110%);
 }
 
 // Bottom Dragbar
@@ -139,7 +132,6 @@ $dragBarWidth: 10px;
 	cursor: row-resize;
 
 }
-
 
 
 

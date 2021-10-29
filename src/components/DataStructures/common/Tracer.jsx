@@ -3,13 +3,10 @@ import React from 'react';
 import Renderer from './Renderer/index';
 
 class Tracer {
-  constructor(key, getObject, title, options) {
+  constructor(key, getObject, title) {
     this.key = key;
     this.getObject = getObject;
     this.title = title;
-    if (options !== undefined) {
-      this.arrayItemMagnitudes = options.arrayItemMagnitudes;
-    }
     this.init();
     this.reset();
   }

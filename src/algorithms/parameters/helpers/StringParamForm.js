@@ -1,17 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext,useEffect } from 'react';
+import React, { useContext } from 'react';
 import ControlButton from '../../../components/common/ControlButton';
 import { closeInstructions } from '../../../components/mid-panel/helper';
 import { GlobalContext } from '../../../context/GlobalState';
 import '../../../styles/Param.scss';
-
-//SIM Event - DanistyWuKids
-const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
-function simulateMouseClick(element){
-  mouseClickEvents.forEach(mouseEventType => element.dispatchEvent(new MouseEvent(mouseEventType, {view: window,bubbles: true,cancelable: true,buttons: 1})));
-}
-
 /**
  * The ParamForm wraps a input, icon(optional) and a button.
  */
@@ -31,8 +24,6 @@ function StringParamForm(props) {
     }
     closeInstructions();
   };
-
-  useEffect(() => {var element = document.querySelector('button[id="startBtnGrp"]');simulateMouseClick(element);},[]);
 
   return (
     <form className={formClassName} onSubmit={handleSubmit}>
@@ -69,7 +60,6 @@ function StringParamForm(props) {
           <ControlButton
             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
             onClick={closeInstructionsFun}
-            id="startBtnGrp"
             type="submit"
             disabled={disabled}
           >

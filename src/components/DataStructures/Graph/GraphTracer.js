@@ -11,16 +11,10 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
-/* eslint-disable-next-line max-classes-per-file */
+
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
-
-export class Element {
-  constructor() {
-    this.variables = [];
-  }
-}
 
 class GraphTracer extends Tracer {
   getRendererClass() {
@@ -30,10 +24,10 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 480,
-      baseHeight: 480,
+      baseWidth: 320,
+      baseHeight: 320,
       padding: 32,
-      nodeRadius: 20,
+      nodeRadius: 12,
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -43,8 +37,8 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
     this.logTracer = null;
-    this.istc = false;
   }
+
 
   /**
    * This is the original function provided by Tracer.js,
@@ -166,22 +160,10 @@ class GraphTracer extends Tracer {
 
   swapNodes(nodeId1, nodeId2) {
     const node1 = this.findNode(nodeId1);
-    const temp = {
-      value: node1.value,
-      key: node1.key,
-      visitedCount: node1.visitedCount,
-      selectedCount: node1.selectedCount,
-    };
+    const temp = node1.value;
     const node2 = this.findNode(nodeId2);
-    // Swap both the value and key (key is what animates swapping action)
     node1.value = node2.value;
-    node1.key = node2.key;
-    node1.visitedCount = node2.visitedCount;
-    node1.selectedCount = node2.selectedCount;
-    node2.value = temp.value;
-    node2.key = temp.key;
-    node2.visitedCount = temp.visitedCount;
-    node2.selectedCount = temp.selectedCount;
+    node2.value = temp;
     this.layoutTree(this.root);
   }
 
@@ -193,27 +175,11 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    const key = id;
-    // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount });
     this.layout();
-  }
-
-  addResult(text, id) {
-    this.findNode(id).Result = text;
-  }
-
-  addStringLen(len, id) {
-    this.findNode(id).StingLen = len;
-  }
-
-  addPatternLen(len, id) {
-    this.findNode(id).PatternLen = len;
   }
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
@@ -233,9 +199,9 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0) {
     if (this.findEdge(source, target)) return;
-    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
+    this.edges.push({ source, target, weight, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -311,16 +277,17 @@ class GraphTracer extends Tracer {
   layoutCircle() {
     this.callLayout = { method: this.layoutCircle, args: arguments };
     const rect = this.getRect();
-    const unitAngle = (2 * Math.PI) / this.nodes.length;
+    const unitAngle = 2 * Math.PI / this.nodes.length;
     let angle = -Math.PI / 2;
     for (const node of this.nodes) {
-      const x = (Math.cos(angle) * rect.width) / 2;
-      const y = (Math.sin(angle) * rect.height) / 2;
+      const x = Math.cos(angle) * rect.width / 2;
+      const y = Math.sin(angle) * rect.height / 2;
       node.x = x;
       node.y = y;
       angle += unitAngle;
     }
   }
+
 
   shift(space = 0, nodes) {
     const searchString = nodes[0];
@@ -407,40 +374,23 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    // const hGap = rect.width / leafCounts[root];
-    // const vGap = rect.height / maxDepth;
+    const hGap = rect.width / leafCounts[root];
+    const vGap = rect.height / maxDepth;
     marked = {};
-    // horizontal size allocated per leaf node under a subtree node
-    const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length;
-    // vertical gap between nodes. incremented every level.
-    const verticalGap = (this.dimensions.baseHeight - 100) / maxDepth;
-    const recursivePosition = (node, h, v, x, y) => {
+    const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
-      // node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
-      // node.y = rect.top + v * vGap;
-      node.x = x;
-      node.y = y;
+      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
+      node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
         if (marked[linkedNode.id]) continue;
-        let x1 = x;
-        let y1 = y;
-        // For left child
-        if (linkedNode.id === 2 * node.id) {
-          x1 -= leafCounts[node.id] * leafNodeSizeAlloc;
-        }
-        // For right child
-        if (linkedNode.id === 2 * node.id + 1) {
-          x1 += leafCounts[node.id] * leafNodeSizeAlloc;
-        }
-        y1 += verticalGap;
-        recursivePosition(linkedNode, h, v + 1, x1, y1);
+        recursivePosition(linkedNode, h, v + 1);
         h += leafCounts[linkedNode.id];
       }
     };
     const rootNode = this.findNode(root);
-    recursivePosition(rootNode, 0, 0, 0, rect.top);
+    recursivePosition(rootNode, 0, 0);
   }
 
   layoutBST(root = 0, sorted = false) {
@@ -475,7 +425,7 @@ class GraphTracer extends Tracer {
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
-    const hGap = rect.width - 150;
+    const hGap = 80;
     const vGap = rect.height / maxDepth;
     marked = {};
     const recursivePosition = (node, h, v) => {
@@ -511,6 +461,7 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
+
   layoutRandom() {
     this.callLayout = { method: this.layoutRandom, args: arguments };
     const rect = this.getRect();
@@ -524,10 +475,6 @@ class GraphTracer extends Tracer {
     }
   }
 
-  visit0(target, source, weight) {
-    this.visitOrLeave0(true, target, source, weight);
-  }
-
   visit(target, source, weight) {
     this.visitOrLeave(true, target, source, weight);
   }
@@ -536,39 +483,12 @@ class GraphTracer extends Tracer {
     this.visitOrLeave(false, target, source, weight);
   }
 
-  allLeave(target, sources, weight) {
-    for (let i = 0; i < sources.length; i += 1) {
-      this.visitOrLeave(false, target, sources[i], weight);
-    }
-  }
-
-  visitOrLeave0(visit, target, source = null, weight) {
-    const edge = this.findEdge(source, target);
-    const node = this.findNode(target);
-    if (weight) node.weight = weight;
-    if (!this.istc) {
-      node.visitedCount0 += visit ? 1 : -1;
-      if (edge) edge.visitedCount0 += visit ? 1 : -1;
-    } else {
-      node.visitedCount0 = visit ? 1 : 0;
-      if (edge) edge.visitedCount0 = visit ? 1 : 0;
-    }
-    if (this.logTracer) {
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
-    }
-  }
-
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
+    if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
-    if (!this.istc) {
-      node.visitedCount += visit ? 1 : -1;
-      if (edge) edge.visitedCount += visit ? 1 : -1;
-    } else {
-      node.visitedCount = visit ? 1 : 0;
-      if (edge) edge.visitedCount = visit ? 1 : 0;
-    }
+    if (weight !== undefined) node.weight = weight;
+    node.visitedCount += visit ? 1 : -1;
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
@@ -578,72 +498,15 @@ class GraphTracer extends Tracer {
     this.selectOrDeselect(true, target, source);
   }
 
-  styledSelect(style, target, source) {
-    this.styledSelectOrDeselect(style, true, target, source);
-  }
-
-  styledDeselect(style, target, source) {
-    this.styledSelectOrDeselect(style, false, target, source);
-  }
-
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
   }
 
-  visit1(target, source, colorIndex, weight) {
-    this.visitOrLeave1(true, target, source, weight, colorIndex);
-  }
-
-  leave0(target, source, colorIndex = 1, weight) {
-    this.visitOrLeave0(false, target, source, weight, colorIndex);
-  }
-
-  leave1(target, source, colorIndex = 1, weight) {
-    this.visitOrLeave1(false, target, source, weight, colorIndex);
-  }
-
-  visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
+  resetSelect(target, source) {
     const edge = this.findEdge(source, target);
+    if (edge) edge.selectedCount = 0;
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
-
-    const node1 = this.findNode(source);
-    if (colorIndex === 1) {
-      if (edge) edge.visitedCount1 = visit ? 1 : 0;
-      node.visitedCount1 = visit ? 1 : 0;
-      if (node1) node1.visitedCount1 = visit ? 1 : 0;
-    } else if (colorIndex === 2) {
-      if (edge) edge.visitedCount2 = visit ? 1 : 0;
-      node.visitedCount2 = visit ? 1 : 0;
-      if (node1) node1.visitedCount2 = visit ? 1 : 0;
-    }
-    if (this.logTracer) {
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
-    }
-  }
-
-  setPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.isPointer = 1;
-    if (!node1.pointerText.includes(sText)) {
-      node1.pointerText = node1.pointerText.concat(' ', sText);
-    }
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.isPointer = 1;
-      if (!node2.pointerText.includes(tText)) {
-        node2.pointerText = node2.pointerText.concat(' ', tText);
-      }
-    }
-  }
-
-  unsetPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.pointerText = node1.pointerText.replace(sText, '');
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.pointerText = node2.pointerText.replace(tText, '');
-    }
+    node.selectedCount = 0;
   }
 
   selectOrDeselect(select, target, source = null) {
@@ -656,41 +519,12 @@ class GraphTracer extends Tracer {
     }
   }
 
-  sorted(target) {
-    const node = this.findNode(target);
-    node.sorted = true;
-  }
-
-  // style = { backgroundStyle: , textStyle: }
-  styledSelectOrDeselect(style, select, target, source) {
-    this.selectOrDeselect(select, target, source);
-    const node = this.findNode(target);
-    node.style = style;
-  }
-
-  resetSelect(target, source) {
-    const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount = 0;
-    const node = this.findNode(target);
-    node.selectedCount = 0;
-  }
-
-  isInterConnected(source, target) {
-    return this.edges.find(edge => edge.source === source && edge.target === target)
-        && this.edges.find(edge => edge.source === target && edge.target === source);
-  }
-
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
   setText(text) {
     this.text = text;
-    this.text.push({ text });
-  }
-
-  setIstc() {
-    this.istc = true;
   }
 }
 

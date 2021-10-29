@@ -15,8 +15,7 @@ function defer(f, v) {
     return () => undefined;
   }
   return (visualisers) => {
-    const result = f(visualisers, ...args)
-    return result;
+    f(visualisers, ...args);
   };
 }
 
@@ -30,17 +29,9 @@ export default class {
 
   // values is a list of arguments passed to func when it is called to perform its task.
   add(bookmark, func, values) {
-    let bookmarkValue = '', pauseInCollapse = false;
-    if(typeof bookmark === 'object'){
-      bookmarkValue = bookmark.bookmark;
-      pauseInCollapse = bookmark.pauseInCollapse;
-    }else{
-      bookmarkValue = bookmark;
-    }
     this.chunks.push({
-      bookmark: String(bookmarkValue),
+      bookmark: String(bookmark),
       mutator: defer(func, clone(values)),
-      pauseInCollapse
     });
   }
 
@@ -59,55 +50,30 @@ export default class {
       .map(([k, v]) => [k, v.instance])));
   }
 
-  checkChunkPause(){
-    let nextIndex = -1;
+  next() {
     if (this.currentChunk === null) {
-      nextIndex = 0
-    }else if(this.currentChunk >= 0 && this.currentChunk <= this.chunks.length - 2){
-      nextIndex = this.currentChunk + 1
-    }else if (this.currentChunk === this.chunks.length - 1) {
-      nextIndex = this.currentChunk + 1
-    }
-    if(nextIndex === -1) return false;
-    if(!this.chunks[nextIndex]) return false;
-    return this.chunks[nextIndex].pauseInCollapse;
-  }
-
-  next(triggerPauseInCollapse = false) {
-    let pauseInCollapse = this.checkChunkPause();
-    if(!pauseInCollapse){
-      if (this.currentChunk === null) {
-        this.visualisers = this.init();
-        this.doChunk(0);
-        this.currentChunk = 0;
-      } else if (this.currentChunk >= 0 && this.currentChunk <= this.chunks.length - 2) {
-        this.doChunk(this.currentChunk + 1);
-        this.currentChunk += 1;
-      } else if (this.currentChunk === this.chunks.length - 1) {
-        this.currentChunk += 1;
-      }
-    }else{
-      if(!triggerPauseInCollapse){
-        this.doChunk(this.currentChunk + 1);
-        this.currentChunk += 1;
-      }
+      this.visualisers = this.init();
+      this.doChunk(0);
+      this.currentChunk = 0;
+    } else if (this.currentChunk >= 0 && this.currentChunk <= this.chunks.length - 2) {
+      this.doChunk(this.currentChunk + 1);
+      this.currentChunk += 1;
+    } else if (this.currentChunk === this.chunks.length - 1) {
+      this.currentChunk += 1;
     }
     if (this.currentChunk < this.chunks.length) {
       return {
         bookmark: this.chunks[this.currentChunk].bookmark,
         finished: false,
-        pauseInCollapse,
       };
     }
     return {
       bookmark: this.chunks[this.currentChunk - 1].bookmark,
       finished: true,
-      pauseInCollapse,
     };
   }
 
   prev() {
-    this._inPrevState = true;
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk - 1; i += 1) {
@@ -115,20 +81,9 @@ export default class {
       }
       this.currentChunk -= 1;
     }
-    this._inPrevState = false;
     return {
       bookmark: this.chunks[this.currentChunk].bookmark,
       finished: false,
     };
-  }
-
-  refresh(){
-    if (this.currentChunk > 0) {
-      this.visualisers = this.init();
-      for (let i = 0; i <= this.currentChunk; i += 1) {
-        this.doChunk(i);
-      }
-      this.currentChunk -= 1;
-    }
   }
 }

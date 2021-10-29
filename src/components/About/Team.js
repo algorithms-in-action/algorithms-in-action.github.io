@@ -6,7 +6,7 @@ import '../../styles/About.scss';
 const Team = ({ teammembers }) => (
   <div className="projectContainer">
     <div className="heading" variant="h4" display="block">
-      Team 2021s1
+      core team
     </div>
     <div className="teamMembers">
 
@@ -21,6 +21,7 @@ const Team = ({ teammembers }) => (
           title={m.title}
         />
       ))}
+
     </div>
   </div>
 );

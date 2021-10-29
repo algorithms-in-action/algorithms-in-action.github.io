@@ -10,7 +10,8 @@ with n nodes. In the adjacency matrix, A[i,j] = 1 indicates that
 there is an edge, i.e., a one-step path, from node i to node j, and 
 0 indicates that there is not an edge. The algorithm ends with a 
 reachability matrix where A[i,j] = 1 means that there is a path from
-i to j, possibly with several intermediate steps between i and j. 
+i to j, possibly with several intermediate steps between i and j,
+possibly with several intermediate steps between i and j. 
 
 The algorithm uses three nested loops that iterate over all the nodes
 but the order of the nesting is crucial for correctness. 
@@ -35,10 +36,3 @@ from i to j, so A[i,j] is set to 1 at this point. Correctness of the
 algorithm relies on the fact that there is a path from i to j using 
 only intermediate nodes 1 to k if and only if there is a path from 
 i to k and from k to j using only intermediate nodes 1 to k-1.
-
-For the graph reachability view it is convenient to assume there
-are no "loop edge" from a node back to itself. Hence the matrices
-are assumed to have all ones in the diagonal. That is, we assume
-the binary relations given as input are irreflexive. However, the 
-algorithm for transitive closure works with any binary relation.
-

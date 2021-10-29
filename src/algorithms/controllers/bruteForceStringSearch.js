@@ -3,7 +3,7 @@
 /* eslint-disable no-plusplus */
 
 import { QSExp } from '../explanations';
-import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 
 export default {
   explanation: QSExp,
@@ -11,7 +11,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracerRect('bst', null, 'Brute force string search'),
+        instance: new GraphTracer('bst', null, 'Brute force string search'),
         order: 0,
       },
     };
@@ -27,22 +27,23 @@ export default {
     // initial state
     const searchString = nodes[0];
     const findString = nodes[1];
+    let stringCount = 0;
     // searchString and findString are stored in the same array
     // to get element in findString, add the length of searchString to the index
     chunker.add('1', (vis, n) => {
-      vis.graph.addNode(0, searchString[0], 'box');
+      vis.graph.addNode(stringCount, searchString[0], 'box');
+      stringCount++;
       for (let i = 1; i < searchString.length; i++) {
-        vis.graph.addNode(i, searchString[i], 'box');
-        vis.graph.addEdge(i, i - 1);
-        vis.graph.addStringLen(searchString.length, i);
-        vis.graph.addPatternLen(findString.length, i);
-        vis.graph.addAlgorithm('bfsSearch', i);
+        vis.graph.addNode(stringCount, searchString[i], 'box');
+        vis.graph.addEdge(stringCount, stringCount - 1);
+        stringCount++;
       }
-      vis.graph.addNode(searchString.length, findString[0]);
-      const j = searchString.length;
+      vis.graph.addNode(stringCount, findString[0]);
+      stringCount++;
       for (let i = 1; i < findString.length; i++) {
-        vis.graph.addNode(j + i, findString[i], 'box');
-        vis.graph.addEdge(j + i, j + i - 1);
+        vis.graph.addNode(stringCount, findString[i], 'box');
+        vis.graph.addEdge(stringCount, stringCount - 1);
+        stringCount++;
       }
       vis.graph.shift(0, n);
     }, [nodes]);
@@ -85,15 +86,6 @@ export default {
         } else if (shift_j === findString.length - 1) {
           // eslint-disable-next-line no-unused-vars
           chunker.add('5', (vis, i, j, n) => {
-            const ResultStr = `Success: pattern found position ${i}`;
-            // method1
-            vis.graph.addResult(ResultStr, i);
-            // method 2：
-            // vis.array.addResult(ResultStr,i);
-            // method 3：
-            // eslint-disable-next-line max-len
-            // const array1 = ["The pattern string("+findString+") is placed at postion "+ i +" of Search String ("+searchString+")"];
-            // vis.array.set2(array1);
           }, [shift_i, shift_j, nodes]);
           return;
         } else {
@@ -103,10 +95,5 @@ export default {
         }
       }
     }
-    const i = findString.length;
-    chunker.add('6', (vis, i, n) => {
-      const ResultStr = 'Pattern not found';
-      vis.graph.addResult(ResultStr, i);
-    }, [i, nodes]);
   },
 };

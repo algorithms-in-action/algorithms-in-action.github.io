@@ -31,9 +31,6 @@ import Linfan from '../assets/images/linfan.jpeg';
 import Yinsong from '../assets/images/yinsong.jpg';
 import Zihan from '../assets/images/zihan.jpg';
 import Nir from '../assets/images/nir.png';
-import Ziyi from '../assets/images/ziyi.jpg';
-import Jiajun from '../assets/images/jiajun.jpg';
-import Hantong from '../assets/images/hantong.jpeg';
 
 
 export const content = {
@@ -70,7 +67,7 @@ export const content = {
 export const professors = [
   {
     id: 0,
-    name: 'Harald Sondergaard',
+    name: 'Haralf Sondergaard',
     desc: 'Professor',
     department: 'University of Melbourne',
     link: 'https://findanexpert.unimelb.edu.au/profile/13416-harald-sondergaard',
@@ -110,6 +107,7 @@ export const team = [
     linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'Kenny Lee',
@@ -118,6 +116,7 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/kennylwx/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'Yingsong Chen',
@@ -126,6 +125,8 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/yinsong-chen-62707b15b/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
+
   },
   {
     name: 'Bohao Liu',
@@ -134,6 +135,7 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/bohao-liu-3218211ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'Nir Palombo',
@@ -142,6 +144,8 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/nir-palombo-b513b449/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
+
   },
   {
     name: 'Boyu Zhou',
@@ -150,6 +154,7 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/boyu-zhou-05487b1a0/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'João Pereira',
@@ -158,6 +163,7 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/joão-pereira-574972163/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'Lin Fan',
@@ -166,6 +172,7 @@ export const team = [
     linkedIn: '',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
+
   },
   {
     name: 'Tianyang Chen',
@@ -174,131 +181,6 @@ export const team = [
     linkedIn: 'https://www.linkedin.com/in/tianyang-chen-8208261ba/',
     desc: 'University of Melbourne',
     title: 'MEng (Software)',
-  },
-];
 
-export const team2021s2 = [// Order by Group 
-// Bluering
-
-  // Boxjelly
-  {
-    name: 'Tianjing Ruan',
-    photo: 'https://media-exp1.licdn.com/dms/image/C5603AQHYyAHvoTMVnA/profile-displayphoto-shrink_400_400/0/1634538882547?e=1640217600&v=beta&t=gnCJL7gD-PK3ERdfrXuVePdY2nfIIQErmlmeFX-zi9o',
-    github: 'https://github.com/TianjingRuan',
-    linkedIn: 'https://www.linkedin.com/in/tianjingruan/',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Wenkai Gong',
-    photo: 'https://ui-avatars.com/api/?name=Wenkai+Gong&background=0D8ABC&color=fff',
-    github: 'https://github.com/DanistyWuKids',
-    linkedIn: 'https://www.linkedin.com/in/wgong0001/',
-    desc: 'University of Melbourne',
-    title: 'MEng (Software)',
-  }, {
-    name: 'Xuan Yin',
-    photo: 'https://ui-avatars.com/api/?name=Xuan+Yin&background=0D8ABC&color=fff',
-    github: 'https://github.com/XuanYin2020',
-    linkedIn: 'https://www.linkedin.com/in/xuan-yin-b09a20224/',
-    desc: 'University of Melbourne',
-    title: 'MIT (Distributed Computing)',
-  }, {
-    name: 'Yuqi Song',
-    photo: 'https://ui-avatars.com/api/?name=Yuqi+Song&background=0D8ABC&color=fff',
-    github: 'https://github.com/irissong49',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Yifei Yang',
-    photo: 'https://ui-avatars.com/api/?name=Yifei+Yang&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'MEng (Software)',
-  },
-  // Redback
-  {
-    name: 'Zhenhao Chen',
-    photo: 'https://ui-avatars.com/api/?name=Zhenhao+Chen&background=0D8ABC&color=fff',
-    github: 'https://github.com/xcorrnner',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Ziyi Zhang',
-    photo: Ziyi,
-    github: 'http://github.com/ZIYIZHANG2',
-    linkedIn: 'https://www.linkedin.com/in/stevie-cheung-84931818b/',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Jiajun Liu',
-    photo: Jiajun,
-    github: 'https://github.com/jiajunliu0024',
-    linkedIn: 'https://www.linkedin.com/in/jiajun-liu-8a9b681b4/',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Hantong Xing',
-    photo: Hantong,
-    github: 'https://github.com/xinghantong',
-    linkedIn: 'https://www.linkedin.com/in/hantong/',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Zisong Liao',
-    photo: 'https://ui-avatars.com/api/?name=Zisong+Liao&background=0D8ABC&color=fff',
-    github: 'https://github.com/ZisongLiao',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'MIT (Artificial Intelligence)',
-  }, {
-    name: 'Huimin Huang',
-    photo: 'https://ui-avatars.com/api/?name=Huimin+Huang&background=0D8ABC&color=fff',
-    github: 'https://github.com/huimin5',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'MIT (Distributed Computing)',
-  },
-  {
-    name: 'Alexander Troup',
-    photo: 'https://ui-avatars.com/api/?name=Alexander+Troup&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'M-IT (Computing)',
-  },
-  {
-    name: 'Madisyn Freeman',
-    photo: 'https://ui-avatars.com/api/?name=Madi+Freeman&background=0D8ABC&color=fff',
-    github: 'https://github.com/madifreeman',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'M-IT',
-  },
-  {
-    name: 'Conor Rogers',
-    photo: 'https://ui-avatars.com/api/?name=Conor+Rogers&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'M-IT',
-  },
-  {
-    name: 'Deepthy Das Kalathil',
-    photo: 'https://ui-avatars.com/api/?name=Deepthy+Das+Kalathil&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'M-IT',
-  },
-  {
-    name: 'Kaiquan Lin',
-    photo: 'https://ui-avatars.com/api/?name=Kaiquan+Lin&background=0D8ABC&color=fff',
-    github: '#',
-    linkedIn: '#',
-    desc: 'University of Melbourne',
-    title: 'M-IT',
   },
 ];
