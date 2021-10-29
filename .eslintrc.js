@@ -22,7 +22,6 @@ module.exports = {
     "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
     "no-continue": 0,
     "no-case-declarations": 0,
-    "no-underscore-dangle": 0,
-    "linebreak-style": 0
+    "no-underscore-dangle": 0
   }
 };

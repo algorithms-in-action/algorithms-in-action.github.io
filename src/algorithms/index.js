@@ -120,25 +120,6 @@ const algorithms = {
       search: Controller.bruteForceStringSearch,
     },
   },
-  'horspoolStringSearch': {
-    name: 'Horspool String Search',
-    category: 'String Search',
-    /*
-    Todo:
-     1. Add explanation and extra info markdown contents
-     2. Implement controller (check bookmark)
-    */
-    explanation: Explanation.HSSExp,
-    param: <Param.HSSParam />,
-    instructions: Instructions.HSSInstruction,
-    extraInfo: ExtraInfo.HSSInfo,
-    pseudocode: {
-      search: Pseudocode.horspoolStringSearching,
-    },
-    controller: {
-      search: Controller.horspoolStringSearch,
-    },
-  },
 };
 
 /**

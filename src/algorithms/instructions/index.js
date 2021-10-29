@@ -3,7 +3,7 @@ const KEY_INSERT = 'INSERT';
 const KEY_PLAY = 'PLAY';
 const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
-const KEY_LOAD = 'START';
+const KEY_LOAD = 'BUILD GRAPH';
 const KEY_FIND = 'FIND STRING';
 
 
@@ -63,21 +63,9 @@ const graphInstructions = [{
   ],
 }];
 
-const graphInstructionsTC = [{
-  title: 'Create Graph ',
-  content: [
-    `Click on ${KEY_CODE} on the right panel`,
-    'Enter a graph in the transition matrix',
-    `Click on ${KEY_LOAD} to load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run.`,
-    'All nodes are SELF-REACHABLE => All diagonal elements are ones and NOT allowed to be edited.',
-  ],
-}];
-
 export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
-export const TCInstruction = graphInstructionsTC;
+export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
-export const HSSInstruction = stringInstructions;

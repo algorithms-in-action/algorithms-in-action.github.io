@@ -129,32 +129,6 @@ $outerBorder: 2px;
       @include border-radii(0,$btnSize,$btnSize,0);
 
     }
-    .top-left {
-    
-      @include border-radii($btnSize,0,0,0);
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
-    }
-    .top-right {
-      
-      @include border-radii(0,$btnSize,0,0);
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
-    }
-    .bottom-right {
-      
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
-      @include border-radii(0,0,$btnSize,0);
-
-    }
-    .bottom-left {
-      
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
-      @include border-radii(0,0,0,$btnSize);
-
-    }
 
   }
 
@@ -226,28 +200,4 @@ $outerBorder: 2px;
 
 .white {
   background: #cecece;
-}
-.positive1{
-  background: #83d489;
-}
-.positive2{
-  background: #258bff;
-}
-.negative1{
-  background: #e85c49;
-}
-.negative2{
-  background: #ec0a70;
-}
-.hint1{
-  background: #fbd651;
-}
-.hint2{
-  background: #f2c988;
-}
-.back-up1{
-  background: #4768de;
-}
-.back-up2{
-  background: #308f45;
 }

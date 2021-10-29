@@ -3,6 +3,7 @@ import React from 'react';
 import Denque from 'denque';
 import ParamMsg from './ParamMsg';
 
+
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
   return t.match(regex);
@@ -14,7 +15,7 @@ export const stringListValidCheck = (t) => {
 };
 
 export const stringValidCheck = (t) => {
-  const regex = /^[a-z\s]+$/g;
+  const regex = /^[a-zA-Z]+$/g;
   return t.match(regex);
 };
 
@@ -22,24 +23,6 @@ export const singleNumberValidCheck = (t) => {
   const regex = /^\d+$/g;
   return t.match(regex);
 };
-
-// eslint-disable-next-line consistent-return
-export const matrixValidCheck = (m) => {
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < m.length; i++) {
-    // eslint-disable-next-line no-plusplus
-    for (let j = 0; j < i; j++) {
-      if (m[i][j] !== m[j][i]) {
-        return false;
-      }
-    }
-    if (m[i][i] !== 0) {
-      return false;
-    }
-  }
-  return true;
-};
-
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -55,28 +38,15 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
-export const quicksortPerfectPivotArray = (minA, maxA) => {
-  function idealOrder(min, max, v, step) {
-    if (max <= min) {
-      return [];
-    }
-    const midDivider = Math.floor(((max - min) / 2) + min);
-    const left = idealOrder(min, midDivider - step, v, step);
-    const right = idealOrder(midDivider + step, max, -1, step);
-
-    if (v === 1) {
-      return left.concat(right).concat([midDivider]);
-    }
-    return [midDivider].concat(left).concat(right);
-  }
-  return idealOrder(minA, maxA, 1, 2);
-};
-
+/**
+ *
+ * @param {string} type algorithm type
+ */
 export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}
-    logTag=""
-    logMsg=""
+    logTag="Great success!"
+    logMsg={`The ${type} algorithm is now ready for execution.`}
   />
 );
 
@@ -94,7 +64,7 @@ export const errorParamMsg = (
   <ParamMsg
     logWarning
     logTag="Oops..."
-    logMsg={`${example || ''}`}
+    logMsg={`${reason} ${example || ''}`}
   />
 );
 
@@ -108,7 +78,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i + 1,
+      Header: i,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -119,9 +89,6 @@ export const makeColumnArray = (len) => {
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix
- * @param min
- * @param max
- * @param symmetric
  * @return array of object
  */
 export const makeData = (len, min, max, symmetric) => {
@@ -141,47 +108,15 @@ export const makeData = (len, min, max, symmetric) => {
       rows.push(row);
     }
   }
-  // const arr = [];
-  let arr = [];
+  const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
       data[`col${j}`] = symmetric
         ? `${rows[i][j]}`
         : `${getRandomInt(min, max)}`;
-      if (i === j && !symmetric) {
-        data[`col${j}`] = '1';
-      }
     }
     arr.push(data);
-  }
-  if (len === 4 && symmetric !== true) {
-    arr = [
-      {
-        col0: '1',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '1',
-        col3: '0',
-      },
-      {
-        col0: '0',
-        col1: '0',
-        col2: '1',
-        col3: '1',
-      },
-    ];
   }
   return arr;
 };

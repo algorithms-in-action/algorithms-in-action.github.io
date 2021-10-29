@@ -2,9 +2,9 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
+import Checkbox from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -34,7 +34,7 @@ const UNCHECKED = {
   balanced: false,
 };
 
-const BlueRadio = withStyles({
+const BlueCheckbox = withStyles({
   root: {
     color: '#2289ff',
     '&$checked': {
@@ -42,8 +42,8 @@ const BlueRadio = withStyles({
     },
   },
   checked: {},
-  // eslint-disable-next-line react/jsx-props-no-spreading
-})((props) => <Radio {...props} />);
+// eslint-disable-next-line react/jsx-props-no-spreading
+})((props) => <Checkbox {...props} />);
 
 function BSTParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -83,41 +83,22 @@ function BSTParam() {
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
       // make sure the tree is not empty
-      if (
-        algorithm.hasOwnProperty('visualisers')
-        && !algorithm.visualisers.graph.instance.isEmpty()
-      ) {
+      if (algorithm.hasOwnProperty('visualisers') && !algorithm.visualisers.graph.instance.isEmpty()) {
         const visualiser = algorithm.chunker.visualisers;
         // run search animation
         dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'binarySearchTree',
-          mode: 'search',
-          visualiser,
-          target,
+          name: 'binarySearchTree', mode: 'search', visualiser, target,
         });
         setMessage(successParamMsg(SEARCH));
       } else {
         // when the tree is &nbsp;&nbsp;empty
-        setMessage(
-          errorParamMsg(
-            SEARCH,
-            undefined,
-            'Please fully build the tree before running a search.',
-          ),
-        );
+        setMessage(errorParamMsg(SEARCH, undefined, 'Please fully build the tree before running a search.'));
       }
     } else {
       // when the input cannot be converted to a number
       setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE));
     }
   };
-
-  useEffect(
-    () => {
-      document.getElementById('startBtnGrp').click();
-    },
-    [bstCase],
-  );
 
   return (
     <>
@@ -128,14 +109,7 @@ function BSTParam() {
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={(() => {
-            if (bstCase.balanced) {
-              return balanceBSTArray([...nodes].sort((a, b) => a - b));
-            } if (bstCase.sorted) {
-              return [...nodes].sort((a, b) => a - b);
-            }
-            return nodes;
-          })()}
+          DEFAULT_VAL={nodes}
           SET_VAL={setNodes}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
@@ -155,37 +129,19 @@ function BSTParam() {
           setMessage={setMessage}
         />
       </div>
-      <span className="generalText">Choose type of tree: &nbsp;&nbsp;</span>
+      Choose type of tree: &nbsp;&nbsp;
       <FormControlLabel
-        control={(
-          <BlueRadio
-            checked={bstCase.random}
-            onChange={handleChange}
-            name="random"
-          />
-        )}
+        control={<BlueCheckbox checked={bstCase.random} onChange={handleChange} name="random" />}
         label="Random"
         className="checkbox"
       />
       <FormControlLabel
-        control={(
-          <BlueRadio
-            checked={bstCase.sorted}
-            onChange={handleChange}
-            name="sorted"
-          />
-        )}
+        control={<BlueCheckbox checked={bstCase.sorted} onChange={handleChange} name="sorted" />}
         label="Sorted"
         className="checkbox"
       />
       <FormControlLabel
-        control={(
-          <BlueRadio
-            checked={bstCase.balanced}
-            onChange={handleChange}
-            name="balanced"
-          />
-        )}
+        control={<BlueCheckbox checked={bstCase.balanced} onChange={handleChange} name="balanced" />}
         label="Balanced"
         className="checkbox"
       />

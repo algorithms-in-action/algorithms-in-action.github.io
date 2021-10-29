@@ -3,8 +3,7 @@
 import React from 'react';
 import Header from './Header';
 import Team from './Team';
-import Team2021s2 from './Team2021s2';
-import { team, team2021s2 } from '../../resources/About';
+import { team } from '../../resources/About';
 import '../../styles/About.scss';
 import { ReactComponent as Wave } from '../../assets/icons/wave.svg';
 import ClientSection from './ClientSection';
@@ -23,9 +22,11 @@ const About = () => {
         </div>
         <ClientSection />
         <AppSection />
-        <div className="aboutContainer"><Team teammembers={team} /></div>
-        <div className="aboutContainer"><Team2021s2 teammembers={team2021s2} /></div>
+        <div className="aboutContainer">
+          <Team teammembers={team} />
+        </div>
         <Contribute />
+
       </div>
     </>
   );

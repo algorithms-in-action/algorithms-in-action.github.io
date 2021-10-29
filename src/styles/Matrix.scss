@@ -50,8 +50,7 @@
     th {
       color: var(--mid-control-param-matrix-header-font);
       background-color: var(--mid-control-param-matrix-header-bg);
-      width: 32px;
-      height: 24px;
+      padding: 6px 8px;
       font-size: 1.1em;
       font-weight: 500;
       @include border-radius(2px);

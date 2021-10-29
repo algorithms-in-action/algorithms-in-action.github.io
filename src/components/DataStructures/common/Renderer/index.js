@@ -36,9 +36,9 @@ class Renderer extends React.Component {
     this.centerX = 0;
     this.centerY = 0;
     this.zoom = 1;
-    this.zoomFactor = 1.001;
+    this.zoomFactor = 1.01;
     this.zoomMax = 20;
-    this.zoomMin = 1 / 200;
+    this.zoomMin = 1 / 20;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
