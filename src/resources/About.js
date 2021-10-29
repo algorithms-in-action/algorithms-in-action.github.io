@@ -70,7 +70,7 @@ export const content = {
 export const professors = [
   {
     id: 0,
-    name: 'Haralf Sondergaard',
+    name: 'Harald Sondergaard',
     desc: 'Professor',
     department: 'University of Melbourne',
     link: 'https://findanexpert.unimelb.edu.au/profile/13416-harald-sondergaard',
