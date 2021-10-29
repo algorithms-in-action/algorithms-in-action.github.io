@@ -19,7 +19,6 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 import { markdownKeywords } from './MarkdownKeywords';
-import {DirectionsOutlined} from '@material-ui/icons';
 
 
 function blockContainsBookmark(algorithm, block) {

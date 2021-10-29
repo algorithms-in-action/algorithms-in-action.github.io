@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react';
+import React from 'react';
 import { useTable } from 'react-table';
 import EditableCell from './EditableCell';
 import '../../../styles/Param.scss';

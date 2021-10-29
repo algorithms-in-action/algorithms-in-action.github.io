@@ -4,7 +4,6 @@
 
 import { QSExp } from '../explanations';
 import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
-import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
   explanation: QSExp,
@@ -104,9 +103,9 @@ export default {
         }
       }
     }
-    let i=findString.length;
+    const i = findString.length;
     chunker.add('6', (vis, i, n) => {
-      const ResultStr = "Pattern not found";
+      const ResultStr = 'Pattern not found';
       vis.graph.addResult(ResultStr, i);
     }, [i, nodes]);
   },

@@ -19,13 +19,6 @@ function ProgressBar({ current, max }) {
     }
   }
 
-  function isInputValid(first, second) {
-    if (first >= 0 && second >= 0) {
-      return true;
-    }
-    return false;
-  }
-
   useEffect(() => {
     function setProgress(ref, val) {
       setTransform(ref, `scaleX(${val})`);

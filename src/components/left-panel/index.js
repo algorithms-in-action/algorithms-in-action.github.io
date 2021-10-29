@@ -70,20 +70,25 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
     // increaseFontSize(itemFontID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
 
-  const mouseEvs=['mousedown','click','mouseup']
-  
+  const mouseEvs = ['mousedown', 'click', 'mouseup'];
+  let startButtonClick = null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    startButtonClick()
-  }, [])
-  const startButtonClick = () =>{  
+    // eslint-disable-next-line no-use-before-define
+    startButtonClick();
+  }, [startButtonClick]);
+  startButtonClick = () => {
     const startButton = document.getElementById('startBtnGrp');
-    console.log(startButton)
-    if(startButton !== null){
+    console.log(startButton);
+    if (startButton !== null) {
       mouseEvs.forEach(
-        mouseEventType => startButton.dispatchEvent(
+        (mouseEventType) => startButton.dispatchEvent(
           new MouseEvent(mouseEventType,
-            {view: window, bubbles: true, cancelable: true, buttons:1}))
-      )
+            {
+              view: window, bubbles: true, cancelable: true, buttons: 1,
+            }),
+        ),
+      );
     }
   };
 
@@ -127,13 +132,13 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
                         className={algorithm.name === algo.name ? 'algoItem active' : 'algoItem'}
                         type="button"
                         id={`algo-${algo.name}`}
-                        onClick={algorithm.name === algo.name? ()=>{
-                          document.getElementById('startBtnGrp');}
+                        onClick={algorithm.name === algo.name ? () => {
+                          document.getElementById('startBtnGrp');
+                        }
                           : () => {
                             openInstructions();
                             dispatch(GlobalActions.LOAD_ALGORITHM, { name: algo.shorthand, mode: algo.mode });
-                          }
-                        }
+                          }}
                       >
                         <div key={algo.id} className="algoItemContent">{algo.name}</div>
                       </button>

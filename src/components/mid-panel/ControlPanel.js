@@ -190,10 +190,11 @@ function ControlPanel() {
         {algorithm.param}
       </div>
 
-      <div className ="InstructionPanel">
-        
+      <div className="InstructionPanel">
+
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className="close" onClick={closeModal}>
               &times;
             </a>

@@ -10,7 +10,6 @@ import ParamForm from './ParamForm';
 import {
   commaSeparatedNumberListValidCheck,
   genRandNumList,
-  successParamMsg,
   errorParamMsg,
 } from './ParamHelper';
 

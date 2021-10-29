@@ -44,6 +44,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           <ControlButton icon={<HelpIcon />} onClick={() => setOpen((o) => !o)} />
           <Popup open={open} closeOnDocumentClick onClose={closeModal}>
             <div className="textArea">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="close" onClick={closeModal}>
                 &times;
               </a>

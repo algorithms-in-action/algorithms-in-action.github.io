@@ -12,11 +12,10 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 
+// eslint-disable-next-line max-classes-per-file
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRendererRect/index';
-import { cloneDeepWith } from "lodash";
-
 
 export class Element {
   constructor() {

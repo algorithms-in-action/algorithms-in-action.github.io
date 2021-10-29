@@ -205,18 +205,19 @@ export default {
         }
 
         updatedStack = updateStackElements(updatedStack, depth, 1, left, right);
-        for(let i=0;i<updatedStack.length;i++) {
-          for(let j=0;j<updatedStack[i].length;j++) {
-            if(updatedStack[i][j] == 0) continue;
-            if(i !== depth && updatedStack[i][j] != 0 && (j <left || j > right)) {updatedStack[i][j] = -1}
-            if(i !== depth && (j >=left && j <= right)) {updatedStack[i][j] = 0 }
+        for (let i = 0; i < updatedStack.length; i++) {
+          for (let j = 0; j < updatedStack[i].length; j++) {
+            if (updatedStack[i][j] === 0) continue;
+            // eslint-disable-next-line max-len
+            if (i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right)) { updatedStack[i][j] = -1; }
+            if (i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0; }
           }
         }
 
         vis.array.setStack(updatedStack);
         vis.array.setStackDepth(depth);
       });
-            if (left < right) {
+      if (left < right) {
         [p, a] = partition(a, left, right);
 
         chunker.add(3, (vis, pivot, arrayLen) => {
@@ -240,16 +241,15 @@ export default {
             vis.array.fadeIn(i);
           }
           // do some somewhat hacky changes to the 'stack' array
+          // eslint-disable-next-line max-len
           // note that this is just setting the state of elements in a 2D array which represents a stack and corresponding elements in the real array positionally in a row
-          let updatedStack = updateStackElements(vis.array.stack, depth, 1, left, right);
-          for(let i=0;i<updatedStack.length;i++) {
-            for(let j=0;j<updatedStack[i].length;j++) {
-              if(j <= pivot) { updatedStack[i][j] = 0 }
-              else if(i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right )) { updatedStack[i][j] = -1}
-              else if(i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0 }
+          const updatedStack = updateStackElements(vis.array.stack, depth, 1, left, right);
+          for (let i = 0; i < updatedStack.length; i++) {
+            for (let j = 0; j < updatedStack[i].length; j++) {
+              // eslint-disable-next-line max-len
+              if (j <= pivot) { updatedStack[i][j] = 0; } else if (i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right)) { updatedStack[i][j] = -1; } else if (i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0; }
             }
           }
-
         }, [p, right + 1]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
@@ -266,6 +266,7 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
+        // eslint-disable-next-line max-len
         vis.array.setStack([new Array(nodes.length).fill(0)]); // used for a custom stack visualisation
       },
       [nodes],
