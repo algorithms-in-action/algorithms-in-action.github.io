@@ -5,14 +5,16 @@
   "homepage": "https://algorithms-in-action.github.io",
   "dependencies": {
     "@material-ui/core": "^4.9.13",
-    "@material-ui/icons": "latest",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "latest",
     "@material-ui/styles": "^4.10.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "denque": "^1.5.0",
+    "framer-motion": "^4.1.17",
     "history": "^5.0.0",
+    "lodash": "^4.17.21",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -22,6 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "react-table": "^7.5.0",
+    "reactjs-popup": "^2.0.5",
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4"
@@ -50,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "electron": "^15.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
@@ -65,7 +69,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npx lint-staged"
     }
   },
   "lint-staged": {

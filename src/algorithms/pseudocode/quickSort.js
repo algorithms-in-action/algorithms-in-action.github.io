@@ -47,17 +47,20 @@ Quicksort(A, left, right) \\B 1
         \\Expl{  Sort elements right of (greater or equal to) the
                 pivot, which is in A[i].
         \\Expl}
+        
     \\In}
+    // Done \\B 50
 \\Code}
 
 \\Code{
 QuicksortFirstHalf
-Quicksort(A, left, i) \\B 3
+Quicksort(A, left, i - 1) \\B 3
 \\Code}
 
 \\Code{
 QuicksortSecondHalf
 Quicksort(A, i + 1, right) \\B 4
+// Done \\B 19
 \\Code}
 
 \\Code{
@@ -110,7 +113,7 @@ Put the pivot in its final place    \\Ref SwapP
 
 \\Code{
 init_iAndj
-i <- left + 1 \\B 11
+i <- left - 1 \\B 11
 \\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
 \\Expl}
 j <- right \\B 12

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
 import Header from './components/top/Header';
 import { ReactComponent as Circle } from './assets/icons/circle.svg';
+import { ReactComponent as Direction } from './assets/icons/direction.svg';
 import { GlobalProvider } from './context/GlobalState';
 import RightPanel from './components/right-panel';
 import LeftPanel from './components/left-panel';
@@ -10,7 +11,7 @@ import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 import Settings from './components/top/Settings';
 import {
-  resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
+  resizeWindow, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
 import {
   setTheme,
@@ -129,26 +130,23 @@ function App() {
         <div id="header">
           <Header onSetting={onSetting} />
         </div>
-
         <div id="leftcol">
           <LeftPanel
             fontSize={LEFT_FONT_SIZE}
             fontSizeIncrement={fontSizeIncrease}
           />
         </div>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <div
           id="leftdragbar"
           tabIndex="-1"
           aria-label="Move left drag bar"
-          onDoubleClick={collapseLeftDrag}
-          onMouseDown={startLeftDrag}
+          onClick={collapseLeftDrag}
           role="button"
           className="dragbar"
         >
           <div id="draghandle" className="handle">
-            <Circle />
-            <Circle />
-            <Circle />
+            <Direction id="leftdraghandle"/>
           </div>
         </div>
         <div id="tabpages">

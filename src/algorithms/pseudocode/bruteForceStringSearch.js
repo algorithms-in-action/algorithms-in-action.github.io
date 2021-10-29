@@ -24,14 +24,13 @@ export default parse(`
                         so we try starting from the next position, i+1, in T.
                 \\Expl}
         \\In}
-        return (-1)
+        return (-1)  \\B 6
         \\Expl{  We use -1 to indicate that there was no match.
         \\Expl}
     \\In}
     \\Code}
     \\Code{
     LookForMatch
-    // Look for a match starting from T[i]
     j <- 0 
     while j < m and P[j] = T[i+j] \\B 3
     \\Expl{  We keep progressing the search as long as we have not 
@@ -65,7 +64,7 @@ export default parse(`
                 return i; //   we had a match T[i]..T[i+m-1]
             i = i+1;
         }
-        return (-1);
+        return (-1);  
     }
     int
     main() {

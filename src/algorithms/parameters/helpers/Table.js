@@ -17,6 +17,7 @@ function Table({
   columns,
   data,
   updateData,
+  algo,
 }) {
   const {
     getTableProps,
@@ -29,8 +30,11 @@ function Table({
     data,
     defaultColumn,
     updateData,
+    algo,
   });
-
+  // add the header in left side of table
+  let counter = 0;
+  const incrementCounter = () => { counter += 1; };
   // Render the table
   return (
     <div className="table">
@@ -38,6 +42,7 @@ function Table({
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
+              <th>Node</th>
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
@@ -49,6 +54,7 @@ function Table({
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
+                <th {...incrementCounter()}>{counter}</th>
                 {row.cells.map((cell) => <td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
               </tr>
             );
