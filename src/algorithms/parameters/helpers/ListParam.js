@@ -10,7 +10,6 @@ import ParamForm from './ParamForm';
 import {
   commaSeparatedNumberListValidCheck,
   genRandNumList,
-  successParamMsg,
   errorParamMsg,
 } from './ParamHelper';
 
@@ -21,8 +20,8 @@ import useParam from '../../../context/useParam';
  * the param input accepts a list
  */
 function ListParam({
-  name, buttonName, mode, DEFAULT_VAL, SET_VAL, ALGORITHM_NAME,
-  EXAMPLE, formClassName, handleSubmit, setMessage,
+  name, buttonName, mode, DEFAULT_VAL, SET_VAL, REFRESH_FUNCTION, ALGORITHM_NAME,
+  EXAMPLE, formClassName, handleSubmit, setMessage
 }) {
   const {
     dispatch,
@@ -44,7 +43,7 @@ function ListParam({
       // SET_VAL(nodes);
       // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      //setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
@@ -76,7 +75,12 @@ function ListParam({
         disabled={disabled}
         onClick={() => {
           // console.log(DEFAULT_VAL);
-          const list = genRandNumList(DEFAULT_VAL.length, 1, 100);
+          let list = genRandNumList(DEFAULT_VAL.length, 1, 100);
+
+          if (REFRESH_FUNCTION !== undefined) {
+            // refresh function is simply a function that returns a list, in whatever sorted (or random) order as desired
+            list = REFRESH_FUNCTION();
+          }
           setMessage(null);
           SET_VAL(list);
         }}

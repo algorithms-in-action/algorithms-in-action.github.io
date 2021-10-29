@@ -4,5 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="manhattanpopulationexplorer" />
+    <orderEntry type="module" module-name="iv_project" />
   </component>
 </module>
