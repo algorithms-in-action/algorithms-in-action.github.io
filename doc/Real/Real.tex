@@ -1,0 +1,429 @@
+\documentclass[11pt]{article}
+\usepackage{url}
+\pagestyle{empty}
+\textwidth	160mm
+\textheight	238mm
+\topmargin      -8mm
+\oddsidemargin	-2mm
+\evensidemargin	-2mm
+\setlength{\parskip}{0.7em}
+\setlength{\parindent}{0ex}
+ \renewcommand{\baselinestretch}{1.04}
+\newenvironment{mylist}{\begin{list}{$\bullet$}
+  {\setlength\labelwidth{.5em}\setlength\leftmargin{1em}
+  \setlength{\itemsep}{-0.4ex}
+  \def\makelabel##1{##1\hfill}}}{\end{list}}
+
+\newcommand{\id}[1]{\mathit{#1}}
+\newcommand{\slant}{\texttt{\char'134}}        % Backslash
+\newcommand{\mycaret}{\char'136}               % Caret
+\newcommand{\mytilde}{\char'176}               % Tilde
+
+\begin{document}
+\begin{center}
+{\LARGE\bf A Specification Language for Algorithms in Action} \\[1ex]
+Lee Naish, Linda Stern, and Harald S{\o}ndergaard \\
+Draft, \today
+\end{center}
+
+The main purpose of this document is to define a language for
+specifying how an algorithm is to be displayed in Algorithms in Action
+(AIA). Those with expertise in algorithms and teaching can use this
+language to communicate requirements to AIA developers.  We have named
+the language Real, for {\it Refinement Explanation Animation Language}.
+The language shows pseudocode, explanations, and the desired breakdown of
+the pseudocode into blocks of pseudocode that can be expanded (refined),
+explained, and collapsed by the user.  In this document, we define the
+language, make some suggestions for how it is used and give an example
+of its use for Heapsort.
+
+An advantage of Real is that it is quite easily readable by both humans
+\emph{and} machines.  Consequently, it is possible that specifications
+written in Real can be incorporated into AIA code almost \emph{as
+is}.  We hope that such a strategy will contribute to both ease
+of implementation and longevity of the AIA software, since Real is
+relatively self-explanatory and could be understood by future developers
+without difficulty.
+
+
+\section{Language specification}
+
+In Real, pseudocode to be displayed in AIA is written simply as lines
+of text.  The language also contains {\it directives}, or instructions,
+that are distinguished from lines of pseudocode by starting with a
+backslash (\textbackslash).  Because all directives begin with the
+backslash character, it is simple to grow the language to include further
+directives, if necessary, while maintaining its conceptual integrity.
+The current directives are:
+
+\begin{description}
+
+\item{\verb~\Note{~:}
+Start of a note for developers etc. A note is not displayed in AIA.
+
+\item{\verb~\Note}~:}
+End of a note. All text between the start of the note and the end of the note, 
+plus any trailing newline, is ignored for the purposes of display.
+
+\item{\verb~\Overview{~:}
+Start of the overview of the algorithm displayed in AIA.
+
+\item{\verb~\Overview}~:}
+End of the overview.
+
+\item{\verb~\Code{~:}
+Start of a pseudocode code block, that is, a chunk of pseudocode. 
+The first line of a block is a label that uniquely refers to that block, 
+and is not displayed. 
+The label for the top level code block is generally `\texttt{Main}' but
+there may be multiple ``entry points'', eg for insertion and searching. 
+Other code blocks are refinements, that is expansions, of lines of code 
+that appear elsewhere. 
+The block label links the block with the line of code it is expanding, 
+see {\tt \textbackslash Ref} below.  
+ 
+Subsequent lines of a block, after the identifier, are the pseudocode, 
+plus the relevant explanations or other directives.
+
+\item{\verb~\Code}~:}
+End of a code block.
+
+\item{\verb~\Ref~:}
+A line of code may end in \texttt{\slant}\texttt{Ref},
+followed by a label that names another code block.
+The  \texttt{\slant}\texttt{Ref} directive shows that the line of pseudocode is 
+expandable: the user can perform an action, such as a mouse click, to replace 
+the line by the code block of the name specified by 
+\texttt{\slant}\texttt{Ref}.
+Similarly, the code block specified by \texttt{\slant}\texttt{Ref} can be 
+condensed, to show, once again, the original line of pseudocode. 
+(See, for example, the line 
+{\tt for k <- Index of last non-leaf downto 1 do \textbackslash Ref BHForLoop} 
+in the Heapsort example below, where \texttt{\slant}\texttt{Ref} specifies 
+that this line can be further refined on user request, and specifies where 
+the pseudocode for this expansion is to be found.)
+
+\item{\verb~\Expl{~:}
+Start of an explanation. This directive appears after a line of pseudocode 
+(usually on the next line), and is a plain language explanation of the 
+preceding pseudocode.  
+The explanation is shown in the explanation display 
+(not directly in the pseudocode) when requested by the user by some mechanism, 
+possibly clicking on the line of pseudocode.
+
+\item{\verb~\Expl}~:}
+End of an explanation. All text between the start and the
+end of the explanation (plus any trailing newline) is not 
+included in the displayed pseudocode
+(but is accessible {\it via} the mechanism chosen for showing explanations).
+ Any trailing newline character is also ignored in the display.
+
+\item{\verb~\In{~:}
+Used within code blocks to specify deeper indentation.
+The lines of pseudocode between {\verb~\In{~} and {\verb~\In}~} will be 
+indented one level more than the current indentation level. 
+Leading spaces and tabs on code lines are ignored.
+
+\item{\verb~\In}~:}
+End indentation, that is, go back to the level of indentation
+that was current before the corresponding 
+\texttt{\slant}\verb!In{!. 
+Any trailing newlines after indentation directives are ignored for 
+the purpose of displaying pseudocode.
+
+\item{\texttt{\slant}~~:}
+that is, a backslash followed by a space. This will be displayed
+as a space (and so can be used to force extra indentation).
+
+\item{\texttt{\slant}\texttt{\slant}:}
+This is displayed as a single backslash in pseudo-code.
+\end{description}
+
+A note about whitespace: Unless otherwise specified, whitespace in the 
+algorithm specification is for human readability only. 
+Blank lines outside of a code block contained between {\verb~\Code{~} 
+and {\verb~\Code}~} are not shown in the AIA display.  
+Similarly, indentations outside of a segment between {\verb~\In{~} and 
+{\verb~\In}~} are not displayed.
+
+Additional signals and identifiers for linking in animation code will
+almost certainly be necessary, but are not part of Real. For example,
+the current AIA code uses \verb@\B@ followed by a number to indicate a
+``bookmark'' used in the animation code.
+
+\section{Tips for writing Real specifications}
+
+For those writing Real specifications, we now provide a few suggestions
+based on our experiences with writing pseudo-code for AIA over the
+years.
+
+\begin{description}
+\item{Forget code efficiency:}
+AIA is designed to teach people about algorithms, \emph{not} efficient
+coding.  If you are an algorithm expert you probably like neat coding as
+well --- try to forget that. No matter how neat your preferred coding is,
+the simplest coding that illustrates the algorithm in the clearest way
+is better for the goal of AIA.  You can always put extra information in
+explanations or the overview mentioning how the algorithm can be coded
+more efficiently than the way presented.
+
+\item{Write code as well as pseudo-code:}
+Pseudo-code can have bugs, just as code can. By writing code based on
+your psuedo-code you can test and debug it. Make sure your code
+really has the same structure as the pseudo-code --- if the code can't
+easily be structured that way, the pseudo-code probably needs adjustment.
+Again, don't worry about efficiency; just concentrate on structure and
+correctness.
+
+\item{Include your code in a note:}
+This keeps everything relevant in one Real file.  Also, the AIA
+developers need to code the algorithm in order to animate it - if you
+provide code it makes their job easier.  Code is also unambigous, where
+as psuedo-code can potentially be misunderstood.
+
+\item{Include notes on animation:}
+The AIA developers need to know how you want the code animated.
+It's worthwhile at least having an overview in the Real file, including
+any subtle points.  Details will no doubt need further refinement and
+discussion with developers but subtleties can be missed.
+
+\item{You can always remove clutter:}
+Sometimes Real code can get rather cluttered with notes, explanations,
+etc. It's pretty easy to remove them and we have written a very
+simple/naive bash script, \texttt{cleanreal} that removes a bunch of
+things so the pseudo-code is easier to read as it is being developed.
+
+\item{Try to be consistent:}
+Ideally we should have a proper style guide for Real, but currently we
+don't. However, you can look at animations and Real code that have been
+developed and try to follow the same conventions unless there is a good
+reason not to.
+
+\item{Consider common structure of different algorithms:}
+Sometimes there are several algorithms with very similar structure. Real
+can emphasise this by having the same (or very similar) top level
+pseudo-code, which may be beneficial. This sometimes involves compromises
+with minor details of some of the algorithms.
+
+\item{Top level pseudo-code should not be trivial:}
+Very early in the original development of AIA we had a single
+line of pseudo-code at the top level: something like ``\texttt{Sort
+array}''. Despite being very elegant, allowing an explanation of what
+sorting is and illustration of \emph{what} the algorithm computes in a
+single step, it just confused many of the students. The top level needs
+to have at least a couple of distinct steps.
+
+\item{You don't have to spell everything out:}
+It is reasonable to assume that students using AIA will understand basic
+coding and will understand simple concepts before attempting to understand
+complex algorithms. If you are writing Real code for something simple like
+selection sort it's worth refining a line like ``\texttt{m <- the index
+of the minimum element of} \verb@a[i]...a[max]@'' but for more complex
+algorithms the extra code in the fully refined version may just be a
+distraction from the key points in the algorithm. In theory, the fully
+refined version \emph{could} be code that can be executed --- elegant,
+but AIA is \emph{not} about coding.  Some students have a ``bottom up''
+learning style, where the first thing they do is expand everything,
+and if the fully expanded version is not too long it may help these
+students especially.
+
+% \item{animation:}
+
+\end{description}
+
+\pagebreak
+\section{Example: Heapsort for AIA, Specified in Real}
+
+\begin{verbatim}
+\Note{  Real specification of heapsort animation
+\Note}
+\Overview{
+Overview of Heapsort omitted for brevity
+\Overview}
+
+\Code{
+Main
+HeapSort(A, n) // Sort array A[1]..A[n] in ascending order.
+    \Expl{  We are not using A[0] (for languages that start array indices at 0).
+    \Expl}
+\In{
+    BuildHeap(A, n) \Ref BuildHeap 
+        \Expl{  First reorder the array elements so they form a (max) heap
+                (no element is larger than its parent). The root node, A[1],
+                is therefore the largest element.  
+        \Expl}
+    SortHeap(A, n) \Ref SortHeap 
+        \Expl{  Convert the heap into a sorted array. The largest element is
+                put in the correct position A[n] first and we work backwards 
+                from there, putting the next-largest element in its place, 
+                etc, shrinking the heap by one element at each step. 
+        \Expl}
+\In}
+\Code}
+
+\Code{
+BuildHeap
+// build heap
+for k <- Index of last non-leaf downto 1 do \Ref BHForLoop 
+    \Expl{  We use bottom-up heap creation, to build the heap from the bottom
+            up (tree view) and right to left (array view). The leaves are 
+            already heaps of size 1, so nothing needs to be done with them. 
+            Working backwards through the heap, and starting from the last 
+            non-leaf node, we form heaps of up to size 3 (from 2 leaves plus
+            their parent k), then 7 (2 heaps of size 3 and their parent k) 
+            etc, until the whole array is a single heap. 
+    \Expl}
+\In{
+    DownHeap(A, k, n) \Ref DownHeapk 
+        \Expl{  DownHeap is where smaller heaps are combined to form larger
+                heaps. The children of node k are already heaps, so we need
+                only be concerned about where A[k] fits in. 
+        \Expl}
+\In}
+\Code}
+
+\Code{
+BHForLoop
+for k <- n/2 downto 1 do 
+    \Expl{  Using root index 1, the last non-leaf has index n/2 (rounded down
+            to the nearest integer).
+    \Expl}
+\Code}
+
+\Code{
+DownHeapk
+// DownHeap(A, k, n)
+    \Expl{  DownHeap is where smaller heaps are combined to form larger heaps.
+            The children of node k are already heaps, so we need only be 
+            concerned about where A[k] fits in. 
+    \Expl}
+i <- k
+    \Expl{  Set index i to the root of the subtree that we are now going to 
+            make into a heap. 
+    \Expl}
+heap <- False // 'heap' is a flag  
+while not (IsLeaf(A[i]) or heap) do                       
+    \Expl{  Traverse down the heap until the current node A[i] is a leaf. 
+            We also terminate the loop if the children of A[i] are in the 
+            correct order relative to the parent, since we know that subtrees
+            lower down already meet the heap condition. We use the heap flag
+            to test the heap condition.  
+    \Expl}
+\In{        
+    j <- IndexOfLargestChild(A, i, n) \Ref IndexOfLargestk 
+        \Expl{  Find the larger of the two children of the node.
+        \Expl}
+    if A[i] >= A[j] then
+    \In{
+        heap <- True
+            \Expl{  The heap condition is satisfied (the root is larger 
+                    than both children), so exit from while loop. 
+            \Expl}
+    \In}
+    else
+    \In{
+        Swap(A[i], A[j]) // Swap root element with (larger) child
+        i <- j
+    \In}
+\In}        
+\Code}
+
+\Code{
+IndexOfLargestk
+if 2*i < n and A[2*i] < A[2*i+1] then
+    \Expl{  The left child of A[i] is A[2*i] and the right child (if there is
+            a right child) is A[2*i+1]; set j to the index of the larger child.
+    \Expl}
+\In{
+    j <- 2*i+1
+\In}
+else
+\In{
+    j <- 2*i
+\In}
+\Code}
+
+\Code{
+SortHeap
+// Sort heap
+while n>1
+    \Expl{  A[1] always has the largest value not yet processed in the 
+            sorting phase. A[n] is the last array element in the heap-ordered
+            array that is not yet sorted. Repeatedly swap these two values, 
+            so that the largest element is now in the last place, decrement n 
+            and re-establish the heap condition for the remaining heap (which
+            now has one less element). Repeat this procedure until n=1, that 
+            is, only one node remains.  
+    \Expl}
+\In{
+    Swap(A[n], A[1])
+    n <- n-1    
+    DownHeap(A, 1, n) \Ref DownHeap1
+        \Expl{  Now that the root node has been swapped to the end, A[1] may 
+                no longer be the largest element in the (reduced size) heap.
+                Use the DownHeap operation to restore the heap condition. 
+        \Expl}
+\In}
+
+\Note{  This is very similar to DownHeapk.
+\Note}
+\Code
+DownHeap1
+// DownHeap(A, 1, n)
+i <- 1
+    \Expl{  Set index i to the root of the subtree that we are now going to 
+            examine. 
+    \Expl}
+heap <- False // 'heap' is a flag
+while not (IsLeaf(A[i]) or heap) do 
+    \Expl{  Traverse down the heap until the current node A[i] is a leaf. 
+            We also terminate the loop if the children of A[i] are in the 
+            correct order relative to the parent, since we know that subtrees
+            lower down already meet the heap condition. We use the heap flag
+            to test the heap condition.  
+    \Expl}
+\In{        
+    j <- IndexOfLargestChild(A, i, n) \Ref IndexOfLargest0 
+        \Expl{  Find the larger of the two children of the node. 
+        \Expl}
+    if A[i] >= A[j] then    // Parent is larger than the largest child
+    \In{
+        heap <- True 
+            \Expl{  The heap condition is satisfied, that is, the root is 
+                    larger than both children, so we exit from the while loop.
+            \Expl}
+    \In}
+    else
+    \In{
+        Swap(A[i], A[j]) // Swap root element with (larger) child
+        i <- j
+    \In}
+\In}        
+\Code}
+
+\Note{  Same as IndexOfLargestk (could possible reuse that; it is duplicated 
+        here because it might make linking with animation easier if each code 
+        expansion is used from a single place).
+\Note}
+\Code{
+IndexOfLargest0
+if 2*i < n and A[2*i] < A[2*i+1] then
+    \Expl{  The left child of A[i] is A[2*i] and the right child (if there is
+            a right child) is A[2*i+1]; set j to the index of the larger child.
+    \Expl}
+\In{
+    j <- 2*i+1
+\In}
+else
+\In{
+    j <- 2*i
+\In}
+\Code}
+
+\Note{
+Implementation in C omitted for brevity
+\Note}
+
+\end{verbatim}
+
+\end{document}

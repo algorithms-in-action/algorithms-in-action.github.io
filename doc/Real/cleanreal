@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# clean up .real file to remove various annotations so the psuedocode is
+# easier to read (assumes various things are on their own line etc -
+# very quick hack).
+# Input from $1.real, Output to $1.rea
+
+
+if test $# -ne 1
+then
+    echo 'Usage: cleanreal file.real    (output to file.rea)'
+    exit 1
+fi
+if test -e $1
+then
+
+    out=`basename --suffix=.real $1`.rea
+    echo Created by: `basename $0` $1 > $out
+    sed -e '/\\Overview{/,/\\Overview}/d
+/\\Note{/,/\\Note}/d
+/\\Expl{/,/\\Expl}/d
+/\\In/d
+/\\Code/d' $1 >> $out
+
+else
+    echo 'Usage: cleanreal file.real    (output to file.rea)'
+    exit 1
+fi
+
+

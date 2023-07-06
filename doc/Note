@@ -1,0 +1,3 @@
+../docs is full of pdf files rather than the source of the
+documents and is listed in .gitignore, so I created this
+directory for source of documents (initially just Real)
