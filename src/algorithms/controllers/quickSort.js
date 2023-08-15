@@ -1,9 +1,17 @@
+
+/*
+
+The 'stack' in this file is simply for the visualisation and does perform push and pop as such.
+It is used to visualise how reccursion sorts increasingly smaller parts of the array.
+It is not possible to replace it with an actual stack without limiting functionality.
+
+*/
+
 import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 /**
- * Updates elements in our 'stack' which is just an array of arrays. Probably a good idea to make this a more principled implementation...!
  * @param {*} arr
  * @param {*} depth
  * @param {*} stateVal
