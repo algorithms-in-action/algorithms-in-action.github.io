@@ -34,6 +34,22 @@ const algorithms = {
       search: Controller.binaryTreeSearch,
     },
   },
+  'dijkstra': {
+    name: 'Dijkstra\'s',
+    category: 'Searching',
+    param: <Param.BSTParam />,
+    instructions: Instructions.BSTInstruction,
+    explanation: Explanation.BSTExp,
+    extraInfo: ExtraInfo.BSTInfo,
+    pseudocode: {
+      insertion: Pseudocode.binaryTreeInsertion,
+      search: Pseudocode.binaryTreeSearch,
+    },
+    controller: {
+      insertion: Controller.binaryTreeInsertion,
+      search: Controller.binaryTreeSearch,
+    },
+  },
   'quickSort': {
     name: 'Quicksort',
     category: 'Sorting',
