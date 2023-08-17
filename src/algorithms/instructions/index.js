@@ -81,3 +81,4 @@ export const TCInstruction = graphInstructionsTC;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
+export const UFInstruction = stringInstructions;
