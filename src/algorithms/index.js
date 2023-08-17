@@ -139,6 +139,20 @@ const algorithms = {
       search: Controller.horspoolStringSearch,
     },
   },
+  'unionFind': {
+    name: 'Union Find',
+    category: 'Graph',
+    param: <Param.UFParam />,
+    instructions: Instructions.UFInstruction,
+    explanation: Explanation.UFExp,
+    extraInfo: ExtraInfo.UFInfo,
+    pseudocode: {
+      union: Pseudocode.unionFind,
+    },
+    controller: {
+      union: Controller.unionFind,
+    },
+  },
 };
 
 /**

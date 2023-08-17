@@ -66,15 +66,15 @@ export default parse(`
   
   \\Overview}
   
+  \\Note{ Could keep tree representation more abstract but I think its
+    best to be up-front with array representation and how roots
+    are distinguished
+  \\Note}
   \\Code{
-  Find
+  Main
   Find(n) // return root of tree containing n
   \\In{
       while parent[n] != n // while we are not at the root
-      \\Note{ Could keep tree representation more abstract but I think its
-              best to be up-front with array representation and how roots
-              are distinguished
-      \\Note}
       \\In{
           shorten path from n to root \\Ref Shorten_path
           \\Expl{ There are several ways of shortening the path back to the
