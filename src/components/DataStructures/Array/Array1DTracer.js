@@ -22,11 +22,12 @@ class Array1DTracer extends Array2DTracer {
     this.syncChartTracer();
   }
 
-
+  // Patches/highlights an element
   patch(x, v) {
     super.patch(0, x, v);
   }
 
+  // Removes patch/highlight
   depatch(x) {
     super.depatch(0, x);
   }
@@ -65,6 +66,7 @@ class Array1DTracer extends Array2DTracer {
     if (this.chartTracer) this.chartTracer.data = this.data;
   }
 
+  // Swaps two elements in 1D array
   swapElements(x, y) {
     const temp1 = { ...this.data[0][x], variables: this.data[0][y].variables };
     const temp2 = { ...this.data[0][y], variables: this.data[0][x].variables };
@@ -72,10 +74,12 @@ class Array1DTracer extends Array2DTracer {
     this.data[0][y] = temp1;
   }
 
+  // Adds variable to specific element in array
   addVariable(v, sx) {
     this.data[0][sx].variables.push(v);
   }
 
+  // Removes value from array
   removeVariable(v) {
     for (let y = 0; y < this.data[0].length; y++) {
       const newVars = this.data[0][y].variables.filter((val) => val !== v);
@@ -83,12 +87,14 @@ class Array1DTracer extends Array2DTracer {
     }
   }
 
+  // Remove all variables from array
   clearVariables() {
     for (let y = 0; y < this.data[0].length; y++) {
       this.data[0][y].variables = [];
     }
   }
 
+  // Removes "variable" from all elements in the array and assigns new "variable" to a specificed index
   assignVariable(v, idx) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     function customizer(val) {
@@ -131,7 +137,5 @@ class Array1DTracer extends Array2DTracer {
     return this.data;
   }
 }
-
-
 
 export default Array1DTracer;

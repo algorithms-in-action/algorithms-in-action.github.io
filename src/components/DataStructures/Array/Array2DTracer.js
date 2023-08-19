@@ -41,7 +41,9 @@ class Array2DTracer extends Tracer {
    * @param {string} algo used to mark if it is a specific algorithm
    */
   set(array2d = [], algo) {
-    this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
+    this.data = array2d.map((array1d) =>
+      [...array1d].map((value, i) => new Element(value, i))
+    );
     this.algo = algo;
     this.kth = '1';
     super.set();
@@ -64,7 +66,8 @@ class Array2DTracer extends Tracer {
     this.data[x][y].sorted = true;
   }
 
-  select(sx, sy, ex = sx, ey = sy, c = '0') { // Color blue
+  select(sx, sy, ex = sx, ey = sy, c = '0') {
+    // Color blue
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         switch (c) {
@@ -123,7 +126,9 @@ class Array2DTracer extends Tracer {
 
     // remove all current occurences of the variable
     for (let y = 0; y < newData[row].length; y++) {
-      newData[row][y].variables = newData[row][y].variables.filter((val) => val !== v);
+      newData[row][y].variables = newData[row][y].variables.filter(
+        (val) => val !== v
+      );
     }
 
     // add variable to item
@@ -132,7 +137,6 @@ class Array2DTracer extends Tracer {
     // update this.data
     this.data = newData;
   }
-
 
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {

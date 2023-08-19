@@ -1,4 +1,3 @@
-
 /*
 
 The 'stack' in this file is simply for the visualisation and does perform push and pop as such.
@@ -32,13 +31,14 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new ArrayTracer('array', null, 'Array view', { arrayItemMagnitudes: true }), // Label the input array as array view
+        instance: new ArrayTracer('array', null, 'Array view', {
+          arrayItemMagnitudes: true,
+        }), // Label the input array as array view
         order: 0,
       },
     };
   },
 
-  
   /**
    *
    * @param {object} chunker
@@ -62,12 +62,16 @@ export default {
     };
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
-      chunker.add(b, (vis, _n1, _n2) => {
-        vis.array.swapElements(_n1, _n2);
-        if (isPivotSwap) {
-          vis.array.assignVariable('pivot', n1);
-        }
-      }, [n1, n2]);
+      chunker.add(
+        b,
+        (vis, _n1, _n2) => {
+          vis.array.swapElements(_n1, _n2);
+          if (isPivotSwap) {
+            vis.array.assignVariable('pivot', n1);
+          }
+        },
+        [n1, n2]
+      );
     };
 
     const noOp = () => {}; // no operation
@@ -79,50 +83,70 @@ export default {
       let tmp;
 
       const pivot = a[right];
-      
+
       chunker.add(5, noOp); // prevent early highlight
 
-      chunker.add(5, (vis, p) => {
-        highlight(vis, p);
-        vis.array.assignVariable('pivot', p);
-      }, [right]);
-      chunker.add(11, (vis, i1) => {
-        if (i1 >= 0) {
-          highlight(vis, i1, false);
-          vis.array.assignVariable('i', i1);
-        }
-      }, [i]);
-      chunker.add(12, (vis, j1) => {
-        if (j1 >= 0) {
-          highlight(vis, j1, false);
-          vis.array.assignVariable('j', j1);
-        }
-      }, [j]);
+      chunker.add(
+        5,
+        (vis, p) => {
+          highlight(vis, p);
+          vis.array.assignVariable('pivot', p);
+        },
+        [right]
+      );
+      chunker.add(
+        11,
+        (vis, i1) => {
+          if (i1 >= 0) {
+            highlight(vis, i1, false);
+            vis.array.assignVariable('i', i1);
+          }
+        },
+        [i]
+      );
+      chunker.add(
+        12,
+        (vis, j1) => {
+          if (j1 >= 0) {
+            highlight(vis, j1, false);
+            vis.array.assignVariable('j', j1);
+          }
+        },
+        [j]
+      );
 
       while (i < j) {
         chunker.add(6);
         do {
           i += 1;
-          chunker.add(7, (vis, i1) => {
-            if (i1 > 0) {
-              unhighlight(vis, i1 - 1, false);
-            }
-            highlight(vis, i1, false);
-            vis.array.assignVariable('i', i1);
-          }, [i]);
+          chunker.add(
+            7,
+            (vis, i1) => {
+              if (i1 > 0) {
+                unhighlight(vis, i1 - 1, false);
+              }
+              highlight(vis, i1, false);
+              vis.array.assignVariable('i', i1);
+            },
+            [i]
+          );
         } while (a[i] < pivot);
 
         do {
           j -= 1;
-          chunker.add(8, (vis, j1) => {
-            unhighlight(vis, j1 + 1, false);
-            if (j1 >= 0) {
-              highlight(vis, j1, false);
-              vis.array.assignVariable('j', j1);
-            } else {
-              vis.array.removeVariable('j');
-            }
-          }, [j]);
+          chunker.add(
+            8,
+            (vis, j1) => {
+              unhighlight(vis, j1 + 1, false);
+              if (j1 >= 0) {
+                highlight(vis, j1, false);
+                vis.array.assignVariable('j', j1);
+              } else {
+                vis.array.removeVariable('j');
+              }
+            },
+            [j]
+          );
         } while (i <= j && pivot < a[j]);
 
         chunker.add(9);
@@ -139,19 +163,23 @@ export default {
       a[i] = pivot;
       swapAction(13, i, right, { isPivotSwap: true });
 
-      chunker.add(13, (vis, i1, j1, r) => {
-        vis.array.assignVariable('pivot', i);
-        unhighlight(vis, i1);
-        if (j1 >= 0) {
-          if (j1 === i1) {
-            unhighlight(vis, r, false);
-          } else {
-            unhighlight(vis, j1, false);
+      chunker.add(
+        13,
+        (vis, i1, j1, r) => {
+          vis.array.assignVariable('pivot', i);
+          unhighlight(vis, i1);
+          if (j1 >= 0) {
+            if (j1 === i1) {
+              unhighlight(vis, r, false);
+            } else {
+              unhighlight(vis, j1, false);
+            }
           }
-        }
-        unhighlight(vis, r, false);
-        vis.array.sorted(i1);
-      }, [i, j, right]);
+          unhighlight(vis, r, false);
+          vis.array.sorted(i1);
+        },
+        [i, j, right]
+      );
       return [i, a]; // Return [pivot location, array values]
     }
 
@@ -168,8 +196,16 @@ export default {
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
             if (updatedStack[i][j] === 0) continue;
-            if (i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right)) { updatedStack[i][j] = -1; }
-            if (i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0; }
+            if (
+              i !== depth &&
+              updatedStack[i][j] !== 0 &&
+              (j < left || j > right)
+            ) {
+              updatedStack[i][j] = -1;
+            }
+            if (i !== depth && j >= left && j <= right) {
+              updatedStack[i][j] = 0;
+            }
           }
         }
 
@@ -179,46 +215,71 @@ export default {
       if (left < right) {
         [p, a] = partition(a, left, right);
 
-        chunker.add(3, (vis, pivot, arrayLen) => {
-          vis.array.stack[depth][p] = 0;
-          // fade out the part of the array that is not being sorted (i.e. right side)
-          for (let i = pivot; i < arrayLen; i++) {
-            vis.array.fadeOut(i);
-          }
-        }, [p, right + 1]);
-        QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth+1);
-
-        chunker.add(4, (vis, pivot, arrayLen) => {
-          vis.array.setStackDepth(depth);
-
-          // fade out the part of the array that is not being sorted (i.e. left side)
-          for (let i = 0; i <= pivot; i++) {
-            vis.array.fadeOut(i);
-          }
-          // fade in part of the array that is now being sorted (i.e. right side)
-          for (let i = pivot + 1; i < arrayLen; i++) {
-            vis.array.fadeIn(i);
-          }
-
-          // do some somewhat hacky changes to the 'stack' array
-          // note that this is just setting the state of elements in a 2D array which represents a stack and corresponding elements in the real array positionally in a row
-          let updatedStack = updateStackElements(vis.array.stack, depth, 1, left, right);
-          for(let i=0;i<updatedStack.length;i++) {
-            for(let j=0;j<updatedStack[i].length;j++) {
-              if(j <= pivot) { updatedStack[i][j] = 0 }
-              else if(i !== depth && updatedStack[i][j] !== 0 && (j < left || j > right )) { updatedStack[i][j] = -1}
-              else if(i !== depth && (j >= left && j <= right)) { updatedStack[i][j] = 0 }
+        chunker.add(
+          3,
+          (vis, pivot, arrayLen) => {
+            vis.array.stack[depth][p] = 0;
+            // fade out the part of the array that is not being sorted (i.e. right side)
+            for (let i = pivot; i < arrayLen; i++) {
+              vis.array.fadeOut(i);
             }
-          }
+          },
+          [p, right + 1]
+        );
+        QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
 
-        }, [p, right + 1]);
+        chunker.add(
+          4,
+          (vis, pivot, arrayLen) => {
+            vis.array.setStackDepth(depth);
+
+            // fade out the part of the array that is not being sorted (i.e. left side)
+            for (let i = 0; i <= pivot; i++) {
+              vis.array.fadeOut(i);
+            }
+            // fade in part of the array that is now being sorted (i.e. right side)
+            for (let i = pivot + 1; i < arrayLen; i++) {
+              vis.array.fadeIn(i);
+            }
+
+            // do some somewhat hacky changes to the 'stack' array
+            // note that this is just setting the state of elements in a 2D array which represents a stack and corresponding elements in the real array positionally in a row
+            let updatedStack = updateStackElements(
+              vis.array.stack,
+              depth,
+              1,
+              left,
+              right
+            );
+            for (let i = 0; i < updatedStack.length; i++) {
+              for (let j = 0; j < updatedStack[i].length; j++) {
+                if (j <= pivot) {
+                  updatedStack[i][j] = 0;
+                } else if (
+                  i !== depth &&
+                  updatedStack[i][j] !== 0 &&
+                  (j < left || j > right)
+                ) {
+                  updatedStack[i][j] = -1;
+                } else if (i !== depth && j >= left && j <= right) {
+                  updatedStack[i][j] = 0;
+                }
+              }
+            }
+          },
+          [p, right + 1]
+        );
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
       // array of size 1, already sorted
       else if (left < array.length) {
-        chunker.add(2, (vis, l) => {
-          vis.array.sorted(l);
-        }, [left]);
+        chunker.add(
+          2,
+          (vis, l) => {
+            vis.array.sorted(l);
+          },
+          [left]
+        );
       }
       return a; // Facilitates testing
     }
@@ -229,20 +290,30 @@ export default {
         vis.array.set(array, 'quicksort');
         vis.array.setStack([new Array(nodes.length).fill(0)]); // used for a custom stack visualisation
       },
-      [nodes],
+      [nodes]
     );
 
-    const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`, 0);
+    const result = QuickSort(
+      nodes,
+      0,
+      nodes.length - 1,
+      `0/${nodes.length - 1}`,
+      0
+    );
     // Fade out final node
-    chunker.add(19, (vis, idx) => {
-      vis.array.fadeOut(idx);
-      // fade all elements back in for final sorted state
-      for (let i = 0; i < nodes.length; i += 1) {
-        vis.array.fadeIn(i);
-      }
-      vis.array.clearVariables();
-      vis.array.setStack([]);
-    }, [nodes.length - 1]);
+    chunker.add(
+      19,
+      (vis, idx) => {
+        vis.array.fadeOut(idx);
+        // fade all elements back in for final sorted state
+        for (let i = 0; i < nodes.length; i += 1) {
+          vis.array.fadeIn(i);
+        }
+        vis.array.clearVariables();
+        vis.array.setStack([]);
+      },
+      [nodes.length - 1]
+    );
     return result;
   },
 };

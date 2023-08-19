@@ -49,17 +49,19 @@ export default class {
     return currentChunk >= 0 && currentChunk <= this.chunks.length;
   }
 
+  // Returns sorted array of visualizer instances
   getVisualisers() {
     return Object.values(this.visualisers)
       .sort((a, b) => a.order - b.order)
       .map((o) => o.instance);
   }
 
+  // Applies chunk at index, this applies its mutation to the visualisers, updating them
   doChunk(index) {
     this.chunks[index].mutator(
       Object.fromEntries(
-        Object.entries(this.visualisers).map(([k, v]) => [k, v.instance]),
-      ),
+        Object.entries(this.visualisers).map(([k, v]) => [k, v.instance])
+      )
     );
   }
 
@@ -68,8 +70,8 @@ export default class {
     if (this.currentChunk === null) {
       nextIndex = 0;
     } else if (
-      this.currentChunk >= 0
-      && this.currentChunk <= this.chunks.length - 2
+      this.currentChunk >= 0 &&
+      this.currentChunk <= this.chunks.length - 2
     ) {
       nextIndex = this.currentChunk + 1;
     } else if (this.currentChunk === this.chunks.length - 1) {
@@ -80,6 +82,7 @@ export default class {
     return this.chunks[nextIndex].pauseInCollapse;
   }
 
+  // Applies next chunks mutation
   next(triggerPauseInCollapse = false) {
     const pauseInCollapse = this.checkChunkPause();
     if (!pauseInCollapse) {
@@ -88,8 +91,8 @@ export default class {
         this.doChunk(0);
         this.currentChunk = 0;
       } else if (
-        this.currentChunk >= 0
-        && this.currentChunk <= this.chunks.length - 2
+        this.currentChunk >= 0 &&
+        this.currentChunk <= this.chunks.length - 2
       ) {
         this.doChunk(this.currentChunk + 1);
         this.currentChunk += 1;
@@ -114,6 +117,7 @@ export default class {
     };
   }
 
+  // Goes back one chunk, undoing last mutation
   prev() {
     this._inPrevState = true;
     if (this.currentChunk > 0) {
