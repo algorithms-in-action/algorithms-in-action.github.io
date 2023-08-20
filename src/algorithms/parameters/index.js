@@ -7,3 +7,5 @@ export { default as TCParam } from './TCParam';
 export { default as BFSSParam } from './BFSSParam';
 export { default as QSM3Param } from './QSM3Param';
 export { default as HSSParam } from './HSSParam';
+export { default as DIJKParam } from './DIJKParam';
+

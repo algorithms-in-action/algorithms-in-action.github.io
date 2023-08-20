@@ -15,7 +15,7 @@ function defer(f, v) {
     return () => undefined;
   }
   return (visualisers) => {
-    const result = f(visualisers, ...args)
+    const result = f(visualisers, ...args);
     return result;
   };
 }
@@ -30,11 +30,11 @@ export default class {
 
   // values is a list of arguments passed to func when it is called to perform its task.
   add(bookmark, func, values) {
-    let bookmarkValue = '', pauseInCollapse = false;
-    if(typeof bookmark === 'object'){
+    let bookmarkValue = ''; let pauseInCollapse = false;
+    if (typeof bookmark === 'object') {
       bookmarkValue = bookmark.bookmark;
       pauseInCollapse = bookmark.pauseInCollapse;
-    }else{
+    } else {
       bookmarkValue = bookmark;
     }
     this.chunks.push({
