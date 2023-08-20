@@ -4,10 +4,10 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const PRIMS = 'Prim\'s';
+const DIJK = 'Prim\'s';
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
-function PrimsParam() {
+function DijkstraParam() {
   const [message, setMessage] = useState(null);
 
   return (
@@ -20,7 +20,7 @@ function PrimsParam() {
         min={0}
         max={9}
         symmetric
-        ALGORITHM_NAME={PRIMS}
+        ALGORITHM_NAME={DIJK}
         EXAMPLE={PRIMS_EXAMPLE}
         EXAMPLE2={PRIMS_EXAMPLE2}
         setMessage={setMessage}
@@ -32,4 +32,4 @@ function PrimsParam() {
   );
 }
 
-export default PrimsParam;
+export default DijkstraParam;

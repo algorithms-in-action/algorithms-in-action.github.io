@@ -37,7 +37,7 @@ const algorithms = {
   'dijkstra': {
     name: 'Dijkstra\'s',
     category: 'Searching',
-    param: <Param.DIJKParam />,
+    param: <Param.BSTParam />,
     instructions: Instructions.DIJKInstruction,
     explanation: Explanation.DIJKExp,
     extraInfo: ExtraInfo.DIJKInfo,
