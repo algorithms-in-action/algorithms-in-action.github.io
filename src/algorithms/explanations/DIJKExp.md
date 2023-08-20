@@ -26,4 +26,4 @@ Dijkstra's algorithm works best when all edge weights are non-negative. If there
 
 ## TLDR
 
-In a nutshell, Dijkstra's algorithm is like finding the shortest route on a map while considering the distances between cities and the roads connecting them. It's a powerful tool for solving various optimization problems in real-world scenarios.
+Dijkstra's algorithm is like finding the shortest route on a map while considering the distances between cities and the roads connecting them. It's a powerful tool for solving various optimization problems in real-world scenarios.

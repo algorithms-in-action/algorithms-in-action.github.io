@@ -4,9 +4,9 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const DIJK = 'Prim\'s';
-const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
-const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
+const DIJK = 'Dijkstra\'s';
+const DIJK_EXAMPLE = 'Please follow the example provided: 0,1'; //TODO
+const DIJK_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
 function DijkstraParam() {
   const [message, setMessage] = useState(null);
 
@@ -14,15 +14,15 @@ function DijkstraParam() {
     <>
       {/* Matrix input */}
       <MatrixParam
-        name="prim"
+        name="dijkstra"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}
         max={9}
         symmetric
         ALGORITHM_NAME={DIJK}
-        EXAMPLE={PRIMS_EXAMPLE}
-        EXAMPLE2={PRIMS_EXAMPLE2}
+        EXAMPLE={DIJK_EXAMPLE}
+        EXAMPLE2={DIJK_EXAMPLE2}
         setMessage={setMessage}
       />
 
