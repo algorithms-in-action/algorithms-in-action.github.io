@@ -33,6 +33,7 @@ const bstInstructions = [
 ];
 
 
+
 const stringInstructions = [{
   title: 'Searching Strings',
   content: [
@@ -81,3 +82,5 @@ export const TCInstruction = graphInstructionsTC;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
+export const DIJKInstruction = graphInstructions; //TODO
+
