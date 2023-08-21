@@ -59,16 +59,16 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    const highlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const highlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.select(index);
       } else {
         vis.array.patch(index);
       }
     };
 
-    const unhighlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const unhighlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.deselect(index);
       } else {
         vis.array.depatch(index);
