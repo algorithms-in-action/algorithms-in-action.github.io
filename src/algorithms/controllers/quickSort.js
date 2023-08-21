@@ -10,6 +10,9 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
+const left_index  = 'i';
+const right_index = 'j';
+
 /**
  * @param {*} arr
  * @param {*} depth
@@ -99,7 +102,7 @@ export default {
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable('i', i1);
+            vis.array.assignVariable(left_index, i1);
           }
         },
         [i]
@@ -109,7 +112,7 @@ export default {
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable('j', j1);
+            vis.array.assignVariable(right_index, j1);
           }
         },
         [j]
@@ -126,7 +129,7 @@ export default {
                 unhighlight(vis, i1 - 1, false);
               }
               highlight(vis, i1, false);
-              vis.array.assignVariable('i', i1);
+              vis.array.assignVariable(left_index, i1);
             },
             [i]
           );
@@ -140,9 +143,9 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable('j', j1);
+                vis.array.assignVariable(right_index, j1);
               } else {
-                vis.array.removeVariable('j');
+                vis.array.removeVariable(right_index);
               }
             },
             [j]
