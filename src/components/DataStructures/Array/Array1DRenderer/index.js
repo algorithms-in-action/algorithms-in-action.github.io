@@ -72,8 +72,19 @@ class Array1DRenderer extends Array2DRenderer {
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                
+                {/* 
+                Pivot Line Rendering:
+                - This JSX code renders the visual line over the pivot element in 1D arrays, e.g., QuickSort.
+                - The feature is currently disabled. To re-enable:
+                  1. Uncomment the following JSX.
+                  2. Uncomment the `.pivotLine` style in Array1DRenderer.module.scss.
+                */}
+
+                {/* 
                 {row.filter((col) => col.variables.includes('pivot')).map((col)=><div className={styles.pivotLine} style={{
                   bottom: `max(var(--array-1d-minimum-height), ${this.toString(scaleY(col.value))}vh)`}}/>)}
+                */}
             {row.map((col) => (
             <motion.div
                 layout

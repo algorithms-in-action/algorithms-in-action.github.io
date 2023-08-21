@@ -8,15 +8,22 @@
         position: relative;
         --array-1d-minimum-height: 1em;
 
-        .pivotLine {
-            position: absolute;
-            width: 100%;
-            height: 3px;
-            background-color: var(--array-1d-row-col-bg-selected);
-            opacity: 0.4;
-            margin-right: 4px;
-            z-index: 1;
-        }
+        /* 
+        Pivot Line Styling:
+        - This style defines the visual representation of the pivot element in 1D arrays, particularly in algorithms like QuickSort.
+        - Currently disabled for design reasons, but can be re-enabled if required in the future.
+        - To reactivate, uncomment this style and the corresponding JSX code in index.js.
+        */
+
+        // .pivotLine {
+        //     position: absolute;
+        //     width: 100%;
+        //     height: 3px;
+        //     background-color: var(--array-1d-row-col-bg-selected);
+        //     opacity: 0.4;
+        //     margin-right: 4px;
+        //     z-index: 1;
+        // }
 
         .col {
             justify-content: center;
