@@ -261,7 +261,7 @@ export default {
             let updatedStack = updateStackElements(
               vis.array.stack,
               depth,
-              1,
+              Stack_color.Red,
               left,
               right
             );
