@@ -29,6 +29,7 @@ export default class {
   }
 
   // values is a list of arguments passed to func when it is called to perform its task.
+  // bookmark relates to the number directly after the \\B notation in the psuedocode
   add(bookmark, func, values) {
     let bookmarkValue = '';
     let pauseInCollapse = false;
