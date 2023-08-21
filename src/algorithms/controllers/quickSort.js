@@ -10,8 +10,11 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
-const LEFT_INDEX  = 'i';
-const RIGHT_INDEX = 'j';
+const Variable_strings = {
+	left_index: 'i',
+	right_index: 'j',
+	pivot: 'pivot',
+};
 
 const Stack_color = {
   Red: 1,
@@ -78,7 +81,7 @@ export default {
         (vis, _n1, _n2) => {
           vis.array.swapElements(_n1, _n2);
           if (isPivotSwap) {
-            vis.array.assignVariable('pivot', n1);
+            vis.array.assignVariable(Variable_strings.pivot, n1);
           }
         },
         [n1, n2]
@@ -101,7 +104,7 @@ export default {
         5,
         (vis, p) => {
           highlight(vis, p);
-          vis.array.assignVariable('pivot', p);
+          vis.array.assignVariable(Variable_strings.pivot, p);
         },
         [right]
       );
@@ -110,7 +113,7 @@ export default {
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable(LEFT_INDEX, i1);
+            vis.array.assignVariable(Variable_strings.left_index, i1);
           }
         },
         [i]
@@ -120,7 +123,7 @@ export default {
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable(RIGHT_INDEX, j1);
+            vis.array.assignVariable(Variable_strings.right_index, j1);
           }
         },
         [j]
@@ -137,7 +140,7 @@ export default {
                 unhighlight(vis, i1 - 1, false);
               }
               highlight(vis, i1, false);
-              vis.array.assignVariable(LEFT_INDEX, i1);
+              vis.array.assignVariable(Variable_strings.left_index, i1);
             },
             [i]
           );
@@ -151,9 +154,9 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable(RIGHT_INDEX, j1);
+                vis.array.assignVariable(Variable_strings.right_index, j1);
               } else {
-                vis.array.removeVariable(RIGHT_INDEX);
+                vis.array.removeVariable(Variable_strings.right_index);
               }
             },
             [j]
@@ -177,7 +180,7 @@ export default {
       chunker.add(
         13,
         (vis, i1, j1, r) => {
-          vis.array.assignVariable('pivot', i);
+          vis.array.assignVariable(Variable_strings.pivot, i);
           unhighlight(vis, i1);
           if (j1 >= 0) {
             if (j1 === i1) {
