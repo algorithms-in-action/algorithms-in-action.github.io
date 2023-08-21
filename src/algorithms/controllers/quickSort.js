@@ -299,7 +299,7 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack([new Array(nodes.length).fill(0)]); // used for a custom stack visualisation
+        vis.array.setStack([new Array(nodes.length).fill(Stack_color.Invisible)]); // used for a custom stack visualisation
       },
       [nodes]
     );
