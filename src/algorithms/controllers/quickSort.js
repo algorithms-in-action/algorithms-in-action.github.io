@@ -10,8 +10,16 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
-const left_index  = 'i';
-const right_index = 'j';
+const LEFT_INDEX  = 'i';
+const RIGHT_INDEX = 'j';
+
+const Stack_color = {
+  Red: 1,
+  Invisible: 0,
+  Gray: -1,
+};
+
+
 
 /**
  * @param {*} arr
@@ -102,7 +110,7 @@ export default {
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable(left_index, i1);
+            vis.array.assignVariable(LEFT_INDEX, i1);
           }
         },
         [i]
@@ -112,7 +120,7 @@ export default {
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable(right_index, j1);
+            vis.array.assignVariable(RIGHT_INDEX, j1);
           }
         },
         [j]
@@ -129,7 +137,7 @@ export default {
                 unhighlight(vis, i1 - 1, false);
               }
               highlight(vis, i1, false);
-              vis.array.assignVariable(left_index, i1);
+              vis.array.assignVariable(LEFT_INDEX, i1);
             },
             [i]
           );
@@ -143,9 +151,9 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable(right_index, j1);
+                vis.array.assignVariable(RIGHT_INDEX, j1);
               } else {
-                vis.array.removeVariable(right_index);
+                vis.array.removeVariable(RIGHT_INDEX);
               }
             },
             [j]
@@ -192,22 +200,22 @@ export default {
       chunker.add(2, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
-          updatedStack = updatedStack.concat([new Array(nodes.length).fill(0)]);
+          updatedStack = updatedStack.concat([new Array(nodes.length).fill(Stack_color.Invisible)]);
         }
 
-        updatedStack = updateStackElements(updatedStack, depth, 1, left, right);
+        updatedStack = updateStackElements(updatedStack, depth, Stack_color.Red, left, right);
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
-            if (updatedStack[i][j] === 0) continue;
+            if (updatedStack[i][j] === Stack_color.Invisible) continue;
             if (
               i !== depth &&
-              updatedStack[i][j] !== 0 &&
+              updatedStack[i][j] !== Stack_color.Invisible &&
               (j < left || j > right)
             ) {
-              updatedStack[i][j] = -1;
+              updatedStack[i][j] = Stack_color.Gray;
             }
             if (i !== depth && j >= left && j <= right) {
-              updatedStack[i][j] = 0;
+              updatedStack[i][j] = Stack_color.Invisible;
             }
           }
         }
@@ -221,7 +229,7 @@ export default {
         chunker.add(
           3,
           (vis, pivot, arrayLen) => {
-            vis.array.stack[depth][p] = 0;
+            vis.array.stack[depth][p] = Stack_color.Invisible;
             // fade out the part of the array that is not being sorted (i.e. right side)
             for (let i = pivot; i < arrayLen; i++) {
               vis.array.fadeOut(i);
@@ -257,15 +265,15 @@ export default {
             for (let i = 0; i < updatedStack.length; i++) {
               for (let j = 0; j < updatedStack[i].length; j++) {
                 if (j <= pivot) {
-                  updatedStack[i][j] = 0;
+                  updatedStack[i][j] = Stack_color.Invisible;
                 } else if (
                   i !== depth &&
-                  updatedStack[i][j] !== 0 &&
+                  updatedStack[i][j] !== Stack_color.Invisible &&
                   (j < left || j > right)
                 ) {
-                  updatedStack[i][j] = -1;
+                  updatedStack[i][j] = Stack_color.Gray;
                 } else if (i !== depth && j >= left && j <= right) {
-                  updatedStack[i][j] = 0;
+                  updatedStack[i][j] = Stack_color.Invisible;
                 }
               }
             }
