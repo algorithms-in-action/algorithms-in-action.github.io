@@ -16,6 +16,8 @@ const Variable_strings = {
   pivot: 'pivot',
 };
 
+// TODO - changes names to conceptual states
+// In_progress, Current, Finished, Not_started + comment default comments in enum
 const stackFrameColour = {
   Red: 1,
   Invisible: 0,
