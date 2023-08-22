@@ -16,7 +16,7 @@ const Variable_strings = {
   pivot: 'pivot',
 };
 
-const Stack_color = {
+const stackFrameColour = {
   Red: 1,
   Invisible: 0,
   Gray: -1,
@@ -57,16 +57,16 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    const highlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const highlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.select(index);
       } else {
         vis.array.patch(index);
       }
     };
 
-    const unhighlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const unhighlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.deselect(index);
       } else {
         vis.array.depatch(index);
@@ -201,6 +201,7 @@ export default {
       chunker.add(2, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
+<<<<<<< HEAD
           updatedStack = updatedStack.concat([
             new Array(nodes.length).fill(Stack_color.Invisible),
           ]);
@@ -213,18 +214,24 @@ export default {
           left,
           right,
         );
+=======
+          updatedStack = updatedStack.concat([new Array(nodes.length).fill(stackFrameColour.Invisible)]);
+        }
+
+        updatedStack = updateStackElements(updatedStack, depth, stackFrameColour.Red, left, right);
+>>>>>>> 0c39ce56d4092f22f2fb4bc2739439a60ea3aca1
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
-            if (updatedStack[i][j] === Stack_color.Invisible) continue;
+            if (updatedStack[i][j] === stackFrameColour.Invisible) continue;
             if (
               i !== depth &&
-              updatedStack[i][j] !== Stack_color.Invisible &&
+              updatedStack[i][j] !== stackFrameColour.Invisible &&
               (j < left || j > right)
             ) {
-              updatedStack[i][j] = Stack_color.Gray;
+              updatedStack[i][j] = stackFrameColour.Gray;
             }
             if (i !== depth && j >= left && j <= right) {
-              updatedStack[i][j] = Stack_color.Invisible;
+              updatedStack[i][j] = stackFrameColour.Invisible;
             }
           }
         }
@@ -238,7 +245,7 @@ export default {
         chunker.add(
           3,
           (vis, pivot, arrayLen) => {
-            vis.array.stack[depth][p] = Stack_color.Invisible;
+            vis.array.stack[depth][p] = stackFrameColour.Invisible;
             // fade out the part of the array that is not being sorted (i.e. right side)
             for (let i = pivot; i < arrayLen; i++) {
               vis.array.fadeOut(i);
@@ -267,22 +274,22 @@ export default {
             let updatedStack = updateStackElements(
               vis.array.stack,
               depth,
-              1,
+              stackFrameColour.Red,
               left,
               right,
             );
             for (let i = 0; i < updatedStack.length; i++) {
               for (let j = 0; j < updatedStack[i].length; j++) {
                 if (j <= pivot) {
-                  updatedStack[i][j] = Stack_color.Invisible;
+                  updatedStack[i][j] = stackFrameColour.Invisible;
                 } else if (
                   i !== depth &&
-                  updatedStack[i][j] !== Stack_color.Invisible &&
+                  updatedStack[i][j] !== stackFrameColour.Invisible &&
                   (j < left || j > right)
                 ) {
-                  updatedStack[i][j] = Stack_color.Gray;
+                  updatedStack[i][j] = stackFrameColour.Gray;
                 } else if (i !== depth && j >= left && j <= right) {
-                  updatedStack[i][j] = Stack_color.Invisible;
+                  updatedStack[i][j] = stackFrameColour.Invisible;
                 }
               }
             }
@@ -308,9 +315,13 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
+<<<<<<< HEAD
         vis.array.setStack([
           new Array(nodes.length).fill(Stack_color.Invisible),
         ]); // used for a custom stack visualisation
+=======
+        vis.array.setStack([new Array(nodes.length).fill(stackFrameColour.Invisible)]); // used for a custom stack visualisation
+>>>>>>> 0c39ce56d4092f22f2fb4bc2739439a60ea3aca1
       },
       [nodes],
     );
