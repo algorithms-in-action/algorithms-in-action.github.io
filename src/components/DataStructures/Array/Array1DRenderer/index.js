@@ -176,6 +176,7 @@ class Array1DRenderer extends Array2DRenderer {
     case 0: return 'var(--completed-stack-section)';
     case 1: return 'var(--active-stack-section)';
     case 2: return 'var(--future-stack-section)';
+		case 3: return 'var(--new-color)';
     default: return '';
   }
 }

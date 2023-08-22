@@ -22,6 +22,7 @@ const stackFrameColour = {
 	Invisible: 0,
   Red: 1,
   Gray: 2,
+	New_color: 3, // example
 };
 
 /**
@@ -87,8 +88,6 @@ export default {
         [n1, n2],
       );
     };
-
-    const noOp = () => {}; // no operation
 
     function partition(values, left, right) {
       const a = values;
