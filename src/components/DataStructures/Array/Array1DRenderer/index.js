@@ -168,17 +168,17 @@ class Array1DRenderer extends Array2DRenderer {
 }
 
 /**
- * @param {*} stackElementValue - an integer representing the state of a stack element
+ * @param {*} color_index - an integer representing the state of a stack element
  * @returns string
  */
- function stackFrameColour(stackElementValue) {
-  switch (stackElementValue) {
-    case 0: return 'var(--completed-stack-section)';
-    case 1: return 'var(--active-stack-section)';
-    case 2: return 'var(--future-stack-section)';
-		case 3: return 'var(--new-color)';
-    default: return '';
-  }
+ function stackFrameColour(color_index) {
+
+	return [
+		'var(--completed-stack-section)', // 0
+		'var(--active-stack-section)',    // 1
+		'var(--future-stack-section)',    // 2
+		'var(--new-color)',               // 3
+	][color_index]
 }
 
 /**
