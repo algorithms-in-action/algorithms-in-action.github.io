@@ -106,6 +106,7 @@ export default {
         },
         [right],
       );
+      // i IS NOT being drawn correctly at this point
       chunker.add(
         11,
         (vis, i1) => {
@@ -116,6 +117,7 @@ export default {
         },
         [i],
       );
+      // i IS being drawn correctly at this point
       chunker.add(
         12,
         (vis, j1) => {
@@ -201,25 +203,18 @@ export default {
       chunker.add(2, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
-<<<<<<< HEAD
           updatedStack = updatedStack.concat([
-            new Array(nodes.length).fill(Stack_color.Invisible),
+            new Array(nodes.length).fill(stackFrameColour.Invisible),
           ]);
         }
 
         updatedStack = updateStackElements(
           updatedStack,
           depth,
-          Stack_color.Red,
+          stackFrameColour.Red,
           left,
           right,
         );
-=======
-          updatedStack = updatedStack.concat([new Array(nodes.length).fill(stackFrameColour.Invisible)]);
-        }
-
-        updatedStack = updateStackElements(updatedStack, depth, stackFrameColour.Red, left, right);
->>>>>>> 0c39ce56d4092f22f2fb4bc2739439a60ea3aca1
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
             if (updatedStack[i][j] === stackFrameColour.Invisible) continue;
@@ -315,13 +310,9 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-<<<<<<< HEAD
         vis.array.setStack([
-          new Array(nodes.length).fill(Stack_color.Invisible),
+          new Array(nodes.length).fill(stackFrameColour.Invisible),
         ]); // used for a custom stack visualisation
-=======
-        vis.array.setStack([new Array(nodes.length).fill(stackFrameColour.Invisible)]); // used for a custom stack visualisation
->>>>>>> 0c39ce56d4092f22f2fb4bc2739439a60ea3aca1
       },
       [nodes],
     );
