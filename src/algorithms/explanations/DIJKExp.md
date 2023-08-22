@@ -1,29 +1,20 @@
 # Dijkstra's Algorithm
+---
 
-Dijkstra's algorithm (/ˈdaɪkstrəz/ DYKE-strəz) is a fundamental concept in computer science and graph theory that helps find the shortest path between two points in a weighted graph. It's commonly used in various applications like finding the shortest route on a map or optimizing network communication paths. 
- 
-## In simpler terms:
+Dijkstra's algorithm is a method used in computer science to find the shortest path between points on a map or a network. Imagine you're trying to find the quickest way from one place to another, considering the distances between places. Here's how Dijkstra's algorithm works:
 
-Imagine you have a map with different cities (nodes) connected by roads (edges), and each road has a distance (weight) associated with it. You want to find the shortest path from one city (start node) to another city (destination node). Dijkstra's algorithm helps you find this shortest path by considering the distances between cities.
+Start: You begin at a chosen point (like a city on a map) and call it your starting point. You're at this point, so the distance from it to itself is 0.
 
-## Here's how the algorithm works:
+Explore: You look at the places directly connected to your current point (like neighboring cities). You figure out how far they are from your starting point.
 
-1. **Initialization**: You start at the chosen starting city. Initially, you mark its distance as 0, indicating that you're at the starting point. The distances to all other cities are marked as infinity (or a very large value) to indicate that they are currently unreachable.
+Update: For each of these connected places, you see if the distance to reach them through your current point is shorter than the distance you knew before. If it's shorter, you update the distance.
 
-2. **Exploration**: You explore the cities around the current city. You examine all the neighboring cities that are connected directly by roads (edges) to the current city.
+Move: You then pick the nearest unexplored place as your new current point and repeat steps 2 and 3.
 
-3. Update Distances: For each neighboring city, you calculate the total distance to reach that city from the starting city via the current city's path. If this calculated distance is shorter than the previously recorded distance, you update the recorded distance for that city.
+Keep Going: You keep doing this until you reach your destination or you've checked all possible paths.
 
-4. Move to Next City: After updating the distances for neighboring cities, you move to the city with the shortest recorded distance among the unvisited cities. This city becomes the new "current city."
+Done: Once you've reached your destination, you can trace back the path you took to get there using the shortest distances you found.
 
-5. Repeat: You continue this process of exploring neighbors, updating distances, and moving to the next city until you reach the destination city or until all cities have been visited.
+The algorithm is smart because it always chooses the shortest path at each step. It's useful for finding efficient routes, like when your GPS figures out the fastest way to get somewhere by considering the roads' lengths.
 
-6. Backtracking (Optional): Once you reach the destination city, you can backtrack from the destination to the starting city using the recorded distances to determine the shortest path you took to get there.
-
-The algorithm guarantees that once you've marked a city as visited and recorded its distance, the recorded distance is indeed the shortest distance from the starting city to that city. This is because the algorithm is designed to always choose the shortest available path at each step.
-
-Dijkstra's algorithm works best when all edge weights are non-negative. If there are negative weights, the algorithm might not work as expected, and you might need to use other algorithms like the Bellman-Ford algorithm.
-
-## TLDR
-
-Dijkstra's algorithm is like finding the shortest route on a map while considering the distances between cities and the roads connecting them. It's a powerful tool for solving various optimization problems in real-world scenarios.
+Remember, Dijkstra's algorithm works best when distances between points are positive (no negative values). It's a helpful tool for solving real-world problems where you want to find the quickest way between things.
