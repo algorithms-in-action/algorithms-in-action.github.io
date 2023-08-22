@@ -19,9 +19,9 @@ const Variable_strings = {
 // TODO - changes names to conceptual states
 // In_progress, Current, Finished, Not_started + comment default comments in enum
 const stackFrameColour = {
+	Invisible: 0,
   Red: 1,
-  Invisible: 0,
-  Gray: -1,
+  Gray: 2,
 };
 
 /**
