@@ -11,9 +11,9 @@ import { QSExp } from '../explanations';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 const Variable_strings = {
-	left_index: 'i',
-	right_index: 'j',
-	pivot: 'pivot',
+  left_index: 'i',
+  right_index: 'j',
+  pivot: 'pivot',
 };
 
 const Stack_color = {
@@ -21,8 +21,6 @@ const Stack_color = {
   Invisible: 0,
   Gray: -1,
 };
-
-
 
 /**
  * @param {*} arr
@@ -84,7 +82,7 @@ export default {
             vis.array.assignVariable(Variable_strings.pivot, n1);
           }
         },
-        [n1, n2]
+        [n1, n2],
       );
     };
 
@@ -98,7 +96,7 @@ export default {
 
       const pivot = a[right];
 
-      chunker.add(5, noOp); // prevent early highlight
+      // chunker.add(5, noOp); // prevent early highlight
 
       chunker.add(
         5,
@@ -106,7 +104,7 @@ export default {
           highlight(vis, p);
           vis.array.assignVariable(Variable_strings.pivot, p);
         },
-        [right]
+        [right],
       );
       chunker.add(
         11,
@@ -116,7 +114,7 @@ export default {
             vis.array.assignVariable(Variable_strings.left_index, i1);
           }
         },
-        [i]
+        [i],
       );
       chunker.add(
         12,
@@ -126,7 +124,7 @@ export default {
             vis.array.assignVariable(Variable_strings.right_index, j1);
           }
         },
-        [j]
+        [j],
       );
 
       while (i < j) {
@@ -142,7 +140,7 @@ export default {
               highlight(vis, i1, false);
               vis.array.assignVariable(Variable_strings.left_index, i1);
             },
-            [i]
+            [i],
           );
         } while (a[i] < pivot);
 
@@ -159,7 +157,7 @@ export default {
                 vis.array.removeVariable(Variable_strings.right_index);
               }
             },
-            [j]
+            [j],
           );
         } while (i <= j && pivot < a[j]);
 
@@ -192,7 +190,7 @@ export default {
           unhighlight(vis, r, false);
           vis.array.sorted(i1);
         },
-        [i, j, right]
+        [i, j, right],
       );
       return [i, a]; // Return [pivot location, array values]
     }
@@ -203,10 +201,18 @@ export default {
       chunker.add(2, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
-          updatedStack = updatedStack.concat([new Array(nodes.length).fill(Stack_color.Invisible)]);
+          updatedStack = updatedStack.concat([
+            new Array(nodes.length).fill(Stack_color.Invisible),
+          ]);
         }
 
-        updatedStack = updateStackElements(updatedStack, depth, Stack_color.Red, left, right);
+        updatedStack = updateStackElements(
+          updatedStack,
+          depth,
+          Stack_color.Red,
+          left,
+          right,
+        );
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
             if (updatedStack[i][j] === Stack_color.Invisible) continue;
@@ -238,7 +244,7 @@ export default {
               vis.array.fadeOut(i);
             }
           },
-          [p, right + 1]
+          [p, right + 1],
         );
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
 
@@ -263,7 +269,7 @@ export default {
               depth,
               1,
               left,
-              right
+              right,
             );
             for (let i = 0; i < updatedStack.length; i++) {
               for (let j = 0; j < updatedStack[i].length; j++) {
@@ -281,7 +287,7 @@ export default {
               }
             }
           },
-          [p, right + 1]
+          [p, right + 1],
         );
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
@@ -292,7 +298,7 @@ export default {
           (vis, l) => {
             vis.array.sorted(l);
           },
-          [left]
+          [left],
         );
       }
       return a; // Facilitates testing
@@ -302,9 +308,11 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack([new Array(nodes.length).fill(Stack_color.Invisible)]); // used for a custom stack visualisation
+        vis.array.setStack([
+          new Array(nodes.length).fill(Stack_color.Invisible),
+        ]); // used for a custom stack visualisation
       },
-      [nodes]
+      [nodes],
     );
 
     const result = QuickSort(
@@ -312,7 +320,7 @@ export default {
       0,
       nodes.length - 1,
       `0/${nodes.length - 1}`,
-      0
+      0,
     );
     // Fade out final node
     chunker.add(
@@ -326,7 +334,7 @@ export default {
         vis.array.clearVariables();
         vis.array.setStack([]);
       },
-      [nodes.length - 1]
+      [nodes.length - 1],
     );
     return result;
   },
