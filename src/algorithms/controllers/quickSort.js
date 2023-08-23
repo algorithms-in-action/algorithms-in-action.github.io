@@ -10,6 +10,21 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
+const Variable_strings = {
+  left_index: 'i',
+  right_index: 'j',
+  pivot: 'pivot',
+};
+
+// TODO - changes names to conceptual states
+// In_progress, Current, Finished, Not_started + comment default comments in enum
+const stackFrameColour = {
+	Invisible: 0,
+  Red: 1,
+  Gray: 2,
+	New_color: 3, // example
+};
+
 /**
  * @param {*} arr
  * @param {*} depth
@@ -45,16 +60,16 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) {
-    const highlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const highlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.select(index);
       } else {
         vis.array.patch(index);
       }
     };
 
-    const unhighlight = (vis, index, primaryColor = true) => {
-      if (primaryColor) {
+    const unhighlight = (vis, index, isPrimaryColor = true) => {
+      if (isPrimaryColor) {
         vis.array.deselect(index);
       } else {
         vis.array.depatch(index);
@@ -67,14 +82,12 @@ export default {
         (vis, _n1, _n2) => {
           vis.array.swapElements(_n1, _n2);
           if (isPivotSwap) {
-            vis.array.assignVariable('pivot', n1);
+            vis.array.assignVariable(Variable_strings.pivot, n1);
           }
         },
-        [n1, n2]
+        [n1, n2],
       );
     };
-
-    const noOp = () => {}; // no operation
 
     function partition(values, left, right) {
       const a = values;
@@ -84,35 +97,37 @@ export default {
 
       const pivot = a[right];
 
-      chunker.add(5, noOp); // prevent early highlight
+      // chunker.add(5, noOp); // prevent early highlight
 
       chunker.add(
         5,
         (vis, p) => {
           highlight(vis, p);
-          vis.array.assignVariable('pivot', p);
+          vis.array.assignVariable(Variable_strings.pivot, p);
         },
-        [right]
+        [right],
       );
+      // i IS NOT being drawn correctly at this point
       chunker.add(
         11,
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable('i', i1);
+            vis.array.assignVariable(Variable_strings.left_index, i1);
           }
         },
-        [i]
+        [i],
       );
+      // i IS being drawn correctly at this point
       chunker.add(
         12,
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable('j', j1);
+            vis.array.assignVariable(Variable_strings.right_index, j1);
           }
         },
-        [j]
+        [j],
       );
 
       while (i < j) {
@@ -126,9 +141,9 @@ export default {
                 unhighlight(vis, i1 - 1, false);
               }
               highlight(vis, i1, false);
-              vis.array.assignVariable('i', i1);
+              vis.array.assignVariable(Variable_strings.left_index, i1);
             },
-            [i]
+            [i],
           );
         } while (a[i] < pivot);
 
@@ -140,12 +155,12 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable('j', j1);
+                vis.array.assignVariable(Variable_strings.right_index, j1);
               } else {
-                vis.array.removeVariable('j');
+                vis.array.removeVariable(Variable_strings.right_index);
               }
             },
-            [j]
+            [j],
           );
         } while (i <= j && pivot < a[j]);
 
@@ -166,7 +181,7 @@ export default {
       chunker.add(
         13,
         (vis, i1, j1, r) => {
-          vis.array.assignVariable('pivot', i);
+          vis.array.assignVariable(Variable_strings.pivot, i);
           unhighlight(vis, i1);
           if (j1 >= 0) {
             if (j1 === i1) {
@@ -178,7 +193,7 @@ export default {
           unhighlight(vis, r, false);
           vis.array.sorted(i1);
         },
-        [i, j, right]
+        [i, j, right],
       );
       return [i, a]; // Return [pivot location, array values]
     }
@@ -189,22 +204,30 @@ export default {
       chunker.add(2, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
-          updatedStack = updatedStack.concat([new Array(nodes.length).fill(0)]);
+          updatedStack = updatedStack.concat([
+            new Array(nodes.length).fill(stackFrameColour.Invisible),
+          ]);
         }
 
-        updatedStack = updateStackElements(updatedStack, depth, 1, left, right);
+        updatedStack = updateStackElements(
+          updatedStack,
+          depth,
+          stackFrameColour.Red,
+          left,
+          right,
+        );
         for (let i = 0; i < updatedStack.length; i += 1) {
           for (let j = 0; j < updatedStack[i].length; j += 1) {
-            if (updatedStack[i][j] === 0) continue;
+            if (updatedStack[i][j] === stackFrameColour.Invisible) continue;
             if (
               i !== depth &&
-              updatedStack[i][j] !== 0 &&
+              updatedStack[i][j] !== stackFrameColour.Invisible &&
               (j < left || j > right)
             ) {
-              updatedStack[i][j] = -1;
+              updatedStack[i][j] = stackFrameColour.Gray;
             }
             if (i !== depth && j >= left && j <= right) {
-              updatedStack[i][j] = 0;
+              updatedStack[i][j] = stackFrameColour.Invisible;
             }
           }
         }
@@ -218,13 +241,13 @@ export default {
         chunker.add(
           3,
           (vis, pivot, arrayLen) => {
-            vis.array.stack[depth][p] = 0;
+            vis.array.stack[depth][p] = stackFrameColour.Invisible;
             // fade out the part of the array that is not being sorted (i.e. right side)
             for (let i = pivot; i < arrayLen; i++) {
               vis.array.fadeOut(i);
             }
           },
-          [p, right + 1]
+          [p, right + 1],
         );
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
 
@@ -247,27 +270,27 @@ export default {
             let updatedStack = updateStackElements(
               vis.array.stack,
               depth,
-              1,
+              stackFrameColour.Red,
               left,
-              right
+              right,
             );
             for (let i = 0; i < updatedStack.length; i++) {
               for (let j = 0; j < updatedStack[i].length; j++) {
                 if (j <= pivot) {
-                  updatedStack[i][j] = 0;
+                  updatedStack[i][j] = stackFrameColour.Invisible;
                 } else if (
                   i !== depth &&
-                  updatedStack[i][j] !== 0 &&
+                  updatedStack[i][j] !== stackFrameColour.Invisible &&
                   (j < left || j > right)
                 ) {
-                  updatedStack[i][j] = -1;
+                  updatedStack[i][j] = stackFrameColour.Gray;
                 } else if (i !== depth && j >= left && j <= right) {
-                  updatedStack[i][j] = 0;
+                  updatedStack[i][j] = stackFrameColour.Invisible;
                 }
               }
             }
           },
-          [p, right + 1]
+          [p, right + 1],
         );
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
@@ -278,7 +301,7 @@ export default {
           (vis, l) => {
             vis.array.sorted(l);
           },
-          [left]
+          [left],
         );
       }
       return a; // Facilitates testing
@@ -288,9 +311,11 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack([new Array(nodes.length).fill(0)]); // used for a custom stack visualisation
+        vis.array.setStack([
+          new Array(nodes.length).fill(stackFrameColour.Invisible),
+        ]); // used for a custom stack visualisation
       },
-      [nodes]
+      [nodes],
     );
 
     const result = QuickSort(
@@ -298,7 +323,7 @@ export default {
       0,
       nodes.length - 1,
       `0/${nodes.length - 1}`,
-      0
+      0,
     );
     // Fade out final node
     chunker.add(
@@ -312,7 +337,7 @@ export default {
         vis.array.clearVariables();
         vis.array.setStack([]);
       },
-      [nodes.length - 1]
+      [nodes.length - 1],
     );
     return result;
   },
