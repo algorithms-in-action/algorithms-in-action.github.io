@@ -9,9 +9,10 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
+// visualisation variable strings
 const VIS_VARIABLE_STRINGS = {
-  left_index: 'i',
-  right_index: 'j',
+  i_left_index: 'i',
+  j_right_index: 'j',
   pivot: 'pivot',
 };
 
@@ -48,7 +49,7 @@ const QS_BOOKMARKS = {
 	// 15
 	// 16
 	// 17
-	done_qs_second_half:                         19,
+	done_qs:                         19,
 	
 };
 
@@ -150,7 +151,7 @@ export default {
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.left_index, i1);
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
           }
         },
         [i],
@@ -162,7 +163,7 @@ export default {
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.right_index, j1);
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
           }
         },
         [j],
@@ -179,7 +180,7 @@ export default {
                 unhighlight(vis, i1 - 1, false);
               }
               highlight(vis, i1, false);
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.left_index, i1);
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
             },
             [i],
           );
@@ -193,9 +194,9 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.right_index, j1);
+                vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
               } else {
-                vis.array.removeVariable(VIS_VARIABLE_STRINGS.right_index);
+                vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
               }
             },
             [j],
@@ -365,7 +366,7 @@ export default {
     );
     // Fade out final node
     chunker.add(
-      QS_BOOKMARKS.done_qs_second_half,
+      QS_BOOKMARKS.done_qs,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
