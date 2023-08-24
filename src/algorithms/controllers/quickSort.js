@@ -49,7 +49,7 @@ const QS_BOOKMARKS = {
 	// 15
 	// 16
 	// 17
-	done_qs:                         19,
+	done_qs:                                     19,
 	
 };
 
@@ -205,9 +205,8 @@ export default {
 
         chunker.add(QS_BOOKMARKS.if_j_greater_i);
         if (i < j) {
-          tmp = a[j];
-          a[j] = a[i];
-          a[i] = tmp;
+
+          [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
           swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, { isPivotSwap: false });
         }
       }
