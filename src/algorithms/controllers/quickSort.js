@@ -25,6 +25,37 @@ const stackFrameColour = {
 	New_color: 3, // example
 };
 
+
+// bookmarks (id) into the REAL file for quicksort
+// (search \\B and find quicksort)
+// keep up to date with this file, ideally this would auto generate
+
+const qsBookmarks = {
+	quicksort_left_to_right:                      1,
+	if_left_less_right:                           2,
+	quicksort_left_to_i_minus_1:                  3,
+	quicksort_i_plus_1_to_right:                  4,
+	set_pivot_to_value_at_array_indx_right:       5,
+	while_i_less_j:                               6,
+	incri_i_until_array_index_i_greater_eq_pivot: 7,
+	decri_j_until_array_index_j_less_i:           8,
+	if_j_greater_i:                               9,
+	swap_array_i_j_vals:                         10,
+  set_i_left_minus_1:                          11,
+	set_j_right:                                 12,
+	swap_pivot_into_correct_position:            13,
+	// 14
+	// 15
+	// 16
+	// 17
+	done_qs_second_half:                         19,
+	
+};
+
+
+
+
+
 /**
  * @param {*} arr
  * @param {*} depth
