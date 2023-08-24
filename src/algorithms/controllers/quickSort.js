@@ -18,6 +18,8 @@ const Variable_strings = {
 
 // TODO - changes names to conceptual states
 // In_progress, Current, Finished, Not_started + comment default comments in enum
+
+// search stackFrameColour to find corresponding function
 const stackFrameColour = {
 	Invisible: 0,
   Red: 1,
@@ -29,7 +31,6 @@ const stackFrameColour = {
 // bookmarks (id) into the REAL file for quicksort
 // (search \\B and find quicksort)
 // keep up to date with this file, ideally this would auto generate
-
 const qsBookmarks = {
 	quicksort_left_to_right:                      1,
 	if_left_less_right:                           2,
@@ -128,19 +129,25 @@ export default {
 
       const pivot = a[right];
 
-      // chunker.add(5, noOp); // prevent early highlight
+      /*
+      chunker.add(
+        qsBookmarks.set_pivot_to_value_at_array_indx_right, 
+        noOp
+      ); // prevent early highlight
+      */
 
       chunker.add(
-        5,
+        qsBookmarks.set_pivot_to_value_at_array_indx_right,
         (vis, p) => {
           highlight(vis, p);
           vis.array.assignVariable(Variable_strings.pivot, p);
         },
         [right],
       );
+
       // i IS NOT being drawn correctly at this point
       chunker.add(
-        11,
+        qsBookmarks.set_i_left_minus_1,
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
@@ -149,9 +156,10 @@ export default {
         },
         [i],
       );
+
       // i IS being drawn correctly at this point
       chunker.add(
-        12,
+        qsBookmarks.set_j_right,
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
@@ -162,11 +170,11 @@ export default {
       );
 
       while (i < j) {
-        chunker.add(6);
+        chunker.add(qsBookmarks.while_i_less_j);
         do {
           i += 1;
           chunker.add(
-            7,
+            qsBookmarks.incri_i_until_array_index_i_greater_eq_pivot,
             (vis, i1) => {
               if (i1 > 0) {
                 unhighlight(vis, i1 - 1, false);
@@ -181,7 +189,7 @@ export default {
         do {
           j -= 1;
           chunker.add(
-            8,
+            qsBookmarks.decri_j_until_array_index_j_less_i,
             (vis, j1) => {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
@@ -195,22 +203,22 @@ export default {
           );
         } while (i <= j && pivot < a[j]);
 
-        chunker.add(9);
+        chunker.add(qsBookmarks.if_j_greater_i);
         if (i < j) {
           tmp = a[j];
           a[j] = a[i];
           a[i] = tmp;
-          swapAction(10, i, j, { isPivotSwap: false });
+          swapAction(qsBookmarks.swap_array_i_j_vals, i, j, { isPivotSwap: false });
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      swapAction(13, i, right, { isPivotSwap: true });
+      swapAction(qsBookmarks.swap_pivot_into_correct_position, i, right, { isPivotSwap: true });
 
       chunker.add(
-        13,
+        qsBookmarks.swap_pivot_into_correct_position,
         (vis, i1, j1, r) => {
           vis.array.assignVariable(Variable_strings.pivot, i);
           unhighlight(vis, i1);
@@ -232,7 +240,7 @@ export default {
     function QuickSort(array, left, right, _, depth) {
       let a = array;
       let p;
-      chunker.add(2, (vis) => {
+      chunker.add(qsBookmarks.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
           updatedStack = updatedStack.concat([
@@ -270,7 +278,7 @@ export default {
         [p, a] = partition(a, left, right);
 
         chunker.add(
-          3,
+          qsBookmarks.quicksort_left_to_i_minus_1,
           (vis, pivot, arrayLen) => {
             vis.array.stack[depth][p] = stackFrameColour.Invisible;
             // fade out the part of the array that is not being sorted (i.e. right side)
@@ -283,7 +291,7 @@ export default {
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
 
         chunker.add(
-          4,
+          qsBookmarks.quicksort_i_plus_1_to_right,
           (vis, pivot, arrayLen) => {
             vis.array.setStackDepth(depth);
 
@@ -328,7 +336,7 @@ export default {
       // array of size 1, already sorted
       else if (left < array.length) {
         chunker.add(
-          2,
+          qsBookmarks.if_left_less_right,
           (vis, l) => {
             vis.array.sorted(l);
           },
@@ -339,7 +347,7 @@ export default {
     }
 
     chunker.add(
-      1,
+      qsBookmarks.quicksort_left_to_right,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
         vis.array.setStack([
@@ -358,7 +366,7 @@ export default {
     );
     // Fade out final node
     chunker.add(
-      19,
+      qsBookmarks.done_qs_second_half,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
