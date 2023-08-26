@@ -1,5 +1,33 @@
 /*
 
+
+Notes for implimenting actual stack
+
+  - prototype by creating 
+        qs_stack { array, left, right }
+
+        old qs_stack stack frame list / array
+        current qs_stack stack (current is top)
+
+      and deriving what the 2D stack should look like from that
+
+  - then we should try to refactor to remove the 2D stack, just relying on the actual stack
+  - See if other algorithms rely on Array1DTracer
+  - Understand and comment Array1DTracer code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 The 'stack' in this file is simply for the visualisation and does perform push and pop as such.
 It is used to visualise how reccursion sorts increasingly smaller parts of the array.
 
