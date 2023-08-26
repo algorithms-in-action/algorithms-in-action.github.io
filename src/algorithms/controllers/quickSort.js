@@ -249,7 +249,7 @@ export default {
 
     function QuickSort(qs_num_array, left, right, _, depth) {
       let a = qs_num_array;
-      let p;
+      let pivot;
       
       chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
@@ -287,21 +287,21 @@ export default {
       });
 
       if (left < right) {
-        [p, a] = partition(a, left, right);
+        [pivot, a] = partition(a, left, right);
 
         chunker.add(
           QS_BOOKMARKS.quicksort_left_to_i_minus_1,
           (vis, pivot, arrayLen) => {
-            vis.array.stack[depth][p] = STACK_FRAME_COLOR.Invisible;
+            vis.array.stack[depth][pivot] = STACK_FRAME_COLOR.Invisible;
             // fade out the part of the array that is not being sorted (i.e. right side)
             for (let i = pivot; i < arrayLen; i++) {
               vis.array.fadeOut(i);
             }
           },
-          [p, right + 1],
+          [pivot, right + 1],
         );
 
-        QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
+        QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
         chunker.add(
           QS_BOOKMARKS.quicksort_i_plus_1_to_right,
@@ -342,10 +342,10 @@ export default {
               }
             }
           },
-          [p, right + 1],
+          [pivot, right + 1],
         );
 
-        QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
+        QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
       else if (left < a.length) {
