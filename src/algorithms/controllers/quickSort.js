@@ -62,11 +62,11 @@ const QS_BOOKMARKS = {
 // ----------------------------------------------------------------------------------------------------------------------------
 
 
-export function updateStackElements(arr, depth, stateVal, left, right) {
+export function updateStackElements(a, depth, stateVal, left, right) {
   for (let i = left; i <= right; i += 1) {
-    arr[depth][i] = stateVal;
+    a[depth][i] = stateVal;
   }
-  return arr;
+  return a;
 }
 
 const highlight = (vis, index, isPrimaryColor = true) => {
@@ -108,8 +108,8 @@ export default {
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
    */
-  run(chunker, { nodes }) {
-
+  run(chunker, { nodes }) { // can't rename from nodes
+    const entire_num_array = nodes; 
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
@@ -133,8 +133,8 @@ export default {
     // Define quicksort functions  
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function partition(values, left, right) {
-      const a = values;
+    function partition(partition_num_array, left, right) {
+      const a = partition_num_array;
       let i = left - 1;
       let j = right;
 
@@ -244,18 +244,18 @@ export default {
         },
         [i, j, right],
       );
-      return [i, a]; // Return [pivot location, array values]
+      return [i, a]; // Return [pivot location, array partition_num_array]
     }
 
-    function QuickSort(array, left, right, _, depth) {
-      let a = array;
+    function QuickSort(qs_num_array, left, right, _, depth) {
+      let a = qs_num_array;
       let p;
       
       chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
           updatedStack = updatedStack.concat([
-            new Array(nodes.length).fill(STACK_FRAME_COLOR.Invisible),
+            new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible),
           ]);
         }
 
@@ -348,7 +348,7 @@ export default {
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
       // array of size 1, already sorted
-      else if (left < array.length) {
+      else if (left < a.length) {
         chunker.add(
           QS_BOOKMARKS.if_left_less_right,
           (vis, l) => {
@@ -371,17 +371,17 @@ export default {
       (vis, array) => {
         vis.array.set(array, 'quicksort');
         vis.array.setStack([
-          new Array(nodes.length).fill(STACK_FRAME_COLOR.Invisible),
+          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible),
         ]); // used for a custom stack visualisation
       },
-      [nodes],
+      [entire_num_array],
     );
 
     const result = QuickSort(
-      nodes,
+      entire_num_array,
       0,
-      nodes.length - 1,
-      `0/${nodes.length - 1}`,
+      entire_num_array.length - 1,
+      `0/${entire_num_array.length - 1}`,
       0,
     );
     // Fade out final node
@@ -390,13 +390,13 @@ export default {
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
-        for (let i = 0; i < nodes.length; i += 1) {
+        for (let i = 0; i < entire_num_array.length; i += 1) {
           vis.array.fadeIn(i);
         }
         vis.array.clearVariables();
         vis.array.setStack([]);
       },
-      [nodes.length - 1],
+      [entire_num_array.length - 1],
     );
     return result;
   },
