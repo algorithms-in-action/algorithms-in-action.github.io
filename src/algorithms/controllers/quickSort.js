@@ -11,6 +11,10 @@ Notes for implimenting actual stack
 
       and deriving what the 2D stack should look like from that
 
+  - need to store inside the array 1DTracer, 
+
+  maybe merge into dev at this point
+
   - then we should try to refactor to remove the 2D stack, just relying on the actual stack
   - See if other algorithms rely on Array1DTracer
   - Understand and comment Array1DTracer code
@@ -48,6 +52,7 @@ const VIS_VARIABLE_STRINGS = {
 // In_progress, Current, Finished, Not_started + comment default comments in enum
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
+// eslint-disable-next-line 
 const STACK_FRAME_COLOR = {
 	Invisible: 0,
   Red: 1,
@@ -281,98 +286,19 @@ export default {
       
       chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
-        if (depth > vis.array.stack.length - 1) {
-          updatedStack = updatedStack.concat([
-            new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible),
-          ]);
-        }
 
-        updatedStack = updateStackElements(
-          updatedStack,
-          depth,
-          STACK_FRAME_COLOR.Red,
-          left,
-          right,
-        );
-        for (let i = 0; i < updatedStack.length; i += 1) {
-          for (let j = 0; j < updatedStack[i].length; j += 1) {
-            if (updatedStack[i][j] === STACK_FRAME_COLOR.Invisible) continue;
-            if (
-              i !== depth &&
-              updatedStack[i][j] !== STACK_FRAME_COLOR.Invisible &&
-              (j < left || j > right)
-            ) {
-              updatedStack[i][j] = STACK_FRAME_COLOR.Gray;
-            }
-            if (i !== depth && j >= left && j <= right) {
-              updatedStack[i][j] = STACK_FRAME_COLOR.Invisible;
-            }
-          }
-        }
+        // STACKTODO
 
         vis.array.setStack(updatedStack);
-        vis.array.setStackDepth(depth);
       });
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(
-          QS_BOOKMARKS.quicksort_left_to_i_minus_1,
-          (vis, pivot, arrayLen) => {
-            vis.array.stack[depth][pivot] = STACK_FRAME_COLOR.Invisible;
-            // fade out the part of the array that is not being sorted (i.e. right side)
-            for (let i = pivot; i < arrayLen; i++) {
-              vis.array.fadeOut(i);
-            }
-          },
-          [pivot, right + 1],
-        );
-
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(
-          QS_BOOKMARKS.quicksort_i_plus_1_to_right,
-          (vis, pivot, arrayLen) => {
-            vis.array.setStackDepth(depth);
-
-            // fade out the part of the array that is not being sorted (i.e. left side)
-            for (let i = 0; i <= pivot; i++) {
-              vis.array.fadeOut(i);
-            }
-            // fade in part of the array that is now being sorted (i.e. right side)
-            for (let i = pivot + 1; i < arrayLen; i++) {
-              vis.array.fadeIn(i);
-            }
-
-            // do some somewhat hacky changes to the 'stack' array
-            // note that this is just setting the state of elements in a 2D array which represents a stack and corresponding elements in the real array positionally in a row
-            let updatedStack = updateStackElements(
-              vis.array.stack,
-              depth,
-              STACK_FRAME_COLOR.Red,
-              left,
-              right,
-            );
-            for (let i = 0; i < updatedStack.length; i++) {
-              for (let j = 0; j < updatedStack[i].length; j++) {
-                if (j <= pivot) {
-                  updatedStack[i][j] = STACK_FRAME_COLOR.Invisible;
-                } else if (
-                  i !== depth &&
-                  updatedStack[i][j] !== STACK_FRAME_COLOR.Invisible &&
-                  (j < left || j > right)
-                ) {
-                  updatedStack[i][j] = STACK_FRAME_COLOR.Gray;
-                } else if (i !== depth && j >= left && j <= right) {
-                  updatedStack[i][j] = STACK_FRAME_COLOR.Invisible;
-                }
-              }
-            }
-          },
-          [pivot, right + 1],
-        );
-
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right);
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
@@ -398,9 +324,10 @@ export default {
       QS_BOOKMARKS.quicksort_left_to_right,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack([
-          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible),
-        ]); // used for a custom stack visualisation
+
+        // STACKTODO
+
+        vis.array.setStack(); // used for a custom stack visualisation
       },
       [entire_num_array],
     );
