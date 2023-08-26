@@ -56,21 +56,38 @@ const QS_BOOKMARKS = {
 
 
 
+// ----------------------------------------------------------------------------------------------------------------------------
+// Define helper functions 
+// without javascript Closure arguements (IE chunker)
+// ----------------------------------------------------------------------------------------------------------------------------
 
-/**
- * @param {*} arr
- * @param {*} depth
- * @param {*} stateVal
- * @param {*} left
- * @param {*} right
- * @returns
- */
+
 export function updateStackElements(arr, depth, stateVal, left, right) {
   for (let i = left; i <= right; i += 1) {
     arr[depth][i] = stateVal;
   }
   return arr;
 }
+
+const highlight = (vis, index, isPrimaryColor = true) => {
+  if (isPrimaryColor) {
+    vis.array.select(index);
+  } else {
+    vis.array.patch(index);
+  }
+};
+
+const unhighlight = (vis, index, isPrimaryColor = true) => {
+  if (isPrimaryColor) {
+    vis.array.deselect(index);
+  } else {
+    vis.array.depatch(index);
+  }
+};
+
+
+// ----------------------------------------------------------------------------------------------------------------------------
+
 
 export default {
   explanation: QSExp,
@@ -99,22 +116,6 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
 
-    const highlight = (vis, index, isPrimaryColor = true) => {
-      if (isPrimaryColor) {
-        vis.array.select(index);
-      } else {
-        vis.array.patch(index);
-      }
-    };
-
-    const unhighlight = (vis, index, isPrimaryColor = true) => {
-      if (isPrimaryColor) {
-        vis.array.deselect(index);
-      } else {
-        vis.array.depatch(index);
-      }
-    };
-
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(
         b,
@@ -136,7 +137,6 @@ export default {
       const a = values;
       let i = left - 1;
       let j = right;
-      let tmp;
 
       const pivot = a[right];
 
@@ -250,6 +250,7 @@ export default {
     function QuickSort(array, left, right, _, depth) {
       let a = array;
       let p;
+      
       chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
@@ -284,6 +285,7 @@ export default {
         vis.array.setStack(updatedStack);
         vis.array.setStackDepth(depth);
       });
+
       if (left < right) {
         [p, a] = partition(a, left, right);
 
@@ -298,6 +300,7 @@ export default {
           },
           [p, right + 1],
         );
+
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth + 1);
 
         chunker.add(
@@ -341,6 +344,7 @@ export default {
           },
           [p, right + 1],
         );
+
         QuickSort(a, p + 1, right, `${right}/${p + 1}`, depth + 1);
       }
       // array of size 1, already sorted
