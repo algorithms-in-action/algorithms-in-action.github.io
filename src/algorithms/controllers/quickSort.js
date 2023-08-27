@@ -21,46 +21,40 @@ const VIS_VARIABLE_STRINGS = {
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
-	Invisible: 0,
+  Invisible: 0,
   Red: 1,
   Gray: 2,
-	New_color: 3, // example
+  New_color: 3, // example
 };
-
 
 // bookmarks (id) into the REAL file for quicksort
 // (search \\B and find quicksort)
 // keep up to date with this file, ideally this would auto generate
 const QS_BOOKMARKS = {
-	quicksort_left_to_right:                      1,
-	if_left_less_right:                           2,
-	quicksort_left_to_i_minus_1:                  3,
-	quicksort_i_plus_1_to_right:                  4,
-	set_pivot_to_value_at_array_indx_right:       5,
-	while_i_less_j:                               6,
-	incri_i_until_array_index_i_greater_eq_pivot: 7,
-	decri_j_until_array_index_j_less_i:           8,
-	if_j_greater_i:                               9,
-	swap_array_i_j_vals:                         10,
-  set_i_left_minus_1:                          11,
-	set_j_right:                                 12,
-	swap_pivot_into_correct_position:            13,
-	// 14
-	// 15
-	// 16
-	// 17
-	done_qs:                                     19,
-	
+  quicksort_left_to_right: 1,
+  if_left_less_right: 2,
+  quicksort_left_to_i_minus_1: 3,
+  quicksort_i_plus_1_to_right: 4,
+  set_pivot_to_value_at_array_indx_right: 5,
+  while_i_less_j: 6,
+  incri_i_until_array_index_i_greater_eq_pivot: 7,
+  decri_j_until_array_index_j_less_i: 8,
+  if_j_greater_i: 9,
+  swap_array_i_j_vals: 10,
+  set_i_left_minus_1: 11,
+  set_j_right: 12,
+  swap_pivot_into_correct_position: 13,
+  // 14
+  // 15
+  // 16
+  // 17
+  done_qs: 19,
 };
 
-
-
-
 // ----------------------------------------------------------------------------------------------------------------------------
-// Define helper functions 
+// Define helper functions
 // without javascript Closure arguements (IE chunker)
 // ----------------------------------------------------------------------------------------------------------------------------
-
 
 export function updateStackElements(a, depth, stateVal, left, right) {
   for (let i = left; i <= right; i += 1) {
@@ -85,9 +79,7 @@ const unhighlight = (vis, index, isPrimaryColor = true) => {
   }
 };
 
-
 // ----------------------------------------------------------------------------------------------------------------------------
-
 
 export default {
   explanation: QSExp,
@@ -108,13 +100,13 @@ export default {
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
    */
-  run(chunker, { nodes }) { // can't rename from nodes
-    const entire_num_array = nodes; 
+  run(chunker, { nodes }) {
+    // can't rename from nodes
+    const entire_num_array = nodes;
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
-
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(
@@ -130,7 +122,7 @@ export default {
     };
 
     // ----------------------------------------------------------------------------------------------------------------------------
-    // Define quicksort functions  
+    // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function partition(partition_num_array, left, right) {
@@ -156,19 +148,23 @@ export default {
         [right],
       );
 
-      // i IS NOT being drawn correctly at this point
+      // At the start of algorithm, i = 0 - 1
+      // Hence cannot be drawn at any index
+      // So in that case, it is displayed at index 0
       chunker.add(
         QS_BOOKMARKS.set_i_left_minus_1,
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+          } else if (i1 === -1) {
+            highlight(vis, 0, false);
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
           }
         },
         [i],
       );
 
-      // i IS being drawn correctly at this point
       chunker.add(
         QS_BOOKMARKS.set_j_right,
         (vis, j1) => {
@@ -205,7 +201,10 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
+                vis.array.assignVariable(
+                  VIS_VARIABLE_STRINGS.j_right_index,
+                  j1,
+                );
               } else {
                 vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
               }
@@ -216,16 +215,19 @@ export default {
 
         chunker.add(QS_BOOKMARKS.if_j_greater_i);
         if (i < j) {
-
           [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
-          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, { isPivotSwap: false });
+          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
+            isPivotSwap: false,
+          });
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, { isPivotSwap: true });
+      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
+        isPivotSwap: true,
+      });
 
       chunker.add(
         QS_BOOKMARKS.swap_pivot_into_correct_position,
@@ -250,12 +252,14 @@ export default {
     function QuickSort(qs_num_array, left, right, _, depth) {
       let a = qs_num_array;
       let pivot;
-      
+
       chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
         let updatedStack = vis.array.stack;
         if (depth > vis.array.stack.length - 1) {
           updatedStack = updatedStack.concat([
-            new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible),
+            new Array(entire_num_array.length).fill(
+              STACK_FRAME_COLOR.Invisible,
+            ),
           ]);
         }
 
@@ -360,11 +364,9 @@ export default {
       return a; // Facilitates testing
     }
 
-
     // ----------------------------------------------------------------------------------------------------------------------------
-    // Perform actual quicksort 
+    // Perform actual quicksort
     // ----------------------------------------------------------------------------------------------------------------------------
-
 
     chunker.add(
       QS_BOOKMARKS.quicksort_left_to_right,
