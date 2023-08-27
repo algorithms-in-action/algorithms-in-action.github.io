@@ -95,13 +95,6 @@ const QS_BOOKMARKS = {
 // ----------------------------------------------------------------------------------------------------------------------------
 
 
-export function updateStackElements(a, depth, stateVal, left, right) {
-  for (let i = left; i <= right; i += 1) {
-    a[depth][i] = stateVal;
-  }
-  return a;
-}
-
 const highlight = (vis, index, isPrimaryColor = true) => {
   if (isPrimaryColor) {
     vis.array.select(index);
@@ -295,10 +288,10 @@ export default {
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1); // STACKTODO
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right);
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right); // STACKTODO
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
