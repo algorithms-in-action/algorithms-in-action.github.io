@@ -91,9 +91,14 @@ const QS_BOOKMARKS = {
 
 // ----------------------------------------------------------------------------------------------------------------------------
 // Define helper functions 
-// without javascript Closure arguements (IE chunker)
+// without javascript Closure arguements (IE 'global variables')
 // ----------------------------------------------------------------------------------------------------------------------------
 
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error(message || "Assertion failed");
+  }
+}
 
 const highlight = (vis, index, isPrimaryColor = true) => {
   if (isPrimaryColor) {
@@ -142,13 +147,16 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes; 
-    const finished_stack_frames = new Array();
-    const real_stack            = new Array();
+    const finished_stack_frames = new Array(); // [left, right] (depth isimplicit)
+    const real_stack            = new Array(); // [left, right,  depth]
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
+    function derive_stack() {
+      //new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible)
+    }
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(
@@ -317,7 +325,10 @@ export default {
         );
       }
 
-      finished_stack_frames.push(real_stack.pop());
+
+      finished_stack_frames.push(
+        real_stack.pop().concat(real_stack.length) // concat real_stack.length to know stack depth
+      );
 
       return a; // Facilitates testing
     }
@@ -347,6 +358,9 @@ export default {
       `0/${entire_num_array.length - 1}`,
       0,
     );
+
+    assert(real_stack.length == 0);
+
     // Fade out final node
     chunker.add(
       QS_BOOKMARKS.done_qs,
@@ -361,6 +375,8 @@ export default {
       },
       [entire_num_array.length - 1],
     );
+
+
     return result;
   },
 };
