@@ -147,7 +147,8 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes; 
-    const finished_stack_frames = new Array(); // [left, right] (depth is implicit)
+    let max_depth_index = -1; 
+    const finished_stack_frames = new Array(); // [left, right,  depth]  (although depth could be implicit this is easier)
     const real_stack            = new Array(); // [left, right,  depth]
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -156,7 +157,18 @@ export default {
 
     function derive_stack() {
 
-      return [new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Red)]; // example
+
+      // doesn't like 2D arrays for some reason
+
+      let stack = [];
+
+      for (let i = 0; i < max_depth_index + 1; i++) {
+        stack.push(
+          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Red) // change to invis
+        );
+      };
+
+      return stack;
     }
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
@@ -292,7 +304,9 @@ export default {
 
     function QuickSort(qs_num_array, left, right, _, depth) {
 
-      real_stack.push([left, right]);
+      real_stack.push([left, right, depth]);
+      max_depth_index = Math.max(max_depth_index, depth);
+
       console.log(real_stack.toString());
 
       let a = qs_num_array;
@@ -321,9 +335,7 @@ export default {
       }
 
 
-      finished_stack_frames.push(
-        real_stack.pop().concat(real_stack.length) // concat real_stack.length to know stack depth
-      );
+      finished_stack_frames.push( real_stack.pop() );
 
       return a; // Facilitates testing
     }
