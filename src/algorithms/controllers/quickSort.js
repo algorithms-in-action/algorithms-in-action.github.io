@@ -48,16 +48,13 @@ const VIS_VARIABLE_STRINGS = {
   pivot: 'pivot',
 };
 
-// TODO - changes names to conceptual states
-// In_progress, Current, Finished, Not_started + comment default comments in enum
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
-// eslint-disable-next-line 
 const STACK_FRAME_COLOR = {
-	Invisible: 0,
-  Red: 1,
-  Gray: 2,
-	New_color: 3, // example
+	Not_started: 0,
+  In_progress: 1,
+  Current: 2,
+	Finished: 3, 
 };
 
 
@@ -164,7 +161,7 @@ export default {
 
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
-          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Red) // change to invis
+          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Not_started) // change to invis
         );
       };
 
