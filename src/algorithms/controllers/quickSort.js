@@ -170,7 +170,10 @@ export default {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack() {
+    function derive_stack(real_stack_, finished_stack_frames_) {
+
+      assert(real_stack_ != undefined);
+      assert(finished_stack_frames_ != undefined);
 
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
@@ -179,22 +182,22 @@ export default {
         );
       };
 
-      finished_stack_frames.forEach((stack_frame) => {
+      finished_stack_frames_.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.Finished)
       })
 
-      real_stack.forEach((stack_frame) => {
+      real_stack_.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
       })
 
-      if (real_stack.length !== 0) { 
-        stack = update_vis_with_stack_frame(stack, real_stack[real_stack.length - 1], STACK_FRAME_COLOR.Current);
+      if (real_stack_.length !== 0) { 
+        stack = update_vis_with_stack_frame(stack, real_stack_[real_stack_.length - 1], STACK_FRAME_COLOR.Current);
       }
      
       return stack;
     }
 
-    const refresh_stack = (vis) => { vis.array.setStack(derive_stack()); }
+    const refresh_stack = (vis, real_stack_, finished_stack_frames_) => { vis.array.setStack(derive_stack(real_stack_, finished_stack_frames_)); }
 
     ///
 
@@ -337,15 +340,15 @@ export default {
       let a = qs_num_array;
       let pivot;
       
-      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack);
+      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [real_stack, finished_stack_frames]);
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack);
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [real_stack, finished_stack_frames]);
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack);
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [real_stack, finished_stack_frames]);
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
@@ -375,7 +378,7 @@ export default {
       QS_BOOKMARKS.quicksort_left_to_right,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack(derive_stack()); // used for a custom stack visualisation
+        vis.array.setStack(derive_stack(real_stack, finished_stack_frames)); // used for a custom stack visualisation
       },
       [entire_num_array],
     );
