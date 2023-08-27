@@ -142,8 +142,8 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes; 
-    const finished_stack_frames = new Array(entire_num_array.length);
-    const real_stack = new Array(entire_num_array.length);
+    const finished_stack_frames = new Array();
+    const real_stack            = new Array();
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
@@ -282,6 +282,10 @@ export default {
     }
 
     function QuickSort(qs_num_array, left, right, _, depth) {
+
+      real_stack.push([left, right]);
+      console.log(real_stack.toString());
+
       let a = qs_num_array;
       let pivot;
       
@@ -312,6 +316,9 @@ export default {
           [left],
         );
       }
+
+      finished_stack_frames.push(real_stack.pop());
+
       return a; // Facilitates testing
     }
 
