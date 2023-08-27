@@ -145,8 +145,8 @@ export default {
 
     const entire_num_array = nodes; 
     let max_depth_index = -1; 
-    const finished_stack_frames = new Array(); // [left, right,  depth]  (although depth could be implicit this is easier)
-    const real_stack            = new Array(); // [left, right,  depth]
+    const finished_stack_frames = new Array(); // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
+    const real_stack            = new Array(); // [ [left, right,  depth], ...]
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
