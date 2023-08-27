@@ -102,7 +102,7 @@ const STACK_FRAME_LEFT_INDEX = 0;
 const STACK_FRAME_RGHT_INDEX = 1;
 const STACK_FRAME_DPTH_INDEX = 2;
 
-export function updateStackElements(a, stack_frame, stateVal) {
+export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
  
   let depth = stack_frame[STACK_FRAME_DPTH_INDEX];
   let left  = stack_frame[STACK_FRAME_LEFT_INDEX];
@@ -180,19 +180,23 @@ export default {
       };
 
       finished_stack_frames.forEach((stack_frame) => {
-        stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.Finished)
+        stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.Finished)
       })
 
       real_stack.forEach((stack_frame) => {
-        stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
+        stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
       })
 
       if (real_stack.length !== 0) { 
-        stack = updateStackElements(stack, real_stack[real_stack.length - 1], STACK_FRAME_COLOR.Current);
+        stack = update_vis_with_stack_frame(stack, real_stack[real_stack.length - 1], STACK_FRAME_COLOR.Current);
       }
      
       return stack;
     }
+
+    const refresh_stack = (vis) => { vis.array.setStack(derive_stack()); }
+
+    ///
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(
@@ -333,15 +337,15 @@ export default {
       let a = qs_num_array;
       let pivot;
       
-      chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => { vis.array.setStack(derive_stack()); });
+      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack);
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis) => { vis.array.setStack(derive_stack()); });
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack);
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, (vis) => { vis.array.setStack(derive_stack()); });
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack);
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
