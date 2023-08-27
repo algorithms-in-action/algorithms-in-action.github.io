@@ -135,7 +135,15 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    */
   run(chunker, { nodes }) { // can't rename from nodes
+
+
+    // ----------------------------------------------------------------------------------------------------------------------------
+    // Define 'global' variables
+    // ----------------------------------------------------------------------------------------------------------------------------
+
     const entire_num_array = nodes; 
+    const finished_stack_frames = new Array(entire_num_array.length);
+    const real_stack = new Array(entire_num_array.length);
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
