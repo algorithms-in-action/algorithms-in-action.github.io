@@ -204,13 +204,14 @@ class Array1DRenderer extends Array2DRenderer {
  * @param {*} color_index - an integer representing the state of a stack element
  * @returns string
  */
-function stackFrameColour(color_index) {
-  return [
-    'var(--completed-stack-section)', // 0
-    'var(--active-stack-section)', // 1
-    'var(--future-stack-section)', // 2
-    'var(--new-color)', // 3
-  ][color_index];
+
+ function stackFrameColour(color_index) {
+	return [
+		'var(--not-started-section)', // 0
+		'var(--in-progress-section)', // 1
+		'var(--current-section)',     // 2
+		'var(--finished-section)',    // 3
+	][color_index]
 }
 
 /**

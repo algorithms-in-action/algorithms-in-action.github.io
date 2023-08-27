@@ -1,7 +1,14 @@
 import { QSM3Exp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
-import { updateStackElements } from './quickSort';
+
+
+export function updateStackElements(a, depth, stateVal, left, right) {
+  for (let i = left; i <= right; i += 1) {
+    a[depth][i] = stateVal;
+  }
+  return a;
+}
 
 export default {
   explanation: QSM3Exp,
