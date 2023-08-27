@@ -147,7 +147,7 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes; 
-    const finished_stack_frames = new Array(); // [left, right] (depth isimplicit)
+    const finished_stack_frames = new Array(); // [left, right] (depth is implicit)
     const real_stack            = new Array(); // [left, right,  depth]
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -155,7 +155,8 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function derive_stack() {
-      //new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Invisible)
+
+      return [new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Red)]; // example
     }
 
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
@@ -297,21 +298,15 @@ export default {
       let a = qs_num_array;
       let pivot;
       
-      chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => {
-        let updatedStack = vis.array.stack;
-
-        // STACKTODO
-
-        vis.array.setStack(updatedStack);
-      });
+      chunker.add(QS_BOOKMARKS.if_left_less_right, (vis) => { vis.array.setStack(derive_stack()); });
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1); // STACKTODO
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis) => { vis.array.setStack(derive_stack()); });
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right); // STACKTODO
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, (vis) => { vis.array.setStack(derive_stack()); });
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
@@ -343,10 +338,7 @@ export default {
       QS_BOOKMARKS.quicksort_left_to_right,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-
-        // STACKTODO
-
-        vis.array.setStack(); // used for a custom stack visualisation
+        vis.array.setStack(derive_stack()); // used for a custom stack visualisation
       },
       [entire_num_array],
     );
