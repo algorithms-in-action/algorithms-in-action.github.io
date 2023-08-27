@@ -97,6 +97,23 @@ function assert(condition, message) {
   }
 }
 
+ // stackframe : [left, right,  depth]
+const STACK_FRAME_LEFT_INDEX = 0;
+const STACK_FRAME_RGHT_INDEX = 1;
+const STACK_FRAME_DPTH_INDEX = 2;
+
+export function updateStackElements(a, stack_frame, stateVal) {
+ 
+  let depth = stack_frame[STACK_FRAME_DPTH_INDEX];
+  let left  = stack_frame[STACK_FRAME_LEFT_INDEX];
+  let right = stack_frame[STACK_FRAME_RGHT_INDEX];
+
+  for (let i = left; i <= right; i += 1) {
+    a[depth][i] = stateVal;
+  }
+  return a;
+}
+
 const highlight = (vis, index, isPrimaryColor = true) => {
   if (isPrimaryColor) {
     vis.array.select(index);
@@ -148,23 +165,36 @@ export default {
     const finished_stack_frames = new Array(); // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack            = new Array(); // [ [left, right,  depth], ...]
 
+
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function derive_stack() {
 
-
-      // doesn't like 2D arrays for some reason
+      
 
       let stack = [];
-
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
-          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Not_started) // change to invis
+          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Not_started) 
         );
       };
 
+      finished_stack_frames.forEach((stack_frame) => {
+        stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.Finished)
+      })
+      
+      real_stack.forEach((stack_frame) => {
+        stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
+      })
+
+      if (real_stack.length != 0) { 
+        stack = updateStackElements(stack, real_stack[real_stack.length - 1], STACK_FRAME_COLOR.Current);
+      }
+
+      console.log(stack);
+      
       return stack;
     }
 
