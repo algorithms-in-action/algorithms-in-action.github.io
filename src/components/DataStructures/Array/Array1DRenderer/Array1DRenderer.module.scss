@@ -130,11 +130,21 @@
             height: 0.6em;
             transition-duration: 0.1s;
             margin-bottom: m#{i}n(1vh, 1em);
+            
+            --not-started-section: rgba(0, 0, 0, 0);
+            --in-progress-section: rgb(165, 165, 165);
+            --current-section: rgb(4, 155, 255);
+            --finished-section: rgba(0, 0, 0, 0);
 
+
+            // TODO : vary with color selection in settings
+            /*
             --active-stack-section: var(--array-1d-row-col-bg-selected);
             --future-stack-section: var(--array-1d-future-stack-todo-section);
-            --completed-stack-section: rgba(0, 0, 0, 0);
+            --completed-stack-section: 
 						--new-color: rgb(201, 4, 255);
+            */
+            
         }
 
         p {

@@ -172,9 +172,6 @@ export default {
 
     function derive_stack(real_stack_, finished_stack_frames_) {
 
-      assert(real_stack_ != undefined);
-      assert(finished_stack_frames_ != undefined);
-
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
