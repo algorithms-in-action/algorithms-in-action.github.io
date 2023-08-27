@@ -162,8 +162,8 @@ export default {
 
     const entire_num_array = nodes; 
     let max_depth_index = -1; 
-    const finished_stack_frames = new Array(); // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
-    const real_stack            = new Array(); // [ [left, right,  depth], ...]
+    const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
+    const real_stack            = []; // [ [left, right,  depth], ...]
 
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -171,8 +171,6 @@ export default {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function derive_stack() {
-
-      
 
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
@@ -184,17 +182,15 @@ export default {
       finished_stack_frames.forEach((stack_frame) => {
         stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.Finished)
       })
-      
+
       real_stack.forEach((stack_frame) => {
         stack = updateStackElements(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
       })
 
-      if (real_stack.length != 0) { 
+      if (real_stack.length !== 0) { 
         stack = updateStackElements(stack, real_stack[real_stack.length - 1], STACK_FRAME_COLOR.Current);
       }
-
-      console.log(stack);
-      
+     
       return stack;
     }
 
@@ -334,8 +330,6 @@ export default {
       real_stack.push([left, right, depth]);
       max_depth_index = Math.max(max_depth_index, depth);
 
-      console.log(real_stack.toString());
-
       let a = qs_num_array;
       let pivot;
       
@@ -390,7 +384,7 @@ export default {
       0,
     );
 
-    assert(real_stack.length == 0);
+    assert(real_stack.length === 0);
 
     // Fade out final node
     chunker.add(
