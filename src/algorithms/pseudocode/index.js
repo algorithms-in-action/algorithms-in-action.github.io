@@ -7,4 +7,5 @@ export { default as prim } from './prim';
 export { default as bruteForceStringSearch } from './bruteForceStringSearch';
 export { default as quickSortM3 } from './quickSortM3';
 export { default as horspoolStringSearching } from './horspoolStringSearching';
-export { default as unionFind } from './unionFind';
+export { default as unionFindUnion } from './unionFindUnion';
+export { default as unionFindFind } from './unionFindFind';

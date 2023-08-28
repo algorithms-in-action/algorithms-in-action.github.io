@@ -147,10 +147,12 @@ const algorithms = {
     explanation: Explanation.UFExp,
     extraInfo: ExtraInfo.UFInfo,
     pseudocode: {
-      union: Pseudocode.unionFind,
+      union: Pseudocode.unionFindUnion,
+      find: Pseudocode.unionFindFind,
     },
     controller: {
-      union: Controller.unionFind,
+      union: Controller.unionFindUnion,
+      find: Controller.unionFindFind,
     },
   },
 };

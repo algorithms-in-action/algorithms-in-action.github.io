@@ -74,7 +74,7 @@ export default parse(`
   Main
   Find(n) // return root of tree containing n
   \\In{
-      while parent[n] != n // while we are not at the root
+      while parent[n] != n // while we are not at the root \\B 1
       \\In{
           shorten path from n to root \\Ref Shorten_path
           \\Expl{ There are several ways of shortening the path back to the
