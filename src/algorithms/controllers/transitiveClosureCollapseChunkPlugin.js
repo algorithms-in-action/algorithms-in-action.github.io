@@ -16,6 +16,8 @@ let dispatchGetter = () => null;
 function getGlobalAlgotithm() {
   return algorithmGetter();
 }
+
+// eslint-disable-next-line
 function getGlobalDispatch() {
   return dispatchGetter();
 }
@@ -94,7 +96,7 @@ export function releaseChunkCache() {
 export function runChunkWithEnterCollapse() {
   if (isInCollapseState()) {
     const algorithm = getGlobalAlgotithm();
-    const dispatch = getGlobalDispatch();
+    // const dispatch = getGlobalDispatch();
     // const algorithm = getGlobalAlgotithm();
     // algorithm.chunker.next();
     if (!algorithm.chunker._inPrevState && !inCollapseStateFlag) {
