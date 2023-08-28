@@ -1,5 +1,5 @@
-// eslint-disable-next-line import/no-cycle
-import { GlobalActions } from '../../context/actions';
+// Uncommenting this will cause dependency errors:
+// import { GlobalActions } from '../../context/actions';
 
 /*
  * @Author: huimin huang
@@ -98,12 +98,12 @@ export function runChunkWithEnterCollapse() {
     // const algorithm = getGlobalAlgotithm();
     // algorithm.chunker.next();
     if (!algorithm.chunker._inPrevState && !inCollapseStateFlag) {
-      setTimeout(() => {
-        dispatch(GlobalActions.NEXT_LINE, {
-          triggerPauseInCollapse: true,
-          playing: algorithm.playing,
-        });
-      });
+      // setTimeout(() => {
+      //   dispatch(GlobalActions.NEXT_LINE, {
+      //     triggerPauseInCollapse: true,
+      //     playing: algorithm.playing,
+      //   });
+      // });
     }
     inCollapseStateFlag = true;
   }

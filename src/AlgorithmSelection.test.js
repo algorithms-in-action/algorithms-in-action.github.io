@@ -14,7 +14,11 @@ test('Check if the input value is correct', () => {
 
   fireEvent.change(input, { target: { value: 'quick' } });
   expect(input.value).toBe('quick');
-  expect(screen.getByText(/Quicksort/i).textContent).toBe('Quicksort');
+  expect(
+    screen
+      .getAllByText(/Quicksort/i)
+      .find((e) => e.classList.contains('algoItemContent')),
+  ).toBeInTheDocument();
 });
 
 describe('<App />', () => {
