@@ -3,8 +3,9 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
+    jest: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', 'airbnb/hooks'],
+  extends: ['plugin:react/recommended', 'airbnb', 'airbnb/hooks', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
