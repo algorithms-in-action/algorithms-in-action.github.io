@@ -13,6 +13,7 @@ function simulateMouseClick(element){
 
 function DualValueForm(props) {
     const {
+        // eslint-disable-next-line
         formClassName, name, buttonName, input1, input2, textInput, onAdd, handleSubmit, disabled
     } = props;
 
