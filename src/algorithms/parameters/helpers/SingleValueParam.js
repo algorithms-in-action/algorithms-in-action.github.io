@@ -43,7 +43,8 @@ function SingleValueParam({
       setParamVal(target);
 
       // TODO: need to be removed when these two algorithms are done
-      if (!(name === 'transitiveClosure' || name === 'prim')) {
+      // we will also need to remove union find when fixed hehe
+      if (!(name === 'transitiveClosure' || name === 'prim' || name === 'unionFind')) {
         // run animation
         dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
       }

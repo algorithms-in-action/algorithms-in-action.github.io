@@ -43,6 +43,25 @@
 .blueWordBtnDisabled:active {
   background: none;
 }
+/////////
+.greyWordBtn {
+  font: 13px 'Roboto', sans-serif !important;
+  border-radius: 1px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 6px;
+  color: grey;
+}
+
+.greyWordBtn:hover {
+  transition: 0.4s;
+  color: lightgrey;
+}
+
+/////////
+/// 
 .checkbox {
   color: var(--mid-control-font);
   font-size: 0.8em;
@@ -188,3 +207,46 @@
 .generalText {
   color: var(--mid-control-font);
 }
+
+.union {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* Union Find: */
+.unionAddInput, .unionTextInput {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.unionAddInput input:focus, .unionTextInput input:focus {
+  outline: none;
+}
+
+.unionAddInput input, .unionTextInput input {
+  width: 50px;
+  height: 25px;
+  flex-grow: 0;
+
+  margin-right: 15px;
+  border: 0.1px solid var(--mid-control-param-border);
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding:  0px 5px;
+
+  font-family:'Roboto', sans-serif;
+  font-size: 1.05em;
+  font-weight: 200;
+}
+
+
+.unionTextInput input {
+  flex-grow: 1;
+  margin-right: 10px;
+  height: 35px;
+}
+
+
+
