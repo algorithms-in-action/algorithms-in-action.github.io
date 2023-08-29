@@ -61,118 +61,7 @@ export default {
       },
       [E]
     );
-
-    const PqSort = () => {
-      let i;
-      let j;
-      let v;
-      for (i = pqStart; i < n; i += 1) {
-        v = pq[i];
-        for (j = i - 1; j >= pqStart && cost[v] < cost[pq[j]]; j -= 1) {
-          pq[j + 1] = pq[j];
-        }
-        pq[j + 1] = v;
-      }
-    };
-    /*
-    * find minimum function would loop the pq cost and point to the minimum element
-    * */
-    const findMinimum = () => {
-        let tmp = Infinity;
-      // eslint-disable-next-line no-unused-vars
-        for (let c = 1; c < pqCost.length; c++) {
-          if (pqCost[c] != null && pqCost[c] < tmp) {
-            tmp = pqCost[c];
-            miniIndex = c;
-          }
-        }
-    };
-
-    const PqUpdate = (i) => {
-      chunker.add(5);
-      let j;
-      let w;
-      let preIndex;
-      for (j = 0; j < n; j += 1) {
-        w = weight[i][j];
-        if (w > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
-          chunker.add(
-            5,
-            (vis, n1, n2) => {
-              vis.graph.visit0(n1, n2);
-            },
-            [i, j]
-          );
-        }
-        /*
-        * this function would compared the new cost with the pq cost and update the pq cost
-        * */
-        if (w > 0 && pending[j] && w < cost[j]) {
-          // show the comparison between weight(i,j) and cost[j]
-          cost[j] = w;
-          if (pqCost[j + 1] === Infinity) {
-            pqCost[j + 1] = `${cost[j].toString()}<∞`;
-          } else if (cost[j] !== null && pqCost[j + 1] != null) {
-            pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
-          }
-          chunker.add(
-              6,
-              (vis, v, u) => {
-                vis.array.set(v, 'prim');
-                if (v[2][u] != null) {
-                  vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
-                }
-              },
-              [[pqDisplay, prevNode, pqCost], miniIndex]
-          );
-          
-          // update cost[j]
-          pqCost[j + 1] = cost[j];
-          chunker.add(
-              7,
-              (vis, v, u) => {
-                vis.array.set(v, 'prim');
-                if (v[2][u] != null) {
-                  vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
-                }
-              },
-              [[pqDisplay, prevNode, pqCost], miniIndex]
-          );
-
-          // show the process of updating PQ
-          PqSort();
-          prev[j] = i;
-          preIndex = miniIndex;
-          findMinimum();
-          chunker.add(
-            8,
-            // eslint-disable-next-line no-shadow
-            (vis, u, v, w) => {
-              vis.array.deselect(2, u);
-              if (w[v] !== null) {
-                vis.array.select(2, v);
-                vis.array.assignVariable('Min', 2, v);
-              }
-            },
-            [preIndex, miniIndex, pqCost]
-          ); 
-
-          // update prev[j]
-          prevNode[j + 1] = i + 1;
-          chunker.add(
-            9,
-            (vis, u, v) => {
-              vis.array.set(u, 'prim');
-              vis.array.select(2, v);
-              vis.array.assignVariable('Min', 2, v);
-            },
-            [[pqDisplay, prevNode, pqCost], miniIndex]
-          );
-        }
-      }
-    };
+  
 
     let i;
     weight = [...E];
@@ -182,7 +71,6 @@ export default {
       prev[i] = 0;
       pending[i] = 1;
     }
-    cost[0] = 0;
     pqCost.push('Cost[i]');  // initialize the pq cost
     pqDisplay.push('i'); // initialize the pq display
     prevNode.push('Parent[i]'); // initialize the prev list
@@ -190,7 +78,7 @@ export default {
       pq[i] = i;
       pqDisplay[i + 1] = i + 1;
       pqCost.push(Infinity);
-      prevNode.push('-');
+      prevNode.push(0);
     }
     pqStart = 0;
     pqCost[1] = cost[0]; // add the minimum cost to pq cost
@@ -205,73 +93,7 @@ export default {
         },
         [[pqDisplay, prevNode, pqCost], miniIndex]
     );
-    chunker.add(
-        3,
-        (vis, v, w) => {
-          vis.array.set(v, 'prim');
-          vis.array.select(2, w);
-          vis.array.assignVariable('Min', 2, w);
-        },
-        [[pqDisplay, prevNode, pqCost], miniIndex]
-    );
-
-    while (pqStart < n) {
-      i = pq[pqStart];
-      prevDisplay[pqStart] = i + 1;
-      /* pop the miniIndex one and add it to spinning tree to extend more connections */
-      pending[i] = 0;
-      pqStart += 1;
-      /* change the miniIndex to null */
-      pqCost[miniIndex] = null;
-      /* get the next minimum value index and select it */
-      prevIndex = miniIndex;
-      findMinimum();
-      chunker.add(
-          4,
-          (vis, v, w, u, n1, n2, index) => {
-            vis.graph.visit0(n1, n2);
-            vis.graph.select(n1, n2);
-            vis.array.deselect(index);
-            vis.array.set(v, 'prim');
-            vis.array.deselect(2, u);
-            if (u !== w && v[2][w] !== null) {
-              vis.array.select(2, w);
-              vis.array.assignVariable('Min', 2, w);
-            }
-          },
-          [[pqDisplay, prevNode, pqCost], miniIndex, prevIndex, i, prev[i], miniIndex]
-      );
-
-      PqUpdate(i);
-      findMinimum();// once update the cost, find the next minimum cost in pq cost and select it
-
-      const newEdges = [];
-      for (let j = 0; j < n; j += 1) {
-        if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
-          newEdges.push(j);
-        }
-      }
-      if (pq[pqStart]) {
-        chunker.add(
-          5,
-          (vis, n1, n2) => {
-            vis.graph.visit0(n1, n2);
-          },
-          [prev[pq[pqStart]], pq[pqStart]]
-        );
-      }
-      chunker.add(
-        5,
-        (vis, n1, n2) => {
-          vis.graph.allLeave(n1, n2);
-          vis.graph.visit0(n1, n1);
-        },
-        [i, newEdges]
-      );
-      chunker.add(3);
-      closed.push(i);
-    }
-    // for test
-    return prev;
+    
+    
   },
 };

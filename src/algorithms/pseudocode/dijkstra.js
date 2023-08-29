@@ -108,12 +108,12 @@ export default parse(`
         
 \\Code{
 Main
-Shortest(G, s) //Given a graph G find a shortest path from start node s
+Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
         // to an end node.  It is assumed the end node(s) are defined
         // separately; with no end nodes, shortest paths to all connected
         // nodes are found. Nodes are numbered 1..nmax. Returns the Parent
         // array, which gives the previous node in the path from s to the
-        // node i (if one has been found; Parent[i] = 0 otherwise).
+        // node i (if one has been found; Parent[i] = 0 otherwise). 
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
                 while Nodes not empty
@@ -131,7 +131,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s
                             component that should be indicated.
                         \\Expl} 
                     \\In} 
-                    for each node m neighbouring n // G has edge from n to m
+                    for each node m neighbouring n // G has edge from n to m 
                     \\In{
                         update Nodes, Parent etc with n & m \\Ref UpdateNodes
                     \\In}
@@ -146,8 +146,8 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s
 
 \\Code{
         Init
-            initialise each element of array Parent to zero
-            initialise each element of array Cost to infinity
+            initialise each element of array Parent to zero \\B 2
+            initialise each element of array Cost to infinity \\B 3
             Cost[s] <- 0
             Nodes <- PQ containing all nodes // only s has finite cost
             \\Note{ Nodes in the PQ with finite cost are in the frontier; others
