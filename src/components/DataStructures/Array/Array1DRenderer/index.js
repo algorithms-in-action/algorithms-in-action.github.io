@@ -240,12 +240,21 @@ function stackRenderer(stack, nodeCount, stackDepth) {
               backgroundColor: stackFrameColour(val),
             }}
           >
-            {(() => {
+            {/* 
+                Stack Number Rendering:
+                - This JSX code renders corresponding numbers under the stack visualisation in 1D arrays, e.g., QuickSort.
+                - The feature is currently disabled. To re-enable:
+                  1. Uncomment the following JSX.
+                  2. Uncomment the `displayStackNumber` function in this file.
+                */}
+
+            {/* {(() => {
               if (displayStackNumber(val, index, stack[i])) {
                 return <p style={{ fontSize: '13px' }}>{index}</p>;
               }
               return '';
-            })()}
+            })()} */}
+
           </div>
         ))}
       </div>,
@@ -264,26 +273,28 @@ function stackRenderer(stack, nodeCount, stackDepth) {
 }
 
 /**
- * NOTE: this should certainly be rewritten. Time constraints mean that this is a
- * fairly quick and dirty solution, however visually it shows the stack that the clients wanted.
- * For the sake of future development, certainly think about changing this.
+ * Stack Number Display Logic:
+ * - This function determines if a number should be displayed in the stack visualization.
+ * - The function is currently commented out as the feature is disabled. To re-enable:
+ *   1. Uncomment this function.
+ *   2. Uncomment the corresponding JSX where this function is called.
+ *
  * @param {*} val
  * @param {*} index
  * @param {*} arr
  * @returns
  */
-function displayStackNumber(val, index, arr) {
-  if (val === 0) {
-    return false;
-  }
-  if (val === 1 && (arr[index - 1] !== 1 || arr[index + 1] !== 1)) {
-    return true;
-  }
-  if (val === -1 && (arr[index - 1] !== -1 || arr[index + 1] !== -1)) {
-    return true;
-  }
-
-  return false;
-}
+// function displayStackNumber(val, index, arr) {
+//   if (val === 0) {
+//     return false;
+//   }
+//   if (val === 1 && (arr[index - 1] !== 1 || arr[index + 1] !== 1)) {
+//     return true;
+//   }
+//   if (val === -1 && (arr[index - 1] !== -1 || arr[index + 1] !== -1)) {
+//     return true;
+//   }
+//   return false;
+// }
 
 export default Array1DRenderer;
