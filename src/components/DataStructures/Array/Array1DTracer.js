@@ -34,7 +34,7 @@ class Array1DTracer extends Array2DTracer {
 
   // used to highlight sorted elements
   sorted(x) {
-    super.sorted(0, x);
+    //super.sorted(0, x);
   }
 
   select(sx, ex = sx) {
