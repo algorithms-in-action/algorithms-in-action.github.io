@@ -53,10 +53,9 @@ function DualValueParam({
       // need to parse input here xoxo
       const target = textInput;
 
-      if (!(name === 'unionFind')) {
-        // run animation
-        dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
-      }
+      // run animation
+      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
+
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
