@@ -46,7 +46,7 @@ function DualValueForm(props) {
                     </div>
 
                     <div className="unionTextInput">
-                        <input type="text" value={textInput.value} onChange={textInput.onChange} />
+                        <input type="text" name="unionTextInput" value={textInput.value} onChange={textInput.onChange} />
                         <div className="btnGrp">
                             <ControlButton
                             className={disabled ? 'blueWordBtnDisabled' : 'blueWordBtn'}
