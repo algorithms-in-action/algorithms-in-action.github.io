@@ -43,15 +43,13 @@ function DualValueParam({
 
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    const textInput = paramVal;
+    const inputValue = e.target.elements.unionTextInput.value;
 
     // will need parse/check logic here:
     const validateInput = true;
 
     if (validateInput) {
-      // need to fix :)
-      // need to parse input here xoxo
-      const target = textInput;
+      const target = inputValue.split(',').map(pair => pair.split('-').map(Number));
 
       // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
