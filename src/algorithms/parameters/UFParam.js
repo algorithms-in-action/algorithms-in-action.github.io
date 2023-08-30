@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext} from 'react';
 
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
-
+import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -16,13 +16,15 @@ import Radio from '@material-ui/core/Radio';
 
 import '../../styles/Param.scss';
 
+const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = "5-7,3-4,9-8,3-8"
 const DEFAULT_FIND = "2"
 
+const ALGORITHM_NAME = 'Union Find';
 const FIND = 'Find'
 const UNION = 'Union'
-const FIND_EXAMPLE = 'Please follow the example provided: 0,1';
-const UNION_EXAMPLE = 'Please follow the example provided: 0,1';
+const FIND_EXAMPLE = 'Please follow the example provided: 2. The single digit should be between 1 and 10.';
+const UNION_EXAMPLE = "Please follow the example provided: 5-7,3-4,9-8,3-8. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
 
 
 // path compression:
@@ -66,12 +68,21 @@ function UFParam() {
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    const target = parseInt(inputValue, 10);
 
-    const visualiser = algorithm.chunker.visualisers;
-    dispatch(GlobalActions.RUN_ALGORITHM, 
-      { name: 'unionFind', mode: 'find', visualiser, target}
-      );
+    if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
+
+      const target = parseInt(inputValue, 10);
+
+      const visualiser = algorithm.chunker.visualisers;
+      dispatch(GlobalActions.RUN_ALGORITHM, 
+        { name: 'unionFind', mode: 'find', visualiser, target}
+        );
+      setMessage(successParamMsg(ALGORITHM_NAME));
+
+    }
+    else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
+    }
 
   }
 
