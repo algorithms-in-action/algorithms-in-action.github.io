@@ -60,11 +60,22 @@ function PrimsMatrixParam({
   const [originalData, setOriginalData] = useState(data);
   const [buttonMessage, setButtonMessage] = useState('Start');
 
+  // Second Table
+  const [data2, setData2] = useState(() => makeData(size, min, max, symmetric));
+  const [originalData2, setOriginalData2] = useState(data2);
+
   // reset the Table when the size changes
   useEffect(() => {
     const newData = makeData(size, min, max, symmetric);
     setData(newData);
     setOriginalData(newData);
+  }, [size, min, max, symmetric]);
+
+  // second table
+  useEffect(() => {
+    const newData2 = makeData(size, min, max, symmetric);
+    setData2(newData2);
+    setOriginalData2(newData2);
   }, [size, min, max, symmetric]);
 
   useEffect(() => {
@@ -76,6 +87,7 @@ function PrimsMatrixParam({
   const resetData = () => {
     setMessage(null);
     setData(originalData);
+    setData2(originalData2);
   };
 
   const updateTableSize = (newSize) => {
@@ -88,6 +100,18 @@ function PrimsMatrixParam({
   // original data
   const updateData = (rowIndex, columnId, value) => {
     setData((old) => old.map((row, index) => {
+      if (index === rowIndex) {
+        return {
+          ...old[rowIndex],
+          [columnId]: value,
+        };
+      }
+      return row;
+    }));
+  };
+
+  const updateData2 = (rowIndex, columnId, value) => {
+    setData2((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -167,8 +191,8 @@ function PrimsMatrixParam({
           {buttonMessage}
         </button>
       </div>
-
       <Table columns={columns} data={data} updateData={updateData} algo={name} />
+      <Table columns={columns} data={data2} updateData={updateData2} algo={name}/>
     </div>
   );
 }
