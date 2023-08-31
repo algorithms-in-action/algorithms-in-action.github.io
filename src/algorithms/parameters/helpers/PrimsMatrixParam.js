@@ -53,22 +53,24 @@ function PrimsMatrixParam({
   const [size, setSize] = useState(defaultSize);
 
   // (size) affects number of columns.
-  const columns = useMemo(() => makeColumnArray(size), [size]);
+  const columns1 = useMemo(() => makeColumnArray(2), [size]);
+  const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data, setData] = useState(() => makeData(size, min, max, symmetric));
-  const [originalData, setOriginalData] = useState(data);
-  const [buttonMessage, setButtonMessage] = useState('Start');
+  const [data1, setData1] = useState(() => makeData(size, min, max, symmetric));
+  const [originalData1, setOriginalData1] = useState(data1);
 
   // Second Table
   const [data2, setData2] = useState(() => makeData(size, min, max, symmetric));
   const [originalData2, setOriginalData2] = useState(data2);
 
+  const [buttonMessage, setButtonMessage] = useState('Start');
+
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size, min, max, symmetric);
-    setData(newData);
-    setOriginalData(newData);
+    const newData1 = makeData(size, min, max, symmetric);
+    setData1(newData1);
+    setOriginalData1(newData1);
   }, [size, min, max, symmetric]);
 
   // second table
@@ -86,7 +88,7 @@ function PrimsMatrixParam({
   // Reset the matrix to the inital set
   const resetData = () => {
     setMessage(null);
-    setData(originalData);
+    setData1(originalData1);
     setData2(originalData2);
   };
 
@@ -98,8 +100,8 @@ function PrimsMatrixParam({
   // When cell renderer calls updateData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
-  const updateData = (rowIndex, columnId, value) => {
-    setData((old) => old.map((row, index) => {
+  const updateData1 = (rowIndex, columnId, value) => {
+    setData1((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -125,7 +127,7 @@ function PrimsMatrixParam({
   // Get and parse the matrix
   const getMatrix = () => {
     const matrix = [];
-    data.forEach((row) => {
+    data1.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         if (singleNumberValidCheck(value)) {
@@ -191,8 +193,8 @@ function PrimsMatrixParam({
           {buttonMessage}
         </button>
       </div>
-      <Table columns={columns} data={data} updateData={updateData} algo={name} />
-      <Table columns={columns} data={data2} updateData={updateData2} algo={name}/>
+      <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
+      <Table columns={columns2} data={data2} updateData={updateData2} algo={name}/>
     </div>
   );
 }
