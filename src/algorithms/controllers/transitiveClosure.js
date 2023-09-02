@@ -235,5 +235,7 @@ export default {
         releaseChunkCache();
       }
     }, []);
+
+    return nodes.length ? nodes[nodes.length-1] : nodes;
   },
 };
