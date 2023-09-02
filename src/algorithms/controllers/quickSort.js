@@ -1,9 +1,8 @@
-
 import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
-import { isIJVarCollapsed } from './quickSortCollapseChunkPlugin';
+import { isIJVarVisible } from './quickSortCollapseChunkPlugin';
 
 // visualisation variable strings
 const VIS_VARIABLE_STRINGS = {
@@ -12,13 +11,12 @@ const VIS_VARIABLE_STRINGS = {
   pivot: 'pivot',
 };
 
-
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
-	Not_started: 0,
+  Not_started: 0,
   In_progress: 1,
   Current: 2,
-	Finished: 3, 
+  Finished: 3,
 };
 
 // bookmarks (id) into the REAL file for quicksort
@@ -47,25 +45,24 @@ const QS_BOOKMARKS = {
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-// Define helper functions 
+// Define helper functions
 // without javascript Closure arguements (IE 'global variables')
 // ----------------------------------------------------------------------------------------------------------------------------
 
 function assert(condition, message) {
   if (!condition) {
-    throw new Error(message || "Assertion failed");
+    throw new Error(message || 'Assertion failed');
   }
 }
 
- // stackframe : [left, right,  depth]
+// stackframe : [left, right,  depth]
 const STACK_FRAME_LEFT_INDEX = 0;
 const STACK_FRAME_RGHT_INDEX = 1;
 const STACK_FRAME_DPTH_INDEX = 2;
 
 export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
- 
   let depth = stack_frame[STACK_FRAME_DPTH_INDEX];
-  let left  = stack_frame[STACK_FRAME_LEFT_INDEX];
+  let left = stack_frame[STACK_FRAME_LEFT_INDEX];
   let right = stack_frame[STACK_FRAME_RGHT_INDEX];
 
   for (let i = left; i <= right; i += 1) {
@@ -119,43 +116,55 @@ export default {
     // Define 'global' variables
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    const entire_num_array = nodes; 
-    let max_depth_index = -1; 
+    const entire_num_array = nodes;
+    let max_depth_index = -1;
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
-    const real_stack            = []; // [ [left, right,  depth], ...]
-
-
+    const real_stack = []; // [ [left, right,  depth], ...]
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-
     function derive_stack(real_stack_, finished_stack_frames_) {
-
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
-          new Array(entire_num_array.length).fill(STACK_FRAME_COLOR.Not_started) 
+          new Array(entire_num_array.length).fill(
+            STACK_FRAME_COLOR.Not_started,
+          ),
         );
-      };
+      }
 
       finished_stack_frames_.forEach((stack_frame) => {
-        stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.Finished)
-      })
+        stack = update_vis_with_stack_frame(
+          stack,
+          stack_frame,
+          STACK_FRAME_COLOR.Finished,
+        );
+      });
 
       real_stack_.forEach((stack_frame) => {
-        stack = update_vis_with_stack_frame(stack, stack_frame, STACK_FRAME_COLOR.In_progress)
-      })
+        stack = update_vis_with_stack_frame(
+          stack,
+          stack_frame,
+          STACK_FRAME_COLOR.In_progress,
+        );
+      });
 
-      if (real_stack_.length !== 0) { 
-        stack = update_vis_with_stack_frame(stack, real_stack_[real_stack_.length - 1], STACK_FRAME_COLOR.Current);
+      if (real_stack_.length !== 0) {
+        stack = update_vis_with_stack_frame(
+          stack,
+          real_stack_[real_stack_.length - 1],
+          STACK_FRAME_COLOR.Current,
+        );
       }
-     
+
       return stack;
     }
 
-    const refresh_stack = (vis, real_stack_, finished_stack_frames_) => { vis.array.setStack(derive_stack(real_stack_, finished_stack_frames_)); }
+    const refresh_stack = (vis, real_stack_, finished_stack_frames_) => {
+      vis.array.setStack(derive_stack(real_stack_, finished_stack_frames_));
+    };
 
     ///
 
@@ -205,10 +214,10 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_i_left_minus_1,
         (vis, i1) => {
-          if (i1 >= 0 && isIJVarCollapsed()) {
+          if (i1 >= 0 && isIJVarVisible()) {
             highlight(vis, i1, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
-          } else if (i1 === -1 && isIJVarCollapsed()) {
+          } else if (i1 === -1 && isIJVarVisible()) {
             highlight(vis, 0, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
           }
@@ -219,7 +228,7 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_j_right,
         (vis, j1) => {
-          if (j1 >= 0 && isIJVarCollapsed()) {
+          if (j1 >= 0 && isIJVarVisible()) {
             highlight(vis, j1, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
           }
@@ -234,9 +243,11 @@ export default {
           chunker.add(
             QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
             (vis, i1) => {
-              if (isIJVarCollapsed()) {
+              if (isIJVarVisible()) {
                 if (i1 > 0) {
                   unhighlight(vis, i1 - 1, false);
+                } else if (i1 == 0) {
+                  unhighlight(vis, i1, false);
                 }
                 highlight(vis, i1, false);
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
@@ -252,7 +263,7 @@ export default {
             QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
             (vis, j1) => {
               unhighlight(vis, j1 + 1, false);
-              if (isIJVarCollapsed()) {
+              if (isIJVarVisible()) {
                 if (j1 >= 0) {
                   highlight(vis, j1, false);
                   vis.array.assignVariable(
@@ -305,23 +316,30 @@ export default {
     }
 
     function QuickSort(qs_num_array, left, right, _, depth) {
-
       real_stack.push([left, right, depth]);
       max_depth_index = Math.max(max_depth_index, depth);
 
       let a = qs_num_array;
       let pivot;
 
-      
-      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [real_stack, finished_stack_frames]);
+      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
+        real_stack,
+        finished_stack_frames,
+      ]);
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
 
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [real_stack, finished_stack_frames]);
+        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
+          real_stack,
+          finished_stack_frames,
+        ]);
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [real_stack, finished_stack_frames]);
+        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
+          real_stack,
+          finished_stack_frames,
+        ]);
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
@@ -335,8 +353,7 @@ export default {
         );
       }
 
-
-      finished_stack_frames.push( real_stack.pop() );
+      finished_stack_frames.push(real_stack.pop());
 
       return a; // Facilitates testing
     }
@@ -378,7 +395,6 @@ export default {
       },
       [entire_num_array.length - 1],
     );
-
 
     return result;
   },

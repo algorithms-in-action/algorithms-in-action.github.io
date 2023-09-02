@@ -20,7 +20,7 @@ export function initGlobalAlgotithmGetterQS(getter) {
   algorithmGetter = getter;
 }
 
-export function isIJVarCollapsed() {
+export function isIJVarVisible() {
   const algorithm = getGlobalAlgotithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
