@@ -214,12 +214,10 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_i_left_minus_1,
         (vis, i1) => {
-          if (i1 >= 0 && isIJVarVisible()) {
+          if (i1 >= 0) {
             highlight(vis, i1, false);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
-          } else if (i1 === -1 && isIJVarVisible()) {
-            highlight(vis, 0, false);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
+            isIJVarVisible() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
           }
         },
         [i],
@@ -228,9 +226,10 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_j_right,
         (vis, j1) => {
-          if (j1 >= 0 && isIJVarVisible()) {
+          if (j1 >= 0) {
             highlight(vis, j1, false);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
+            isIJVarVisible() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
           }
         },
         [j],
@@ -243,15 +242,15 @@ export default {
           chunker.add(
             QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
             (vis, i1) => {
-              if (isIJVarVisible()) {
-                if (i1 > 0) {
-                  unhighlight(vis, i1 - 1, false);
-                } else if (i1 == 0) {
-                  unhighlight(vis, i1, false);
-                }
-                highlight(vis, i1, false);
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+              if (i1 > 0) {
+                unhighlight(vis, i1 - 1, false);
               }
+              // else if (i1 == 0) {
+              //   unhighlight(vis, i1, false);
+              // }
+              highlight(vis, i1, false);
+              isIJVarVisible() &&
+                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
             },
             [i],
           );
@@ -263,16 +262,15 @@ export default {
             QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
             (vis, j1) => {
               unhighlight(vis, j1 + 1, false);
-              if (isIJVarVisible()) {
-                if (j1 >= 0) {
-                  highlight(vis, j1, false);
+              if (j1 >= 0) {
+                highlight(vis, j1, false);
+                isIJVarVisible() &&
                   vis.array.assignVariable(
                     VIS_VARIABLE_STRINGS.j_right_index,
                     j1,
                   );
-                } else {
-                  vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
-                }
+              } else {
+                vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
               }
             },
             [j],
@@ -298,7 +296,8 @@ export default {
       chunker.add(
         QS_BOOKMARKS.swap_pivot_into_correct_position,
         (vis, i1, j1, r) => {
-          vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
+          isIJVarVisible() &&
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
           unhighlight(vis, i1);
           if (j1 >= 0) {
             if (j1 === i1) {
