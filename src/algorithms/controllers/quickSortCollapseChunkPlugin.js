@@ -1,23 +1,18 @@
 // eslint-disable-next-line import/no-cycle
-import { GlobalActions } from '../../context/actions';
 
 /*
- * @Author: huimin huang
- * @Date: 2021-10-05
- * @FilePath: /src/algorithms/controllers/transitiveClosureCollapseChunkPlugin.js
- * @Description: logic for transitiveClosure reachability
+ * @Author: Roden Wild
+ * @Date: 2023-09-02
+ * @FilePath: /src/algorithms/controllers/quickSortCollapseChunkPlugin.js
+ * @Description: logic for quickSort reachability
  */
 
 const QS_NAME = 'quickSort';
 
 let algorithmGetter = () => null;
-let dispatchGetter = () => null;
 
 function getGlobalAlgotithm() {
   return algorithmGetter();
-}
-function getGlobalDispatch() {
-  return dispatchGetter();
 }
 
 window.getGlobalAlgotithm = getGlobalAlgotithm;
@@ -26,15 +21,9 @@ export function initGlobalAlgotithmGetterQS(getter, dispatchGetterFn) {
   dispatchGetter = dispatchGetterFn;
 }
 
-function isInQuickSort(algorithm) {
-  // eslint-disable-next-line no-param-reassign
-  if (!algorithm) algorithm = getGlobalAlgotithm();
-  return algorithm.id.name === QS_NAME;
-}
-
 export function isIJVarCollapsed() {
   const algorithm = getGlobalAlgotithm();
-  if (!isInQuickSort(algorithm)) return false;
+  if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
 
