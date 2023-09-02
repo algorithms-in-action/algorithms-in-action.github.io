@@ -41,7 +41,9 @@ export function isCurrentLineInCollapseState() {
   const { bookmark, pseudocode, collapse } = algorithm;
   if (collapse.transitiveClosure.tc.Reachable) return false;
   const { Reachable } = pseudocode;
-  return typeof Reachable.find((item) => item.bookmark === bookmark) !== 'undefined';
+  return (
+    typeof Reachable.find((item) => item.bookmark === bookmark) !== 'undefined'
+  );
 }
 // window.isCurrentLineInCollapseState = isCurrentLineInCollapseState;
 
@@ -88,7 +90,9 @@ export function onCollapseStateChange() {
 }
 
 export function releaseChunkCache() {
-  chunkCache.forEach((fn) => { fn(); });
+  chunkCache.forEach((fn) => {
+    fn();
+  });
   chunkCache = [];
   inCollapseStateFlag = false;
 }

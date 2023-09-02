@@ -36,10 +36,7 @@ export const GlobalProvider = ({ children }) => {
     () => globalState.algorithm,
     () => dispatch,
   );
-  initGlobalAlgotithmGetterQS(
-    () => globalState.algorithm,
-    () => dispatch,
-  );
+  initGlobalAlgotithmGetterQS(() => globalState.algorithm);
 
   return (
     <GlobalContext.Provider value={globalState}>

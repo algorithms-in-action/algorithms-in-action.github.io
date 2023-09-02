@@ -16,9 +16,8 @@ function getGlobalAlgotithm() {
 }
 
 window.getGlobalAlgotithm = getGlobalAlgotithm;
-export function initGlobalAlgotithmGetterQS(getter, dispatchGetterFn) {
+export function initGlobalAlgotithmGetterQS(getter) {
   algorithmGetter = getter;
-  dispatchGetter = dispatchGetterFn;
 }
 
 export function isIJVarCollapsed() {
