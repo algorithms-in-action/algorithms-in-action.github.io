@@ -9,6 +9,8 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
+import { isIJVarCollapsed } from './quickSortCollapseChunkPlugin';
+
 // visualisation variable strings
 const VIS_VARIABLE_STRINGS = {
   i_left_index: 'i',
@@ -154,10 +156,10 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_i_left_minus_1,
         (vis, i1) => {
-          if (i1 >= 0) {
+          if (i1 >= 0 && isIJVarCollapsed()) {
             highlight(vis, i1, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
-          } else if (i1 === -1) {
+          } else if (i1 === -1 && isIJVarCollapsed()) {
             highlight(vis, 0, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
           }
@@ -168,7 +170,7 @@ export default {
       chunker.add(
         QS_BOOKMARKS.set_j_right,
         (vis, j1) => {
-          if (j1 >= 0) {
+          if (j1 >= 0 && isIJVarCollapsed()) {
             highlight(vis, j1, false);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
           }
@@ -183,11 +185,13 @@ export default {
           chunker.add(
             QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
             (vis, i1) => {
-              if (i1 > 0) {
-                unhighlight(vis, i1 - 1, false);
+              if (isIJVarCollapsed()) {
+                if (i1 > 0) {
+                  unhighlight(vis, i1 - 1, false);
+                }
+                highlight(vis, i1, false);
+                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
               }
-              highlight(vis, i1, false);
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
             },
             [i],
           );
@@ -199,14 +203,16 @@ export default {
             QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
             (vis, j1) => {
               unhighlight(vis, j1 + 1, false);
-              if (j1 >= 0) {
-                highlight(vis, j1, false);
-                vis.array.assignVariable(
-                  VIS_VARIABLE_STRINGS.j_right_index,
-                  j1,
-                );
-              } else {
-                vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
+              if (isIJVarCollapsed()) {
+                if (j1 >= 0) {
+                  highlight(vis, j1, false);
+                  vis.array.assignVariable(
+                    VIS_VARIABLE_STRINGS.j_right_index,
+                    j1,
+                  );
+                } else {
+                  vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
+                }
               }
             },
             [j],
