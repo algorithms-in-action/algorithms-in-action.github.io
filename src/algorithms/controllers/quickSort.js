@@ -218,6 +218,10 @@ export default {
             highlight(vis, i1, false);
             isIJVarVisible() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+          } else if (i1 === -1) {
+            isIJVarVisible() && highlight(vis, 0, false);
+            isIJVarVisible() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
           }
         },
         [i],
@@ -244,11 +248,11 @@ export default {
             (vis, i1) => {
               if (i1 > 0) {
                 unhighlight(vis, i1 - 1, false);
+              } else if (i1 === -1) {
+                unhighlight(vis, 0, false);
               }
-              // else if (i1 == 0) {
-              //   unhighlight(vis, i1, false);
-              // }
-              highlight(vis, i1, false);
+              if (i1 > 0) highlight(vis, i1, false);
+              else if (!isIJVarVisible() && i1 === 0) highlight(vis, i1, false);
               isIJVarVisible() &&
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
             },
