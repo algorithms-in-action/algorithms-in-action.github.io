@@ -25,6 +25,13 @@ export function isIJVarVisible() {
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
-
   return collapse.quickSort.sort.Partition;
+}
+
+export function isIJVarExpanded() {
+  const algorithm = getGlobalAlgotithm();
+  if (algorithm.id.name !== QS_NAME) return false;
+  // , playing, chunker
+  const { bookmark, pseudocode, collapse } = algorithm;
+  return collapse.quickSort.sort.init_iAndj;
 }
