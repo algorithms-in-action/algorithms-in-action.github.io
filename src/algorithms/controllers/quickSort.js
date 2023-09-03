@@ -45,7 +45,8 @@ const QS_BOOKMARKS = {
   // 15
   // 16
   // 17
-  done_qs: 19,
+  done_qs_left: 18,
+  done_qs_right: 19,
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -330,31 +331,46 @@ export default {
 
       let a = qs_num_array;
       let pivot;
-
-      chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
-        real_stack,
-        finished_stack_frames,
-      ]);
+      if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
+        chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
+          real_stack,
+          finished_stack_frames,
+        ]);
+      }
 
       if (left < right) {
         [pivot, a] = partition(a, left, right);
-
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
+          
+        if (depth < 1 || isQuicksortFirstHalfExpanded()) {
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
           real_stack,
           finished_stack_frames,
-        ]);
+          ]);
+        } else {
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, () => {}, []);
+        }
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
+        if (depth < 1 || isQuicksortSecondHalfExpanded()) {
+          chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
           real_stack,
           finished_stack_frames,
-        ]);
+          ]);
+        } else {
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, () => {}, []);
+        }
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
       else if (left < a.length) {
+        let size_one_bookmark = QS_BOOKMARKS.if_left_less_right;
+        if (!isQuicksortFirstHalfExpanded() && !isQuicksortSecondHalfExpanded()) {
+          size_one_bookmark = QS_BOOKMARKS.quicksort_left_to_i_minus_1;
+        } else if (!isQuicksortSecondHalfExpanded()) {
+          size_one_bookmark = QS_BOOKMARKS.quicksort_i_plus_1_to_right;
+        }
         chunker.add(
-          QS_BOOKMARKS.if_left_less_right,
+          size_one_bookmark,
           (vis, l) => {
             vis.array.sorted(l);
           },
@@ -392,7 +408,7 @@ export default {
 
     // Fade out final node
     chunker.add(
-      QS_BOOKMARKS.done_qs,
+      QS_BOOKMARKS.done_qs_right,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state

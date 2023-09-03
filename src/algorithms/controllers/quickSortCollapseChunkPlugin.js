@@ -11,17 +11,17 @@ const QS_NAME = 'quickSort';
 
 let algorithmGetter = () => null;
 
-function getGlobalAlgotithm() {
+function getGlobalAlgorithm() {
   return algorithmGetter();
 }
 
-window.getGlobalAlgotithm = getGlobalAlgotithm;
-export function initGlobalAlgotithmGetterQS(getter) {
+window.getGlobalAlgorithm = getGlobalAlgorithm;
+export function initGlobalAlgorithmGetterQS(getter) {
   algorithmGetter = getter;
 }
 
 export function isPartitionExpanded() {
-  const algorithm = getGlobalAlgotithm();
+  const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
@@ -29,7 +29,7 @@ export function isPartitionExpanded() {
 }
 
 export function isIJVarExpanded() {
-  const algorithm = getGlobalAlgotithm();
+  const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
@@ -37,7 +37,7 @@ export function isIJVarExpanded() {
 }
 
 export function isQuicksortFirstHalfExpanded() {
-  const algorithm = getGlobalAlgotithm();
+  const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
@@ -45,7 +45,7 @@ export function isQuicksortFirstHalfExpanded() {
 }
 
 export function isQuicksortSecondHalfExpanded() {
-  const algorithm = getGlobalAlgotithm();
+  const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
   const { bookmark, pseudocode, collapse } = algorithm;
