@@ -7,6 +7,9 @@ name: CI
 on:
   push:
     branches: [ dev ]
+    paths-ignore:
+      - 'doc/**'      # Ignore all files and subdirectories under "doc/"
+      - 'docs/**'     # Ignore all files and subdirectories under "docs/"
   #pull_request:
   #  branches: [ dev ]
 
