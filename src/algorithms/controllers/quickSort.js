@@ -2,7 +2,12 @@ import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
-import { isIJVarVisible } from './quickSortCollapseChunkPlugin';
+import {
+  isPartitionExpanded,
+  isIJVarExpanded,
+  isQuicksortFirstHalfExpanded,
+  isQuicksortSecondHalfExpanded,
+} from './quickSortCollapseChunkPlugin';
 
 // visualisation variable strings
 const VIS_VARIABLE_STRINGS = {
@@ -216,11 +221,11 @@ export default {
         (vis, i1) => {
           if (i1 >= 0) {
             highlight(vis, i1, false);
-            isIJVarVisible() &&
+            isPartitionExpanded() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
           } else if (i1 === -1) {
-            isIJVarVisible() && highlight(vis, 0, false);
-            isIJVarVisible() &&
+            isPartitionExpanded() && highlight(vis, 0, false);
+            isPartitionExpanded() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
           }
         },
@@ -232,7 +237,7 @@ export default {
         (vis, j1) => {
           if (j1 >= 0) {
             highlight(vis, j1, false);
-            isIJVarVisible() &&
+            isPartitionExpanded() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
           }
         },
@@ -252,8 +257,9 @@ export default {
                 unhighlight(vis, 0, false);
               }
               if (i1 > 0) highlight(vis, i1, false);
-              else if (!isIJVarVisible() && i1 === 0) highlight(vis, i1, false);
-              isIJVarVisible() &&
+              else if (!isPartitionExpanded() && i1 === 0)
+                highlight(vis, i1, false);
+              isPartitionExpanded() &&
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
             },
             [i],
@@ -268,7 +274,7 @@ export default {
               unhighlight(vis, j1 + 1, false);
               if (j1 >= 0) {
                 highlight(vis, j1, false);
-                isIJVarVisible() &&
+                isPartitionExpanded() &&
                   vis.array.assignVariable(
                     VIS_VARIABLE_STRINGS.j_right_index,
                     j1,
@@ -300,7 +306,7 @@ export default {
       chunker.add(
         QS_BOOKMARKS.swap_pivot_into_correct_position,
         (vis, i1, j1, r) => {
-          isIJVarVisible() &&
+          isPartitionExpanded() &&
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
           unhighlight(vis, i1);
           if (j1 >= 0) {
