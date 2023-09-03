@@ -1,11 +1,9 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import {
-  Link,
-} from '@material-ui/core';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import Link from '@mui/material/Link';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import '../../styles/About.scss';
 
 /**

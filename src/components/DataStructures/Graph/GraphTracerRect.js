@@ -11,6 +11,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
+/* eslint-disable import/no-unresolved */
 
 // eslint-disable-next-line max-classes-per-file
 import Tracer from '../common/Tracer';
