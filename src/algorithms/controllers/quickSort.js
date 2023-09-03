@@ -400,7 +400,7 @@ export default {
           vis.array.fadeIn(i);
         }
         vis.array.clearVariables();
-        vis.array.setStack([]);
+        vis.array.setStack(derive_stack(real_stack, finished_stack_frames));
       },
       [entire_num_array.length - 1],
     );
