@@ -4,7 +4,7 @@ import PrimsMatrixParam from './helpers/PrimsMatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const PRIMS = 'Prim\'s';
+const PRIMS = 'Old Prim\'s';
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
 function PrimsParam() {
@@ -14,7 +14,7 @@ function PrimsParam() {
     <>
       {/* Matrix input */}
       <PrimsMatrixParam
-        name="prim"
+        name="primOld"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}

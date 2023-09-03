@@ -78,11 +78,25 @@ const algorithms = {
       sort: Controller.heapSort,
     },
   },
-  'prim': {
-    name: 'Prim\'s Algorithm',
+  'primOld': {
+    name: 'Old Prim\'s Algorithm',
     category: 'Greedy',
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
+    instructions: Instructions.PrimsInstruction,
+    extraInfo: ExtraInfo.PrimsInfo,
+    pseudocode: {
+      find: Pseudocode.prim,
+    },
+    controller: {
+      find: Controller.prim,
+    },
+  },
+  'primNew': {
+    name: 'New Prim\'s Algorithm',
+    category: 'Greedy',
+    explanation: Explanation.PrimsExp,
+    param: <Param.PrimsParamNew />,
     instructions: Instructions.PrimsInstruction,
     extraInfo: ExtraInfo.PrimsInfo,
     pseudocode: {
