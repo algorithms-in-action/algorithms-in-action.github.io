@@ -375,7 +375,7 @@ export default {
       QS_BOOKMARKS.quicksort_left_to_right,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
-        vis.array.setStack(derive_stack(real_stack, finished_stack_frames)); // used for a custom stack visualisation
+        vis.array.setStack([]); // used for a custom stack visualisation
       },
       [entire_num_array],
     );
