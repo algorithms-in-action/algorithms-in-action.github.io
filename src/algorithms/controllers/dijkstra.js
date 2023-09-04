@@ -98,20 +98,20 @@ export default {
     const numVertices = matrix.length;
     const INFINITY = Number.MAX_SAFE_INTEGER; 
     const E = [...matrix]  
-    const pqCost = [];
-    const prevNode = [];
-    const pqDisplay = []; 
+    const minCosts = [];
+    const parents = [];
+    const nodes = []; 
     // Create a set to keep track of visited vertices
     const visited = new Set();  
-    let minVertex = 0; 
+    let miniIndex = 0; 
 
     const findMinimum = () =>{
       let minCost = INFINITY; 
-      minVertex = null;
+      miniIndex = null;
       for (let i = numVertices-1; i >= 0; i--) {
         if (!visited.has(i) && cost[i] <= minCost) {
           minCost = cost[i];
-          minVertex = i;
+          miniIndex = i;
         }
       } 
     };
@@ -128,26 +128,26 @@ export default {
   
     ///initialise each element of array Parent to zero 
     const prev = Array(numVertices).fill(null);  
-    pqDisplay.push('i'); // initialize the pq display
-    prevNode.push('Parent[i]');
-    pqCost.push('Cost[i]');
+    nodes.push('i'); // initialize the pq display
+    parents.push('Parent[i]');
+    minCosts.push('Cost[i]');
     for (let i = 0; i < numVertices; i += 1) {
-      pqDisplay[i + 1] = i + 1;
-      pqCost.push("-");
-      prevNode.push(0);
+      nodes[i + 1] = i + 1;
+      minCosts.push("-");
+      parents.push(0);
     }  // initialize the pq cost
     chunker.add(
       5,
       (vis, v) => {
         vis.array.set(v, 'dijkstra');
       },
-      [[pqDisplay, prevNode, pqCost], 0]
+      [[nodes, parents, minCosts], 0]
     );
     
     ///initialize each element of array Cost to infinity
     const cost = Array(numVertices).fill(INFINITY);  
     for (let i = 0; i < numVertices; i += 1) {
-      pqCost[i+1] = (Infinity);
+      minCosts[i+1] = (Infinity);
     }  
     chunker.add(
       6,
@@ -155,13 +155,13 @@ export default {
         vis.array.set(v, 'dijkstra');
        ;
       },
-      [[pqDisplay, prevNode, pqCost], 0]
+      [[nodes, parents, minCosts], 0]
     );
     
   
     ///Cost[s] <- 0
     cost[0] = 0;  
-    pqCost[1] = 0; 
+    minCosts[1] = 0; 
     chunker.add(
       7,
       (vis, v, w) => {
@@ -169,7 +169,7 @@ export default {
         vis.array.select(2, w+1);
         vis.array.assignVariable('Min', 2, w+1);
       },
-      [[pqDisplay, prevNode, pqCost], 0]
+      [[nodes, parents, minCosts], 0]
     );
 
     
@@ -193,17 +193,17 @@ export default {
           }
           
         },
-        [[pqDisplay, prevNode, pqCost], minVertex]
+        [[nodes, parents, minCosts], miniIndex]
       );
 
       // Find the unvisited vertex with the smallest cost
       
       let currentVertex = null; 
       findMinimum();
-      currentVertex = minVertex;
+      currentVertex = miniIndex;
       
       ///n <- RemoveMin(Nodes)  
-      pqCost[currentVertex+1] = null; 
+      minCosts[currentVertex+1] = null; 
       visited.add(currentVertex);
       findMinimum(); 
       chunker.add(
@@ -221,7 +221,7 @@ export default {
           
 
         },
-        [[pqDisplay, prevNode, pqCost], minVertex, currentVertex,prev[currentVertex]]
+        [[nodes, parents, minCosts], miniIndex, currentVertex,prev[currentVertex]]
       );
       
       // If we can't find a reachable vertex, exit 
@@ -258,21 +258,21 @@ export default {
               }
               
             },
-            [[pqDisplay, prevNode, pqCost], minVertex]
+            [[nodes, parents, minCosts], miniIndex]
           );// Skip if no edge exists
           
           const newCost = cost[currentVertex] + matrix[currentVertex][m];
           
           /// if Cost[n]+weight(n,m)<Cost[m]
-          let tempString = pqCost[m+1];
-          if(pqCost[m+1] === Infinity){
+          let tempString = minCosts[m+1];
+          if(minCosts[m+1] === Infinity){
             tempString = "∞";
           }
           if (newCost < cost[m]){
-            pqCost[m+1] = (newCost+"<" + tempString);
+            minCosts[m+1] = (newCost+"<" + tempString);
           } 
           else{
-            pqCost[m+1] = (newCost+"!<" + tempString);
+            minCosts[m+1] = (newCost+"!<" + tempString);
           }
           
           //findMinimum();
@@ -287,15 +287,15 @@ export default {
               }
 
             },
-            [[pqDisplay, prevNode, pqCost], minVertex]
+            [[nodes, parents, minCosts], miniIndex]
           );
-          pqCost[m+1] = cost[m];
+          minCosts[m+1] = cost[m];
           
           if (newCost < cost[m]) {
             
             /// Cost[m] <- Cost[n] + weight(n,m)
             cost[m] = newCost; 
-            pqCost[m+1] = newCost;
+            minCosts[m+1] = newCost;
             //findMinimum();
             chunker.add(
               12,
@@ -307,7 +307,7 @@ export default {
                   vis.array.assignVariable("Min", 2, w+1);
                 }
               },
-              [[pqDisplay, prevNode, pqCost], minVertex]
+              [[nodes, parents, minCosts], miniIndex]
             );
 
             /// UpdateCost(Nodes,m,Cost[m]) 
@@ -323,13 +323,13 @@ export default {
                 
                 
               },
-              [[pqDisplay, prevNode, pqCost], minVertex]
+              [[nodes, parents, minCosts], miniIndex]
             );
 
             
             ///Parent[m] <- n
             prev[m] = currentVertex; 
-            prevNode[m+1] = prev[m]+1; 
+            parents[m+1] = prev[m]+1; 
             //findMinimum();
             chunker.add(
               14,
@@ -338,7 +338,7 @@ export default {
                 vis.array.assignVariable("Min", 2, w+1);
                 vis.array.select(2,w+1); 
               },
-              [[pqDisplay, prevNode, pqCost], minVertex]
+              [[nodes, parents, minCosts], miniIndex]
             );
             
           }
