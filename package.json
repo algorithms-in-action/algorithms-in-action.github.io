@@ -34,7 +34,7 @@
     "rfdc": "^1.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "electron": "^15.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
