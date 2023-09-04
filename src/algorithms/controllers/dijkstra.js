@@ -7,6 +7,7 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import { chunk } from 'lodash';
 
 // merge test 
 
@@ -29,7 +30,7 @@ export default {
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
    */
-  run(chunker, { matrix }) {
+  run1(chunker, { matrix }) {
     const E = [...matrix];
     const vertex = matrix.length;
 
@@ -93,10 +94,13 @@ export default {
 
   }, 
 
-  run2(chunker, { matrix }) {
+  run(chunker, { matrix }) {
     const numVertices = matrix.length;
     const INFINITY = Number.MAX_SAFE_INTEGER; 
-    const E = [...matrix] 
+    const E = [...matrix]  
+    const pqCost = [];
+    const prevNode = [];
+    const pqDisplay = [];
 
     chunker.add(
       1,
@@ -109,20 +113,59 @@ export default {
     );
   
     ///initialise each element of array Parent to zero 
-    //chunker.add
-    const prev = Array(numVertices).fill(null);
+    const prev = Array(numVertices).fill(null);  
+    pqDisplay.push('i'); // initialize the pq display
+    prevNode.push('Parent[i]');
+    pqCost.push('Cost[i]');
+    for (let i = 0; i < numVertices; i += 1) {
+      pqDisplay[i + 1] = i + 1;
+      pqCost.push("-");
+      prevNode.push(0);
+    }  // initialize the pq cost
+    chunker.add(
+      5,
+      (vis, v, w) => {
+        vis.array.set(v, 'prim');
+        //vis.array.select(2, w);
+        //vis.array.assignVariable('Min', 2, w);
+      },
+      [[pqDisplay, prevNode, pqCost], 0]
+    );
     
     ///initialize each element of array Cost to infinity
-    const cost = Array(numVertices).fill(INFINITY); 
+    const cost = Array(numVertices).fill(INFINITY);  
+    for (let i = 0; i < numVertices; i += 1) {
+      pqCost[i+1] = (Infinity);
+    }  
+    chunker.add(
+      6,
+      (vis, v, w) => {
+        vis.array.set(v, 'prim');
+        //vis.array.select(2, w);
+        //vis.array.assignVariable('Min', 2, w);
+      },
+      [[pqDisplay, prevNode, pqCost], 0]
+    );
     
   
     ///Cost[s] <- 0
-    cost[0] = 0; 
-    const pqCost = [];
-    const prevNode = [];
-    const pqDisplay = [];
+    cost[0] = 0;  
+    pqCost[1] = 0; 
+    chunker.add(
+      7,
+      (vis, v, w) => {
+        vis.array.set(v, 'prim');
+        //vis.array.select(2, w);
+        //vis.array.assignVariable('Min', 2, w); 
+        vis.array.select(2, w+1);
+        vis.array.assignVariable('Min', 2, w+1);
+      },
+      [[pqDisplay, prevNode, pqCost], 0]
+    );
+
     
-    /// Nodes <- PQ containing all nodes
+    /// Nodes <- PQ containing all nodes 
+    chunker.add(8);
 
     // Create a set to keep track of visited vertices
     const visited = new Set(); 
@@ -130,7 +173,9 @@ export default {
    
     
     while (visited.size < numVertices) { 
-      ///while Nodes not Empty
+      ///while Nodes not Empty 
+      chunker.add(2);
+
       // Find the unvisited vertex with the smallest cost
       let minCost = INFINITY;
       let currentVertex = null;
@@ -140,10 +185,22 @@ export default {
           currentVertex = i;
         }
       } 
-      ///n <- RemoveMin(Nodes)
+      ///n <- RemoveMin(Nodes)  
+      pqCost[currentVertex+1] = null;
+      chunker.add(
+        9,
+        (vis, v, w) => {
+          vis.graph.select(w);
+          vis.array.deselect(w+1);
+          vis.array.set(v, 'prim');
+          
+        },
+        [[pqDisplay, prevNode, pqCost], currentVertex]
+      );
   
       // If we can't find a reachable vertex, exit 
-      /// if is_end_node(n) or Cost[n] = infinity
+      /// if is_end_node(n) or Cost[n] = infinity 
+      
       if (currentVertex === null) {
         ///return
         break; 
