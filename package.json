@@ -15,6 +15,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "cross-env": "^7.0.3",
     "denque": "^1.5.0",
     "framer-motion": "^4.1.17",
     "history": "^5.0.0",
@@ -34,7 +35,7 @@
     "rfdc": "^1.1.4"
   },
   "scripts": {
-    "start": "cross-env PORT=3000 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
@@ -58,7 +59,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "electron": "^15.0.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
