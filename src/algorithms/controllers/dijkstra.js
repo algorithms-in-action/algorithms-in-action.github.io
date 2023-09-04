@@ -100,7 +100,21 @@ export default {
     const E = [...matrix]  
     const pqCost = [];
     const prevNode = [];
-    const pqDisplay = [];
+    const pqDisplay = []; 
+    // Create a set to keep track of visited vertices
+    const visited = new Set();  
+    let minVertex = 0; 
+
+    const findMinimum = () =>{
+      let minCost = INFINITY; 
+      minVertex = null;
+      for (let i = numVertices-1; i >= 0; i--) {
+        if (!visited.has(i) && cost[i] <= minCost) {
+          minCost = cost[i];
+          minVertex = i;
+        }
+      } 
+    };
 
     chunker.add(
       1,
@@ -124,10 +138,8 @@ export default {
     }  // initialize the pq cost
     chunker.add(
       5,
-      (vis, v, w) => {
-        vis.array.set(v, 'prim');
-        //vis.array.select(2, w);
-        //vis.array.assignVariable('Min', 2, w);
+      (vis, v) => {
+        vis.array.set(v, 'dijkstra');
       },
       [[pqDisplay, prevNode, pqCost], 0]
     );
@@ -139,10 +151,9 @@ export default {
     }  
     chunker.add(
       6,
-      (vis, v, w) => {
-        vis.array.set(v, 'prim');
-        //vis.array.select(2, w);
-        //vis.array.assignVariable('Min', 2, w);
+      (vis, v) => {
+        vis.array.set(v, 'dijkstra');
+       ;
       },
       [[pqDisplay, prevNode, pqCost], 0]
     );
@@ -154,9 +165,7 @@ export default {
     chunker.add(
       7,
       (vis, v, w) => {
-        vis.array.set(v, 'prim');
-        //vis.array.select(2, w);
-        //vis.array.assignVariable('Min', 2, w); 
+        vis.array.set(v, 'dijkstra');
         vis.array.select(2, w+1);
         vis.array.assignVariable('Min', 2, w+1);
       },
@@ -167,63 +176,177 @@ export default {
     /// Nodes <- PQ containing all nodes 
     chunker.add(8);
 
-    // Create a set to keep track of visited vertices
-    const visited = new Set(); 
     
    
     
     while (visited.size < numVertices) { 
       ///while Nodes not Empty 
-      chunker.add(2);
-
-      // Find the unvisited vertex with the smallest cost
-      let minCost = INFINITY;
-      let currentVertex = null;
-      for (let i = 0; i < numVertices; i++) {
-        if (!visited.has(i) && cost[i] < minCost) {
-          minCost = cost[i];
-          currentVertex = i;
-        }
-      } 
-      ///n <- RemoveMin(Nodes)  
-      pqCost[currentVertex+1] = null;
+      findMinimum();
       chunker.add(
-        9,
+        2,
         (vis, v, w) => {
-          vis.graph.select(w);
-          vis.array.deselect(w+1);
-          vis.array.set(v, 'prim');
+         
+          vis.array.set(v, 'dijkstra'); 
+          if(w != null){
+            vis.array.select(2, w+1); 
+            vis.array.assignVariable("Min", 2, w+1);
+          }
           
         },
-        [[pqDisplay, prevNode, pqCost], currentVertex]
+        [[pqDisplay, prevNode, pqCost], minVertex]
       );
-  
+
+      // Find the unvisited vertex with the smallest cost
+      
+      let currentVertex = null; 
+      findMinimum();
+      currentVertex = minVertex;
+      
+      ///n <- RemoveMin(Nodes)  
+      pqCost[currentVertex+1] = null; 
+      visited.add(currentVertex);
+      findMinimum(); 
+      chunker.add(
+        9,
+        (vis, v, w, x,y) => {
+      
+          vis.graph.select(x, y); 
+          
+          vis.array.set(v, 'dijkstra'); 
+
+          if(w!=null){
+            vis.array.select(2, w+1);
+            vis.array.assignVariable("Min", 2, w+1);
+          }
+          
+
+        },
+        [[pqDisplay, prevNode, pqCost], minVertex, currentVertex,prev[currentVertex]]
+      );
+      
       // If we can't find a reachable vertex, exit 
       /// if is_end_node(n) or Cost[n] = infinity 
-      
-      if (currentVertex === null) {
-        ///return
+      chunker.add(10);
+      if (currentVertex === null){
+        chunker.add(3);
+        /// return
         break; 
       }
       // Mark the vertex as visited
-      visited.add(currentVertex);
+      
   
       // Update the cost and prev arrays 
+      
       /// for each node m neighbouting n
       for (let m = 0; m < numVertices; m++) {
-        if (matrix[currentVertex][m] !== 0) { // Skip if no edge exists
+        
+        if (matrix[currentVertex][m] !== 0 &&
+          !visited.has(m)) {  
+
+            
+          
+          //findMinimum();  
+          chunker.add(
+            4,
+            (vis, v, w) => {
+              
+              
+              vis.array.set(v, 'dijkstra'); 
+              if(w != null){
+                vis.array.select(2, w+1); 
+                vis.array.assignVariable("Min", 2, w+1);
+              }
+              
+            },
+            [[pqDisplay, prevNode, pqCost], minVertex]
+          );// Skip if no edge exists
+          
           const newCost = cost[currentVertex] + matrix[currentVertex][m];
+          
           /// if Cost[n]+weight(n,m)<Cost[m]
+          let tempString = pqCost[m+1];
+          if(pqCost[m+1] === Infinity){
+            tempString = "∞";
+          }
+          if (newCost < cost[m]){
+            pqCost[m+1] = (newCost+"<" + tempString);
+          } 
+          else{
+            pqCost[m+1] = (newCost+"!<" + tempString);
+          }
+          
+          //findMinimum();
+          chunker.add(
+            11,
+            (vis, v, w) => {
+              
+              vis.array.set(v, 'dijkstra');  
+              if(w != null){
+                vis.array.select(2, w+1); 
+                vis.array.assignVariable("Min", 2, w+1);
+              }
+
+            },
+            [[pqDisplay, prevNode, pqCost], minVertex]
+          );
+          pqCost[m+1] = cost[m];
+          
           if (newCost < cost[m]) {
+            
             /// Cost[m] <- Cost[n] + weight(n,m)
             cost[m] = newCost; 
-            ///UpdateCost(Nodes,m,Cost[m])
+            pqCost[m+1] = newCost;
+            //findMinimum();
+            chunker.add(
+              12,
+              (vis, v, w) => {
+               
+                vis.array.set(v, 'dijkstra'); 
+                if(w != null){
+                  vis.array.select(2, w+1); 
+                  vis.array.assignVariable("Min", 2, w+1);
+                }
+              },
+              [[pqDisplay, prevNode, pqCost], minVertex]
+            );
+
+            /// UpdateCost(Nodes,m,Cost[m]) 
+            findMinimum();
+            chunker.add(
+              13,
+              (vis, v, w, x) => {
+                vis.array.set(v, 'dijkstra'); 
+                vis.array.assignVariable("Min", 2, w+1);
+           
+                vis.array.select(2,w+1); 
+                
+                
+                
+              },
+              [[pqDisplay, prevNode, pqCost], minVertex]
+            );
+
+            
             ///Parent[m] <- n
-            prev[m] = currentVertex;
+            prev[m] = currentVertex; 
+            prevNode[m+1] = prev[m]+1; 
+            //findMinimum();
+            chunker.add(
+              14,
+              (vis, v, w) => {
+                vis.array.set(v, 'dijkstra'); 
+                vis.array.assignVariable("Min", 2, w+1);
+                vis.array.select(2,w+1); 
+              },
+              [[pqDisplay, prevNode, pqCost], minVertex]
+            );
+            
           }
         }
       }
     }
-  }, 
+  },  
+
+  
 
 };
