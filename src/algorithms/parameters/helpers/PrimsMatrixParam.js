@@ -9,6 +9,7 @@ import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
   makeColumnArray,
+  makeColumnCoords,
   makeData,
   singleNumberValidCheck,
   errorParamMsg,
@@ -53,7 +54,7 @@ function PrimsMatrixParam({
   const [size, setSize] = useState(defaultSize);
 
   // (size) affects number of columns.
-  const columns1 = useMemo(() => makeColumnArray(2), [size]);
+  const columns1 = useMemo(() => makeColumnCoords(size), [size]);
   const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
