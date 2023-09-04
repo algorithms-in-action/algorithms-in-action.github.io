@@ -116,7 +116,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
         // node i (if one has been found; Parent[i] = 0 otherwise). 
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
-                while Nodes not empty
+                while Nodes not empty \\B 2
                 \\In{
                     remove next node n from Nodes and finalise it \\Ref Next_node
                     // The Parent of n has now been determined
@@ -124,14 +124,14 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                     \\Expl{ Have we found an end node?
                     \\Expl} 
                     \\In{
-                        return
+                        return \\B 3
                         \\Expl{ If there may be several end nodes we may want to
                             return which one was found as well as the Parent
                             array, and if we have explored the whole graph
                             component that should be indicated.
                         \\Expl} 
                     \\In} 
-                    for each node m neighbouring n // G has edge from n to m 
+                    for each node m neighbouring n // G has edge from n to m \\B 4
                     \\In{
                         update Nodes, Parent etc with n & m \\Ref UpdateNodes
                     \\In}
@@ -146,16 +146,16 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
 
 \\Code{
         Init
-            initialise each element of array Parent to zero \\B 2
-            initialise each element of array Cost to infinity \\B 3
-            Cost[s] <- 0
-            Nodes <- PQ containing all nodes // only s has finite cost
+            initialise each element of array Parent to zero \\B 5
+            initialise each element of array Cost to infinity \\B 6
+            Cost[s] <- 0 \\B 7
+            Nodes <- PQ containing all nodes  // only s has finite cost \\B 8
             //  Nodes in the PQ with finite cost are in the frontier; others are yet to be seen. 
 \\Code}  
 
 \\Code{
         Next_node
-            n <- RemoveMin(Nodes) // remove lowest cost element of Nodes PQ
+            n <- RemoveMin(Nodes) // remove lowest cost element of Nodes PQ \\B 9
             \\Expl{ n is the node in the frontier with the shortest known path
                     back to s (if it has infinite cost it must be in a component
                     not connected to s; not actually in the frontier).
@@ -165,7 +165,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
 
 \\Code{
         Completed
-            if is_end_node(n) or Cost[n] = infinity
+            if is_end_node(n) or Cost[n] = infinity \\B 10
             \\Expl{ If the cost of n is infinite we have searched the whole component
                 (without finding an end node) and the Parent array has all shortest
                 paths.  Otherwise, n is an end node we have succeeded and
@@ -175,7 +175,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
 
 \\Code{
         UpdateNodes
-            if Cost[n] + weight(n,m) < Cost[m]
+            if Cost[n] + weight(n,m) < Cost[m] \\B 11
             \\Expl{ The path from s to n to m is shorter than the current
                 shortest known path from s to m. If Cost[m] = infinity
                 it will be replaced with a finite weight, implicitly moving
@@ -183,9 +183,9 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                 finalised, this test is guaranteed to fail.
             \\Expl} 
             \\In{
-                Cost[m] <- Cost[n] + weight(n,m) // new cost is path length from s
-                UpdateCost(Nodes, m, Cost[m]) // update cost in Nodes PQ
-                Parent[m] <- n
+                Cost[m] <- Cost[n] + weight(n,m) // new cost is path length from s \\B 12
+                UpdateCost(Nodes, m, Cost[m]) // update cost in Nodes PQ \\B 13
+                Parent[m] <- n \\B 14
                 \\Expl{ The shortest known path to m now goes via n.
                 \\Expl}
             \\In}

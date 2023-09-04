@@ -108,7 +108,8 @@ export default {
       [E]
     );
   
-    ///initialise each element of array Parent to zero
+    ///initialise each element of array Parent to zero 
+    //chunker.add
     const prev = Array(numVertices).fill(null);
     
     ///initialize each element of array Cost to infinity
