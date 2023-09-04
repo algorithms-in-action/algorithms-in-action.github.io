@@ -1,7 +1,7 @@
 name: Deploy
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # enables manual deploy
   push:
     branches:
       - dev
@@ -23,4 +23,8 @@ jobs:
           buildpack: "mars/create-react-app"
           stack: "heroku-20"
           # action should not succeed if app crashes
-          healthcheck: "https://young-forest-20958.herokuapp.com/health"
+          healthcheck: "https://young-forest-20958-c873991c1564.herokuapp.com/"
+          # don't deploy if healthcheck fails
+          rollbackonhealthcheckfailed: true 
+          # delay health check since it takes time to boot up
+          delay: 30
