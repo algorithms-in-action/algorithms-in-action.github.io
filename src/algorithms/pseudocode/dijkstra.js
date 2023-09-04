@@ -150,10 +150,8 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
             initialise each element of array Cost to infinity \\B 3
             Cost[s] <- 0
             Nodes <- PQ containing all nodes // only s has finite cost
-            \\Note{ Nodes in the PQ with finite cost are in the frontier; others
-                are yet to be seen.
-            \\Note}
-\\Code}
+            //  Nodes in the PQ with finite cost are in the frontier; others are yet to be seen. 
+\\Code}  
 
 \\Code{
         Next_node

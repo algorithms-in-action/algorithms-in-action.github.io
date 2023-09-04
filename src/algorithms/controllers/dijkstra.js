@@ -42,15 +42,11 @@ export default {
     const pending = new Array(matrix.length);
     const prev = new Array(matrix.length);
     const pq = new Array(matrix.length);
-    const pqDisplay = [];
-    const prevDisplay = new Array(matrix.length).fill('');
-    let pqStart;
+    const nodes = [];
     let n;
     let miniIndex;
-    let prevIndex;
-    const closed = [];
-    const pqCost = [];
-    const prevNode = [];
+    const minCosts = [];
+    const parents = [];
 
     chunker.add(
       1,
@@ -71,29 +67,29 @@ export default {
       prev[i] = 0;
       pending[i] = 1;
     }
-    pqCost.push('Cost[i]');  // initialize the pq cost
-    pqDisplay.push('i'); // initialize the pq display
-    prevNode.push('Parent[i]'); // initialize the prev list
+    
+    minCosts.push('Cost[i]');  // initialize the cost list
+    nodes.push('i'); // initialize the first row of list
+    parents.push('Parent[i]'); // initialize the parents list
     for (i = 0; i < n; i += 1) {
       pq[i] = i;
-      pqDisplay[i + 1] = i + 1;
-      pqCost.push(Infinity);
-      prevNode.push(0);
+      nodes[i + 1] = i + 1;
+      minCosts.push(Infinity);
+      parents.push(0);
     }
-    pqStart = 0;
-    pqCost[1] = cost[0]; // add the minimum cost to pq cost
+    
     miniIndex = 1; // point the mini index in the pq cost
     /* the chunker add select the minimum cost one */
     chunker.add(
         2,
         (vis, v, w) => {
-          vis.array.set(v, 'prim');
-          vis.array.select(2, w);
-          vis.array.assignVariable('Min', 2, w);
+          vis.array.set(v, 'dijkstra');
         },
-        [[pqDisplay, prevNode, pqCost], miniIndex]
+        [[nodes, parents, minCosts], miniIndex]
     );
     
     
+
+
   },
 };
