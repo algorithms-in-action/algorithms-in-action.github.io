@@ -95,20 +95,8 @@ export default {
 
   run2(chunker, { matrix }) {
     const numVertices = matrix.length;
-    const INFINITY = Number.MAX_SAFE_INTEGER;
-  
-    // Initialize cost array with INFINITY and prev array with null
-    const cost = Array(numVertices).fill(INFINITY);
-    const prev = Array(numVertices).fill(null);
-  
-    // We start at vertex 0
-    cost[0] = 0; 
-    const pqCost = [];
-    const prevNode = [];
-    const pqDisplay = [];
-  
-    // Create a set to keep track of visited vertices
-    const visited = new Set(); 
+    const INFINITY = Number.MAX_SAFE_INTEGER; 
+    const E = [...matrix] 
 
     chunker.add(
       1,
@@ -120,7 +108,28 @@ export default {
       [E]
     );
   
-    while (visited.size < numVertices) {
+    ///initialise each element of array Parent to zero
+    const prev = Array(numVertices).fill(null);
+    
+    ///initialize each element of array Cost to infinity
+    const cost = Array(numVertices).fill(INFINITY); 
+    
+  
+    ///Cost[s] <- 0
+    cost[0] = 0; 
+    const pqCost = [];
+    const prevNode = [];
+    const pqDisplay = [];
+    
+    /// Nodes <- PQ containing all nodes
+
+    // Create a set to keep track of visited vertices
+    const visited = new Set(); 
+    
+   
+    
+    while (visited.size < numVertices) { 
+      ///while Nodes not Empty
       // Find the unvisited vertex with the smallest cost
       let minCost = INFINITY;
       let currentVertex = null;
@@ -129,24 +138,34 @@ export default {
           minCost = cost[i];
           currentVertex = i;
         }
+      } 
+      ///n <- RemoveMin(Nodes)
+  
+      // If we can't find a reachable vertex, exit 
+      /// if is_end_node(n) or Cost[n] = infinity
+      if (currentVertex === null) {
+        ///return
+        break; 
       }
-  
-      // If we can't find a reachable vertex, exit
-      if (currentVertex === null) break;
-  
       // Mark the vertex as visited
       visited.add(currentVertex);
   
-      // Update the cost and prev arrays
-      for (let i = 0; i < numVertices; i++) {
-        if (matrix[currentVertex][i] !== 0) { // Skip if no edge exists
-          const newCost = cost[currentVertex] + matrix[currentVertex][i];
-          if (newCost < cost[i]) {
-            cost[i] = newCost;
-            prev[i] = currentVertex;
+      // Update the cost and prev arrays 
+      /// for each node m neighbouting n
+      for (let m = 0; m < numVertices; m++) {
+        if (matrix[currentVertex][m] !== 0) { // Skip if no edge exists
+          const newCost = cost[currentVertex] + matrix[currentVertex][m];
+          /// if Cost[n]+weight(n,m)<Cost[m]
+          if (newCost < cost[m]) {
+            /// Cost[m] <- Cost[n] + weight(n,m)
+            cost[m] = newCost; 
+            ///UpdateCost(Nodes,m,Cost[m])
+            ///Parent[m] <- n
+            prev[m] = currentVertex;
           }
         }
       }
     }
   }, 
+
 };
