@@ -18,12 +18,12 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.14 
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "young-forest-20958"
+          heroku_app_name: "aia-g007"
           heroku_email: "bensampsondev@gmail.com"
           buildpack: "mars/create-react-app"
           stack: "heroku-20"
           # action should not succeed if app crashes
-          healthcheck: "https://young-forest-20958-c873991c1564.herokuapp.com/"
+          healthcheck: "https://aia-g007-5158289162d4.herokuapp.com/"
           # don't deploy if healthcheck fails
           rollbackonhealthcheckfailed: true 
           # delay health check since it takes time to boot up
