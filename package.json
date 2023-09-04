@@ -4,7 +4,8 @@
   "private": true,
   "homepage": "https://algorithms-in-action.github.io",
   "engines": {
-    "node": "14.x"
+    "node": "14.21.x",
+    "npm": "9.1.x"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.13",
