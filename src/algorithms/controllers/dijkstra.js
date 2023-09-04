@@ -91,5 +91,62 @@ export default {
     
 
 
-  },
+  }, 
+
+  run2(chunker, { matrix }) {
+    const numVertices = matrix.length;
+    const INFINITY = Number.MAX_SAFE_INTEGER;
+  
+    // Initialize cost array with INFINITY and prev array with null
+    const cost = Array(numVertices).fill(INFINITY);
+    const prev = Array(numVertices).fill(null);
+  
+    // We start at vertex 0
+    cost[0] = 0; 
+    const pqCost = [];
+    const prevNode = [];
+    const pqDisplay = [];
+  
+    // Create a set to keep track of visited vertices
+    const visited = new Set(); 
+
+    chunker.add(
+      1,
+      (vis, array) => {
+        vis.graph.directed(false);
+        vis.graph.weighted(true);
+        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+      },
+      [E]
+    );
+  
+    while (visited.size < numVertices) {
+      // Find the unvisited vertex with the smallest cost
+      let minCost = INFINITY;
+      let currentVertex = null;
+      for (let i = 0; i < numVertices; i++) {
+        if (!visited.has(i) && cost[i] < minCost) {
+          minCost = cost[i];
+          currentVertex = i;
+        }
+      }
+  
+      // If we can't find a reachable vertex, exit
+      if (currentVertex === null) break;
+  
+      // Mark the vertex as visited
+      visited.add(currentVertex);
+  
+      // Update the cost and prev arrays
+      for (let i = 0; i < numVertices; i++) {
+        if (matrix[currentVertex][i] !== 0) { // Skip if no edge exists
+          const newCost = cost[currentVertex] + matrix[currentVertex][i];
+          if (newCost < cost[i]) {
+            cost[i] = newCost;
+            prev[i] = currentVertex;
+          }
+        }
+      }
+    }
+  }, 
 };
