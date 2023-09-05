@@ -264,7 +264,7 @@ function stackRenderer(stack, nodeCount, stackDepth) {
     <div className={styles.stack}>
       <p>
         {stack.length > 0 && stackDepth !== undefined
-          ? `Current stack depth: ${stackDepth + 1}`
+          ? `Current stack depth: ${stackDepth}`
           : ''}
       </p>
       {stackItems}

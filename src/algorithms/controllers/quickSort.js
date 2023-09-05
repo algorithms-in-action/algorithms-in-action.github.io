@@ -131,7 +131,7 @@ export default {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(real_stack_, finished_stack_frames_) {
+    function derive_stack(Cur_real_stack, Cur_finished_stack_frames) {
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
@@ -141,7 +141,7 @@ export default {
         );
       }
 
-      finished_stack_frames_.forEach((stack_frame) => {
+      Cur_finished_stack_frames.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(
           stack,
           stack_frame,
@@ -149,7 +149,7 @@ export default {
         );
       });
 
-      real_stack_.forEach((stack_frame) => {
+      Cur_real_stack.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(
           stack,
           stack_frame,
@@ -157,10 +157,10 @@ export default {
         );
       });
 
-      if (real_stack_.length !== 0) {
+      if (Cur_real_stack.length !== 0) {
         stack = update_vis_with_stack_frame(
           stack,
-          real_stack_[real_stack_.length - 1],
+          Cur_real_stack[Cur_real_stack.length - 1],
           STACK_FRAME_COLOR.Current,
         );
       }
@@ -168,8 +168,9 @@ export default {
       return stack;
     }
 
-    const refresh_stack = (vis, real_stack_, finished_stack_frames_) => {
-      vis.array.setStack(derive_stack(real_stack_, finished_stack_frames_));
+    const refresh_stack = (vis, Cur_real_stack, Cur_finished_stack_frames) => {
+      vis.array.setStackDepth(Cur_real_stack.length);
+      vis.array.setStack(derive_stack(Cur_real_stack, Cur_finished_stack_frames));
     };
 
     ///
