@@ -195,7 +195,10 @@ export default {
       chunker.add( 
         2,
         (vis, v, w,x) => {
-          
+          // visit1(x,y,2) highlights the edge xy,and nodes x and y
+          // in the 2nd color 
+          // leave1(x,y,2) removes the highlight on nodes x, y and 
+          // edge xy(placed by the visit1 function in the 2nd color)
           if(x[0] != null){
             vis.graph.leave1(x[0],x[1],2);
           }
