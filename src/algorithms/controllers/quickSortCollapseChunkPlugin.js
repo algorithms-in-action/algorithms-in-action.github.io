@@ -20,6 +20,13 @@ export function initGlobalAlgorithmGetterQS(getter) {
   algorithmGetter = getter;
 }
 
+
+function isInQuickSort(algorithm) {
+    // eslint-disable-next-line no-param-reassign
+    if (!algorithm) algorithm = getGlobalAlgorithm();
+    return algorithm.id.name === QS_NAME;
+  }
+
 export function isPartitionExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
@@ -51,3 +58,10 @@ export function isQuicksortSecondHalfExpanded() {
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.QuicksortSecondHalf;
 }
+
+export function onCollapseStateChangeQS() {
+    //console.log("here");
+    if (!isInQuickSort()) return false;
+    const algorithm = getGlobalAlgorithm();
+    algorithm.chunker.refresh();
+  }

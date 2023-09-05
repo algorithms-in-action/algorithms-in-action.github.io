@@ -347,7 +347,7 @@ export default {
           finished_stack_frames,
           ]);
         } else {
-          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, () => {}, []);
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
         }
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
@@ -357,7 +357,7 @@ export default {
           finished_stack_frames,
           ]);
         } else {
-          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, () => {}, []);
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
         }
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }

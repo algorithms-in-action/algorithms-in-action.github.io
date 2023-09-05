@@ -5,7 +5,7 @@ import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
-
+import { onCollapseStateChangeQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
 
@@ -301,6 +301,7 @@ export const GlobalActions = {
     }
 
     onCollapseStateChange();
+    onCollapseStateChangeQS();
 
     return {
       ...state,
