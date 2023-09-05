@@ -301,7 +301,7 @@ export const GlobalActions = {
     }
 
     onCollapseStateChange();
-    onCollapseStateChangeQS();
+    //onCollapseStateChangeQS();
 
     return {
       ...state,
