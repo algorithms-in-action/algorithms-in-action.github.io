@@ -64,7 +64,7 @@ function PrimsMatrixParam({
   const [originalData1, setOriginalData1] = useState(data1);
 
   // Second Table
-  const [data2, setData2] = useState(() => makeData(size, min, max, symmetric));
+  const [data2, setData2] = useState(() => makeData(size, 1, 1, symmetric));
   const [originalData2, setOriginalData2] = useState(data2);
 
   const [buttonMessage, setButtonMessage] = useState('Start');
@@ -78,10 +78,10 @@ function PrimsMatrixParam({
 
   // second table
   useEffect(() => {
-    const newData2 = makeData(size, min, max, symmetric);
+    const newData2 = makeData(size, 1, 1, symmetric);
     setData2(newData2);
     setOriginalData2(newData2);
-  }, [size, min, max, symmetric]);
+  }, [size, 1, 1, symmetric]);
 
   useEffect(() => {
     const element = document.querySelector('button[id="startBtnGrp"]');
@@ -144,6 +144,7 @@ function PrimsMatrixParam({
       coords.push(temp);
     });
 
+
     if (coords.length !== size || coords[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(coords) === false) {
@@ -184,27 +185,24 @@ function PrimsMatrixParam({
       const temp_edges = [];
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
-        if (i !== j) {
-          if (isEuclidean === true) {
-            // Calculate Euclidean Distances
-            distance = Math.sqrt(Math.pow(coords[0][j] - coords[0][i], 2) + Math.pow(coords[1][j] - coords[1][i], 2));
-          } else {
-            // Calculate Manhattan Distances
-            distance = Math.abs(coords[0][j] - coords[0][i]) + Math.abs(coords[1][j] - coords[1][i]);
-          }
-
-          // If adjacent push distance if not then 0
-          if (adjacent[i][j] === 1) {
-            temp_edges.push(distance);
-          } else if (adjacent[i][j] === 0) {
-            temp_edges.push(0);
-          } else {
-            setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
-            console.log("error");
-            return [];
-          }
-          
+        if (isEuclidean === true) {
+          // Calculate Euclidean Distances
+          distance = Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][0], 2));
+        } else {
+          // Calculate Manhattan Distances
+          distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
         }
+
+        // If adjacent push distance if not then 0
+        if (adjacent[i][j] === 1) {
+          temp_edges.push(distance);
+        } else if (adjacent[i][j] === 0) {
+          temp_edges.push(0);
+        } else {
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+          return [];
+        }
+
       }
       edges.push(temp_edges);
     }
@@ -217,7 +215,6 @@ function PrimsMatrixParam({
         return [];
       }
     }
-
     return edges;
   };
 
