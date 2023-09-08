@@ -24,6 +24,7 @@ import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
 import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
+import { template } from 'lodash';
 
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -49,6 +50,7 @@ function PrimsMatrixParam({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
+  isEuclidean,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -125,10 +127,38 @@ function PrimsMatrixParam({
     }));
   };
 
-  // Get and parse the matrix
-  const getMatrix = () => {
-    const matrix = [];
+  // Get and parse the coordinates of each node
+  const getCoordinateMatrix = () => {
+    const coords = [];
     data1.forEach((row) => {
+      const temp = [];
+      for (const [_, value] of Object.entries(row)) {
+        if (singleNumberValidCheck(value)) {
+          const num = parseInt(value, 10);
+          temp.push(num);
+        } else {
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+          return;
+        }
+      }
+      coords.push(temp);
+    });
+
+    if (coords.length !== size || coords[0].length !== size) return [];
+    if (name === 'prim') {
+      if (matrixValidCheck(coords) === false) {
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+        // eslint-disable-next-line consistent-return
+        return [];
+      }
+    }
+    return coords;
+  };
+
+  // Get and parse the edges between nodes of 0s and 1s
+  const getEdgeMatrix = () => {
+    const adjacent = [];
+    data2.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         if (singleNumberValidCheck(value)) {
@@ -140,26 +170,65 @@ function PrimsMatrixParam({
           return;
         }
       }
-      matrix.push(temp);
+      adjacent.push(temp);
     });
+    console.log("edge");
+    // Calculate edges based on adjacent matrix
+    const coords = getCoordinateMatrix();
+    if (coords.length !== adjacent.length || coords[0].length !== adjacent[0].length) {
+      return [];
+    }
 
-    if (matrix.length !== size || matrix[0].length !== size) return [];
+    const edges = [];
+
+    for (let i = 0; i < coords.length; i++) {
+      const temp_edges = [];
+      for (let j = 0; j < coords.length; j++) {
+        let distance = 0;
+        if (i !== j) {
+          if (isEuclidean) {
+            // Calculate Euclidean Distances
+            distance = Math.sqrt(Math.pow(coords[0][j] - coords[0][i], 2) + Math.pow(coords[1][j] - coords[1][i], 2));
+          } else {
+            // Calculate Manhattan Distances
+            distance = Math.abs(coords[0][j] - coords[0][i]) + Math.abs(coords[1][j] - coords[1][i]);
+          }
+
+          // If adjacent push distance if not then 0
+          if (adjacent[i][j] === 1) {
+            temp_edges.push(distance);
+          } else if (adjacent[i][j] === 0) {
+            temp_edges.push(0);
+          } else {
+            setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+            return [];
+          }
+          
+        }
+      }
+      edges.push(temp_edges);
+    }
+    console.log("hello");
+
+    if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
-      if (matrixValidCheck(matrix) === false) {
+      if (matrixValidCheck(edges) === false) {
         setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
         // eslint-disable-next-line consistent-return
         return [];
       }
     }
-
-    return matrix;
+    console.log("hello");
+    return edges;
   };
 
   // Run the animation
   const handleSearch = () => {
     closeInstructions(); // remove instruction
     setMessage(null);
-    const matrix = getMatrix();
+
+    const coords = getCoordinateMatrix();
+    const matrix = getEdgeMatrix();
 
     if (matrix.length !== 0) {
       // setMessage(successParamMsg(ALGORITHM_NAME));
@@ -167,7 +236,7 @@ function PrimsMatrixParam({
         name,
         mode,
         size,
-        matrix,
+        matrix
       });
     //   setButtonMessage('Reset');
     } else {

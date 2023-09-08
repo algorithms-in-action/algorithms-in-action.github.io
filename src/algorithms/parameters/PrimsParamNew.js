@@ -24,6 +24,7 @@ function PrimsParamNew() {
         EXAMPLE={PRIMS_EXAMPLE}
         EXAMPLE2={PRIMS_EXAMPLE2}
         setMessage={setMessage}
+        isEuclidean={true}
       />
 
       {/* render success/error message */}
