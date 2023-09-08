@@ -172,7 +172,6 @@ function PrimsMatrixParam({
       }
       adjacent.push(temp);
     });
-    console.log("edge");
     // Calculate edges based on adjacent matrix
     const coords = getCoordinateMatrix();
     if (coords.length !== adjacent.length || coords[0].length !== adjacent[0].length) {
@@ -186,7 +185,7 @@ function PrimsMatrixParam({
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (i !== j) {
-          if (isEuclidean) {
+          if (isEuclidean === true) {
             // Calculate Euclidean Distances
             distance = Math.sqrt(Math.pow(coords[0][j] - coords[0][i], 2) + Math.pow(coords[1][j] - coords[1][i], 2));
           } else {
@@ -201,6 +200,7 @@ function PrimsMatrixParam({
             temp_edges.push(0);
           } else {
             setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+            console.log("error");
             return [];
           }
           
@@ -208,7 +208,6 @@ function PrimsMatrixParam({
       }
       edges.push(temp_edges);
     }
-    console.log("hello");
 
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
@@ -218,7 +217,7 @@ function PrimsMatrixParam({
         return [];
       }
     }
-    console.log("hello");
+
     return edges;
   };
 
