@@ -232,6 +232,7 @@ function PrimsMatrixParam({
         name,
         mode,
         size,
+        coords,
         matrix
       });
     //   setButtonMessage('Reset');
