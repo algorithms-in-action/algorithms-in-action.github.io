@@ -49,19 +49,36 @@ class GraphTracer extends Tracer {
   /**
    * This is the original function provided by Tracer.js,
    * but we add a second argument which accepts nodes' values
+   * and a third argument which accepts nodes' coordinates.
    * @param {array} array2d 2D array of nodes
    */
-  set(array2d = [], values = []) {
+  set(array2d = [], values = [], coordinates = [[0, 0]]) {
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i, values[i] ? values[i] : i);
+      const nodeValue = values[i] ? values[i] : i;
+      if(coordinates.length === 0)
+      {
+        this.addNode(i, nodeValue);
+      }
+      else
+      {
+        const x = coordinates[i][0];
+        const y = coordinates[i][1];
+        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
+      }
+
       for (let j = 0; j < array2d.length; j++) {
         const value = array2d[i][j];
         if (value) {
           this.addEdge(i, j, this.isWeighted ? value : null);
         }
       }
+    }
+    if(coordinates.length > 0)
+    {
+      // Specifies no layout since coordinates were specified.
+      this.callLayout = null;
     }
     this.layout();
     super.set();
@@ -304,6 +321,10 @@ class GraphTracer extends Tracer {
   }
 
   layout() {
+    if(this.callLayout === null)
+    {
+      return;
+    }
     const { method, args } = this.callLayout;
     method.apply(this, args);
   }

@@ -157,7 +157,7 @@ function PrimsMatrixParam({
   };
 
   // Get and parse the edges between nodes of 0s and 1s
-  const getEdgeMatrix = () => {
+  const getEdgeValueMatrix = () => {
     const adjacent = [];
     data2.forEach((row) => {
       const temp = [];
@@ -223,17 +223,17 @@ function PrimsMatrixParam({
     closeInstructions(); // remove instruction
     setMessage(null);
 
-    const coords = getCoordinateMatrix();
-    const matrix = getEdgeMatrix();
+    const coordsMatrix = getCoordinateMatrix();
+    const edgeValueMatrix = getEdgeValueMatrix();
 
-    if (matrix.length !== 0) {
+    if (edgeValueMatrix.length !== 0) {
       // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
         size,
-        coords,
-        matrix
+        coordsMatrix,
+        edgeValueMatrix
       });
     //   setButtonMessage('Reset');
     } else {
