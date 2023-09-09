@@ -183,11 +183,12 @@ function PrimsMatrixParam({
 
     for (let i = 0; i < coords.length; i++) {
       const temp_edges = [];
+      
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (isEuclidean === true) {
           // Calculate Euclidean Distances
-          distance = Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][0], 2));
+          distance = Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2));
         } else {
           // Calculate Manhattan Distances
           distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
@@ -204,6 +205,7 @@ function PrimsMatrixParam({
         }
 
       }
+      
       edges.push(temp_edges);
     }
 
