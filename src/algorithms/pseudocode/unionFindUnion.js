@@ -65,18 +65,16 @@ export default parse(`
   how much this aspect of the algorithm reduces tree height.
 
   \\Overview}
-
+  \\Note{ Could keep tree representation more abstract but I think its
+    best to be up-front with array representation and how roots
+    are distinguished
+  \\Note}
   \\Code{
-  Find
-  Find(n) // return root of tree containing n \\B 2
+  Findn
   \\In{
-      while parent[n] != n // while we are not at the root \\B 3
-      \\Note{ Could keep tree representation more abstract but I think its
-              best to be up-front with array representation and how roots
-              are distinguished
-      \\Note}
+      while parent[n] != n // while we are not at the root \\B while parent[n] != n
       \\In{
-          shorten path from n to root \\Ref Shorten_path
+          Shorten_path(n) // shorten path from n to root \\Ref Shorten_path_n
           \\Expl{ There are several ways of shortening the path back to the
                   root. The most obvious is to follow the path to the root
                   then follow it again, making each element point to the
@@ -85,15 +83,16 @@ export default parse(`
                   The animation allows path compression to be disabled so
                   you can compare the relative heights of the trees produced.
           \\Expl} 
-          n <- parent[n]  // go up the tree one step \\B 4
+          n <- parent[n]  // go up the tree one step \\B n <- parent[n]
       \\In}
-      return n // return root \\B 5
-  \\In} 
+      return n // return root \\B return n
+  \\In}
   \\Code}
 
   \\Code{
-  Shorten_path
-      parent[n] <- parent[parent[n]] (if enabled) // point to grandparent, not parent \\B 5
+    Shorten_path_n
+      \\In{
+      parent[n] <- parent[parent[n]] // point to grandparent \\B parent[n] <- parent[parent[n]]
       \\Expl{ By replacing the parent pointer by a pointer to the
           grandparent at each step up the tree, the path length is
           halved. This turns out to be sufficient to keep paths very
@@ -101,25 +100,60 @@ export default parse(`
           The animation allows this path compression to be disabled so
           you can compare the relative heights of the trees produced.
       \\Expl} 
+      \\In}
   \\Code} 
 
   \\Code{
+    Findm
+    \\In{
+        while parent[m] != m // while we are not at the root \\B while parent[m] != m
+        \\In{
+          Shorten_path(m) // shorten path from m to root \\Ref Shorten_path_m
+            \\Expl{ There are several ways of shortening the path back to the
+                    root. The most obvious is to follow the path to the root
+                    then follow it again, making each element point to the
+                    root. The version here doesn't shorten the path as much
+                    but is simpler and overall it works extremely well.
+                    The animation allows path compression to be disabled so
+                    you can compare the relative heights of the trees produced.
+            \\Expl} 
+            m <- parent[m]  // go up the tree one step \\B m <- parent[m]
+        \\In}
+        return m // return root \\B return m
+    \\In}
+    \\Code}
+
+    \\Code{
+      Shorten_path_m
+        \\In{
+        parent[m] <- parent[parent[m]] // point to grandparent \\B parent[m] <- parent[parent[m]]
+        \\Expl{ By replacing the parent pointer by a pointer to the
+            grandparent at each step up the tree, the path length is
+            halved. This turns out to be sufficient to keep paths very
+            short. Note that the root node is its own parent.
+            The animation allows this path compression to be disabled so
+            you can compare the relative heights of the trees produced.
+        \\Expl} 
+        \\In}
+    \\Code} 
+
+  \\Code{
   Main
-  Union(n, m) // merge/union the subsets containing n and m, respectively \\B 1
+  Union(n, m) // merge/union the subsets containing n and m, respectively \\B union(n, m)
   \\In{
-      n <- Find(n) \\Ref Find
-      m <- Find(m) \\Ref Find
-      if n == m // in same subset already - nothing to do \\B 7
+      n <- Find(n) // return root of tree containing n \\Ref Findn
+      m <- Find(m) // return root of tree containing m \\Ref Findm
+        if n == m // in same subset already \\B if n == m 
       \\In{
-          return \\B 8
+        return // do nothing \\B return
       \\In}
-      // swap n and m if needed to ensure m is the "taller" subtree \\Ref Maybe_swap
-      parent[n] = m // add the shorter subtree (n) to the taller one (m) \\B 9
+      Maybe_swap(n,m) // swap n and m if needed to ensure m is the "taller" subtree \\Ref Maybe_swap
+      parent[n] = m // add the shorter subtree (n) to the taller one (m) \\B parent[n] = m
       \\Expl{ This sometimes increases the height of the resulting tree but
               if we added the taller to the shorter the height would always
               increase.
       \\Expl} 
-      adjust the "height" measure of the taller subtree (m) \\Ref Adjust_rank
+      Adjust_rank(n,m) // adjust the "height" measure of the taller subtree (m) \\Ref Adjust_rank
       \\Expl{ The shorter subtree remains the same but the taller one
               may have grown because it had had an extra subtree added.
       \\Expl} 
@@ -128,32 +162,39 @@ export default parse(`
 
   \\Code{
   Maybe_swap
-      if rank[n] > rank[m] \\B 12
+    \\In{
+      if rank[n] > rank[m] \\B if rank[n] > rank[m]
           \\Expl{ We maintain a "rank" for each subset, which is an upper
                   bound on the height. The actual height may be less due
                   to paths being shortened in Find.
           \\Expl} 
-          swap(n, m) \\B 13
+          \\In{
+          swap(n, m) \\B swap(n, m)
+          \\In}
+    \\In}
   \\Code}
 
   \\Code{
   Adjust_rank
-      if rank[n] == rank[m] \\B 14
+    \\In{
+      if rank[n] == rank[m] \\B if rank[n] == rank[m]
           \\Expl{  If we are adding a strictly shorter subtree to m the height
                   doesn't change, but if the heights were equal the new height
                   of m increases by one.
           \\Expl}
-          rank[m] <- rank[m] + 1 \\B 15
-          \\Note{ Should we use ++ or "increment"???
-          \\Note}
+          rank[m] <- rank[m] + 1 \\B rank[m] <- rank[m] + 1
+
+    \\In}
   \\Code}
+  \\Note{ Should we use ++ or "increment"???
+  \\Note}
 
   \\Code{
   Initialise
       \\Note{ No need to animate this?? We just have this as the initial
           state of the animation.
       \\Note}
-      parent[i] = i and rank[i] = 0 for all elements i in the set \\B 16
+      parent[i] = i and rank[i] = 0 for all elements i in the set \\B parent[i] = i and rank[i] = 0 for all elements i in the set
       \\Expl{ Initially, each element i is in its own singleton subset. If
               the array has free space, extra elements can be added and
               initialised in the same way.
