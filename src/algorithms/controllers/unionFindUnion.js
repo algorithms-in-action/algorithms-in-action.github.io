@@ -1,5 +1,7 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
 import { UFExp } from '../explanations';
-// import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
@@ -13,56 +15,71 @@ export default {
         instance: new Array2DTracer('array', null, 'Array View'),
         order: 0,
       },
-      // insert tree here
+      // TODO: insert tree here
     };
   },
 
-  find(chunker, parentArr, n, name, pathCompression) {
-    // chunker.add(`find(${name})`, () => {});
-    // eslint-disable-next-line no-loop-func
-    const n2 = n;
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(0, n2 - 1);
-    });
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(1, n2 - 1);
-    });
+  /**
+   * Populate the chunker with the steps required to do a find operation.
+   * @param {Chunker} chunker - The chunker to populate.
+   * @param {Array} arrTable - The internal representation of the arrays.
+   * @param {Number} n - The number to find.
+   * @param {String} name - The variable name of the number to find.
+   * @param {Boolean} pathCompression - Whether to use path compression.
+   */
+  find(chunker, arrTable, n, name, pathCompression) {
+    const nInitial = n;
 
-    // eslint-disable-next-line eqeqeq
-    while (parentArr[n - 1] != n) {
-      // shorten path from n to root
-      // TODO: add path compression at `${name} <- parent[${name}]`
-      // console.log(pathCompression);
+    // 'while parent[n] != n' or 'while parent[m] != m'
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      vis.array.select(0, nInitial - 1);
+    });
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      vis.array.select(1, nInitial - 1);
+    });
+    while (arrTable[n - 1] != n) {
+      // TODO: `${name} <- parent[${name}]` (path compression)
       if (pathCompression === true) {
         // console.log('path compression on');
       }
-      const n3prev = n;
-      // eslint-disable-next-line no-param-reassign
-      n = parentArr[n - 1];
-      const n3 = n;
-      // eslint-disable-next-line no-loop-func
+      const nTempPrev = n;
+
+      // 'n <- parent[n]' or 'm <- parent[m]'
+      n = arrTable[n - 1];
+      const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
-        // eslint-disable-next-line no-param-reassign
-        vis.array.data[0][n3prev - 1].selected2 = true;
-        // eslint-disable-next-line no-param-reassign
-        vis.array.data[1][n3prev - 1].selected2 = true;
-        vis.array.select(0, n3 - 1);
+        vis.array.data[0][nTempPrev - 1].selected2 = true;
+        vis.array.data[1][nTempPrev - 1].selected2 = true;
+        vis.array.select(0, nTemp - 1);
       });
       chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-        vis.array.select(1, n3 - 1);
+        vis.array.select(1, nTemp - 1);
       });
     }
+
+    // 'return n' or 'return m'
     chunker.add(`return ${name}`, (vis) => {
-      // eslint-disable-next-line no-param-reassign
       vis.array.data[0][n - 1].selected1 = true;
+      vis.array.data[1][n - 1].selected1 = true;
     });
     return n;
   },
 
-  union(chunker, parentArray, x, y, pathCompression) {
-    const root1 = this.find(chunker, parentArray, x, 'n', pathCompression);
-    const root2 = this.find(chunker, parentArray, y, 'm', pathCompression);
+  /**
+   * Populate the chunker with the steps required to do a union operation.
+   * @param {Chunker} chunker - The chunker to populate.
+   * @param {Array} arrTable - The internal representation of the arrays.
+   * @param {Number} n - The first number to union.
+   * @param {Number} m - The second number to union.
+   * @param {Boolean} pathCompression - Whether to use path compression.
+   */
+  union(chunker, arrTable, n, m, pathCompression) {
 
+    // 'n <- find(n)' and 'm <- find(m)'
+    const root1 = this.find(chunker, arrTable, n, 'n', pathCompression);
+    const root2 = this.find(chunker, arrTable, m, 'm', pathCompression);
+
+    // 'if n == m'
     chunker.add('if n == m', () => {});
     if (root1 === root2) {
       chunker.add('return', () => {});
@@ -75,17 +92,13 @@ export default {
     // TODO: 'swap(n, m)'
     chunker.add('swap(n, m)', () => {});
 
-    // eslint-disable-next-line no-param-reassign
-    parentArray[root2 - 1] = root1;
-    // update array
+    // 'parent[n] = m'
+    arrTable[root2 - 1] = root1;
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array);
-      // eslint-disable-next-line no-param-reassign
       vis.array.data[1][root1 - 1].selected1 = true;
-      // eslint-disable-next-line no-param-reassign
       vis.array.data[1][root2 - 1].selected1 = true;
-    },
-    [[N_ARRAY, parentArray]]);
+    }, [[N_ARRAY, arrTable]]);
 
     // TODO: 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
@@ -97,25 +110,28 @@ export default {
     chunker.add('rank[m] <- rank[m] + 1', () => {});
   },
 
+  /**
+   * Run the algorithm, populating the chunker with the set of union
+   * steps.
+   * @param {Chunker} chunker - The chunker to populate.
+   * @param {Object} params - The parameters for the algorithm.
+   * @param {Array} params.target - The set of union operations to perform.
+   * @param {Boolean} params.pathCompression - Whether to use path compression.
+   */
   run(chunker, params) {
     const unionOperations = params.target;
 
-    // initialise parent array
-    const parentArray = [...N_ARRAY];
-
     // setting up the arrays
+    const arrTable = [...N_ARRAY];
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array);
-    },
-    [[N_ARRAY, parentArray]]); // will add a third array for rank here
+    }, [[N_ARRAY, arrTable]]); // TODO: will add a third array for rank here
 
     // applying union operations
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < unionOperations.length; i++) {
-      // eslint-disable-next-line no-undef
       this.union(
         chunker,
-        parentArray,
+        arrTable,
         unionOperations[i][0],
         unionOperations[i][1],
         params.target.name,
