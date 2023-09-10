@@ -17,14 +17,14 @@ import Radio from '@material-ui/core/Radio';
 import '../../styles/Param.scss';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-const DEFAULT_UNION = "5-7,3-4,9-8,3-8"
+const DEFAULT_UNION = "5-7,8-5,9-8,3-9,5-2"
 const DEFAULT_FIND = "2"
 
 const ALGORITHM_NAME = 'Union Find';
 const FIND = 'Find'
 const UNION = 'Union'
 const FIND_EXAMPLE = 'Please follow the example provided: 2. The single digit should be between 1 and 10.';
-const UNION_EXAMPLE = "Please follow the example provided: 5-7,3-4,9-8,3-8. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
+const UNION_EXAMPLE = "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
 
 
 // path compression:

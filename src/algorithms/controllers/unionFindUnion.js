@@ -17,42 +17,69 @@ export default {
     };
   },
 
-  find(chunker, parentArr, n, bookmark) {
-    // there is a bug here
-    chunker.add(bookmark, (vis) => {
-      vis.array.select(1, n - 1);
+  find(chunker, parentArr, n, name) {
+    // chunker.add(`find(${name})`, () => {});
+    // eslint-disable-next-line no-loop-func
+    const n2 = n;
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      vis.array.select(0, n2 - 1);
+      vis.array.select(1, n2 - 1);
     });
+    // eslint-disable-next-line eqeqeq
+    while (parentArr[n - 1] != n) {
+      // shorten path from n to root
+      // TODO: add path compression at `${name} <- parent[${name}]`
 
-    while (parentArr[n - 1] !== n) {
       // eslint-disable-next-line no-param-reassign
       n = parentArr[n - 1];
+      const n3 = n;
+      chunker.add(`${name} <- parent[${name}]`, () => {});
+      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+        vis.array.select(0, n3 - 1);
+        vis.array.select(1, n3 - 1);
+      });
     }
-
+    chunker.add(`return ${name}`, (vis) => {
+      // eslint-disable-next-line no-param-reassign
+      vis.array.data[0][n - 1].selected1 = true;
+    });
     return n;
   },
 
   union(chunker, parentArray, x, y) {
-    const root1 = this.find(chunker, parentArray, x, '2');
-    const root2 = this.find(chunker, parentArray, y, '3');
+    const root1 = this.find(chunker, parentArray, x, 'n');
+    const root2 = this.find(chunker, parentArray, y, 'm');
 
-    chunker.add('4', (vis) => {
+    chunker.add('if n == m', () => {});
+    if (root1 === root2) {
+      chunker.add('return', () => {});
+      return;
+    }
+
+    chunker.add('if rank[n] > rank[m]', () => {});
+
+    chunker.add('swap(n, m)', () => {});
+
+    // eslint-disable-next-line no-param-reassign
+    parentArray[root2 - 1] = root1;
+    // update array
+    chunker.add('parent[n] = m', (vis, array) => {
+      vis.array.set(array);
       vis.array.select(1, root1 - 1);
-      vis.array.select(1, root2 - 1); // is there a way to avoid -1 here?
+      vis.array.select(1, root2 - 1);
+      // eslint-disable-next-line no-param-reassign
+      vis.array.data[1][root1 - 1].selected3 = true;
+      // eslint-disable-next-line no-param-reassign
+      vis.array.data[1][root2 - 1].selected3 = true;
+    },
+    [[N_ARRAY, parentArray]]);
+
+    chunker.add('if rank[n] == rank[m]', (vis) => {
+      vis.array.deselect(1, root1 - 1);
+      vis.array.deselect(1, root2 - 1);
     });
 
-    if (root1 !== root2) {
-      // eslint-disable-next-line no-param-reassign
-      parentArray[root2 - 1] = root1;
-
-      // update array
-      chunker.add(
-        '5',
-        (vis, array) => {
-          vis.array.set(array);
-        },
-        [[N_ARRAY, parentArray]],
-      );
-    }
+    chunker.add('rank[m] <- rank[m] + 1', () => {});
   },
 
   run(chunker, params) {
@@ -62,13 +89,10 @@ export default {
     const parentArray = [...N_ARRAY];
 
     // setting up the arrays
-    chunker.add(
-      '1',
-      (vis, array) => {
-        vis.array.set(array);
-      },
-      [[N_ARRAY, parentArray]],
-    ); // will add a third array for rank here
+    chunker.add('union(n, m)', (vis, array) => {
+      vis.array.set(array);
+    },
+    [[N_ARRAY, parentArray]]); // will add a third array for rank here
 
     // applying union operations
     // eslint-disable-next-line no-plusplus
