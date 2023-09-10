@@ -23,8 +23,11 @@ export default {
     const n2 = n;
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
       vis.array.select(0, n2 - 1);
+    });
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
       vis.array.select(1, n2 - 1);
     });
+
     // eslint-disable-next-line eqeqeq
     while (parentArr[n - 1] != n) {
       // shorten path from n to root
@@ -33,13 +36,19 @@ export default {
       if (pathCompression === true) {
         // console.log('path compression on');
       }
-
+      const n3prev = n;
       // eslint-disable-next-line no-param-reassign
       n = parentArr[n - 1];
       const n3 = n;
-      chunker.add(`${name} <- parent[${name}]`, () => {});
-      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      // eslint-disable-next-line no-loop-func
+      chunker.add(`${name} <- parent[${name}]`, (vis) => {
+        // eslint-disable-next-line no-param-reassign
+        vis.array.data[0][n3prev - 1].selected2 = true;
+        // eslint-disable-next-line no-param-reassign
+        vis.array.data[1][n3prev - 1].selected2 = true;
         vis.array.select(0, n3 - 1);
+      });
+      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
         vis.array.select(1, n3 - 1);
       });
     }
@@ -71,12 +80,10 @@ export default {
     // update array
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array);
-      vis.array.select(1, root1 - 1);
-      vis.array.select(1, root2 - 1);
       // eslint-disable-next-line no-param-reassign
-      vis.array.data[1][root1 - 1].selected3 = true;
+      vis.array.data[1][root1 - 1].selected1 = true;
       // eslint-disable-next-line no-param-reassign
-      vis.array.data[1][root2 - 1].selected3 = true;
+      vis.array.data[1][root2 - 1].selected1 = true;
     },
     [[N_ARRAY, parentArray]]);
 
