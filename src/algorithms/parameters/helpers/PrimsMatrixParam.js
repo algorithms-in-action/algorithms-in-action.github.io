@@ -50,7 +50,6 @@ function PrimsMatrixParam({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
-  isEuclidean,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -68,6 +67,10 @@ function PrimsMatrixParam({
   const [originalData2, setOriginalData2] = useState(data2);
 
   const [buttonMessage, setButtonMessage] = useState('Start');
+  
+  // With the buton toggle Euclidean/Manhattan
+  const [isEuclidean, setCalcMethod] = useState(true);
+  const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Toggle: Euclidean');
 
   // reset the Table when the size changes
   useEffect(() => {
@@ -98,6 +101,17 @@ function PrimsMatrixParam({
   const updateTableSize = (newSize) => {
     setMessage(null);
     setSize(newSize);
+  };
+
+  const changeCalcMethod = (state) => {
+    setMessage(null);
+    setCalcMethod(state);
+    if (state === true) {
+      setCalcMethodButtonMessage('Toggle: Euclidean');
+    } else {
+      setCalcMethodButtonMessage('Toggle: Manhattan');
+    }
+    
   };
 
   // When cell renderer calls updateData, we'll use
@@ -158,6 +172,7 @@ function PrimsMatrixParam({
 
   // Get and parse the edges between nodes of 0s and 1s
   const getEdgeValueMatrix = () => {
+
     const adjacent = [];
     data2.forEach((row) => {
       const temp = [];
@@ -251,6 +266,9 @@ function PrimsMatrixParam({
         </button>
         <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
           Decrease Graph Size
+        </button>
+        <button className="matrixBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
+          {isEuclideanButtonMessage}
         </button>
         <ControlButton
           icon={<RefreshIcon />}
