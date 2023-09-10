@@ -91,7 +91,6 @@ export default {
   },
 
   run(chunker, params) {
-    console.log(params);
     const unionOperations = params.target;
 
     // initialise parent array
