@@ -1,80 +1,80 @@
 import parse from '../../pseudocode/parse';
 
 export default parse(`
-\\Note{  REAL specification Union Find
-  In development
-  Lee Naish
-  Sun Jun 11 18:07:23 AEST 2023
+  \\Note{  REAL specification Union Find
   \\Note}
-  
+
   \\Note{
-  Current version uses union by rank and path halving for find due to
+  Current version uses Union by rank and path halving for Find due to
   simple coding + its easy to separate path compression
-  
-  Could be good to provide button/... to eliminate path compression so
-  students can explore what can happen without it
-  
-  Tentative idea for visualisation is to have array view, with rows
-  for n, parent[n] and rank[n] plus forest view
-  The forest could have fixed width columns with one number+rank per
-  column, the numbers sorted within each tree and the trees sorted
-  according to their roots. Rank information could be elided for some
-  levels of abstraction.
+
+  Plan is to provide button to disable path compression so
+  students can explore what can happen without it.
+
+  Tentative idea for visualisation is to have array view, with rows for
+  n, parent[n] and rank[n] (rank[n] can be blank for non-roots) plus
+  forest view.  The forest could have fixed width columns with one number
+  per column (plus rank for root nodes?). Union operation could shuffle
+  rightmost tree to the left until its next to the tree to be merged with,
+  then one tree could be moved downwards one row and new edge added.
+  Rank information could be elided for some levels of abstraction.
   \\Note}
-  
+
   \\Overview{
-  
+
   Union Find algorithms allow us to maintain and manipulate the partitioning
   of a set into (disjoint) subsets. There are two main operations supported:
   Union and Find. Union takes two subsets and merges them together to form
   a single subset.  Find takes and element and returns a representative
-  element of the subset it occurs in. It must be the case that find(n) ==
-  find(m) if and only if n and m are in the same subset, but which element
+  element of the subset it occurs in. It must be the case that Find(n) =
+  Find(m) if and only if n and m are in the same subset, but which element
   is returned is left to the implementation (this flexibility allows for
   simple, efficient solutions). There may also be an operation to add
   an additional element in a singleton subset; here we simply initialise
   the data structure with a fixed number of elements, each in a singleton
-  subset. It is often convenient to number the elements 0, 1, 2,... allowing
+  subset. It is often convenient to number the elements 1, 2, 3,... allowing
   the array-based solution we present here.
-  
-  XXX include applications? - graph connectivity, unification??,
-  reflexive+transitive relations??...
-  
+
   Union-Find has many and varied applications.  For example, to determine
-  connected components of an undirected graph, we can simply call
-  Union(a,b) for each edge a-b in the graph.
-  
+  connected components of an undirected graph, we can simply call Union(a,b)
+  for each edge a-b in the graph, then any two nodes in the same connected
+  component will have have the same result returned by Find.  Kruskal's
+  algorithm for finding minimum spanning trees is similar.
+
   To represent a partitioning with N subsets we use N trees, each containing
-  the elements of the subset. Each element in the tree points to the parent
-  node, with the root node pointing to itself (a bit of a trick that makes
-  code simpler). A node can have many children pointing to it. Find returns
-  the root node and union joins two trees together.  There are some subtle
-  aspects to ensure the height of the trees is kept small, so finding the
-  root can be done very quickly.  Extra information is maintained for each
-  subset so Union can reduce the height and when Find traverses a path
-  from a node to the root, we take the opportunity to reduce the length
-  of the path for future calls to Find (the tree height is reduced and the
-  "width" is increased by having more children for some nodes).
-  
+  the elements of the subset. Each tree node has a "parent" pointer and a
+  node can have many children pointing to it (there are no pointers from
+  parents to children).  The root node points to itself (a bit of a trick
+  that makes code simpler).  Find returns the root node and Union joins two
+  trees together.  There are some subtle aspects to ensure the height of
+  the trees is kept small, so that finding the root can be done very quickly.
+  Extra information is maintained for each subset so Union can reduce the
+  height and when Find traverses a path from a node to the root, we take
+  the opportunity to reduce the length of the path for future calls to Find
+  (the tree height is reduced and the "width" is increased by having more
+  children for some nodes).
+
   Interestingly, the extra information used to reduce the height is only
   approximate and the method used to reduce path lengths is not as thorough
-  as some obvious alternatives. These shortcuts make the code very simple,
+  as some obvious alternatives. These shortcuts make the code quite short,
   but it is still extremely effective at reducing the tree height - most
   nodes point directly to the root. It has been shown that no matter how
   large the set is, Find has takes very close to constant time on average
-  (the inverse of the Ackerman function to be precise).
-  
+  (the inverse of the Ackerman function to be precise).  In this animation
+  we allow path compression to be disabled so you can experiment to see
+  how much this aspect of the algorithm reduces tree height.
+
   \\Overview}
-  
-  \\Note{ Could keep tree representation more abstract but I think its
-    best to be up-front with array representation and how roots
-    are distinguished
-  \\Note}
+
   \\Code{
-  Main
-  Find(n) // return root of tree containing n
+  Find
+  Find(n) // return root of tree containing n \\B 2
   \\In{
-      while parent[n] != n // while we are not at the root \\B 1
+      while parent[n] != n // while we are not at the root \\B 3
+      \\Note{ Could keep tree representation more abstract but I think its
+              best to be up-front with array representation and how roots
+              are distinguished
+      \\Note}
       \\In{
           shorten path from n to root \\Ref Shorten_path
           \\Expl{ There are several ways of shortening the path back to the
@@ -82,33 +82,39 @@ export default parse(`
                   then follow it again, making each element point to the
                   root. The version here doesn't shorten the path as much
                   but is simpler and overall it works extremely well.
+                  The animation allows path compression to be disabled so
+                  you can compare the relative heights of the trees produced.
           \\Expl} 
-          n <- parent[n]  // go up the tree one step
+          n <- parent[n]  // go up the tree one step \\B 4
       \\In}
-      return n // return root
+      return n // return root \\B 5
   \\In} 
   \\Code}
-  
+
   \\Code{
   Shorten_path
-      parent[n] = parent[parent[n]] // point to grandparent, not parent
+      parent[n] <- parent[parent[n]] (if enabled) // point to grandparent, not parent \\B 5
       \\Expl{ By replacing the parent pointer by a pointer to the
-              grandparent at each step up the tree, the path length is
-              halved. This turns out to be sufficient to keep paths very
-              short.
+          grandparent at each step up the tree, the path length is
+          halved. This turns out to be sufficient to keep paths very
+          short. Note that the root node is its own parent.
+          The animation allows this path compression to be disabled so
+          you can compare the relative heights of the trees produced.
       \\Expl} 
   \\Code} 
-  
+
   \\Code{
-  Union
-  Union(n, m) // merge/union the subsets containing n and m, respectively
+  Main
+  Union(n, m) // merge/union the subsets containing n and m, respectively \\B 1
   \\In{
-      n <- Find(n)
-      m <- Find(m)
-      if n == m // in same subset already - nothing to do
-          return
-      swap n and m if needed to ensure m is the "taller" subtree \\Ref Maybe_swap
-      parent[n] = m // add the shorter subtree (n) to the taller one (m)
+      n <- Find(n) \\Ref Find
+      m <- Find(m) \\Ref Find
+      if n == m // in same subset already - nothing to do \\B 7
+      \\In{
+          return \\B 8
+      \\In}
+      // swap n and m if needed to ensure m is the "taller" subtree \\Ref Maybe_swap
+      parent[n] = m // add the shorter subtree (n) to the taller one (m) \\B 9
       \\Expl{ This sometimes increases the height of the resulting tree but
               if we added the taller to the shorter the height would always
               increase.
@@ -119,29 +125,41 @@ export default parse(`
       \\Expl} 
   \\In} 
   \\Code}
-  
+
   \\Code{
   Maybe_swap
-      if rank[n] > rank[m]
+      if rank[n] > rank[m] \\B 12
           \\Expl{ We maintain a "rank" for each subset, which is an upper
                   bound on the height. The actual height may be less due
                   to paths being shortened in Find.
           \\Expl} 
-          swap(n, m)
+          swap(n, m) \\B 13
   \\Code}
-  
+
   \\Code{
   Adjust_rank
-      if rank[n] == rank[m]
+      if rank[n] == rank[m] \\B 14
           \\Expl{  If we are adding a strictly shorter subtree to m the height
                   doesn't change, but if the heights were equal the new height
                   of m increases by one.
           \\Expl}
-          rank[m] <- rank[m] + 1
+          rank[m] <- rank[m] + 1 \\B 15
           \\Note{ Should we use ++ or "increment"???
           \\Note}
   \\Code}
-  
+
+  \\Code{
+  Initialise
+      \\Note{ No need to animate this?? We just have this as the initial
+          state of the animation.
+      \\Note}
+      parent[i] = i and rank[i] = 0 for all elements i in the set \\B 16
+      \\Expl{ Initially, each element i is in its own singleton subset. If
+              the array has free space, extra elements can be added and
+              initialised in the same way.
+      \\Expl} 
+  \\Code}
+
   \\Note{
   // Union Find: simple implementation for testing animation specification
   // Sample test:
@@ -177,16 +195,16 @@ export default parse(`
   n           0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
   parent[n]   4  4  4  4  4  4  6  7  8  9 10 11 12 13 14 15 16 17 18 19
   rank[n]     0  0  0  1  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-  
+
   */
   #include<stdio.h>
   #include<stdlib.h>
-  
+
   #define demand(fact, remark)\\
       {   if (!(fact))\\
           {   fprintf(stderr, "%s\n", remark); exit(1);   }\\
       }
-  
+
   #define SIZE 20    // (max) size of set we are partitioning
   int parent[SIZE];  // parent for each node
   int rank[SIZE];    // rank for each node
@@ -195,7 +213,7 @@ export default parse(`
   #else
   int compresspaths = 1;
   #endif
-  
+
   // add operation; here we add all the elements in the array
   // at the start, don't keep track whats in the set and don't
   // expand the array
@@ -206,7 +224,7 @@ export default parse(`
       parent[n] = n;
       rank[n] = 0;
   }
-  
+
   // find operation
   int
   find(int n) {
@@ -220,7 +238,7 @@ export default parse(`
       }
       return n;
   }
-  
+
   // union operation, called merge since union is a C keyword
   void
   merge(int n, int m) {
@@ -238,7 +256,7 @@ export default parse(`
           rank[m]++;
       return;
   }
-  
+
   int
   main() {
       int c, n1, n2;
@@ -275,20 +293,20 @@ export default parse(`
       }
       return 0;
   }
-   
+    
   /* Example of test
-  
-  
+
+
   */
   \\Note} 
-  
+
   \\Note{
   Handy things to copy/paste in vim for editing this file:
   (mostly in my .exrc now)
   :set ts=4 et
-  
+
   \\In{
   \\In}
-  
-  \\Note}  
+
+  \\Note}
 `);
