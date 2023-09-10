@@ -1,34 +1,36 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import SingleValueParam from './helpers/SingleValueParam';
 import DualValueParam from './helpers/DualValueParam';
-
-import { withStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
 
 
 import '../../styles/Param.scss';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-const DEFAULT_UNION = "5-7,8-5,9-8,3-9,5-2"
-const DEFAULT_FIND = "2"
+const DEFAULT_UNION = '5-7,8-5,9-8,3-9,5-2';
+const DEFAULT_FIND = '2';
 
 const ALGORITHM_NAME = 'Union Find';
-const FIND = 'Find'
-const UNION = 'Union'
+const FIND = 'Find';
+const UNION = 'Union';
 const FIND_EXAMPLE = 'Please follow the example provided: 2. The single digit should be between 1 and 10.';
 const UNION_EXAMPLE = "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
 
 
 // path compression:
-const UNCHECKED = {on: false, off: false};
+const UNCHECKED = {
+  on: false,
+  off: false,
+};
 
 const BlueRadio = withStyles({
   root: {
@@ -45,7 +47,7 @@ function UFParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
 
-  const [pathCompression, setPathCompression] = useState( {
+  const [pathCompression, setPathCompression] = useState({
     on: false,
     off: true,
   });
@@ -62,29 +64,29 @@ function UFParam() {
     }
 
     setPathCompression({ ...UNCHECKED, [e.target.name]: true });
-  }
+  };
 
   // to use array from union
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
 
+    // eslint-disable-next-line no-restricted-globals
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
-
       const target = parseInt(inputValue, 10);
 
       const visualiser = algorithm.chunker.visualisers;
-      dispatch(GlobalActions.RUN_ALGORITHM, 
-        { name: 'unionFind', mode: 'find', visualiser, target}
-        );
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'unionFind',
+        mode: 'find',
+        visualiser,
+        target,
+      });
       setMessage(successParamMsg(ALGORITHM_NAME));
-
-    }
-    else {
+    } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
     }
-
-  }
+  };
 
   useEffect(
     () => {
@@ -96,19 +98,17 @@ function UFParam() {
   return (
     <>
       <div className="form">
-      
         <DualValueParam
-            name="unionFind"
-            buttonName="Union"
-            mode="union"
-            formClassName="formLeft"
-            DEFAULT_VAL={DEFAULT_UNION}
-            ALGORITHM_NAME={UNION}
-            EXAMPLE={UNION_EXAMPLE}
-            setMessage={setMessage}
-          />
-
-      <SingleValueParam
+          name="unionFind"
+          buttonName="Union"
+          mode="union"
+          formClassName="formLeft"
+          DEFAULT_VAL={DEFAULT_UNION}
+          ALGORITHM_NAME={UNION}
+          EXAMPLE={UNION_EXAMPLE}
+          setMessage={setMessage}
+        />
+        <SingleValueParam
           name="unionFind"
           buttonName="Find"
           mode="find"
@@ -143,7 +143,7 @@ function UFParam() {
         )}
         label="Off"
         className="checkbox"
-      /> 
+      />
       {/* render success/error message */}
       {message}
     </>
