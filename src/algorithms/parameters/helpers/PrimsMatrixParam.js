@@ -18,7 +18,7 @@ import {
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
-import '../../../styles/Matrix.scss';
+import '../../../styles/PrimsMatrix.scss';
 import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
 import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
@@ -70,7 +70,7 @@ function PrimsMatrixParam({
   
   // With the buton toggle Euclidean/Manhattan
   const [isEuclidean, setCalcMethod] = useState(true);
-  const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Toggle: Euclidean');
+  const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
   // reset the Table when the size changes
   useEffect(() => {
@@ -107,9 +107,9 @@ function PrimsMatrixParam({
     setMessage(null);
     setCalcMethod(state);
     if (state === true) {
-      setCalcMethodButtonMessage('Toggle: Euclidean');
+      setCalcMethodButtonMessage('Euclidean');
     } else {
-      setCalcMethodButtonMessage('Toggle: Manhattan');
+      setCalcMethodButtonMessage('Manhattan');
     }
     
   };
@@ -261,24 +261,32 @@ function PrimsMatrixParam({
   return (
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
-        <button className="matrixBtn" onClick={() => updateTableSize(size + 2)}>
-          Increase Graph Size
+        <div className="sLineButtonContainer">
+          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
+            −
+          </button>
+          <span className='size'>Num Nodes: {size}</span>
+          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
+            +
+          </button>
+          
+        </div>
+
+        <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
+          Toggle : {isEuclideanButtonMessage}
         </button>
-        <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
-          Decrease Graph Size
-        </button>
-        <button className="matrixBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
-          {isEuclideanButtonMessage}
-        </button>
-        <ControlButton
-          icon={<RefreshIcon />}
-          className="greyRoundBtn"
-          id="refreshMatrix"
-          onClick={resetData}
-        />
-        <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
-          {buttonMessage}
-        </button>
+
+        <div className="sLineButtonContainer">
+          <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
+            {buttonMessage}
+          </button>
+          <ControlButton
+            icon={<RefreshIcon />}
+            className="greyRoundBtn"
+            id="refreshMatrix"
+            onClick={resetData}/>
+          
+        </div>
       </div>
       <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
       <Table columns={columns2} data={data2} updateData={updateData2} algo={name}/>
