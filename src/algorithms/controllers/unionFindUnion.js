@@ -17,7 +17,7 @@ export default {
     };
   },
 
-  find(chunker, parentArr, n, name) {
+  find(chunker, parentArr, n, name, pathCompression) {
     // chunker.add(`find(${name})`, () => {});
     // eslint-disable-next-line no-loop-func
     const n2 = n;
@@ -29,6 +29,10 @@ export default {
     while (parentArr[n - 1] != n) {
       // shorten path from n to root
       // TODO: add path compression at `${name} <- parent[${name}]`
+      // console.log(pathCompression);
+      if (pathCompression === true) {
+        // console.log('path compression on');
+      }
 
       // eslint-disable-next-line no-param-reassign
       n = parentArr[n - 1];
@@ -46,9 +50,9 @@ export default {
     return n;
   },
 
-  union(chunker, parentArray, x, y) {
-    const root1 = this.find(chunker, parentArray, x, 'n');
-    const root2 = this.find(chunker, parentArray, y, 'm');
+  union(chunker, parentArray, x, y, pathCompression) {
+    const root1 = this.find(chunker, parentArray, x, 'n', pathCompression);
+    const root2 = this.find(chunker, parentArray, y, 'm', pathCompression);
 
     chunker.add('if n == m', () => {});
     if (root1 === root2) {
@@ -56,8 +60,10 @@ export default {
       return;
     }
 
+    // TODO: 'if rank[n] < rank[m]'
     chunker.add('if rank[n] > rank[m]', () => {});
 
+    // TODO: 'swap(n, m)'
     chunker.add('swap(n, m)', () => {});
 
     // eslint-disable-next-line no-param-reassign
@@ -74,15 +80,18 @@ export default {
     },
     [[N_ARRAY, parentArray]]);
 
+    // TODO: 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
       vis.array.deselect(1, root1 - 1);
       vis.array.deselect(1, root2 - 1);
     });
 
+    // TODO: 'rank[m] <- rank[m] + 1'
     chunker.add('rank[m] <- rank[m] + 1', () => {});
   },
 
   run(chunker, params) {
+    console.log(params);
     const unionOperations = params.target;
 
     // initialise parent array
@@ -98,7 +107,13 @@ export default {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < unionOperations.length; i++) {
       // eslint-disable-next-line no-undef
-      this.union(chunker, parentArray, unionOperations[i][0], unionOperations[i][1]);
+      this.union(
+        chunker,
+        parentArray,
+        unionOperations[i][0],
+        unionOperations[i][1],
+        params.target.name,
+      );
     }
   },
 };
