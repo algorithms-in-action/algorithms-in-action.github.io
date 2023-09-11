@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
-const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+const N_ARRAY = [1,2,3,4,5,6,7,8,9,10];
 
 export default {
   explanation: UFExp,
@@ -86,10 +86,10 @@ export default {
    * @param {Number} m The second number to union.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  union(chunker, parentArr, n, m, pathCompression) {
+  union(chunker, parentArr, rankArr, n, m, pathCompression) {
     // 'n <- find(n)' and 'm <- find(m)'
-    const root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
-    const root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
+    var root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
+    var root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
 
     // 'if n == m'
     chunker.add('if n == m', () => {});
@@ -98,28 +98,36 @@ export default {
       return;
     }
 
-    // TODO: 'if rank[n] < rank[m]'
+    // 'if rank[n] > rank[m]'
     chunker.add('if rank[n] > rank[m]', () => {});
-
-    // TODO: 'swap(n, m)'
-    chunker.add('swap(n, m)', () => {});
+    if (rankArr[root1 - 1] > rankArr[root2 - 1]) {
+      // 'swap(n, m)'
+      chunker.add('swap(n, m)', () => {});
+      var tempRoot1 = root1;
+      root1 = root2;
+      root2 = tempRoot1;
+    }
 
     // 'parent[n] = m'
-    parentArr[root2 - 1] = root1;
+    parentArr[root1 - 1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array);
       vis.array.data[1][root1 - 1].selected1 = true;
       vis.array.data[1][root2 - 1].selected1 = true;
     }, [[N_ARRAY, parentArr]]);
 
-    // TODO: 'if rank[n] == rank[m]'
+    // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
       vis.array.deselect(1, root1 - 1);
       vis.array.deselect(1, root2 - 1);
     });
-
-    // TODO: 'rank[m] <- rank[m] + 1'
-    chunker.add('rank[m] <- rank[m] + 1', () => {});
+    // TODO: animate rank array
+    if (rankArr[root1 - 1] == rankArr[root2 - 1]) {
+      // 'rank[m] <- rank[m] + 1'
+      chunker.add('rank[m] <- rank[m] + 1', () => {});
+      //TODO: animate rank array
+      rankArr[root2 - 1] += 1;
+    }
   },
 
   /**
@@ -135,6 +143,7 @@ export default {
 
     // setting up the arrays
     const parentArr = [...N_ARRAY];
+    const rankArr = Array(10).fill(0); 
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array);
     }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
@@ -144,6 +153,7 @@ export default {
       this.union(
         chunker,
         parentArr,
+        rankArr,
         unionOperations[i][0],
         unionOperations[i][1],
         params.pathCompression,
