@@ -31,6 +31,8 @@ export function isPartitionExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
+
+  // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.Partition;
 }
@@ -39,6 +41,8 @@ export function isIJVarExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
+
+  // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.init_iAndj;
 }
@@ -47,6 +51,8 @@ export function isQuicksortFirstHalfExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
+
+  // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.QuicksortFirstHalf;
 }
@@ -55,6 +61,8 @@ export function isQuicksortSecondHalfExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
+
+  // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.QuicksortSecondHalf;
 }
