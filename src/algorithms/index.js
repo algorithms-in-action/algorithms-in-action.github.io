@@ -49,6 +49,21 @@ const algorithms = {
 
     },
   },
+  'A*': {
+    name: 'A* Algorithm',
+    category: 'Greedy',
+    param: <Param.ASTARParam />,
+    instructions: Instructions.DIJKInstruction,
+    explanation: Explanation.DIJKExp,
+    extraInfo: ExtraInfo.DIJKInfo,
+    pseudocode: {
+      find: Pseudocode.dijkstra,
+    },
+    controller: {
+      find: Controller.dijkstra,
+
+    },
+  },
   'quickSort': {
     name: 'Quicksort',
     category: 'Sorting',

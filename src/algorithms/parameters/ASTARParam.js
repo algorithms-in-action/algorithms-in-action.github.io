@@ -4,25 +4,25 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const DIJK = 'Dijkstra\'s';
-const DIJK_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
-const DIJK_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
-function DijkstraParam() {
+const ASTAR = 'A* Algorithm';
+const ASTAR_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
+const ASTAR_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
+function ASTARParam() {
   const [message, setMessage] = useState(null);
 
   return (
     <>
       {/* Matrix input */}
       <MatrixParam
-        name="dijkstra"
+        name="A*"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}
         max={9}
         symmetric
-        ALGORITHM_NAME={DIJK}
-        EXAMPLE={DIJK_EXAMPLE}
-        EXAMPLE2={DIJK_EXAMPLE2}
+        ALGORITHM_NAME={ASTAR}
+        EXAMPLE={ASTAR_EXAMPLE}
+        EXAMPLE2={ASTAR_EXAMPLE2}
         setMessage={setMessage}
       />
 
@@ -32,4 +32,4 @@ function DijkstraParam() {
   );
 }
 
-export default DijkstraParam;
+export default ASTARParam;
