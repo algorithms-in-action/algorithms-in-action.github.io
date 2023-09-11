@@ -301,22 +301,19 @@ export default {
         }
         if (i < j) {
           [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
-          if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-            swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
-              isPivotSwap: false,
-            });
-          }
+          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
+            isPivotSwap: false,
+          });
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
+      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
+        isPivotSwap: true,
+      });
       if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-        swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
-          isPivotSwap: true,
-        });
-
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r) => {
