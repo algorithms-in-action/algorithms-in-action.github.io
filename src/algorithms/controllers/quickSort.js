@@ -192,7 +192,7 @@ export default {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function partition(partition_num_array, left, right, depth) {
+    function partition(partition_num_array, left, right) {
       const a = partition_num_array;
       let i = left - 1;
       let j = right;
@@ -205,137 +205,124 @@ export default {
         noOp
       ); // prevent early highlight
       */
-      if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-        chunker.add(
-          QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
-          (vis, p) => {
-            highlight(vis, p);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
-          },
-          [right],
-        );
 
-        // At the start of algorithm, i = 0 - 1
-        // Hence cannot be drawn at any index
-        // So in that case, it is displayed at index 0
-      
-        chunker.add(
-          QS_BOOKMARKS.set_i_left_minus_1,
-          (vis, i1) => {
-            if (i1 >= 0) {
-              highlight(vis, i1, false);
-              isPartitionExpanded() &&
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
-            } else if (i1 === -1) {
-              isPartitionExpanded() && highlight(vis, 0, false);
-              isPartitionExpanded() &&
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
-            }
-          },
-          [i],
-        );
+      chunker.add(
+        QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
+        (vis, p) => {
+          highlight(vis, p);
+          vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
+        },
+        [right],
+      );
 
-        chunker.add(
-          QS_BOOKMARKS.set_j_right,
-          (vis, j1) => {
-            if (j1 >= 0) {
-              highlight(vis, j1, false);
-              isPartitionExpanded() &&
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
-            }
-          },
-          [j],
-        );
-      }
+      // At the start of algorithm, i = 0 - 1
+      // Hence cannot be drawn at any index
+      // So in that case, it is displayed at index 0
+      chunker.add(
+        QS_BOOKMARKS.set_i_left_minus_1,
+        (vis, i1) => {
+          if (i1 >= 0) {
+            highlight(vis, i1, false);
+            isPartitionExpanded() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+          } else if (i1 === -1) {
+            isPartitionExpanded() && highlight(vis, 0, false);
+            isPartitionExpanded() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
+          }
+        },
+        [i],
+      );
+
+      chunker.add(
+        QS_BOOKMARKS.set_j_right,
+        (vis, j1) => {
+          if (j1 >= 0) {
+            highlight(vis, j1, false);
+            isPartitionExpanded() &&
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
+          }
+        },
+        [j],
+      );
 
       while (i < j) {
-        if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-          chunker.add(QS_BOOKMARKS.while_i_less_j);
-        }
+        chunker.add(QS_BOOKMARKS.while_i_less_j);
         do {
           i += 1;
-          if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-            chunker.add(
-              QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
-              (vis, i1) => {
-                if (i1 > 0) {
-                  unhighlight(vis, i1 - 1, false);
-                } else if (i1 === -1) {
-                  unhighlight(vis, 0, false);
-                }
-                if (i1 > 0) highlight(vis, i1, false);
-                else if (!isPartitionExpanded() && i1 === 0)
-                  highlight(vis, i1, false);
-                isPartitionExpanded() &&
-                  vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
-              },
-              [i],
-            );
-          }
+          chunker.add(
+            QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
+            (vis, i1) => {
+              if (i1 > 0) {
+                unhighlight(vis, i1 - 1, false);
+              } else if (i1 === -1) {
+                unhighlight(vis, 0, false);
+              }
+              if (i1 > 0) highlight(vis, i1, false);
+              else if (!isPartitionExpanded() && i1 === 0)
+                highlight(vis, i1, false);
+              isPartitionExpanded() &&
+                vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+            },
+            [i],
+          );
         } while (a[i] < pivot);
 
         do {
           j -= 1;
-          if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-            chunker.add(
-              QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
-              (vis, j1) => {
-                unhighlight(vis, j1 + 1, false);
-                if (j1 >= 0) {
-                  highlight(vis, j1, false);
-                  isPartitionExpanded() &&
-                    vis.array.assignVariable(
-                      VIS_VARIABLE_STRINGS.j_right_index,
-                      j1,
-                    );
-                } else {
-                  vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
-                }
-              },
-              [j],
-            );
-          }
+          chunker.add(
+            QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
+            (vis, j1) => {
+              unhighlight(vis, j1 + 1, false);
+              if (j1 >= 0) {
+                highlight(vis, j1, false);
+                isPartitionExpanded() &&
+                  vis.array.assignVariable(
+                    VIS_VARIABLE_STRINGS.j_right_index,
+                    j1,
+                  );
+              } else {
+                vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
+              }
+            },
+            [j],
+          );
         } while (i <= j && pivot < a[j]);
-        if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-          chunker.add(QS_BOOKMARKS.if_j_greater_i);
-        }
+
+        chunker.add(QS_BOOKMARKS.if_j_greater_i);
         if (i < j) {
           [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
-          if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-            swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
-              isPivotSwap: false,
-            });
-          }
+          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
+            isPivotSwap: false,
+          });
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
-        swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
-          isPivotSwap: true,
-        });
+      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
+        isPivotSwap: true,
+      });
 
-        chunker.add(
-          QS_BOOKMARKS.swap_pivot_into_correct_position,
-          (vis, i1, j1, r) => {
-            isPartitionExpanded() &&
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
-            unhighlight(vis, i1);
-            if (j1 >= 0) {
-              if (j1 === i1) {
-                unhighlight(vis, r, false);
-              } else {
-                unhighlight(vis, j1, false);
-              }
+      chunker.add(
+        QS_BOOKMARKS.swap_pivot_into_correct_position,
+        (vis, i1, j1, r) => {
+          isPartitionExpanded() &&
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
+          unhighlight(vis, i1);
+          if (j1 >= 0) {
+            if (j1 === i1) {
+              unhighlight(vis, r, false);
+            } else {
+              unhighlight(vis, j1, false);
             }
-            unhighlight(vis, r, false);
-            vis.array.sorted(i1);
-          },
-          [i, j, right],
-        );
-      }
+          }
+          unhighlight(vis, r, false);
+          vis.array.sorted(i1);
+        },
+        [i, j, right],
+      );
       return [i, a]; // Return [pivot location, array partition_num_array]
     }
 
@@ -353,7 +340,7 @@ export default {
       }
 
       if (left < right) {
-        [pivot, a] = partition(a, left, right, depth);
+        [pivot, a] = partition(a, left, right);
           
         if (depth < 1 || isQuicksortFirstHalfExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
@@ -361,11 +348,7 @@ export default {
           finished_stack_frames,
           ]);
         } else {
-          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis, low, high) => {
-            for (let i = low; i < high; i++) {
-              vis.array.sorted(i);
-            }
-          }, [left, pivot]);
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
         }
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
@@ -375,11 +358,7 @@ export default {
           finished_stack_frames,
           ]);
         } else {
-          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis, low, high) => {
-            for (let i = low; i < high; i++) {
-              vis.array.sorted(i);
-            }
-          }, [pivot, right]);
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1);
         }
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
