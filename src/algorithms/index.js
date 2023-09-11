@@ -53,14 +53,14 @@ const algorithms = {
     name: 'A* Algorithm',
     category: 'Greedy',
     param: <Param.ASTARParam />,
-    instructions: Instructions.DIJKInstruction,
-    explanation: Explanation.DIJKExp,
-    extraInfo: ExtraInfo.DIJKInfo,
+    instructions: Instructions.ASTARInstruction,
+    explanation: Explanation.ASTARExp,
+    extraInfo: ExtraInfo.ASTARInfo,
     pseudocode: {
-      find: Pseudocode.dijkstra,
+      find: Pseudocode.AStar,
     },
     controller: {
-      find: Controller.dijkstra,
+      find: Controller.AStar,
 
     },
   },

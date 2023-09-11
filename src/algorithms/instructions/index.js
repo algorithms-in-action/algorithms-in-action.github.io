@@ -83,4 +83,4 @@ export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const DIJKInstruction = graphInstructions; //TODO
-
+export const ASTARInstruction = graphInstructions; //TODO

@@ -8,3 +8,4 @@ export { default as bruteForceStringSearch } from './bruteForceStringSearch';
 export { default as quickSortM3 } from './quickSortM3';
 export { default as horspoolStringSearching } from './horspoolStringSearching';
 export { default as dijkstra } from './dijkstra';
+export { default as AStar} from './AStar';
