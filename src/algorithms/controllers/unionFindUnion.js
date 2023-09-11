@@ -51,6 +51,7 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression) {
     // 'while parent[n] != n' or 'while parent[m] != m'
+    chunker.add(`while parent[${name}] != ${name}`, () => {});
     while (this.notAtRoot(chunker, parentArr, n, name)) {
       const nTempPrev = n;
 
