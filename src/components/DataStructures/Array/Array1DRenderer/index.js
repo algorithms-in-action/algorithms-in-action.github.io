@@ -48,6 +48,8 @@ class Array1DRenderer extends Array2DRenderer {
 
     this.togglePan(true);
     this.toggleZoom(true);
+
+    this.maxStackDepth = 0;
   }
 
   renderData() {
@@ -137,9 +139,9 @@ class Array1DRenderer extends Array2DRenderer {
           >
             {longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === 'heapsort') {
+
                 i += 1;
-              }
+              
               return (
                 <div className={classes(styles.col, styles.index)} key={i}>
                   <span className={styles.value}>{i}</span>
@@ -190,7 +192,8 @@ class Array1DRenderer extends Array2DRenderer {
         </div>
         <div>
           {stack && stack.length > 0 ? (
-            stackRenderer(stack, data[0].length, stackDepth)
+            this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
+            stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
           ) : (
             <div />
           )}
@@ -222,7 +225,7 @@ class Array1DRenderer extends Array2DRenderer {
  * @param {*} stackDepth
  * @returns
  */
-function stackRenderer(stack, nodeCount, stackDepth) {
+function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) { 
   if (!stack) {
     return <div />;
   }
@@ -262,11 +265,14 @@ function stackRenderer(stack, nodeCount, stackDepth) {
   }
   return (
     <div className={styles.stack}>
-      <p>
-        {stack.length > 0 && stackDepth !== undefined
-          ? `Current stack depth: ${stackDepth}`
-          : ''}
-      </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <p>
+          {stack.length > 0 && stackDepth !== undefined ? `Current stack depth: ${stackDepth}` : ''}
+        </p>
+        <p>
+          {stack.length > 0 && stackDepth !== undefined ? `Maximum stack depth: ${maxStackDepth}` : ''}
+        </p>
+      </div>
       {stackItems}
     </div>
   );
