@@ -20,40 +20,52 @@ export default {
   },
 
   /**
-   * Populate the chunker with the steps required to do a find operation.
-   * @param {Chunker} chunker - The chunker to populate.
-   * @param {Array} arrTable - The internal representation of the arrays.
-   * @param {Number} n - The number to find.
-   * @param {String} name - The variable name of the number to find.
-   * @param {Boolean} pathCompression - Whether to use path compression.
+   * Populate the chunker with 'while parent[n] != n' or 'while parent[m] != m'.
+   * Return true if the number is not at the root, false otherwise.
+   * @param {Chunker} chunker The chunker to populate.
+   * @param {Array} parentArr The parent array.
+   * @param {Number} n The number to find.
+   * @param {String} name The variable name of the number to find.
+   * @returns {Boolean} Whether the number is not at the root.
    */
-  find(chunker, arrTable, n, name, pathCompression) {
-    const nInitial = n;
+  notAtRoot(chunker, parentArr, n, name) {
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      vis.array.select(0, n - 1);
+    });
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      vis.array.select(1, n - 1);
+    });
+    if (parentArr[n - 1] != n) {
+      return true;
+    }
+    return false;
+  },
 
+  /**
+   * Populate the chunker with the steps required to do a find operation.
+   * @param {Chunker} chunker The chunker to populate.
+   * @param {Array} parentArr The parent array.
+   * @param {Number} n The number to find.
+   * @param {String} name The variable name of the number to find.
+   * @param {Boolean} pathCompression Whether to use path compression.
+   */
+  find(chunker, parentArr, n, name, pathCompression) {
     // 'while parent[n] != n' or 'while parent[m] != m'
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(0, nInitial - 1);
-    });
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(1, nInitial - 1);
-    });
-    while (arrTable[n - 1] != n) {
+    while (this.notAtRoot(chunker, parentArr, n, name)) {
+      const nTempPrev = n;
+
       // TODO: `${name} <- parent[${name}]` (path compression)
       if (pathCompression === true) {
         // console.log('path compression on');
       }
-      const nTempPrev = n;
 
       // 'n <- parent[n]' or 'm <- parent[m]'
-      n = arrTable[n - 1];
+      n = parentArr[n - 1];
       const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
         vis.array.data[0][nTempPrev - 1].selected2 = true;
         vis.array.data[1][nTempPrev - 1].selected2 = true;
         vis.array.select(0, nTemp - 1);
-      });
-      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-        vis.array.select(1, nTemp - 1);
       });
     }
 
@@ -67,17 +79,16 @@ export default {
 
   /**
    * Populate the chunker with the steps required to do a union operation.
-   * @param {Chunker} chunker - The chunker to populate.
-   * @param {Array} arrTable - The internal representation of the arrays.
-   * @param {Number} n - The first number to union.
-   * @param {Number} m - The second number to union.
-   * @param {Boolean} pathCompression - Whether to use path compression.
+   * @param {Chunker} chunker The chunker to populate.
+   * @param {Array} parentArr The parent array.
+   * @param {Number} n The first number to union.
+   * @param {Number} m The second number to union.
+   * @param {Boolean} pathCompression Whether to use path compression.
    */
-  union(chunker, arrTable, n, m, pathCompression) {
-
+  union(chunker, parentArr, n, m, pathCompression) {
     // 'n <- find(n)' and 'm <- find(m)'
-    const root1 = this.find(chunker, arrTable, n, 'n', pathCompression);
-    const root2 = this.find(chunker, arrTable, m, 'm', pathCompression);
+    const root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
+    const root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
 
     // 'if n == m'
     chunker.add('if n == m', () => {});
@@ -93,12 +104,12 @@ export default {
     chunker.add('swap(n, m)', () => {});
 
     // 'parent[n] = m'
-    arrTable[root2 - 1] = root1;
+    parentArr[root2 - 1] = root1;
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array);
       vis.array.data[1][root1 - 1].selected1 = true;
       vis.array.data[1][root2 - 1].selected1 = true;
-    }, [[N_ARRAY, arrTable]]);
+    }, [[N_ARRAY, parentArr]]);
 
     // TODO: 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
@@ -113,28 +124,28 @@ export default {
   /**
    * Run the algorithm, populating the chunker with the set of union
    * steps.
-   * @param {Chunker} chunker - The chunker to populate.
-   * @param {Object} params - The parameters for the algorithm.
-   * @param {Array} params.target - The set of union operations to perform.
-   * @param {Boolean} params.pathCompression - Whether to use path compression.
+   * @param {Chunker} chunker The chunker to populate.
+   * @param {Object} params The parameters for the algorithm.
+   * @param {Array} params.target The set of union operations to perform.
+   * @param {Boolean} params.pathCompression Whether to use path compression.
    */
   run(chunker, params) {
     const unionOperations = params.target;
 
     // setting up the arrays
-    const arrTable = [...N_ARRAY];
+    const parentArr = [...N_ARRAY];
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array);
-    }, [[N_ARRAY, arrTable]]); // TODO: will add a third array for rank here
+    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
       this.union(
         chunker,
-        arrTable,
+        parentArr,
         unionOperations[i][0],
         unionOperations[i][1],
-        params.target.name,
+        params.pathCompression,
       );
     }
   },
