@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
-const N_ARRAY = [1,2,3,4,5,6,7,8,9,10];
+const N_ARRAY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default {
   explanation: UFExp,
@@ -88,8 +88,8 @@ export default {
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
     // 'n <- find(n)' and 'm <- find(m)'
-    var root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
-    var root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
+    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
+    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
 
     // 'if n == m'
     chunker.add('if n == m', () => {});
@@ -103,7 +103,7 @@ export default {
     if (rankArr[root1 - 1] > rankArr[root2 - 1]) {
       // 'swap(n, m)'
       chunker.add('swap(n, m)', () => {});
-      var tempRoot1 = root1;
+      const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
     }
@@ -125,7 +125,7 @@ export default {
     if (rankArr[root1 - 1] == rankArr[root2 - 1]) {
       // 'rank[m] <- rank[m] + 1'
       chunker.add('rank[m] <- rank[m] + 1', () => {});
-      //TODO: animate rank array
+      // TODO: animate rank array
       rankArr[root2 - 1] += 1;
     }
   },
@@ -143,7 +143,7 @@ export default {
 
     // setting up the arrays
     const parentArr = [...N_ARRAY];
-    const rankArr = Array(10).fill(0); 
+    const rankArr = Array(10).fill(0);
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array);
     }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
