@@ -4,7 +4,7 @@ import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
   isPartitionExpanded,
-  isIJVarExpanded,
+  //isIJVarExpanded,
   isQuicksortFirstHalfExpanded,
   isQuicksortSecondHalfExpanded,
 } from './quickSortCollapseChunkPlugin';
