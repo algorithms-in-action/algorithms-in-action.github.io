@@ -273,7 +273,7 @@ function PrimsMatrixParam({
         </div>
 
         <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
-          Toggle : {isEuclideanButtonMessage}
+          Edge Weight: {isEuclideanButtonMessage}
         </button>
 
         <div className="sLineButtonContainer">

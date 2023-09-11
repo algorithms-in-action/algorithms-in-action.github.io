@@ -12,7 +12,8 @@
     @include border-radius(6px);
     margin-right: 16px;
     border: 1px solid var(--system-border);
-    width: 155px;
+    width: 170px;
+    font-size: 12px;
     
     button {
       margin-top: 2px;
@@ -53,7 +54,7 @@
     white-space: nowrap;
     text-align: center;
     height: 10px;
-    font-size: 13px;
+    font-size: 12px;
     margin-bottom: 20px;
 
     .sizeBtn {
