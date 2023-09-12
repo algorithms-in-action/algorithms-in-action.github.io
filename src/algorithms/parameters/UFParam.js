@@ -12,9 +12,6 @@ import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
 import SingleValueParam from './helpers/SingleValueParam';
 import DualValueParam from './helpers/DualValueParam';
 
-import { withStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-
 import '../../styles/Param.scss';
 import { set } from 'lodash';
 
