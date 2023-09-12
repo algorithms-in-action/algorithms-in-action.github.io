@@ -21,7 +21,7 @@ export default {
         
         // running find
         const value = target.arg1;
-        const pathCompression = target.arg2;
+        // const pathCompression = target.arg2;
         find(chunker, parentArray, value);
 
    }
