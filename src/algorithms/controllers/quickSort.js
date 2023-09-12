@@ -364,10 +364,11 @@ export default {
         } else { // this part animates the recursion when it is collapsed
           // can also add a function to animate the swap actions in one step here instead of in the partition function
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis, low, high) => {
-            for (let i = low; i < high; i++) {
+            
+            for (let i = low; i <= high; i++) { // inclusive to make sure pivot is sorted at end
               vis.array.sorted(i);
-            } // pivot + 1 solves the bug that does not fully colour in the array when it is finished
-          }, [left, pivot+1]);
+            } 
+          }, [left, pivot]);
         }
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
