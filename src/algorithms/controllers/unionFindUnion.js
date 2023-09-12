@@ -139,8 +139,12 @@ export default {
    * @param {Boolean} params.pathCompression Whether to use path compression.
    */
   run(chunker, params) {
-    const unionOperations = params.target;
-
+      const unionOperations = params.target.arg1;
+    const pathCompression = params.target.arg2;
+    
+    // initialise parent array
+    let parentArray = [...N_ARRAY]
+    
     // setting up the arrays
     const parentArr = [...N_ARRAY];
     const rankArr = Array(10).fill(0);
