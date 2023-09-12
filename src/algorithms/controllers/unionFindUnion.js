@@ -139,7 +139,7 @@ export default {
    * @param {Boolean} params.pathCompression Whether to use path compression.
    */
   run(chunker, params) {
-      const unionOperations = params.target.arg1;
+    const unionOperations = params.target.arg1;
     const pathCompression = params.target.arg2;
     
     // initialise parent array
