@@ -192,6 +192,9 @@ export default {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
+    // any if statements with depth < 1 and isQuicksort...Expanded is related to the independent recursion animation
+    // it prevents some chunkers to be added so that some animation can be done in one step. 
+    // Refer to the quicksort function for more information
     function partition(partition_num_array, left, right, depth) {
       const a = partition_num_array;
       let i = left - 1;
@@ -342,6 +345,7 @@ export default {
 
       let a = qs_num_array;
       let pivot;
+      // depth < 1 makes sure that when depth is 0, the animation plays for the initial segment of code before the recursion is called
       if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
         chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
           real_stack,
@@ -357,12 +361,13 @@ export default {
           real_stack,
           finished_stack_frames,
           ]);
-        } else {
+        } else { // this part animates the recursion when it is collapsed
+          // can also add a function to animate the swap actions in one step here instead of in the partition function
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, (vis, low, high) => {
             for (let i = low; i < high; i++) {
               vis.array.sorted(i);
-            }
-          }, [left, pivot]);
+            } // pivot + 1 solves the bug that does not fully colour in the array when it is finished
+          }, [left, pivot+1]);
         }
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
@@ -381,6 +386,7 @@ export default {
         QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
       }
       // array of size 1, already sorted
+      // has a conditional to specify which line it jumps to depending on the expanding and collapsing
       else if (left < a.length) {
         let size_one_bookmark = QS_BOOKMARKS.if_left_less_right;
         if (!isQuicksortFirstHalfExpanded() && !isQuicksortSecondHalfExpanded()) {
