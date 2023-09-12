@@ -15,12 +15,14 @@ export default {
 
     run(chunker, {visualiser, target} ) {
         
-        // getting parent awway
+        // getting parent array
         const elemArray = visualiser.array.instance.data[1]
         const parentArray = elemArray.map(element => parseInt(element.value, 10));
         
         // running find
-        find(chunker, parentArray, target);
+        const value = target.arg1;
+        const pathCompression = target.arg2;
+        find(chunker, parentArray, value);
 
    }
 

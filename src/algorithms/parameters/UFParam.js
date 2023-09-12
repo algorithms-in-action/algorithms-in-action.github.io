@@ -63,8 +63,8 @@ function UFParam() {
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
 
       const target = {
-        value: parseInt(inputValue, 10),
-        pathCompression: pathCompressionEnabled,
+        arg1: parseInt(inputValue, 10),
+        arg2: pathCompressionEnabled,
       };
 
       const visualiser = algorithm.chunker.visualisers;
