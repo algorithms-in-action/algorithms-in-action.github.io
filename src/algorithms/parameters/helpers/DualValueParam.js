@@ -9,78 +9,120 @@ import DualValueForm from './DualValueForm';
 import useParam from '../../../context/useParam';
 import { successParamMsg, errorParamMsg } from './ParamHelper';
 
-// find someway to import this more nicely?? so can change in multiple places
-const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-
-// to-do:
-// manual editing: maybe we shouldnt allow them to type characters? or continue to type if input is correct? overall, should not be checking validation at the end, as they will have to go back through their text carefully - quite annoying. 
-// with the manual ediitng real-time validaiton, could like colour the border red if invalid? or stop them from typing?
-// could have more targeted error (e.g., out of bounds value, incorrect syntax, etc.)
-
+/**
+ * This dual value component can be used where two input values are progressively
+ * combined into a formatted sequence. This sequence can be manually edited or submitted as-is.
+ *
+ * @param {function} validateAddInput - A function that takes two arguments and returns true if
+ * the arguments are valid, false otherwise. This function is used to validate the input values
+ * before they are added to the sequence.
+ * @param {function} validateTextInput - A function that takes a string and returns true if the
+ * string is valid, false otherwise. This function is used to validate the sequence before
+ * it is submitted.
+ * @param {string} inputFormatPattern - A string that is used to format the input values before
+ * they are added to the sequence. The string should contain two placeholders, '{0}' and '{1}',
+ * which will be replaced by the input values.
+ * @param {function} parseTextInput - A function that takes a string and returns some value
+ * (for example, an array) that is ready for processing within algorithm controller.
+ * @param {string} placeholderVal1 - A string to be used as the placeholder for the first input value.
+ * @param {string} placeholderVal2 - A string that is used as the placeholder for the second input value.
+ * @param {*} additionalTarget - An optional value that is passed to the algorithm controller along with the sequence. For example, could be the value of a toggle. If included, can access within controller by using target.arg2.
+ */
 function DualValueParam({
-  name, buttonName, mode, DEFAULT_VAL, ALGORITHM_NAME,
-  EXAMPLE, formClassName, handleSubmit, setMessage,
+  name, buttonName, mode, DEFAULT_TEXT, ALGORITHM_NAME,
+  ADD_EXAMPLE, SUBMIT_EXAMPLE, setMessage, formClassName, handleSubmit, handleAdd,
+  placeholderVal1 = 'Val 1',
+  placeholderVal2 = 'Val 2',
+  additionalTarget = null,
+  // Must either implement the following, or override the handleDefaultAdd and handleDefaultSubmit functions. 
+  validateAddInput = () => true,
+  validateTextInput = () => true,
+  inputFormatPattern = '{0}{1}',
+  parseTextInput = (value) => value,
 }) {
   const {
     dispatch,
     disabled,
     paramVal,
     setParamVal,
-  } = useParam(DEFAULT_VAL);
-
+  } = useParam(DEFAULT_TEXT);
 
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
 
-  const handleAdd = () => {
+  const handleDefaultAdd = () => {
 
-    const trimmedInput1 = input1.trim();
-    const trimmedInput2 = input2.trim();
+    if(validateAddInput(input1, input2)) {
 
-    if(validateNumberInput(trimmedInput1, trimmedInput2)) {
-
-      const formatInput = `${trimmedInput1}-${trimmedInput2}`;
+      const formatInput = formatUsingPattern(inputFormatPattern, input1, input2);
       if (paramVal) {
         setParamVal(prev => `${prev},${formatInput}`);
       } else {
           setParamVal(formatInput);
       }
+
+      // Resetting the input fields.
       setInput1('');
       setInput2('');
+
       setMessage(successParamMsg(ALGORITHM_NAME));
 
     }
     else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, "Can only add two single digits between 1 and 10."));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ADD_EXAMPLE));
     }
   };
 
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    const inputValue = e.target.elements.unionTextInput.value;
 
-    if (validateTextInput(inputValue)) {
-      const target = inputValue.split(',').map(pair => pair.split('-').map(Number));
+    // Getting text from field in form.
+    const textInput = e.target.elements.textInput.value;
 
-      // run animation
+    if (validateTextInput(textInput)) {
+      
+      let target;
+
+      // Can add a second argument (e.g., value of a toggle).
+      if (additionalTarget !== null) {
+        target = {
+          arg1: parseTextInput(textInput),
+          arg2: additionalTarget,
+        };
+      }
+      else {
+        target = parseTextInput(textInput);
+      }
+
+      // Running animation.
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
 
       setMessage(successParamMsg(ALGORITHM_NAME));
+
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+
+      setMessage(errorParamMsg(ALGORITHM_NAME, SUBMIT_EXAMPLE));
     }
     
   };
+    
 
   return (
     <DualValueForm
       formClassName={formClassName}
       name={ALGORITHM_NAME}
       buttonName={buttonName}
-      input1={{value: input1, onChange: (e) => setInput1(e.target.value)}}
-      input2={{value: input2, onChange: (e) => setInput2(e.target.value)}}
+      // Setting input values and handling trimming of whitespace.
+      input1={{value: input1, onChange: (e) => setInput1(e.target.value.trim())}}
+      input2={{value: input2, onChange: (e) => setInput2(e.target.value.trim())}}
+      placeholderVal1={placeholderVal1}
+      placeholderVal2={placeholderVal2}
       textInput={{value: paramVal, onChange: (e) => setParamVal(e.target.value)}}
-      onAdd={handleAdd}
+      onAdd={
+        handleAdd && typeof handleAdd === 'function'
+          ? handleAdd
+          : handleDefaultAdd
+      }
       onChangeText={(e) => setParamVal(e.target.value)}
       disabled={disabled}
       handleSubmit={
@@ -94,41 +136,6 @@ function DualValueParam({
 
 export default DualValueParam;
 
-function validateTextInput(value) {
-  if (!value) return false;
-
-  // ensuring only allowable characters
-  if (!/^[0-9,-]+$/.test(value)) return false;
-
-  // strips of commas at the start and end of the string
-  value = value.replace(/^,|,$/g, '');
-
-  // splits the string into an array of pairs
-  const pairs = value.split(',');
-
-  // checks if each pair is valid
-  for (let i = 0; i < pairs.length; i++) {
-    const pair = pairs[i].split('-');
-
-    // checks only two values in pair
-    if (pair.length !== 2) return false;
-
-    // checks if each value in pair is in domain
-    if (pair.some((val) => isNaN(val) || !N_ARRAY.includes(val))) return false;
-
-  }
-
-  return true;
-
-}
-
-function validateNumberInput(value1, value2) {
-
-  if(!value1 || !value2) return false;
-  if (isNaN(value1) || isNaN(value2)) return false;
-
-  // checks if each value in pair is in domain
-  if (!N_ARRAY.includes(value1) || !N_ARRAY.includes(value2)) return false;
-
-  return true;
-}
+const formatUsingPattern = (pattern, input1, input2) => {
+  return pattern.replace('{0}', input1).replace('{1}', input2);
+};

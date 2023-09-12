@@ -43,25 +43,19 @@
 .blueWordBtnDisabled:active {
   background: none;
 }
-/////////
+
 .greyWordBtn {
-  font: 13px 'Roboto', sans-serif !important;
-  border-radius: 1px;
-  text-align: center;
-  position: relative;
-  cursor: pointer;
-  text-transform: uppercase;
-  padding: 6px;
+  @extend .blueWordBtn;
   color: grey;
 }
 
 .greyWordBtn:hover {
   transition: 0.4s;
   color: lightgrey;
+  background: none;
 }
 
-/////////
-/// 
+
 .checkbox {
   color: var(--mid-control-font);
   font-size: 0.8em;
@@ -208,23 +202,24 @@
   color: var(--mid-control-font);
 }
 
-.union {
+.dualColumnWrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-/* Union Find: */
-.unionAddInput, .unionTextInput {
+
+.dualAddInput, .dualTextInput {
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
 }
 
-.unionAddInput input:focus, .unionTextInput input:focus {
+
+.dualAddInput input:focus, .dualTextInput input:focus {
   outline: none;
 }
 
-.unionAddInput input, .unionTextInput input {
+.dualAddInput input, .dualTextInput input {
   width: 50px;
   height: 25px;
   flex-grow: 0;
@@ -236,20 +231,22 @@
   margin-bottom: 4px;
   padding:  0px 5px;
 
-  font-family:'Roboto', sans-serif;
+  //font-family:'Roboto', sans-serif;
   font-size: 1.05em;
-  font-weight: 200;
+  //font-weight: 200;
 
   background-color: var(--mid-control-bg);
   color: var(--mid-control-font);
 }
 
-
-.unionTextInput input {
+.dualTextInput input {
   flex-grow: 1;
   margin-right: 10px;
   height: 35px;
 }
+
+
+
 
 
 
