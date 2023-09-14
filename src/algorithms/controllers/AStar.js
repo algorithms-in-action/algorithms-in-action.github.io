@@ -24,10 +24,13 @@ export default {
     const parents = [];
     const nodes = [];  
     const finalCosts = [];
+    const heuristics = [];
+    const calculatedHeuristics = [];
     // Create a set to keep track of visited vertices
     const visited = new Set();  
     let miniIndex = 0;  
     let last = [null,null];//keep track of the last neighbour we visited
+
     const findMinimum = () =>{
       let minCost = INFINITY; 
       miniIndex = null;
@@ -38,6 +41,17 @@ export default {
         }
       } 
     };
+    
+    //Change this to the function for calculating heuristic distances
+    const calculateHDistance = () => {
+      return 0;
+    }
+
+    for (let i = 0; i < numVertices; i++) {
+        calculatedHeuristics[i] = calculateHDistance();
+      }
+
+    
 
     chunker.add(
       1,
@@ -54,13 +68,16 @@ export default {
     const prev = Array(numVertices).fill(null);  
 
     nodes.push('i'); // initialize the pq display
+    heuristics.push('h(n)');
     parents.push('Parent[i]');
     minCosts.push('Cost[i] (PQ)'); 
     finalCosts.push('Final Cost');
+    
      
     //Initialize the table
     for (let i = 0; i < numVertices; i += 1) {
       nodes[i + 1] = i + 1;
+      heuristics.push(calculatedHeuristics[i]);
       minCosts.push("-");
       parents.push(0); 
       finalCosts.push("-");
@@ -70,7 +87,7 @@ export default {
       (vis, v) => {
         vis.array.set(v, 'dijkstra');
       },
-      [[nodes, parents, minCosts,finalCosts], 0]
+      [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
     
     ///initialize each element of array Cost to infinity
@@ -85,7 +102,7 @@ export default {
         vis.array.set(v, 'dijkstra');
        ;
       },
-      [[nodes, parents, minCosts,finalCosts], 0]
+      [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
     
   
@@ -99,7 +116,7 @@ export default {
         vis.array.select(2, w+1);
         vis.array.assignVariable('Min', 2, w+1);
       },
-      [[nodes, parents, minCosts,finalCosts], 0]
+      [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
 
     
@@ -130,7 +147,7 @@ export default {
           }
           
         },
-        [[nodes, parents, minCosts,finalCosts], miniIndex, last]
+        [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, last]
       );
 
       // Find the unvisited vertex with the smallest cost
@@ -168,7 +185,7 @@ export default {
           
 
         },
-        [[nodes, parents, minCosts,finalCosts], miniIndex, currentVertex,prev[currentVertex]]
+        [[nodes, heuristics, parents, minCosts,finalCosts], miniIndex, currentVertex,prev[currentVertex]]
       );
       
       // If we can't find a reachable vertex, exit 
@@ -208,7 +225,7 @@ export default {
              
               
             },
-            [[nodes, parents, minCosts,finalCosts], miniIndex,last]
+            [[nodes,heuristics,parents, minCosts,finalCosts], miniIndex,last]
           );
           
           const newCost = cost[currentVertex] + matrix[currentVertex][m];
@@ -218,11 +235,11 @@ export default {
           if(minCosts[m+1] === Infinity){
             tempString = "∞";
           }
-          if (newCost < cost[m]){
-            minCosts[m+1] = (newCost+"<" + tempString);
+          if ((newCost + calculatedHeuristics[m]) < cost[m]){
+            minCosts[m+1] = (newCost + "+" + calculatedHeuristics[m] + "<" + tempString);
           } 
           else{
-            minCosts[m+1] = (newCost+"!<" + tempString);
+            minCosts[m+1] = (newCost + "+" + calculatedHeuristics[m] + "!<" + tempString);
           }
           
           //findMinimum();
@@ -241,7 +258,7 @@ export default {
               vis.graph.leave1(y,y,2);
 
             },
-            [[nodes, parents, minCosts,finalCosts], miniIndex, currentVertex,m]
+            [[nodes,heuristics,parents, minCosts,finalCosts], miniIndex, currentVertex,m]
           ); 
           last = [currentVertex,m];
           minCosts[m+1] = cost[m];
@@ -262,7 +279,7 @@ export default {
                   vis.array.assignVariable("Min", 2, w+1);
                 }
               },
-              [[nodes, parents, minCosts,finalCosts], miniIndex]
+              [[nodes,heuristics,parents, minCosts,finalCosts], miniIndex]
             );
 
             /// UpdateCost(Nodes,m,Cost[m]) 
@@ -278,7 +295,7 @@ export default {
                 
                 
               },
-              [[nodes, parents, minCosts,finalCosts], miniIndex]
+              [[nodes,heuristics,parents, minCosts,finalCosts], miniIndex]
             );
 
             
@@ -310,7 +327,7 @@ export default {
                 
                 
               },
-              [[nodes, parents, minCosts,finalCosts], miniIndex,prev[m], m,lastparent,currentVertex]
+              [[nodes,heuristics,parents, minCosts,finalCosts], miniIndex,prev[m], m,lastparent,currentVertex]
             );
             
             
