@@ -4,7 +4,9 @@
   "private": true,
   "homepage": "https://algorithms-in-action.github.io",
   "scripts": {
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build": "run-script-os",
+    "build:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build:win32": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
     "eject": "react-scripts eject",
