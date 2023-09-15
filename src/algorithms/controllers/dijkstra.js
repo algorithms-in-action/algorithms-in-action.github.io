@@ -1,6 +1,5 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import { chunk } from 'lodash';
 
 export default {
   initVisualisers() {

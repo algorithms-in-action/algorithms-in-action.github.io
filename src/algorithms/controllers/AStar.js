@@ -1,6 +1,5 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import { chunk } from 'lodash';
 
 export default {
   initVisualisers() {
@@ -68,7 +67,7 @@ export default {
     const prev = Array(numVertices).fill(null);  
 
     nodes.push('i'); // initialize the pq display
-    heuristics.push('h(n)');
+    heuristics.push('h(i)');
     parents.push('Parent[i]');
     minCosts.push('Cost[i] (PQ)'); 
     finalCosts.push('Final Cost');
