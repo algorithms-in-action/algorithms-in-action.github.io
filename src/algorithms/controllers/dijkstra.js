@@ -1,10 +1,3 @@
-// TODO
-
-/* eslint-disable brace-style */
-/* eslint-disable no-plusplus */
-/* eslint-disable comma-dangle */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable no-multi-spaces,indent,prefer-destructuring */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
