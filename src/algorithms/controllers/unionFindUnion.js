@@ -61,7 +61,7 @@ export default {
       }
 
       // 'n <- parent[n]' or 'm <- parent[m]'
-      n = parentArr[n - 1];
+      n = parentArr[n];
       const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
         vis.array.data[0][nTempPrev].selected2 = true;
