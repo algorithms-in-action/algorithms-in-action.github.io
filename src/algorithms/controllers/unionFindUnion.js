@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
-const N_ARRAY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const N_ARRAY = ["n", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default {
   explanation: UFExp,
@@ -30,12 +30,12 @@ export default {
    */
   notAtRoot(chunker, parentArr, n, name) {
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(0, n - 1);
+      vis.array.select(0, n);
     });
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(1, n - 1);
+      vis.array.select(1, n);
     });
-    if (parentArr[n - 1] != n) {
+    if (parentArr[n] != n) {
       return true;
     }
     return false;
@@ -64,16 +64,16 @@ export default {
       n = parentArr[n - 1];
       const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
-        vis.array.data[0][nTempPrev - 1].selected2 = true;
-        vis.array.data[1][nTempPrev - 1].selected2 = true;
-        vis.array.select(0, nTemp - 1);
+        vis.array.data[0][nTempPrev].selected2 = true;
+        vis.array.data[1][nTempPrev].selected2 = true;
+        vis.array.select(0, nTemp);
       });
     }
 
     // 'return n' or 'return m'
     chunker.add(`return ${name}`, (vis) => {
-      vis.array.data[0][n - 1].selected1 = true;
-      vis.array.data[1][n - 1].selected1 = true;
+      vis.array.data[0][n].selected1 = true;
+      vis.array.data[1][n].selected1 = true;
     });
     return n;
   },
@@ -106,7 +106,7 @@ export default {
 
     // 'if rank[n] > rank[m]'
     chunker.add('if rank[n] > rank[m]', () => {});
-    if (rankArr[root1 - 1] > rankArr[root2 - 1]) {
+    if (rankArr[root1] > rankArr[root2]) {
       // 'swap(n, m)'
       chunker.add('swap(n, m)', () => {});
       const tempRoot1 = root1;
@@ -115,26 +115,26 @@ export default {
     }
 
     // 'parent[n] = m'
-    parentArr[root1 - 1] = root2;
+    parentArr[root1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array, 'unionFind');
-      vis.array.data[1][root1 - 1].selected1 = true;
-      vis.array.data[1][root2 - 1].selected1 = true;
+      vis.array.data[1][root1].selected1 = true;
+      vis.array.data[1][root2].selected1 = true;
       // Re-rendering union caption after array reset.
       vis.array.showKth(`${n} UNION ${m}`);
     }, [[N_ARRAY, parentArr]]);
 
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
-      vis.array.deselect(1, root1 - 1);
-      vis.array.deselect(1, root2 - 1);
+      vis.array.deselect(1, root1);
+      vis.array.deselect(1, root2);
     });
     // TODO: animate rank array
-    if (rankArr[root1 - 1] == rankArr[root2 - 1]) {
+    if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
       chunker.add('rank[m] <- rank[m] + 1', () => {});
       // TODO: animate rank array
-      rankArr[root2 - 1] += 1;
+      rankArr[root2] += 1;
     }
   },
 
@@ -151,12 +151,12 @@ export default {
     const pathCompression = params.target.arg2;
         
     // setting up the arrays
-    const parentArr = [...N_ARRAY];
-    const rankArr = Array(10).fill(0);
+    const parentArr = ["Parent[n]",...N_ARRAY.slice(1)];
+    const rankArr = ["Rank[n]",...Array(10).fill(0)];
 
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array, 'unionFind');
-    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+   }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
 
 
 
