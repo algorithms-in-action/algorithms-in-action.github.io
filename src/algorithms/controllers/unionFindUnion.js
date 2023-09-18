@@ -114,20 +114,33 @@ export default {
       vis.array.set(array);
       vis.array.data[1][root1 - 1].selected1 = true;
       vis.array.data[1][root2 - 1].selected1 = true;
-    }, [[N_ARRAY, parentArr]]);
-
+    }, [[N_ARRAY, parentArr, rankArr]]);
+    
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
       vis.array.deselect(1, root1 - 1);
       vis.array.deselect(1, root2 - 1);
+      vis.array.data[2][root1 - 1].selected = true;
+      vis.array.data[2][root2 - 1].selected = true;
     });
     // TODO: animate rank array
     if (rankArr[root1 - 1] == rankArr[root2 - 1]) {
       // 'rank[m] <- rank[m] + 1'
-      chunker.add('rank[m] <- rank[m] + 1', () => {});
       // TODO: animate rank array
       rankArr[root2 - 1] += 1;
+      rankArr[root1 - 1] = null;
+      chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
+        vis.array.set(array);
+        vis.array.data[2][root2 - 1].selected1 = true;
+        vis.array.data[2][root1 - 1].selected = false;
+      }, [[N_ARRAY, parentArr, rankArr]]);
     }
+    else {
+      rankArr[root1 - 1] = null;
+    }
+    chunker.add('union(n, m)', (vis, array) => {
+      vis.array.set(array);
+    }, [[N_ARRAY, parentArr, rankArr]]);
   },
 
   /**
@@ -147,7 +160,7 @@ export default {
     const rankArr = Array(10).fill(0);
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array);
-    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+    }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
