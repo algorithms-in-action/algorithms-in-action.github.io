@@ -52,7 +52,12 @@ class GraphTracer extends Tracer {
    * and a third argument which accepts nodes' coordinates.
    * @param {array} array2d 2D array of nodes
    */
-  set(array2d = [], values = [], coordinates = [[0, 0]]) {
+  set(array2d = [], values = [], coordinates = []) {
+    // Set layout to null if nodes are to be displayed by coordinates.
+    if(coordinates.length > 0)
+    {
+      this.callLayout = null;
+    }
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
@@ -74,11 +79,6 @@ class GraphTracer extends Tracer {
           this.addEdge(i, j, this.isWeighted ? value : null);
         }
       }
-    }
-    if(coordinates.length > 0)
-    {
-      // Specifies no layout since coordinates were specified.
-      this.callLayout = null;
     }
     this.layout();
     super.set();

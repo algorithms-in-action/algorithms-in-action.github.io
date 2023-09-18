@@ -27,7 +27,7 @@ export default {
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
    */
-  run(chunker, { edgeValueMatrix, coordsMatrix }) {
+  run(chunker, { edgeValueMatrix, coordsMatrix = [] }) {
     const E = [...edgeValueMatrix];
     const coords = [...coordsMatrix];
     const vertex = edgeValueMatrix.length;
