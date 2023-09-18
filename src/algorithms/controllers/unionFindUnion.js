@@ -30,10 +30,11 @@ export default {
    */
   notAtRoot(chunker, parentArr, n, name) {
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(0, n);
+      vis.array.select(0, n, undefined, undefined, '4');
     });
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(1, n);
+      vis.array.select(1, n, undefined, undefined, '4');
+
     });
     if (parentArr[n] != n) {
       return true;
@@ -51,9 +52,17 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression) {
     // 'while parent[n] != n' or 'while parent[m] != m'
-    chunker.add(`while parent[${name}] != ${name}`, () => {});
+    chunker.add(`while parent[${name}] != ${name}`, () => {
+    });
     while (this.notAtRoot(chunker, parentArr, n, name)) {
       const nTempPrev = n;
+      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+        vis.array.deselect(0, nTempPrev);
+        vis.array.deselect(1, nTempPrev);
+        vis.array.select(0, nTempPrev, undefined, undefined, '5');
+        vis.array.select(1, nTempPrev, undefined, undefined, '5');
+
+      });
 
       // TODO: `${name} <- parent[${name}]` (path compression)
       if (pathCompression === true) {
@@ -64,16 +73,19 @@ export default {
       n = parentArr[n];
       const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
-        vis.array.data[0][nTempPrev].selected2 = true;
-        vis.array.data[1][nTempPrev].selected2 = true;
-        vis.array.select(0, nTemp);
+        vis.array.deselect(0, nTempPrev);
+        vis.array.deselect(1, nTempPrev);
+        vis.array.select(1, nTempPrev, undefined, undefined, '4');
       });
     }
 
     // 'return n' or 'return m'
     chunker.add(`return ${name}`, (vis) => {
-      vis.array.data[0][n].selected1 = true;
-      vis.array.data[1][n].selected1 = true;
+      vis.array.deselect(0, n);
+      vis.array.deselect(1, n);
+      vis.array.select(0, n, undefined, undefined, '1');
+      vis.array.select(1, n, undefined, undefined, '1');
+
     });
     return n;
   },
@@ -118,8 +130,6 @@ export default {
     parentArr[root1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
       vis.array.set(array, 'unionFind');
-      vis.array.data[1][root1].selected1 = true;
-      vis.array.data[1][root2].selected1 = true;
       // Re-rendering union caption after array reset.
       vis.array.showKth(`${n} UNION ${m}`);
     }, [[N_ARRAY, parentArr]]);
