@@ -42,7 +42,7 @@ export default {
     return out;
   },
 
-  run(chunker, { matrix, size }) {
+  run(chunker, { edgeValueMatrix, size }) {
     // eslint-disable-next-line no-unused-expressions
     const numOfNodes = size;
     const nodes = new Array(numOfNodes);
@@ -52,15 +52,15 @@ export default {
     chunker.add(1, (g) => {
       // show kth tag when step back
       setKthVisible(true);
-      g.array.set([...matrix], 'tc');
-      g.graph.set([...matrix], Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+      g.array.set([...edgeValueMatrix], 'tc');
+      g.graph.set([...edgeValueMatrix], Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)));
       g.graph.layoutCircle();
       // initialise the matrix in the 'Matrix' component
       g.graph.setIstc();
     }, [this.graph], [this.array]);
 
     for (let i = 0; i < numOfNodes; i++) {
-      nodes[i] = this.copyArr([...matrix]);
+      nodes[i] = this.copyArr([...edgeValueMatrix]);
     }
 
     for (let k = 0; k < numOfNodes; k++) {
