@@ -87,10 +87,16 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
+    // For rendering the current union caption. 
+    chunker.add('union(n, m)', (vis, array) => {
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`${n} UNION ${m}`);
+    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+
     // 'n <- find(n)' and 'm <- find(m)'
     let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
     let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
-
+    
     // 'if n == m'
     chunker.add('if n == m', () => {});
     if (root1 === root2) {
@@ -111,9 +117,11 @@ export default {
     // 'parent[n] = m'
     parentArr[root1 - 1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
-      vis.array.set(array);
+      vis.array.set(array, 'unionFind');
       vis.array.data[1][root1 - 1].selected1 = true;
       vis.array.data[1][root2 - 1].selected1 = true;
+      // Re-rendering union caption after array reset.
+      vis.array.showKth(`${n} UNION ${m}`);
     }, [[N_ARRAY, parentArr]]);
 
     // 'if rank[n] == rank[m]'
@@ -145,9 +153,12 @@ export default {
     // setting up the arrays
     const parentArr = [...N_ARRAY];
     const rankArr = Array(10).fill(0);
+
     chunker.add('union(n, m)', (vis, array) => {
-      vis.array.set(array);
+      vis.array.set(array, 'unionFind');
     }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+
+
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {

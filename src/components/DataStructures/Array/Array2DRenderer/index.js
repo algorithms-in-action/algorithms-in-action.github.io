@@ -79,7 +79,7 @@ class Array2DRenderer extends Renderer {
               if (algo === 'tc') {
                 i += 1;
               }
-              if (algo === 'prim') {
+              if (algo === 'prim' || algo == 'unionFind') {
                 i = ' ';
               }
               return (
@@ -92,6 +92,8 @@ class Array2DRenderer extends Renderer {
         </tr>
         {
           data.map((row, i) => {
+            // potentially add for union find (to hide parent)
+
             let pointer = false;
             // eslint-disable-next-line no-plusplus
             for (let j = 0; j < row.length; j++) {
@@ -191,6 +193,12 @@ class Array2DRenderer extends Renderer {
           algo === 'tc' &&
           <caption kth-tag='transitive_closure'>
             k = { kth }
+          </caption>
+        }
+        {
+          algo == 'unionFind' &&
+          <caption kth-tag='unionFind'>
+            {kth}
           </caption>
         }
       </table>
