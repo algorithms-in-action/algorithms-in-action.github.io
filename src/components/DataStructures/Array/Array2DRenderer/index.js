@@ -65,6 +65,30 @@ class Array2DRenderer extends Renderer {
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
         <tbody>
+
+          {
+            algo === 'unionFind' && ( 
+            <AnimateSharedLayout>
+              <tr>
+                {data[0].map((col, idx) => (
+                  <td key={idx}>
+                    {col.variables.map((v) => (
+                      <motion.div
+                        layoutId={v}
+                        key={v}
+                        className={classes(styles.variable, styles.top_variable)}
+                        transition={{ type: 'tween'}}
+                      >
+                        {v}
+                      </motion.div>
+                    ))}
+                  </td>
+                ))}
+              </tr>
+            </AnimateSharedLayout>
+          )
+          }
+            
         <tr className={styles.row}>
           {
             !isArray1D &&
@@ -92,7 +116,6 @@ class Array2DRenderer extends Renderer {
         </tr>
         {
           data.map((row, i) => {
-            // potentially add for union find (to hide parent)
 
             let pointer = false;
             // eslint-disable-next-line no-plusplus
@@ -197,9 +220,13 @@ class Array2DRenderer extends Renderer {
         }
         {
           algo == 'unionFind' &&
-          <caption kth-tag='unionFind' className={styles.bottom_caption}>
+          <motion.caption kth-tag='unionFind' className={styles.bottom_caption}
+          // If want dynamic movement:
+          // transition={{ type: 'tween'}}
+          // layout="position"
+          >
             {kth}
-          </caption>
+          </motion.caption>
         }
       </table>
     );
