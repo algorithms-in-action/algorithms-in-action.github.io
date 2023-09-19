@@ -22,6 +22,8 @@ const STACK_FRAME_COLOR = {
   In_progress: 1,
   Current: 2,
   Finished: 3,
+  I_color: 4,
+  J_color: 5
 };
 
 // bookmarks (id) into the REAL file for quicksort
@@ -131,7 +133,10 @@ export default {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(Cur_real_stack, Cur_finished_stack_frames) {
+    function derive_stack(Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_depth) {
+
+      // pass in curr_i, curr_j, curr_depth as -1 if they are not to be rendered
+
       let stack = [];
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack.push(
@@ -163,6 +168,13 @@ export default {
           Cur_real_stack[Cur_real_stack.length - 1],
           STACK_FRAME_COLOR.Current,
         );
+      }
+
+      if (cur_i !== -1) { // i wish i had optionals 
+        
+        Cur_real_stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
+        Cur_real_stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
+        
       }
 
       return stack;

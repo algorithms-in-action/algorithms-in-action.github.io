@@ -211,6 +211,8 @@ class Array1DRenderer extends Array2DRenderer {
 		'var(--in-progress-section)', // 1
 		'var(--current-section)',     // 2
 		'var(--finished-section)',    // 3
+    'var(--i-section)',    // 4
+    'var(--j-section)',    // 5
 	][color_index]
 }
 
