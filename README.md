@@ -36,7 +36,7 @@ Navigate to the root directory of the project and run `npm install` to install a
 
 ### Running a local development server
 
-Navigate to the root directory of the project and run `npm start` this will start the development server on your local machine on port 3000. The application will be launched automatically in your default browser at http://localhost:3000
+Navigate to the root directory of the project and run `npm start` this will start the development server on your local machine on port 3000. The application will be launched automatically in your default browser at <http://localhost:3000>
 
 ## Demo
 
