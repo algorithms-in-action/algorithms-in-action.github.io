@@ -1,8 +1,9 @@
 # Algorithms in Action
 
-This is most recent version modified by the students from Semester 2 2021 COMP90082_2021 Software Project. 
+This is most recent version modified by the students from Semester 2 2023 COMP30022 IT Project. 
 
-* This is a team sub-branch of the main branch. Please tracking most stable running model.
+* This is a fork of the main repository. Please track most stable running model.
+* The current up-to-date development branch is feature/no-ref/union-find-algorithm.
 
 ## Organisation of folders
 
@@ -13,10 +14,11 @@ This is most recent version modified by the students from Semester 2 2021 COMP90
     
  ## Links to Tools
 
-   - Slack channel - https://algorithmsinactionhq.slack.com
-   - Demo of the app (Current Team release) - https://aia.testingstar.top
-   - Demo of the app (Current Stable release of all teams work) - https://aa.testingstar.top
-   - Current working repository: https://github.com/Melb-Uni/AA
+   - Project documentation - (private) https://www.notion.so/Algorithms-in-Action-9b48dc2c17ee4dd39c82b956c981693e
+   - Discord channel - (private) https://discord.com/channels/1079696215136018472/1133180081771139082
+   - Demo of the app (Current Team release) - https://aia.davidsha.me/
+   - Demo of the app (Current Stable release of all teams work) - https://algorithms-in-action.github.io/
+   - Current working repository: https://github.com/d4vidsha/algorithms-in-action.github.io
 
 ## Deployment
 
@@ -24,7 +26,7 @@ Algorithms in Action is written in JavaScript, using the React framework. To wor
 
 **First-time Setup**
 
-Ensure you have node version 14.x and npm version 6.x or higher
+Ensure you have python 3.9.x, node version 18.x and npm version 9.x or higher
 
 To verify, type the following commands in your terminal/ command prompt -
 
@@ -42,6 +44,6 @@ Navigate to the root directory of the project and run `npm start` this will star
 
 We currently have an accessible link to the application, link has shows as above.
 
-This [link](https://aa.testingstar.top) above includes changes made by teams at the end of each sprint and is accessible to anyone who has the link. The version of the algorithm in action web application in the above link tracks the changes made to the `dev` branch in the Github repository. When a pull request is submitted, approved, and merged into the `dev` branch from respective team branches, the application will be redeployed with the updated changes.
+This [link](https://algorithms-in-action.github.io/) above includes changes made by teams at the end of each sprint and is accessible to anyone who has the link. The version of the algorithm in action web application in the above link tracks the changes made to the `dev` branch in the Github repository. When a pull request is submitted, approved, and merged into the `dev` branch from respective team branches, the application will be redeployed with the updated changes.
 
-This [link](https://aia.testingstar.top) is showing current team's work. It's a fast-tracking branch of alpha release which may be unstable. It has tracked with `boxjelly` branch in the GitHub repository.
+This [link](https://aia.davidsha.me/) is showing current team's work. It's a fast-tracking branch of alpha release which may be unstable. It has tracked with `boxjelly` branch in the GitHub repository.
