@@ -76,9 +76,12 @@ pivot <- A[right] \\B 5
 
 \\Code{
 Partition
-Set index i at left of the array segment and j at the right    \\Ref init_iAndj 
-\\Expl{  i scans from left to right stopping at large elements and
-        j scans from right to left stopping at small elements.
+i <- left - 1 \\B 11
+\\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
+\\Expl}
+j <- right \\B 12
+\\Expl{  The j pointer is set to right, rather than right + 1, because the pivot
+        element is in A[right] and is not part of the partitioning.
 \\Expl}
 while i < j \\B 6
 \\Expl{  When the indices cross, all the large elements at the left of
@@ -110,17 +113,6 @@ while i < j \\B 6
     \\In}
 \\In}
 Put the pivot in its final place    \\Ref SwapP 
-\\Code}
-
-\\Code{
-init_iAndj
-i <- left - 1 \\B 11
-\\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
-\\Expl}
-j <- right \\B 12
-\\Expl{  The j pointer is set to right, rather than right + 1, because the pivot
-        element is in A[right] and is not part of the partitioning.
-\\Expl}
 \\Code}
 
 \\Code{

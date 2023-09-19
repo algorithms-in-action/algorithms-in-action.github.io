@@ -20,12 +20,11 @@ export function initGlobalAlgorithmGetterQS(getter) {
   algorithmGetter = getter;
 }
 
-
 function isInQuickSort(algorithm) {
-    // eslint-disable-next-line no-param-reassign
-    if (!algorithm) algorithm = getGlobalAlgorithm();
-    return algorithm.id.name === QS_NAME;
-  }
+  // eslint-disable-next-line no-param-reassign
+  if (!algorithm) algorithm = getGlobalAlgorithm();
+  return algorithm.id.name === QS_NAME;
+}
 
 export function isPartitionExpanded() {
   const algorithm = getGlobalAlgorithm();
@@ -35,16 +34,6 @@ export function isPartitionExpanded() {
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return collapse.quickSort.sort.Partition;
-}
-
-export function isIJVarExpanded() {
-  const algorithm = getGlobalAlgorithm();
-  if (algorithm.id.name !== QS_NAME) return false;
-  // , playing, chunker
-
-  // eslint-disable-next-line
-  const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.init_iAndj;
 }
 
 export function isQuicksortFirstHalfExpanded() {
@@ -68,8 +57,8 @@ export function isQuicksortSecondHalfExpanded() {
 }
 
 export function onCollapseStateChangeQS() {
-    //console.log("here");
-    if (!isInQuickSort()) return false;
-    const algorithm = getGlobalAlgorithm();
-    algorithm.chunker.refresh();
-  }
+  //console.log("here");
+  if (!isInQuickSort()) return false;
+  const algorithm = getGlobalAlgorithm();
+  algorithm.chunker.refresh();
+}
