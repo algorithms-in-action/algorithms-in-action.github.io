@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
-const N_ARRAY = ["n", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const N_ARRAY = ["i", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default {
   explanation: UFExp,
@@ -29,12 +29,14 @@ export default {
    * @returns {Boolean} Whether the number is not at the root.
    */
   notAtRoot(chunker, parentArr, n, name) {
+    // For two separate steps. 
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
       vis.array.select(0, n, undefined, undefined, '4');
     });
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
       vis.array.select(1, n, undefined, undefined, '4');
-
+      vis.array.deselect(1, 0, undefined, n-1)
+      vis.array.deselect(1, n+1, undefined, 10)
     });
     if (parentArr[n] != n) {
       return true;
@@ -51,9 +53,9 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   find(chunker, parentArr, n, name, pathCompression) {
+    
     // 'while parent[n] != n' or 'while parent[m] != m'
-    chunker.add(`while parent[${name}] != ${name}`, () => {
-    });
+
     while (this.notAtRoot(chunker, parentArr, n, name)) {
       const nTempPrev = n;
       chunker.add(`while parent[${name}] != ${name}`, (vis) => {
@@ -80,13 +82,20 @@ export default {
     }
 
     // 'return n' or 'return m'
-    chunker.add(`return ${name}`, (vis) => {
+    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      // Highlight both green
       vis.array.deselect(0, n);
       vis.array.deselect(1, n);
       vis.array.select(0, n, undefined, undefined, '1');
       vis.array.select(1, n, undefined, undefined, '1');
-
     });
+    chunker.add(`return ${name}`, (vis) => {
+      // Deselect the parent
+      vis.array.deselect(1, n);
+    });
+    /*chunker.add(`return ${name}`, (vis) => {
+      vis.array.deselect(0, n);
+    }); */
     return n;
   },
 
@@ -102,7 +111,7 @@ export default {
     // For rendering the current union caption. 
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
-      vis.array.showKth(`${n} UNION ${m}`);
+      vis.array.showKth(`Union(${n}, ${m})`);
     }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here
 
     // 'n <- find(n)' and 'm <- find(m)'
@@ -110,9 +119,13 @@ export default {
     let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
     
     // 'if n == m'
-    chunker.add('if n == m', () => {});
+    chunker.add('if n == m', (vis) => {
+      // maybe change here
+      vis.array.select(0, root1, undefined, undefined, '1');
+    });
     if (root1 === root2) {
-      chunker.add('return', () => {});
+      chunker.add('return', () => {
+      });
       return;
     }
 
@@ -129,19 +142,26 @@ export default {
     // 'parent[n] = m'
     parentArr[root1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
-
-      vis.array.set(array, 'unionFind', ' ');
-      vis.array.showKth(`${n} UNION ${m}`);
-      vis.array.data[1][root1].selected1 = true;
-      vis.array.data[1][root2].selected1 = true;
+      vis.array.deselect(0, root1);
+      vis.array.select(1, root1, undefined, undefined, '1');
     }, [[N_ARRAY, parentArr, rankArr]]);
     
+    chunker.add('parent[n] = m', (vis, array) => {
+      vis.array.deselect(0, root1);
+      vis.array.select(1, root1, undefined, undefined, '1');
+      vis.array.set(array, 'unionFind');
+
+      vis.array.select(0, root2, undefined, undefined, '1');
+      vis.array.select(1, root1, undefined, undefined, '1');
+
+      // Re-rendering union caption after array reset.
+      vis.array.showKth(`Union(${n}, ${m})`);
+    }, [[N_ARRAY, parentArr, rankArr]]);
+
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
       vis.array.deselect(1, root1);
-      vis.array.deselect(1, root2);
-      vis.array.data[2][root1].selected = true;
-      vis.array.data[2][root2].selected = true;
+      vis.array.deselect(0, root2);
     });
     if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
@@ -149,7 +169,8 @@ export default {
       rankArr[root1] = null;
       chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
         vis.array.set(array, 'unionFind', ' ');
-        vis.array.showKth(`${n} UNION ${m}`);
+        vis.array.showKth(`Union(${n}, ${m})`);
+
         vis.array.data[2][root2].selected1 = true;
         vis.array.data[2][root1].selected = false;
       }, [[N_ARRAY, parentArr, rankArr]]);
@@ -159,7 +180,7 @@ export default {
     }
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
-      vis.array.showKth(`${n} UNION ${m}`);
+      vis.array.showKth(`Union(${n}, ${m})`);
     }, [[N_ARRAY, parentArr, rankArr]]);
   },
 
@@ -176,8 +197,8 @@ export default {
     const pathCompression = params.target.arg2;
         
     // setting up the arrays
-    const parentArr = ["Parent[n]",...N_ARRAY.slice(1)];
-    const rankArr = ["Rank[n]",...Array(10).fill(0)];
+    const parentArr = ["Parent[i]",...N_ARRAY.slice(1)];
+    const rankArr = ["Rank[i]",...Array(10).fill(0)];
 
     chunker.add('union(n, m)', (vis, array) => {
 

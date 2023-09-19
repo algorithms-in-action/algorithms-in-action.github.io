@@ -1,13 +1,23 @@
 @import "../../common/stylesheet/index";
 
+
 .array_2d {
   flex-shrink: 0;
   display: table;
   border-collapse: collapse;
 
+  .bottom_caption {
+    caption-side: bottom;
+    text-align: left;
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 500,
+  }
+
   .row {
     display: table-row;
     height: 28px;
+  
 
     .col {
       display: table-cell;
