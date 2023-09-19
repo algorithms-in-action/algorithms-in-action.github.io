@@ -113,7 +113,7 @@ export default {
     // For rendering the current union caption. 
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
-      vis.array.showKth(`Union(${n}, ${m})`);
+      vis.array.showKth(`${n} UNION ${m}`);
     }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here
 
     // 'n <- find(n)' and 'm <- find(m)'
@@ -165,13 +165,24 @@ export default {
       vis.array.deselect(1, root1);
       vis.array.deselect(0, root2);
     });
-    // TODO: animate rank array
     if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
-      chunker.add('rank[m] <- rank[m] + 1', () => {});
-      // TODO: animate rank array
       rankArr[root2] += 1;
+      rankArr[root1] = null;
+      chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
+        vis.array.set(array, 'unionFind', ' ');
+        vis.array.showKth(`${n} UNION ${m}`);
+        vis.array.data[2][root2].selected1 = true;
+        vis.array.data[2][root1].selected = false;
+      }, [[N_ARRAY, parentArr, rankArr]]);
     }
+    else {
+      rankArr[root1] = null;
+    }
+    chunker.add('union(n, m)', (vis, array) => {
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`${n} UNION ${m}`);
+    }, [[N_ARRAY, parentArr, rankArr]]);
   },
 
   /**
@@ -191,10 +202,9 @@ export default {
     const rankArr = ["Rank[i]",...Array(10).fill(0)];
 
     chunker.add('union(n, m)', (vis, array) => {
+
       vis.array.set(array, 'unionFind');
-   }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here,
-
-
+    }, [[N_ARRAY, parentArr, rankArr]]);
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
