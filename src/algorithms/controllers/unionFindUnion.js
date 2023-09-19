@@ -103,7 +103,7 @@ export default {
     chunker.add('union(n, m)', (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.showKth(`${n} UNION ${m}`);
-    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+    }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here
 
     // 'n <- find(n)' and 'm <- find(m)'
     let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
@@ -130,7 +130,8 @@ export default {
     parentArr[root1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
 
-      vis.array.set(array);
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`${n} UNION ${m}`);
       vis.array.data[1][root1].selected1 = true;
       vis.array.data[1][root2].selected1 = true;
     }, [[N_ARRAY, parentArr, rankArr]]);
@@ -144,19 +145,21 @@ export default {
     });
     if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
-      rankArr[root2 - 1] += 1;
-      rankArr[root1 - 1] = null;
+      rankArr[root2] += 1;
+      rankArr[root1] = null;
       chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
-        vis.array.set(array);
+        vis.array.set(array, 'unionFind', ' ');
+        vis.array.showKth(`${n} UNION ${m}`);
         vis.array.data[2][root2].selected1 = true;
         vis.array.data[2][root1].selected = false;
       }, [[N_ARRAY, parentArr, rankArr]]);
     }
     else {
-      rankArr[root1 - 1] = null;
+      rankArr[root1] = null;
     }
     chunker.add('union(n, m)', (vis, array) => {
-      vis.array.set(array);
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`${n} UNION ${m}`);
     }, [[N_ARRAY, parentArr, rankArr]]);
   },
 
@@ -178,7 +181,7 @@ export default {
 
     chunker.add('union(n, m)', (vis, array) => {
 
-      vis.array.set(array);
+      vis.array.set(array, 'unionFind');
     }, [[N_ARRAY, parentArr, rankArr]]);
 
     // applying union operations
