@@ -197,7 +197,7 @@ class Array2DRenderer extends Renderer {
         }
         {
           algo == 'unionFind' &&
-          <caption kth-tag='unionFind'>
+          <caption kth-tag='unionFind' className={styles.bottom_caption}>
             {kth}
           </caption>
         }
