@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
-const N_ARRAY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const N_ARRAY = ["n", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default {
   explanation: UFExp,
@@ -30,12 +30,13 @@ export default {
    */
   notAtRoot(chunker, parentArr, n, name) {
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(0, n - 1);
+      vis.array.select(0, n, undefined, undefined, '4');
     });
     chunker.add(`while parent[${name}] != ${name}`, (vis) => {
-      vis.array.select(1, n - 1);
+      vis.array.select(1, n, undefined, undefined, '4');
+
     });
-    if (parentArr[n - 1] != n) {
+    if (parentArr[n] != n) {
       return true;
     }
     return false;
@@ -51,9 +52,17 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression) {
     // 'while parent[n] != n' or 'while parent[m] != m'
-    chunker.add(`while parent[${name}] != ${name}`, () => {});
+    chunker.add(`while parent[${name}] != ${name}`, () => {
+    });
     while (this.notAtRoot(chunker, parentArr, n, name)) {
       const nTempPrev = n;
+      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+        vis.array.deselect(0, nTempPrev);
+        vis.array.deselect(1, nTempPrev);
+        vis.array.select(0, nTempPrev, undefined, undefined, '5');
+        vis.array.select(1, nTempPrev, undefined, undefined, '5');
+
+      });
 
       // TODO: `${name} <- parent[${name}]` (path compression)
       if (pathCompression === true) {
@@ -61,19 +70,22 @@ export default {
       }
 
       // 'n <- parent[n]' or 'm <- parent[m]'
-      n = parentArr[n - 1];
+      n = parentArr[n];
       const nTemp = n;
       chunker.add(`${name} <- parent[${name}]`, (vis) => {
-        vis.array.data[0][nTempPrev - 1].selected2 = true;
-        vis.array.data[1][nTempPrev - 1].selected2 = true;
-        vis.array.select(0, nTemp - 1);
+        vis.array.deselect(0, nTempPrev);
+        vis.array.deselect(1, nTempPrev);
+        vis.array.select(1, nTempPrev, undefined, undefined, '4');
       });
     }
 
     // 'return n' or 'return m'
     chunker.add(`return ${name}`, (vis) => {
-      vis.array.data[0][n - 1].selected1 = true;
-      vis.array.data[1][n - 1].selected1 = true;
+      vis.array.deselect(0, n);
+      vis.array.deselect(1, n);
+      vis.array.select(0, n, undefined, undefined, '1');
+      vis.array.select(1, n, undefined, undefined, '1');
+
     });
     return n;
   },
@@ -87,10 +99,16 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
+    // For rendering the current union caption. 
+    chunker.add('union(n, m)', (vis, array) => {
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`${n} UNION ${m}`);
+    }, [[N_ARRAY, parentArr]]); // TODO: will add a third array for rank here
+
     // 'n <- find(n)' and 'm <- find(m)'
     let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
     let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
-
+    
     // 'if n == m'
     chunker.add('if n == m', () => {});
     if (root1 === root2) {
@@ -100,7 +118,7 @@ export default {
 
     // 'if rank[n] > rank[m]'
     chunker.add('if rank[n] > rank[m]', () => {});
-    if (rankArr[root1 - 1] > rankArr[root2 - 1]) {
+    if (rankArr[root1] > rankArr[root2]) {
       // 'swap(n, m)'
       chunker.add('swap(n, m)', () => {});
       const tempRoot1 = root1;
@@ -109,30 +127,29 @@ export default {
     }
 
     // 'parent[n] = m'
-    parentArr[root1 - 1] = root2;
+    parentArr[root1] = root2;
     chunker.add('parent[n] = m', (vis, array) => {
+
       vis.array.set(array);
-      vis.array.data[1][root1 - 1].selected1 = true;
-      vis.array.data[1][root2 - 1].selected1 = true;
+      vis.array.data[1][root1].selected1 = true;
+      vis.array.data[1][root2].selected1 = true;
     }, [[N_ARRAY, parentArr, rankArr]]);
     
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
-      vis.array.deselect(1, root1 - 1);
-      vis.array.deselect(1, root2 - 1);
-      vis.array.data[2][root1 - 1].selected = true;
-      vis.array.data[2][root2 - 1].selected = true;
+      vis.array.deselect(1, root1);
+      vis.array.deselect(1, root2);
+      vis.array.data[2][root1].selected = true;
+      vis.array.data[2][root2].selected = true;
     });
-    // TODO: animate rank array
-    if (rankArr[root1 - 1] == rankArr[root2 - 1]) {
+    if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
-      // TODO: animate rank array
       rankArr[root2 - 1] += 1;
       rankArr[root1 - 1] = null;
       chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
         vis.array.set(array);
-        vis.array.data[2][root2 - 1].selected1 = true;
-        vis.array.data[2][root1 - 1].selected = false;
+        vis.array.data[2][root2].selected1 = true;
+        vis.array.data[2][root1].selected = false;
       }, [[N_ARRAY, parentArr, rankArr]]);
     }
     else {
@@ -156,11 +173,13 @@ export default {
     const pathCompression = params.target.arg2;
         
     // setting up the arrays
-    const parentArr = [...N_ARRAY];
-    const rankArr = Array(10).fill(0);
+    const parentArr = ["Parent[n]",...N_ARRAY.slice(1)];
+    const rankArr = ["Rank[n]",...Array(10).fill(0)];
+
     chunker.add('union(n, m)', (vis, array) => {
+
       vis.array.set(array);
-    }, [[N_ARRAY, parentArr, rankArr]]); // TODO: will add a third array for rank here
+    }, [[N_ARRAY, parentArr, rankArr]]);
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
