@@ -235,7 +235,7 @@ export default {
               highlight(vis, i1, false);
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
             } else if (i1 === -1) {
-              isPartitionExpanded() && highlight(vis, 0, false);
+              if (isPartitionExpanded()) { highlight(vis, 0, false); }
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
           },
@@ -279,6 +279,7 @@ export default {
               [i],
             );
           }
+
         } while (a[i] < pivot);
 
         do {
@@ -322,7 +323,8 @@ export default {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r) => {
-            isPartitionExpanded() && vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
+
+            if (isPartitionExpanded()) { vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i); }
             unhighlight(vis, i1);
             if (j1 >= 0) {
               if (j1 === i1) {
