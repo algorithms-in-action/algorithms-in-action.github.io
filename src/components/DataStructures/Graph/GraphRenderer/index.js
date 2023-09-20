@@ -140,7 +140,7 @@ class GraphRenderer extends Renderer {
     const labelPosX = maxScale.x + 100;
     const labelPosY = maxScale.y + 60;
 
-    console.log(labelPosX, labelPosY)
+    // console.log(labelPosX, labelPosY)
 
     const scales = this.computeScales(-1000, 1000, axisCenter);
 
