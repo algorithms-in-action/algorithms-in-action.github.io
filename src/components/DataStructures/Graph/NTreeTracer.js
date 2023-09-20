@@ -12,7 +12,7 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
-import Tracer from '../common/Tracer';
+import Tracer from '../common/Tracer.jsx';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 import TreeNode from './NAryTree';

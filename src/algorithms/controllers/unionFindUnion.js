@@ -227,6 +227,9 @@ export default {
 
       vis.array.deselect(N_ARRAY_IDX, root1);
 
+    }, [[N_ARRAY, parentArr, rankArr]]);
+
+
     parentArr[root1] = root2;
 
     chunker.add('parent[n] = m', (vis, array) => {
