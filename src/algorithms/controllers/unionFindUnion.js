@@ -29,7 +29,7 @@ export default {
   },
 
   /**
-   * Populate the chunker with 'while parent[n] != n' or 'while parent[m] != m'.
+   * Populate the chunker with 'while n != parent[n]' or 'while m != parent[m]'.
    * Return true if the number is not at the root, false otherwise.
    * @param {Chunker} chunker The chunker to populate.
    * @param {Array} parentArr The parent array.
@@ -40,7 +40,7 @@ export default {
   notAtRoot(chunker, parentArr, n, name, nTempPrev) {
     
     // To visually separate into two distinct steps:
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
 
       vis.array.assignVariable(`${name}`, N_ARRAY_IDX, n);
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
@@ -51,7 +51,7 @@ export default {
       }
     });
 
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
 
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
       
@@ -76,14 +76,14 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression) {
     
-    // 'while parent[n] != n' or 'while parent[m] != m'
+    // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
 
     while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
 
       nTempPrev = n;
 
-      chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+      chunker.add(`while ${name} != parent[${name}]`, (vis) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
@@ -113,7 +113,7 @@ export default {
     }
 
     // 'return n' or 'return m'
-    chunker.add(`while parent[${name}] != ${name}`, (vis) => {
+    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
 
       vis.array.deselect(N_ARRAY_IDX, n);
       vis.array.deselect(PARENT_ARRAY_IDX, n);
