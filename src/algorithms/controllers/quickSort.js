@@ -371,14 +371,14 @@ export default {
         [pivot, a] = partition(a, left, right, depth);
 
 
-        // need to refresh stack here, otherwise bug where stack will not show up when expanded
-        chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
-          real_stack,
-          finished_stack_frames,
-        ]);
+        if (depth === 0 || isQuicksortFirstHalfExpanded()) {
+          
+          chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
+            real_stack,
+            finished_stack_frames,
+          ]);
 
-
-        if (!(depth === 0 || isQuicksortFirstHalfExpanded())) {
+        } else {
 
           // this part animates the recursion when it is collapsed
           // can also add a function to animate the swap actions in one step here instead of in the partition function
