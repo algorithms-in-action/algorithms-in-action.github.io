@@ -206,4 +206,19 @@
       fill: var(--graph-arrow-fill-visited2);
     }
   }
+
+
+  // X, Y axis
+  .axis {
+    stroke: var(--axis);
+    stroke-width: 1;
+    fill: none;
+
+  }
+
+  .axisLabel {
+    font-size: 20;
+    font-weight: 1;
+  }
+
 }

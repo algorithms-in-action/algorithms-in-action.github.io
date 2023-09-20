@@ -17,6 +17,8 @@ import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
+import { node } from 'prop-types';
+
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -90,6 +92,102 @@ class GraphRenderer extends Renderer {
     return { x, y };
   }
 
+  /**
+   * Compute the max x and y from nodes coordinates for auto scalling
+   */
+  computeMax(nodes) {
+    var xMax = 0;
+    var yMax = 0;
+
+    const nodesXArr = []
+    const nodesYArr = []
+    for (const node of nodes) {
+      const {x, y} = node;
+      nodesXArr.push(x);
+      nodesYArr.push(y);
+    }
+    xMax = Math.max.apply(null, nodesXArr.map(Math.abs));
+    yMax = Math.max.apply(null, nodesYArr.map(Math.abs));
+    return {x:xMax, y:yMax};
+  }
+
+  /**
+   * Add scales to the axis
+  */
+  computeScales(min, max, center, stepSize=10, stepHeight=5) {
+    const scales = [];
+    const alignMinX = center.x - stepHeight/2;
+    const alignMaxX = center.x + stepHeight/2;
+    const alignMinY = center.y - stepHeight/2;
+    const alignMaxY = center.y + stepHeight/2;
+
+    for (let i=0;i < (max-min)/stepSize; i++) {
+      scales.push({x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY});
+      scales.push({x1: alignMinX, x2: alignMaxX, y1: min + i * stepSize, y2: min + i * stepSize});
+    }
+
+    return scales;
+    
+  }
+
+  /*
+   * Render x y axis
+  */
+  renderAxis(maxScale) {
+    // axis position
+    const axisCenter = {x:0, y:0};
+    const axisScale = 1000;
+    const labelPosX = maxScale.x + 100;
+    const labelPosY = maxScale.y + 60;
+
+    console.log(labelPosX, labelPosY)
+
+    const scales = this.computeScales(-1000, 1000, axisCenter);
+
+
+    return (
+      <g>
+        {/* Add X and Y Axis */}
+        <line x1={0} y1={axisCenter.y} x2={axisScale} y2={axisCenter.y} className={styles.axis} />
+        <line x1={0} y1={axisCenter.y} x2={-axisScale} y2={axisCenter.y} className={styles.axis} />
+
+        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={axisScale} className={styles.axis} />
+        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisScale} className={styles.axis} />
+
+        {/* X Axis Label */}
+        <text x={labelPosX} y={axisCenter.y + 20} textAnchor="middle" className={styles.axisLabel}>
+          + x
+        </text>
+        <text x={-labelPosX} y={axisCenter.y + 20} textAnchor="middle" className={styles.axisLabel}>
+          - x
+        </text>
+
+        {/* Y Axis Label */}
+        <text x={axisCenter.x + 20} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
+          + y
+        </text>
+        <text x={axisCenter.x + 20} y={labelPosY} textAnchor="middle" className={styles.axisLabel}>
+          - y
+        </text>
+
+        {/* Origin Label */}
+        <text x={axisCenter.x - 8} y={axisCenter.x + 16} textAnchor="middle" className={styles.axisLabel}>
+          0
+        </text>
+        
+        {/* Scales */}
+        {scales.map((scale) => {
+          return (
+            <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
+          );
+        })}
+
+
+      </g>
+    );
+  }
+
+
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
@@ -105,7 +203,8 @@ class GraphRenderer extends Renderer {
     if (root) {
       rootX = root.x;
       rootY = root.y;
-    }
+    } 
+    
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -174,7 +273,9 @@ class GraphRenderer extends Renderer {
               </g>
             );
           })
+
         }
+
         {/* node graph */}
         {nodes.map((node) => {
           const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
@@ -205,10 +306,17 @@ class GraphRenderer extends Renderer {
                   isPointer &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
                 }
+
             </motion.g>
+            
           );
         })}
+
+        { /* X axis and Y axis */}
+        {this.renderAxis(this.computeMax(nodes))}
+
         <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
+        
       </svg>
     );
   }
