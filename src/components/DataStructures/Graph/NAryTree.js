@@ -13,65 +13,65 @@
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
 class TreeNode {
-    constructor(id) {
-      this.id = id;
-      this.parent = null;
-      this.children = [];
-      this.x = null;
-      this.y = null;
-      this.level = null;
-      this.prelimx = 0
-      this.modifier = 0;
-      
+  constructor(id) {
+    this.id = id;
+    this.parent = null;
+    this.children = [];
+    this.x = null;
+    this.y = null;
+    this.level = null;
+    this.prelimx = 0;
+    this.modifier = 0;
+    this.rank = 0;
+  }
+
+  addChild(childNode) {
+    childNode.parent = this;
+    this.children.push(childNode);
+  }
+
+  getParent() {
+    return this.parent;
+  }
+
+  getLeftSibling() {
+    if (this.getParent() == null) {
+      return null;
     }
-    
-    addChild(childNode) {
-      childNode.parent = this;
-      this.children.push(childNode);
+    const myIndex = this.getParent().getChildIndex(this);
+    if (myIndex - 1 >= 0) {
+      return this.getParent().children[myIndex - 1];
     }
-    
-    getParent(){
-        return this.parent;
+    return null;
+  }
+
+  getChildIndex(child) {
+    return this.children.findIndex(c => c.id === child.id);
+  }
+
+  getRightSibling() {
+    if (this.getParent() == null) {
+      return null;
     }
-    
-    getLeftSibling(){
-        if (this.getParent() == null){
-            return null;
-        }
-        let myIndex = this.getParent().getChildIndex(this);
-        if (myIndex - 1 >= 0){
-            return this.getParent().children[myIndex-1];
-        }
-        return null;
+    const myIndex = this.getParent().getChildIndex(this);
+    if (myIndex + 1 < this.getParent().children.length) {
+      return this.getParent().children[myIndex + 1];
     }
- 
-    getChildIndex(child){
-        return this.children.findIndex(c => c.id === child.id);
+    return null;
+  }
+
+  getLeftNeighbour(hierarchy) {
+    const leftSibling = this.getLeftSibling();
+    if (leftSibling == null) {
+      const levelList = hierarchy[this.level];
+      const index = levelList.findIndex(n => n.id === this.id);
+      if (index !== 0) {
+        return levelList[index - 1];
+      }
+      // if it is the first node on a level, return null since it has no left neighbour
+      return null;
     }
- 
-    getRightSibling(){
-        if (this.getParent() == null){
-            return null;
-        }
-        let myIndex = this.getParent().getChildIndex(this);
-        if (myIndex + 1 < this.getParent().children.length){
-            return this.getParent().children[myIndex+1];
-        }
-        return null;
-    }
- 
-    getLeftNeighbour(hierarchy){
-        let leftSibling = this.getLeftSibling();
-        if (leftSibling == null){
-            let levelList = hierarchy[this.level];
-            let index = levelList.findIndex(n => n.id === this.id);
-            if (index !== 0){
-                return levelList[index-1];
-            }
-            // if it is the first node on a level, return null since it has no left neighbour
-            return null;
-        }
-        return leftSibling;
-    }
+    return leftSibling;
+  }
 }
 export default TreeNode;
