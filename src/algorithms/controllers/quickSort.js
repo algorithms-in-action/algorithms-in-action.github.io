@@ -201,7 +201,7 @@ export default {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    // any if statements with depth < 1 and isQuicksort...Expanded is related to the independent recursion animation
+    // any if statements with depth === 0 and isQuicksort...Expanded is related to the independent recursion animation
     // it prevents some chunkers to be added so that some animation can be done in one step.
     // Refer to the quicksort function for more information
     function partition(partition_num_array, left, right, depth) {
@@ -211,16 +211,10 @@ export default {
 
       const pivot = a[right];
 
-      /*
-      chunker.add(
-        QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, 
-        noOp
-      ); // prevent early highlight
-      */
-      if (
-        depth < 1 ||
-        (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-      ) {
+      let boolShouldAnimate = (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded());
+
+      if (boolShouldAnimate) {
+
         chunker.add(
           QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
           (vis, p) => {
@@ -261,18 +255,14 @@ export default {
       }
 
       while (i < j) {
-        if (
-          depth < 1 ||
-          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-        ) {
+        if (boolShouldAnimate) {
           chunker.add(QS_BOOKMARKS.while_i_less_j);
         }
         do {
           i += 1;
-          if (
-            depth < 1 ||
-            (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-          ) {
+
+          if (boolShouldAnimate) {
+
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
               (vis, i1) => {
@@ -293,10 +283,7 @@ export default {
 
         do {
           j -= 1;
-          if (
-            depth < 1 ||
-            (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-          ) {
+          if (boolShouldAnimate) {
             chunker.add(
               QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
               (vis, j1) => {
@@ -312,10 +299,8 @@ export default {
             );
           }
         } while (i <= j && pivot < a[j]);
-        if (
-          depth < 1 ||
-          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-        ) {
+
+        if (boolShouldAnimate) {
           chunker.add(QS_BOOKMARKS.if_j_greater_i);
         }
         if (i < j) {
@@ -332,15 +317,12 @@ export default {
       swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
         isPivotSwap: true,
       });
-      if (
-        depth < 1 ||
-        (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-      ) {
+
+      if (boolShouldAnimate) {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r) => {
-            isPartitionExpanded() &&
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
+            isPartitionExpanded() && vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
             unhighlight(vis, i1);
             if (j1 >= 0) {
               if (j1 === i1) {
@@ -364,11 +346,11 @@ export default {
 
       let a = qs_num_array;
       let pivot;
-      // depth < 1 makes sure that when depth is 0, the animation plays for the initial segment of code before the recursion is called
-      if (
-        depth < 1 ||
-        (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-      ) {
+
+      let boolShouldAnimate = (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded());
+
+      // depth === 0 makes sure that when depth is 0, the animation plays for the initial segment of code before the recursion is called
+      if (boolShouldAnimate) {
         chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
           real_stack,
           finished_stack_frames,
@@ -378,12 +360,14 @@ export default {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-        if (depth < 1 || isQuicksortFirstHalfExpanded()) {
+        if (depth === 0 || isQuicksortFirstHalfExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
           ]);
+
         } else {
+
           // this part animates the recursion when it is collapsed
           // can also add a function to animate the swap actions in one step here instead of in the partition function
           chunker.add(
@@ -391,15 +375,17 @@ export default {
             (vis, low, high) => {
               for (let i = low; i <= high; i++) {
                 // inclusive to make sure pivot is sorted at end
-                vis.array.sorted(i);
+                vis.array.sorted(i); 
               }
             },
             [left, pivot],
           );
+
         }
+
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        if (depth < 1 || isQuicksortSecondHalfExpanded()) {
+        if (depth === 0 || isQuicksortSecondHalfExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
