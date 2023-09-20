@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import PrimsMatrixParam from './helpers/PrimsMatrixParam';
 import '../../styles/Param.scss';
 
-import MatrixParam from './helpers/MatrixParam';
-
 const DEFAULT_SIZE = 5;
 const PRIMS = 'New Prim\'s';
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
