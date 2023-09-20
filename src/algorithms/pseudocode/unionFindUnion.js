@@ -72,7 +72,7 @@ export default parse(`
   \\Code{
   Findn
   \\In{
-      while parent[n] != n // while we are not at the root \\B while parent[n] != n
+      while n != parent[n] // while we are not at the root \\B while n != parent[n]
       \\In{
           Shorten_path(n) // shorten path from n to root \\Ref Shorten_path_n
           \\Expl{ There are several ways of shortening the path back to the
@@ -106,7 +106,7 @@ export default parse(`
   \\Code{
     Findm
     \\In{
-        while parent[m] != m // while we are not at the root \\B while parent[m] != m
+        while m != parent[m] // while we are not at the root \\B while m != parent[m]
         \\In{
           Shorten_path(m) // shorten path from m to root \\Ref Shorten_path_m
             \\Expl{ There are several ways of shortening the path back to the
