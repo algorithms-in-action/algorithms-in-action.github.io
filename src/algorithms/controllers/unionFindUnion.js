@@ -3,7 +3,8 @@
 /* eslint-disable no-param-reassign */
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-
+import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
+import TreeNode from '../../components/DataStructures/Graph/NAryTree'; 
 // Defining constants for readability.
 const ORANGE = '4';
 const GREEN = '1';
@@ -24,7 +25,10 @@ export default {
         instance: new Array2DTracer('array', null, 'Array View'),
         order: 0,
       },
-      // TODO: insert tree here
+      tree: {
+        instance: new NTreeTracer('n-tree', null, 'Graph View'),
+        order: 1,
+      },
     };
   },
 
@@ -74,7 +78,7 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  find(chunker, parentArr, n, name, pathCompression) {
+  find(chunker, parentArr, n, name, pathCompression, nodesArray) {
     
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
@@ -140,7 +144,7 @@ export default {
    * @param {Number} m The second number to union.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  union(chunker, parentArr, rankArr, n, m, pathCompression) {
+  union(chunker, parentArr, rankArr, n, m, pathCompression, nodesArray) {
     // For rendering the current union caption. 
     chunker.add('union(n, m)', (vis, array) => {
 
@@ -153,7 +157,16 @@ export default {
     // 'n <- find(n)' and 'm <- find(m)'
     let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
     let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
-    
+    let root1node = null;
+    let root2node = null;
+    for (let i = 0; i < nodesArray.length; i++) {
+      if (nodesArray[i].id == root1) {
+        root1node = nodesArray[i];
+      }
+      if (nodesArray[i].id == root2) {
+        root2node = nodesArray[i];
+      }
+    }
     // 'if n == m'
     chunker.add('if n == m', (vis) => {
 
@@ -179,6 +192,16 @@ export default {
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
+      
+      let tmpParent = null;
+      let tmpChildren = null;
+      tmpParent = root1node.parent;
+      tmpChildren = root1node.children;
+      root1node.parent = root2node.parent;
+      root1node.children = root2node.children;
+      root2node.parent = tmpParent;
+      root2node.children = tmpChildren;
+      // now we have swapped the node
     }
 
     // 'parent[n] = m'
@@ -190,7 +213,8 @@ export default {
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
 
     }, [[N_ARRAY, parentArr, rankArr]]);
-    
+    root1node.parent = root2node;
+    root2node.addChild(root1node);
     chunker.add('parent[n] = m', (vis, array) => {
 
       vis.array.deselect(N_ARRAY_IDX, root1);
@@ -216,6 +240,9 @@ export default {
       vis.array.deselect(N_ARRAY_IDX, root2);
 
     });
+    if (root1node.rank == root2node.rank) {
+      root2node.rank += 1;
+    }
 
     if (rankArr[root1] == rankArr[root2]) {
       // 'rank[m] <- rank[m] + 1'
@@ -257,10 +284,26 @@ export default {
     // setting up the arrays
     const parentArr = ["Parent[i]",...N_ARRAY.slice(1)];
     const rankArr = ["Rank[i]",...Array(10).fill(0)];
-
+    const nodesArray = [];
+    parentArr.forEach((id) => {
+      const newNode = new TreeNode(id);
+      nodesArray.push(newNode);
+    });
+    // now set up connections
+    const rootNode = nodesArray[0]; // The first node in the array
+    for (let i = 1; i < nodesArray.length; i++) { // Start from the second node
+      rootNode.addChild(nodesArray[i]);
+      nodesArray[i].parent = rootNode;
+    }
     chunker.add('union(n, m)', (vis, array) => {
-
+    
       vis.array.set(array, 'unionFind');
+      vis.tree.addNode(array[0]);
+      for (const node of array.slice(1)) {
+        vis.tree.addNode(node);
+        vis.tree.addEdge(array[0], node);
+      }
+      vis.tree.layout();
       
     }, [[N_ARRAY, parentArr, rankArr]]);
 
@@ -273,6 +316,7 @@ export default {
         unionOperations[i][0],
         unionOperations[i][1],
         pathCompression,
+        nodesArray,
       );
     }
   },
