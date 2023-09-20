@@ -231,11 +231,12 @@ export default {
         chunker.add(
           QS_BOOKMARKS.set_i_left_minus_1,
           (vis, i1) => {
-            if (i1 >= 0) {
+            if (i1 !== -1) {
               highlight(vis, i1, false);
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
-            } else if (i1 === -1) {
-              if (isPartitionExpanded()) { highlight(vis, 0, false); }
+
+            } else {
+              if (isPartitionExpanded()) { highlight(vis, 0, false); } // TODO comment and explain this
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
           },
@@ -271,10 +272,17 @@ export default {
                 } else if (i1 === -1) {
                   unhighlight(vis, 0, false);
                 }
-                if (i1 > 0) highlight(vis, i1, false);
-                else if (!isPartitionExpanded() && i1 === 0)
-                  highlight(vis, i1, false);
-                assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
+
+                // TODO can someone check this, i'm not sure how this works 
+                // i've added brackets to what i thought the intent was
+                // the highlight statement was duplicated 
+                // and without brackets with assign_i_j was outside the if statement
+                highlight(vis, i1, false);
+                if (i1 > 0) {  } 
+                else if (!isPartitionExpanded() && i1 === 0) {
+                  assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
+                }
+
               },
               [i],
             );
@@ -349,9 +357,9 @@ export default {
       let a = qs_num_array;
       let pivot;
 
+      // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
       let boolShouldAnimate = (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded());
 
-      // depth === 0 makes sure that when depth is 0, the animation plays for the initial segment of code before the recursion is called
       if (boolShouldAnimate) {
         chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
           real_stack,
