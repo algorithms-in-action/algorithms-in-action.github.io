@@ -158,6 +158,7 @@ export default {
     chunker.add('if n == m', (vis) => {
 
       vis.array.select(N_ARRAY_IDX, root1, undefined, undefined, GREEN);
+      vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
 
     });
 
@@ -170,37 +171,41 @@ export default {
     }
 
     // 'if rank[n] > rank[m]'
-    chunker.add('if rank[n] > rank[m]', () => {});
+    chunker.add('if rank[n] > rank[m]', (vis) => {
+      vis.array.deselect(N_ARRAY_IDX, root1);
+      vis.array.deselect(N_ARRAY_IDX, root2);
+      vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
+      vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
+    });
 
     if (rankArr[root1] > rankArr[root2]) {
       // 'swap(n, m)'
-      chunker.add('swap(n, m)', () => {});
-
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
+      chunker.add('swap(n, m)', (vis) => {
+        vis.array.assignVariable('n', N_ARRAY_IDX, root1);
+        vis.array.assignVariable('m', N_ARRAY_IDX, root2);
+        vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
+        vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
+      });
     }
 
     // 'parent[n] = m'
+    chunker.add('parent[n] = m', (vis) => { 
+      vis.array.deselect(RANK_ARRAY_IDX, root1);
+      vis.array.deselect(RANK_ARRAY_IDX, root2);
+      vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
+      vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
+
+    });
+
     parentArr[root1] = root2;
-    chunker.add('parent[n] = m', (vis) => {
 
-      vis.array.deselect(N_ARRAY_IDX, root1);
-
-      vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
-
-    }, [[N_ARRAY, parentArr, rankArr]]);
-    
     chunker.add('parent[n] = m', (vis, array) => {
-
-      vis.array.deselect(N_ARRAY_IDX, root1);
-
-      vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
-      vis.array.set(array, 'unionFind');
-
+      vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable('n', N_ARRAY_IDX, root1);
       vis.array.assignVariable('m', N_ARRAY_IDX, root2);
-
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
 
@@ -211,10 +216,10 @@ export default {
 
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
-
       vis.array.deselect(PARENT_ARRAY_IDX, root1);
       vis.array.deselect(N_ARRAY_IDX, root2);
-
+      vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
+      vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
     });
 
     if (rankArr[root1] == rankArr[root2]) {
@@ -226,17 +231,19 @@ export default {
 
         vis.array.set(array, 'unionFind', ' ');
         vis.array.showKth(`Union(${n}, ${m})`);
-
         vis.array.assignVariable('n', N_ARRAY_IDX, root1);
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
-
-        vis.array.data[2][root2].selected1 = true;
-        vis.array.data[2][root1].selected = false;
+        vis.array.deselect(RANK_ARRAY_IDX, root1);
+        vis.array.deselect(RANK_ARRAY_IDX, root2);
+        vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, GREEN);
 
       }, [[N_ARRAY, parentArr, rankArr]]);
     }
     else {
-      rankArr[root1] = null;
+      chunker.add('if rank[n] == rank[m]', (vis) => {
+        vis.array.deselect(RANK_ARRAY_IDX, root1);
+        vis.array.deselect(RANK_ARRAY_IDX, root2);
+      });
     }
 
   },
