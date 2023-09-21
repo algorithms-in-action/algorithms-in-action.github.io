@@ -230,12 +230,6 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr]]);
     root1node.parent = root2node;
     root2node.addChild(root1node);
-    chunker.add('parent[n] = m', (vis, array) => {
-
-      vis.array.deselect(N_ARRAY_IDX, root1);
-
-    }, [[N_ARRAY, parentArr, rankArr]]);
-
 
     parentArr[root1] = root2;
 
