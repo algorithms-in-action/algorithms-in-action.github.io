@@ -99,7 +99,6 @@ export default {
       6,
       (vis, v) => {
         vis.array.set(v, 'dijkstra');
-       ;
       },
       [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
