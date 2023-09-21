@@ -92,6 +92,7 @@ class GraphRenderer extends Renderer {
     return { x, y };
   }
 
+
   /**
    * Compute the max x and y from nodes coordinates for auto scalling
    */
@@ -111,6 +112,7 @@ class GraphRenderer extends Renderer {
     return {x:xMax, y:yMax};
   }
 
+
   /**
    * Add scales to the axis
   */
@@ -123,7 +125,7 @@ class GraphRenderer extends Renderer {
 
     for (let i=0;i < (max-min)/stepSize; i++) {
       scales.push({x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY});
-      scales.push({x1: alignMinX, x2: alignMaxX, y1: min + i * stepSize, y2: min + i * stepSize});
+      scales.push({x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize});
     }
 
     return scales;
@@ -141,33 +143,32 @@ class GraphRenderer extends Renderer {
     const labelPosY = maxScale.y + 60;
 
     // console.log(labelPosX, labelPosY)
+    const scales = this.computeScales(0, 1000, axisCenter);
 
-    const scales = this.computeScales(-1000, 1000, axisCenter);
+    // console.log(this.props.title);
 
+    if (this.props.title !== 'Graph view') {
+      // Do not render axis if its not graph
+      return (
+        <g></g>
+      );
+    }
 
     return (
       <g>
         {/* Add X and Y Axis */}
         <line x1={0} y1={axisCenter.y} x2={axisScale} y2={axisCenter.y} className={styles.axis} />
-        <line x1={0} y1={axisCenter.y} x2={-axisScale} y2={axisCenter.y} className={styles.axis} />
 
-        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={axisScale} className={styles.axis} />
         <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisScale} className={styles.axis} />
 
         {/* X Axis Label */}
         <text x={labelPosX} y={axisCenter.y + 20} textAnchor="middle" className={styles.axisLabel}>
           + x
         </text>
-        <text x={-labelPosX} y={axisCenter.y + 20} textAnchor="middle" className={styles.axisLabel}>
-          - x
-        </text>
 
         {/* Y Axis Label */}
         <text x={axisCenter.x + 20} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
           + y
-        </text>
-        <text x={axisCenter.x + 20} y={labelPosY} textAnchor="middle" className={styles.axisLabel}>
-          - y
         </text>
 
         {/* Origin Label */}
@@ -181,7 +182,6 @@ class GraphRenderer extends Renderer {
             <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
           );
         })}
-
 
       </g>
     );
@@ -224,6 +224,10 @@ class GraphRenderer extends Renderer {
             <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
           </marker>
         </defs>
+
+        { /* X axis and Y axis */}
+        {this.renderAxis(this.computeMax(nodes))}
+
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
             const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
@@ -312,8 +316,6 @@ class GraphRenderer extends Renderer {
           );
         })}
 
-        { /* X axis and Y axis */}
-        {this.renderAxis(this.computeMax(nodes))}
 
         <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
         
