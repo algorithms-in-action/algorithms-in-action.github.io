@@ -211,9 +211,9 @@ export default {
 
       const pivot = a[right];
 
-      let boolShouldAnimate = (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded());
+      function boolShouldAnimate() { return (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded()); }
 
-      if (boolShouldAnimate) {
+      if (boolShouldAnimate()) {
 
         chunker.add(
           QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
@@ -256,13 +256,13 @@ export default {
       }
 
       while (i < j) {
-        if (boolShouldAnimate) {
+        if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.while_i_less_j);
         }
         do {
           i += 1;
 
-          if (boolShouldAnimate) {
+          if (boolShouldAnimate()) {
 
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
@@ -292,7 +292,7 @@ export default {
 
         do {
           j -= 1;
-          if (boolShouldAnimate) {
+          if (boolShouldAnimate()) {
             chunker.add(
               QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
               (vis, j1) => {
@@ -309,7 +309,7 @@ export default {
           }
         } while (i <= j && pivot < a[j]);
 
-        if (boolShouldAnimate) {
+        if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.if_j_greater_i);
         }
         if (i < j) {
@@ -327,7 +327,7 @@ export default {
         isPivotSwap: true,
       });
 
-      if (boolShouldAnimate) {
+      if (boolShouldAnimate()) {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r) => {
@@ -358,9 +358,9 @@ export default {
       let pivot;
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
-      let boolShouldAnimate = (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded());
+      function boolShouldAnimate() { return (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded()); }
 
-      if (boolShouldAnimate) {
+      if (boolShouldAnimate()) {
         chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
           real_stack,
           finished_stack_frames,
