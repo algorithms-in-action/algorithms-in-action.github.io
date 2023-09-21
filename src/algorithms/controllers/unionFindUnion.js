@@ -15,7 +15,7 @@ const PARENT_ARRAY_IDX = 1;
 const RANK_ARRAY_IDX = 2;
 
 const N_ARRAY = ["i", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
+const N_GRAPH = ['0','1','2','3','4','5','6','7','8','9','10'];
 export default {
   explanation: UFExp,
 
@@ -80,22 +80,26 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression, nodesArray) {
     
+    
+    
+   
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
-
+    console.log("og ", n);
     while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
-
+      
       nTempPrev = n;
-
-      chunker.add(`while ${name} != parent[${name}]`, (vis) => {
+      
+      chunker.add(`while ${name} != parent[${name}]`, (vis,n) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
 
         vis.array.select(N_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
-
-      });
+        
+        vis.tree.select(n.toString(),n.toString());
+      },[nTempPrev]);
 
       // TODO: `${name} <- parent[${name}]` (path compression)
       if (pathCompression === true) {
@@ -105,15 +109,15 @@ export default {
       // 'n <- parent[n]' or 'm <- parent[m]'
       n = parentArr[n];
       const nTemp = n;
-
-      chunker.add(`${name} <- parent[${name}]`, (vis) => {
+      console.log("goo",n, nTempPrev);
+      chunker.add(`${name} <- parent[${name}]`, (vis,nPrev) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
 
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
-
-      });
+        vis.tree.deselect(nPrev.toString(),nPrev.toString());
+      }, [nTempPrev]);
     }
 
     // 'return n' or 'return m'
@@ -124,13 +128,14 @@ export default {
       
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
+      vis.tree.select(n.toString(), n.toString());
 
-    });
+    }, [n]);
 
     chunker.add(`return ${name}`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-
+      
     });
 
     return n;
@@ -196,12 +201,14 @@ export default {
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
-      chunker.add('swap(n, m)', (vis) => {
+      chunker.add('swap(n, m)', (vis,n,m) => {
         vis.array.assignVariable('n', N_ARRAY_IDX, root1);
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
         vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
         vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
-      });
+        vis.tree.swapNodes(n,m);
+        vis.tree.layout();
+      }, [root1node.id, root2node.id]);
       
       let tmpParent = null;
       let tmpChildren = null;
@@ -232,17 +239,26 @@ export default {
 
     parentArr[root1] = root2;
 
-    chunker.add('parent[n] = m', (vis, array) => {
+    chunker.add('parent[n] = m', (vis, array,n,m) => {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable('n', N_ARRAY_IDX, root1);
       vis.array.assignVariable('m', N_ARRAY_IDX, root2);
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
-
+      
       // Re-rendering union caption after array reset.
       vis.array.showKth(`Union(${n}, ${m})`);
+      // doing graph operations now
+      const root = '0';
+      vis.tree.removeEdge(root, n.toString());
+      // now add a new edge connecting n to m
+      vis.tree.addEdge(m.toString(), n.toString());
+      // now relayout
+      vis.tree.layout();
+      vis.tree.deselect(n.toString(), n.toString());
+      vis.tree.deselect(m.toString(), m.toString());
 
-    }, [[N_ARRAY, parentArr, rankArr]]);
+    }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
     chunker.add('if rank[n] == rank[m]', (vis) => {
@@ -311,10 +327,10 @@ export default {
     chunker.add('union(n, m)', (vis, array) => {
     
       vis.array.set(array, 'unionFind');
-      vis.tree.addNode(array[0]);
-      for (const node of array.slice(1)) {
+      vis.tree.addNode(N_GRAPH[0]);
+      for (const node of N_GRAPH.slice(1)) {
         vis.tree.addNode(node);
-        vis.tree.addEdge(array[0], node);
+        vis.tree.addEdge(N_GRAPH[0], node);
       }
       vis.tree.layout();
       
