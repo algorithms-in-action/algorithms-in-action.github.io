@@ -26,10 +26,25 @@ export default {
    *
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
+   * 
    */
-  run(chunker, { edgeValueMatrix, coordsMatrix = [] }) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, matrix }) {
+    // When matrix parameter is passed, the graph should be "coordinateless".
+    if(matrix !== undefined)
+    {
+      if(edgeValueMatrix !== undefined) {
+        throw new Error("edgeValueMatrix should be undefined.");
+      }
+      if(coordsMatrix !== undefined)
+      {
+        throw new Error("Coordinate matrix should be undefined.");
+      }
+      edgeValueMatrix = matrix;
+      coordsMatrix = [];
+    }
+
     const E = [...edgeValueMatrix];
-    const coords = [...coordsMatrix];
+    const coords = [...coordsMatrix];  // Potentially empty.
     const vertex = edgeValueMatrix.length;
 
     let weight = new Array(edgeValueMatrix.length);

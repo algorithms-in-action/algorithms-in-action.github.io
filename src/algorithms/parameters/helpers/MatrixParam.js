@@ -130,15 +130,15 @@ function MatrixParam({
   const handleSearch = () => {
     closeInstructions(); // remove instruction
     setMessage(null);
-    const edgeValueMatrix = getMatrix();
+    const matrix = getMatrix();
 
-    if (edgeValueMatrix.length !== 0) {
+    if (matrix.length !== 0) {
       // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
         size,
-        edgeValueMatrix,
+        matrix,
       });
     //   setButtonMessage('Reset');
     } else {
