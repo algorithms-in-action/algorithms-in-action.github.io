@@ -99,16 +99,15 @@ export default {
     
     chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
+      vis.array.assignVariable(name, N_ARRAY_IDX, n);
       if (name == 'n') {
         vis.array.showKth(`Union(${n}, ${m})`);
       }
-      else {
-        vis.array.showKth(`Union(${m}, ${n})`);
-      }
-      vis.array.assignVariable(name, N_ARRAY_IDX, n);
-      if (name == 'm') {
+      else { // dealing with m, need to show n and order Union(n,m) correctly
         vis.array.assignVariable('n', N_ARRAY_IDX, m);
-      }      
+        vis.array.showKth(`Union(${m}, ${n})`);        
+      }
+    
       vis.array.deselect(PARENT_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
     }, [[N_ARRAY, parentArr, rankArr]]);
