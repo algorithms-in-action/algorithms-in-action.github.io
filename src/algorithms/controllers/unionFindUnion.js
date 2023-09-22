@@ -73,35 +73,46 @@ export default {
 
    // TODO: path compression for tree
    shortenPath(chunker, parentArr, rankArr, n, name, m) {
-    const parent = PARENT_ARRAY_IDX[n];
-    const grandparent = PARENT_ARRAY_IDX[parent];
-
+    const parent = parentArr[n];
+    const grandparent = parentArr[parent];
     // highlight parent[n] in parent array
     chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
-      vis.array.deselect(N_ARRAY, n);
+      vis.array.deselect(N_ARRAY_IDX, n);
       vis.array.deselect(PARENT_ARRAY_IDX, n);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
     });
 
     // highlight n's parent in the n array
     chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
-      vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+      vis.array.select(N_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
     
     // highlight the grandparent
     chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.deselect(N_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
 
+    
     // change parent[n] into the grandparent's value
-    PARENT_ARRAY_IDX[n] = grandparent;
+    parentArr[n] = grandparent;
+    
     chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
-      vis.array.showKth(`Union(${n}, ${m})`);
-      vis.array.assignVariable('n', N_ARRAY_IDX, n);
+      if (name == 'n') {
+        vis.array.showKth(`Union(${n}, ${m})`);
+      }
+      else {
+        vis.array.showKth(`Union(${m}, ${n})`);
+      }
+      vis.array.assignVariable(name, N_ARRAY_IDX, n);
+      if (name == 'm') {
+        vis.array.assignVariable('n', N_ARRAY_IDX, m);
+      }      
       vis.array.deselect(PARENT_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
     }, [[N_ARRAY, parentArr, rankArr]]);
+
   },
 
   /**
@@ -132,11 +143,10 @@ export default {
         vis.tree.select(n.toString(),n.toString());
       },[nTempPrev]);
 
-      // TODO: path compression for tree
       if (pathCompression === true) {
         this.shortenPath(chunker, parentArr, rankArr, nTempPrev, name, m);
       }
-      
+
       // 'n <- parent[n]' or 'm <- parent[m]'
       n = parentArr[n];
       const nTemp = n;
