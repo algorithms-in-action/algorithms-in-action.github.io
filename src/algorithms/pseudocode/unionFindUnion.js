@@ -67,31 +67,6 @@ how much this aspect of the algorithm reduces tree height.
 \\Overview}
 
 \\Code{
-Find
-Find(n) // return root of tree containing n \\B Find(n)
-\\In{
-    while n != parent[n]  // while we are not at the root \\B while n != parent[n]
-    \\Note{ Could keep tree representation more abstract but I think its
-            best to be up-front with array representation and how roots
-            are distinguished
-    \\Note}
-    \\In{
-        shorten path from n to root \\Ref Shorten_path
-        \\Expl{ There are several ways of shortening the path back to the
-                root. The most obvious is to follow the path to the root
-                then follow it again, making each element point to the
-                root. The version here doesn't shorten the path as much
-                but is simpler and overall it works extremely well.
-                The animation allows path compression to be disabled so
-                you can compare the relative heights of the trees produced.
-        \\Expl} 
-        n <- parent[n]  // go up the tree one step \\B n <- parent[n]
-    \\In}
-    return n // return root \\B return n
-\\In} 
-\\Code}
-
-\\Code{
 Shorten_path
     parent[n] <- parent[parent[n]] (if enabled) // point to grandparent, not parent \\B parent[n] <- parent[parent[n]]
     \\Expl{ By replacing the parent pointer by a pointer to the
@@ -123,6 +98,24 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
     \\Expl{ The shorter subtree remains the same but the taller one
             may have grown because it had had an extra subtree added.
     \\Expl} 
+\\In} 
+
+Find(n) // return root of tree containing n \\B Find(n)
+\\In{
+    while n != parent[n]  // while we are not at the root \\B while n != parent[n]
+    \\In{
+        shorten path from n to root \\Ref Shorten_path
+        \\Expl{ There are several ways of shortening the path back to the
+                root. The most obvious is to follow the path to the root
+                then follow it again, making each element point to the
+                root. The version here doesn't shorten the path as much
+                but is simpler and overall it works extremely well.
+                The animation allows path compression to be disabled so
+                you can compare the relative heights of the trees produced.
+        \\Expl} 
+        n <- parent[n]  // go up the tree one step \\B n <- parent[n]
+    \\In}
+    return n // return root \\B return n
 \\In} 
 \\Code}
 
