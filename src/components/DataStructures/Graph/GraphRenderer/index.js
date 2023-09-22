@@ -54,6 +54,12 @@ function calculateControlCord(x1, y1, x2, y2) {
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
+    
+    if (this.props.title === 'Graph view') {
+      // Center to 
+      this.centerX = 300;
+      this.centerY = -180;
+    }
 
     this.elementRef = React.createRef();
     this.selectedNode = null;
@@ -138,8 +144,10 @@ class GraphRenderer extends Renderer {
     // axis position
     const axisCenter = {x:0, y:0};
     const axisScale = 1000;
-    const labelPosX = maxScale.x + 100;
-    const labelPosY = maxScale.y + 60;
+    const labelPadding = 25;
+
+    const labelPosX = maxScale.x + labelPadding;
+    const labelPosY = maxScale.y + labelPadding;
 
     if (this.props.title !== 'Graph view') {
       // Do not render axis if its not graph
@@ -164,12 +172,12 @@ class GraphRenderer extends Renderer {
         </text>
 
         {/* Y Axis Label */}
-        <text x={axisCenter.x + 20} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
+        <text x={axisCenter.x - 20} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
           + y
         </text>
 
         {/* Origin Label */}
-        <text x={axisCenter.x - 8} y={axisCenter.x + 16} textAnchor="middle" className={styles.axisLabel}>
+        <text x={axisCenter.x - 5} y={axisCenter.y + 16} textAnchor="middle" className={styles.axisLabel}>
           0
         </text>
         
