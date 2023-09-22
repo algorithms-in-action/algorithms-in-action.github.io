@@ -115,7 +115,7 @@ function MatrixParam({
     });
 
     if (matrix.length !== size || matrix[0].length !== size) return [];
-    if (name === 'prim') {
+    if (name === 'primOld' || name === 'primNew') {
       if (matrixValidCheck(matrix) === false) {
         setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
         // eslint-disable-next-line consistent-return

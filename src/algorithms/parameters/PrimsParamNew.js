@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import PrimsMatrixParam from './helpers/PrimsMatrixParam';
+import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
@@ -13,7 +13,7 @@ function PrimsParamNew() {
   return (
     <>
       {/* Matrix input */}
-      <PrimsMatrixParam
+      <EuclideanMatrixParams
         name="primNew"
         mode="find"
         defaultSize={DEFAULT_SIZE}

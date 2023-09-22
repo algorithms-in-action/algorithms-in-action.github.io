@@ -29,17 +29,14 @@ export default {
    * 
    */
   run(chunker, { edgeValueMatrix, coordsMatrix, matrix }) {
-    // When matrix parameter is passed, the graph should be "coordinateless".
+    // Only one of matrix and edgeValueMatrix should be defined.
+    if(edgeValueMatrix !== undefined && coordsMatrix !== undefined && matrix !== undefined) {
+      throw new Error("edgeValueMatrix should be undefined.");
+    }
+    // Following code handles case where function is called by MatrixParam rather than EuclideanMatrixParams.
     if(matrix !== undefined)
     {
-      if(edgeValueMatrix !== undefined) {
-        throw new Error("edgeValueMatrix should be undefined.");
-      }
-      if(coordsMatrix !== undefined)
-      {
-        throw new Error("Coordinate matrix should be undefined.");
-      }
-      edgeValueMatrix = matrix;
+      edgeValueMatrix = matrix;  
       coordsMatrix = [];
     }
 
