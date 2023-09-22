@@ -17,7 +17,6 @@ import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
-import { node } from 'prop-types';
 
 
 let modename;
@@ -116,7 +115,7 @@ class GraphRenderer extends Renderer {
   /**
    * Add scales to the axis
   */
-  computeScales(min, max, center, stepSize=10, stepHeight=5) {
+  computeScales(min, max, center, stepSize=20, stepHeight=5) {
     const scales = [];
     const alignMinX = center.x - stepHeight/2;
     const alignMaxX = center.x + stepHeight/2;
@@ -142,17 +141,15 @@ class GraphRenderer extends Renderer {
     const labelPosX = maxScale.x + 100;
     const labelPosY = maxScale.y + 60;
 
-    // console.log(labelPosX, labelPosY)
-    const scales = this.computeScales(0, 1000, axisCenter);
-
-    // console.log(this.props.title);
-
     if (this.props.title !== 'Graph view') {
       // Do not render axis if its not graph
       return (
         <g></g>
       );
     }
+
+    // console.log(labelPosX, labelPosY)
+    const scales = this.computeScales(0, 1000, axisCenter);
 
     return (
       <g>
@@ -186,7 +183,6 @@ class GraphRenderer extends Renderer {
       </g>
     );
   }
-
 
   renderData() {
     const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
