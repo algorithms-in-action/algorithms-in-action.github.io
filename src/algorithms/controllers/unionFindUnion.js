@@ -5,6 +5,7 @@ import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
 import TreeNode from '../../components/DataStructures/Graph/NAryTree'; 
+import { chunk } from 'lodash';
 // Defining constants for readability.
 const ORANGE = '4';
 const GREEN = '1';
@@ -70,6 +71,39 @@ export default {
     return false;
   },
 
+   // TODO: path compression for tree
+   shortenPath(chunker, parentArr, rankArr, n, name, m) {
+    const parent = PARENT_ARRAY_IDX[n];
+    const grandparent = PARENT_ARRAY_IDX[parent];
+
+    // highlight parent[n] in parent array
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.deselect(N_ARRAY, n);
+      vis.array.deselect(PARENT_ARRAY_IDX, n);
+      vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
+    });
+
+    // highlight n's parent in the n array
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+    });
+    
+    // highlight the grandparent
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+    });
+
+    // change parent[n] into the grandparent's value
+    PARENT_ARRAY_IDX[n] = grandparent;
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.showKth(`Union(${n}, ${m})`);
+      vis.array.assignVariable('n', N_ARRAY_IDX, n);
+      vis.array.deselect(PARENT_ARRAY_IDX, parent);
+      vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
+    }, [[N_ARRAY, parentArr, rankArr]]);
+  },
+
   /**
    * Populate the chunker with the steps required to do a find operation.
    * @param {Chunker} chunker The chunker to populate.
@@ -78,10 +112,7 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  find(chunker, parentArr, n, name, pathCompression, nodesArray) {
-    
-    
-    
+  find(chunker, parentArr, rankArr, n, name, m, pathCompression, nodesArray) {  
    
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
@@ -101,11 +132,11 @@ export default {
         vis.tree.select(n.toString(),n.toString());
       },[nTempPrev]);
 
-      // TODO: `${name} <- parent[${name}]` (path compression)
+      // TODO: path compression for tree
       if (pathCompression === true) {
-        // console.log('path compression on');
+        this.shortenPath(chunker, parentArr, rankArr, nTempPrev, name, m);
       }
-
+      
       // 'n <- parent[n]' or 'm <- parent[m]'
       n = parentArr[n];
       const nTemp = n;
@@ -141,7 +172,7 @@ export default {
     return n;
   },
 
-  /**
+   /**
    * Populate the chunker with the steps required to do a union operation.
    * @param {Chunker} chunker The chunker to populate.
    * @param {Array} parentArr The parent array.
@@ -160,8 +191,8 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr]]);
 
     // 'n <- find(n)' and 'm <- find(m)'
-    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
-    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
+    let root1 = this.find(chunker, parentArr, rankArr, n, 'n', m, pathCompression, nodesArray);
+    let root2 = this.find(chunker, parentArr, rankArr, m, 'm', n, pathCompression, nodesArray);
     let root1node = null;
     let root2node = null;
     for (let i = 0; i < nodesArray.length; i++) {
@@ -230,12 +261,6 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr]]);
     root1node.parent = root2node;
     root2node.addChild(root1node);
-    chunker.add('parent[n] = m', (vis, array) => {
-
-      vis.array.deselect(N_ARRAY_IDX, root1);
-
-    }, [[N_ARRAY, parentArr, rankArr]]);
-
 
     parentArr[root1] = root2;
 
