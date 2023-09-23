@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth } = this.props.data;
+    const { data, algo, kth, motionOn} = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -77,7 +77,7 @@ class Array2DRenderer extends Renderer {
                         layoutId={v}
                         key={v}
                         className={classes(styles.variable, styles.top_variable)}
-                        transition={{ type: 'tween'}}
+                        transition={motionOn ? { type: 'tween' } : { duration: 0 }}
                       >
                         {v}
                       </motion.div>
