@@ -121,7 +121,7 @@ class GraphRenderer extends Renderer {
   /**
    * Add scales to the axis
   */
-  computeScales(min, max, center, stepSize=20, stepHeight=5) {
+  computeScales(min, max, center, stepSize=30, stepHeight=5) {
     const scales = [];
     const alignMinX = center.x - stepHeight/2;
     const alignMaxX = center.x + stepHeight/2;

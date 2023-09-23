@@ -109,7 +109,7 @@
   .edge {
     .line {
       stroke: var(--graph-edge-line-stroke);
-      stroke-width: 3.5;
+      stroke-width: 2.5;
       fill: none;
 
       &.directed {
@@ -121,7 +121,7 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
-      font-size: 24px;
+      font-size: 15px;
     }
 
     &.selected {
