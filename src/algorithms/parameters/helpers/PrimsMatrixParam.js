@@ -114,8 +114,6 @@ function PrimsMatrixParam({
     
   };
 
-  // EXAMPLE of new code!
-
   // When cell renderer calls updateData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
