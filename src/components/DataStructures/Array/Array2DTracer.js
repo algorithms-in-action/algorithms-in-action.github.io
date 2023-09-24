@@ -45,6 +45,7 @@ class Array2DTracer extends Tracer {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
     this.kth = '1';
+    this.motionOn = true;
     // For a blank inital state. 
     if (algo === 'unionFind') {
       this.kth = ' ';
@@ -142,6 +143,10 @@ class Array2DTracer extends Tracer {
 
     // update this.data
     this.data = newData;
+  }
+
+  setMotion(bool=true) {
+    this.motionOn = bool;
   }
 
 
