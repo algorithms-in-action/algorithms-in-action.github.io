@@ -6,7 +6,7 @@ name: CI
 # events but only for the dev branch and the master branch
 on:
   push:
-    branches: [ dev, feature/no-ref/union-find-algorithm ]
+    branches: [ dev, feature/no-ref/ci-tests ]
     paths-ignore:
       - 'doc/**'      # Ignore all files and subdirectories under "doc/"
       - 'docs/**'     # Ignore all files and subdirectories under "docs/"
