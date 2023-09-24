@@ -80,22 +80,23 @@ export default {
 
    // TODO: path compression for tree
    shortenPath(chunker, parentArr, rankArr, n, name, m) {
+    console.log('hello');
     const parent = parentArr[n];
     const grandparent = parentArr[parent];
     // highlight parent[n] in parent array
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.deselect(N_ARRAY_IDX, n);
       vis.array.deselect(PARENT_ARRAY_IDX, n);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
     });
 
     // highlight n's parent in the n array
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.select(N_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
     
     // highlight the grandparent
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.deselect(N_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
@@ -104,7 +105,7 @@ export default {
     // change parent[n] into the grandparent's value
     parentArr[n] = grandparent;
     
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis, array) => {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable(name, N_ARRAY_IDX, n);
       if (name == 'n') {
