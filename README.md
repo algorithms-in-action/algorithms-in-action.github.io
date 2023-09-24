@@ -50,9 +50,11 @@ This [link](https://aia.davidsha.me/) is showing current team's work. It's a fas
 
 ### Development
 
-Below we make notes on the dev process for the Union Find Algorithm team.
+The main/master branch for this team is `feature/no-ref/union-find-algorithm`. All official changes made by the Union Find Algorithm team will be made in this branch.
 
 #### Changelog
 
+Below we make notes on the dev process for the Union Find Algorithm team.
+
 * [x] After rebasing with the new changes made by the intern, an additional package `run-scripts-os` was added to `package.json` to fix the issue of the app not running on Windows machines.
-* [ ] Create new Union Find algorithm section.
+* [ ] Create new Union Find algorithm.
