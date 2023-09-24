@@ -5,6 +5,7 @@ import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
 import TreeNode from '../../components/DataStructures/Graph/NAryTree'; 
+import { chunk } from 'lodash';
 // Defining constants for readability.
 const ORANGE = '4';
 const GREEN = '1';
@@ -77,6 +78,49 @@ export default {
     return false;
   },
 
+   // TODO: path compression for tree
+   shortenPath(chunker, parentArr, rankArr, n, name, m) {
+    const parent = parentArr[n];
+    const grandparent = parentArr[parent];
+    // highlight parent[n] in parent array
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.deselect(N_ARRAY_IDX, n);
+      vis.array.deselect(PARENT_ARRAY_IDX, n);
+      vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
+    });
+
+    // highlight n's parent in the n array
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.select(N_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+    });
+    
+    // highlight the grandparent
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+      vis.array.deselect(N_ARRAY_IDX, parent);
+      vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+    });
+
+    
+    // change parent[n] into the grandparent's value
+    parentArr[n] = grandparent;
+    
+    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
+      vis.array.set(array, 'unionFind', ' ');
+      vis.array.assignVariable(name, N_ARRAY_IDX, n);
+      if (name == 'n') {
+        vis.array.showKth(`Union(${n}, ${m})`);
+      }
+      else { // dealing with m, need to show n and order Union(n,m) correctly
+        vis.array.assignVariable('n', N_ARRAY_IDX, m);
+        vis.array.showKth(`Union(${m}, ${n})`);        
+      }
+    
+      vis.array.deselect(PARENT_ARRAY_IDX, parent);
+      vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
+    }, [[N_ARRAY, parentArr, rankArr]]);
+
+  },
+
   /**
    * Populate the chunker with the steps required to do a find operation.
    * @param {Chunker} chunker The chunker to populate.
@@ -85,10 +129,9 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  find(chunker, parentArr, n, name, pathCompression, nConst, caption) {
+  find(chunker, parentArr, rankArr, n, name, m, pathCompression, nodesArray, nConst, caption) {
     
-        
-   
+           
     // 'while n != parent[n]'
     let nTempPrev = n;
     
@@ -110,7 +153,7 @@ export default {
 
       // TODO: `n <- parent[n]` (path compression)
       if (pathCompression === true) {
-        // console.log('path compression on');
+        this.shortenPath(chunker, parentArr, rankArr, nTempPrev, name, m);
       }
 
       // 'n <- parent[n]'
@@ -150,7 +193,7 @@ export default {
     return n;
   },
 
-  /**
+   /**
    * Populate the chunker with the steps required to do a union operation.
    * @param {Chunker} chunker The chunker to populate.
    * @param {Array} parentArr The parent array.
@@ -175,8 +218,8 @@ export default {
 
 
     // 'n <- find(n)' and 'm <- find(m)'
-    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression, undefined, `Union(${n}, ${m}) → Find(${n})`);
-    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression, root1, `Union(${n}, ${m}) → Find(${m})`);
+    let root1 = this.find(chunker, parentArr, rankArr, n, 'n', m, pathCompression, nodesArray, undefined, `Union(${n}, ${m}) → Find(${n})`);
+    let root2 = this.find(chunker, parentArr, rankArr, m, 'm', m, pathCompression, nodesArray, root1, `Union(${n}, ${m}) → Find(${m})`);
     let root1node = null;
     let root2node = null;
     for (let i = 0; i < nodesArray.length; i++) {
