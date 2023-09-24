@@ -80,7 +80,6 @@ export default {
 
    // TODO: path compression for tree
    shortenPath(chunker, parentArr, rankArr, n, name, m, nodesArray) {
-    console.log("yooooooo");
     const parent = parentArr[n];
     const grandparent = parentArr[parent];
     const parentNode = nodesArray[n].parent;

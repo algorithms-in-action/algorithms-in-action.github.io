@@ -74,7 +74,7 @@ export default parse(`
   Main
   Find(n) // return root of tree containing n
   \\In{
-      while parent[n] != n // while we are not at the root \\B 1
+      while parent[n] != n // while we are not at the root \\B while n != parent[n]
       \\In{
           shorten path from n to root \\Ref Shorten_path
           \\Expl{ There are several ways of shortening the path back to the
@@ -83,15 +83,15 @@ export default parse(`
                   root. The version here doesn't shorten the path as much
                   but is simpler and overall it works extremely well.
           \\Expl} 
-          n <- parent[n]  // go up the tree one step
+          n <- parent[n]  // go up the tree one step \\B n <- parent[n]
       \\In}
-      return n // return root
+      return n // return root \\B return n
   \\In} 
   \\Code}
   
   \\Code{
   Shorten_path
-      parent[n] = parent[parent[n]] // point to grandparent, not parent
+      parent[n] = parent[parent[n]] // point to grandparent, not parent \\B parent[n] <- parent[parent[n]]
       \\Expl{ By replacing the parent pointer by a pointer to the
               grandparent at each step up the tree, the path length is
               halved. This turns out to be sufficient to keep paths very
