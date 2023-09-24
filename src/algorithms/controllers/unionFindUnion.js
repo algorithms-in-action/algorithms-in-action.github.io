@@ -16,6 +16,7 @@ const RANK_ARRAY_IDX = 2;
 
 const N_ARRAY = ["i", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const N_GRAPH = ['0','1','2','3','4','5','6','7','8','9','10'];
+
 export default {
   explanation: UFExp,
 
@@ -26,7 +27,7 @@ export default {
         order: 0,
       },
       tree: {
-        instance: new NTreeTracer('n-tree', null, 'Graph View'),
+        instance: new NTreeTracer('n-tree', null, 'Tree View'),
         order: 1,
       },
     };
@@ -41,13 +42,19 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @returns {Boolean} Whether the number is not at the root.
    */
-  notAtRoot(chunker, parentArr, n, name, nTempPrev) {
+  notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption) {
+
     
     // To visually separate into two distinct steps:
     chunker.add(`while n != parent[n]`, (vis) => {
 
+      vis.array.setMotion(true);
+
       vis.array.assignVariable(`${name}`, N_ARRAY_IDX, n);
+      vis.array.showKth(caption);
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
+      // To keep 'n' highlighted:
+      vis.array.select(N_ARRAY_IDX, nConst, undefined, undefined, GREEN);
 
       if (nTempPrev != n) {
         // Maintain orange highlight (assignVariable effectively deselects).
@@ -78,15 +85,15 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  find(chunker, parentArr, n, name, pathCompression, nodesArray) {
+  find(chunker, parentArr, n, name, pathCompression, nConst, caption) {
     
-    
-    
+        
    
     // 'while n != parent[n]'
     let nTempPrev = n;
-    console.log("og ", n);
-    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
+    
+    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
+
       
       nTempPrev = n;
       
@@ -98,7 +105,7 @@ export default {
         vis.array.select(N_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         
-        vis.tree.select(n.toString(),n.toString());
+        vis.tree.visit1(n.toString(),n.toString(),2);
       },[nTempPrev]);
 
       // TODO: `n <- parent[n]` (path compression)
@@ -109,14 +116,15 @@ export default {
       // 'n <- parent[n]'
       n = parentArr[n];
       const nTemp = n;
-      console.log("goo",n, nTempPrev);
       chunker.add(`n <- parent[n]`, (vis,nPrev) => {
+      
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
 
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
-        vis.tree.deselect(nPrev.toString(),nPrev.toString());
+        vis.tree.leave1(n.toString(),n.toString(),2);
+        
       }, [nTempPrev]);
     }
 
@@ -128,15 +136,16 @@ export default {
       
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
-      vis.tree.select(n.toString(), n.toString());
-
+      
+      vis.tree.visit1(n.toString(),n.toString(),2);
     }, [n]);
 
     chunker.add(`return n`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-      
-    });
+      vis.tree.leave1(n.toString(), n.toString(),2);
+      vis.tree.select(n.toString(), n.toString());
+    },[n]);
 
     return n;
   },
@@ -153,15 +162,21 @@ export default {
     // For rendering the current union caption. 
     chunker.add('Union(n, m)', (vis, array) => {
 
+
       vis.array.set(array, 'unionFind', ' ');
+      vis.array.setMotion(false);
+      vis.array.assignVariable('n', N_ARRAY_IDX, n);
+      vis.array.assignVariable('m', N_ARRAY_IDX, m);
 
       vis.array.showKth(`Union(${n}, ${m})`);
 
     }, [[N_ARRAY, parentArr, rankArr]]);
 
+
+
     // 'n <- find(n)' and 'm <- find(m)'
-    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
-    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
+    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression, undefined, `Union(${n}, ${m}) → Find(${n})`);
+    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression, root1, `Union(${n}, ${m}) → Find(${m})`);
     let root1node = null;
     let root2node = null;
     for (let i = 0; i < nodesArray.length; i++) {
@@ -206,18 +221,23 @@ export default {
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
         vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
         vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
-        vis.tree.swapNodes(n,m);
-        vis.tree.layout();
+        //vis.tree.swapNodes(n,m);
+        //vis.tree.layout();
       }, [root1node.id, root2node.id]);
       
       let tmpParent = null;
       let tmpChildren = null;
+      let tmpId = null;
+  
       tmpParent = root1node.parent;
       tmpChildren = root1node.children;
+      tmpId = root1node.id;
       root1node.parent = root2node.parent;
       root1node.children = root2node.children;
+      root1node.id = root2node.id;
       root2node.parent = tmpParent;
       root2node.children = tmpChildren;
+      root2node.id = tmpId;
       // now we have swapped the node
     }
 
@@ -230,12 +250,6 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr]]);
     root1node.parent = root2node;
     root2node.addChild(root1node);
-    chunker.add('parent[n] = m', (vis, array) => {
-
-      vis.array.deselect(N_ARRAY_IDX, root1);
-
-    }, [[N_ARRAY, parentArr, rankArr]]);
-
 
     parentArr[root1] = root2;
 
@@ -257,7 +271,7 @@ export default {
       vis.tree.layout();
       vis.tree.deselect(n.toString(), n.toString());
       vis.tree.deselect(m.toString(), m.toString());
-
+      console.log(n, m)
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
