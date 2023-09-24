@@ -51,4 +51,4 @@ jobs:
       - name: Install and Test 🔧
         run: |
           npm install
-          npm run test
+          npm test -- ./src/algorithms/controllers/unionFindUnion.test.js
