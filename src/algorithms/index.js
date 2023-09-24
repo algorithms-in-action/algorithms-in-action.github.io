@@ -141,7 +141,7 @@ const algorithms = {
   },
   'unionFind': {
     name: 'Union Find',
-    category: 'Graph',
+    category: 'Other',
     param: <Param.UFParam />,
     instructions: Instructions.UFInstruction,
     explanation: Explanation.UFExp,

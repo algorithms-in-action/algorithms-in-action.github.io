@@ -16,6 +16,7 @@ const RANK_ARRAY_IDX = 2;
 
 const N_ARRAY = ["i", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const N_GRAPH = ['0','1','2','3','4','5','6','7','8','9','10'];
+
 export default {
   explanation: UFExp,
 
@@ -26,7 +27,7 @@ export default {
         order: 0,
       },
       tree: {
-        instance: new NTreeTracer('n-tree', null, 'Graph View'),
+        instance: new NTreeTracer('n-tree', null, 'Tree View'),
         order: 1,
       },
     };
@@ -41,13 +42,19 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @returns {Boolean} Whether the number is not at the root.
    */
-  notAtRoot(chunker, parentArr, n, name, nTempPrev) {
+  notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption) {
+
     
     // To visually separate into two distinct steps:
     chunker.add(`while ${name} != parent[${name}]`, (vis) => {
 
+      vis.array.setMotion(true);
+
       vis.array.assignVariable(`${name}`, N_ARRAY_IDX, n);
+      vis.array.showKth(caption);
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
+      // To keep 'n' highlighted:
+      vis.array.select(N_ARRAY_IDX, nConst, undefined, undefined, GREEN);
 
       if (nTempPrev != n) {
         // Maintain orange highlight (assignVariable effectively deselects).
@@ -78,15 +85,14 @@ export default {
    * @param {String} name The variable name of the number to find.
    * @param {Boolean} pathCompression Whether to use path compression.
    */
-  find(chunker, parentArr, n, name, pathCompression, nodesArray) {
+  find(chunker, parentArr, n, name, pathCompression, nConst, caption) {
     
     
-    
-   
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
     
-    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
+    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
+
       
       nTempPrev = n;
       
@@ -153,17 +159,23 @@ export default {
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression, nodesArray) {
     // For rendering the current union caption. 
+
     chunker.add('union(n, m)', (vis, array) => {
 
       vis.array.set(array, 'unionFind', ' ');
+      vis.array.setMotion(false);
+      vis.array.assignVariable('n', N_ARRAY_IDX, n);
+      vis.array.assignVariable('m', N_ARRAY_IDX, m);
 
       vis.array.showKth(`Union(${n}, ${m})`);
 
     }, [[N_ARRAY, parentArr, rankArr]]);
 
+
+
     // 'n <- find(n)' and 'm <- find(m)'
-    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression);
-    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression);
+    let root1 = this.find(chunker, parentArr, n, 'n', pathCompression, undefined, `Union(${n}, ${m}) → Find(${n})`);
+    let root2 = this.find(chunker, parentArr, m, 'm', pathCompression, root1, `Union(${n}, ${m}) → Find(${m})`);
     let root1node = null;
     let root2node = null;
     for (let i = 0; i < nodesArray.length; i++) {
