@@ -667,6 +667,9 @@ class NTreeTracer extends Tracer {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
     if (weight) node.weight = weight;
+    if (visit == false){
+      console.log(node);
+    }
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;
       if (edge) edge.visitedCount += visit ? 1 : -1;
@@ -674,7 +677,7 @@ class NTreeTracer extends Tracer {
       node.visitedCount = visit ? 1 : 0;
       if (edge) edge.visitedCount = visit ? 1 : 0;
     }
-    if (this.logTracer) {
+    if (this.logTracer){
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
     }
   }
