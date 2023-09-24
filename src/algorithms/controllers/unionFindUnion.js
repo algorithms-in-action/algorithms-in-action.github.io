@@ -91,7 +91,7 @@ export default {
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
     
-    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
+    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
       
       nTempPrev = n;
       
