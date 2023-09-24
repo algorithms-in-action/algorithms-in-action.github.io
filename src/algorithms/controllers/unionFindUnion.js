@@ -90,7 +90,8 @@ export default {
     
     // 'while n != parent[n]' or 'while m != parent[m]'
     let nTempPrev = n;
-    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
+    
+    while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev)) {
       
       nTempPrev = n;
       
@@ -102,7 +103,7 @@ export default {
         vis.array.select(N_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         
-        vis.tree.select(n.toString(),n.toString());
+        vis.tree.visit1(n.toString(),n.toString(),2);
       },[nTempPrev]);
 
       // TODO: `${name} <- parent[${name}]` (path compression)
@@ -113,14 +114,15 @@ export default {
       // 'n <- parent[n]' or 'm <- parent[m]'
       n = parentArr[n];
       const nTemp = n;
-      console.log("goo",n, nTempPrev);
-      chunker.add(`${name} <- parent[${name}]`, (vis,nPrev) => {
+      
+      chunker.add(`${name} <- parent[${name}]`, (vis,n) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
 
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
-        vis.tree.deselect(nPrev.toString(),nPrev.toString());
+        vis.tree.leave1(n.toString(),n.toString(),2);
+        
       }, [nTempPrev]);
     }
 
@@ -132,15 +134,16 @@ export default {
       
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
-      vis.tree.select(n.toString(), n.toString());
-
+      
+      vis.tree.visit1(n.toString(),n.toString(),2);
     }, [n]);
 
     chunker.add(`return ${name}`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-      
-    });
+      vis.tree.leave1(n.toString(), n.toString(),2);
+      vis.tree.select(n.toString(), n.toString());
+    },[n]);
 
     return n;
   },
@@ -216,18 +219,23 @@ export default {
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
         vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
         vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
-        vis.tree.swapNodes(n,m);
-        vis.tree.layout();
+        //vis.tree.swapNodes(n,m);
+        //vis.tree.layout();
       }, [root1node.id, root2node.id]);
       
       let tmpParent = null;
       let tmpChildren = null;
+      let tmpId = null;
+  
       tmpParent = root1node.parent;
       tmpChildren = root1node.children;
+      tmpId = root1node.id;
       root1node.parent = root2node.parent;
       root1node.children = root2node.children;
+      root1node.id = root2node.id;
       root2node.parent = tmpParent;
       root2node.children = tmpChildren;
+      root2node.id = tmpId;
       // now we have swapped the node
     }
 
@@ -261,7 +269,7 @@ export default {
       vis.tree.layout();
       vis.tree.deselect(n.toString(), n.toString());
       vis.tree.deselect(m.toString(), m.toString());
-
+      console.log(n, m)
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
