@@ -92,6 +92,7 @@ export default {
     let nTempPrev = n;
     
     while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
+
       
       nTempPrev = n;
       
