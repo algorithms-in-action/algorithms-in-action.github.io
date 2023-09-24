@@ -47,7 +47,7 @@ export default {
 
     
     // To visually separate into two distinct steps:
-    chunker.add(`while n != parent[n]`, (vis) => {
+    chunker.add(`while n != parent[n]`, (vis,n) => {
 
       vis.array.setMotion(true);
 
@@ -56,12 +56,12 @@ export default {
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
       // To keep 'n' highlighted:
       vis.array.select(N_ARRAY_IDX, nConst, undefined, undefined, GREEN);
-
+      vis.tree.visit1(n.toString(),n.toString(),2);
       if (nTempPrev != n) {
         // Maintain orange highlight (assignVariable effectively deselects).
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
       }
-    });
+    },[n]);
 
     chunker.add(`while n != parent[n]`, (vis) => {
 
@@ -79,32 +79,43 @@ export default {
   },
 
    // TODO: path compression for tree
-   shortenPath(chunker, parentArr, rankArr, n, name, m) {
+   shortenPath(chunker, parentArr, rankArr, n, name, m, nodesArray) {
+    console.log("yooooooo");
     const parent = parentArr[n];
     const grandparent = parentArr[parent];
+    const parentNode = nodesArray[n].parent;
+    const grandparentNode = parentNode.parent;
+    
     // highlight parent[n] in parent array
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.deselect(N_ARRAY_IDX, n);
       vis.array.deselect(PARENT_ARRAY_IDX, n);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
     });
 
     // highlight n's parent in the n array
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.select(N_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
     
     // highlight the grandparent
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
       vis.array.deselect(N_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
     });
 
-    
+    let gp = null;
+    let p = parentNode.id;
     // change parent[n] into the grandparent's value
     parentArr[n] = grandparent;
+    if (grandparentNode != null){
+      let index = parentNode.children.indexOf(nodesArray[n]);
+      parentNode.children.splice(nodesArray[n],1);
+      nodesArray[n].parent = grandparentNode;
+      gp = grandparentNode.id;
+    }
     
-    chunker.add(`parent[${name}] <- parent[parent[${name}]]`, (vis, array) => {
+    chunker.add(`parent[n] <- parent[parent[n]]`, (vis, array, n, p, gp) => {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable(name, N_ARRAY_IDX, n);
       if (name == 'n') {
@@ -114,10 +125,18 @@ export default {
         vis.array.assignVariable('n', N_ARRAY_IDX, m);
         vis.array.showKth(`Union(${m}, ${n})`);        
       }
+      // change edges if the node has a grandparent
+      
+      if (gp != null){
+        console.log(n, p, gp);
+        vis.tree.removeEdge(p.toString(), n.toString());
+        vis.tree.addEdge(gp.toString(), n.toString());
+        vis.tree.layout();
+      }
     
       vis.array.deselect(PARENT_ARRAY_IDX, parent);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
-    }, [[N_ARRAY, parentArr, rankArr]]);
+    }, [[N_ARRAY, parentArr, rankArr],nodesArray[n].id,p, gp]);
 
   },
 
@@ -147,26 +166,27 @@ export default {
 
         vis.array.select(N_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
+        vis.tree.leave1(n.toString(),n.toString(),2);
+        vis.tree.visit(n.toString(), n.toString());
         
-        vis.tree.visit1(n.toString(),n.toString(),2);
       },[nTempPrev]);
 
       // TODO: `n <- parent[n]` (path compression)
       if (pathCompression === true) {
-        this.shortenPath(chunker, parentArr, rankArr, nTempPrev, name, m);
+        this.shortenPath(chunker, parentArr, rankArr, nTempPrev, name, m, nodesArray);
       }
 
       // 'n <- parent[n]'
       n = parentArr[n];
       const nTemp = n;
-      chunker.add(`n <- parent[n]`, (vis,nPrev) => {
+      chunker.add(`n <- parent[n]`, (vis,n) => {
       
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
 
         vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
-        vis.tree.leave1(n.toString(),n.toString(),2);
+        vis.tree.leave(n.toString(),n.toString());
         
       }, [nTempPrev]);
     }
@@ -312,8 +332,7 @@ export default {
       vis.tree.addEdge(m.toString(), n.toString());
       // now relayout
       vis.tree.layout();
-      vis.tree.deselect(n.toString(), n.toString());
-      vis.tree.deselect(m.toString(), m.toString());
+      
       console.log(n, m)
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
@@ -323,6 +342,8 @@ export default {
       vis.array.deselect(N_ARRAY_IDX, root2);
       vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
       vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
+      vis.tree.deselect(n.toString(), n.toString());
+      vis.tree.deselect(m.toString(), m.toString());
     });
     if (root1node.rank == root2node.rank) {
       root2node.rank += 1;
