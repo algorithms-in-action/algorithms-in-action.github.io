@@ -149,6 +149,11 @@ class Array2DTracer extends Tracer {
     this.motionOn = bool;
   }
 
+  clearVariables() {
+    for (let y = 0; y < this.data[0].length; y++) {
+      this.data[0][y].variables = [];
+    }
+  }
 
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {

@@ -97,6 +97,16 @@ class NTreeTracer extends Tracer {
     this.text = null;
   }
 
+  clearHighlights() {
+    this.nodes.forEach(node => {
+      this.leave(node.id, node.id);
+      // If want to generalise, may need to add more leave1 with different colour values.
+      this.leave1(node.id, node.id, 2);
+      this.deselect(node.id, node.id);
+    })
+  }
+  
+
   isEmpty() {
     return this.nodes.length === 0 && this.edges.length === 0;
   }
