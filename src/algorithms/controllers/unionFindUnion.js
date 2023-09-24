@@ -46,7 +46,7 @@ export default {
 
     
     // To visually separate into two distinct steps:
-    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
+    chunker.add(`while n != parent[n]`, (vis) => {
 
       vis.array.setMotion(true);
 
@@ -62,7 +62,7 @@ export default {
       }
     });
 
-    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
+    chunker.add(`while n != parent[n]`, (vis) => {
 
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
       
@@ -87,8 +87,9 @@ export default {
    */
   find(chunker, parentArr, n, name, pathCompression, nConst, caption) {
     
-    
-    // 'while n != parent[n]' or 'while m != parent[m]'
+        
+   
+    // 'while n != parent[n]'
     let nTempPrev = n;
     
     while (this.notAtRoot(chunker, parentArr, n, name, nTempPrev, nConst, caption)) {
@@ -96,7 +97,7 @@ export default {
       
       nTempPrev = n;
       
-      chunker.add(`while ${name} != parent[${name}]`, (vis,n) => {
+      chunker.add(`while n != parent[n]`, (vis,n) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
@@ -107,16 +108,16 @@ export default {
         vis.tree.visit1(n.toString(),n.toString(),2);
       },[nTempPrev]);
 
-      // TODO: `${name} <- parent[${name}]` (path compression)
+      // TODO: `n <- parent[n]` (path compression)
       if (pathCompression === true) {
         // console.log('path compression on');
       }
 
-      // 'n <- parent[n]' or 'm <- parent[m]'
+      // 'n <- parent[n]'
       n = parentArr[n];
       const nTemp = n;
+      chunker.add(`n <- parent[n]`, (vis,nPrev) => {
       
-      chunker.add(`${name} <- parent[${name}]`, (vis,n) => {
 
         vis.array.deselect(N_ARRAY_IDX, nTempPrev);
         vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
@@ -127,8 +128,8 @@ export default {
       }, [nTempPrev]);
     }
 
-    // 'return n' or 'return m'
-    chunker.add(`while ${name} != parent[${name}]`, (vis) => {
+    // 'return n'
+    chunker.add(`while n != parent[n]`, (vis) => {
 
       vis.array.deselect(N_ARRAY_IDX, n);
       vis.array.deselect(PARENT_ARRAY_IDX, n);
@@ -139,7 +140,7 @@ export default {
       vis.tree.visit1(n.toString(),n.toString(),2);
     }, [n]);
 
-    chunker.add(`return ${name}`, (vis) => {
+    chunker.add(`return n`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
       vis.tree.leave1(n.toString(), n.toString(),2);
@@ -159,8 +160,8 @@ export default {
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression, nodesArray) {
     // For rendering the current union caption. 
+    chunker.add('Union(n, m)', (vis, array) => {
 
-    chunker.add('union(n, m)', (vis, array) => {
 
       vis.array.set(array, 'unionFind', ' ');
       vis.array.setMotion(false);
@@ -337,7 +338,7 @@ export default {
       rootNode.addChild(nodesArray[i]);
       nodesArray[i].parent = rootNode;
     }
-    chunker.add('union(n, m)', (vis, array) => {
+    chunker.add('Union(n, m)', (vis, array) => {
     
       vis.array.set(array, 'unionFind');
       vis.tree.addNode(N_GRAPH[0]);
