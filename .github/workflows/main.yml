@@ -3,10 +3,10 @@
 name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the dev branch and the master branch
+# events but only for the dev branch
 on:
   push:
-    branches: [ dev, feature/no-ref/ci-tests ]
+    branches: [ dev ]
     paths-ignore:
       - 'doc/**'      # Ignore all files and subdirectories under "doc/"
       - 'docs/**'     # Ignore all files and subdirectories under "docs/"
@@ -39,16 +39,3 @@ jobs:
           BRANCH: master # The branch the action should deploy to.
           FOLDER: build # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
-        with:
-          persist-credentials: false
-
-      - name: Install and Test 🔧
-        run: |
-          npm install
-          npm test -- ./src/algorithms/controllers/unionFindUnion.test.js
