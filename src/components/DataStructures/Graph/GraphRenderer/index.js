@@ -56,8 +56,8 @@ class GraphRenderer extends Renderer {
     super(props);
     
     if (this.props.title === 'Graph view') {
-      // Center to axis origin
-      this.centerX = 300;
+      // Center to new axis origin
+      this.centerX = 180;
       this.centerY = -180;
     }
 
