@@ -119,6 +119,7 @@ export default {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable(name, N_ARRAY_IDX, n);
       if (name == 'n') {
+        vis.array.assignVariable('m', N_ARRAY_IDX, m);
         vis.array.showKth(`Union(${n}, ${m})`);
       }
       else { // dealing with m, need to show n and order Union(n,m) correctly
@@ -222,6 +223,9 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression, nodesArray) {
+    const constN = n;
+    const constM = m;
+    
     // For rendering the current union caption. 
     chunker.add('Union(n, m)', (vis, array) => {
 
@@ -252,7 +256,7 @@ export default {
     }
     // 'if n == m'
     chunker.add('if n == m', (vis) => {
-
+      vis.array.showKth(`Union(${constN}, ${constM})`);
       vis.array.select(N_ARRAY_IDX, root1, undefined, undefined, GREEN);
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
 
@@ -324,7 +328,7 @@ export default {
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
       
       // Re-rendering union caption after array reset.
-      vis.array.showKth(`Union(${n}, ${m})`);
+      vis.array.showKth(`Union(${constN}, ${constM})`);
       // doing graph operations now
       const root = '0';
       vis.tree.removeEdge(root, n.toString());
@@ -357,7 +361,7 @@ export default {
       chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
 
         vis.array.set(array, 'unionFind', ' ');
-        vis.array.showKth(`Union(${n}, ${m})`);
+        vis.array.showKth(`Union(${constN}, ${constM})`);
         vis.array.assignVariable('n', N_ARRAY_IDX, root1);
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
         vis.array.deselect(RANK_ARRAY_IDX, root1);
