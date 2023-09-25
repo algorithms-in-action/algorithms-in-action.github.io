@@ -106,6 +106,7 @@ export default {
     let gp = null;
     let p = parentNode.id;
     // change parent[n] into the grandparent's value
+    console.log(parentNode.id);
     parentArr[n] = grandparent;
     if (grandparentNode != null){
       let index = parentNode.children.indexOf(nodesArray[n]);
@@ -391,7 +392,7 @@ export default {
     const parentArr = ["Parent[i]",...N_ARRAY.slice(1)];
     const rankArr = ["Rank[i]",...Array(10).fill(0)];
     const nodesArray = [];
-    parentArr.forEach((id) => {
+    N_GRAPH.forEach((id) => {
       const newNode = new TreeNode(id);
       nodesArray.push(newNode);
     });
