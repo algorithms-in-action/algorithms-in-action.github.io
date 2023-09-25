@@ -82,8 +82,13 @@ export default {
    shortenPath(chunker, parentArr, rankArr, n, name, m, nodesArray) {
     const parent = parentArr[n];
     const grandparent = parentArr[parent];
+    let grandparentNode =null;
     const parentNode = nodesArray[n].parent;
-    const grandparentNode = parentNode.parent;
+    if (parentNode!= null){
+      grandparentNode = parentNode.parent;
+    }
+    
+    
     
     // highlight parent[n] in parent array
     chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
@@ -104,9 +109,13 @@ export default {
     });
 
     let gp = null;
-    let p = parentNode.id;
+    let p =null;
+    if (parentNode != null){
+      p = parentNode.id;
+    }
+    
     // change parent[n] into the grandparent's value
-    console.log(parentNode.id);
+    
     parentArr[n] = grandparent;
     if (grandparentNode != null){
       let index = parentNode.children.indexOf(nodesArray[n]);
@@ -396,15 +405,15 @@ export default {
     const parentArr = ["Parent[i]",...N_ARRAY.slice(1)];
     const rankArr = ["Rank[i]",...Array(10).fill(0)];
     const nodesArray = [];
-    N_GRAPH.forEach((id) => {
+    N_GRAPH.slice(1).forEach((id) => {
       const newNode = new TreeNode(id);
       nodesArray.push(newNode);
     });
     // now set up connections
     const rootNode = nodesArray[0]; // The first node in the array
-    for (let i = 1; i < nodesArray.length; i++) { // Start from the second node
-      rootNode.addChild(nodesArray[i]);
-      nodesArray[i].parent = rootNode;
+    for (let i = 0; i < nodesArray.length; i++) { // Start from the second node
+      //rootNode.addChild(nodesArray[i]);
+      nodesArray[i].parent = null;
     }
     chunker.add('Union(n, m)', (vis, array) => {
     
