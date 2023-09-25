@@ -350,14 +350,15 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
-    chunker.add('if rank[n] == rank[m]', (vis) => {
+    chunker.add('if rank[n] == rank[m]', (vis,n,m) => {
       vis.array.deselect(PARENT_ARRAY_IDX, root1);
       vis.array.deselect(N_ARRAY_IDX, root2);
       vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
       vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
+      console.log("dsds", n,m);
       vis.tree.deselect(n.toString(), n.toString());
       vis.tree.deselect(m.toString(), m.toString());
-    });
+    },[root1node.id, root2node.id]);
     if (root1node.rank == root2node.rank) {
       root2node.rank += 1;
     }
