@@ -143,11 +143,11 @@ class GraphRenderer extends Renderer {
   renderAxis(maxScale) {
     // axis position
     const axisCenter = {x:0, y:0};
-    const axisScale = 1000;
-    const labelPadding = 25;
+    const padding = 30;
+    const axisScale = Math.max(maxScale.x, maxScale.y) + padding;
 
-    const labelPosX = maxScale.x + labelPadding;
-    const labelPosY = maxScale.y + labelPadding;
+    const labelPosX = axisScale + padding;
+    const labelPosY = axisScale + padding;
 
     if (this.props.title !== 'Graph view') {
       // Do not render axis if its not graph
@@ -157,7 +157,7 @@ class GraphRenderer extends Renderer {
     }
 
     // console.log(labelPosX, labelPosY)
-    const scales = this.computeScales(0, 1000, axisCenter);
+    const scales = this.computeScales(0, axisScale, axisCenter);
 
     return (
       <g>
@@ -167,13 +167,13 @@ class GraphRenderer extends Renderer {
         <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisScale} className={styles.axis} />
 
         {/* X Axis Label */}
-        <text x={labelPosX} y={axisCenter.y + 20} textAnchor="middle" className={styles.axisLabel}>
-          + x
+        <text x={labelPosX} y={axisCenter.y + 5} textAnchor="middle" className={styles.axisLabel}>
+          x
         </text>
 
         {/* Y Axis Label */}
-        <text x={axisCenter.x - 20} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
-          + y
+        <text x={axisCenter.x} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
+          y
         </text>
 
         {/* Origin Label */}
