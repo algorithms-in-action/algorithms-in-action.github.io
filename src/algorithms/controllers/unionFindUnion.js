@@ -210,14 +210,16 @@ export default {
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
       
-      vis.tree.visit1(n.toString(),n.toString(),2);
+      //vis.tree.visit1(n.toString(),n.toString(),2);
+      vis.tree.leave1(n.toString(), n.toString(),2);
+      vis.tree.select(n.toString(), n.toString());
     }, [n]);
 
     chunker.add(`return n`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-      vis.tree.leave1(n.toString(), n.toString(),2);
-      vis.tree.select(n.toString(), n.toString());
+      
+      //vis.tree.leave1(n.toString(), n.toString(),2);
     },[n]);
 
     return n;
