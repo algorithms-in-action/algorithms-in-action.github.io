@@ -128,9 +128,9 @@ class GraphRenderer extends Renderer {
     const alignMinY = center.y - stepHeight/2;
     const alignMaxY = center.y + stepHeight/2;
 
-    for (let i=0;i < (max-min)/stepSize; i++) {
-      scales.push({x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY});
-      scales.push({x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize});
+    for (let i=1;i < (max-min)/stepSize; i++) {
+      scales.push({label: 'x', x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY, num: i});
+      scales.push({label: 'y', x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize, num: i});
     }
 
     return scales;
@@ -148,6 +148,8 @@ class GraphRenderer extends Renderer {
 
     const labelPosX = axisScale + padding;
     const labelPosY = axisScale + padding;
+
+    const originCoords = {x: axisCenter.x - 8, y: axisCenter.y + 16};
 
     if (this.props.title !== 'Graph view') {
       // Do not render axis if its not graph
@@ -177,15 +179,29 @@ class GraphRenderer extends Renderer {
         </text>
 
         {/* Origin Label */}
-        <text x={axisCenter.x - 5} y={axisCenter.y + 16} textAnchor="middle" className={styles.axisLabel}>
+        <text x={originCoords.x} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}>
           0
         </text>
         
         {/* Scales */}
         {scales.map((scale) => {
-          return (
-            <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
-          );
+          if (scale.label === 'x') {
+            return (
+              <g>
+                <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
+                <text x={scale.x1} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+              </g>
+            );
+
+          } else if (scale.label === 'y') {
+            return (
+              <g>
+                <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
+                <text x={originCoords.x} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+              </g>
+            );
+          }
+          
         })}
 
       </g>
