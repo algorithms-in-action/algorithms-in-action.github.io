@@ -100,7 +100,8 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
     \\Expl} 
 \\In} 
 
-Find(n) // return root of tree containing n \\B Find(n)
+\\NewLine
+\nFind(n) // return root of tree containing n \\B Find(n)
 \\In{
     while n != parent[n]  // while we are not at the root \\B while n != parent[n]
     \\In{

@@ -155,6 +155,22 @@ const algorithms = {
       find: Controller.unionFindFind,
     },
   },
+  'TTFTree': {
+    name: '2-3-4 Tree',
+    category: 'Other',
+    param: <Param.TTFTreeParam/>,
+    instructions: Instructions.TTFInstruction,
+    explanation: Explanation.TTFExp,
+    extraInfo: ExtraInfo.TTFInfo,
+    pseudocode: {
+      insertion: Pseudocode.TTFTreeInsertion,
+      search: Pseudocode.TTFTreeSearch,
+    },
+    controller: {
+      insertion: Controller.TTFTreeInsertion,
+      search: Controller.TTFTreeSearch,
+    },
+  },
 };
 
 /**

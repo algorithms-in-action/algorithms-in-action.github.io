@@ -34,18 +34,19 @@ export default {
         };
     },
 
-    notAtRoot(chunker, parentArr, n, nTempPrev, nConst) {
+    notAtRoot(chunker, parentArr, n, nTempPrev) {
 
-        chunker.add('while n != parent[n]', (vis) => {
+        chunker.add('while n != parent[n]', (vis,n) => {
     
           vis.array.assignVariable('n', N_ARRAY_IDX, n);
           vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
-    
+          //vis.tree.visit1(n.toString(),n.toString(),2);
+
           if (nTempPrev != n) {
             // Maintain orange highlight (assignVariable effectively deselects).
             vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
           } 
-        });
+        }, [n]);
     
         chunker.add(`while n != parent[n]`, (vis) => {
     
@@ -61,9 +62,14 @@ export default {
         return false;
       },
 
-      shortenPath(chunker, parentArr, n) {
+      shortenPath(chunker, parentArr, n, nodesArray) {
         const parent = parentArr[n];
         const grandparent = parentArr[parent];
+
+        const parentNode = nodesArray[n].parent;
+        const grandparentNode = parentNode.parent;
+        
+
         // highlight parent[n] in parent array
         chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
           vis.array.deselect(N_ARRAY_IDX, n);
@@ -80,26 +86,43 @@ export default {
         chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
           vis.array.deselect(N_ARRAY_IDX, parent);
           vis.array.select(PARENT_ARRAY_IDX, parent, undefined, undefined, ORANGE);
+          
         });
         // change parent[n] into the grandparent's value
+        let gp = null;
+        let p = parentNode.id;
         parentArr[n] = grandparent;
+        if (grandparentNode != null){
+          let index = parentNode.children.indexOf(nodesArray[n]);
+          parentNode.children.splice(nodesArray[n],1);
+          nodesArray[n].parent = grandparentNode;
+          gp = grandparentNode.id;
+        }
     
-        chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
+        chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, p, gp) => {
           vis.array.set([N_ARRAY, parentArr], 'unionFind', ' ');
           vis.array.assignVariable('n', N_ARRAY_IDX, n);
+
+          if (gp != null){
+            console.log(n, p, gp);
+            vis.tree.removeEdge(p.toString(), n.toString());
+            vis.tree.addEdge(gp.toString(), n.toString());
+            vis.tree.layout();
+          }
+
           vis.array.deselect(PARENT_ARRAY_IDX, parent);
           vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, ORANGE);
-        });
+        },[nodesArray[n].id,p, gp]);
     
       },
 
-    find(chunker, parentArr, n, pathCompression, nodesArray, nConst) {
+    find(chunker, parentArr, n, pathCompression, nodesArray) {
 
            
         // 'while n != parent[n]'
         let nTempPrev = n;
         
-        while (this.notAtRoot(chunker, parentArr, n, nTempPrev, nConst)) {    
+        while (this.notAtRoot(chunker, parentArr, n, nTempPrev)) {    
           
             nTempPrev = n;
           
@@ -111,11 +134,15 @@ export default {
             vis.array.select(N_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
             vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
             
-            vis.tree.visit1(n.toString(),n.toString(),2);
+            vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, RED);
+            vis.tree.leave1(n.toString(),n.toString(),2);
+            vis.tree.visit(n.toString(), n.toString());
+            
+            
           },[nTempPrev]);
           
         if (pathCompression === true) {
-            this.shortenPath(chunker, parentArr, nTempPrev);
+            this.shortenPath(chunker, parentArr, nTempPrev, nodesArray);
         }
     
           // 'n <- parent[n]'
@@ -127,7 +154,7 @@ export default {
             vis.array.deselect(PARENT_ARRAY_IDX, nTempPrev);
     
             vis.array.select(PARENT_ARRAY_IDX, nTempPrev, undefined, undefined, ORANGE);
-            vis.tree.leave1(n.toString(),n.toString(),2);
+            vis.tree.leave(n.toString(),n.toString());
             
           }, [nTempPrev]);
         }
@@ -154,6 +181,23 @@ export default {
         return n;
 
     },
+
+    getNodesArray(treeStruct, orderList) {
+      const nodeMap = {};
+      const queue = [treeStruct.tree];  // Start with the root
+  
+      // Populate nodeMap using BFS
+      while (queue.length) {
+          const current = queue.shift();
+          nodeMap[current.id] = current;
+          queue.push(...current.children);
+      }
+  
+      // Create the ordered nodesArray using N_GRAPH
+      const nodesArray = orderList.map(id => nodeMap[id]);
+      
+      return nodesArray;
+  },
     
 
     run(chunker, {visualiser, target} ) {
@@ -166,10 +210,24 @@ export default {
         visualiser.array.instance.set([N_ARRAY, parentArray], 'unionFind');
         const value = target.arg1;
         const pathCompression = target.arg2;
-        const nodesArray = N_GRAPH.map(id => visualiser.tree.instance.findNode(id));
+
+        let treeStruct = visualiser.tree.instance.getNTree();
+        const nodesArray = this.getNodesArray(treeStruct, N_GRAPH);
+
+        for (let i = 1; i < nodesArray.length; i++) {
+          if (nodesArray[i].parent.id === nodesArray[i].id){
+            console.log(nodesArray[i].parent.id);
+            //visualiser.tree.instance.addSelfLoop(nodesArray[i].id);
+          } 
+        }
+
+        console.log(nodesArray[1]);
+
 
         this.find(chunker, parentArray, value, pathCompression, nodesArray, value);
 
+
    }
+
 
 }
