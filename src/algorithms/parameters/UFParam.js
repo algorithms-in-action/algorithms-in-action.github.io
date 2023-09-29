@@ -90,7 +90,6 @@ function UFParam() {
           arg2: pathCompressionEnabled,
         };
 
-        console.log(target.arg1);
   
         // Running animation.
         dispatch(GlobalActions.RUN_ALGORITHM, { name:'unionFind', mode: 'union', target });
