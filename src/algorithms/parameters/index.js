@@ -8,3 +8,4 @@ export { default as BFSSParam } from './BFSSParam';
 export { default as QSM3Param } from './QSM3Param';
 export { default as HSSParam } from './HSSParam';
 export { default as UFParam } from './UFParam';
+export { default as TTFTreeParam } from './TTFTreeParam';

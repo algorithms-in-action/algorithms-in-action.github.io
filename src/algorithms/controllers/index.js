@@ -9,3 +9,5 @@ export { default as quickSortM3 } from './quickSortM3';
 export { default as horspoolStringSearch } from './horspoolStringSearch';
 export { default as unionFindUnion } from './unionFindUnion';
 export { default as unionFindFind } from './unionFindFind';
+export { default as TTFTreeInsertion } from './TTFTreeInsertion';
+export { default as TTFTreeSearch } from './TTFTreeSearch';
