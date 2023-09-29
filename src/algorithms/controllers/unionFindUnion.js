@@ -424,13 +424,13 @@ export default {
       nodesArray[i].parent = null;
     }
     chunker.add('Union(n, m)', (vis, array) => {
-    
       vis.array.set(array, 'unionFind');
       vis.tree.addNode(N_GRAPH[0], undefined, 'circle');
       for (const node of N_GRAPH.slice(1)) {
         vis.tree.addNode(node, undefined, 'circle');
         vis.tree.addEdge(N_GRAPH[0], node);
       }
+      vis.tree.isReversed = true;
       vis.tree.layout();
 
       for (const node of N_GRAPH.slice(1)) {

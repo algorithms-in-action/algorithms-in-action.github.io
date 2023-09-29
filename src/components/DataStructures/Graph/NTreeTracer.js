@@ -49,6 +49,7 @@ class NTreeTracer extends Tracer {
     this.realEdges = [];
     this.realNodes = [];
     this.variableNodes = false;
+    this.isReversed = false;
 
     this.logTracer = null;
     this.istc = false;

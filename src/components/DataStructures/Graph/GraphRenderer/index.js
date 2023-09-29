@@ -91,7 +91,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, showSelfLoop, variableNodes, dimensions, text } = this.props.data;
+    const { nodes, edges, isDirected, isWeighted, showSelfLoop, variableNodes, isReversed, dimensions, text } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) / this.zoom,
@@ -106,23 +106,26 @@ class GraphRenderer extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
+
+    const sizeAdjust = isReversed ? 0.5 : 1;
+
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
-          <marker id="markerArrow" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={styles.arrow} />
+          <marker id="markerArrow" markerWidth={`${6*sizeAdjust}`} markerHeight={`${6*sizeAdjust}`} refX={`${3*sizeAdjust}`} refY={`${3*sizeAdjust}`} orient="auto">
+            <path d={`M0,0 L0,${6*sizeAdjust} L${6*sizeAdjust},${3*sizeAdjust} L0,0`} className={styles.arrow} />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.selected)} />
+          <marker id="markerArrowSelected" markerWidth={`${6*sizeAdjust}`} markerHeight={`${6*sizeAdjust}`} refX={`${3*sizeAdjust}`} refY={`${3*sizeAdjust}`} orient="auto">
+            <path d={`M0,0 L0,${6*sizeAdjust} L${6*sizeAdjust},${3*sizeAdjust} L0,0`} className={classes(styles.arrow, styles.selected)} />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited)} />
+          <marker id="markerArrowVisited" markerWidth={`${6*sizeAdjust}`} markerHeight={`${6*sizeAdjust}`} refX={`${3*sizeAdjust}`} refY={`${3*sizeAdjust}`} orient="auto">
+            <path d={`M0,0 L0,${6*sizeAdjust} L${6*sizeAdjust},${3*sizeAdjust} L0,0`} className={classes(styles.arrow, styles.visited)} />
           </marker>
-          <marker id="markerArrowVisited1" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited1)} />
+          <marker id="markerArrowVisited1" markerWidth={`${6*sizeAdjust}`} markerHeight={`${6*sizeAdjust}`} refX={`${3*sizeAdjust}`} refY={`${3*sizeAdjust}`} orient="auto">
+            <path d={`M0,0 L0,${6*sizeAdjust} L${6*sizeAdjust},${3*sizeAdjust} L0,0`} className={classes(styles.arrow, styles.visited1)} />
           </marker>
-          <marker id="markerArrowVisited2" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          <marker id="markerArrowVisited2" markerWidth={`${6*sizeAdjust}`} markerHeight={`${6*sizeAdjust}`} refX={`${3*sizeAdjust}`} refY={`${3*sizeAdjust}`} orient="auto">
+            <path d={`M0,0 L0,${6*sizeAdjust} L${6*sizeAdjust},${3*sizeAdjust} L0,0`} className={classes(styles.arrow, styles.visited2)} />
           </marker>
         </defs>
         {
@@ -130,7 +133,7 @@ class GraphRenderer extends Renderer {
             const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
 
             let sourceNode, targetNode;
-            if (this.props.data.variableNodes) {
+            if (variableNodes) {
               sourceNode = this.props.data.findVariableNode(source);
               targetNode = this.props.data.findVariableNode(target);
               if (sourceNode.id === 0) return undefined;
@@ -163,9 +166,16 @@ class GraphRenderer extends Renderer {
               pathSvg = `M${startPoint} A${loopRadiusX},${loopRadiusY} 0 1,1 ${endPoint}`;
             } 
             else {
+              let sx, sy, ex, ey;
 
-              const { x: sx, y: sy } = sourceNode;
-              let { x: ex, y: ey } = targetNode;
+              if (isReversed) {
+                ({ x: sx, y: sy } = targetNode);
+                ({ x: ex, y: ey } = sourceNode);
+              } else {
+                ({ x: sx, y: sy } = sourceNode);
+                ({ x: ex, y: ey } = targetNode);
+              }
+
               mx = (sx + ex) / 2;
               my = (sy + ey) / 2;
               const dx = ex - sx;
@@ -173,8 +183,8 @@ class GraphRenderer extends Renderer {
               if (isDirected) {
                 const length = Math.sqrt(dx * dx + dy * dy);
                 if (length !== 0) {
-                  ex = sx + (dx / length) * (length - nodeRadius - (arrowGap*2));
-                  ey = sy + (dy / length) * (length - nodeRadius - (arrowGap*2));
+                  ex = sx + (dx / length) * (length - nodeRadius - ((arrowGap*2))*sizeAdjust);
+                  ey = sy + (dy / length) * (length - nodeRadius - ((arrowGap*2))*sizeAdjust);
                 }
               }
               if (this.props.data.isInterConnected(source, target)) {
