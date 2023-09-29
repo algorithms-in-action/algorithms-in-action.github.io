@@ -70,6 +70,7 @@ export default {
       vis.array.deselect(PARENT_ARRAY_IDX, 0, undefined, n-1)
       vis.array.deselect(PARENT_ARRAY_IDX, n+1, undefined, 10)
       
+      
     });
 
     if (parentArr[n] != n) {
@@ -122,12 +123,11 @@ export default {
       }
       else { // dealing with m, need to show n and order Union(n,m) correctly
         vis.array.assignVariable('n', N_ARRAY_IDX, m);
-        vis.array.showKth(`Union(${m}, ${n})`);        
+        vis.array.showKth(`Union(${m}, ${n})`);    
       }
       // change edges if the node has a grandparent
       
       if (gp != null){
-        console.log(n, p, gp);
         vis.tree.removeEdge(p.toString(), n.toString());
         vis.tree.addEdge(gp.toString(), n.toString());
         vis.tree.layout();
@@ -148,6 +148,11 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   find(chunker, parentArr, rankArr, n, name, m, pathCompression, nodesArray, nConst, caption) {
+
+
+    chunker.add(`${name} <- Find(${name})`, (vis) => {
+      //vis.array.select(N_ARRAY_IDX, n, undefined, undefined, ORANGE);
+    },);
     
            
     // 'while n != parent[n]'
@@ -198,15 +203,17 @@ export default {
       
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
+      vis.tree.leave1(n.toString(),n.toString(),2);
+      vis.tree.select(n.toString(), n.toString());
+
+
       
-      vis.tree.visit1(n.toString(),n.toString(),2);
     }, [n]);
 
     chunker.add(`return n`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-      vis.tree.leave1(n.toString(), n.toString(),2);
-      vis.tree.select(n.toString(), n.toString());
+
     },[n]);
 
     return n;
@@ -234,8 +241,6 @@ export default {
 
     }, [[N_ARRAY, parentArr, rankArr]]);
 
-
-
     // 'n <- find(n)' and 'm <- find(m)'
     let root1 = this.find(chunker, parentArr, rankArr, n, 'n', m, pathCompression, nodesArray, undefined, `Union(${n}, ${m}) → Find(${n})`);
     let root2 = this.find(chunker, parentArr, rankArr, m, 'm', m, pathCompression, nodesArray, root1, `Union(${n}, ${m}) → Find(${m})`);
@@ -254,6 +259,7 @@ export default {
 
       vis.array.select(N_ARRAY_IDX, root1, undefined, undefined, GREEN);
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
+      
 
     });
 
@@ -309,6 +315,7 @@ export default {
       vis.array.deselect(RANK_ARRAY_IDX, root2);
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
+
     }, [[N_ARRAY, parentArr, rankArr]]);
     root1node.parent = root2node;
     root2node.addChild(root1node);
@@ -327,12 +334,13 @@ export default {
       // doing graph operations now
       const root = '0';
       vis.tree.removeEdge(root, n.toString());
+      vis.tree.removeEdge(n.toString(), n.toString())
+
       // now add a new edge connecting n to m
       vis.tree.addEdge(m.toString(), n.toString());
       // now relayout
       vis.tree.layout();
       
-      console.log(n, m)
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
@@ -404,14 +412,19 @@ export default {
     chunker.add('Union(n, m)', (vis, array) => {
     
       vis.array.set(array, 'unionFind');
-      vis.tree.addNode(N_GRAPH[0]);
+      vis.tree.addNode(N_GRAPH[0], undefined, 'circle');
       for (const node of N_GRAPH.slice(1)) {
-        vis.tree.addNode(node);
+        vis.tree.addNode(node, undefined, 'circle');
         vis.tree.addEdge(N_GRAPH[0], node);
       }
       vis.tree.layout();
+
+      for (const node of N_GRAPH.slice(1)) {
+        vis.tree.addSelfLoop(node);
+      }
       
     }, [[N_ARRAY, parentArr, rankArr]]);
+
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
