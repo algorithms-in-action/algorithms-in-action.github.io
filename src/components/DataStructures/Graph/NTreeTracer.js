@@ -12,10 +12,12 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
+import { node } from 'prop-types';
 import Tracer from '../common/Tracer.jsx';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 import TreeNode from './NAryTree';
+import VariableTreeNode from './NAryTreeVariable';
 
 export class Element {
   constructor() {
@@ -41,11 +43,13 @@ class NTreeTracer extends Tracer {
     };
     this.isDirected = true;
     this.isWeighted = false;
+    //this.shape = 'square';
+    this.showSelfLoop = true;
     this.callLayout = { method: this.layoutNTree, args: [] };
     this.realEdges = [];
     this.realNodes = [];
+    this.variableNodes = false;
 
-    this.text = null;
     this.logTracer = null;
     this.istc = false;
     this.SiblingSeparation = 50;
@@ -94,7 +98,6 @@ class NTreeTracer extends Tracer {
       node.visitedCount = 0;
       node.selectedCount = 0;
     });
-    this.text = null;
   }
 
   clearHighlights() {
@@ -160,16 +163,27 @@ class NTreeTracer extends Tracer {
 
     // Create the TreeNode instances and map them by their ID.
     this.realNodes.forEach(node => {
-      const treeNode = new TreeNode(node.id);
+      let treeNode;
+      if (this.variableNodes) {
+        treeNode = new VariableTreeNode(node.id);
+        node.nodeIDs.forEach(nodeID => treeNode.addRelatedNodeID(nodeID));
+      } else {
+        treeNode = new TreeNode(node.id);
+    }
+    //console.log("THIS IS THE IMPORTANT ONE", treeNode.getIDs());
       treeNode.x = 0; // node.x;
       treeNode.y = 0; // node.y;
+      //console.log("node id", node.id);
       nodeMap[node.id] = treeNode;
     });
+    //console.log("nodeMap", nodeMap);
 
     // Use edges to establish parent-child relationships.
+    //console.log("edges", this.realEdges);
     this.realEdges.forEach(edge => {
       const parent = nodeMap[edge.source];
       const child = nodeMap[edge.target];
+      //console.log("parent", parent, "child", child);
 
       // Make sure this is a new child relationship
       if (parent && child && !parent.children.includes(child)) {
@@ -291,30 +305,37 @@ class NTreeTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.realNodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    if (!this.variableNodes) {
+      this.realNodes.push({id, x, y});
+    }
     if (id !== '0') {
-      this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+      this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1});
     }
     // this.layout();
   }
 
-  addResult(text, id) {
-    this.findNode(id).Result = text;
-  }
+  // solely for real nodes
+  addVariableNode(varID, nodeID) {
+    if (!this.variableNodes) return;
+    const index = this.realNodes.findIndex(node => node.id === varID);
 
-  addStringLen(len, id) {
-    this.findNode(id).StingLen = len;
-  }
+    if (index === -1) {
+      // this means that the variable node does not exist yet
+      this.realNodes.push({id: varID, x: 0, y: 0, nodeIDs: [nodeID]});
+    } else {
+      // this means that the variable node already exists
+      this.realNodes[index].nodeIDs.push(nodeID);
+    }
 
-  addPatternLen(len, id) {
-    this.findNode(id).PatternLen = len;
+    this.addNode(nodeID, undefined, 'square');
+
   }
+  
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
@@ -326,6 +347,14 @@ class NTreeTracer extends Tracer {
   }
 
   removeNode(id) {
+    if(this.variableNodes) {
+      for (const node of this.realNodes) {
+        if (node.nodeIDs.includes(id)) {
+          const index = node.nodeIDs.indexOf(id);
+          node.nodeIDs.splice(index, 1);
+        }
+      }
+    }
     const node = this.findNode(id);
     if (!node) return;
     const index = this.nodes.indexOf(node);
@@ -336,23 +365,29 @@ class NTreeTracer extends Tracer {
   addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
     if (this.findEdge(source, target)) return;
     // for the sake of coding, check if the edge passed in involves the "hidden" node as a parent
-    if (source !== '0') {
+    if (source !== '0') { // and not visited?
       this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
     }
-    this.realEdges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
 
+    if (!(source === target)) {
+    this.realEdges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
+    }
+
+    console.log(this.edges);
 
     // this.layout();
   }
 
   removeEdge(source, target) {
-    // Remove edge from this.edges
-    this.edges = this.edges.filter(edge => !(edge.source === source && edge.target === target));
 
-    // Remove edge from this.realEdges
-    this.realEdges = this.realEdges.filter(edge => !(edge.source === source && edge.target === target));
+    const newEdges = this.edges.filter(edge => !(edge.source === source && edge.target === target));
 
-  }
+    const newRealEdges = this.realEdges.filter(edge => !(edge.source === source && edge.target === target));
+
+    this.edges = newEdges;
+    this.realEdges = newRealEdges;
+    
+}
 
 
   updateEdge(source, target, weight, visitedCount, selectedCount) {
@@ -372,6 +407,12 @@ class NTreeTracer extends Tracer {
   findNode(id) {
     return this.nodes.find(node => node.id === id);
   }
+
+  findVariableNode(varID) {
+    if (!this.variableNodes) return;
+    return this.realNodes.find(node => node.id === varID);
+  }
+
 
   findEdge(source, target, isDirected = this.isDirected) {
     if (isDirected) {
@@ -417,38 +458,12 @@ class NTreeTracer extends Tracer {
     method.apply(this, args);
   }
 
-
-  shift(space = 0, nodes) {
-    const searchString = nodes[0];
-    const findString = nodes[1];
-    let stringCount = 0;
-    const xSpacing = 25;
-    const ySpacing = 30;
-    let startFindString = -1;
-    for (let i = 0; i < searchString.length; i++) {
-      const thisNode = this.findNode(stringCount);
-      thisNode.shape = 'box';
-      thisNode.x = (i - searchString.length / 2) * xSpacing;
-      if (i === 0) {
-        startFindString = thisNode.x;
-      }
-      thisNode.y = ySpacing / 2;
-      stringCount++;
-    }
-    for (let i = 0; i < findString.length; i++) {
-      const thisNode = this.findNode(stringCount);
-      thisNode.shape = 'box';
-      thisNode.x = startFindString + (i + space) * (xSpacing);
-      thisNode.y = -1 * (ySpacing / 2);
-      stringCount++;
-    }
-  }
-
-
   meanNodeSize(leftNode, rightNode) {
     // need to consider changing this
-    const nodeSize = 0;
-    return 40;
+    const leftNodeSize = leftNode.getNodeLength() * (this.dimensions.nodeRadius*2);
+    const rightNodeSize = rightNode.getNodeLength() * (this.dimensions.nodeRadius*2);
+    
+    return (leftNodeSize + rightNodeSize) / 2;
   }
 
   getLeftMost(node, lvl, depth) {
@@ -583,17 +598,60 @@ class NTreeTracer extends Tracer {
     return result;
   }
 
+  getVariableNode(varID) {
+    if (!this.variableNodes) return;
+    return this.realNodes.find(node => node.varID === varID);
+  }
+
   translateCoords() {
     const flattenedLevels = [].concat(...this.levels);
 
     flattenedLevels.forEach(levelNode => {
-      // Find the matching node based on the id attribute
-      const nodeToUpdate = this.nodes.find(node => node.id === levelNode.id);
 
-      // Update x and y attributes of the matching node
-      if (nodeToUpdate) {
-        nodeToUpdate.x = levelNode.x;
-        nodeToUpdate.y = levelNode.y;
+      if (!this.variableNodes) {
+        const nodeToUpdate = this.nodes.find(node => node.id === levelNode.id);
+
+        if (nodeToUpdate) {
+          nodeToUpdate.x = levelNode.x;
+          nodeToUpdate.y = levelNode.y;
+        }
+      } else {
+        // Updating x and y in realNodes for rendering in variable:
+        const updateXandY = this.findVariableNode(levelNode.id);
+        updateXandY.x = levelNode.x;
+        updateXandY.y = levelNode.y;
+
+
+        let nodeLength = levelNode.getNodeLength();
+        console.log("do we have x/y?:", levelNode.x, levelNode.y);
+        console.log(levelNode);
+
+          const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
+          //console.log(nodesToUpdate);
+          // might want to sort here?
+
+          if (nodesToUpdate) {
+            const nodeRadius = this.dimensions.nodeRadius;
+            const halfWidth = nodeRadius * nodeLength;
+            nodesToUpdate.forEach((nodeToUpdate, i) => {
+              let valueX;
+
+              if (nodeLength === 1) {
+                valueX = levelNode.x ;
+              }
+              if (nodeLength === 2) {
+                valueX = levelNode.x + (i * nodeRadius * 2) - nodeRadius;
+                //console.log("SHOULD MAKE IT HERE!!");
+              } else if (nodeLength === 3) {
+                valueX = levelNode.x + ((i - 1) * nodeRadius * 2);
+              } else {
+                valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
+              }
+              //console.log("valueX", valueX, "levelNode.x", levelNode.x, "i", i);
+              nodeToUpdate.x = valueX;
+              nodeToUpdate.y = levelNode.y;
+            });
+          }
       }
     });
   }
@@ -605,11 +663,13 @@ class NTreeTracer extends Tracer {
     const rect = this.getRect();
 
     if (this.realNodes.length === 0) {
+      //console.log("no nodes");
       // this means there is no tree to layout, so just return
 
       return;
     }
-    if (this.realNodes.length === 1) {
+    //console.log("real nodes", this.realNodes);
+    if (this.realNodes.length === 1 && !this.variableNodes) {
       const [node] = this.realNodes;
       node.x = (rect.left + rect.right) / 2;
       node.y = (rect.top + rect.bottom) / 2;
@@ -639,6 +699,14 @@ class NTreeTracer extends Tracer {
     }
   }
 
+  addSelfLoop(nodeId, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+    if (!this.findNode(nodeId)) {
+      return;
+    }
+    this.addEdge(nodeId, nodeId, weight, visitedCount, selectedCount, visitedCount1);
+  }
+  
+
   visit0(target, source, weight) {
     this.visitOrLeave0(true, target, source, weight);
   }
@@ -663,10 +731,10 @@ class NTreeTracer extends Tracer {
     if (weight) node.weight = weight;
     if (!this.istc) {
       node.visitedCount0 += visit ? 1 : -1;
-      if (edge) edge.visitedCount0 += visit ? 1 : -1;
+      if (edge && !(source === target)) edge.visitedCount0 += visit ? 1 : -1;
     } else {
       node.visitedCount0 = visit ? 1 : 0;
-      if (edge) edge.visitedCount0 = visit ? 1 : 0;
+      if (edge && !(source === target)) edge.visitedCount0 = visit ? 1 : 0;
     }
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
@@ -678,14 +746,14 @@ class NTreeTracer extends Tracer {
     const node = this.findNode(target);
     if (weight) node.weight = weight;
     if (visit == false){
-      console.log(node);
+     // console.log(node);
     }
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;
-      if (edge) edge.visitedCount += visit ? 1 : -1;
+      if (edge && !(source === target)) edge.visitedCount += visit ? 1 : -1;
     } else {
       node.visitedCount = visit ? 1 : 0;
-      if (edge) edge.visitedCount = visit ? 1 : 0;
+      if (edge && ! (source === target)) edge.visitedCount = visit ? 1 : 0;
     }
     if (this.logTracer){
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
@@ -727,11 +795,11 @@ class NTreeTracer extends Tracer {
 
     const node1 = this.findNode(source);
     if (colorIndex === 1) {
-      if (edge) edge.visitedCount1 = visit ? 1 : 0;
+      if (edge && !(source === target)) edge.visitedCount1 = visit ? 1 : 0;
       node.visitedCount1 = visit ? 1 : 0;
       if (node1) node1.visitedCount1 = visit ? 1 : 0;
     } else if (colorIndex === 2) {
-      if (edge) edge.visitedCount2 = visit ? 1 : 0;
+      if (edge && !(source === target)) edge.visitedCount2 = visit ? 1 : 0;
       node.visitedCount2 = visit ? 1 : 0;
       if (node1) node1.visitedCount2 = visit ? 1 : 0;
     }
@@ -740,33 +808,9 @@ class NTreeTracer extends Tracer {
     }
   }
 
-  setPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.isPointer = 1;
-    if (!node1.pointerText.includes(sText)) {
-      node1.pointerText = node1.pointerText.concat(' ', sText);
-    }
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.isPointer = 1;
-      if (!node2.pointerText.includes(tText)) {
-        node2.pointerText = node2.pointerText.concat(' ', tText);
-      }
-    }
-  }
-
-  unsetPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.pointerText = node1.pointerText.replace(sText, '');
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.pointerText = node2.pointerText.replace(tText, '');
-    }
-  }
-
   selectOrDeselect(select, target, source = null) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount += select ? 1 : -1;
+    if (edge && !(source === target)) edge.selectedCount += select ? 1 : -1;
     const node = this.findNode(target.toString());
     node.selectedCount += select ? 1 : -1;
     if (this.logTracer) {
@@ -800,11 +844,6 @@ class NTreeTracer extends Tracer {
 
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
-  }
-
-  setText(text) {
-    this.text = text;
-    this.text.push({ text });
   }
 
   setIstc() {

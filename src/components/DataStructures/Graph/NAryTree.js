@@ -25,6 +25,14 @@ class TreeNode {
     this.rank = 0;
   }
 
+  getIDs() {
+    return [this.id];
+  }
+
+  getNodeLength() {
+    return 1;
+  }
+
   addChild(childNode) {
     childNode.parent = this;
     this.children.push(childNode);

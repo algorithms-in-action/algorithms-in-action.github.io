@@ -91,7 +91,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
+    const { nodes, edges, isDirected, isWeighted, showSelfLoop, variableNodes, dimensions, text } = this.props.data;
     const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) / this.zoom,
@@ -128,28 +128,61 @@ class GraphRenderer extends Renderer {
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
             const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
-            const sourceNode = this.props.data.findNode(source);
-            const targetNode = this.props.data.findNode(target);
-            if (!sourceNode || !targetNode) return undefined;
-            const { x: sx, y: sy } = sourceNode;
-            let { x: ex, y: ey } = targetNode;
-            const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
-            const dx = ex - sx;
-            const dy = ey - sy;
-            if (isDirected) {
-              const length = Math.sqrt(dx * dx + dy * dy);
-              if (length !== 0) {
-                ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
-                ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
-              }
-            }
-            let pathSvg = null;
-            if (this.props.data.isInterConnected(source, target)) {
-              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
-              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+
+            let sourceNode, targetNode;
+            if (this.props.data.variableNodes) {
+              sourceNode = this.props.data.findVariableNode(source);
+              targetNode = this.props.data.findVariableNode(target);
+              if (sourceNode.id === 0) return undefined;
             } else {
-              pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              sourceNode = this.props.data.findNode(source);
+              targetNode = this.props.data.findNode(target);
+            }
+
+            if (!sourceNode || !targetNode) return undefined;
+            let pathSvg = null;
+            let mx, my;
+
+            // Adding self loop
+            if (sourceNode == targetNode && showSelfLoop) {
+              const { x, y } = sourceNode;
+          
+              const loopRadiusX = 1.1 * (nodeRadius);
+              const loopRadiusY = 1.1 * (nodeRadius);
+          
+              const arrowOffset = isDirected ? arrowGap : 0;
+              
+              // 10 o'clock start position
+              const startAngle = 210 * (Math.PI / 180);
+              const startPoint = `${x + nodeRadius * Math.cos(startAngle)},${y + nodeRadius * Math.sin(startAngle)}`;
+          
+              // 2 o'clock end position
+              const endAngle = 330 * (Math.PI / 180);
+              const endPoint = `${x + (nodeRadius + arrowOffset) * Math.cos(endAngle)},${y + (nodeRadius + arrowOffset) * Math.sin(endAngle)}`;
+          
+              pathSvg = `M${startPoint} A${loopRadiusX},${loopRadiusY} 0 1,1 ${endPoint}`;
+            } 
+            else {
+
+              const { x: sx, y: sy } = sourceNode;
+              let { x: ex, y: ey } = targetNode;
+              mx = (sx + ex) / 2;
+              my = (sy + ey) / 2;
+              const dx = ex - sx;
+              const dy = ey - sy;
+              if (isDirected) {
+                const length = Math.sqrt(dx * dx + dy * dy);
+                if (length !== 0) {
+                  ex = sx + (dx / length) * (length - nodeRadius - (arrowGap*2));
+                  ey = sy + (dy / length) * (length - nodeRadius - (arrowGap*2));
+                }
+              }
+              if (this.props.data.isInterConnected(source, target)) {
+                const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+                pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+              } else {
+                pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              }
             }
             // console.log(sx,sy,ex,ey,cx,cy);
             return (
@@ -177,7 +210,7 @@ class GraphRenderer extends Renderer {
         }
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
+          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, shape, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode0 = visitedCount0 === 1;
@@ -192,7 +225,11 @@ class GraphRenderer extends Renderer {
                 className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
                 key={key}
             >
-              <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
+              {shape === 'square' ? (
+                <rect className={styles.circle} width={2 * nodeRadius} height={2 * nodeRadius} x={-nodeRadius} y={-nodeRadius} />
+              ) : (
+                <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
+              )}
               <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
               {
                 isWeighted && (
