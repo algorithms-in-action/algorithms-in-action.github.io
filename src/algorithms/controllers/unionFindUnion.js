@@ -83,8 +83,13 @@ export default {
    shortenPath(chunker, parentArr, rankArr, n, name, m, nodesArray) {
     const parent = parentArr[n];
     const grandparent = parentArr[parent];
+    let grandparentNode =null;
     const parentNode = nodesArray[n].parent;
-    const grandparentNode = parentNode.parent;
+    if (parentNode!= null){
+      grandparentNode = parentNode.parent;
+    }
+    
+    
     
     // highlight parent[n] in parent array
     chunker.add(`parent[n] <- parent[parent[n]]`, (vis) => {
@@ -105,8 +110,13 @@ export default {
     });
 
     let gp = null;
-    let p = parentNode.id;
+    let p =null;
+    if (parentNode != null){
+      p = parentNode.id;
+    }
+    
     // change parent[n] into the grandparent's value
+    
     parentArr[n] = grandparent;
     if (grandparentNode != null){
       let index = parentNode.children.indexOf(nodesArray[n]);
@@ -119,6 +129,7 @@ export default {
       vis.array.set(array, 'unionFind', ' ');
       vis.array.assignVariable(name, N_ARRAY_IDX, n);
       if (name == 'n') {
+        vis.array.assignVariable('m', N_ARRAY_IDX, m);
         vis.array.showKth(`Union(${n}, ${m})`);
       }
       else { // dealing with m, need to show n and order Union(n,m) correctly
@@ -203,17 +214,16 @@ export default {
       
       vis.array.select(N_ARRAY_IDX, n, undefined, undefined, GREEN);
       vis.array.select(PARENT_ARRAY_IDX, n, undefined, undefined, GREEN);
-      vis.tree.leave1(n.toString(),n.toString(),2);
+
+      vis.tree.leave1(n.toString(), n.toString(),2);
       vis.tree.select(n.toString(), n.toString());
-
-
-      
     }, [n]);
 
     chunker.add(`return n`, (vis) => {
 
       vis.array.deselect(PARENT_ARRAY_IDX, n);
-
+      
+      //vis.tree.leave1(n.toString(), n.toString(),2);
     },[n]);
 
     return n;
@@ -228,6 +238,9 @@ export default {
    * @param {Boolean} pathCompression Whether to use path compression.
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression, nodesArray) {
+    const constN = n;
+    const constM = m;
+    
     // For rendering the current union caption. 
     chunker.add('Union(n, m)', (vis, array) => {
 
@@ -256,7 +269,7 @@ export default {
     }
     // 'if n == m'
     chunker.add('if n == m', (vis) => {
-
+      vis.array.showKth(`Union(${constN}, ${constM})`);
       vis.array.select(N_ARRAY_IDX, root1, undefined, undefined, GREEN);
       vis.array.select(N_ARRAY_IDX, root2, undefined, undefined, GREEN);
       
@@ -330,7 +343,7 @@ export default {
       vis.array.select(PARENT_ARRAY_IDX, root1, undefined, undefined, GREEN);
       
       // Re-rendering union caption after array reset.
-      vis.array.showKth(`Union(${n}, ${m})`);
+      vis.array.showKth(`Union(${constN}, ${constM})`);
       // doing graph operations now
       const root = '0';
       vis.tree.removeEdge(root, n.toString());
@@ -344,14 +357,15 @@ export default {
     }, [[N_ARRAY, parentArr, rankArr],root1node.id, root2node.id]);
 
     // 'if rank[n] == rank[m]'
-    chunker.add('if rank[n] == rank[m]', (vis) => {
+    chunker.add('if rank[n] == rank[m]', (vis,n,m) => {
       vis.array.deselect(PARENT_ARRAY_IDX, root1);
       vis.array.deselect(N_ARRAY_IDX, root2);
       vis.array.select(RANK_ARRAY_IDX, root1, undefined, undefined, ORANGE);
       vis.array.select(RANK_ARRAY_IDX, root2, undefined, undefined, ORANGE);
+      console.log("dsds", n,m);
       vis.tree.deselect(n.toString(), n.toString());
       vis.tree.deselect(m.toString(), m.toString());
-    });
+    },[root1node.id, root2node.id]);
     if (root1node.rank == root2node.rank) {
       root2node.rank += 1;
     }
@@ -364,7 +378,7 @@ export default {
       chunker.add('rank[m] <- rank[m] + 1', (vis, array) => {
 
         vis.array.set(array, 'unionFind', ' ');
-        vis.array.showKth(`Union(${n}, ${m})`);
+        vis.array.showKth(`Union(${constN}, ${constM})`);
         vis.array.assignVariable('n', N_ARRAY_IDX, root1);
         vis.array.assignVariable('m', N_ARRAY_IDX, root2);
         vis.array.deselect(RANK_ARRAY_IDX, root1);
@@ -399,15 +413,15 @@ export default {
     const parentArr = ["Parent[i]",...N_ARRAY.slice(1)];
     const rankArr = ["Rank[i]",...Array(10).fill(0)];
     const nodesArray = [];
-    parentArr.forEach((id) => {
+    N_GRAPH.slice(1).forEach((id) => {
       const newNode = new TreeNode(id);
       nodesArray.push(newNode);
     });
     // now set up connections
     const rootNode = nodesArray[0]; // The first node in the array
-    for (let i = 1; i < nodesArray.length; i++) { // Start from the second node
-      rootNode.addChild(nodesArray[i]);
-      nodesArray[i].parent = rootNode;
+    for (let i = 0; i < nodesArray.length; i++) { // Start from the second node
+      //rootNode.addChild(nodesArray[i]);
+      nodesArray[i].parent = null;
     }
     chunker.add('Union(n, m)', (vis, array) => {
     
