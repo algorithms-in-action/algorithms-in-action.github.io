@@ -26,7 +26,7 @@ function extractCode(lines) {
   for (const line of lines) {
     if (line.localeCompare('\\In{') === 0) {
       ind += 1;
-    } else if (line.localeCompare('\\In}') === 0) {
+    }  else if (line.localeCompare('\\In}') === 0) {
       ind -= 1;
     } else if (line.indexOf('\\Expl{ ') >= 0) {
       explFlag = true;
@@ -46,6 +46,9 @@ function extractCode(lines) {
         jsons.push(json);
         json = {};
       }
+      if (line.localeCompare('\\NewLine') === 0) {
+        jsons.push({ code: '\n', explanation: '', indentation: ind });
+      } else {
       if (line.indexOf(' \\Ref ') >= 0) {
         json['code'] = line.substring(0, line.indexOf(' \\Ref '));
         json['ref'] = line.substring(line.indexOf(' \\Ref ') + 6, line.length);
@@ -59,6 +62,7 @@ function extractCode(lines) {
       json['explanation'] = '';
       json['indentation'] = ind;
     }
+  }
   }
   if (Object.keys(json).length !== 0) {
     jsons.push(json);
