@@ -42,6 +42,7 @@ class GraphTracer extends Tracer {
     this.isDirected = true;
     this.isWeighted = false;
     this.showSelfLoop = false;
+    this.isReversed = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
     this.logTracer = null;
