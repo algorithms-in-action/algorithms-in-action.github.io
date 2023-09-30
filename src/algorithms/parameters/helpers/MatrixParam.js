@@ -115,7 +115,7 @@ function MatrixParam({
     });
 
     if (matrix.length !== size || matrix[0].length !== size) return [];
-    if (name === 'prim') {
+    if (name === 'primOld' || name === 'primNew') {
       if (matrixValidCheck(matrix) === false) {
         setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
         // eslint-disable-next-line consistent-return
@@ -130,15 +130,15 @@ function MatrixParam({
   const handleSearch = () => {
     closeInstructions(); // remove instruction
     setMessage(null);
-    const edgeValueMatrix = getMatrix();
+    const matrix = getMatrix();
 
-    if (edgeValueMatrix.length !== 0) {
+    if (matrix.length !== 0) {
       // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
         size,
-        edgeValueMatrix,
+        matrix,
       });
     //   setButtonMessage('Reset');
     } else {

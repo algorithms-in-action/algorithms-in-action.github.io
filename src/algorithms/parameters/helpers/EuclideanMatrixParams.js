@@ -39,7 +39,7 @@ function simulateMouseClick(element) {
  * This matrix param component can be used when
  * the param input accepts a matrix
  */
-function PrimsMatrixParam({
+function EuclideanMatrixParams({
   defaultSize,
   min,
   max,
@@ -294,4 +294,4 @@ function PrimsMatrixParam({
   );
 }
 
-export default PrimsMatrixParam;
+export default EuclideanMatrixParams;
