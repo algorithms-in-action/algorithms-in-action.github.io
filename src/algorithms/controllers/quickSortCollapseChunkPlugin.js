@@ -6,18 +6,25 @@
  * @FilePath: /src/algorithms/controllers/quickSortCollapseChunkPlugin.js
  * @Description: logic for quickSort reachability
  */
+import { GlobalActions } from '../../context/actions';
 
 const QS_NAME = 'quickSort';
 
 let algorithmGetter = () => null;
+let dispatchGetter = () => null;
 
 function getGlobalAlgorithm() {
   return algorithmGetter();
 }
 
+function getGlobalDispatch() {
+  return dispatchGetter();
+}
+
 window.getGlobalAlgorithm = getGlobalAlgorithm;
-export function initGlobalAlgorithmGetterQS(getter) {
+export function initGlobalAlgorithmGetterQS(getter, dispatchGetterFn) {
   algorithmGetter = getter;
+  dispatchGetter = dispatchGetterFn;
 }
 
 function isInQuickSort(algorithm) {
@@ -57,8 +64,10 @@ export function isQuicksortSecondHalfExpanded() {
 }
 
 export function onCollapseStateChangeQS() {
-  //console.log("here");
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
-  algorithm.chunker.refresh();
+  const dispatch = getGlobalDispatch();
+  console.log(algorithm);
+  console.log(dispatch);
+  GlobalActions.RUN_ALGORITHM(algorithm.state, dispatch);
 }
