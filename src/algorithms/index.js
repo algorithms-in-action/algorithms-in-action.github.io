@@ -48,7 +48,8 @@ const algorithms = {
       find: Controller.dijkstra,
 
     },
-  },
+  }, 
+  
   'A*': {
     name: 'A* Algorithm',
     category: 'Greedy',
@@ -63,7 +64,23 @@ const algorithms = {
       find: Controller.AStar,
 
     },
-  },
+  }, 
+
+  /*'BFS': {
+    name: 'Breadth Frist Search',
+    category: 'Greedy',
+    param: <Param.BFSParam />,
+    instructions: Instructions.BFSInstruction,
+    explanation: Explanation.BFSExp,
+    extraInfo: ExtraInfo.BFSInfo,
+    pseudocode: {
+      find: Pseudocode.BFS,
+    },
+    controller: {
+      find: Controller.BFS,
+    },
+  },*/
+
   'quickSort': {
     name: 'Quicksort',
     category: 'Sorting',
