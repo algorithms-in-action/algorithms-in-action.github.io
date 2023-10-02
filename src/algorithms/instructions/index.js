@@ -73,7 +73,9 @@ const graphInstructionsTC = [{
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
     'All nodes are SELF-REACHABLE => All diagonal elements are ones and NOT allowed to be edited.',
   ],
-}];
+}]; 
+
+
 
 export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
