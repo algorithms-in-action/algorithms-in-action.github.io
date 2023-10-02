@@ -157,16 +157,6 @@ function EuclideanMatrixParams({
       }
       coords.push(temp);
     });
-
-
-    if (coords.length !== size || coords[0].length !== size) return [];
-    if (name === 'prim') {
-      if (matrixValidCheck(coords) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
-        // eslint-disable-next-line consistent-return
-        return [];
-      }
-    }
     return coords;
   };
 

@@ -68,8 +68,10 @@ class GraphTracer extends Tracer {
       }
       else
       {
-        const x = coordinates[i][0];
-        const y = coordinates[i][1];
+        // Do not change this value unless you also change axis scales
+        const scaleSize = 30;
+        const x = coordinates[i][0] * scaleSize;
+        const y = -coordinates[i][1] * scaleSize;
         this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
       }
 

@@ -1,20 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
+import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const PRIMS = 'New Prim\'s';
+const PRIMS = 'Old Prim\'s';
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
-function PrimsParamNew() {
+function PrimsParamOld() {
   const [message, setMessage] = useState(null);
 
   return (
     <>
       {/* Matrix input */}
-      <EuclideanMatrixParams
-        name="primNew"
+      <MatrixParam
+        name="primOld"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}
@@ -32,4 +32,4 @@ function PrimsParamNew() {
   );
 }
 
-export default PrimsParamNew;
+export default OldPrimsParam;
