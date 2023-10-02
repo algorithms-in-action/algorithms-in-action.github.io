@@ -161,8 +161,8 @@ class GraphRenderer extends Renderer {
       }
     }
 
-    const maxScale = 2000;
-    return maxScale * stepSize;
+    const scale = 2000;
+    return scale * stepSize;
   }
 
   /*
@@ -171,11 +171,11 @@ class GraphRenderer extends Renderer {
   renderAxis(maxScale) {
     // axis position
     const axisCenter = {x:0, y:0};  // axis position
-    const axisScale = this.calculateAxisScale(maxScale);
+    const axisScale = this.calculateAxisScale(maxScale);  // Largest coordinate value of each axis.
     const labelPadding = 25;
 
-    const labelPosX = maxScale.x + labelPadding;
-    const labelPosY = maxScale.y + labelPadding;
+    const labelPosX = axisScale + labelPadding;
+    const labelPosY = axisScale + labelPadding;
 
     const originCoords = {x: axisCenter.x - 8, y: axisCenter.y + 16};
 
