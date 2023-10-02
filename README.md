@@ -1,16 +1,29 @@
 # Algorithms in Action
 
+![license](https://img.shields.io/badge/license-MIT-Green) ![node](https://img.shields.io/badge/node-v18.17.1-blue) ![npm](https://img.shields.io/badge/npm-v9.6.7-blue)
+
 Welcome to Algorithms In Action!
 
 Here is the [entry](https://algorithms-in-action.github.io/) for the algorithm visualiser.
 
 You may want to read the [WIKI](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki) for more project details.
 
-[toc]
+- [Algorithms in Action](#algorithms-in-action)
+  - [Project Description](#project-description)
+  - [Development History](#development-history)
+  - [Developer](#developer)
+    - [Start Up](#start-up)
+    - [Deployment](#deployment)
+      - [Environment Setup](#environment-setup)
+      - [Install Dependencies](#install-dependencies)
+      - [Start a local server](#start-a-local-server)
+    - [Branch Management](#branch-management)
+    - [Folder Organisation](#folder-organisation)
+  - [License](#license)
 
 ## Project Description
 
-Algorithms in Action (AIA) is an animation software tool, developed for the purposes of teaching computer science algorithms by Linda Stern, Lee Naish, and Harald Søndergaard at The University of Melbourne. AIA features animation, pseudocode, and textual explanations, run in coordinated fashion. A key feature of AIA, not found in other algorithm animations, is that students can view an algorithm at varying levels of detail. Starting with a high level pseudocode description of the algorithm, with accompanying high level animation and textual explanation, students can expand sections of the pseudocode to expose more detail. Animation and explanation are controlled in coordinate fashion, becoming correspondingly more detailed as the pseudocode is expanded. The rationale for various features of AIA and results from students using the program were reported in [1].
+Algorithms in Action (AIA) is an animation software tool, developed for the purposes of teaching computer science algorithms by Linda Stern, Lee Naish, and Harald Søndergaard at The University of Melbourne. AIA features animation, pseudocode, and textual explanations, run in coordinated fashion. A key feature of AIA, not found in other algorithm animations, is that students can view an algorithm at varying levels of detail. Starting with a high level pseudocode description of the algorithm, with accompanying high level animation and textual explanation, students can expand sections of the pseudocode to expose more detail. Animation and explanation are controlled in coordinate fashion, becoming correspondingly more detailed as the pseudocode is expanded. The rationale for various features of AIA and results from students using the program were reported in the paper <sup>[1]</sup>.
 
 > [1] Stern, L., Søndergaard, and Naish, L., A Strategy for Managing Content Complexity in Algorithm Animation, *Proceedings of the Fourth Annual SIGCSE/SIGCUE Conference on Innovation and* *Technology in Computer Science Education (ITiCSE99),* Cracow, Poland, ACM Press, 127-130, 1999.
 
@@ -78,8 +91,10 @@ You may need to check the WIKI for the [development manual](https://github.com/a
 
 ### Folder Organisation
 
-- src/\: Source code of the web app.
-- ui/\: Contains all the images and graphics used for the project.
+| Name  | Description                                                |
+| ----- | ---------------------------------------------------------- |
+| ./src | Source code of the web app.                                |
+| ./ui  | Contains all the images and graphics used for the project. |
 
 ## License
 
