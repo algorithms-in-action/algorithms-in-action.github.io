@@ -9,3 +9,6 @@ export { default as QSM3Param } from './QSM3Param';
 export { default as HSSParam } from './HSSParam';
 export { default as DIJKParam } from './DIJKParam';
 export { default as ASTARParam } from './ASTParam';
+export { default as BFSParam } from './BFSParam';
+export { default as DFSParam } from './DFSParam';
+

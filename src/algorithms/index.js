@@ -49,7 +49,6 @@ const algorithms = {
 
     },
   }, 
-  
   'A*': {
     name: 'A* Algorithm',
     category: 'Greedy',
@@ -66,10 +65,10 @@ const algorithms = {
     },
   }, 
 
-  /*'BFS': {
-    name: 'Breadth Frist Search',
+  'BFS': {
+    name: 'Breadth First Search',
     category: 'Greedy',
-    param: <Param.BFSParam />,
+    param: <Param.BFSParam/>,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,
@@ -79,7 +78,22 @@ const algorithms = {
     controller: {
       find: Controller.BFS,
     },
-  },*/
+  },
+
+  'DFS': {
+    name: 'Depth First Search',
+    category: 'Greedy',
+    param: <Param.DFSParam />,
+    instructions: Instructions.DFSInstruction,
+    explanation: Explanation.DFSExp,
+    extraInfo: ExtraInfo.DFSInfo,
+    pseudocode: {
+      find: Pseudocode.DFS,
+    },
+    controller: {
+      find: Controller.DFS,
+    },
+  },
 
   'quickSort': {
     name: 'Quicksort',
