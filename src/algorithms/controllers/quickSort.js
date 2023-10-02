@@ -211,10 +211,14 @@ export default {
 
       const pivot = a[right];
 
-      function boolShouldAnimate() { return (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded()); }
+      function boolShouldAnimate() {
+        return (
+          depth === 0 ||
+          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
+        );
+      }
 
       if (boolShouldAnimate()) {
-
         chunker.add(
           QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
           (vis, p) => {
@@ -234,9 +238,10 @@ export default {
             if (i1 !== -1) {
               highlight(vis, i1, false);
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
-
             } else {
-              if (isPartitionExpanded()) { highlight(vis, 0, false); } // TODO comment and explain this
+              if (isPartitionExpanded()) {
+                highlight(vis, 0, false);
+              } // TODO comment and explain this
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
           },
@@ -263,7 +268,6 @@ export default {
           i += 1;
 
           if (boolShouldAnimate()) {
-
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
               (vis, i1) => {
@@ -273,21 +277,19 @@ export default {
                   unhighlight(vis, 0, false);
                 }
 
-                // TODO can someone check this, i'm not sure how this works 
-                // i've added brackets to what i thought the intent was
-                // the highlight statement was duplicated 
-                // and without brackets with assign_i_j was outside the if statement
-                highlight(vis, i1, false);
-                if (i1 > 0) {  } 
-                else if (!isPartitionExpanded() && i1 === 0) {
-                  assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
+                // Both these are needed due to a bug where the first bar stays highlighted
+                if (i1 > 0) {
+                  highlight(vis, i1, false);
+                } else if (!isPartitionExpanded() && i1 === 0) {
+                  highlight(vis, i1, false);
                 }
 
+                // assign_i_j already takes into account the isPartitionExpanded
+                assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
               },
               [i],
             );
           }
-
         } while (a[i] < pivot);
 
         do {
@@ -331,8 +333,9 @@ export default {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r) => {
-
-            if (isPartitionExpanded()) { vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i); }
+            if (isPartitionExpanded()) {
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
+            }
             unhighlight(vis, i1);
             if (j1 >= 0) {
               if (j1 === i1) {
@@ -358,7 +361,12 @@ export default {
       let pivot;
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
-      function boolShouldAnimate() { return (depth === 0) || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded()); }
+      function boolShouldAnimate() {
+        return (
+          depth === 0 ||
+          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
+        );
+      }
 
       if (boolShouldAnimate()) {
         chunker.add(QS_BOOKMARKS.if_left_less_right, refresh_stack, [
@@ -370,16 +378,12 @@ export default {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-
         if (depth === 0 || isQuicksortFirstHalfExpanded()) {
-          
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
           ]);
-
         } else {
-
           // this part animates the recursion when it is collapsed
           // can also add a function to animate the swap actions in one step here instead of in the partition function
           chunker.add(
@@ -387,12 +391,11 @@ export default {
             (vis, low, high) => {
               for (let i = low; i <= high; i++) {
                 // inclusive to make sure pivot is sorted at end
-                vis.array.sorted(i); 
+                vis.array.sorted(i);
               }
             },
             [left, pivot],
           );
-
         }
 
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);

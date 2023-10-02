@@ -66,8 +66,5 @@ export function isQuicksortSecondHalfExpanded() {
 export function onCollapseStateChangeQS() {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
-  const dispatch = getGlobalDispatch();
-  console.log(algorithm);
-  console.log(dispatch);
-  GlobalActions.RUN_ALGORITHM(algorithm.state, dispatch);
+  GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
 }
