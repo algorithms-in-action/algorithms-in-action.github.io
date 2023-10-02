@@ -121,7 +121,7 @@ class GraphRenderer extends Renderer {
   /**
    * Add scales to the axis
   */
-  computeScales(min, max, center, stepSize=30, stepHeight=5) {
+  computeScales(min, max, center, stepSize = 30, stepHeight=5) {
     const scales = [];
     const alignMinX = center.x - stepHeight/2;
     const alignMaxX = center.x + stepHeight/2;
@@ -138,16 +138,44 @@ class GraphRenderer extends Renderer {
   }
 
   /*
+   * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
+  */
+  calculateAxisScale(maxScale, stepSize = 30) {
+    const trueMax = Math.max(maxScale.x, maxScale.y) / stepSize;  // Maximum individual coordinate value.
+
+    // Determine scale up to multiple of 10.
+    for(let i = 1; i < 10; ++i){
+      const scale = 10 * i;
+      if(trueMax < scale)
+      {
+        return scale * stepSize;
+      }
+    }
+
+    // Determine scale up to multiple of 100.
+    for(let i = 1; i < 10; ++i){
+      const scale = 100 * i;
+      if(trueMax < scale)
+      {
+        return scale * stepSize;
+      }
+    }
+
+    const maxScale = 2000;
+    return maxScale * stepSize;
+  }
+
+  /*
    * Render x y axis
   */
   renderAxis(maxScale) {
     // axis position
-    const axisCenter = {x:0, y:0};
-    const padding = 30;
-    const axisScale = Math.max(maxScale.x, maxScale.y) + padding;
+    const axisCenter = {x:0, y:0};  // axis position
+    const axisScale = this.calculateAxisScale(maxScale);
+    const labelPadding = 25;
 
-    const labelPosX = axisScale + padding;
-    const labelPosY = axisScale + padding;
+    const labelPosX = maxScale.x + labelPadding;
+    const labelPosY = maxScale.y + labelPadding;
 
     const originCoords = {x: axisCenter.x - 8, y: axisCenter.y + 16};
 
