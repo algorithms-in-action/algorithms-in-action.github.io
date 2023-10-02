@@ -133,7 +133,7 @@ export default {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_depth) {
+    function derive_stack(Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) {
 
       // pass in curr_i, curr_j, curr_depth as -1 if they are not to be rendered
 
@@ -170,19 +170,28 @@ export default {
         );
       }
 
-      if (cur_i !== -1) { // i wish i had optionals 
+
+      if (cur_i === undefined) { return stack }
+
+      // won't run if cur_i is undefined
+      // cur_i can be -1 if 0 - 1 in some cases
+      if (cur_i !== -1) {
         
-        Cur_real_stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
-        Cur_real_stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
+        stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
+        stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
         
       }
 
       return stack;
     }
 
-    const refresh_stack = (vis, Cur_real_stack, Cur_finished_stack_frames) => {
+    const refresh_stack = (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+
+      assert(vis.array);
+      assert(Cur_real_stack && Cur_finished_stack_frames);
+
       vis.array.setStackDepth(Cur_real_stack.length);
-      vis.array.setStack(derive_stack(Cur_real_stack, Cur_finished_stack_frames));
+      vis.array.setStack(derive_stack(Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth));
     };
 
     ///
@@ -223,11 +232,12 @@ export default {
       if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
         chunker.add(
           QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
-          (vis, p) => {
+          (vis, p, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
             highlight(vis, p);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [right],
+          [right, real_stack, finished_stack_frames, i, j, pivot, depth],
         );
 
         // At the start of algorithm, i = 0 - 1
@@ -236,7 +246,7 @@ export default {
       
         chunker.add(
           QS_BOOKMARKS.set_i_left_minus_1,
-          (vis, i1) => {
+          (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
             if (i1 >= 0) {
               highlight(vis, i1, false);
               isPartitionExpanded() &&
@@ -246,20 +256,24 @@ export default {
               isPartitionExpanded() &&
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [i],
+          [i, real_stack, finished_stack_frames, i, j, pivot, depth],
         );
 
         chunker.add(
           QS_BOOKMARKS.set_j_right,
-          (vis, j1) => {
+          (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
             if (j1 >= 0) {
               highlight(vis, j1, false);
               isPartitionExpanded() &&
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
             }
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [j],
+          [j, real_stack, finished_stack_frames, i, j, pivot, depth],
         );
       }
 
@@ -272,7 +286,7 @@ export default {
           if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
-              (vis, i1) => {
+              (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
                 if (i1 > 0) {
                   unhighlight(vis, i1 - 1, false);
                 } else if (i1 === -1) {
@@ -283,8 +297,10 @@ export default {
                   highlight(vis, i1, false);
                 isPartitionExpanded() &&
                   vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
+
+                  refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
               },
-              [i],
+              [i, real_stack, finished_stack_frames, i, j, pivot, depth], 
             );
           }
         } while (a[i] < pivot);
