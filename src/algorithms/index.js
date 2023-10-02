@@ -67,7 +67,7 @@ const algorithms = {
 
   'BFS': {
     name: 'Breadth First Search',
-    category: 'Greedy',
+    category: 'Searching',
     param: <Param.BFSParam/>,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
@@ -82,7 +82,7 @@ const algorithms = {
 
   'DFS': {
     name: 'Depth First Search',
-    category: 'Greedy',
+    category: 'Searching',
     param: <Param.DFSParam />,
     instructions: Instructions.DFSInstruction,
     explanation: Explanation.DFSExp,
