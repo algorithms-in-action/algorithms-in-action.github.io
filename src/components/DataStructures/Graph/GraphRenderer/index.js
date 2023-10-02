@@ -59,6 +59,7 @@ class GraphRenderer extends Renderer {
       // Center to new axis origin
       this.centerX = 180;
       this.centerY = -180;
+
     }
 
     this.elementRef = React.createRef();
@@ -77,14 +78,20 @@ class GraphRenderer extends Renderer {
   }
 
   handleMouseMove(e) {
-    if (this.selectedNode) {
+
+    if (this.selectedNode && this.props.title !== "Graph view") {
       const { x, y } = this.computeCoords(e);
       const node = this.props.data.findNode(this.selectedNode.id);
       node.x = x;
       node.y = y;
       this.refresh();
+
+    } else if (this.props.title === "Graph view") {
+      this.refresh();
+
     } else {
       super.handleMouseMove(e);
+      
     }
   }
 
@@ -337,6 +344,7 @@ class GraphRenderer extends Renderer {
           const visitedNode = visitedCount === 1;
           const visitedNode1 = visitedCount1 === 1;
           const visitedNode2 = visitedCount2 === 1;
+
           return (
             <motion.g
                 animate={{ x, y }}
