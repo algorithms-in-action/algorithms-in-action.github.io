@@ -1,5 +1,7 @@
 # A* Algorithm
+
 ---
+
 The A* (pronounced "A star") algorithm for graphs can be used to find
 the shortest (that is, lowest weight or cost) path from a single start
 node to a single end node. It uses a "heuristic" function to help guide
