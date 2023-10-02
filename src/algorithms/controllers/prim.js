@@ -28,17 +28,7 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    * 
    */
-  run(chunker, { edgeValueMatrix, coordsMatrix, matrix }) {
-    // Only one of matrix and edgeValueMatrix should be defined.
-    if(edgeValueMatrix !== undefined && coordsMatrix !== undefined && matrix !== undefined) {
-      throw new Error("edgeValueMatrix should be undefined.");
-    }
-    // Following code handles case where function is called by MatrixParam rather than EuclideanMatrixParams.
-    if(matrix !== undefined)
-    {
-      edgeValueMatrix = matrix;  
-      coordsMatrix = [];
-    }
+  run(chunker, { edgeValueMatrix, coordsMatrix }) {
 
     const E = [...edgeValueMatrix];
     const coords = [...coordsMatrix];  // Potentially empty.
