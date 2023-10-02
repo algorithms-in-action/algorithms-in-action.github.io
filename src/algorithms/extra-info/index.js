@@ -8,3 +8,6 @@ export { default as QSM3Info } from './QSM3Info.md';
 export { default as HSSInfo } from './HSSInfo.md';
 export { default as DIJKInfo } from './DIJKInfo.md';
 export { default as ASTARInfo } from './ASTARInfo.md';
+export { default as BFSInfo } from './BFSInfo.md';
+export { default as DFSInfo } from './DFSInfo.md';
+
