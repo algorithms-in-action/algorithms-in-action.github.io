@@ -128,7 +128,7 @@ class GraphRenderer extends Renderer {
     const alignMinY = center.y - stepHeight/2;
     const alignMaxY = center.y + stepHeight/2;
 
-    for (let i=1;i < (max-min)/stepSize; i++) {
+    for (let i=1;i <= (max-min)/stepSize; i++) {
       scales.push({label: 'x', x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY, num: i});
       scales.push({label: 'y', x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize, num: i});
     }
@@ -177,7 +177,7 @@ class GraphRenderer extends Renderer {
     const labelPosX = axisScale + labelPadding;
     const labelPosY = axisScale + labelPadding;
 
-    const originCoords = {x: axisCenter.x - 8, y: axisCenter.y + 16};
+    const originCoords = {x: axisCenter.x - 12, y: axisCenter.y + 16};
 
     if (this.props.title !== 'Graph view') {
       // Do not render axis if its not graph
