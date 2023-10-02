@@ -80,6 +80,7 @@ class GraphRenderer extends Renderer {
   handleMouseMove(e) {
 
     if (this.selectedNode && this.props.title !== "Graph view") {
+      // Allow mouse movement
       const { x, y } = this.computeCoords(e);
       const node = this.props.data.findNode(this.selectedNode.id);
       node.x = x;
@@ -87,11 +88,12 @@ class GraphRenderer extends Renderer {
       this.refresh();
 
     } else if (this.props.title === "Graph view") {
+      // Ignore mouse movement if Graph view was used
       this.refresh();
 
     } else {
       super.handleMouseMove(e);
-      
+
     }
   }
 
