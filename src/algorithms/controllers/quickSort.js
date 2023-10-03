@@ -170,7 +170,6 @@ export default {
         );
       }
 
-
       if (cur_i === undefined) { return stack }
 
       // won't run if cur_i is undefined
@@ -310,7 +309,7 @@ export default {
           if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
             chunker.add(
               QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
-              (vis, j1) => {
+              (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
                 unhighlight(vis, j1 + 1, false);
                 if (j1 >= 0) {
                   highlight(vis, j1, false);
@@ -322,8 +321,11 @@ export default {
                 } else {
                   vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
                 }
+
+                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+                
               },
-              [j],
+              [j, real_stack, finished_stack_frames, i, j, pivot, depth],
             );
           }
         } while (i <= j && pivot < a[j]);
