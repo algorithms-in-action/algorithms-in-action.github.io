@@ -238,7 +238,7 @@ export default {
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [right, real_stack, finished_stack_frames, i, j, pivot, depth],
+          [right, real_stack, finished_stack_frames, i, j, right, depth],
         );
 
         // At the start of algorithm, i = 0 - 1
@@ -260,7 +260,7 @@ export default {
 
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [i, real_stack, finished_stack_frames, i, j, pivot, depth],
+          [i, real_stack, finished_stack_frames, i, j, right, depth],
         );
 
         chunker.add(
@@ -274,7 +274,7 @@ export default {
 
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [j, real_stack, finished_stack_frames, i, j, pivot, depth],
+          [j, real_stack, finished_stack_frames, i, j, right, depth],
         );
       }
 
@@ -301,7 +301,7 @@ export default {
 
                   refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
               },
-              [i, real_stack, finished_stack_frames, i, j, pivot, depth], 
+              [i, real_stack, finished_stack_frames, i, j, right, depth], 
             );
           }
         } while (a[i] < pivot);
@@ -327,7 +327,7 @@ export default {
                 refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
                 
               },
-              [j, real_stack, finished_stack_frames, i, j, pivot, depth],
+              [j, real_stack, finished_stack_frames, i, j, right, depth],
             );
           }
         } while (i <= j && pivot < a[j]);
@@ -351,7 +351,7 @@ export default {
       if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
-          (vis, i1, j1, r) => {
+          (vis, i1, j1, r, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
             isPartitionExpanded() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
             unhighlight(vis, i1);
@@ -364,8 +364,10 @@ export default {
             }
             unhighlight(vis, r, false);
             vis.array.sorted(i1);
+            console.log('swap!')
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
-          [i, j, right],
+          [i, j, right, real_stack, finished_stack_frames, i, j, i, depth],
         );
       }
       return [i, a]; // Return [pivot location, array partition_num_array]
