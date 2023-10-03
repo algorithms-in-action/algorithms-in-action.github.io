@@ -23,7 +23,8 @@ const STACK_FRAME_COLOR = {
   Current: 2,
   Finished: 3,
   I_color: 4,
-  J_color: 5
+  J_color: 5,
+  P_color: 6 // pivot
 };
 
 // bookmarks (id) into the REAL file for quicksort
@@ -178,6 +179,7 @@ export default {
         
         stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
         stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
+        stack[cur_depth][cur_pivot] = STACK_FRAME_COLOR.P_color;
         
       }
 

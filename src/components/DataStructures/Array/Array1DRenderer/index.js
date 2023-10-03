@@ -213,6 +213,7 @@ class Array1DRenderer extends Array2DRenderer {
 		'var(--finished-section)',    // 3
     'var(--i-section)',    // 4
     'var(--j-section)',    // 5
+    'var(--p-section)',    // 6
 	][color_index]
 }
 
