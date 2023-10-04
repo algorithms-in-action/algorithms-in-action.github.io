@@ -147,7 +147,7 @@ class GraphRenderer extends Renderer {
   }
 
   /**
-   * Add arrows to the end of axis
+   * Add arrows to the end of axis using two lines
    */
   computeArrows(label, axisEndPoint, length, width) {
     var arrow1;
@@ -160,9 +160,11 @@ class GraphRenderer extends Renderer {
     } else if (label === 'y') {
       arrow1 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x - width/2, y2: -axisEndPoint.y + length};
       arrow2 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x + width/2, y2: -axisEndPoint.y + length};
+
     } else {
       arrow1 = {};
       arrow2 = {};
+
     }
 
     return [arrow1, arrow2];
