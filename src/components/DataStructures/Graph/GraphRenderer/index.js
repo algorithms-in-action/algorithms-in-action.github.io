@@ -87,7 +87,7 @@ class GraphRenderer extends Renderer {
       node.y = y;
       this.refresh();
 
-    } else if (this.props.title === "Graph view") {
+    } else if (this.selectedNode && this.props.title === "Graph view") {
       // Ignore mouse movement if Graph view was used
       this.refresh();
 
@@ -146,6 +146,31 @@ class GraphRenderer extends Renderer {
     
   }
 
+  /**
+   * Add arrows to the end of axis using two lines
+   */
+  computeArrows(label, axisEndPoint, length, width) {
+    var arrow1;
+    var arrow2;
+
+    if (label === 'x') {
+      arrow1 = {x1: axisEndPoint.x, y1: axisEndPoint.y, x2: axisEndPoint.x - length, y2: axisEndPoint.y - width/2};
+      arrow2 = {x1: axisEndPoint.x, y1: axisEndPoint.y, x2: axisEndPoint.x - length, y2: axisEndPoint.y + width/2};
+
+    } else if (label === 'y') {
+      arrow1 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x - width/2, y2: -axisEndPoint.y + length};
+      arrow2 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x + width/2, y2: -axisEndPoint.y + length};
+
+    } else {
+      arrow1 = {};
+      arrow2 = {};
+
+    }
+
+    return [arrow1, arrow2];
+
+  }
+
   /*
    * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
   */
@@ -178,13 +203,20 @@ class GraphRenderer extends Renderer {
    * Render x y axis
   */
   renderAxis(maxScale) {
-    // axis position
     const axisCenter = {x:0, y:0};  // axis position
-    const axisScale = this.calculateAxisScale(maxScale);  // Largest coordinate value of each axis.
-    const labelPadding = 25;
+    const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
 
-    const labelPosX = axisScale + labelPadding;
-    const labelPosY = axisScale + labelPadding;
+    const scales = this.computeScales(0, axisScale, axisCenter); // list of scales
+
+
+    const axisEndPoint = axisScale + 20;
+    const axisArrowX = this.computeArrows('x', {x:axisEndPoint, y:axisCenter.y}, 8, 8); // list containing fragments to form arrow on x
+    const axisArrowY = this.computeArrows('y', {x:axisCenter.x, y:axisEndPoint}, 8, 8); // list containing fragments to form arrow on y
+
+
+    const labelPadding = 20;
+    const labelPosX = axisEndPoint + labelPadding;
+    const labelPosY = axisEndPoint + labelPadding;
 
     const originCoords = {x: axisCenter.x - 12, y: axisCenter.y + 16};
 
@@ -195,15 +227,25 @@ class GraphRenderer extends Renderer {
       );
     }
 
-    // console.log(labelPosX, labelPosY)
-    const scales = this.computeScales(0, axisScale, axisCenter);
+    
 
     return (
       <g>
         {/* Add X and Y Axis */}
-        <line x1={0} y1={axisCenter.y} x2={axisScale} y2={axisCenter.y} className={styles.axis} />
+        <line x1={0} y1={axisCenter.y} x2={axisEndPoint} y2={axisCenter.y} className={styles.axis} />
 
-        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisScale} className={styles.axis} />
+        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisEndPoint} className={styles.axis} />
+
+        {/* Arrow X */}
+        {axisArrowX.map((frag) => {
+          return (<line x1={frag.x1} y1={frag.y1} x2={frag.x2} y2={frag.y2} className={styles.axis} />);
+        })}
+        
+
+        {/* Arrow Y */}
+        {axisArrowY.map((frag) => {
+          return (<line x1={frag.x1} y1={frag.y1} x2={frag.x2} y2={frag.y2} className={styles.axis} />);
+        })}
 
         {/* X Axis Label */}
         <text x={labelPosX} y={axisCenter.y + 5} textAnchor="middle" className={styles.axisLabel}>
