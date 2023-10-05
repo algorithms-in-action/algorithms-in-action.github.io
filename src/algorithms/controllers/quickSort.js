@@ -171,16 +171,23 @@ export default {
         );
       }
 
-      if (cur_i === undefined) { return stack }
+      console.log(cur_depth, cur_i, cur_j, cur_pivot);
 
-      // won't run if cur_i is undefined
-      // cur_i can be -1 if 0 - 1 in some cases
-      if (cur_i !== -1) {
-        
-        stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
-        stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
+      if (cur_depth === undefined) { return stack; }
+
+      // preferentially display the indices over the depth
+      // TODO: display both, one on top of the other
+
+      if (cur_pivot !== undefined && cur_pivot !== -1) {
         stack[cur_depth][cur_pivot] = STACK_FRAME_COLOR.P_color;
-        
+      }
+
+      if (cur_i !== undefined && cur_i !== -1) {
+        stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
+      }
+
+      if (cur_j !== undefined && cur_j !== -1) {
+        stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
       }
 
       return stack;
@@ -200,13 +207,17 @@ export default {
     const swapAction = (b, n1, n2, { isPivotSwap }) => {
       chunker.add(
         b,
-        (vis, _n1, _n2) => {
+        (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+          console.log('swapping elements')
           vis.array.swapElements(_n1, _n2);
           if (isPivotSwap) {
+            // n1 = i, n2 = right
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, n1);
+
+            // refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_pivot, cur_j, _n1, cur_depth)
           }
         },
-        [n1, n2],
+        [n1, n2, real_stack, finished_stack_frames, undefined, undefined, undefined, undefined],
       );
     };
 
@@ -234,8 +245,10 @@ export default {
         chunker.add(
           QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
           (vis, p, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            console.log('set_pivot_to_value_at_array_indx_right', cur_pivot);
             highlight(vis, p);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
+
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
           [right, real_stack, finished_stack_frames, i, j, right, depth],
@@ -248,6 +261,7 @@ export default {
         chunker.add(
           QS_BOOKMARKS.set_i_left_minus_1,
           (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            console.log('set_i_left_minus_1', cur_i);
             if (i1 >= 0) {
               highlight(vis, i1, false);
               isPartitionExpanded() &&
@@ -258,7 +272,9 @@ export default {
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
 
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+            const new_i = cur_i === -1 ? 0 : cur_i;
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, new_i, cur_j, cur_pivot, cur_depth)
           },
           [i, real_stack, finished_stack_frames, i, j, right, depth],
         );
@@ -266,13 +282,16 @@ export default {
         chunker.add(
           QS_BOOKMARKS.set_j_right,
           (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            console.log('set_j_right');
             if (j1 >= 0) {
               highlight(vis, j1, false);
               isPartitionExpanded() &&
                 vis.array.assignVariable(VIS_VARIABLE_STRINGS.j_right_index, j1);
             }
 
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+            const new_i = cur_i === -1 ? 0 : cur_i;
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, new_i, cur_j, cur_pivot, cur_depth)
           },
           [j, real_stack, finished_stack_frames, i, j, right, depth],
         );
@@ -288,6 +307,7 @@ export default {
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
               (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+                console.log('incri_i_until_array_index_i_greater_eq_pivot');
                 if (i1 > 0) {
                   unhighlight(vis, i1 - 1, false);
                 } else if (i1 === -1) {
@@ -299,7 +319,8 @@ export default {
                 isPartitionExpanded() &&
                   vis.array.assignVariable(VIS_VARIABLE_STRINGS.i_left_index, i1);
 
-                  refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+                const new_i = i1 === -1 ? 0 : i1;
+                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, new_i, cur_j, cur_pivot, cur_depth)
               },
               [i, real_stack, finished_stack_frames, i, j, right, depth], 
             );
@@ -312,6 +333,7 @@ export default {
             chunker.add(
               QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
               (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+                console.log('decri_j_until_array_index_j_less_i');
                 unhighlight(vis, j1 + 1, false);
                 if (j1 >= 0) {
                   highlight(vis, j1, false);
@@ -324,7 +346,9 @@ export default {
                   vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
                 }
 
-                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+                const new_j = cur_j >= 0 ? cur_j : 0;
+
+                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, new_j, cur_pivot, cur_depth)
                 
               },
               [j, real_stack, finished_stack_frames, i, j, right, depth],
@@ -352,6 +376,7 @@ export default {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, i1, j1, r, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            console.log('swap_pivot_into_correct_position');
             isPartitionExpanded() &&
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
             unhighlight(vis, i1);
@@ -364,7 +389,6 @@ export default {
             }
             unhighlight(vis, r, false);
             vis.array.sorted(i1);
-            console.log('swap!')
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [i, j, right, real_stack, finished_stack_frames, i, j, i, depth],
