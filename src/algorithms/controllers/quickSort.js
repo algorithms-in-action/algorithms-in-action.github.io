@@ -204,22 +204,21 @@ export default {
 
     ///
 
-    const swapAction = (b, n1, n2, { isPivotSwap }) => {
-      chunker.add(
-        b,
-        (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-          console.log('swapping elements')
-          vis.array.swapElements(_n1, _n2);
-          if (isPivotSwap) {
-            // n1 = i, n2 = right
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, n1);
+    // const swapAction = (b, n1, n2, { isPivotSwap }) => {
+    //   chunker.add(
+    //     b,
+    //     (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+    //       vis.array.swapElements(_n1, _n2);
+    //       if (isPivotSwap) {
+    //         // n1 = i, n2 = pivot
+    //         vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, n1);
 
-            // refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_pivot, cur_j, _n1, cur_depth)
-          }
-        },
-        [n1, n2, real_stack, finished_stack_frames, undefined, undefined, undefined, undefined],
-      );
-    };
+    //         refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, _n2, cur_j, _n1, cur_depth)
+    //       }
+    //     },
+    //     [n1, n2, real_stack, finished_stack_frames, undefined, undefined, undefined, undefined],
+    //   );
+    // };
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define quicksort functions
@@ -360,18 +359,39 @@ export default {
         }
         if (i < j) {
           [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
-          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
-            isPivotSwap: false,
-          });
+          // swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
+          //   isPivotSwap: false,
+          // });
+          chunker.add(
+            QS_BOOKMARKS.swap_array_i_j_vals,
+            (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+              console.log('swap_array_i_j_vals');
+              vis.array.swapElements(cur_i, cur_j);
+
+              // refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_j, cur_i, cur_pivot, cur_depth) // cur_i and cur_j are swapped
+            },
+            [real_stack, finished_stack_frames, i, j, right, depth],
+          )
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
-        isPivotSwap: true,
-      });
+      // swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
+      //   isPivotSwap: true,
+      // });
+      chunker.add(
+        QS_BOOKMARKS.swap_pivot_into_correct_position,
+          (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            console.log('swap_pivot_into_correct_position');
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_i);
+            vis.array.swapElements(cur_i, cur_pivot);
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_i, cur_depth)
+          },
+          [real_stack, finished_stack_frames, i, j, right, depth],
+      )
       if (depth < 1 || (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())) {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
