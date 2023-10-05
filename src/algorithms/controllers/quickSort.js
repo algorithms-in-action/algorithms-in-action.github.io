@@ -250,7 +250,7 @@ export default {
 
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
           },
-          [right, real_stack, finished_stack_frames, i, j, right, depth],
+          [right, real_stack, finished_stack_frames, undefined, undefined, right, depth],
         );
 
         // At the start of algorithm, i = 0 - 1
@@ -275,7 +275,7 @@ export default {
 
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, new_i, cur_j, cur_pivot, cur_depth)
           },
-          [i, real_stack, finished_stack_frames, i, j, right, depth],
+          [i, real_stack, finished_stack_frames, i, undefined, right, depth],
         );
 
         chunker.add(
@@ -382,6 +382,7 @@ export default {
       //   isPivotSwap: true,
       // });
       chunker.add(
+        // "swap" is something of a misnomer since i does not
         QS_BOOKMARKS.swap_pivot_into_correct_position,
           (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
             console.log('swap_pivot_into_correct_position');
