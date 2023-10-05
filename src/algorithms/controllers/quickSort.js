@@ -75,7 +75,10 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
   let right = stack_frame[STACK_FRAME_RGHT_INDEX];
 
   for (let i = left; i <= right; i += 1) {
-    a[depth][i] = stateVal;
+    // each element in the vis stack is a tuple: 
+    // 0th index is for base color, 
+    // 1th index is for pivot, i, j colors
+    a[depth][i] = {base: stateVal, extra: []};
   }
   return a;
 }
@@ -139,11 +142,13 @@ export default {
       // pass in curr_i, curr_j, curr_depth as -1 if they are not to be rendered
 
       let stack = [];
+
       for (let i = 0; i < max_depth_index + 1; i++) {
+        // for whatever reason fill() does not work here... JavaScript
         stack.push(
-          new Array(entire_num_array.length).fill(
-            STACK_FRAME_COLOR.Not_started,
-          ),
+          [...Array.from({ length: entire_num_array.length })].map(() => (
+            { base: STACK_FRAME_COLOR.Not_started, extra: [] }
+          )),
         );
       }
 
@@ -171,24 +176,24 @@ export default {
         );
       }
 
-      console.log(cur_depth, cur_i, cur_j, cur_pivot);
-
       if (cur_depth === undefined) { return stack; }
 
       // preferentially display the indices over the depth
       // TODO: display both, one on top of the other
 
       if (cur_pivot !== undefined && cur_pivot !== -1) {
-        stack[cur_depth][cur_pivot] = STACK_FRAME_COLOR.P_color;
+        stack[cur_depth][cur_pivot].extra.push(STACK_FRAME_COLOR.P_color);
       }
 
       if (cur_i !== undefined && cur_i !== -1) {
-        stack[cur_depth][cur_i] = STACK_FRAME_COLOR.I_color;
+        stack[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
       }
 
       if (cur_j !== undefined && cur_j !== -1) {
-        stack[cur_depth][cur_j] = STACK_FRAME_COLOR.J_color;
+        stack[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
       }
+
+      console.log(stack);
 
       return stack;
     }

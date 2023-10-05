@@ -127,6 +127,8 @@
 
     .stack {
         .stackElement {
+            display: grid;
+            grid-auto-flow: row;
             height: 0.6em;
             transition-duration: 0.1s;
             margin-bottom: m#{i}n(1vh, 1em);
@@ -135,9 +137,13 @@
             --in-progress-section: rgb(169, 169, 169); 
             --current-section: var(--array-1d-row-col-bg-selected); 
             --finished-section: rgb(0, 0, 0); 
-            --j-section: rgb(58, 177, 167); 
-            --i-section: rgb(28, 185, 41); 
-            --p-section: rgb(176, 25, 187);  // pink pivot
+
+            .stackSubElement {
+                transition-duration: 0.1s;
+                --j-section: rgb(58, 177, 167); 
+                --i-section: rgb(28, 185, 41); 
+                --p-section: rgb(176, 25, 187);  // pink pivot
+            }
         }
 
         p {

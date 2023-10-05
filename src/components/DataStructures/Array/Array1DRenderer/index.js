@@ -233,17 +233,18 @@ function stackRenderer(stack, nodeCount, stackDepth) {
   for (let i = 0; i < stack.length; i += 1) {
     stackItems.push(
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {stack[i].map((val, index) => (
-          <div
-            className={styles.stackElement}
-            style={{
-              width: `calc(100%/${nodeCount})`,
-              textAlign: 'center',
-              color: 'gray',
-              backgroundColor: stackFrameColour(val),
-            }}
-          >
-            {/* 
+        {stack[i].map(({ base, extra }, index) =>
+          (
+            <div
+              className={styles.stackElement}
+              style={{
+                width: `calc(100%/${nodeCount})`,
+                textAlign: 'center',
+                color: 'gray',
+                backgroundColor: stackFrameColour(base),
+              }}
+            >
+              {/* 
                 Stack Number Rendering:
                 - This JSX code renders corresponding numbers under the stack visualisation in 1D arrays, e.g., QuickSort.
                 - The feature is currently disabled. To re-enable:
@@ -251,15 +252,25 @@ function stackRenderer(stack, nodeCount, stackDepth) {
                   2. Uncomment the `displayStackNumber` function in this file.
                 */}
 
-            {/* {(() => {
+              {/* {(() => {
               if (displayStackNumber(val, index, stack[i])) {
                 return <p style={{ fontSize: '13px' }}>{index}</p>;
               }
               return '';
             })()} */}
-
-          </div>
-        ))}
+              {extra.map((extraColor) => (
+                <div
+                  className={styles.stackSubElement}
+                  style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    backgroundColor: stackFrameColour(extraColor),
+                  }}
+                />
+              ))}
+            </div>
+          )
+        )}
       </div>,
     );
   }
