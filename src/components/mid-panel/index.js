@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/order
 import { GlobalContext } from '../../context/GlobalState';
 import '../../styles/MidPanel.scss';
+/* eslint-disable-next-line import/no-named-as-default */
 import Popup from 'reactjs-popup';
 import ReactMarkDown from 'react-markdown/with-html';
 import toc from 'remark-toc';
-import HelpIcon from '@material-ui/icons/HelpOutlineOutlined';
+import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import ControlButton from '../common/ControlButton';
@@ -44,7 +45,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           <ControlButton icon={<HelpIcon />} onClick={() => setOpen((o) => !o)} />
           <Popup open={open} closeOnDocumentClick onClose={closeModal}>
             <div className="textArea">
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
               <a className="close" onClick={closeModal}>
                 &times;
               </a>
