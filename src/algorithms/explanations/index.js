@@ -7,4 +7,3 @@ export { default as BFSSExp } from './BFSSExp.md';
 export { default as QSM3Exp } from './QSM3Exp.md';
 export { default as HSSExp } from './HSSExp.md';
 export { default as UFExp } from './UFExp.md';
-export { default as TTFExp } from './TTFExp.md';
