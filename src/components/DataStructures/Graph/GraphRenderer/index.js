@@ -18,6 +18,7 @@ import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
 
+
 let modename;
 function switchmode(modetype = mode()) {
   switch (modetype) {
@@ -53,6 +54,13 @@ function calculateControlCord(x1, y1, x2, y2) {
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
+    
+    if (this.props.title === 'Graph view') {
+      // Center to new axis origin
+      this.centerX = 180;
+      this.centerY = -180;
+
+    }
 
     this.elementRef = React.createRef();
     this.selectedNode = null;
@@ -70,14 +78,22 @@ class GraphRenderer extends Renderer {
   }
 
   handleMouseMove(e) {
-    if (this.selectedNode) {
+
+    if (this.selectedNode && this.props.title !== "Graph view") {
+      // Allow mouse movement
       const { x, y } = this.computeCoords(e);
       const node = this.props.data.findNode(this.selectedNode.id);
       node.x = x;
       node.y = y;
       this.refresh();
+
+    } else if (this.selectedNode && this.props.title === "Graph view") {
+      // Ignore mouse movement if Graph view was used
+      this.refresh();
+
     } else {
       super.handleMouseMove(e);
+
     }
   }
 
@@ -88,6 +104,187 @@ class GraphRenderer extends Renderer {
     s.y = e.clientY;
     const { x, y } = s.matrixTransform(svg.getScreenCTM().inverse());
     return { x, y };
+  }
+
+
+  /**
+   * Compute the max x and y from nodes coordinates for auto scalling
+   */
+  computeMax(nodes) {
+    var xMax = 0;
+    var yMax = 0;
+
+    const nodesXArr = []
+    const nodesYArr = []
+    for (const node of nodes) {
+      const {x, y} = node;
+      nodesXArr.push(x);
+      nodesYArr.push(y);
+    }
+    xMax = Math.max.apply(null, nodesXArr.map(Math.abs));
+    yMax = Math.max.apply(null, nodesYArr.map(Math.abs));
+    return {x:xMax, y:yMax};
+  }
+
+
+  /**
+   * Add scales to the axis
+  */
+  computeScales(min, max, center, stepSize = 30, stepHeight=5) {
+    const scales = [];
+    const alignMinX = center.x - stepHeight/2;
+    const alignMaxX = center.x + stepHeight/2;
+    const alignMinY = center.y - stepHeight/2;
+    const alignMaxY = center.y + stepHeight/2;
+
+    for (let i=1;i <= (max-min)/stepSize; i++) {
+      scales.push({label: 'x', x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY, num: i});
+      scales.push({label: 'y', x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize, num: i});
+    }
+
+    return scales;
+    
+  }
+
+  /**
+   * Add arrows to the end of axis using two lines
+   */
+  computeArrows(label, axisEndPoint, length, width) {
+    var arrow1;
+    var arrow2;
+
+    if (label === 'x') {
+      arrow1 = {x1: axisEndPoint.x, y1: axisEndPoint.y, x2: axisEndPoint.x - length, y2: axisEndPoint.y - width/2};
+      arrow2 = {x1: axisEndPoint.x, y1: axisEndPoint.y, x2: axisEndPoint.x - length, y2: axisEndPoint.y + width/2};
+
+    } else if (label === 'y') {
+      arrow1 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x - width/2, y2: -axisEndPoint.y + length};
+      arrow2 = {x1: axisEndPoint.x, y1: -axisEndPoint.y, x2: axisEndPoint.x + width/2, y2: -axisEndPoint.y + length};
+
+    } else {
+      arrow1 = {};
+      arrow2 = {};
+
+    }
+
+    return [arrow1, arrow2];
+
+  }
+
+  /*
+   * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
+  */
+  calculateAxisScale(maxScale, stepSize = 30) {
+    const trueMax = Math.max(maxScale.x, maxScale.y) / stepSize;  // Maximum individual coordinate value.
+
+    // Determine scale up to multiple of 10.
+    for(let i = 1; i < 10; ++i){
+      const scale = 10 * i;
+      if(trueMax < scale)
+      {
+        return scale * stepSize;
+      }
+    }
+
+    // Determine scale up to multiple of 100.
+    for(let i = 1; i < 10; ++i){
+      const scale = 100 * i;
+      if(trueMax < scale)
+      {
+        return scale * stepSize;
+      }
+    }
+
+    const scale = 2000;
+    return scale * stepSize;
+  }
+
+  /*
+   * Render x y axis
+  */
+  renderAxis(maxScale) {
+    const axisCenter = {x:0, y:0};  // axis position
+    const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
+
+    const scales = this.computeScales(0, axisScale, axisCenter); // list of scales
+
+
+    const axisEndPoint = axisScale + 20;
+    const axisArrowX = this.computeArrows('x', {x:axisEndPoint, y:axisCenter.y}, 8, 8); // list containing fragments to form arrow on x
+    const axisArrowY = this.computeArrows('y', {x:axisCenter.x, y:axisEndPoint}, 8, 8); // list containing fragments to form arrow on y
+
+
+    const labelPadding = 20;
+    const labelPosX = axisEndPoint + labelPadding;
+    const labelPosY = axisEndPoint + labelPadding;
+
+    const originCoords = {x: axisCenter.x - 12, y: axisCenter.y + 16};
+
+    if (this.props.title !== 'Graph view') {
+      // Do not render axis if its not graph
+      return (
+        <g></g>
+      );
+    }
+
+    
+
+    return (
+      <g>
+        {/* Add X and Y Axis */}
+        <line x1={0} y1={axisCenter.y} x2={axisEndPoint} y2={axisCenter.y} className={styles.axis} />
+
+        <line x1={axisCenter.x} y1={0} x2={axisCenter.x} y2={-axisEndPoint} className={styles.axis} />
+
+        {/* Arrow X */}
+        {axisArrowX.map((frag) => {
+          return (<line x1={frag.x1} y1={frag.y1} x2={frag.x2} y2={frag.y2} className={styles.axis} />);
+        })}
+        
+
+        {/* Arrow Y */}
+        {axisArrowY.map((frag) => {
+          return (<line x1={frag.x1} y1={frag.y1} x2={frag.x2} y2={frag.y2} className={styles.axis} />);
+        })}
+
+        {/* X Axis Label */}
+        <text x={labelPosX} y={axisCenter.y + 5} textAnchor="middle" className={styles.axisLabel}>
+          x
+        </text>
+
+        {/* Y Axis Label */}
+        <text x={axisCenter.x} y={-labelPosY} textAnchor="middle" className={styles.axisLabel}>
+          y
+        </text>
+
+        {/* Origin Label */}
+        <text x={originCoords.x} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}>
+          0
+        </text>
+        
+        {/* Scales */}
+        {scales.map((scale) => {
+          if (scale.label === 'x') {
+            return (
+              <g>
+                <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
+                <text x={scale.x1} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+              </g>
+            );
+
+          } else if (scale.label === 'y') {
+            return (
+              <g>
+                <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
+                <text x={originCoords.x} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+              </g>
+            );
+          }
+          
+        })}
+
+      </g>
+    );
   }
 
   renderData() {
@@ -105,7 +302,8 @@ class GraphRenderer extends Renderer {
     if (root) {
       rootX = root.x;
       rootY = root.y;
-    }
+    } 
+    
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
         <defs>
@@ -125,6 +323,10 @@ class GraphRenderer extends Renderer {
             <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
           </marker>
         </defs>
+
+        { /* X axis and Y axis */}
+        {this.renderAxis(this.computeMax(nodes))}
+
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
             const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
@@ -174,7 +376,9 @@ class GraphRenderer extends Renderer {
               </g>
             );
           })
+
         }
+
         {/* node graph */}
         {nodes.map((node) => {
           const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
@@ -184,6 +388,7 @@ class GraphRenderer extends Renderer {
           const visitedNode = visitedCount === 1;
           const visitedNode1 = visitedCount1 === 1;
           const visitedNode2 = visitedCount2 === 1;
+
           return (
             <motion.g
                 animate={{ x, y }}
@@ -205,10 +410,15 @@ class GraphRenderer extends Renderer {
                   isPointer &&
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
                 }
+
             </motion.g>
+            
           );
         })}
+
+
         <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
+        
       </svg>
     );
   }

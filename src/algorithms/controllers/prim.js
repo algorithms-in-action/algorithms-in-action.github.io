@@ -26,22 +26,25 @@ export default {
    *
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
+   * 
    */
-  run(chunker, { matrix }) {
-    const E = [...matrix];
-    const vertex = matrix.length;
+  run(chunker, { edgeValueMatrix, coordsMatrix }) {
 
-    let weight = new Array(matrix.length);
+    const E = [...edgeValueMatrix];
+    const coords = [...coordsMatrix];  // Potentially empty.
+    const vertex = edgeValueMatrix.length;
+
+    let weight = new Array(edgeValueMatrix.length);
     for (let i = 0; i < weight.length; i += 1) {
-      weight[i] = new Array(matrix.length);
+      weight[i] = new Array(edgeValueMatrix.length);
     }
 
-    const cost = new Array(matrix.length);
-    const pending = new Array(matrix.length);
-    const prev = new Array(matrix.length);
-    const pq = new Array(matrix.length);
+    const cost = new Array(edgeValueMatrix.length);
+    const pending = new Array(edgeValueMatrix.length);
+    const prev = new Array(edgeValueMatrix.length);
+    const pq = new Array(edgeValueMatrix.length);
     const pqDisplay = [];
-    const prevDisplay = new Array(matrix.length).fill('');
+    const prevDisplay = new Array(edgeValueMatrix.length).fill('');
     let pqStart;
     let n;
     let miniIndex;
@@ -52,12 +55,12 @@ export default {
 
     chunker.add(
       1,
-      (vis, array) => {
+      (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
-        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
       },
-      [E]
+      [E, coords]
     );
 
     const PqSort = () => {

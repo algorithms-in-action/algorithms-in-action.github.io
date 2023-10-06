@@ -116,6 +116,20 @@ export const makeColumnArray = (len) => {
 };
 
 /**
+ * Return XY columns for new params user interface
+ * @return array of object
+ */
+
+export const makeColumnCoords = () => {
+  const arr = [];
+  arr.push({Header: 'X', accessor: `col${0}`,});
+  arr.push({Header: 'Y', accessor: `col${1}`,});
+
+  return arr;
+};
+
+
+/**
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix

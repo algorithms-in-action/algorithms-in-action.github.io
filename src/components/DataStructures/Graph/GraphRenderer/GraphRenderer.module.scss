@@ -109,7 +109,7 @@
   .edge {
     .line {
       stroke: var(--graph-edge-line-stroke);
-      stroke-width: 3.5;
+      stroke-width: 2.5;
       fill: none;
 
       &.directed {
@@ -121,7 +121,7 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
-      font-size: 24px;
+      font-size: 15px;
     }
 
     &.selected {
@@ -206,4 +206,19 @@
       fill: var(--graph-arrow-fill-visited2);
     }
   }
+
+
+  // X, Y axis
+  .axis {
+    stroke: var(--axis);
+    stroke-width: 1;
+    fill: none;
+
+  }
+
+  .axisLabel {
+    font-size: 15px;
+    font-weight: 1;
+  }
+
 }

@@ -50,13 +50,32 @@ class GraphTracer extends Tracer {
   /**
    * This is the original function provided by Tracer.js,
    * but we add a second argument which accepts nodes' values
+   * and a third argument which accepts nodes' coordinates.
    * @param {array} array2d 2D array of nodes
    */
-  set(array2d = [], values = []) {
+  set(array2d = [], values = [], coordinates = []) {
+    // Set layout to null if nodes are to be displayed by coordinates.
+    if(coordinates.length > 0)
+    {
+      this.callLayout = null;
+    }
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i, values[i] ? values[i] : i);
+      const nodeValue = values[i] ? values[i] : i;
+      if(coordinates.length === 0)
+      {
+        this.addNode(i, nodeValue);
+      }
+      else
+      {
+        // Do not change this value unless you also change axis scales
+        const scaleSize = 30;
+        const x = coordinates[i][0] * scaleSize;
+        const y = -coordinates[i][1] * scaleSize;
+        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
+      }
+
       for (let j = 0; j < array2d.length; j++) {
         const value = array2d[i][j];
         if (value) {
@@ -305,6 +324,10 @@ class GraphTracer extends Tracer {
   }
 
   layout() {
+    if(this.callLayout === null)
+    {
+      return;
+    }
     const { method, args } = this.callLayout;
     method.apply(this, args);
   }
