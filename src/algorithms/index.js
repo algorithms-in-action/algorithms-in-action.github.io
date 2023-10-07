@@ -66,6 +66,7 @@ const algorithms = {
   }, 
 
   'BFS': {
+    
     name: 'Breadth First Search',
     category: 'Searching',
     param: <Param.BFSParam/>,
