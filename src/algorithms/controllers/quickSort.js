@@ -329,10 +329,10 @@ export default {
         isPivotSwap: true,
       });
 
-      if (boolShouldAnimate()) {
-        chunker.add(
-          QS_BOOKMARKS.swap_pivot_into_correct_position,
-          (vis, i1, j1, r) => {
+      chunker.add(
+        QS_BOOKMARKS.swap_pivot_into_correct_position,
+        (vis, i1, j1, r) => {
+          if (boolShouldAnimate()) {
             if (isPartitionExpanded()) {
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
             }
@@ -345,11 +345,12 @@ export default {
               }
             }
             unhighlight(vis, r, false);
-            vis.array.sorted(i1);
-          },
-          [i, j, right],
-        );
-      }
+          }
+          vis.array.sorted(i1);
+        },
+        [i, j, right],
+      );
+
       return [i, a]; // Return [pivot location, array partition_num_array]
     }
 
