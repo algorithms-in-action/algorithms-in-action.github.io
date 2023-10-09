@@ -44,7 +44,7 @@ const QS_BOOKMARKS = {
   // 15
   // 16
   // 17
-  done_qs_left: 18,
+  // 18
   done_qs_right: 19,
 };
 
@@ -432,7 +432,7 @@ export default {
           size_one_bookmark = QS_BOOKMARKS.quicksort_i_plus_1_to_right;
         }
         chunker.add(
-          size_one_bookmark,
+          QS_BOOKMARKS.if_left_less_right,
           (vis, l) => {
             vis.array.sorted(l);
           },
