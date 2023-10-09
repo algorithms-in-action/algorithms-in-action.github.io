@@ -36,7 +36,7 @@ export default {
     let last = [null, null]; // keep track of the last neighbour we visited
     // initialize each element of array Cost to infinity
     const cost = Array(numVertices).fill(Infinity);
-      
+  
     const findMinimum = () => {
       let minCost = Infinity;
       miniIndex = null;
@@ -300,5 +300,64 @@ export default {
         }
       }
     }
-  },
+  }, 
+
+  run1(chunker, { matrix }) {
+    const E = [...matrix];
+    const numVertices = matrix.length;
+    // initialise each element of array Parent to zero
+    // initialise each element of Finalised to false
+    const visited = new Array(numVertices).fill(false);
+
+    // DFS(G, s)
+    const dfs = (s) => {
+        // Nodes <- stack containing just s
+        const Nodes = [s];
+        // while Nodes not empty
+        while (Nodes.length > 0) {
+            // n <- pop
+            let n = Nodes.pop();
+            // While Finalised[n]
+            while (visited[n]) {
+                // If Node is empty
+                if (Nodes.length === 0) {
+                    // Return
+                    return;
+                }
+                // n <- pop(Nodes)
+                n = Nodes.pop();
+            }
+            // Finalised[n] <- True
+            visited[n] = true;
+            // If is_end_node(n)
+            // NOTE: Assuming there's a function is_end_node to check for an end condition, or you can define your own condition here
+            // if (is_end_node(n)) {
+            //     return;
+            // }
+            // for each node m neighbouring n
+            for (let m = 0; m < numVertices; m++) {
+                if (E[n][m] === 1) {
+                    // If not Finalised[m]
+                    if (!visited[m]) {
+                        // Parent[m]
+                        // NOTE: This part is missing. It looks like the pseudocode wants to assign 'n' as the parent of 'm', but it's not clear.
+                        // You would need an array to track this if you wish to.
+                        // Parent[m] = n;
+                        // push(Nodes,m)
+                        Nodes.push(m);
+                    }
+                }
+            }
+        }
+    };
+
+    for (let i = 0; i < numVertices; i++) {
+        // If not Finalised[m]
+        if (!visited[i]) {
+            dfs(i);
+        }
+    }
+}
+
+  
 };
