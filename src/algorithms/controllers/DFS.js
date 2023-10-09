@@ -9,9 +9,14 @@ export default {
         order: 0,
       },
       array: {
-        instance: new Array2DTracer('array', null, 'Parent array & Priority Queue'),
+        instance: new Array2DTracer('array', null, 'Visited array & Stack'),
         order: 1,
-      },
+      }, 
+      pq: {
+        instance: new Array2DTracer('array', null, 'Stack'),
+        order: 2,
+      }, 
+
     };
   },
 
@@ -47,24 +52,30 @@ export default {
         }
       } 
     };
-
+    
+    nodes.push('i'); // initialize the pq display
+    parents.push('Parent[i]');
+    minCosts.push('Cost[i] (PQ)'); 
+    finalCosts.push('Final Cost');
     chunker.add(
       1,
-      (vis, array) => {
+      (vis, array, npmf,i) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        vis.array.set([...matrix], 'dfs');
+        //vis.graph.setIstc();
+        vis.array.showKth(4);
+        
+        
       },
-      [E]
+      [E,[nodes, parents, minCosts, finalCosts], 0]
     );
 
     // initialise each element of array Parent to zero 
     const prev = Array(numVertices).fill(null);  
 
-    nodes.push('i'); // initialize the pq display
-    parents.push('Parent[i]');
-    minCosts.push('Cost[i] (PQ)'); 
-    finalCosts.push('Final Cost');
+    
      
     // Initialize the table
     for (let i = 0; i < numVertices; i += 1) {
@@ -304,32 +315,47 @@ export default {
 
   run1(chunker, { matrix }) {
     const E = [...matrix];
-    const numVertices = matrix.length;
-    // initialise each element of array Parent to zero
-    // initialise each element of Finalised to false
-    const visited = new Array(numVertices).fill(false);
+    const numVertices = matrix.length;   
 
-    // DFS(G, s)
+
+    // DFS(G, s) B1
+    chunker.add(
+      1,
+      (vis, array) => {
+        vis.graph.directed(false);
+        vis.graph.weighted(false);
+        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+      },
+      [E]
+    );
+
+    // initialise each element of array Parent to zero B6
+    // initialise each element of Finalised to  B7
+    const visited = new Array(numVertices).fill(false); 
+    const displayedVisited = new Array(numVertices); 
+
+    const displayedStack = new Array();
+    
     const dfs = (s) => {
-        // Nodes <- stack containing just s
+        // Nodes <- stack containing just s B8
         const Nodes = [s];
-        // while Nodes not empty
+        // while Nodes not empty B2
         while (Nodes.length > 0) {
-            // n <- pop
+            // n <- pop(Nodes) B9
             let n = Nodes.pop();
-            // While Finalised[n]
+            // While Finalised[n] B10 
             while (visited[n]) {
-                // If Node is empty
+                // If Node is empty B11
                 if (Nodes.length === 0) {
-                    // Return
+                    // Return B12
                     return;
                 }
-                // n <- pop(Nodes)
+                // n <- pop(Nodes) B13
                 n = Nodes.pop();
             }
-            // Finalised[n] <- True
+            // Finalised[n] <- True B14
             visited[n] = true;
-            // If is_end_node(n)
+            // If is_end_node(n) B15
             // NOTE: Assuming there's a function is_end_node to check for an end condition, or you can define your own condition here
             // if (is_end_node(n)) {
             //     return;

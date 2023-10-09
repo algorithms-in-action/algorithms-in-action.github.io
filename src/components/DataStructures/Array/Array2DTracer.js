@@ -44,7 +44,8 @@ class Array2DTracer extends Tracer {
   set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = '1';
+    this.kth = '1'; 
+    this.listOfNumbers = 'HAHA';
     super.set();
   }
 

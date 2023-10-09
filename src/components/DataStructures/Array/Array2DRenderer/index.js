@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth } = this.props.data;
+    const { data, algo, kth, listOfNumbers } = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -62,6 +62,7 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     return (
+      
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
         <tbody>
@@ -192,9 +193,18 @@ class Array2DRenderer extends Renderer {
           <caption kth-tag='transitive_closure'>
             k = { kth }
           </caption>
+        } 
+        {
+          algo === 'dfs' &&
+          <caption className={algo === 'dfs' ? styles.captionDFS : ''} kth-tag='dfs_caption'>
+              Stack: {listOfNumbers}
+          </caption>
         }
-      </table>
+      </table> 
+     
     );
   }
-}
+} 
+
+
 export default Array2DRenderer;

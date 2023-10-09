@@ -92,7 +92,7 @@ export default {
       (vis, v) => {
         vis.array.set(v, algNameStr);
       },
-      [[nodes, parents, minCosts, finalCosts], 0]
+      [[nodes, parents, minCosts, finalCosts],0]
     );
     
   
