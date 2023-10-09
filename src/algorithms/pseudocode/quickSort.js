@@ -104,11 +104,7 @@ while i < j \\B 6
         \\Expl}
     \\In}
 \\In}
-Put the pivot in its final place    \\Ref SwapP 
-\\Code}
-
-\\Code{
-SwapP
+// Put the pivot in its final place
 swap(A[i], A[right]) \\B 13
 \\Expl{  The pivot element, in A[right], is swapped with A[i]. All
         elements to the left of A[i] must be less then or equal to
