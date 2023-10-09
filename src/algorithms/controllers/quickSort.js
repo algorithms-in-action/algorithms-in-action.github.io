@@ -4,8 +4,7 @@ import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
   isPartitionExpanded,
-  isQuicksortFirstHalfExpanded,
-  isQuicksortSecondHalfExpanded,
+  isQuicksortExpanded,
 } from './quickSortCollapseChunkPlugin';
 
 // visualisation variable strings
@@ -212,10 +211,7 @@ export default {
       const pivot = a[right];
 
       function boolShouldAnimate() {
-        return (
-          depth === 0 ||
-          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-        );
+        return depth === 0 || isQuicksortExpanded();
       }
 
       if (boolShouldAnimate()) {
@@ -316,23 +312,37 @@ export default {
         }
         if (i < j) {
           [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
-          swapAction(QS_BOOKMARKS.swap_array_i_j_vals, i, j, {
-            isPivotSwap: false,
-          });
+          swapAction(
+            boolShouldAnimate()
+              ? QS_BOOKMARKS.swap_array_i_j_vals
+              : QS_BOOKMARKS.done_qs_right,
+            i,
+            j,
+            {
+              isPivotSwap: false,
+            },
+          );
         }
       }
 
       // swap pivot with i
       a[right] = a[i];
       a[i] = pivot;
-      swapAction(QS_BOOKMARKS.swap_pivot_into_correct_position, i, right, {
-        isPivotSwap: true,
-      });
+      swapAction(
+        boolShouldAnimate()
+          ? QS_BOOKMARKS.swap_pivot_into_correct_position
+          : QS_BOOKMARKS.done_qs_right,
+        i,
+        right,
+        {
+          isPivotSwap: true,
+        },
+      );
 
-      chunker.add(
-        QS_BOOKMARKS.swap_pivot_into_correct_position,
-        (vis, i1, j1, r) => {
-          if (boolShouldAnimate()) {
+      if (boolShouldAnimate()) {
+        chunker.add(
+          QS_BOOKMARKS.swap_pivot_into_correct_position,
+          (vis, i1, j1, r) => {
             if (isPartitionExpanded()) {
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, i);
             }
@@ -345,11 +355,11 @@ export default {
               }
             }
             unhighlight(vis, r, false);
-          }
-          vis.array.sorted(i1);
-        },
-        [i, j, right],
-      );
+            vis.array.sorted(i1);
+          },
+          [i, j, right],
+        );
+      }
 
       return [i, a]; // Return [pivot location, array partition_num_array]
     }
@@ -363,10 +373,7 @@ export default {
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
       function boolShouldAnimate() {
-        return (
-          depth === 0 ||
-          (isQuicksortFirstHalfExpanded() && isQuicksortSecondHalfExpanded())
-        );
+        return depth === 0 || isQuicksortExpanded();
       }
 
       if (boolShouldAnimate()) {
@@ -379,7 +386,7 @@ export default {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-        if (depth === 0 || isQuicksortFirstHalfExpanded()) {
+        if (depth === 0 || isQuicksortExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
@@ -401,7 +408,7 @@ export default {
 
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        if (depth === 0 || isQuicksortSecondHalfExpanded()) {
+        if (depth === 0 || isQuicksortExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
@@ -422,17 +429,12 @@ export default {
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
       else if (left < a.length) {
-        let size_one_bookmark = QS_BOOKMARKS.if_left_less_right;
-        if (
-          !isQuicksortFirstHalfExpanded() &&
-          !isQuicksortSecondHalfExpanded()
-        ) {
-          size_one_bookmark = QS_BOOKMARKS.quicksort_left_to_i_minus_1;
-        } else if (!isQuicksortSecondHalfExpanded()) {
-          size_one_bookmark = QS_BOOKMARKS.quicksort_i_plus_1_to_right;
-        }
+        let size_one_bookmark = isQuicksortExpanded()
+          ? QS_BOOKMARKS.quicksort_left_to_i_minus_1
+          : QS_BOOKMARKS.done_qs_right;
+
         chunker.add(
-          QS_BOOKMARKS.if_left_less_right,
+          size_one_bookmark,
           (vis, l) => {
             vis.array.sorted(l);
           },

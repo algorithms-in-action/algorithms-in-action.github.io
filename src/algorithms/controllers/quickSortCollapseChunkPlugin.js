@@ -43,24 +43,14 @@ export function isPartitionExpanded() {
   return collapse.quickSort.sort.Partition;
 }
 
-export function isQuicksortFirstHalfExpanded() {
+export function isQuicksortExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.QuicksortFirstHalf;
-}
-
-export function isQuicksortSecondHalfExpanded() {
-  const algorithm = getGlobalAlgorithm();
-  if (algorithm.id.name !== QS_NAME) return false;
-  // , playing, chunker
-
-  // eslint-disable-next-line
-  const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.QuicksortSecondHalf;
+  return collapse.quickSort.sort.QuicksortBoth;
 }
 
 export function onCollapseStateChangeQS() {
