@@ -200,6 +200,12 @@ class Array2DRenderer extends Renderer {
               Stack: {listOfNumbers}
           </caption>
         }
+        {
+          algo === 'bfs' &&
+          <caption className={algo === 'bfs' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
+              Queue: {listOfNumbers}
+          </caption>
+        }
       </table> 
      
     );

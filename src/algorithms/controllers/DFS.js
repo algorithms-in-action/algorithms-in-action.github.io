@@ -12,15 +12,12 @@ export default {
         instance: new Array2DTracer('array', null, 'Visited array & Stack'),
         order: 1,
       }, 
-      pq: {
-        instance: new Array2DTracer('array', null, 'Stack'),
-        order: 2,
-      }, 
+      
 
     };
   },
 
-  run(chunker, { matrix }) {
+  run1(chunker, { matrix }) {
     // String Variables used in displaying algo
     const algNameStr = 'dijkstra';
     const dashStr = '-';
@@ -63,9 +60,9 @@ export default {
         vis.graph.directed(false);
         vis.graph.weighted(true);
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
-        vis.array.set([...matrix], 'dfs');
+        vis.array.set([...matrix], 'bfs');
         //vis.graph.setIstc();
-        vis.array.showKth(4);
+        vis.array.setList([1,2,3]);
         
         
       },
@@ -313,9 +310,14 @@ export default {
     }
   }, 
 
-  run1(chunker, { matrix }) {
+  run(chunker, { matrix }) {
     const E = [...matrix];
     const numVertices = matrix.length;   
+    const visited = new Array(numVertices).fill(false); 
+    const parent = new Array(numVertices);
+
+    const displayedVisited = new Array(numVertices); 
+    const displayedStack = new Array(); 
 
 
     // DFS(G, s) B1
@@ -325,16 +327,17 @@ export default {
         vis.graph.directed(false);
         vis.graph.weighted(false);
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        
       },
       [E]
-    );
+    ); 
+    
 
-    // initialise each element of array Parent to zero B6
+    // initialise each element of array Parent to zero B6 
+
+
     // initialise each element of Finalised to  B7
-    const visited = new Array(numVertices).fill(false); 
-    const displayedVisited = new Array(numVertices); 
-
-    const displayedStack = new Array();
+    
     
     const dfs = (s) => {
         // Nodes <- stack containing just s B8
