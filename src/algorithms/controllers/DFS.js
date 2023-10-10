@@ -62,11 +62,13 @@ export default {
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
         vis.graph.colorEdge(1,2,4);  
         vis.graph.colorEdge(0,1,3);
+        vis.graph.colorNode(0,4); 
+        vis.graph.colorNode(1,3);
         //vis.graph.removeEdgeColor(1,2);
         vis.array.set([...matrix], 'bfs');
         //vis.graph.setIstc();
         vis.array.setList([1,2,3]); 
-        vis.array.select(1,2,3,4,'4');
+        vis.array.select(1,2,1,2,'4'); 
         
         
       },
@@ -75,8 +77,10 @@ export default {
     chunker.add(
       1,
       (vis, array, npmf,i) => {
-        vis.graph.removeEdgeColor(1,2); 
-       // vis.graph.removeEdgeColor(0,1);
+        vis.graph.removeEdgeColor(1,2);  
+        vis.graph.removeNodeColor(1);
+       // vis.graph.removeEdgeColor(0,1); 
+       vis.array.deselect(1,2);
         
       },
       [E,[nodes, parents, minCosts, finalCosts], 0]
