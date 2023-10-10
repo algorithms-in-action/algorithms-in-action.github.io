@@ -81,7 +81,11 @@ class Array2DTracer extends Tracer {
             break;
           case '3':
             this.data[x][y].selected3 = true;
-            break;
+            break;  
+          case '4':
+            this.data[x][y].selected4 = true;
+            break; 
+          
           default:
             this.data[x][y].selected = true;
             break;
