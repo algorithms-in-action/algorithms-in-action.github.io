@@ -75,7 +75,8 @@ class Array2DRenderer extends Renderer {
             algo === 'tc' && // Leave a blank cell at the header row
             <td />
           }
-          {
+          { 
+            (algo !== 'bfs' && algo !== 'dfs' && algo !== 'dijkstra' && algo !== 'astar') &&
             longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
@@ -124,14 +125,33 @@ class Array2DRenderer extends Renderer {
                 ))
               }
               {
-                pointer && algo === 'tc' &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> i </span>
-                </th> || algo === 'prim' && i === 2 &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> Priority Queue </span>
-                </th> ||
-                <td className={classes(styles.col, styles.index)} />
+                pointer && algo === 'tc'
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> i </span>
+                  </th>
+                )
+                : algo === 'prim' && i === 2
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : algo === 'dijkstra' && i === 2
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : algo === 'astar' && i === 3
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : (
+                  <td className={classes(styles.col, styles.index)} />
+                )
               }
             </tr>
             );
@@ -162,7 +182,7 @@ class Array2DRenderer extends Renderer {
         </tr>
         }
         {
-          algo === 'prim' &&
+          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'astar') &&
           data.map((row, i) => (
             i === 2 && (
                 <AnimateSharedLayout>

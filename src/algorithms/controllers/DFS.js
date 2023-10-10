@@ -314,10 +314,12 @@ export default {
     const E = [...matrix];
     const numVertices = matrix.length;   
     const visited = new Array(numVertices).fill(false); 
-    const parent = new Array(numVertices);
+    const parent = new Array(numVertices).fill(null);
 
-    const displayedVisited = new Array(numVertices); 
-    const displayedStack = new Array(); 
+    const displayedVisited = []; 
+    const displayedStack = []; 
+    const displayedParent = []; 
+    const displayedNodes = [];
 
 
     // DFS(G, s) B1
@@ -333,11 +335,37 @@ export default {
     ); 
     
 
-    // initialise each element of array Parent to zero B6 
-
+    // initialise each element of array Parent to zero B6  
+    displayedParent.push('parent');  
+    displayedVisited.push('visited'); 
+    displayedNodes.push('i');
+    for (let i = 0; i < numVertices; i += 1) {
+      displayedParent.push(0); 
+      displayedVisited.push(' ');  
+      displayedNodes.push(i + 1);
+    }
+    chunker.add(
+      6,
+      (vis, x) => { 
+        vis.array.set(x, 'dfs'); 
+      },
+      [[displayedNodes, displayedParent, displayedVisited], displayedStack]
+    ); 
 
     // initialise each element of Finalised to  B7
-    
+    for (let i = 0; i < numVertices; i += 1) {
+      displayedVisited[i + 1] = "false"; 
+    }  
+
+    chunker.add(
+      7,
+      (vis, x) => { 
+        vis.array.set(x, 'dfs'); 
+      },
+      [[displayedNodes, displayedParent, displayedVisited], displayedStack]
+    ); 
+
+
     
     const dfs = (s) => {
         // Nodes <- stack containing just s B8

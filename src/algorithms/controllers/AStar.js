@@ -84,7 +84,7 @@ export default {
     chunker.add(
       5,
       (vis, v) => {
-        vis.array.set(v, 'dijkstra');
+        vis.array.set(v, 'astar');
       },
       [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
@@ -98,7 +98,7 @@ export default {
     chunker.add(
       6,
       (vis, v) => {
-        vis.array.set(v, 'dijkstra');
+        vis.array.set(v, 'astar');
       },
       [[nodes,heuristics,parents, minCosts,finalCosts], 0]
     );
@@ -110,8 +110,8 @@ export default {
     chunker.add(
       7,
       (vis, v, w) => {
-        vis.array.set(v, 'dijkstra');
-        vis.array.select(2, w+1);
+        vis.array.set(v, 'astar');
+        vis.array.select(3, w+1);
         vis.array.assignVariable('Min', 2, w+1);
       },
       [[nodes,heuristics,parents, minCosts,finalCosts], 0]
@@ -138,9 +138,9 @@ export default {
           if(x[0] != null){
             vis.graph.leave1(x[0],x[1],2);
           }
-          vis.array.set(v, 'dijkstra'); 
+          vis.array.set(v, 'astar'); 
           if(w != null){
-            vis.array.select(2, w+1); 
+            vis.array.select(3, w+1); 
             vis.array.assignVariable("Min", 2, w+1);
           }
           
@@ -174,10 +174,10 @@ export default {
             vis.graph.leave1(y,y,1);
           }
           vis.graph.select(x, x);
-          vis.array.set(v, 'dijkstra'); 
+          vis.array.set(v, 'astar'); 
 
           if(w!=null){
-            vis.array.select(2, w+1);
+            vis.array.select(3, w+1);
             vis.array.assignVariable("Min", 2, w+1);
           }
           
@@ -215,9 +215,9 @@ export default {
                 vis.graph.leave1(z[0],z[1],2);
               }
               
-              vis.array.set(v, 'dijkstra'); 
+              vis.array.set(v, 'astar'); 
               if(w != null){
-                vis.array.select(2, w+1); 
+                vis.array.select(3, w+1); 
                 vis.array.assignVariable("Min", 2, w+1);
               }
              
@@ -245,9 +245,9 @@ export default {
             11,
             (vis, v, w,x,y) => {
               
-              vis.array.set(v, 'dijkstra');  
+              vis.array.set(v, 'astar');  
               if(w != null){
-                vis.array.select(2, w+1); 
+                vis.array.select(3, w+1); 
                 vis.array.assignVariable("Min", 2, w+1);
                 
               } 
@@ -271,9 +271,9 @@ export default {
               12,
               (vis, v, w) => {
                
-                vis.array.set(v, 'dijkstra'); 
+                vis.array.set(v, 'astar'); 
                 if(w != null){
-                  vis.array.select(2, w+1); 
+                  vis.array.select(3, w+1); 
                   vis.array.assignVariable("Min", 2, w+1);
                 }
               },
@@ -285,10 +285,10 @@ export default {
             chunker.add(
               13,
               (vis, v, w, x) => {
-                vis.array.set(v, 'dijkstra'); 
+                vis.array.set(v, 'astar'); 
                 vis.array.assignVariable("Min", 2, w+1);
            
-                vis.array.select(2,w+1); 
+                vis.array.select(3,w+1); 
                 
                 
                 
@@ -309,9 +309,9 @@ export default {
               (vis, v, w,x, y, z,z1) => {
                 vis.graph.leave1(z1,y,2);
                 
-                vis.array.set(v, 'dijkstra'); 
+                vis.array.set(v, 'astar'); 
                 vis.array.assignVariable("Min", 2, w+1);
-                vis.array.select(2,w+1);  
+                vis.array.select(3,w+1);  
                 vis.graph.deselect(x,x); 
                 vis.graph.select(x, y);  
                 

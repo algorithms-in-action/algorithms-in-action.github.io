@@ -26,7 +26,7 @@
 
       .variable {
         font-size: 18px;
-        color: var(--array-2d-row-col-sorted);
+        color: --array-2d-row-col-value-color;//var(--array-2d-row-col-sorted);
       }
 
       &.selected {
