@@ -17,7 +17,7 @@ export default {
     };
   },
 
-  run1(chunker, { matrix }) {
+  run(chunker, { matrix }) {
     // String Variables used in displaying algo
     const algNameStr = 'dijkstra';
     const dashStr = '-';
@@ -60,14 +60,28 @@ export default {
         vis.graph.directed(false);
         vis.graph.weighted(true);
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        vis.graph.colorEdge(1,2,4);  
+        vis.graph.colorEdge(0,1,3);
+        //vis.graph.removeEdgeColor(1,2);
         vis.array.set([...matrix], 'bfs');
         //vis.graph.setIstc();
-        vis.array.setList([1,2,3]);
+        vis.array.setList([1,2,3]); 
+        vis.array.select(1,2,3,4,'4');
         
         
       },
       [E,[nodes, parents, minCosts, finalCosts], 0]
-    );
+    ); 
+    chunker.add(
+      1,
+      (vis, array, npmf,i) => {
+        vis.graph.removeEdgeColor(1,2); 
+       // vis.graph.removeEdgeColor(0,1);
+        
+      },
+      [E,[nodes, parents, minCosts, finalCosts], 0]
+    ); 
+
 
     // initialise each element of array Parent to zero 
     const prev = Array(numVertices).fill(null);  
@@ -310,7 +324,7 @@ export default {
     }
   }, 
 
-  run(chunker, { matrix }) {
+  run1(chunker, { matrix }) {
     const E = [...matrix];
     const numVertices = matrix.length;   
     const visited = new Array(numVertices).fill(false); 

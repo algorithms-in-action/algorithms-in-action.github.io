@@ -164,7 +164,8 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected = false;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
-        this.data[x][y].selected3 = false;
+        this.data[x][y].selected3 = false; 
+        this.data[x][y].selected4 = false;
         this.data[x][y].style = undefined;
       }
     }
