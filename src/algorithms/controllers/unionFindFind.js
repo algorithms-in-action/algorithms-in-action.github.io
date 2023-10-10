@@ -104,7 +104,6 @@ export default {
           vis.array.assignVariable('n', N_ARRAY_IDX, n);
 
           if (gp != null){
-            console.log(n, p, gp);
             vis.tree.removeEdge(p.toString(), n.toString());
             vis.tree.addEdge(gp.toString(), n.toString());
             vis.tree.layout();
@@ -213,16 +212,6 @@ export default {
 
         let treeStruct = visualiser.tree.instance.getNTree();
         const nodesArray = this.getNodesArray(treeStruct, N_GRAPH);
-
-        for (let i = 1; i < nodesArray.length; i++) {
-          if (nodesArray[i].parent.id === nodesArray[i].id){
-            console.log(nodesArray[i].parent.id);
-            //visualiser.tree.instance.addSelfLoop(nodesArray[i].id);
-          } 
-        }
-
-        console.log(nodesArray[1]);
-
 
         this.find(chunker, parentArray, value, pathCompression, nodesArray, value);
 
