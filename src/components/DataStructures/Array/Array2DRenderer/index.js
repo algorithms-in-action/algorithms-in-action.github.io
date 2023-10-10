@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth, motionOn} = this.props.data;
+    const { data, algo, kth, motionOn, hideArrayAtIdx} = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -118,6 +118,9 @@ class Array2DRenderer extends Renderer {
           data.map((row, i) => {
 
             let pointer = false;
+
+            if (i === hideArrayAtIdx) return null;
+
             // eslint-disable-next-line no-plusplus
             for (let j = 0; j < row.length; j++) {
               if (row[j].selected) {
@@ -221,9 +224,6 @@ class Array2DRenderer extends Renderer {
         {
           algo == 'unionFind' &&
           <motion.caption kth-tag='unionFind' className={styles.bottom_caption}
-          // If want dynamic movement:
-          // transition={{ type: 'tween'}}
-          // layout="position"
           >
             {kth}
           </motion.caption>
