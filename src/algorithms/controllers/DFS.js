@@ -9,7 +9,7 @@ export default {
         order: 0,
       },
       array: {
-        instance: new Array2DTracer('array', null, 'Visited array & Stack'),
+        instance: new Array2DTracer('array', null, 'Parent array, Finalized array & Stack'),
         order: 1,
       }, 
       
@@ -17,7 +17,7 @@ export default {
     };
   },
 
-  run(chunker, { matrix }) {
+  run1(chunker, { matrix }) {
     // String Variables used in displaying algo
     const algNameStr = 'dijkstra';
     const dashStr = '-';
@@ -65,7 +65,7 @@ export default {
         vis.graph.colorNode(0,4); 
         vis.graph.colorNode(1,3);
         //vis.graph.removeEdgeColor(1,2);
-        vis.array.set([...matrix], 'bfs');
+        vis.array.set([...matrix], 'dfs');
         //vis.graph.setIstc();
         vis.array.setList([1,2,3]); 
         vis.array.select(1,2,1,2,'4'); 
@@ -328,16 +328,18 @@ export default {
     }
   }, 
 
-  run1(chunker, { matrix }) {
+  run(chunker, { matrix }) {
     const E = [...matrix];
     const numVertices = matrix.length;   
+    //The real Finalised array(visited) and Parent array(parent)
     const visited = new Array(numVertices).fill(false); 
     const parent = new Array(numVertices).fill(null);
-
+    
+    //The fake ones for display
     const displayedVisited = []; 
-    const displayedStack = []; 
     const displayedParent = []; 
-    const displayedNodes = [];
+    const displayedNodes = []; 
+    let displayedStack = []; 
 
 
     // DFS(G, s) B1
@@ -354,8 +356,8 @@ export default {
     
 
     // initialise each element of array Parent to zero B6  
-    displayedParent.push('parent');  
-    displayedVisited.push('visited'); 
+    displayedParent.push('Parent[i]');  
+    displayedVisited.push('Finalised[i]'); 
     displayedNodes.push('i');
     for (let i = 0; i < numVertices; i += 1) {
       displayedParent.push(0); 
@@ -380,14 +382,28 @@ export default {
       (vis, x) => { 
         vis.array.set(x, 'dfs'); 
       },
-      [[displayedNodes, displayedParent, displayedVisited], displayedStack]
+      [[displayedNodes, displayedParent, displayedVisited]]
     ); 
 
 
     
     const dfs = (s) => {
         // Nodes <- stack containing just s B8
-        const Nodes = [s];
+        //The real stack
+        const Nodes = [s];  
+        displayedStack = [];
+        displayedStack.push(s+1);
+        chunker.add(
+          8,
+          (vis, x, y, z) => { 
+            vis.array.set(x, 'dfs');  
+            vis.array.setList(y); 
+            vis.array.select(0, z[z.length - 1] + 1); 
+            vis.graph.colorNode(z[z.length - 1], 4);
+          },
+          [[displayedNodes, displayedParent, displayedVisited], displayedStack, Nodes]
+        ); 
+
         // while Nodes not empty B2
         while (Nodes.length > 0) {
             // n <- pop(Nodes) B9
@@ -403,7 +419,8 @@ export default {
                 n = Nodes.pop();
             }
             // Finalised[n] <- True B14
-            visited[n] = true;
+            visited[n] = true; 
+
             // If is_end_node(n) B15
             // NOTE: Assuming there's a function is_end_node to check for an end condition, or you can define your own condition here
             // if (is_end_node(n)) {
@@ -411,7 +428,7 @@ export default {
             // }
             // for each node m neighbouring n
             for (let m = 0; m < numVertices; m++) {
-                if (E[n][m] === 1) {
+                if (E[n][m] != 0) {
                     // If not Finalised[m]
                     if (!visited[m]) {
                         // Parent[m]

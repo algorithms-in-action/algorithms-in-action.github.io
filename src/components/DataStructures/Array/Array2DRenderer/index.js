@@ -218,13 +218,13 @@ class Array2DRenderer extends Renderer {
         {
           algo === 'dfs' &&
           <caption className={algo === 'dfs' ? styles.captionDFS : ''} kth-tag='dfs_caption'>
-              Stack: {listOfNumbers}
+              Nodes(stack): {listOfNumbers}
           </caption>
         }
         {
           algo === 'bfs' &&
           <caption className={algo === 'bfs' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
-              Queue: {listOfNumbers}
+              Nodes(queue): {listOfNumbers}
           </caption>
         }
       </table> 
