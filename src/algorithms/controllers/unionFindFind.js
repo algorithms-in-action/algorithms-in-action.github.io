@@ -96,16 +96,12 @@ export function find(chunker, parentArr, n, name, m, pathCompression) {
 export default {
 
     initVisualisers({visualiser}) {
-        // Clearing array from union
-        visualiser.array.instance.deselectRow(0, 0, 10);
-        visualiser.array.instance.deselectRow(1, 0, 10);
-        visualiser.array.instance.showKth(' ');
-        visualiser.array.instance.clearVariables();
 
         // Clearing tree from union
-        visualiser.tree.instance.clearHighlights();
-
-
+        for (let i = 1; i < N_ARRAY.length; i++) {
+          let n = N_ARRAY[i];
+          unhighlight(visualiser.tree.instance, n, n);
+        }
         return {
             array: {
                 instance: visualiser.array.instance,
@@ -130,11 +126,8 @@ export default {
         const value = target.arg1;
         const pathCompression = target.arg2;
 
-        let treeStruct = visualiser.tree.instance.getNTree(); // huh
-
-        let caption = 'hi';
-              // Highlighting the current n to find in tree and array. 
-      chunker.add(`Find(n)`, (vis, n) => {
+        // Highlighting the current n to find in tree and array. 
+        chunker.add(`Find(n)`, (vis, n) => {
         vis.array.setMotion(true); // Turning on smooth transition.
         highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
         highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
