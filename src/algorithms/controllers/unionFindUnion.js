@@ -6,10 +6,6 @@ import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
 import TreeNode from '../../components/DataStructures/Graph/NAryTree'; 
 
-import { getGlobalAlgotithm } from './transitiveClosureCollapseChunkPlugin';
-import { update } from 'lodash';
-
-
 // Defining constants for readability.
 const array = {
   RED: '5',
@@ -33,8 +29,10 @@ const N_GRAPH = ['0','1','2','3','4','5','6','7','8','9','10'];
 let isRankVisible = false;
 let unionPair = [];
 
-export function unionFindChunkerRefresh(vis) {
-  const algorithm  = getGlobalAlgotithm();
+
+export function unionFindChunkerRefresh(algorithm) {
+  if (!algorithm) return;
+  let vis = algorithm.chunker.visualisers; // there is also a visualisers not attached to chunker...
   let isVisible = algorithm.collapse.unionFind.union.Maybe_swap || algorithm.collapse.unionFind.union.Adjust_rank;
   vis.array.instance.hideArrayAtIndex(isVisible ? null : RANK_ARRAY_IDX);
   isRankVisible = isVisible;
@@ -58,6 +56,7 @@ function unhighlight(visObj, index1, index2, deselectForRow=false) {
 }
 
 function highlight(visObj, index1, index2, colour) {
+
   if (visObj.key === 'array') {
     visObj.deselect(index1, index2); // might cause an issue
     visObj.select(index1, index2, undefined, undefined, colour);
@@ -449,6 +448,7 @@ export default {
       const newNode = new TreeNode(id);
       nodesArray.push(newNode);
     });
+
     // now set up connections
     const rootNode = nodesArray[0]; // The first node in the array
     for (let i = 0; i < nodesArray.length; i++) { // Start from the second node
@@ -456,7 +456,6 @@ export default {
       nodesArray[i].parent = null;
     }
     chunker.add('Union(n, m)', (vis, array) => {
-     // console.log(isRankVisible);
 
       vis.array.set(array, 'unionFind');
       vis.array.hideArrayAtIndex(isRankVisible ? null : RANK_ARRAY_IDX);

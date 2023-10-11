@@ -253,7 +253,7 @@ export const GlobalActions = {
     }
 
     onCollapseStateChange();
-    unionFindChunkerRefresh(state.chunker.visualisers);
+    unionFindChunkerRefresh(state);
 
     return {
       ...state,
