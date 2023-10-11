@@ -26,7 +26,7 @@ function extractCode(lines) {
   for (const line of lines) {
     if (line.localeCompare('\\In{') === 0) {
       ind += 1;
-    }  else if (line.localeCompare('\\In}') === 0) {
+    } else if (line.localeCompare('\\In}') === 0) {
       ind -= 1;
     } else if (line.indexOf('\\Expl{ ') >= 0) {
       explFlag = true;
@@ -49,20 +49,26 @@ function extractCode(lines) {
       if (line.localeCompare('\\NewLine') === 0) {
         jsons.push({ code: '\n', explanation: '', indentation: ind });
       } else {
-      if (line.indexOf(' \\Ref ') >= 0) {
-        json['code'] = line.substring(0, line.indexOf(' \\Ref '));
-        json['ref'] = line.substring(line.indexOf(' \\Ref ') + 6, line.length);
-      } else if (line.indexOf(' \\B ') >= 0) {
-        json['code'] = line.substring(0, line.indexOf(' \\B '));
-        json['bookmark'] = line.substring(line.indexOf(' \\B ') + 4, line.length);
-        // json['ref'] = '';
-      } else {
-        json['code'] = line;
+        if (line.indexOf(' \\Ref ') >= 0) {
+          json['code'] = line.substring(0, line.indexOf(' \\Ref '));
+          json['ref'] = line.substring(
+            line.indexOf(' \\Ref ') + 6,
+            line.length
+          );
+        } else if (line.indexOf(' \\B ') >= 0) {
+          json['code'] = line.substring(0, line.indexOf(' \\B '));
+          json['bookmark'] = line.substring(
+            line.indexOf(' \\B ') + 4,
+            line.length
+          );
+          // json['ref'] = '';
+        } else {
+          json['code'] = line;
+        }
+        json['explanation'] = '';
+        json['indentation'] = ind;
       }
-      json['explanation'] = '';
-      json['indentation'] = ind;
     }
-  }
   }
   if (Object.keys(json).length !== 0) {
     jsons.push(json);
@@ -103,10 +109,17 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
   // eslint-disable-next-line no-param-reassign
   outputBlocks[blockName] = [];
   originalBlocks[blockName].forEach((line) => {
-    indentedLine = '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) + line['code'];
+    indentedLine =
+      '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) +
+      line['code'];
     outputBlocks[blockName].push({ ...line, code: indentedLine });
     if (line['ref']) {
-      addIndentation(originalBlocks, line['ref'], baseIndent + line['indentation'], outputBlocks);
+      addIndentation(
+        originalBlocks,
+        line['ref'],
+        baseIndent + line['indentation'],
+        outputBlocks
+      );
     }
   });
 }
