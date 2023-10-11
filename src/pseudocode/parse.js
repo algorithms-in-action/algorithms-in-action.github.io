@@ -16,6 +16,7 @@ function removeLineContinuation(input) {
   return output;
 }
 
+
 // Extract the /Code {} section from pseudocode
 function extractCode(lines) {
   const jsons = [];
@@ -112,7 +113,8 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
 }
 
 export default function parse(input) {
-  const rawCode = removeLineContinuation(input);
+  const inputRemovedNotes = input.replace(/\\Note\{[^}]*\}/gs, '');
+  const rawCode = removeLineContinuation(inputRemovedNotes);
   const rawCodeBlocks = extractCodeBlock(rawCode);
   if (Object.keys(rawCodeBlocks).length > 0) {
     const indentedCodeBlocks = {};

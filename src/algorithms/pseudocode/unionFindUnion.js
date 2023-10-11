@@ -138,14 +138,13 @@ Maybe_swap
         if rank[n] == rank[m] \\B if rank[n] == rank[m]
             \\Expl{  If we are adding a strictly shorter subtree to m the height
                     doesn't change, but if the heights were equal the new height
-                    of m increases by one.
             \\Expl}
             \\In{
-            rank[m] <- rank[m] + 1 \\B rank[m] <- rank[m] + 1
-            \\In}
+                rank[m] <- rank[m] + 1 \\B rank[m] <- rank[m] + 1
+                \\In}
+            \\Note{ Should we use ++ or "increment"???
+            \\Note}
     \\Code}
-    \\Note{ Should we use ++ or "increment"???
-    \\Note}
 
 \\Code{
 Initialise

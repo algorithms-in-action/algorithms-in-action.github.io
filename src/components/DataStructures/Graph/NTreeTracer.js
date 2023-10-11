@@ -810,7 +810,7 @@ class NTreeTracer extends Tracer {
     const edge = this.findEdge(source, target);
     if (edge && !(source === target)) edge.selectedCount += select ? 1 : -1;
     const node = this.findNode(target.toString());
-    node.selectedCount += select ? 1 : -1;
+    node.selectedCount = select ? 1 : 0;
     if (this.logTracer) {
       this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
     }
