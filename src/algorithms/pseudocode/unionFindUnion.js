@@ -101,7 +101,8 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
 \\In} 
 
 \\NewLine
-\nFind(n) // return root of tree containing n \\B Find(n)
+
+Find(n) // return root of tree containing n \\B Find(n)
 \\In{
     while n != parent[n]  // while we are not at the root \\B while n != parent[n]
     \\In{
@@ -133,18 +134,18 @@ Maybe_swap
 \\Code}
 
 \\Code{
-Adjust_rank
-    if rank[n] == rank[m] \\B if rank[n] == rank[m]
-        \\Expl{  If we are adding a strictly shorter subtree to m the height
-                doesn't change, but if the heights were equal the new height
-                of m increases by one.
-        \\Expl}
-        \\In{
-        rank[m] <- rank[m] + 1 \\B rank[m] <- rank[m] + 1
-        \\In}
-\\Code}
-\\Note{ Should we use ++ or "increment"???
-\\Note}
+    Adjust_rank
+        if rank[n] == rank[m] \\B if rank[n] == rank[m]
+            \\Expl{  If we are adding a strictly shorter subtree to m the height
+                    doesn't change, but if the heights were equal the new height
+                    of m increases by one.
+            \\Expl}
+            \\In{
+            rank[m] <- rank[m] + 1 \\B rank[m] <- rank[m] + 1
+            \\In}
+    \\Code}
+    \\Note{ Should we use ++ or "increment"???
+    \\Note}
 
 \\Code{
 Initialise

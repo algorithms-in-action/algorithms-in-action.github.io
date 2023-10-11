@@ -374,8 +374,6 @@ class NTreeTracer extends Tracer {
     this.realEdges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
     }
 
-    console.log(this.edges);
-
     // this.layout();
   }
 
@@ -624,7 +622,6 @@ class NTreeTracer extends Tracer {
 
 
         let nodeLength = levelNode.getNodeLength();
-        console.log("do we have x/y?:", levelNode.x, levelNode.y);
         console.log(levelNode);
 
           const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
@@ -642,13 +639,11 @@ class NTreeTracer extends Tracer {
               }
               if (nodeLength === 2) {
                 valueX = levelNode.x + (i * nodeRadius * 2) - nodeRadius;
-                //console.log("SHOULD MAKE IT HERE!!");
               } else if (nodeLength === 3) {
                 valueX = levelNode.x + ((i - 1) * nodeRadius * 2);
               } else {
                 valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
               }
-              //console.log("valueX", valueX, "levelNode.x", levelNode.x, "i", i);
               nodeToUpdate.x = valueX;
               nodeToUpdate.y = levelNode.y;
             });
@@ -803,6 +798,8 @@ class NTreeTracer extends Tracer {
       if (edge && !(source === target)) edge.visitedCount2 = visit ? 1 : 0;
       node.visitedCount2 = visit ? 1 : 0;
       if (node1) node1.visitedCount2 = visit ? 1 : 0;
+    } else if (colorIndex === 3) { // For red
+      node.visitedCount = visit ? 1: 0;
     }
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);

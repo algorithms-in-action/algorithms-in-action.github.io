@@ -8,10 +8,12 @@
 
   .bottom_caption {
     caption-side: bottom;
-    text-align: center;
-    margin-top: 17px;
-    font-size: 17px;
-    font-weight: 500,
+    text-align: left;
+    margin-top: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--array-2d-row-col-value-color);
+
   }
 
   .top_variable {
@@ -19,7 +21,8 @@
     text-align: center;
     margin-bottom: -15px;
     font-size: 13px;
-    font-weight: 500,
+    font-weight: 500;
+    color: var(--array-2d-row-col-value-color);
   }
 
   .row {
