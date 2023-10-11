@@ -4,7 +4,6 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
-import TreeNode from '../../components/DataStructures/Graph/NAryTree'; 
 
 const array = {
   RED: '5',
@@ -91,27 +90,26 @@ export default {
     chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, parent, grandparent) => {
       unhighlight(vis.array, N_IDX, n);
       unhighlight(vis.tree, n, n);
-      highlight(vis.array, PARENT_IDX, n, array.ORANGE); // this is the parent
-      highlight(vis.array, PARENT_IDX, parent, array.ORANGE); // this is the grandparent
+      highlight(vis.array, PARENT_IDX, n, array.ORANGE);
+      highlight(vis.array, PARENT_IDX, parent, array.ORANGE);
       highlight(vis.tree, parent, parent, tree.ORANGE);
       highlight(vis.tree, grandparent, grandparent, tree.ORANGE);
     },[n, parentArr[n], parentArr[parentArr[n]]]);
 
     // If grandparent is not the parent 
     if (parentArr[n] !== n && parentArr[parentArr[n]] !== parentArr[n]) {
-      
-        let formerParent = parentArr[n];
-        parentArr[n] = parentArr[parentArr[n]]; // 
+        
+      let formerParent = parentArr[n];
+        parentArr[n] = parentArr[parentArr[n]]; 
 
-
-      // highlight parent[n] in parent array
       chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, grandparent) => {
-        vis.array.updateValueAt(PARENT_IDX, n, grandparent); // flag
+        vis.array.updateValueAt(PARENT_IDX, n, grandparent);
 
         vis.tree.removeEdge(formerParent.toString(), n.toString());
         vis.tree.addEdge(grandparent.toString(), n.toString());
         vis.tree.layout();
       },[n, parentArr[parentArr[n]]]);
+      
 
       chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, formerParent, newParent) => {
         unhighlight(vis.array, PARENT_IDX, formerParent);
@@ -222,6 +220,7 @@ export default {
 
     if (rankArr[root1] > rankArr[root2]) {
 
+      // Swap n and m
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
@@ -242,11 +241,6 @@ export default {
       highlight(vis.array, PARENT_IDX, root1, array.ORANGE);
     },[root1, root2]);
 
-    // Adding to internal tree logic for path compression. 
-    // May not even need.... 
-    //root1node.parent = root2node;
-    //root2node.addChild(root1node);
-
     parentArr[root1] = root2;
 
     chunker.add('parent[n] = m', (vis, root1, root2) => {
@@ -260,7 +254,7 @@ export default {
 
       vis.tree.removeEdge('0', root1.toString());
       vis.tree.removeEdge(root1.toString(), root1.toString()) // Remove self-loop.
-      vis.tree.addEdge(root2.toString(), root1.toString()); // double check
+      vis.tree.addEdge(root2.toString(), root1.toString());
       vis.tree.layout();
       
     }, [root1, root2]);
