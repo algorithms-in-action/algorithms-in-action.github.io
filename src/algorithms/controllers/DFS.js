@@ -65,7 +65,7 @@ export default {
         vis.graph.colorNode(0,4); 
         vis.graph.colorNode(1,3);
         //vis.graph.removeEdgeColor(1,2);
-        vis.array.set([...matrix], 'dfs');
+        vis.array.set([...matrix], 'DFS');
         //vis.graph.setIstc();
         vis.array.setList([1,2,3]); 
         vis.array.select(1,2,1,2,'4'); 
@@ -368,7 +368,7 @@ export default {
     chunker.add(
       6,
       (vis, x) => { 
-        vis.array.set(x, 'dfs');  
+        vis.array.set(x, 'DFS');  
       },
       [[displayedNodes, displayedParent, displayedVisited], displayedStack]
     ); 
@@ -382,7 +382,7 @@ export default {
     chunker.add(
       7,
       (vis, x) => { 
-        vis.array.set(x, 'dfs');  
+        vis.array.set(x, 'DFS');  
       },
       [[displayedNodes, displayedParent, displayedVisited]]
     ); 
@@ -400,7 +400,7 @@ export default {
           8,
           (vis, x, y, z) => { 
             
-            vis.array.set(x, 'dfs');  
+            vis.array.set(x, 'DFS');  
             vis.array.setList(y);  
 
             //select the explored node in blue 
@@ -428,7 +428,7 @@ export default {
             chunker.add(
               9,
               (vis, x, y, z, a, b) => { 
-                vis.array.set(x, 'dfs'); 
+                vis.array.set(x, 'DFS'); 
                 
                 //add a string "n" below the currently popped out node
                 vis.array.assignVariable('n', 2, b + 1); 
@@ -479,7 +479,7 @@ export default {
                   13,
                   (vis, x, y, z, a, b) => { 
                     //reset
-                    vis.array.set(x,'dfs');  
+                    vis.array.set(x,'DFS');  
                     //add a string "n" below the currently popped out node
                     vis.array.assignVariable('n', 2, y + 1);  
                     
@@ -518,7 +518,7 @@ export default {
             chunker.add(
               14,
               (vis, x, y, z, a, b) => { 
-                vis.array.set(x, 'dfs');
+                vis.array.set(x, 'DFS');
                 //add a string "n" below the currently popped out node
                 vis.array.assignVariable('n', 2, b + 1); 
 

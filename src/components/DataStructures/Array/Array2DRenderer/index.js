@@ -76,7 +76,7 @@ class Array2DRenderer extends Renderer {
             <td />
           }
           { 
-            (algo !== 'bfs' && algo !== 'dfs' && algo !== 'dijkstra' && algo !== 'astar') &&
+            (algo !== 'BFS' && algo !== 'DFS' && algo !== 'dijkstra' && algo !== 'astar') &&
             longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
@@ -183,7 +183,7 @@ class Array2DRenderer extends Renderer {
         </tr>
         }
         {
-          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'astar' || algo === 'dfs' || algo == 'bfs') &&
+          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'astar' || algo === 'DFS' || algo == 'BFS') &&
           data.map((row, i) => (
             i === 2 && (
                 <AnimateSharedLayout>
@@ -216,14 +216,14 @@ class Array2DRenderer extends Renderer {
           </caption>
         } 
         {
-          algo === 'dfs' &&
-          <caption className={algo === 'dfs' ? styles.captionDFS : ''} kth-tag='dfs_caption'>
+          algo === 'DFS' &&
+          <caption className={algo === 'DFS' ? styles.captionDFS : ''} kth-tag='dfs_caption'>
               Nodes(stack): {listOfNumbers}
           </caption>
         }
         {
-          algo === 'bfs' &&
-          <caption className={algo === 'bfs' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
+          algo === 'BFS' &&
+          <caption className={algo === 'BFS' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
               Nodes(queue): {listOfNumbers}
           </caption>
         }

@@ -51,7 +51,7 @@ function MatrixParam({
   // const [size, setSize] = useState(defaultSize); 
   
   const [size, setSize] = useState(defaultSize);
-  const [endNode, setEndNode] = useState(defaultSize.toString());
+  const [endNode, setEndNode] = useState(defaultSize);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
@@ -91,11 +91,13 @@ function MatrixParam({
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
-          [columnId]: value,
+          [columnId]: value, 
         };
       }
       return row;
     }));
+  
+  
   };
 
   // Get and parse the matrix
@@ -149,23 +151,20 @@ function MatrixParam({
     }
   }; 
 
-  const handleBlur = () => {
-    let value = parseInt(endNode, 10);
-    if (isNaN(value) || value < 1) {
-        value = 1;
-    } else if (value > size) {
-        value = size;
-    }
-    setEndNode(value.toString());
-};
+  const handleEndNodeBlur = () => {
+    if (endNode === "" || endNode < 1) setEndNode(1);
+    else if (endNode > size) setEndNode(size);
+  };  
 
 // This function gets called for every input event
-  const handleInput = (e) => {
-      // Allow only numbers, nothing happens for non-numerical values
-      const regex = /^[0-9]*$/;
-      if (regex.test(e.target.value) || e.target.value === "") {
-          setEndNode(e.target.value);
-       }
+  const handleEndNodeChange = e => {
+    const value = e.target.value;
+    if (value === "") {
+        setEndNode(value); // allows empty input to be set
+    } else if (!isNaN(value) && Number.isInteger(parseFloat(value))) {
+        setEndNode(parseInt(value, 10)); // convert string to integer and set
+    }
+    // If not a valid number, just ignore the input
   };
 
   return (
@@ -177,9 +176,9 @@ function MatrixParam({
             <input 
               type="text" 
               id="endNodeInput" 
-              value={endNode} 
-              onInput={handleInput}
-              onBlur={handleBlur}
+              value={endNode === "" ? "" : endNode} // display empty if endNode is empty string
+              onChange={handleEndNodeChange}
+              onBlur={handleEndNodeBlur}
             />
           </div>
         )}
