@@ -23,7 +23,8 @@ function DFSParam() {
         ALGORITHM_NAME={DFS}
         EXAMPLE={DFS_EXAMPLE}
         EXAMPLE2={DFS_EXAMPLE2}
-        setMessage={setMessage}
+        setMessage={setMessage} 
+        unweighted
       />
 
       {/* render success/error message */}

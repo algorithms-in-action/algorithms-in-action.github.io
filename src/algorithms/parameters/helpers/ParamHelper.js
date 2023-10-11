@@ -124,7 +124,7 @@ export const makeColumnArray = (len) => {
  * @param symmetric
  * @return array of object
  */
-export const makeData = (len, min, max, symmetric) => {
+export const makeData = (len, min, max, symmetric, unweighted) => {
   const rows = [];
   if (symmetric) {
     for (let i = 0; i < len; i += 1) {
@@ -135,23 +135,29 @@ export const makeData = (len, min, max, symmetric) => {
           val = rows[j][i];
         } else if (i !== j) {
           val = getRandomInt(min, max);
+          if (unweighted) {
+            val = val > 0 ? 1 : 0;  // If unweighted, force the value to be either 0 or 1.
+          }
         }
         row.push(val);
       }
       rows.push(row);
     }
   }
-  // const arr = [];
   let arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
-      data[`col${j}`] = symmetric
+      let value = symmetric
         ? `${rows[i][j]}`
         : `${getRandomInt(min, max)}`;
-      if (i === j && !symmetric) {
-        data[`col${j}`] = '1';
+      if (unweighted) {
+        value = parseInt(value, 10) > 0 ? '1' : '0'; // If unweighted, force the value to be either 0 or 1.
       }
+      if (i === j && !symmetric) {
+        value = '1';
+      }
+      data[`col${j}`] = value;
     }
     arr.push(data);
   }
@@ -185,6 +191,7 @@ export const makeData = (len, min, max, symmetric) => {
   }
   return arr;
 };
+
 
 export const balanceBSTArray = (nodes) => {
   class TreeNode {

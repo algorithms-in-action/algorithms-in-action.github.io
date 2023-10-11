@@ -46,7 +46,8 @@ function MatrixParam({
   setMessage,
   ALGORITHM_NAME,
   EXAMPLE,
-  EXAMPLE2,
+  EXAMPLE2, 
+  unweighted
 }) {
   // const [size, setSize] = useState(defaultSize); 
   
@@ -56,16 +57,20 @@ function MatrixParam({
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data, setData] = useState(() => makeData(size, min, max, symmetric));
+
+  //modified this so that the graph is synchronized with the matrix at the start
+  const [data, setData] = useState(() => makeData(size, min, max, symmetric, unweighted));
+
+
   const [originalData, setOriginalData] = useState(data);
-  const [buttonMessage, setButtonMessage] = useState('Start');
+  const [buttonMessage, setButtonMessage] = useState('Restart');
 
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size, min, max, symmetric);
+    const newData = makeData(size, min, max, symmetric, unweighted);
     setData(newData);
     setOriginalData(newData);
-  }, [size, min, max, symmetric]);
+  }, [size, min, max, symmetric, unweighted]);
 
   useEffect(() => {
     const element = document.querySelector('button[id="startBtnGrp"]');
@@ -87,18 +92,43 @@ function MatrixParam({
   // the rowIndex, columnId and new value to update the
   // original data
   const updateData = (rowIndex, columnId, value) => {
-    setData((old) => old.map((row, index) => {
-      if (index === rowIndex) {
-        return {
-          ...old[rowIndex],
-          [columnId]: value, 
-        };
-      }
-      return row;
-    }));
+    
+    // Check if the new value is the same as the old value
+    if (data[rowIndex] && data[rowIndex][columnId] === value) {
+      return; 
+    }
+    
+    // Make a deep copy of the data
+    const updatedData = JSON.parse(JSON.stringify(data));
+
+    // Update the cell (a, b)
+    if (updatedData[rowIndex]) {
+        updatedData[rowIndex][columnId] = value;
+    }
+
+    // Only do the following if the name is NOT "transitiveClosure"
+    if (name !== "transitiveClosure") {
+        // Get the reversed column id (i.e., swap rowIndex and columnId)
+        const reverseColumnId = `col${rowIndex}`;
+        const reverseRowIndex = parseInt(columnId.replace('col', ''), 10);
+
+        // Update the symmetric cell (b, a)
+        if (updatedData[reverseRowIndex]) {
+            updatedData[reverseRowIndex][reverseColumnId] = value;
+        }
+    } 
+
+
   
-  
-  };
+    // Update the state
+    setData(updatedData);  
+    
+    //handleSearch();
+  }; 
+
+  useEffect(() => {
+    handleSearch();
+  }, [data]);
 
   // Get and parse the matrix
   const getMatrix = () => {
@@ -131,7 +161,8 @@ function MatrixParam({
   };
 
   // Run the animation
-  const handleSearch = () => {
+  const handleSearch = () => { 
+
     closeInstructions(); // remove instruction
     setMessage(null);
     const matrix = getMatrix();
@@ -149,10 +180,14 @@ function MatrixParam({
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
-  }; 
+  };  
+
+  useEffect(() => {
+    handleSearch();
+  }, [endNode]);
 
   const handleEndNodeBlur = () => {
-    if (endNode === "" || endNode < 1) setEndNode(1);
+    if (endNode === "" || endNode < 1) setEndNode(size);
     else if (endNode > size) setEndNode(size);
   };  
 
@@ -188,12 +223,10 @@ function MatrixParam({
         <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
           Decrease Graph Size
         </button>
-        <ControlButton
-          icon={<RefreshIcon />}
-          className="greyRoundBtn"
-          id="refreshMatrix"
-          onClick={resetData}
-        /> 
+        <button className="matrixBtn" onClick={resetData}>
+          Revert
+        </button>
+        
         
         
 
@@ -211,3 +244,10 @@ function MatrixParam({
 }
 
 export default MatrixParam;
+/*
+<ControlButton
+          icon={<RefreshIcon />}
+          className="greyRoundBtn"
+          id="refreshMatrix"
+          onClick={resetData}
+        /> */
