@@ -328,19 +328,20 @@ export default {
     }
   }, 
 
-  run(chunker, { matrix }) {
+  run(chunker, { matrix, endNode}) {
     const E = [...matrix];
     const numVertices = matrix.length;   
     //The real Finalised array(visited) and Parent array(parent)
     const visited = new Array(numVertices).fill(false); 
     const parent = new Array(numVertices).fill(null);
+    const explored = new Array(numVertices).fill(false); 
     
     //The fake ones for display
     const displayedVisited = []; 
     const displayedParent = []; 
     const displayedNodes = []; 
-    let displayedStack = []; 
-
+    let displayedStack = [];  
+   
 
     // DFS(G, s) B1
     chunker.add(
@@ -352,7 +353,7 @@ export default {
         
       },
       [E]
-    ); 
+    );  
     
 
     // initialise each element of array Parent to zero B6  
@@ -367,20 +368,21 @@ export default {
     chunker.add(
       6,
       (vis, x) => { 
-        vis.array.set(x, 'dfs'); 
+        vis.array.set(x, 'dfs');  
       },
       [[displayedNodes, displayedParent, displayedVisited], displayedStack]
     ); 
 
     // initialise each element of Finalised to  B7
     for (let i = 0; i < numVertices; i += 1) {
-      displayedVisited[i + 1] = "false"; 
+      displayedVisited[i + 1] = "false";  
+      displayedVisited[i + 1] = endNode;
     }  
 
     chunker.add(
       7,
       (vis, x) => { 
-        vis.array.set(x, 'dfs'); 
+        vis.array.set(x, 'dfs');  
       },
       [[displayedNodes, displayedParent, displayedVisited]]
     ); 
@@ -392,34 +394,162 @@ export default {
         //The real stack
         const Nodes = [s];  
         displayedStack = [];
-        displayedStack.push(s+1);
+        displayedStack.push(s+1); 
+        explored[s] = true;
         chunker.add(
           8,
           (vis, x, y, z) => { 
+            
             vis.array.set(x, 'dfs');  
-            vis.array.setList(y); 
-            vis.array.select(0, z[z.length - 1] + 1); 
-            vis.graph.colorNode(z[z.length - 1], 4);
+            vis.array.setList(y);  
+
+            //select the explored node in blue 
+
+            for (let i = 0; i < z.length; i ++){
+              if(z[i] == true){
+                vis.array.select(0,i + 1);
+                vis.graph.colorNode(i, 4);
+              }
+            } 
+
+           
+
           },
-          [[displayedNodes, displayedParent, displayedVisited], displayedStack, Nodes]
-        ); 
+          [[displayedNodes, displayedParent, displayedVisited], displayedStack, explored]
+        );  
+
 
         // while Nodes not empty B2
         while (Nodes.length > 0) {
+            chunker.add(2);
             // n <- pop(Nodes) B9
-            let n = Nodes.pop();
+            let n = Nodes.pop();  
+            displayedStack.pop();
+            chunker.add(
+              9,
+              (vis, x, y, z, a, b) => { 
+                vis.array.set(x, 'dfs'); 
+                
+                //add a string "n" below the currently popped out node
+                vis.array.assignVariable('n', 2, b + 1); 
+                
+                //highlight all nodes explored in blue 
+                //
+                for (let i = 0; i < z.length; i ++){
+                  if(z[i] == true){
+                    vis.array.select(0,i + 1);
+                    
+                  }
+                }
+
+                //highlight all finalized nodes in green
+                for(let i = 0; i < a.length; i++)
+                { 
+                  if(a[i] == true)
+                  { 
+                    //vis.array.deselect(0, i + 1);
+                    vis.array.select(0, i + 1, 0, i + 1, '1');
+                  }
+                }  
+
+                
+
+                vis.array.setList(y); 
+              },
+              [[displayedNodes, displayedParent, displayedVisited], displayedStack, explored, visited, n]
+            );  
+
+
+
             // While Finalised[n] B10 
-            while (visited[n]) {
+            while (visited[n]) { 
+                chunker.add(10);
+
+                chunker.add(11);
                 // If Node is empty B11
                 if (Nodes.length === 0) {
                     // Return B12
+                    chunker.add(12);
                     return;
                 }
                 // n <- pop(Nodes) B13
-                n = Nodes.pop();
+                n = Nodes.pop();  
+                displayedStack.pop(); 
+                chunker.add(
+                  13,
+                  (vis, x, y, z, a, b) => { 
+                    //reset
+                    vis.array.set(x,'dfs');  
+                    //add a string "n" below the currently popped out node
+                    vis.array.assignVariable('n', 2, y + 1);  
+                    
+                    //highlight all nodes explored in blue 
+                    //
+                    for (let i = 0; i < a.length; i ++){
+                      if(a[i] == true){
+                        vis.array.select(0,i + 1);
+                        
+                      }
+                    }
+
+                    //highlight all finalized nodes in green
+                    for(let i = 0; i < b.length; i++)
+                    { 
+                      if(b[i] == true)
+                      { 
+                        vis.array.select(0, i + 1, 0, i + 1, '1');  
+                      }
+                    }                   
+                    
+                    
+
+                    //redisplay stack
+                    vis.array.setList(z);
+                  },
+                  [[displayedNodes, displayedParent, displayedVisited], n, displayedStack, explored, visited]
+                ); 
+
+
             }
             // Finalised[n] <- True B14
-            visited[n] = true; 
+            visited[n] = true;  
+            displayedVisited[n + 1] = "true";   
+            explored[n] = false;
+            chunker.add(
+              14,
+              (vis, x, y, z, a, b) => { 
+                vis.array.set(x, 'dfs');
+                //add a string "n" below the currently popped out node
+                vis.array.assignVariable('n', 2, b + 1); 
+
+                //highlight all nodes explored in blue in the array
+                //
+                for (let i = 0; i < z.length; i ++){
+                  if(z[i] == true){
+                    vis.array.select(0,i + 1);
+                    //vis.graph.colorNode(i, 4);
+                  }
+                }
+
+                //highlight all finalized nodes in green in the array
+                for(let i = 0; i < a.length; i++)
+                { 
+                  if(a[i] == true)
+                  { 
+                    vis.array.select(0, i + 1, 0, i + 1, '1');  
+                  }
+                }  
+
+                //changed the finalized node's highlight color to green in the graph
+                vis.graph.removeNodeColor(b); 
+                vis.graph.colorNode(b, 1);
+                
+                vis.array.setList(y); 
+              },
+              [[displayedNodes, displayedParent, displayedVisited], displayedStack, explored, visited, n]
+            );
+
+
 
             // If is_end_node(n) B15
             // NOTE: Assuming there's a function is_end_node to check for an end condition, or you can define your own condition here

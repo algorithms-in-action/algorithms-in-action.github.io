@@ -84,6 +84,9 @@ class Array2DTracer extends Tracer {
             break;  
           case '4':
             this.data[x][y].selected4 = true;
+            break;  
+          case '5':
+            this.data[x][y].selected5 = true;
             break; 
           
           default:
@@ -165,7 +168,8 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false; 
-        this.data[x][y].selected4 = false;
+        this.data[x][y].selected4 = false; 
+        this.data[x][y].selected5 = false;
         this.data[x][y].style = undefined;
       }
     }

@@ -48,8 +48,10 @@ function MatrixParam({
   EXAMPLE,
   EXAMPLE2,
 }) {
-  // const [size, setSize] = useState(defaultSize);
+  // const [size, setSize] = useState(defaultSize); 
+  
   const [size, setSize] = useState(defaultSize);
+  const [endNode, setEndNode] = useState(defaultSize.toString());
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
@@ -138,17 +140,49 @@ function MatrixParam({
         name,
         mode,
         size,
-        matrix,
+        matrix, 
+        endNode,
       });
     //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
+  }; 
+
+  const handleBlur = () => {
+    let value = parseInt(endNode, 10);
+    if (isNaN(value) || value < 1) {
+        value = 1;
+    } else if (value > size) {
+        value = size;
+    }
+    setEndNode(value.toString());
+};
+
+// This function gets called for every input event
+  const handleInput = (e) => {
+      // Allow only numbers, nothing happens for non-numerical values
+      const regex = /^[0-9]*$/;
+      if (regex.test(e.target.value) || e.target.value === "") {
+          setEndNode(e.target.value);
+       }
   };
 
   return (
-    <div className="matrixContainer">
-      <div className="matrixButtonContainer">
+    <div className="matrixContainer"> 
+      <div className="matrixButtonContainer"> 
+        {(name === "BFS" || name === "DFS") && (
+          <div className="endNodeInputContainer">
+            <label htmlFor="endNodeInput">End Node: </label>
+            <input 
+              type="text" 
+              id="endNodeInput" 
+              value={endNode} 
+              onInput={handleInput}
+              onBlur={handleBlur}
+            />
+          </div>
+        )}
         <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
           Increase Graph Size
         </button>
@@ -160,15 +194,21 @@ function MatrixParam({
           className="greyRoundBtn"
           id="refreshMatrix"
           onClick={resetData}
-        />
+        /> 
+        
+        
+
         <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
           {buttonMessage}
         </button>
-      </div>
+      </div> 
+
+      
 
       <Table columns={columns} data={data} updateData={updateData} algo={name} />
     </div>
   );
+  
 }
 
 export default MatrixParam;
