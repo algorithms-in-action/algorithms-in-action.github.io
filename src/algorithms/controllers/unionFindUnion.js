@@ -174,8 +174,8 @@ export default {
     chunker.add(
       'if rank[n] > rank[m]',
       (vis, root1, root2) => {
-        //unhighlight(vis.array, N_IDX, root1);
-        //unhighlight(vis.array, N_IDX, root2);
+        this.unhighlight(vis.array, N_IDX, root1);
+        this.unhighlight(vis.array, N_IDX, root2);
         this.highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
         this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
       },
