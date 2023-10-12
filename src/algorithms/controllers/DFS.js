@@ -408,7 +408,8 @@ export default {
             for (let i = 0; i < z.length; i ++){
               if(z[i] == true){
                 vis.array.select(0,i + 1);
-                vis.graph.colorNode(i, 4);
+                vis.graph.colorNode(i, 4); 
+                
               }
             } 
 
