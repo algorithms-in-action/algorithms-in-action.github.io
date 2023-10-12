@@ -52,7 +52,8 @@ function MatrixParam({
   // const [size, setSize] = useState(defaultSize); 
   
   const [size, setSize] = useState(defaultSize);
-  const [endNode, setEndNode] = useState(defaultSize);
+  const [endNode, setEndNode] = useState(defaultSize); 
+  const [startNode, setStartNode] = useState(1);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
@@ -92,7 +93,12 @@ function MatrixParam({
       //decrease to that value
       if(endNode > newSize){
         setEndNode(newSize);
-      }
+      } 
+
+      if(startNode > newSize){
+        setStartNode(newSize);
+      } 
+
     } 
   };
 
@@ -182,17 +188,35 @@ function MatrixParam({
         mode,
         size,
         matrix, 
-        endNode,
+        endNode,  
+        startNode,
+
       });
     //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
   };  
-
+  
   useEffect(() => {
     handleSearch();
-  }, [endNode]);
+  }, [startNode]);
+  useEffect(() => {
+    handleSearch();
+  }, [endNode]);  
+
+
+  const increaseStartNode = () => {
+    if (startNode < size) {
+        setStartNode(prevStartNode => prevStartNode + 1);
+    }
+  };
+
+  const decreaseStartNode = () => {
+    if (startNode > 1) {
+        setStartNode(prevStartNode => prevStartNode - 1);
+    }
+  };
 
   const increaseEndNode = () => {
     if (endNode < size) {
@@ -204,12 +228,36 @@ function MatrixParam({
     if (endNode > 1) {
         setEndNode(prevEndNode => prevEndNode - 1);
     }
-  };
+  }; 
+
 
   return (
     <div className="matrixContainer"> 
       <div className="matrixButtonContainer"> 
-        {(name === "BFS" || name === "DFS") && (
+      {(name === "BFS" || name === "DFS" || name === "dijkstra"
+       || name === "aStar") && (
+          <div className="startNodeInputContainer">
+          <label htmlFor="startNodeCounter" className="startNodeLabel">Start Node: </label>
+          <button 
+              onClick={() => decreaseStartNode()}
+              disabled={startNode <= 1}
+              className={`arrowBtn pointerCursor ${startNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="startNodeCounter" className="startNodeValue"> {startNode} </span>
+          <button 
+              onClick={() => increaseStartNode()}
+              disabled={startNode >= size}
+              className={`arrowBtn pointerCursor ${startNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
+        )}
+        
+        
+        {(name === "BFS" || name === "DFS" || name === "aStar") && (
           <div className="endNodeInputContainer">
           <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
           <button 
@@ -219,7 +267,7 @@ function MatrixParam({
           >
               -
           </button>
-          <span id="endNodeCounter" className="endNodeValue">{endNode}</span>
+          <span id="endNodeCounter" className="endNodeValue"> {endNode} </span>
           <button 
               onClick={() => increaseEndNode()}
               disabled={endNode >= size}

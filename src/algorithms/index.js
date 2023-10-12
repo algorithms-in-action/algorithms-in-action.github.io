@@ -49,7 +49,7 @@ const algorithms = {
 
     },
   }, 
-  'A*': {
+   'aStar': {
     name: 'A* Algorithm',
     category: 'Greedy',
     param: <Param.ASTARParam />,

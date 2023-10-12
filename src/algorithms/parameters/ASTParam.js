@@ -14,7 +14,7 @@ function ASTParam() {
     <>
       {/* Matrix input */}
       <MatrixParam
-        name="A*"
+        name="aStar"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}
