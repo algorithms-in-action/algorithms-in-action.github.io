@@ -11,14 +11,21 @@ export function notAtRoot(chunker, parentArr, n) {
 
 export function shortenPath(chunker, parentArr, n) {
 
-  chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, parent, grandparent) => {
+  chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, parent) => {
     unhighlight(vis.array, N_IDX, n);
     unhighlight(vis.tree, n, n);
     highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-    highlight(vis.array, PARENT_IDX, parent, ARRAY_COLOUR_CODES.ORANGE);
+    highlight(vis.array, N_IDX, parent, ARRAY_COLOUR_CODES.ORANGE);
+    highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
     highlight(vis.tree, parent, parent, TREE_COLOUR_CODES.ORANGE);
+  },[n, parentArr[n]]);
+
+  chunker.add(`parent[n] <- parent[parent[n]]`, (vis, parent, grandparent) => {
+    unhighlight(vis.array, N_IDX, parent);
+    unhighlight(vis.tree, parent, parent);
+    highlight(vis.array, PARENT_IDX, parent, ARRAY_COLOUR_CODES.ORANGE);
     highlight(vis.tree, grandparent, grandparent, TREE_COLOUR_CODES.ORANGE);
-  },[n, parentArr[n], parentArr[parentArr[n]]]);
+  },[parentArr[n], parentArr[parentArr[n]]]);
 
   // If grandparent is not the parent 
   if (parentArr[n] !== n && parentArr[parentArr[n]] !== parentArr[n]) {
@@ -37,7 +44,6 @@ export function shortenPath(chunker, parentArr, n) {
 
     chunker.add(`parent[n] <- parent[parent[n]]`, (vis, n, formerParent, newParent) => {
       unhighlight(vis.array, PARENT_IDX, formerParent);
-      unhighlight(vis.tree, formerParent, formerParent);
       unhighlight(vis.tree, newParent, newParent)
       
       highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);

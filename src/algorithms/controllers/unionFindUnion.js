@@ -129,8 +129,8 @@ export default {
 
     // 'if rank[n] > rank[m]'
     chunker.add('if rank[n] > rank[m]', (vis, root1, root2) => {
-      //unhighlight(vis.array, N_IDX, root1);
-      //unhighlight(vis.array, N_IDX, root2);
+      unhighlight(vis.array, N_IDX, root1);
+      unhighlight(vis.array, N_IDX, root2);
       highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
       highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
     },[root1, root2]);
