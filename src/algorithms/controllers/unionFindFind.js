@@ -75,6 +75,14 @@ export default {
     return parentArr[n] != n;
   },
 
+  /**
+   * Finds the root of the current node.
+   * @param {Array} parentArr The parent array.
+   * @param n The element to find.
+   * @param {string} name The name of the element to find.
+   * @param {boolean} pathCompression Whether to use path compression.
+   * @returns {number} The root of the current node.
+   */
   find(chunker, parentArr, n, name, m, pathCompression) {
     while (this.notAtRoot(chunker, parentArr, n)) {
       // highlighting for 'fail state'
@@ -139,6 +147,11 @@ export default {
     return n;
   },
 
+  /**
+   * Shortens the path from the current node to the root.
+   * @param {Array} parentArr The parent array.
+   * @param n The element to shorten the path for.
+   */
   shortenPath(chunker, parentArr, n) {
     chunker.add(
       `parent[n] <- parent[parent[n]]`,
@@ -194,5 +207,6 @@ export default {
         [n, formerParent, parentArr[n]]
       );
     }
+    return parentArr[n];
   },
 };

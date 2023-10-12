@@ -51,6 +51,61 @@ export default {
     };
   },
 
+  run(chunker, params) {
+    const { arg1: unionOperations, arg2: pathCompression } = params.target;
+
+    // setting up the arrays
+    let parentArr = ['Parent[i]', ...N_ARRAY.slice(1)];
+    let rankArr = ['Rank[i]', ...Array(10).fill(0)];
+
+    // initialising the visualisers
+    chunker.add(
+      'Union(n, m)',
+      (vis, array) => {
+        // setting up array
+        vis.array.set(array, 'unionFind', '');
+        vis.array.hideArrayAtIndex(isRankVisible ? null : RANK_IDX);
+
+        // adding nodes to tree
+        vis.tree.addNode(N_GRAPH[0], undefined, 'circle');
+        for (const node of N_GRAPH.slice(1)) {
+          vis.tree.addNode(node, undefined, 'circle');
+          // setting up connections to invisible root node
+          vis.tree.addEdge(N_GRAPH[0], node);
+        }
+
+        vis.tree.isReversed = true;
+        vis.tree.layout();
+
+        // adding self-loop.
+        for (const node of N_GRAPH.slice(1)) {
+          vis.tree.addSelfLoop(node);
+        }
+      },
+      [[N_ARRAY, parentArr, rankArr]]
+    );
+
+    // applying union operations
+    for (let i = 0; i < unionOperations.length; i++) {
+      this.union(
+        chunker,
+        parentArr,
+        rankArr,
+        unionOperations[i][0],
+        unionOperations[i][1],
+        pathCompression
+      );
+    }
+    return parentArr.slice(1);
+  },
+
+  /**
+   * Highlight the current node.
+   * @param {*} visObj
+   * @param {*} index1 
+   * @param {*} index2 
+   * @param {*} colour 
+   */
   highlight(visObj, index1, index2, colour) {
     if (visObj.key === 'array') {
       visObj.deselect(index1, index2);
@@ -62,6 +117,13 @@ export default {
     }
   },
 
+  /**
+   * Unhighlight the current node.
+   * @param {*} visObj
+   * @param {*} index1
+   * @param {*} index2
+   * @param {*} deselectForRow
+   */
   unhighlight(visObj, index1, index2, deselectForRow = false) {
     if (visObj.key === 'array') {
       if (deselectForRow === true) {
@@ -90,6 +152,15 @@ export default {
     }
   },
 
+  /**
+   * Union two nodes together.
+   * @param {Chunker} chunker The chunker object.
+   * @param {Array} parentArr The parent array.
+   * @param {Array} rankArr The rank array.
+   * @param {Number} n The first node.
+   * @param {Number} m The second node.
+   * @param {Boolean} pathCompression Whether to use path compression.
+   */
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
     // initialising current union operation
     chunker.add(
@@ -262,53 +333,5 @@ export default {
         [root1, root2]
       );
     }
-  },
-
-  run(chunker, params) {
-    const { arg1: unionOperations, arg2: pathCompression } = params.target;
-
-    // setting up the arrays
-    let parentArr = ['Parent[i]', ...N_ARRAY.slice(1)];
-    let rankArr = ['Rank[i]', ...Array(10).fill(0)];
-
-    // initialising the visualisers
-    chunker.add(
-      'Union(n, m)',
-      (vis, array) => {
-        // setting up array
-        vis.array.set(array, 'unionFind', '');
-        vis.array.hideArrayAtIndex(isRankVisible ? null : RANK_IDX);
-
-        // adding nodes to tree
-        vis.tree.addNode(N_GRAPH[0], undefined, 'circle');
-        for (const node of N_GRAPH.slice(1)) {
-          vis.tree.addNode(node, undefined, 'circle');
-          // setting up connections to invisible root node
-          vis.tree.addEdge(N_GRAPH[0], node);
-        }
-
-        vis.tree.isReversed = true;
-        vis.tree.layout();
-
-        // adding self-loop.
-        for (const node of N_GRAPH.slice(1)) {
-          vis.tree.addSelfLoop(node);
-        }
-      },
-      [[N_ARRAY, parentArr, rankArr]]
-    );
-
-    // applying union operations
-    for (let i = 0; i < unionOperations.length; i++) {
-      this.union(
-        chunker,
-        parentArr,
-        rankArr,
-        unionOperations[i][0],
-        unionOperations[i][1],
-        pathCompression
-      );
-    }
-    return parentArr.slice(1);
   },
 };
