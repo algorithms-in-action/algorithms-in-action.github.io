@@ -23,6 +23,7 @@ class VariableTreeNode extends TreeNode {
         }
 
         this.relatedNodeIDs.push(nodeID);
+        this.relatedNodeIDs.sort((a, b) => a - b);
     }
 
     removeRelatedNodeID(nodeID) {
@@ -31,7 +32,9 @@ class VariableTreeNode extends TreeNode {
             this.relatedNodeIDs.splice(index, 1);
         }
     }
-
+    clearRelatedNodeIDs(){
+        this.relatedNodeIDs = [];
+    }
     getNodeLength() {
         return this.relatedNodeIDs.length;
     }
