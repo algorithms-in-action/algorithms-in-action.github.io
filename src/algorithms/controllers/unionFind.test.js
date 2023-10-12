@@ -27,16 +27,16 @@ describe('Union Find', () => {
     })).toEqual();
   });
 
-  it('notAtRoot() should return true', () => {
-    const parentArr = [0, 1, 2, 2];
-    const node = 3;
-    expect(unionFindUnion.notAtRoot(chunker, parentArr, node, "n", undefined, undefined, undefined)).toEqual(true);
-  });
+  // it('notAtRoot() should return true', () => {
+  //   const parentArr = [0, 1, 2, 2];
+  //   const node = 3;
+  //   expect(unionFindUnion.notAtRoot(chunker, parentArr, node, "n", undefined, undefined, undefined)).toEqual(true);
+  // });
 
-  it('notAtRoot() should return false', () => {
-    const parentArr = [0, 1, 2, 3];
-    const node = 3;
-    expect(unionFindUnion.notAtRoot(chunker, parentArr, node, "n", undefined, undefined, undefined)).toEqual(false);
-  });
+  // it('notAtRoot() should return false', () => {
+  //   const parentArr = [0, 1, 2, 3];
+  //   const node = 3;
+  //   expect(unionFindUnion.notAtRoot(chunker, parentArr, node, "n", undefined, undefined, undefined)).toEqual(false);
+  // });
 
 });

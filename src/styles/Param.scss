@@ -55,12 +55,11 @@
   background: none;
 }
 
-
 .checkbox {
   color: var(--mid-control-font);
   font-size: 0.8em;
   // font: 13px "Roboto", sans-serif !important;
-  font-family: Menlo, "Liberation Mono", Courier, monospace;
+  font-family: Menlo, 'Liberation Mono', Courier, monospace;
 }
 
 .greyRoundBtn {
@@ -93,9 +92,8 @@
 .stringContainer {
   margin-right: 15px;
   padding: 0px 5px;
-
-  }
-.inputContainer{
+}
+.inputContainer {
   border: 0.1px solid var(--mid-control-param-border);
   border-radius: 4px;
   // display: flex;
@@ -104,7 +102,6 @@
   margin-right: 15px;
   padding: 0px 5px;
 }
-
 
 .outerInput {
   border: 1px solid var(--mid-control-param-border);
@@ -208,18 +205,20 @@
   flex-direction: column;
 }
 
-.dualAddInput, .dualTextInput {
+.dualAddInput,
+.dualTextInput {
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
 }
 
-
-.dualAddInput input:focus, .dualTextInput input:focus {
+.dualAddInput input:focus,
+.dualTextInput input:focus {
   outline: none;
 }
 
-.dualAddInput input, .dualTextInput input {
+.dualAddInput input,
+.dualTextInput input {
   width: 50px;
   height: 25px;
   flex-grow: 0;
@@ -229,7 +228,7 @@
   border-radius: 4px;
   margin-top: 4px;
   margin-bottom: 4px;
-  padding:  0px 5px;
+  padding: 0px 5px;
 
   //font-family:'Roboto', sans-serif;
   font-size: 1.05em;
@@ -244,9 +243,3 @@
   margin-right: 10px;
   height: 35px;
 }
-
-
-
-
-
-

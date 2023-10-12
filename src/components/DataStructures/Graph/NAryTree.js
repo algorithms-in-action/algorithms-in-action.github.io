@@ -54,7 +54,7 @@ class TreeNode {
   }
 
   getChildIndex(child) {
-    return this.children.findIndex(c => c.id === child.id);
+    return this.children.findIndex((c) => c.id === child.id);
   }
 
   getRightSibling() {
@@ -72,7 +72,7 @@ class TreeNode {
     const leftSibling = this.getLeftSibling();
     if (leftSibling == null) {
       const levelList = hierarchy[this.level];
-      const index = levelList.findIndex(n => n.id === this.id);
+      const index = levelList.findIndex((n) => n.id === this.id);
       if (index !== 0) {
         return levelList[index - 1];
       }
