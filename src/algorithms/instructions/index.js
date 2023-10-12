@@ -83,7 +83,7 @@ const unionFindInstructions = [{
     `Click on ${KEY_UF_UNION} to load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
     `At any point in time, you can click on ${KEY_UF_FIND} to switch to find mode for the currently visible array.`,
-    `Then client on ${KEY_PLAY} to watch the find algorithm run.`,
+    `Then click on ${KEY_PLAY} to watch the find algorithm run.`,
   ]
 }];
 
