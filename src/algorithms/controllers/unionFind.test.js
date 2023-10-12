@@ -6,7 +6,7 @@
 /* eslint-disable no-undef */
 
 import unionFindUnion from './unionFindUnion'
-import { notAtRoot } from './unionFindFind'
+import unionFindFind from './unionFindFind'
 
 // simple stub for the chunker
 const chunker = {
@@ -36,7 +36,7 @@ describe('Union Find', () => {
     const parentArr = [0, 1, 2, 2]
     const node = 3
     expect(
-      notAtRoot(
+      unionFindFind.notAtRoot(
         chunker,
         parentArr,
         node,
@@ -52,7 +52,7 @@ describe('Union Find', () => {
     const parentArr = [0, 1, 2, 3]
     const node = 3
     expect(
-      notAtRoot(
+      unionFindFind.notAtRoot(
         chunker,
         parentArr,
         node,
