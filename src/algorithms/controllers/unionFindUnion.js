@@ -4,7 +4,7 @@
 import { UFExp } from '../explanations';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
-import unionFindFind from './unionFindFind';
+import { find } from './unionFindFind';
 
 export const ARRAY_COLOUR_CODES = {
   RED: '5',
@@ -115,7 +115,7 @@ export default {
       [n, m]
     );
 
-    let root1 = unionFindFind.find(
+    let root1 = find(
       chunker,
       parentArr,
       n,
@@ -135,7 +135,7 @@ export default {
       [n, m]
     );
 
-    let root2 = unionFindFind.find(
+    let root2 = find(
       chunker,
       parentArr,
       m,
