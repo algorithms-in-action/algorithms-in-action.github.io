@@ -91,7 +91,7 @@ export default {
   },
 
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
-    // Initialising current union operation.
+    // initialising current union operation
     chunker.add(
       'Union(n, m)',
       (vis, n, m) => {
@@ -103,11 +103,11 @@ export default {
       [n, m]
     );
 
-    // Highlighting the current n to find in tree and array.
+    // highlighting the current n to find in tree and array
     chunker.add(
       `n <- Find(n)`,
       (vis, n) => {
-        vis.array.setMotion(true); // Turning on smooth transition.
+        vis.array.setMotion(true); // turning on smooth transition
         this.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
         this.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
         vis.array.showKth(`Union(${n}, ${m}) - Find(${n})`);
@@ -124,7 +124,7 @@ export default {
       pathCompression
     );
 
-    // Highlighting the current n to find in tree and array.
+    // highlighting the current n to find in tree and array
     chunker.add(
       `m <- Find(m)`,
       (vis, n, m) => {
@@ -157,7 +157,7 @@ export default {
       [n, m, root1, root2]
     );
 
-    // If in same set, return.
+    // if in same set, return
     if (root1 === root2) {
       chunker.add(
         'return',
@@ -183,7 +183,7 @@ export default {
     );
 
     if (rankArr[root1] > rankArr[root2]) {
-      // Swap n and m
+      // swap n and m
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
@@ -226,7 +226,8 @@ export default {
         this.highlight(vis.tree, root2, root2, TREE_COLOUR_CODES.GREEN);
 
         vis.tree.removeEdge('0', root1.toString());
-        vis.tree.removeEdge(root1.toString(), root1.toString()); // Remove self-loop.
+        // remove self-loop
+        vis.tree.removeEdge(root1.toString(), root1.toString());
         vis.tree.addEdge(root2.toString(), root1.toString());
         vis.tree.layout();
       },
@@ -266,29 +267,30 @@ export default {
   run(chunker, params) {
     const { arg1: unionOperations, arg2: pathCompression } = params.target;
 
-    // Setting up the arrays.
+    // setting up the arrays
     let parentArr = ['Parent[i]', ...N_ARRAY.slice(1)];
     let rankArr = ['Rank[i]', ...Array(10).fill(0)];
 
-    // Initialising the visualisers.
+    // initialising the visualisers
     chunker.add(
       'Union(n, m)',
       (vis, array) => {
-        // Setting up array.
+        // setting up array
         vis.array.set(array, 'unionFind', '');
         vis.array.hideArrayAtIndex(isRankVisible ? null : RANK_IDX);
 
-        // Adding nodes to tree.
+        // adding nodes to tree
         vis.tree.addNode(N_GRAPH[0], undefined, 'circle');
         for (const node of N_GRAPH.slice(1)) {
           vis.tree.addNode(node, undefined, 'circle');
-          vis.tree.addEdge(N_GRAPH[0], node); // Setting up connections to invisible root node.
+          // setting up connections to invisible root node
+          vis.tree.addEdge(N_GRAPH[0], node);
         }
 
         vis.tree.isReversed = true;
         vis.tree.layout();
 
-        // Adding self-loop.
+        // adding self-loop.
         for (const node of N_GRAPH.slice(1)) {
           vis.tree.addSelfLoop(node);
         }
@@ -296,7 +298,7 @@ export default {
       [[N_ARRAY, parentArr, rankArr]]
     );
 
-    // Applying union operations
+    // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
       this.union(
         chunker,
