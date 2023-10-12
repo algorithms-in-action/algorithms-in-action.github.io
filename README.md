@@ -46,15 +46,15 @@ This [link](https://algorithms-in-action.github.io/) above includes changes made
 
 This [link](https://aia.davidsha.me/) is showing current team's work. It's a fast-tracking branch of alpha release which may be unstable. It has tracked with `feature/no-ref/union-find-algorithm` branch in the GitHub repository.
 
-## Union Find Algorithm Team
+## Union-Find Algorithm Team
 
 ### Development
 
-The main/master branch for this team is `feature/no-ref/union-find-algorithm`. All official changes made by the Union Find Algorithm team will be made in this branch.
+The main/master branch for this team is `feature/no-ref/union-find-algorithm`. All official changes made by the Union-Find Algorithm team will be made in this branch.
 
 #### Changelog
 
-Below we make notes on the dev process for the Union Find Algorithm team.
+Below we make notes on the dev process for the Union-Find Algorithm team.
 
 * [x] After rebasing with the new changes made by the intern, an additional package `run-scripts-os` was added to `package.json` to fix the issue of the app not running on Windows machines.
-* [ ] Create new Union Find algorithm.
+* [x] Create new Union-Find algorithm.
