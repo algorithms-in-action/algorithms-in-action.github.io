@@ -48,7 +48,7 @@ export default {
       [value]
     );
 
-    find(chunker, parentArray, value, 'n', null, pathCompression);
+    this.find(chunker, parentArray, value, 'n', null, pathCompression);
   },
 
   notAtRoot(chunker, parentArr, n) {
