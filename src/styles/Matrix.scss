@@ -77,6 +77,23 @@
     }
 
     
+  } 
+  .arrowBtn.pointerCursor {
+    cursor: pointer;
+  } 
+
+  .arrowBtn.pointerCursor.disabledBtn {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
   }
+
+/*  .disabledBtn {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+  } */
+
+  
 
 }

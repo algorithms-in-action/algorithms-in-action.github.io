@@ -82,10 +82,18 @@ function MatrixParam({
     setMessage(null);
     setData(originalData);
   };
-
+  
+  //The size does not go above 10 or below one
   const updateTableSize = (newSize) => {
-    setMessage(null);
-    setSize(newSize);
+    if (newSize >= 1 && newSize <= 10) {  
+      setMessage(null);
+      setSize(newSize); 
+      //If the size decrease to a lower value than endNode, endNode should
+      //decrease to that value
+      if(endNode > newSize){
+        setEndNode(newSize);
+      }
+    } 
   };
 
   // When cell renderer calls updateData, we'll use
@@ -186,20 +194,16 @@ function MatrixParam({
     handleSearch();
   }, [endNode]);
 
-  const handleEndNodeBlur = () => {
-    if (endNode === "" || endNode < 1) setEndNode(size);
-    else if (endNode > size) setEndNode(size);
-  };  
-
-// This function gets called for every input event
-  const handleEndNodeChange = e => {
-    const value = e.target.value;
-    if (value === "") {
-        setEndNode(value); // allows empty input to be set
-    } else if (!isNaN(value) && Number.isInteger(parseFloat(value))) {
-        setEndNode(parseInt(value, 10)); // convert string to integer and set
+  const increaseEndNode = () => {
+    if (endNode < size) {
+        setEndNode(prevEndNode => prevEndNode + 1);
     }
-    // If not a valid number, just ignore the input
+  };
+
+  const decreaseEndNode = () => {
+    if (endNode > 1) {
+        setEndNode(prevEndNode => prevEndNode - 1);
+    }
   };
 
   return (
@@ -207,15 +211,23 @@ function MatrixParam({
       <div className="matrixButtonContainer"> 
         {(name === "BFS" || name === "DFS") && (
           <div className="endNodeInputContainer">
-            <label htmlFor="endNodeInput">End Node: </label>
-            <input 
-              type="text" 
-              id="endNodeInput" 
-              value={endNode === "" ? "" : endNode} // display empty if endNode is empty string
-              onChange={handleEndNodeChange}
-              onBlur={handleEndNodeBlur}
-            />
-          </div>
+          <label htmlFor="endNodeCounter">End Node: </label>
+          <button 
+              onClick={() => decreaseEndNode()}
+              disabled={endNode <= 1}
+              className={`arrowBtn pointerCursor ${endNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="endNodeCounter">{endNode}</span>
+          <button 
+              onClick={() => increaseEndNode()}
+              disabled={endNode >= size}
+              className={`arrowBtn pointerCursor ${endNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
         )}
         <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
           Increase Graph Size

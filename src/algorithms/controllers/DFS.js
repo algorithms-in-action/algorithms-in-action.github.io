@@ -376,7 +376,7 @@ export default {
     // initialise each element of Finalised to  B7
     for (let i = 0; i < numVertices; i += 1) {
       displayedVisited[i + 1] = "false";  
-      displayedVisited[i + 1] = endNode;
+      displayedVisited[i + 1] = (endNode);
     }  
 
     chunker.add(
