@@ -5,7 +5,8 @@ const KEY_SEARCH = 'SEARCH';
 const KEY_SORT = 'SORT';
 const KEY_LOAD = 'START';
 const KEY_FIND = 'FIND STRING';
-
+const KEY_UF_UNION = 'UNION';
+const KEY_UF_FIND = 'FIND';
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
@@ -74,6 +75,18 @@ const graphInstructionsTC = [{
   ],
 }];
 
+const unionFindInstructions = [{
+  title: ' ',
+  content: [
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter a list of operations.',
+    `Click on ${KEY_UF_UNION} to load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+    `At any point in time, you can click on ${KEY_UF_FIND} to switch to find mode for the currently visible array.`,
+    `Then client on ${KEY_PLAY} to watch the find algorithm run.`,
+  ]
+}];
+
 export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
@@ -81,4 +94,4 @@ export const TCInstruction = graphInstructionsTC;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
-export const UFInstruction = stringInstructions;
+export const UFInstruction = unionFindInstructions;

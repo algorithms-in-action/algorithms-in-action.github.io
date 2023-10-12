@@ -4,7 +4,7 @@
 import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
-import {onCollapseStateChange} from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindChunkerRefresh } from '../algorithms/controllers/unionFindUnion';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
