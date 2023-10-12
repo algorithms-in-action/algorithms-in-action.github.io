@@ -161,7 +161,9 @@ class NTreeTracer extends Tracer {
     // this will be the theoretical root node, and the handle for the tree
     const nodeMap = {};
     const rootNodes = new Set(this.realNodes.map((node) => node.id));
-
+    if (this.realNodes.length === 0) {
+      return null;
+    }
     // create the TreeNode instances and map them by their ID
     this.realNodes.forEach((node) => {
       let treeNode;
@@ -560,7 +562,6 @@ class NTreeTracer extends Tracer {
           leftSiblings++;
           tempPtr = tempPtr.getLeftSibling();
         }
-
 
         if (tempPtr) {
           const portion = moveDistance / leftSiblings;
