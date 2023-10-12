@@ -223,7 +223,7 @@ class Array2DRenderer extends Renderer {
         }
         {
           algo === 'BFS' &&
-          <caption className={algo === 'BFS' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
+          <caption className={algo === 'BFS' ? styles.captionBFS : ''} kth-tag='bfs_caption'>
               Nodes(queue): {listOfNumbers}
           </caption>
         }

@@ -211,7 +211,7 @@ function MatrixParam({
       <div className="matrixButtonContainer"> 
         {(name === "BFS" || name === "DFS") && (
           <div className="endNodeInputContainer">
-          <label htmlFor="endNodeCounter">End Node: </label>
+          <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
           <button 
               onClick={() => decreaseEndNode()}
               disabled={endNode <= 1}
@@ -219,7 +219,7 @@ function MatrixParam({
           >
               -
           </button>
-          <span id="endNodeCounter">{endNode}</span>
+          <span id="endNodeCounter" className="endNodeValue">{endNode}</span>
           <button 
               onClick={() => increaseEndNode()}
               disabled={endNode >= size}
@@ -229,12 +229,18 @@ function MatrixParam({
           </button>
       </div>
         )}
-        <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
-          Increase Graph Size
+        <button 
+          className={`matrixBtn ${size == 10 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size + 1)}>
+            Increase Graph Size
         </button>
-        <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
-          Decrease Graph Size
+        
+        <button 
+          className={`matrixBtn ${size == 1 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size - 1)}>
+           Decrease Graph Size
         </button>
+        
         <button className="matrixBtn" onClick={resetData}>
           Revert
         </button>

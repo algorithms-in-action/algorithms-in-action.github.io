@@ -88,11 +88,15 @@
     cursor: not-allowed;
   }
 
-/*  .disabledBtn {
-    background-color: #ddd;
+  .matrixBtn.disabledText {
     color: #aaa;
-    cursor: not-allowed;
-  } */
+    cursor: not-allowed; // This changes the cursor to an "unavailable" style
+  } 
+
+  .endNodeLabel, .endNodeValue {
+    color: var(--mid-control-param-matrix-cell-font); // You can change this to your desired color.
+  }
+
 
   
 
