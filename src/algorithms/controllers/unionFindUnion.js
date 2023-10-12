@@ -307,5 +307,6 @@ export default {
         pathCompression
       );
     }
+    return parentArr.slice(1);
   },
 };
