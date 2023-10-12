@@ -118,14 +118,18 @@ export default {
 
           }
 
-          //Remove the edge highlight
-          chunker.add(
-            4,
-            (vis,graph, x) => {
-              vis.graph.removeEdgeColor(x, i);
-            },
-            [E, currentVertex]
-          )
+          //Remove the edge highlight after visiting 1 node
+          if(i == numVertices-1){
+            for(let i = 0; i < numVertices; i++){
+              chunker.add(
+                4,
+                (vis,graph, x) => {
+                  vis.graph.removeEdgeColor(x, i);
+                },
+                [E, currentVertex]
+              )
+            }
+          }
           
         }
       }
