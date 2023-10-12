@@ -24,7 +24,6 @@ export const RANK_IDX = 2;
 
 export const N_ARRAY = ['i', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const N_GRAPH = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-let unionPair = [];
 
 let isRankVisible = false;
 export function unionFindChunkerRefresh(algorithm) {
@@ -35,41 +34,6 @@ export function unionFindChunkerRefresh(algorithm) {
     algorithm.collapse.unionFind.union.Adjust_rank;
   vis.array.instance.hideArrayAtIndex(isVisible ? null : RANK_IDX);
   isRankVisible = isVisible;
-}
-
-export function unhighlight(visObj, index1, index2, deselectForRow = false) {
-  if (visObj.key === 'array') {
-    if (deselectForRow === true) {
-      visObj.deselect(index1, 0, undefined, N_ARRAY.length - 1);
-      return;
-    }
-    visObj.deselect(index1, index2);
-    return;
-  }
-  if (visObj.key === 'n-tree') {
-    visObj.leave1(index1.toString(), index2.toString(), TREE_COLOUR_CODES.RED);
-    visObj.leave1(
-      index1.toString(),
-      index2.toString(),
-      TREE_COLOUR_CODES.ORANGE
-    );
-    visObj.leave1(
-      index1.toString(),
-      index2.toString(),
-      TREE_COLOUR_CODES.GREEN
-    );
-  }
-}
-
-export function highlight(visObj, index1, index2, colour) {
-  if (visObj.key === 'array') {
-    visObj.deselect(index1, index2);
-    visObj.select(index1, index2, undefined, undefined, colour);
-  }
-  if (visObj.key === 'n-tree') {
-    unhighlight(visObj, index1, index2);
-    visObj.visit1(index1.toString(), index2.toString(), colour);
-  }
 }
 
 export default {
@@ -85,6 +49,45 @@ export default {
         order: 1,
       },
     };
+  },
+
+  highlight(visObj, index1, index2, colour) {
+    if (visObj.key === 'array') {
+      visObj.deselect(index1, index2);
+      visObj.select(index1, index2, undefined, undefined, colour);
+    }
+    if (visObj.key === 'n-tree') {
+      this.unhighlight(visObj, index1, index2);
+      visObj.visit1(index1.toString(), index2.toString(), colour);
+    }
+  },
+
+  unhighlight(visObj, index1, index2, deselectForRow = false) {
+    if (visObj.key === 'array') {
+      if (deselectForRow === true) {
+        visObj.deselect(index1, 0, undefined, N_ARRAY.length - 1);
+        return;
+      }
+      visObj.deselect(index1, index2);
+      return;
+    }
+    if (visObj.key === 'n-tree') {
+      visObj.leave1(
+        index1.toString(),
+        index2.toString(),
+        TREE_COLOUR_CODES.RED
+      );
+      visObj.leave1(
+        index1.toString(),
+        index2.toString(),
+        TREE_COLOUR_CODES.ORANGE
+      );
+      visObj.leave1(
+        index1.toString(),
+        index2.toString(),
+        TREE_COLOUR_CODES.GREEN
+      );
+    }
   },
 
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
@@ -105,8 +108,8 @@ export default {
       `n <- Find(n)`,
       (vis, n) => {
         vis.array.setMotion(true); // Turning on smooth transition.
-        highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
         vis.array.showKth(`Union(${n}, ${m}) - Find(${n})`);
       },
       [n, m]
@@ -125,8 +128,8 @@ export default {
     chunker.add(
       `m <- Find(m)`,
       (vis, n, m) => {
-        highlight(vis.array, N_IDX, m, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, m, m, TREE_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, N_IDX, m, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.tree, m, m, TREE_COLOUR_CODES.ORANGE);
         vis.array.showKth(`Union(${n}, ${m}) - Find(${m})`);
       },
       [n, m]
@@ -146,10 +149,10 @@ export default {
       (vis, n, m, root1, root2) => {
         vis.array.showKth(`Union(${n}, ${m})`);
 
-        highlight(vis.array, N_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, root2, root2, TREE_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, N_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.ORANGE);
+        this.highlight(vis.tree, root2, root2, TREE_COLOUR_CODES.ORANGE);
       },
       [n, m, root1, root2]
     );
@@ -159,8 +162,8 @@ export default {
       chunker.add(
         'return',
         (vis, root1) => {
-          highlight(vis.array, N_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
-          highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.GREEN);
+          this.highlight(vis.array, N_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
+          this.highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.GREEN);
         },
         [root1]
       );
@@ -173,8 +176,8 @@ export default {
       (vis, root1, root2) => {
         //unhighlight(vis.array, N_IDX, root1);
         //unhighlight(vis.array, N_IDX, root2);
-        highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
       },
       [root1, root2]
     );
@@ -190,8 +193,8 @@ export default {
         (vis, root1, root2) => {
           vis.array.assignVariable('n', N_IDX, root1);
           vis.array.assignVariable('m', N_IDX, root2);
-          highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
-          highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
+          this.highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
+          this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
         },
         [root1, root2]
       );
@@ -200,11 +203,11 @@ export default {
     chunker.add(
       'parent[n] = m',
       (vis, root1, root2) => {
-        unhighlight(vis.array, N_IDX, root1);
-        unhighlight(vis.array, RANK_IDX, root1);
-        unhighlight(vis.array, RANK_IDX, root2);
-        highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.array, PARENT_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
+        this.unhighlight(vis.array, N_IDX, root1);
+        this.unhighlight(vis.array, RANK_IDX, root1);
+        this.unhighlight(vis.array, RANK_IDX, root2);
+        this.highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, PARENT_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
       },
       [root1, root2]
     );
@@ -216,11 +219,11 @@ export default {
       (vis, root1, root2) => {
         vis.array.updateValueAt(PARENT_IDX, root1, root2);
 
-        highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
-        highlight(vis.array, PARENT_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
+        this.highlight(vis.array, N_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
+        this.highlight(vis.array, PARENT_IDX, root1, ARRAY_COLOUR_CODES.GREEN);
 
-        highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.GREEN);
-        highlight(vis.tree, root2, root2, TREE_COLOUR_CODES.GREEN);
+        this.highlight(vis.tree, root1, root1, TREE_COLOUR_CODES.GREEN);
+        this.highlight(vis.tree, root2, root2, TREE_COLOUR_CODES.GREEN);
 
         vis.tree.removeEdge('0', root1.toString());
         vis.tree.removeEdge(root1.toString(), root1.toString()); // Remove self-loop.
@@ -233,12 +236,12 @@ export default {
     chunker.add(
       'if rank[n] == rank[m]',
       (vis, root1, root2) => {
-        unhighlight(vis.array, PARENT_IDX, root1);
-        unhighlight(vis.array, N_IDX, root2);
-        highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
-        unhighlight(vis.tree, root1, root1);
-        unhighlight(vis.tree, root2, root2);
+        this.unhighlight(vis.array, PARENT_IDX, root1);
+        this.unhighlight(vis.array, N_IDX, root2);
+        this.highlight(vis.array, RANK_IDX, root1, ARRAY_COLOUR_CODES.ORANGE);
+        this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.ORANGE);
+        this.unhighlight(vis.tree, root1, root1);
+        this.unhighlight(vis.tree, root2, root2);
       },
       [root1, root2]
     );
@@ -252,8 +255,8 @@ export default {
         (vis, root1, root2) => {
           vis.array.updateValueAt(RANK_IDX, root2, rankArr[root2]);
           vis.array.updateValueAt(RANK_IDX, root1, rankArr[root1]);
-          unhighlight(vis.array, RANK_IDX, root1);
-          highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
+          this.unhighlight(vis.array, RANK_IDX, root1);
+          this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
         },
         [root1, root2]
       );

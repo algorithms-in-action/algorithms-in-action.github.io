@@ -4,8 +4,7 @@ import {
   TREE_COLOUR_CODES,
   N_IDX,
   PARENT_IDX,
-  highlight,
-  unhighlight,
+  default as unionFind,
 } from './unionFindUnion.js';
 
 export default {
@@ -13,7 +12,7 @@ export default {
     // Clearing tree from union
     for (let i = 1; i < N_ARRAY.length; i++) {
       let n = N_ARRAY[i];
-      unhighlight(visualiser.tree.instance, n, n);
+      unionFind.unhighlight(visualiser.tree.instance, n, n);
     }
     return {
       array: {
@@ -42,8 +41,8 @@ export default {
       `Find(n)`,
       (vis, n) => {
         vis.array.setMotion(true); // Turning on smooth transition.
-        highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
+        unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
+        unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
         vis.array.showKth(`Find(${n})`);
       },
       [value]
@@ -57,8 +56,13 @@ export default {
     chunker.add(
       `while n != parent[n]`,
       (vis, n) => {
-        unhighlight(vis.array, PARENT_IDX, n, true);
-        highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
+        unionFind.unhighlight(vis.array, PARENT_IDX, n, true);
+        unionFind.highlight(
+          vis.array,
+          PARENT_IDX,
+          n,
+          ARRAY_COLOUR_CODES.ORANGE
+        );
       },
       [n]
     );
@@ -71,9 +75,9 @@ export default {
       chunker.add(
         `while n != parent[n]`,
         (vis, n) => {
-          highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
-          highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
-          highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
+          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
         },
         [n]
       );
@@ -92,11 +96,16 @@ export default {
           vis.array.assignVariable(`${name}`, N_IDX, n); // Update 'n'.
           // Union specific logic, but cannot see a way around.
           if (n !== m && m !== null)
-            highlight(vis.array, N_IDX, m, ARRAY_COLOUR_CODES.GREEN);
-          highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-          highlight(vis.array, PARENT_IDX, nPrev, ARRAY_COLOUR_CODES.ORANGE);
-          highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
-          unhighlight(vis.tree, nPrev, nPrev);
+            unionFind.highlight(vis.array, N_IDX, m, ARRAY_COLOUR_CODES.GREEN);
+          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
+          unionFind.highlight(
+            vis.array,
+            PARENT_IDX,
+            nPrev,
+            ARRAY_COLOUR_CODES.ORANGE
+          );
+          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
+          unionFind.unhighlight(vis.tree, nPrev, nPrev);
         },
         [n, m, nTempPrev]
       );
@@ -106,9 +115,9 @@ export default {
     chunker.add(
       `while n != parent[n]`,
       (vis, n) => {
-        highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.GREEN);
-        highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.GREEN);
-        highlight(vis.tree, n, n, TREE_COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.GREEN);
       },
       [n]
     );
@@ -117,7 +126,7 @@ export default {
     chunker.add(
       `return n`,
       (vis, n) => {
-        unhighlight(vis.array, PARENT_IDX, n);
+        unionFind.unhighlight(vis.array, PARENT_IDX, n);
       },
       [n]
     );
@@ -129,12 +138,27 @@ export default {
     chunker.add(
       `parent[n] <- parent[parent[n]]`,
       (vis, n, parent, grandparent) => {
-        unhighlight(vis.array, N_IDX, n);
-        unhighlight(vis.tree, n, n);
-        highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.array, PARENT_IDX, parent, ARRAY_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, parent, parent, TREE_COLOUR_CODES.ORANGE);
-        highlight(vis.tree, grandparent, grandparent, TREE_COLOUR_CODES.ORANGE);
+        unionFind.unhighlight(vis.array, N_IDX, n);
+        unionFind.unhighlight(vis.tree, n, n);
+        unionFind.highlight(
+          vis.array,
+          PARENT_IDX,
+          n,
+          ARRAY_COLOUR_CODES.ORANGE
+        );
+        unionFind.highlight(
+          vis.array,
+          PARENT_IDX,
+          parent,
+          ARRAY_COLOUR_CODES.ORANGE
+        );
+        unionFind.highlight(vis.tree, parent, parent, TREE_COLOUR_CODES.ORANGE);
+        unionFind.highlight(
+          vis.tree,
+          grandparent,
+          grandparent,
+          TREE_COLOUR_CODES.ORANGE
+        );
       },
       [n, parentArr[n], parentArr[parentArr[n]]]
     );
@@ -159,13 +183,13 @@ export default {
       chunker.add(
         `parent[n] <- parent[parent[n]]`,
         (vis, n, formerParent, newParent) => {
-          unhighlight(vis.array, PARENT_IDX, formerParent);
-          unhighlight(vis.tree, formerParent, formerParent);
-          unhighlight(vis.tree, newParent, newParent);
+          unionFind.unhighlight(vis.array, PARENT_IDX, formerParent);
+          unionFind.unhighlight(vis.tree, formerParent, formerParent);
+          unionFind.unhighlight(vis.tree, newParent, newParent);
 
-          highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
-          highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
-          highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
+          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
         },
         [n, formerParent, parentArr[n]]
       );
