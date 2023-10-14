@@ -334,6 +334,7 @@ class NTreeTracer extends Tracer {
     } else {
       // this means that the variable node already exists
       this.realNodes[index].nodeIDs.push(nodeID);
+      this.realNodes[index].nodeIDs.sort((a, b) => a - b);
     }
 
     this.addNode(nodeID, undefined, 'square');
@@ -349,7 +350,20 @@ class NTreeTracer extends Tracer {
     });
     Object.assign(node, update);
   }
-
+  removeFullNode(id){
+    // intention of this function is to get rid of the whole node given a unique node id
+    // also any edges that point to such a node or point out from it
+    if (id === 4){
+      console.log("nodes", this.realNodes);
+      console.log("edges", this.realEdges);
+    }
+    this.realNodes = this.realNodes.filter(node => node.id !== id);
+    this.realEdges = this.realEdges.filter(edge => edge.source !== id && edge.target !== id);
+    //this.nodes = this.nodes.filter(node => node.id !== id);
+    this.edges = this.edges.filter(edge => edge.source !== id && edge.target !== id);
+    console.log("afterNodes", this.realNodes);
+    console.log("afteredges", this.realEdges);
+  }
   removeNode(id) {
     if(this.variableNodes) {
       for (const node of this.realNodes) {
@@ -377,7 +391,7 @@ class NTreeTracer extends Tracer {
     this.realEdges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
     }
 
-    console.log(this.edges);
+    //console.log(this.edges);
 
     // this.layout();
   }
@@ -609,7 +623,10 @@ class NTreeTracer extends Tracer {
 
   translateCoords() {
     const flattenedLevels = [].concat(...this.levels);
-
+    //console.log("here are the levels", this.levels )
+    const rect = this.getRect();
+    let offset = 308 - (this.levels.length-2)* 100;
+    // 
     flattenedLevels.forEach(levelNode => {
 
       if (!this.variableNodes) {
@@ -623,16 +640,19 @@ class NTreeTracer extends Tracer {
         // Updating x and y in realNodes for rendering in variable:
         const updateXandY = this.findVariableNode(levelNode.id);
         updateXandY.x = levelNode.x;
-        updateXandY.y = levelNode.y;
+        updateXandY.y = levelNode.y+(offset);
 
 
         let nodeLength = levelNode.getNodeLength();
-        console.log("do we have x/y?:", levelNode.x, levelNode.y);
-        console.log(levelNode);
+        //console.log("do we have x/y?:", levelNode.x, levelNode.y);
+        //console.log(levelNode);
 
           const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
+          
           //console.log(nodesToUpdate);
-          // might want to sort here?
+          
+          // sort to account for later insertions
+          nodesToUpdate.sort((a, b) => a.id - b.id);
 
           if (nodesToUpdate) {
             const nodeRadius = this.dimensions.nodeRadius;
@@ -653,7 +673,9 @@ class NTreeTracer extends Tracer {
               }
               //console.log("valueX", valueX, "levelNode.x", levelNode.x, "i", i);
               nodeToUpdate.x = valueX;
-              nodeToUpdate.y = levelNode.y;
+              nodeToUpdate.y = levelNode.y +(offset);
+              console.log(levelNode.y, nodeToUpdate.y);
+              
             });
           }
       }
@@ -665,7 +687,7 @@ class NTreeTracer extends Tracer {
     // will work only with a root that connects to the rest of the tree
     this.callLayout = { method: this.layoutNTree, args: arguments };
     const rect = this.getRect();
-
+    
     if (this.realNodes.length === 0) {
       //console.log("no nodes");
       // this means there is no tree to layout, so just return
@@ -677,15 +699,17 @@ class NTreeTracer extends Tracer {
       const [node] = this.realNodes;
       node.x = (rect.left + rect.right) / 2;
       node.y = (rect.top + rect.bottom) / 2;
+      
       return;
     }
 
-    // also note that root node should start at (240,0)
+  
     // now we need to grab the tree here
     const { tree, levels } = this.getNTree();
     this.levels = levels;
     tree.x = (rect.left + rect.right) / 2;
-    tree.y = rect.top;
+    tree.y = rect.top
+    console.log(tree.y, "aint' his happening?");
 
     if (tree !== null) {
       this.firstWalk(tree, 0);
