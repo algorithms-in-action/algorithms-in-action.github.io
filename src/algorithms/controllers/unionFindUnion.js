@@ -102,9 +102,9 @@ export default {
   /**
    * Highlight the current node.
    * @param {*} visObj
-   * @param {*} index1 
-   * @param {*} index2 
-   * @param {*} colour 
+   * @param {*} index1
+   * @param {*} index2
+   * @param {*} colour
    */
   highlight(visObj, index1, index2, colour) {
     if (visObj.key === 'array') {
