@@ -160,4 +160,39 @@
     
   }
 
+  .coord {
+    margin-left: 0px;
+
+    .titles {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      font-size: 1.1em;
+      font-weight: 500;
+      white-space: nowrap;
+      display: flex;
+      margin-left: 2px;
+      margin-right: 2px;
+      padding: 2px;
+
+    }
+  }
+
+  .edge {
+    margin-left: 50px;
+
+    .titles {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      font-size: 1.1em;
+      font-weight: 500;
+      white-space: nowrap;
+      display: flex;
+      margin-left: 2px;
+      margin-right: 2px;
+      padding: 2px;
+    }
+  }
+
+  
+
 }
