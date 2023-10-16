@@ -190,7 +190,6 @@ function MatrixParam({
         matrix, 
         endNode,  
         startNode,
-
       });
     //   setButtonMessage('Reset');
     } else {
@@ -288,7 +287,6 @@ function MatrixParam({
           onClick={() => updateTableSize(size - 1)}>
            Decrease Graph Size
         </button>
-        
         <button className="matrixBtn" onClick={resetData}>
           Revert
         </button>

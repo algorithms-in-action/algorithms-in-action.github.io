@@ -30,6 +30,7 @@ export default {
     const displayedParent = []; 
     const displayedNodes = []; 
     let displayedStack = [];  
+
     
     const start = startNode - 1;
     const end = endNode - 1; 
@@ -55,7 +56,9 @@ export default {
     displayedVisited.push('Finalised[i]'); 
     displayedNodes.push('i');
     for (let i = 0; i < numVertices; i += 1) {
+
       parent[i] = null;
+
       displayedParent.push(0); 
       displayedVisited.push(' ');  
       displayedNodes.push(i + 1);
@@ -72,7 +75,7 @@ export default {
     // initialise each element of Finalised to  B7
     for (let i = 0; i < numVertices; i += 1) {
       displayedVisited[i + 1] = "false";  
-      
+
     }  
 
     chunker.add(
@@ -105,7 +108,6 @@ export default {
               if(z[i] == true){
                 vis.array.select(0,i + 1);
                 vis.graph.colorNode(i, 4); 
-                
               }
             } 
 
@@ -471,9 +473,7 @@ export default {
       [n, lastNeighbor, parent, start, end]
       
     ) 
-
-    
-}
+  }
 
   
 };
