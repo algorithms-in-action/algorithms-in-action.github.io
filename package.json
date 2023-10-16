@@ -4,11 +4,15 @@
   "private": true,
   "homepage": "https://algorithms-in-action.github.io",
   "scripts": {
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build": "run-script-os",
+    "build:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build:win32": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
     "eject": "react-scripts eject",
-    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "start": "run-script-os",
+    "start:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "start:win32": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "test": "react-scripts test"
   },
   "husky": {
@@ -72,6 +76,7 @@
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
+    "run-script-os": "^1.1.6",
     "sass": "^1.50.0"
   },
   "devDependencies": {
