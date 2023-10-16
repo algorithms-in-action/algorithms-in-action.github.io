@@ -43,7 +43,7 @@ function UFParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(DEFAULT_UNION);
-  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(false);
+  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {

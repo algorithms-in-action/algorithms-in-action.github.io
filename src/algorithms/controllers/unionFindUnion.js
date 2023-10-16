@@ -325,12 +325,32 @@ export default {
       chunker.add(
         'rank[m] <- rank[m] + 1',
         (vis, root1, root2, updatedRank1, updatedRank2) => {
-          vis.array.updateValueAt(RANK_IDX, root2, updatedRank2);
           vis.array.updateValueAt(RANK_IDX, root1, updatedRank1);
+          vis.array.updateValueAt(RANK_IDX, root2, updatedRank2);
           this.unhighlight(vis.array, RANK_IDX, root1);
           this.highlight(vis.array, RANK_IDX, root2, ARRAY_COLOUR_CODES.GREEN);
         },
         [root1, root2, rankArr[root1], rankArr[root2]]
+      );
+
+      chunker.add(
+        'rank[m] <- rank[m] + 1',
+        (vis, root2) => {
+          this.unhighlight(vis.array, RANK_IDX, root2);
+        },
+        [root2]
+      );
+    } else {
+      rankArr[root1] = null;
+
+      chunker.add(
+        'if rank[n] == rank[m]',
+        (vis, root1, root2, updatedRank1) => {
+          vis.array.updateValueAt(RANK_IDX, root1, updatedRank1);
+          this.unhighlight(vis.array, RANK_IDX, root1);
+          this.unhighlight(vis.array, RANK_IDX, root2);
+        },
+        [root1, root2, rankArr[root1]]
       );
     }
   },
