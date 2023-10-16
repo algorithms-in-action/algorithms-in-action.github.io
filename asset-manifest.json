@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.4bb01321.chunk.css",
-    "main.js": "/static/js/main.85e91230.chunk.js",
-    "main.js.map": "/static/js/main.85e91230.chunk.js.map",
+    "main.css": "/static/css/main.3dcaf513.chunk.css",
+    "main.js": "/static/js/main.607dd377.chunk.js",
+    "main.js.map": "/static/js/main.607dd377.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.9762177c.js",
     "runtime-main.js.map": "/static/js/runtime-main.9762177c.js.map",
     "static/css/2.450bcdb5.chunk.css": "/static/css/2.450bcdb5.chunk.css",
-    "static/js/2.7d6f4338.chunk.js": "/static/js/2.7d6f4338.chunk.js",
-    "static/js/2.7d6f4338.chunk.js.map": "/static/js/2.7d6f4338.chunk.js.map",
+    "static/js/2.e86a8fd0.chunk.js": "/static/js/2.e86a8fd0.chunk.js",
+    "static/js/2.e86a8fd0.chunk.js.map": "/static/js/2.e86a8fd0.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.450bcdb5.chunk.css.map": "/static/css/2.450bcdb5.chunk.css.map",
-    "static/css/main.4bb01321.chunk.css.map": "/static/css/main.4bb01321.chunk.css.map",
-    "static/js/2.7d6f4338.chunk.js.LICENSE.txt": "/static/js/2.7d6f4338.chunk.js.LICENSE.txt",
+    "static/css/main.3dcaf513.chunk.css.map": "/static/css/main.3dcaf513.chunk.css.map",
+    "static/js/2.e86a8fd0.chunk.js.LICENSE.txt": "/static/js/2.e86a8fd0.chunk.js.LICENSE.txt",
     "static/media/BFSSExp.6e9dff73.md": "/static/media/BFSSExp.6e9dff73.md",
     "static/media/BFSSInfo.2bffa799.md": "/static/media/BFSSInfo.2bffa799.md",
     "static/media/BSTExp.1dd2ddc4.md": "/static/media/BSTExp.1dd2ddc4.md",
@@ -28,10 +28,6 @@
     "static/media/QSM3Info.c725ee9a.md": "/static/media/QSM3Info.c725ee9a.md",
     "static/media/TCExp.a2345a1d.md": "/static/media/TCExp.a2345a1d.md",
     "static/media/TCInfo.651b230b.md": "/static/media/TCInfo.651b230b.md",
-    "static/media/TTFExp.ae639344.md": "/static/media/TTFExp.ae639344.md",
-    "static/media/TTFInfo.86232571.md": "/static/media/TTFInfo.86232571.md",
-    "static/media/UFExp.4e12391c.md": "/static/media/UFExp.4e12391c.md",
-    "static/media/UFInfo.77b519a0.md": "/static/media/UFInfo.77b519a0.md",
     "static/media/add.89fe7bf6.svg": "/static/media/add.89fe7bf6.svg",
     "static/media/arrow.b7990345.svg": "/static/media/arrow.b7990345.svg",
     "static/media/boyu.06b0f954.JPG": "/static/media/boyu.06b0f954.JPG",
@@ -63,8 +59,8 @@
   "entrypoints": [
     "static/js/runtime-main.9762177c.js",
     "static/css/2.450bcdb5.chunk.css",
-    "static/js/2.7d6f4338.chunk.js",
-    "static/css/main.4bb01321.chunk.css",
-    "static/js/main.85e91230.chunk.js"
+    "static/js/2.e86a8fd0.chunk.js",
+    "static/css/main.3dcaf513.chunk.css",
+    "static/js/main.607dd377.chunk.js"
   ]
 }
