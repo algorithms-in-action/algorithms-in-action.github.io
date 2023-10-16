@@ -32,6 +32,7 @@ export default {
     let child = tree;
 
     while (child != null) {
+      let oldChild = child;
       // if we encounter a four node
       if (child.getNodeLength() === 3) {
         let child1, child2;
@@ -67,28 +68,36 @@ export default {
           ]);
           child = tree;
         } else if (parent.getNodeLength() === 1) {
-          parent = this.formParentThreeNode(parent, child, child1, child2);
+          let parentChildren = parent.children;
+          let idx = this.formParentThreeNode(parent, child, child1, child2);
 
           chunker.add('1', this.handleChunkerAdd, [
-            tree.id,
+            parent.id,
             child.getIDs()[1],
             child.id,
             [child1.id, child1.getIDs()[0], child1.children],
             [child2.id, child2.getIDs()[0], child2.children],
+            false,
+            idx,
+            parentChildren
           ]);
         } else {
-          parent = this.formParentFourNode(parent, child, child1, child2);
+          let parentChildren = parent.children;
+          let idx = this.formParentFourNode(parent, child, child1, child2);
 
           chunker.add('1', this.handleChunkerAdd, [
-            tree.id,
+            parent.id,
             child.getIDs()[1],
             child.id,
             [child1.id, child1.getIDs()[0], child1.children],
             [child2.id, child2.getIDs()[0], child2.children],
+            false,
+            idx,
+            parentChildren
           ]);
         }
 
-        if (value < child.getIDs()[1]) {
+        if (value < oldChild.getIDs()[1]) {
           child = child1;
         } else {
           child = child2;
@@ -120,6 +129,7 @@ export default {
 
     parent.addRelatedNodeID(child.getIDs()[1]);
     parent.addRelatedNodeID(parentnodeIDs[0]);
+    return childIdx;
   },
 
   formParentFourNode(parent, child, child1, child2) {
@@ -132,6 +142,7 @@ export default {
     parent.addRelatedNodeID(child.getIDs()[1]);
     parent.addRelatedNodeID(parentnodeIDs[0]);
     parent.addRelatedNodeID(parentnodeIDs[1]);
+    return childIdx;
   },
 
   createNodeAndIncrement(id) {
@@ -148,7 +159,9 @@ export default {
     oldChildID,
     child1Info,
     child2Info,
-    newRoot = false
+    newRoot = false,
+    childIdx = null,
+    parentChildren = null,
   ) {
     if (newRoot) {
       vis.tree.addVariableNode(ParentID, newParentValue);
@@ -162,11 +175,33 @@ export default {
     vis.tree.addVariableNode(child2Info[0], child2Info[1]);
 
     // add to parent as well
-    vis.tree.addVariableNode(ParentID, newParentValue);
-
+    vis.tree.addVariableNode(ParentID, newParentValue);    
+    if (!newRoot) {
+      for (let i = 0; i < parentChildren.length; i++) {
+        if (i != childIdx) {
+          vis.tree.removeEdge(ParentID, parentChildren[i].id);
+        }
+      }
+    }
+    
     // now connect them properly to new parent and also the original children
-    vis.tree.addEdge(ParentID, child1Info[0]);
-    vis.tree.addEdge(ParentID, child2Info[0]);
+
+    if (!newRoot) {
+      for (let i = 0; i < parentChildren.length; i++) {
+        if (i != childIdx) {
+          vis.tree.addEdge(ParentID, parentChildren[i].id);
+        }
+        else {
+          vis.tree.addEdge(ParentID, child1Info[0]);
+          vis.tree.addEdge(ParentID, child2Info[0]);
+        }
+      }
+    }
+
+    else {
+      vis.tree.addEdge(ParentID, child1Info[0]);
+      vis.tree.addEdge(ParentID, child2Info[0]);
+    }
 
     for (let i = 0; i < child2Info[2].length; i++) {
       vis.tree.addEdge(child2Info[0], child2Info[2][i].id);
@@ -204,7 +239,7 @@ export default {
   run(chunker, { ignore }) {
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 
-    let values = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let values = [78,60,4,17,95,40,94,20,44,21];
 
     // initialising tree
     let treeStruct = this.initTree(chunker, values[0], tree);
