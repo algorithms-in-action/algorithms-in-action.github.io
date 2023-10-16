@@ -16,7 +16,6 @@ function removeLineContinuation(input) {
   return output;
 }
 
-
 // Extract the /Code {} section from pseudocode
 function extractCode(lines) {
   const jsons = [];
@@ -66,7 +65,6 @@ function extractCode(lines) {
   }
   return jsons;
 }
-
 
 // For each code block, in other words /Code {} section,
 // extract the code, explanation, indentation and reference information.
