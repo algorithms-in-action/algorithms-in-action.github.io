@@ -45,12 +45,6 @@ class Array2DTracer extends Tracer {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
     this.kth = '1';
-    this.motionOn = true;
-    this.hideArrayAtIdx = null;
-    // For a blank inital state. 
-    if (algo === 'unionFind') {
-      this.kth = ' ';
-    }
     super.set();
   }
 
@@ -86,12 +80,6 @@ class Array2DTracer extends Tracer {
             break;
           case '3':
             this.data[x][y].selected3 = true;
-            break;
-          case '4':
-            this.data[x][y].selected4 = true;
-            break;
-          case '5':
-            this.data[x][y].selected5 = true;
             break;
           default:
             this.data[x][y].selected = true;
@@ -146,15 +134,6 @@ class Array2DTracer extends Tracer {
     this.data = newData;
   }
 
-  setMotion(bool=true) {
-    this.motionOn = bool;
-  }
-
-  clearVariables() {
-    for (let y = 0; y < this.data[0].length; y++) {
-      this.data[0][y].variables = [];
-    }
-  }
 
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
@@ -181,8 +160,6 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
-        this.data[x][y].selected4 = false;
-        this.data[x][y].selected5 = false;
         this.data[x][y].style = undefined;
       }
     }
@@ -198,17 +175,6 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
-  }
-
-  hideArrayAtIndex(index) {
-    this.hideArrayAtIdx = index;
-  }
-
-  updateValueAt(x, y, newValue) {
-    if (!this.data[x] || !this.data[x][y]) {
-      return;
-    }
-    this.data[x][y].value = newValue;
   }
 }
 

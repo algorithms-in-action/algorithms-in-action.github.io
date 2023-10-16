@@ -1,34 +1,13 @@
 @import "../../common/stylesheet/index";
 
-
 .array_2d {
   flex-shrink: 0;
   display: table;
   border-collapse: collapse;
 
-  .bottom_caption {
-    caption-side: bottom;
-    text-align: left;
-    margin-top: 15px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--array-2d-row-col-value-color);
-
-  }
-
-  .top_variable {
-    caption-side: top;
-    text-align: center;
-    margin-bottom: -15px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--array-2d-row-col-value-color);
-  }
-
   .row {
     display: table-row;
     height: 28px;
-  
 
     .col {
       display: table-cell;
@@ -76,24 +55,6 @@
 
       &.selected3 {
         background-color: var(--array-2d-row-col-bg-selected3);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected4 {
-        // make this a variable
-        background-color: rgb(228, 148, 1);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected5 {
-        // make this a variable
-        background-color: rgb(208, 55, 0);
 
         span {
           color: var(--array-2d-row-col-selected);

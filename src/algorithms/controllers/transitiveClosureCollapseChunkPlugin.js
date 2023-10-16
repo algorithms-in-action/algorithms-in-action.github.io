@@ -13,7 +13,7 @@ const TC_NAME = 'transitiveClosure';
 let algorithmGetter = () => null;
 let dispatchGetter = () => null;
 
-export function getGlobalAlgotithm() {
+function getGlobalAlgotithm() {
   return algorithmGetter();
 }
 function getGlobalDispatch() {
@@ -31,7 +31,6 @@ function isInTransitiveClosure(algorithm) {
   if (!algorithm) algorithm = getGlobalAlgotithm();
   return algorithm.id.name === TC_NAME;
 }
-
 
 export function isCurrentLineInCollapseState() {
   const algorithm = getGlobalAlgotithm();

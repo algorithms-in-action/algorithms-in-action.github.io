@@ -139,38 +139,6 @@ const algorithms = {
       search: Controller.horspoolStringSearch,
     },
   },
-  'unionFind': {
-    name: 'Union Find',
-    category: 'Other',
-    param: <Param.UFParam />,
-    instructions: Instructions.UFInstruction,
-    explanation: Explanation.UFExp,
-    extraInfo: ExtraInfo.UFInfo,
-    pseudocode: {
-      union: Pseudocode.unionFindUnion,
-      find: Pseudocode.unionFindFind,
-    },
-    controller: {
-      union: Controller.unionFindUnion,
-      find: Controller.unionFindFind,
-    },
-  },
-  'TTFTree': {
-    name: '2-3-4 Tree',
-    category: 'Other',
-    param: <Param.TTFTreeParam/>,
-    instructions: Instructions.TTFInstruction,
-    explanation: Explanation.TTFExp,
-    extraInfo: ExtraInfo.TTFInfo,
-    pseudocode: {
-      insertion: Pseudocode.TTFTreeInsertion,
-      search: Pseudocode.TTFTreeSearch,
-    },
-    controller: {
-      insertion: Controller.TTFTreeInsertion,
-      search: Controller.TTFTreeSearch,
-    },
-  },
 };
 
 /**
