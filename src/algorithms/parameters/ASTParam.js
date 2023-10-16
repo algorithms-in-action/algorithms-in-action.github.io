@@ -23,7 +23,8 @@ function ASTParam() {
         ALGORITHM_NAME={ASTAR}
         EXAMPLE={ASTAR_EXAMPLE}
         EXAMPLE2={ASTAR_EXAMPLE2}
-        setMessage={setMessage}
+        setMessage={setMessage} 
+        
       />
 
       {/* render success/error message */}

@@ -24,6 +24,7 @@ function BFSParam() {
         EXAMPLE={BFS_EXAMPLE}
         EXAMPLE2={BFS_EXAMPLE2}
         setMessage={setMessage}
+        unweighted
       />
 
       {/* render success/error message */}

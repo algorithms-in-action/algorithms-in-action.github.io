@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth } = this.props.data;
+    const { data, algo, kth, listOfNumbers } = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -62,6 +62,7 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     return (
+      
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
         <tbody>
@@ -74,7 +75,8 @@ class Array2DRenderer extends Renderer {
             algo === 'tc' && // Leave a blank cell at the header row
             <td />
           }
-          {
+          { 
+            (algo !== 'BFS' && algo !== 'DFS' && algo !== 'dijkstra' && algo !== 'astar') &&
             longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
@@ -116,21 +118,41 @@ class Array2DRenderer extends Renderer {
               {
                 row.map((col, j) => (
                   <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched,
-                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, col.selected3 && styles.selected3)}
+                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, 
+                    col.selected3 && styles.selected3, col.selected4 && styles.selected4, col.selected5 && styles.selected5)}
                       key={j}>
                     <span className={styles.value}>{this.toString(col.value)}</span>
                   </td>
                 ))
               }
               {
-                pointer && algo === 'tc' &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> i </span>
-                </th> || algo === 'prim' && i === 2 &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> Priority Queue </span>
-                </th> ||
-                <td className={classes(styles.col, styles.index)} />
+                pointer && algo === 'tc'
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> i </span>
+                  </th>
+                )
+                : algo === 'prim' && i === 2
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : algo === 'dijkstra' && i === 2
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : algo === 'astar' && i === 3
+                ? (
+                  <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                  </th>
+                )
+                : (
+                  <td className={classes(styles.col, styles.index)} />
+                )
               }
             </tr>
             );
@@ -161,7 +183,7 @@ class Array2DRenderer extends Renderer {
         </tr>
         }
         {
-          algo === 'prim' &&
+          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'astar' || algo === 'DFS' || algo == 'BFS') &&
           data.map((row, i) => (
             i === 2 && (
                 <AnimateSharedLayout>
@@ -192,9 +214,24 @@ class Array2DRenderer extends Renderer {
           <caption kth-tag='transitive_closure'>
             k = { kth }
           </caption>
+        } 
+        {
+          algo === 'DFS' &&
+          <caption className={algo === 'DFS' ? styles.captionDFS : ''} kth-tag='dfs_caption'>
+              Nodes(stack): {listOfNumbers}
+          </caption>
         }
-      </table>
+        {
+          algo === 'BFS' &&
+          <caption className={algo === 'BFS' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
+              Nodes(queue): {listOfNumbers}
+          </caption>
+        }
+      </table> 
+     
     );
   }
-}
+} 
+
+
 export default Array2DRenderer;
