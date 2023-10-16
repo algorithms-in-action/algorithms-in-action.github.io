@@ -285,7 +285,7 @@ function EuclideanMatrixParams({
       </div>
       
       <div className="edge">
-        <text className="titles"> Edges (0,1)</text>
+        <text className="titles"> Edges (0 or 1)</text>
         <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
       </div>
       
