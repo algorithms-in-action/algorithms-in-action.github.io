@@ -76,7 +76,7 @@ class Array2DRenderer extends Renderer {
             <td />
           }
           { 
-            (algo !== 'BFS' && algo !== 'DFS' && algo !== 'dijkstra' && algo !== 'astar') &&
+            (algo !== 'BFS' && algo !== 'DFS' && algo !== 'dijkstra' && algo !== 'aStar') &&
             longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
@@ -144,7 +144,7 @@ class Array2DRenderer extends Renderer {
                       <span className={styles.value}> Priority Queue </span>
                   </th>
                 )
-                : algo === 'astar' && i === 3
+                : algo === 'aStar' && i === 3
                 ? (
                   <th className={classes(styles.col, styles.index)}>
                       <span className={styles.value}> Priority Queue </span>
@@ -183,7 +183,7 @@ class Array2DRenderer extends Renderer {
         </tr>
         }
         {
-          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'astar' || algo === 'DFS' || algo == 'BFS') &&
+          (algo === 'prim'|| algo === 'dijkstra'|| algo === 'aStar' || algo === 'DFS' || algo == 'BFS') &&
           data.map((row, i) => (
             i === 2 && (
                 <AnimateSharedLayout>
@@ -223,7 +223,7 @@ class Array2DRenderer extends Renderer {
         }
         {
           algo === 'BFS' &&
-          <caption className={algo === 'BFS' ? styles.captionDFS : ''} kth-tag='bfs_caption'>
+          <caption className={algo === 'BFS' ? styles.captionBFS : ''} kth-tag='bfs_caption'>
               Nodes(queue): {listOfNumbers}
           </caption>
         }

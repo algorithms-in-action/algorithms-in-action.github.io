@@ -26,7 +26,7 @@
 
       .variable {
         font-size: 18px;
-        color: --array-2d-row-col-value-color;//var(--array-2d-row-col-sorted);
+        color: var(--array-2d-row-col-value-color);//var(--array-2d-row-col-sorted);
       }
 
       &.selected {
@@ -125,4 +125,16 @@
 }
 .captionDFS {
   caption-side: bottom;
+}  
+
+.captionBFS {
+  caption-side: bottom;
+} 
+
+.captionDFS {
+  color: var(--array-2d-row-col-value-color); 
+}
+
+.captionBFS {
+  color: var(--array-2d-row-col-value-color); 
 }

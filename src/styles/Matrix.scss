@@ -77,6 +77,50 @@
     }
 
     
+  }  
+  
+  .arrowBtn {
+    background-color: #ddd;
+    color: black;
+    border: none; 
+    border-radius: 8px; 
+    padding: 5px 10px; 
+    transition: background-color 0.3s, color 0.3s; 
+    
   }
+
+  .arrowBtn.pointerCursor {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0a87f5; 
+    }
+  }
+
+  .arrowBtn.pointerCursor.disabledBtn {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+
+    &:hover {
+        background-color: #ddd; 
+    } 
+  }  
+
+  .matrixBtn.disabledText {
+    color: #aaa;
+    cursor: not-allowed; // This changes the cursor to an "unavailable" style
+  } 
+
+  .endNodeLabel, .endNodeValue {
+    color: var(--mid-control-param-matrix-cell-font); // You can change this to your desired color.
+  } 
+   
+  .startNodeLabel, .startNodeValue {
+    color: var(--mid-control-param-matrix-cell-font); // You can change this to your desired color.
+  }  
+
+  
+  
 
 }

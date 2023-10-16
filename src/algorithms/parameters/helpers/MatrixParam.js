@@ -52,7 +52,8 @@ function MatrixParam({
   // const [size, setSize] = useState(defaultSize); 
   
   const [size, setSize] = useState(defaultSize);
-  const [endNode, setEndNode] = useState(defaultSize);
+  const [endNode, setEndNode] = useState(defaultSize); 
+  const [startNode, setStartNode] = useState(1);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
@@ -82,10 +83,23 @@ function MatrixParam({
     setMessage(null);
     setData(originalData);
   };
-
+  
+  //The size does not go above 10 or below one
   const updateTableSize = (newSize) => {
-    setMessage(null);
-    setSize(newSize);
+    if (newSize >= 1 && newSize <= 10) {  
+      setMessage(null);
+      setSize(newSize); 
+      //If the size decrease to a lower value than endNode, endNode should
+      //decrease to that value
+      if(endNode > newSize){
+        setEndNode(newSize);
+      } 
+
+      if(startNode > newSize){
+        setStartNode(newSize);
+      } 
+
+    } 
   };
 
   // When cell renderer calls updateData, we'll use
@@ -174,54 +188,104 @@ function MatrixParam({
         mode,
         size,
         matrix, 
-        endNode,
+        endNode,  
+        startNode,
       });
     //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
   };  
-
+  
   useEffect(() => {
     handleSearch();
-  }, [endNode]);
+  }, [startNode]);
+  useEffect(() => {
+    handleSearch();
+  }, [endNode]);  
 
-  const handleEndNodeBlur = () => {
-    if (endNode === "" || endNode < 1) setEndNode(size);
-    else if (endNode > size) setEndNode(size);
-  };  
 
-// This function gets called for every input event
-  const handleEndNodeChange = e => {
-    const value = e.target.value;
-    if (value === "") {
-        setEndNode(value); // allows empty input to be set
-    } else if (!isNaN(value) && Number.isInteger(parseFloat(value))) {
-        setEndNode(parseInt(value, 10)); // convert string to integer and set
+  const increaseStartNode = () => {
+    if (startNode < size) {
+        setStartNode(prevStartNode => prevStartNode + 1);
     }
-    // If not a valid number, just ignore the input
   };
+
+  const decreaseStartNode = () => {
+    if (startNode > 1) {
+        setStartNode(prevStartNode => prevStartNode - 1);
+    }
+  };
+
+  const increaseEndNode = () => {
+    if (endNode < size) {
+        setEndNode(prevEndNode => prevEndNode + 1);
+    }
+  };
+
+  const decreaseEndNode = () => {
+    if (endNode > 1) {
+        setEndNode(prevEndNode => prevEndNode - 1);
+    }
+  }; 
+
 
   return (
     <div className="matrixContainer"> 
       <div className="matrixButtonContainer"> 
-        {(name === "BFS" || name === "DFS") && (
-          <div className="endNodeInputContainer">
-            <label htmlFor="endNodeInput">End Node: </label>
-            <input 
-              type="text" 
-              id="endNodeInput" 
-              value={endNode === "" ? "" : endNode} // display empty if endNode is empty string
-              onChange={handleEndNodeChange}
-              onBlur={handleEndNodeBlur}
-            />
-          </div>
+      {(name === "BFS" || name === "DFS" || name === "dijkstra"
+       || name === "aStar") && (
+          <div className="startNodeInputContainer">
+          <label htmlFor="startNodeCounter" className="startNodeLabel">Start Node: </label>
+          <button 
+              onClick={() => decreaseStartNode()}
+              disabled={startNode <= 1}
+              className={`arrowBtn pointerCursor ${startNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="startNodeCounter" className="startNodeValue"> {startNode} </span>
+          <button 
+              onClick={() => increaseStartNode()}
+              disabled={startNode >= size}
+              className={`arrowBtn pointerCursor ${startNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
         )}
-        <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
-          Increase Graph Size
+        
+        
+        {(name === "BFS" || name === "DFS" || name === "aStar") && (
+          <div className="endNodeInputContainer">
+          <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
+          <button 
+              onClick={() => decreaseEndNode()}
+              disabled={endNode <= 1}
+              className={`arrowBtn pointerCursor ${endNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="endNodeCounter" className="endNodeValue"> {endNode} </span>
+          <button 
+              onClick={() => increaseEndNode()}
+              disabled={endNode >= size}
+              className={`arrowBtn pointerCursor ${endNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
+        )}
+        <button 
+          className={`matrixBtn ${size == 10 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size + 1)}>
+            Increase Graph Size
         </button>
-        <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
-          Decrease Graph Size
+        
+        <button 
+          className={`matrixBtn ${size == 1 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size - 1)}>
+           Decrease Graph Size
         </button>
         <button className="matrixBtn" onClick={resetData}>
           Revert
