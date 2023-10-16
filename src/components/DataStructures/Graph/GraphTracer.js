@@ -41,6 +41,8 @@ class GraphTracer extends Tracer {
     };
     this.isDirected = true;
     this.isWeighted = false;
+    this.showSelfLoop = false;
+    this.isReversed = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
     this.logTracer = null;
@@ -562,6 +564,7 @@ class GraphTracer extends Tracer {
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
+    
     if (weight) node.weight = weight;
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;

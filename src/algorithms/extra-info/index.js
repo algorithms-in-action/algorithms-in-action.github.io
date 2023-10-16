@@ -6,3 +6,5 @@ export { default as TCInfo } from './TCInfo.md';
 export { default as BFSSInfo } from './BFSSInfo.md';
 export { default as QSM3Info } from './QSM3Info.md';
 export { default as HSSInfo } from './HSSInfo.md';
+export { default as UFInfo } from './UFInfo.md';
+export { default as TTFInfo } from './TTFInfo.md';

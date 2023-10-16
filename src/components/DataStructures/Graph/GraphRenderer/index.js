@@ -36,11 +36,12 @@ function switchmode(modetype = mode()) {
 function calculateControlCord(x1, y1, x2, y2) {
   // Slope for line that perpendicular to (x1,y1) (x2,y2)
   const slope = -(x2 - x1) / (y2 - y1);
-  let cx; let cy;
-  let direction = (y1 > y2) ? 1 : -1;
+  let cx;
+  let cy;
+  let direction = y1 > y2 ? 1 : -1;
 
   if (Math.abs(y1 - y2) / Math.abs(x1 - x2) < 0.5) {
-    direction = (x1 > x2) ? 1 : -1;
+    direction = x1 > x2 ? 1 : -1;
     cx = (x2 + x1) / 2;
     cy = (y1 + y2) / 2 + direction * 30;
   } else {
@@ -66,7 +67,9 @@ class GraphRenderer extends Renderer {
     const coords = this.computeCoords(e);
     const { nodes, dimensions } = this.props.data;
     const { nodeRadius } = dimensions;
-    this.selectedNode = nodes.find(node => distance(coords, node) <= nodeRadius);
+    this.selectedNode = nodes.find(
+      (node) => distance(coords, node) <= nodeRadius
+    );
   }
 
   handleMouseMove(e) {
@@ -91,8 +94,25 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
-    const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const {
+      nodes,
+      edges,
+      isDirected,
+      isWeighted,
+      showSelfLoop,
+      variableNodes,
+      isReversed,
+      dimensions,
+      text,
+    } = this.props.data;
+    const {
+      baseWidth,
+      baseHeight,
+      nodeRadius,
+      arrowGap,
+      nodeWeightGap,
+      edgeWeightGap,
+    } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) / this.zoom,
       (this.centerY - baseHeight / 2) / this.zoom,
@@ -106,50 +126,182 @@ class GraphRenderer extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
+
+    const sizeAdjust = isReversed ? 0.5 : 1;
+
     return (
-      <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
+      <svg
+        className={switchmode(mode())}
+        viewBox={viewBox}
+        ref={this.elementRef}
+      >
         <defs>
-          <marker id="markerArrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={styles.arrow} />
+          <marker
+            id="markerArrow"
+            markerWidth={`${6 * sizeAdjust}`}
+            markerHeight={`${6 * sizeAdjust}`}
+            refX={`${3 * sizeAdjust}`}
+            refY={`${3 * sizeAdjust}`}
+            orient="auto"
+          >
+            <path
+              d={`M0,0 L0,${6 * sizeAdjust} L${6 * sizeAdjust},${
+                3 * sizeAdjust
+              } L0,0`}
+              className={styles.arrow}
+            />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.selected)} />
+          <marker
+            id="markerArrowSelected"
+            markerWidth={`${6 * sizeAdjust}`}
+            markerHeight={`${6 * sizeAdjust}`}
+            refX={`${3 * sizeAdjust}`}
+            refY={`${3 * sizeAdjust}`}
+            orient="auto"
+          >
+            <path
+              d={`M0,0 L0,${6 * sizeAdjust} L${6 * sizeAdjust},${
+                3 * sizeAdjust
+              } L0,0`}
+              className={classes(styles.arrow, styles.selected)}
+            />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited)} />
+          <marker
+            id="markerArrowVisited"
+            markerWidth={`${6 * sizeAdjust}`}
+            markerHeight={`${6 * sizeAdjust}`}
+            refX={`${3 * sizeAdjust}`}
+            refY={`${3 * sizeAdjust}`}
+            orient="auto"
+          >
+            <path
+              d={`M0,0 L0,${6 * sizeAdjust} L${6 * sizeAdjust},${
+                3 * sizeAdjust
+              } L0,0`}
+              className={classes(styles.arrow, styles.visited)}
+            />
           </marker>
-          <marker id="markerArrowVisited1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited1)} />
+          <marker
+            id="markerArrowVisited1"
+            markerWidth={`${6 * sizeAdjust}`}
+            markerHeight={`${6 * sizeAdjust}`}
+            refX={`${3 * sizeAdjust}`}
+            refY={`${3 * sizeAdjust}`}
+            orient="auto"
+          >
+            <path
+              d={`M0,0 L0,${6 * sizeAdjust} L${6 * sizeAdjust},${
+                3 * sizeAdjust
+              } L0,0`}
+              className={classes(styles.arrow, styles.visited1)}
+            />
           </marker>
-          <marker id="markerArrowVisited2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          <marker
+            id="markerArrowVisited2"
+            markerWidth={`${6 * sizeAdjust}`}
+            markerHeight={`${6 * sizeAdjust}`}
+            refX={`${3 * sizeAdjust}`}
+            refY={`${3 * sizeAdjust}`}
+            orient="auto"
+          >
+            <path
+              d={`M0,0 L0,${6 * sizeAdjust} L${6 * sizeAdjust},${
+                3 * sizeAdjust
+              } L0,0`}
+              className={classes(styles.arrow, styles.visited2)}
+            />
           </marker>
         </defs>
-        {
-          edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
-            const sourceNode = this.props.data.findNode(source);
-            const targetNode = this.props.data.findNode(target);
-            if (!sourceNode || !targetNode) return undefined;
-            const { x: sx, y: sy } = sourceNode;
-            let { x: ex, y: ey } = targetNode;
-            const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
-            const dx = ex - sx;
-            const dy = ey - sy;
-            if (isDirected) {
-              const length = Math.sqrt(dx * dx + dy * dy);
-              if (length !== 0) {
-                ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
-                ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
-              }
-            }
-            let pathSvg = null;
-            if (this.props.data.isInterConnected(source, target)) {
-              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
-              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+        {edges
+          .sort(
+            (a, b) =>
+              a.visitedCount -
+              b.visitedCount +
+              a.visitedCount1 -
+              b.visitedCount1
+          )
+          .map((edge) => {
+            const {
+              source,
+              target,
+              weight,
+              visitedCount,
+              selectedCount,
+              visitedCount0,
+              visitedCount1,
+              visitedCount2,
+            } = edge;
+
+            let sourceNode, targetNode;
+            if (variableNodes) {
+              sourceNode = this.props.data.findVariableNode(source);
+              targetNode = this.props.data.findVariableNode(target);
+              if (sourceNode.id === 0) return undefined;
             } else {
-              pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              sourceNode = this.props.data.findNode(source);
+              targetNode = this.props.data.findNode(target);
+            }
+
+            if (!sourceNode || !targetNode) return undefined;
+            let pathSvg = null;
+            let mx, my;
+
+            // Adding self loop
+            if (sourceNode == targetNode && showSelfLoop) {
+              const { x, y } = sourceNode;
+
+              const loopRadiusX = 1.1 * nodeRadius;
+              const loopRadiusY = 1.1 * nodeRadius;
+
+              const arrowOffset = isDirected ? arrowGap : 0;
+
+              // 10 o'clock start position
+              const startAngle = 210 * (Math.PI / 180);
+              const startPoint = `${x + nodeRadius * Math.cos(startAngle)},${
+                y + nodeRadius * Math.sin(startAngle)
+              }`;
+
+              // 2 o'clock end position
+              const endAngle = 330 * (Math.PI / 180);
+              const endPoint = `${
+                x + (nodeRadius + arrowOffset) * Math.cos(endAngle)
+              },${y + (nodeRadius + arrowOffset) * Math.sin(endAngle)}`;
+
+              pathSvg = `M${startPoint} A${loopRadiusX},${loopRadiusY} 0 1,1 ${endPoint}`;
+            } else {
+              let sx, sy, ex, ey;
+
+              if (isReversed) {
+                ({ x: sx, y: sy } = targetNode);
+                ({ x: ex, y: ey } = sourceNode);
+              } else {
+                ({ x: sx, y: sy } = sourceNode);
+                ({ x: ex, y: ey } = targetNode);
+              }
+
+              mx = (sx + ex) / 2;
+              my = (sy + ey) / 2;
+              const dx = ex - sx;
+              const dy = ey - sy;
+              if (isDirected) {
+                const length = Math.sqrt(dx * dx + dy * dy);
+                if (length !== 0) {
+                  ex =
+                    sx +
+                    (dx / length) *
+                      (length - nodeRadius - arrowGap * 2 * sizeAdjust);
+                  ey =
+                    sy +
+                    (dy / length) *
+                      (length - nodeRadius - arrowGap * 2 * sizeAdjust);
+                }
+              }
+              if (this.props.data.isInterConnected(source, target)) {
+                const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+                pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+              } else {
+                pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              }
             }
             // console.log(sx,sy,ex,ey,cx,cy);
             return (
@@ -158,26 +310,53 @@ class GraphRenderer extends Renderer {
                   styles.edge,
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
-                  !selectedCount && visitedCount && styles.visited, visitedCount0 && styles.visited,
-                  visitedCount1 && styles.visited1, visitedCount2 && styles.visited2,
+                  !selectedCount && visitedCount && styles.visited,
+                  visitedCount0 && styles.visited,
+                  visitedCount1 && styles.visited1,
+                  visitedCount2 && styles.visited2
                 )}
                 key={`${source}-${target}`}
               >
-                <path d={pathSvg} className={classes(styles.line, isDirected && styles.directed)} />
-                {
-                  isWeighted &&
+                <path
+                  d={pathSvg}
+                  className={classes(
+                    styles.line,
+                    isDirected && styles.directed
+                  )}
+                />
+                {isWeighted && (
                   <g transform={`translate(${mx},${my})`}>
-                    <text className={styles.weight} transform="rotate(0)"
-                          y={-edgeWeightGap}>{this.toString(weight)}</text>
+                    <text
+                      className={styles.weight}
+                      transform="rotate(0)"
+                      y={-edgeWeightGap}
+                    >
+                      {this.toString(weight)}
+                    </text>
                   </g>
-                }
+                )}
               </g>
             );
-          })
-        }
+          })}
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
+          const {
+            x,
+            y,
+            weight,
+            visitedCount0,
+            visitedCount,
+            visitedCount1,
+            visitedCount2,
+            selectedCount,
+            value,
+            shape,
+            key,
+            style,
+            sorted,
+            isPointer,
+            pointerText,
+          } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode0 = visitedCount0 === 1;
@@ -186,29 +365,61 @@ class GraphRenderer extends Renderer {
           const visitedNode2 = visitedCount2 === 1;
           return (
             <motion.g
-                animate={{ x, y }}
-                initial={false}
-                transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
-                key={key}
+              animate={{ x, y }}
+              initial={false}
+              transition={{ duration: 1 }}
+              className={classes(
+                styles.node,
+                selectNode && styles.selected,
+                sorted && styles.sorted,
+                visitedNode0 && styles.visited0,
+                visitedNode && styles.visited,
+                visitedNode1 && styles.visited1,
+                visitedNode2 && styles.visited2
+              )}
+              key={key}
             >
-              <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
-              <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
-              {
-                isWeighted && (
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                    {this.toString(weight)}
-                  </text>
-                )
-              }
-              {
-                  isPointer &&
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
-                }
+              {shape === 'square' ? (
+                <rect
+                  className={styles.circle}
+                  width={2 * nodeRadius}
+                  height={2 * nodeRadius}
+                  x={-nodeRadius}
+                  y={-nodeRadius}
+                />
+              ) : (
+                <circle
+                  className={classes(
+                    styles.circle,
+                    style && style.backgroundStyle
+                  )}
+                  r={nodeRadius}
+                />
+              )}
+              <text className={classes(styles.id, style && style.textStyle)}>
+                {value}
+              </text>
+              {isWeighted && (
+                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                  {this.toString(weight)}
+                </text>
+              )}
+              {isPointer && (
+                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                  {this.toString(pointerText)}
+                </text>
+              )}
             </motion.g>
           );
         })}
-        <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
+        <text
+          style={{ fill: '#ff0000' }}
+          textAnchor="middle"
+          x={rootX}
+          y={rootY - 20}
+        >
+          {text}
+        </text>
       </svg>
     );
   }

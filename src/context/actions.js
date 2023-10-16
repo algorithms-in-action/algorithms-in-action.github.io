@@ -4,7 +4,8 @@
 import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
-import {onCollapseStateChange} from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { unionFindChunkerRefresh } from '../algorithms/controllers/unionFindUnion';
 
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
@@ -164,7 +165,8 @@ export const GlobalActions = {
     const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
-    const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
+    //const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
+    const firstLineExplan = null;
     previousState = [];
 
     return {
@@ -190,19 +192,19 @@ export const GlobalActions = {
     let result;
 
     let triggerPauseInCollapse = false;
-    if(typeof playing === 'object'){
+    if (typeof playing === 'object') {
       triggerPauseInCollapse = playing.triggerPauseInCollapse;
       playing = playing.playing;
     }
 
     do {
       result = state.chunker.next(triggerPauseInCollapse);
-      if(!triggerPauseInCollapse){
+      if (!triggerPauseInCollapse) {
         result.pauseInCollapse = false;
       }
     } while (
       !result.pauseInCollapse &&
-      !result.finished && 
+      !result.finished &&
       !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark)
     );
     if (result.finished) {
@@ -252,6 +254,7 @@ export const GlobalActions = {
     }
 
     onCollapseStateChange();
+    unionFindChunkerRefresh(state);
 
     return {
       ...state,

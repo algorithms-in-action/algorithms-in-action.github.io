@@ -16,6 +16,7 @@ function removeLineContinuation(input) {
   return output;
 }
 
+
 // Extract the /Code {} section from pseudocode
 function extractCode(lines) {
   const jsons = [];
@@ -46,18 +47,28 @@ function extractCode(lines) {
         jsons.push(json);
         json = {};
       }
-      if (line.indexOf(' \\Ref ') >= 0) {
-        json['code'] = line.substring(0, line.indexOf(' \\Ref '));
-        json['ref'] = line.substring(line.indexOf(' \\Ref ') + 6, line.length);
-      } else if (line.indexOf(' \\B ') >= 0) {
-        json['code'] = line.substring(0, line.indexOf(' \\B '));
-        json['bookmark'] = line.substring(line.indexOf(' \\B ') + 4, line.length);
-        // json['ref'] = '';
+      if (line.localeCompare('\\NewLine') === 0) {
+        jsons.push({ code: '\n', explanation: '', indentation: ind });
       } else {
-        json['code'] = line;
+        if (line.indexOf(' \\Ref ') >= 0) {
+          json['code'] = line.substring(0, line.indexOf(' \\Ref '));
+          json['ref'] = line.substring(
+            line.indexOf(' \\Ref ') + 6,
+            line.length
+          );
+        } else if (line.indexOf(' \\B ') >= 0) {
+          json['code'] = line.substring(0, line.indexOf(' \\B '));
+          json['bookmark'] = line.substring(
+            line.indexOf(' \\B ') + 4,
+            line.length
+          );
+          // json['ref'] = '';
+        } else {
+          json['code'] = line;
+        }
+        json['explanation'] = '';
+        json['indentation'] = ind;
       }
-      json['explanation'] = '';
-      json['indentation'] = ind;
     }
   }
   if (Object.keys(json).length !== 0) {
@@ -99,16 +110,24 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
   // eslint-disable-next-line no-param-reassign
   outputBlocks[blockName] = [];
   originalBlocks[blockName].forEach((line) => {
-    indentedLine = '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) + line['code'];
+    indentedLine =
+      '\xa0\xa0\xa0\xa0'.repeat(baseIndent + line['indentation']) +
+      line['code'];
     outputBlocks[blockName].push({ ...line, code: indentedLine });
     if (line['ref']) {
-      addIndentation(originalBlocks, line['ref'], baseIndent + line['indentation'], outputBlocks);
+      addIndentation(
+        originalBlocks,
+        line['ref'],
+        baseIndent + line['indentation'],
+        outputBlocks
+      );
     }
   });
 }
 
 export default function parse(input) {
-  const rawCode = removeLineContinuation(input);
+  const inputRemovedNotes = input.replace(/\\Note\{[^}]*\}/gs, '');
+  const rawCode = removeLineContinuation(inputRemovedNotes);
   const rawCodeBlocks = extractCodeBlock(rawCode);
   if (Object.keys(rawCodeBlocks).length > 0) {
     const indentedCodeBlocks = {};
