@@ -8,24 +8,24 @@ import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
 
-
 import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
-
 
 import '../../styles/Param.scss';
 import { set } from 'lodash';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-const DEFAULT_UNION = ['5-7','8-5','9-8','3-9','5-2'];
+const DEFAULT_UNION = ['5-7', '8-5', '9-8', '3-9', '5-2'];
 const DEFAULT_FIND = '2';
 
 const ALGORITHM_NAME = 'Union Find';
-const FIND = 'Find'
-const UNION = 'Union'
+const FIND = 'Find';
+const UNION = 'Union';
 
-const FIND_EXAMPLE = 'Please follow the example provided: 2. The single digit should be between 1 and 10.';
-const UNION_EXAMPLE = "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
+const FIND_EXAMPLE =
+  'Please follow the example provided: 2. The single digit should be between 1 and 10.';
+const UNION_EXAMPLE =
+  "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
 
 // button styling
 const BlueRadio = withStyles({
@@ -40,26 +40,23 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />);
 
 function UFParam() {
-
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(false);
 
-  // Toggling path compression (i.e., a boolean value).
+  // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
-    setPathCompressionEnabled(prevState => !prevState);
-  }
+    setPathCompressionEnabled((prevState) => !prevState);
+  };
 
-
-  // Validating input before find submission.
+  // validating input before find submission
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
 
     // eslint-disable-next-line no-restricted-globals
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
-
       const target = {
         arg1: parseInt(inputValue, 10),
         arg2: pathCompressionEnabled,
@@ -76,41 +73,37 @@ function UFParam() {
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
     }
-  }
+  };
 
   const handleUnion = (e) => {
     e.preventDefault();
 
-      const textInput = e.target[0].value.replace(/\s+/g, '');
+    const textInput = e.target[0].value.replace(/\s+/g, '');
 
-      if (validateTextInput(textInput)) {
-        
-        const target = {
-          arg1: textInput.split(',').map(pair => pair.trim().split('-').map(Number)),
-          arg2: pathCompressionEnabled,
-        };
+    if (validateTextInput(textInput)) {
+      const target = {
+        arg1: textInput
+          .split(',')
+          .map((pair) => pair.trim().split('-').map(Number)),
+        arg2: pathCompressionEnabled,
+      };
 
-  
-        // Running animation.
-        dispatch(GlobalActions.RUN_ALGORITHM, { name:'unionFind', mode: 'union', target });
-  
-        setMessage(successParamMsg(ALGORITHM_NAME));
-  
-      } else {
-  
-        setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
-      }
-      
-    };
-    
+      // running animation
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'unionFind',
+        mode: 'union',
+        target,
+      });
 
+      setMessage(successParamMsg(ALGORITHM_NAME));
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
+    }
+  };
 
-  useEffect(
-    () => {
-      document.getElementById('startBtnGrp').click();
-    },
-    [pathCompressionEnabled],
-  );
+  useEffect(() => {
+    document.getElementById('startBtnGrp').click();
+  }, [pathCompressionEnabled]);
 
   return (
     <>
@@ -123,21 +116,20 @@ function UFParam() {
           DEFAULT_VAL={unions}
           SET_VAL={setUnions}
           handleSubmit={handleUnion}
-          REFRESH_FUNCTION={() => ['5-7','8-5','9-8','3-9','5-2']}
+          REFRESH_FUNCTION={() => ['5-7', '8-5', '9-8', '3-9', '5-2']}
           ALGORITHM_NAME={UNION}
           EXAMPLE={UNION_EXAMPLE}
           setMessage={setMessage}
-
         />
 
-      <SingleValueParam
+        <SingleValueParam
           name="unionFind"
           buttonName="Find"
           mode="find"
           formClassName="formRight"
           DEFAULT_VAL={DEFAULT_FIND}
           ALGORITHM_NAME={FIND}
-          EXAMPLE={FIND_EXAMPLE}          
+          EXAMPLE={FIND_EXAMPLE}
           handleSubmit={handleFind}
           setMessage={setMessage}
         />
@@ -145,24 +137,24 @@ function UFParam() {
 
       <span className="generalText">Path compression: &nbsp;&nbsp;</span>
       <FormControlLabel
-        control={(
+        control={
           <BlueRadio
             checked={pathCompressionEnabled === true}
             onChange={handleChange}
             name="on"
           />
-        )}
+        }
         label="On"
         className="checkbox"
       />
       <FormControlLabel
-        control={(
+        control={
           <BlueRadio
             checked={pathCompressionEnabled === false}
             onChange={handleChange}
             name="off"
           />
-        )}
+        }
         label="Off"
         className="checkbox"
       />
@@ -174,30 +166,29 @@ function UFParam() {
 
 export default UFParam;
 
-// For validating the text input within the DualValueParam component.
+/**
+ * Validate the text input within the DualValueParam component.
+ * @param {String} value The text input.
+ * @returns {Boolean} Whether the text input is valid.
+ */
 function validateTextInput(value) {
   if (!value) return false;
 
-  // Ensuring only allowable characters.
+  // ensuring only allowable characters
   if (!/^[0-9,-\s]+$/.test(value)) return false;
 
-  // Strips off commas at the start and end of the string.
-  //value = value.replace(/^,|,$/g, '');
+  // splits the string into an array of pairs
+  const pairs = value.split(',').map((pair) => pair.trim());
 
-  // Splits the string into an array of pairs.
-  const pairs = value.split(',').map(pair => pair.trim());
-
-  // Checks if each pair is valid.
+  // checks if each pair is valid
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i].split('-');
 
-    // Checks only two values in pair.
+    // checks only two values in pair
     if (pair.length !== 2) return false;
 
-    // Checks if each value in pair is in domain.
+    // checks if each value in pair is in domain
     if (pair.some((val) => isNaN(val) || !N_ARRAY.includes(val))) return false;
-
   }
   return true;
-
 }
