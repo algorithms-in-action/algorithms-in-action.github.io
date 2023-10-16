@@ -91,25 +91,25 @@ class NTreeTracer extends Tracer {
    * nodes and edges remain unchanged
    */
   clear() {
-    this.edges.forEach(edge => {
+    this.edges.forEach((edge) => {
       edge.visitedCount = 0;
       edge.selectedCount = 0;
     });
-    this.nodes.forEach(node => {
+    this.nodes.forEach((node) => {
       node.visitedCount = 0;
       node.selectedCount = 0;
     });
   }
 
   clearHighlights() {
-    this.nodes.forEach(node => {
+    this.nodes.forEach((node) => {
       this.leave(node.id, node.id);
-      // If want to generalise, may need to add more leave1 with different colour values.
+      // if want to generalise, may need to add more leave1 with different
+      // colour values
       this.leave1(node.id, node.id, 2);
       this.deselect(node.id, node.id);
-    })
+    });
   }
-  
 
   isEmpty() {
     return this.nodes.length === 0 && this.edges.length === 0;
@@ -132,7 +132,7 @@ class NTreeTracer extends Tracer {
       }
     };
 
-    this.edges.forEach(obj => {
+    this.edges.forEach((obj) => {
       if (!tree.hasOwnProperty(obj.source)) {
         tree[obj.source] = {};
         setLeftOrRightChild(tree, obj.source, obj.target);
@@ -144,7 +144,7 @@ class NTreeTracer extends Tracer {
       }
     });
 
-    this.nodes.forEach(obj => {
+    this.nodes.forEach((obj) => {
       if (!tree.hasOwnProperty(obj.id)) {
         tree[obj.id] = {};
       }
@@ -160,52 +160,46 @@ class NTreeTracer extends Tracer {
   getNTree() {
     // this will be the theoretical root node, and the handle for the tree
     const nodeMap = {};
-    const rootNodes = new Set(this.realNodes.map(node => node.id));
-    if (this.realNodes.length === 0){
+    const rootNodes = new Set(this.realNodes.map((node) => node.id));
+    if (this.realNodes.length === 0) {
       return null;
-
     }
-    // Create the TreeNode instances and map them by their ID.
-    this.realNodes.forEach(node => {
+    // create the TreeNode instances and map them by their ID
+    this.realNodes.forEach((node) => {
       let treeNode;
       if (this.variableNodes) {
         treeNode = new VariableTreeNode(node.id);
-        node.nodeIDs.forEach(nodeID => treeNode.addRelatedNodeID(nodeID));
+        node.nodeIDs.forEach((nodeID) => treeNode.addRelatedNodeID(nodeID));
       } else {
         treeNode = new TreeNode(node.id);
-    }
-    //console.log("THIS IS THE IMPORTANT ONE", treeNode.getIDs());
+      }
       treeNode.x = 0; // node.x;
       treeNode.y = 0; // node.y;
-      //console.log("node id", node.id);
       nodeMap[node.id] = treeNode;
     });
-    //console.log("nodeMap", nodeMap);
 
-    // Use edges to establish parent-child relationships.
-    //console.log("edges", this.realEdges);
-    this.realEdges.forEach(edge => {
+    // use edges to establish parent-child relationships
+    this.realEdges.forEach((edge) => {
       const parent = nodeMap[edge.source];
       const child = nodeMap[edge.target];
-      //console.log("parent", parent, "child", child);
 
-      // Make sure this is a new child relationship
+      // make sure this is a new child relationship
       if (parent && child && !parent.children.includes(child)) {
         parent.children.push(child);
         child.parent = parent;
 
-        // Once we determine the parent of a node, it's no longer a root candidate
+        // once we determine the parent of a node, it's no longer
+        // a root candidate
         rootNodes.delete(child.id);
       }
     });
 
-    // For the BFS
+    // for the BFS
     const queue = [];
     const levels = [];
 
-    // Assuming a single root for simplicity, but you can adjust if there are multiple roots
-
-
+    // assuming a single root for simplicity, but you can adjust if there
+    // are multiple roots
     const root = nodeMap[Array.from(rootNodes)[0]];
     root.level = 0;
     queue.push(root);
@@ -219,7 +213,7 @@ class NTreeTracer extends Tracer {
         levels[current.level] = [current];
       }
 
-      current.children.forEach(child => {
+      current.children.forEach((child) => {
         child.level = current.level + 1;
         queue.push(child);
       });
@@ -240,20 +234,19 @@ class NTreeTracer extends Tracer {
     if (this.edges.length === 0 && this.realNodes.length === 1) {
       return this.realNodes[0].id;
     }
-    const sources = this.edges.map(obj => obj.source);
-    const targets = this.edges.map(obj => obj.target);
+    const sources = this.edges.map((obj) => obj.source);
+    const targets = this.edges.map((obj) => obj.target);
     const nodes = [...new Set([...sources, ...targets])];
     // the node that does not a source is the root
-    return nodes.find(node => !targets.includes(node));
+    return nodes.find((node) => !targets.includes(node));
   }
-
 
   swapNodes(nodeId1, nodeId2) {
     this.swap = true;
     const node1 = this.findNode(nodeId1.toString());
     const node2 = this.findNode(nodeId2.toString());
-    // after tracking both nodes, we need to now swap them by changing the outging edges and ingoing edges
-
+    // after tracking both nodes, we need to now swap them by changing the
+    // outging edges and ingoing edges
 
     //  swap edges
     for (const edge of this.realEdges) {
@@ -287,7 +280,6 @@ class NTreeTracer extends Tracer {
         edge.target = node1.id;
       }
     }
-    
   }
 
   directed(isDirected = true) {
@@ -308,29 +300,50 @@ class NTreeTracer extends Tracer {
     return false;
   }
 
-  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+  addNode(
+    id,
+    value = undefined,
+    shape = 'circle',
+    color = 'blue',
+    weight = null,
+    x = 0,
+    y = 0,
+    visitedCount = 0,
+    selectedCount = 0,
+    visitedCount1 = 0
+  ) {
     if (this.findNode(id)) return;
-    value = (value === undefined ? id : value);
+    value = value === undefined ? id : value;
     const key = id;
     // eslint-disable-next-line max-len
     if (!this.variableNodes) {
-      this.realNodes.push({id, x, y});
+      this.realNodes.push({ id, x, y });
     }
     if (id !== '0') {
-      this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1});
+      this.nodes.push({
+        id,
+        value,
+        shape,
+        color,
+        weight,
+        x,
+        y,
+        visitedCount,
+        selectedCount,
+        key,
+        visitedCount1,
+      });
     }
-    // this.layout();
   }
 
   // solely for real nodes
   addVariableNode(varID, nodeID) {
     if (!this.variableNodes) return;
-    const index = this.realNodes.findIndex(node => node.id === varID);
+    const index = this.realNodes.findIndex((node) => node.id === varID);
 
     if (index === -1) {
       // this means that the variable node does not exist yet
-      this.realNodes.push({id: varID, x: 0, y: 0, nodeIDs: [nodeID]});
+      this.realNodes.push({ id: varID, x: 0, y: 0, nodeIDs: [nodeID] });
     } else {
       // this means that the variable node already exists
       this.realNodes[index].nodeIDs.push(nodeID);
@@ -338,14 +351,12 @@ class NTreeTracer extends Tracer {
     }
 
     this.addNode(nodeID, undefined, 'square');
-
   }
-  
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
     const update = { value, weight, x, y, visitedCount, selectedCount };
-    Object.keys(update).forEach(key => {
+    Object.keys(update).forEach((key) => {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(node, update);
@@ -365,7 +376,7 @@ class NTreeTracer extends Tracer {
     console.log("afteredges", this.realEdges);
   }
   removeNode(id) {
-    if(this.variableNodes) {
+    if (this.variableNodes) {
       for (const node of this.realNodes) {
         if (node.nodeIDs.includes(id)) {
           const index = node.nodeIDs.indexOf(id);
@@ -380,84 +391,110 @@ class NTreeTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+  addEdge(
+    source,
+    target,
+    weight = null,
+    visitedCount = 0,
+    selectedCount = 0,
+    visitedCount1 = 0
+  ) {
     if (this.findEdge(source, target)) return;
-    // for the sake of coding, check if the edge passed in involves the "hidden" node as a parent
-    if (source !== '0') { // and not visited?
-      this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
+    // for the sake of coding, check if the edge passed in involves
+    // the "hidden" node as a parent
+    if (source !== '0') {
+      // and not visited?
+      this.edges.push({
+        source,
+        target,
+        weight,
+        visitedCount,
+        selectedCount,
+        visitedCount1,
+      });
     }
 
     if (!(source === target)) {
-    this.realEdges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
+      this.realEdges.push({
+        source,
+        target,
+        weight,
+        visitedCount,
+        selectedCount,
+        visitedCount1,
+      });
     }
-
-    //console.log(this.edges);
-
-    // this.layout();
   }
 
   removeEdge(source, target) {
+    const newEdges = this.edges.filter(
+      (edge) => !(edge.source === source && edge.target === target)
+    );
 
-    const newEdges = this.edges.filter(edge => !(edge.source === source && edge.target === target));
-
-    const newRealEdges = this.realEdges.filter(edge => !(edge.source === source && edge.target === target));
+    const newRealEdges = this.realEdges.filter(
+      (edge) => !(edge.source === source && edge.target === target)
+    );
 
     this.edges = newEdges;
     this.realEdges = newRealEdges;
-    
-}
-
+  }
 
   updateEdge(source, target, weight, visitedCount, selectedCount) {
     const edge = this.findEdge(source, target);
     const update = { weight, visitedCount, selectedCount };
-    Object.keys(update).forEach(key => {
+    Object.keys(update).forEach((key) => {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(edge, update);
   }
-
 
   findValue(id) {
     return this.findNode(id).value;
   }
 
   findNode(id) {
-    return this.nodes.find(node => node.id === id);
+    return this.nodes.find((node) => node.id === id);
   }
 
   findVariableNode(varID) {
     if (!this.variableNodes) return;
-    return this.realNodes.find(node => node.id === varID);
+    return this.realNodes.find((node) => node.id === varID);
   }
-
 
   findEdge(source, target, isDirected = this.isDirected) {
     if (isDirected) {
-      return this.edges.find(edge => edge.source === source && edge.target === target);
+      return this.edges.find(
+        (edge) => edge.source === source && edge.target === target
+      );
     } else {
-      return this.edges.find(edge =>
-        (edge.source === source && edge.target === target) ||
-        (edge.source === target && edge.target === source));
+      return this.edges.find(
+        (edge) =>
+          (edge.source === source && edge.target === target) ||
+          (edge.source === target && edge.target === source)
+      );
     }
   }
 
   findLinkedEdges(source, isDirected = this.isDirected) {
     if (isDirected) {
-      return this.edges.filter(edge => edge.source === source);
+      return this.edges.filter((edge) => edge.source === source);
     } else {
-      return this.edges.filter(edge => edge.source === source || edge.target === source);
+      return this.edges.filter(
+        (edge) => edge.source === source || edge.target === source
+      );
     }
   }
 
   findLinkedNodeIds(source, isDirected = this.isDirected) {
     const edges = this.findLinkedEdges(source, isDirected);
-    return edges.map(edge => edge.source === source ? edge.target : edge.source);
+    return edges.map((edge) =>
+      edge.source === source ? edge.target : edge.source
+    );
   }
 
   findLinkedNodes(source, isDirected = this.isDirected) {
     const ids = this.findLinkedNodeIds(source, isDirected);
-    return ids.map(id => this.findNode(id));
+    return ids.map((id) => this.findNode(id));
   }
 
   getRect() {
@@ -477,10 +514,11 @@ class NTreeTracer extends Tracer {
   }
 
   meanNodeSize(leftNode, rightNode) {
-    // need to consider changing this
-    const leftNodeSize = leftNode.getNodeLength() * (this.dimensions.nodeRadius*2);
-    const rightNodeSize = rightNode.getNodeLength() * (this.dimensions.nodeRadius*2);
-    
+    const leftNodeSize =
+      leftNode.getNodeLength() * (this.dimensions.nodeRadius * 2);
+    const rightNodeSize =
+      rightNode.getNodeLength() * (this.dimensions.nodeRadius * 2);
+
     return (leftNodeSize + rightNodeSize) / 2;
   }
 
@@ -505,7 +543,6 @@ class NTreeTracer extends Tracer {
   apportion(node, lvl) {
     let leftmost = node.children[0];
     let neighbour = leftmost.getLeftNeighbour(this.levels);
-    // console.log("why does it look weird", leftmost.value, neighbour.value);
 
     let compareDepth = 1;
     const depthToStop = this.maxDepth - lvl;
@@ -524,8 +561,12 @@ class NTreeTracer extends Tracer {
         leftModsum += ancestorNeighbour.modifier;
       }
 
-      let moveDistance = (neighbour.prelimx + leftModsum + this.SubtreeSeparation + this.meanNodeSize(leftmost, neighbour)) - (leftmost.prelimx + rightModsum);
-      // console.log("movedist", moveDistance, node.value);
+      let moveDistance =
+        neighbour.prelimx +
+        leftModsum +
+        this.SubtreeSeparation +
+        this.meanNodeSize(leftmost, neighbour) -
+        (leftmost.prelimx + rightModsum);
 
       if (moveDistance > 0) {
         let tempPtr = node;
@@ -536,14 +577,11 @@ class NTreeTracer extends Tracer {
           tempPtr = tempPtr.getLeftSibling();
         }
 
-        // console.log("leftsiblings", leftSiblings);
-
         if (tempPtr) {
           const portion = moveDistance / leftSiblings;
           tempPtr = node;
 
           while (tempPtr !== ancestorNeighbour) {
-            // console.log("ancestor neighbour", portion);
             tempPtr.prelimx += moveDistance;
             tempPtr.modifier += moveDistance;
             moveDistance -= portion;
@@ -571,15 +609,24 @@ class NTreeTracer extends Tracer {
     if (node.children.length === 0) {
       const leftSibling = node.getLeftSibling();
       if (leftSibling !== null) {
-        node.prelimx = leftSibling.prelimx + this.SiblingSeparation + this.meanNodeSize(leftSibling, node);
+        node.prelimx =
+          leftSibling.prelimx +
+          this.SiblingSeparation +
+          this.meanNodeSize(leftSibling, node);
       } else {
         node.prelimx = 0;
       }
     } else {
-      node.children.forEach(child => this.firstWalk(child, lvl + 1));
-      const midpoint = (node.children[0].prelimx + node.children[node.children.length - 1].prelimx) / 2;
+      node.children.forEach((child) => this.firstWalk(child, lvl + 1));
+      const midpoint =
+        (node.children[0].prelimx +
+          node.children[node.children.length - 1].prelimx) /
+        2;
       if (node.getLeftSibling() !== null) {
-        node.prelimx = node.getLeftSibling().prelimx + this.SiblingSeparation + this.meanNodeSize(node.getLeftSibling(), node);
+        node.prelimx =
+          node.getLeftSibling().prelimx +
+          this.SiblingSeparation +
+          this.meanNodeSize(node.getLeftSibling(), node);
         node.modifier = node.prelimx - midpoint;
         this.apportion(node, lvl);
       } else {
@@ -590,21 +637,27 @@ class NTreeTracer extends Tracer {
 
   checkExtentsRange(x, y) {
     const rect = this.getRect();
-    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    return (
+      x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+    );
   }
 
   secondWalk(node, lvl, modsum) {
     let result = true;
     if (lvl <= this.maxDepth) {
       const xTemp = this.xTopAdjustment + node.prelimx + modsum;
-      const yTemp = this.yTopAdjustment + (lvl * this.LevelSeparation);
+      const yTemp = this.yTopAdjustment + lvl * this.LevelSeparation;
 
       if (this.checkExtentsRange(xTemp, yTemp)) {
         node.x = xTemp;
         node.y = yTemp;
 
         if (node.children.length !== 0) {
-          result = this.secondWalk(node.children[0], lvl + 1, modsum + node.modifier);
+          result = this.secondWalk(
+            node.children[0],
+            lvl + 1,
+            modsum + node.modifier
+          );
         }
         if (result && node.getRightSibling() !== null) {
           result = this.secondWalk(node.getRightSibling(), lvl, modsum);
@@ -618,7 +671,7 @@ class NTreeTracer extends Tracer {
 
   getVariableNode(varID) {
     if (!this.variableNodes) return;
-    return this.realNodes.find(node => node.varID === varID);
+    return this.realNodes.find((node) => node.varID === varID);
   }
 
   translateCoords() {
@@ -627,25 +680,25 @@ class NTreeTracer extends Tracer {
     const rect = this.getRect();
     let offset = 308 - (this.levels.length-2)* 100;
     // 
-    flattenedLevels.forEach(levelNode => {
-
+    flattenedLevels.forEach((levelNode) => {
       if (!this.variableNodes) {
-        const nodeToUpdate = this.nodes.find(node => node.id === levelNode.id);
+        const nodeToUpdate = this.nodes.find(
+          (node) => node.id === levelNode.id
+        );
 
         if (nodeToUpdate) {
           nodeToUpdate.x = levelNode.x;
           nodeToUpdate.y = levelNode.y;
         }
       } else {
-        // Updating x and y in realNodes for rendering in variable:
+        // updating x and y in realNodes for rendering in variable
         const updateXandY = this.findVariableNode(levelNode.id);
         updateXandY.x = levelNode.x;
         updateXandY.y = levelNode.y+(offset);
 
 
         let nodeLength = levelNode.getNodeLength();
-        //console.log("do we have x/y?:", levelNode.x, levelNode.y);
-        //console.log(levelNode);
+        console.log(levelNode);
 
           const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
           
@@ -654,11 +707,11 @@ class NTreeTracer extends Tracer {
           // sort to account for later insertions
           nodesToUpdate.sort((a, b) => a.id - b.id);
 
-          if (nodesToUpdate) {
-            const nodeRadius = this.dimensions.nodeRadius;
-            const halfWidth = nodeRadius * nodeLength;
-            nodesToUpdate.forEach((nodeToUpdate, i) => {
-              let valueX;
+        if (nodesToUpdate) {
+          const nodeRadius = this.dimensions.nodeRadius;
+          const halfWidth = nodeRadius * nodeLength;
+          nodesToUpdate.forEach((nodeToUpdate, i) => {
+            let valueX;
 
               if (nodeLength === 1) {
                 valueX = levelNode.x ;
@@ -683,18 +736,16 @@ class NTreeTracer extends Tracer {
   }
 
   layoutNTree() {
-    // Note that this function as of right now (haven't fully decided)
+    // note that this function as of right now (haven't fully decided)
     // will work only with a root that connects to the rest of the tree
     this.callLayout = { method: this.layoutNTree, args: arguments };
     const rect = this.getRect();
     
     if (this.realNodes.length === 0) {
-      //console.log("no nodes");
       // this means there is no tree to layout, so just return
 
       return;
     }
-    //console.log("real nodes", this.realNodes);
     if (this.realNodes.length === 1 && !this.variableNodes) {
       const [node] = this.realNodes;
       node.x = (rect.left + rect.right) / 2;
@@ -720,20 +771,31 @@ class NTreeTracer extends Tracer {
       // move the node coordinates over
       this.translateCoords();
 
-
       return outcome;
     } else {
       return true;
     }
   }
 
-  addSelfLoop(nodeId, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+  addSelfLoop(
+    nodeId,
+    weight = null,
+    visitedCount = 0,
+    selectedCount = 0,
+    visitedCount1 = 0
+  ) {
     if (!this.findNode(nodeId)) {
       return;
     }
-    this.addEdge(nodeId, nodeId, weight, visitedCount, selectedCount, visitedCount1);
+    this.addEdge(
+      nodeId,
+      nodeId,
+      weight,
+      visitedCount,
+      selectedCount,
+      visitedCount1
+    );
   }
-  
 
   visit0(target, source, weight) {
     this.visitOrLeave0(true, target, source, weight);
@@ -765,7 +827,11 @@ class NTreeTracer extends Tracer {
       if (edge && !(source === target)) edge.visitedCount0 = visit ? 1 : 0;
     }
     if (this.logTracer) {
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+      this.logTracer.println(
+        visit
+          ? (source || '') + ' -> ' + target
+          : (source || '') + ' <- ' + target
+      );
     }
   }
 
@@ -773,18 +839,19 @@ class NTreeTracer extends Tracer {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
     if (weight) node.weight = weight;
-    if (visit == false){
-     // console.log(node);
-    }
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;
       if (edge && !(source === target)) edge.visitedCount += visit ? 1 : -1;
     } else {
       node.visitedCount = visit ? 1 : 0;
-      if (edge && ! (source === target)) edge.visitedCount = visit ? 1 : 0;
+      if (edge && !(source === target)) edge.visitedCount = visit ? 1 : 0;
     }
-    if (this.logTracer){
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+    if (this.logTracer) {
+      this.logTracer.println(
+        visit
+          ? (source || '') + ' -> ' + target
+          : (source || '') + ' <- ' + target
+      );
     }
   }
 
@@ -830,9 +897,16 @@ class NTreeTracer extends Tracer {
       if (edge && !(source === target)) edge.visitedCount2 = visit ? 1 : 0;
       node.visitedCount2 = visit ? 1 : 0;
       if (node1) node1.visitedCount2 = visit ? 1 : 0;
+    } else if (colorIndex === 3) {
+      // for red
+      node.visitedCount = visit ? 1 : 0;
     }
     if (this.logTracer) {
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
+      this.logTracer.println(
+        visit
+          ? (source || '') + ' -> ' + target
+          : (source || '') + ' <- ' + target
+      );
     }
   }
 
@@ -840,9 +914,13 @@ class NTreeTracer extends Tracer {
     const edge = this.findEdge(source, target);
     if (edge && !(source === target)) edge.selectedCount += select ? 1 : -1;
     const node = this.findNode(target.toString());
-    node.selectedCount += select ? 1 : -1;
+    node.selectedCount = select ? 1 : 0;
     if (this.logTracer) {
-      this.logTracer.println(select ? (source || '') + ' => ' + target : (source || '') + ' <= ' + target);
+      this.logTracer.println(
+        select
+          ? (source || '') + ' => ' + target
+          : (source || '') + ' <= ' + target
+      );
     }
   }
 
@@ -851,7 +929,6 @@ class NTreeTracer extends Tracer {
     node.sorted = true;
   }
 
-  // style = { backgroundStyle: , textStyle: }
   styledSelectOrDeselect(style, select, target, source) {
     this.selectOrDeselect(select, target, source);
     const node = this.findNode(target);
@@ -866,8 +943,14 @@ class NTreeTracer extends Tracer {
   }
 
   isInterConnected(source, target) {
-    return this.edges.find(edge => edge.source === source && edge.target === target)
-        && this.edges.find(edge => edge.source === target && edge.target === source);
+    return (
+      this.edges.find(
+        (edge) => edge.source === source && edge.target === target
+      ) &&
+      this.edges.find(
+        (edge) => edge.source === target && edge.target === source
+      )
+    );
   }
 
   log(key) {

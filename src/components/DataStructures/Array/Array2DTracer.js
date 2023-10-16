@@ -46,6 +46,7 @@ class Array2DTracer extends Tracer {
     this.algo = algo;
     this.kth = '1';
     this.motionOn = true;
+    this.hideArrayAtIdx = null;
     // For a blank inital state. 
     if (algo === 'unionFind') {
       this.kth = ' ';
@@ -197,6 +198,17 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
+  }
+
+  hideArrayAtIndex(index) {
+    this.hideArrayAtIdx = index;
+  }
+
+  updateValueAt(x, y, newValue) {
+    if (!this.data[x] || !this.data[x][y]) {
+      return;
+    }
+    this.data[x][y].value = newValue;
   }
 }
 

@@ -1,48 +1,44 @@
-
 import TreeNode from './NAryTree';
 
 class VariableTreeNode extends TreeNode {
-    constructor(id) {
-        super(id);
-        this.relatedNodeIDs = [];
+  constructor(id) {
+    super(id);
+    this.relatedNodeIDs = [];
+  }
+
+  getNodeId() {
+    return this.id;
+  }
+
+  getIDs() {
+    return this.relatedNodeIDs;
+  }
+
+  addRelatedNodeID(nodeID) {
+    if (this.relatedNodeIDs.includes(nodeID)) {
+      return;
     }
 
-    getNodeId()
-    {
-        return this.id;
-    }
+    this.relatedNodeIDs.push(nodeID);
+    this.relatedNodeIDs.sort((a, b) => a - b);
+  }
 
-
-    getIDs() {
-        return this.relatedNodeIDs;
+  removeRelatedNodeID(nodeID) {
+    const index = this.relatedNodeIDs.indexOf(nodeID);
+    if (index !== -1) {
+      this.relatedNodeIDs.splice(index, 1);
     }
+  }
+  clearRelatedNodeIDs() {
+    this.relatedNodeIDs = [];
+  }
+  getNodeLength() {
+    return this.relatedNodeIDs.length;
+  }
 
-    addRelatedNodeID(nodeID) {
-        if (this.relatedNodeIDs.includes(nodeID)) {
-            return;
-        }
-
-        this.relatedNodeIDs.push(nodeID);
-        this.relatedNodeIDs.sort((a, b) => a - b);
-    }
-
-    removeRelatedNodeID(nodeID) {
-        const index = this.relatedNodeIDs.indexOf(nodeID);
-        if (index !== -1) {
-            this.relatedNodeIDs.splice(index, 1);
-        }
-    }
-    clearRelatedNodeIDs(){
-        this.relatedNodeIDs = [];
-    }
-    getNodeLength() {
-        return this.relatedNodeIDs.length;
-    }
-
-    hasRelatedNodeID(nodeID) {
-        return this.relatedNodeIDs.includes(nodeID);
-    }
-
+  hasRelatedNodeID(nodeID) {
+    return this.relatedNodeIDs.includes(nodeID);
+  }
 }
 
 export default VariableTreeNode;

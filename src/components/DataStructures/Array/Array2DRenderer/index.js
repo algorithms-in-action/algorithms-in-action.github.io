@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth, motionOn} = this.props.data;
+    const { data, algo, kth, motionOn, hideArrayAtIdx } = this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -60,14 +60,21 @@ class Array2DRenderer extends Renderer {
       data_T = data[0].map((col, i) => data.map((row) => row[i]));
     }
     // const isArray1D = this instanceof Array1DRenderer;
-    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
+    let longestRow = data.reduce(
+      (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
+      []
+    );
     return (
-      <table className={switchmode(mode())}
-             style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
+      <table
+        className={switchmode(mode())}
+        style={{
+          marginLeft: -this.centerX * 2,
+          marginTop: -this.centerY * 2,
+          transform: `scale(${this.zoom})`,
+        }}
+      >
         <tbody>
-
-          {
-            algo === 'unionFind' && ( 
+          {algo === 'unionFind' && (
             <AnimateSharedLayout>
               <tr>
                 {data[0].map((col, idx) => (
@@ -76,8 +83,13 @@ class Array2DRenderer extends Renderer {
                       <motion.div
                         layoutId={v}
                         key={v}
-                        className={classes(styles.variable, styles.top_variable)}
-                        transition={motionOn ? { type: 'tween' } : { duration: 0 }}
+                        className={classes(
+                          styles.variable,
+                          styles.top_variable
+                        )}
+                        transition={
+                          motionOn ? { type: 'tween' } : { duration: 0 }
+                        }
                       >
                         {v}
                       </motion.div>
@@ -86,20 +98,14 @@ class Array2DRenderer extends Renderer {
                 ))}
               </tr>
             </AnimateSharedLayout>
-          )
-          }
-            
-        <tr className={styles.row}>
-          {
-            !isArray1D &&
-            <td className={classes(styles.col, styles.index)} />
-          }
-          {
-            algo === 'tc' && // Leave a blank cell at the header row
-            <td />
-          }
-          {
-            longestRow.map((_, i) => {
+          )}
+
+          <tr className={styles.row}>
+            {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+            {algo === 'tc' && ( // Leave a blank cell at the header row
+              <td />
+            )}
+            {longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
               }
@@ -108,16 +114,16 @@ class Array2DRenderer extends Renderer {
               }
               return (
                 <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i }</span>
+                  <span className={styles.value}>{i}</span>
                 </th>
               );
-            })
-          }
-        </tr>
-        {
-          data.map((row, i) => {
-
+            })}
+          </tr>
+          {data.map((row, i) => {
             let pointer = false;
+
+            if (i === hideArrayAtIdx) return null;
+
             // eslint-disable-next-line no-plusplus
             for (let j = 0; j < row.length; j++) {
               if (row[j].selected) {
@@ -125,109 +131,107 @@ class Array2DRenderer extends Renderer {
               }
             }
             return (
-            <tr className={styles.row} key={i}>
-              {
-                algo === 'tc' && // generate vertical index, which starts from 1
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i + 1 }</span>
-                </th>
-              }
-              {
-                !isArray1D && algo !== 'tc' &&
-                <td className={classes(styles.col, styles.index)}>
-                  <span className={styles.value}>{i}</span>
-                </td>
-              }
-              {
-                row.map((col, j) => (
-                  <td className={classes(styles.col, col.selected && styles.selected, col.patched && styles.patched,
-                    col.sorted && styles.sorted, col.selected1 && styles.selected1, col.selected2 && styles.selected2, col.selected3 && styles.selected3, col.selected4 && styles.selected4, col.selected5 && styles.selected5)}
-                      key={j}>
-                    <span className={styles.value}>{this.toString(col.value)}</span>
+              <tr className={styles.row} key={i}>
+                {algo === 'tc' && ( // generate vertical index, which starts from 1
+                  <th className={classes(styles.col, styles.index)} key={i}>
+                    <span className={styles.value}>{i + 1}</span>
+                  </th>
+                )}
+                {!isArray1D && algo !== 'tc' && (
+                  <td className={classes(styles.col, styles.index)}>
+                    <span className={styles.value}>{i}</span>
                   </td>
-                ))
-              }
-              {
-                pointer && algo === 'tc' &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> i </span>
-                </th> || algo === 'prim' && i === 2 &&
-                <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> Priority Queue </span>
-                </th> ||
-                <td className={classes(styles.col, styles.index)} />
-              }
-            </tr>
-            );
-          })
-        }
-        {
-        algo === 'tc' &&
-        // Don't remove "j-tag='transitive_closure'"
-        <tr j-tag='transitive_closure' className={styles.row}>
-          <td />
-          {
-            data_T.map((row) => {
-              let pointer = false;
-              // eslint-disable-next-line no-plusplus
-              for (let j = 0; j < row.length; j++) {
-                if (row[j].selected1) {
-                  pointer = true;
-                }
-              }
-              return (
-                (pointer &&
-                <th className={classes(styles.col, styles.index)}>
-                  <span className={styles.value}> j </span>
-                </th>) || <td className={classes(styles.col, styles.index)} />
-              );
-            })
-          }
-        </tr>
-        }
-        {
-          algo === 'prim' &&
-          data.map((row, i) => (
-            i === 2 && (
-                <AnimateSharedLayout>
-                <tr layout className={styles.row} key={i}>
+                )}
                 {row.map((col, j) => (
-                    <td
-                    className={classes(styles.col, styles.variables)}
-                    key={j}>
-                    {col.variables.map((v) => (
-                        <motion.p
-                        layoutId={v}
-                        key={v}
-                        className={styles.variable}
-                        >
-                        {v}
-                        </motion.p>
-                    ))}
-                    </td>
+                  <td
+                    className={classes(
+                      styles.col,
+                      col.selected && styles.selected,
+                      col.patched && styles.patched,
+                      col.sorted && styles.sorted,
+                      col.selected1 && styles.selected1,
+                      col.selected2 && styles.selected2,
+                      col.selected3 && styles.selected3,
+                      col.selected4 && styles.selected4,
+                      col.selected5 && styles.selected5
+                    )}
+                    key={j}
+                  >
+                    <span className={styles.value}>
+                      {this.toString(col.value)}
+                    </span>
+                  </td>
                 ))}
-                </tr>
-            </AnimateSharedLayout>
-            )
-          ))
-        }
+                {(pointer && algo === 'tc' && (
+                  <th className={classes(styles.col, styles.index)}>
+                    <span className={styles.value}> i </span>
+                  </th>
+                )) ||
+                  (algo === 'prim' && i === 2 && (
+                    <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> Priority Queue </span>
+                    </th>
+                  )) || <td className={classes(styles.col, styles.index)} />}
+              </tr>
+            );
+          })}
+          {algo === 'tc' && (
+            // Don't remove "j-tag='transitive_closure'"
+            <tr j-tag="transitive_closure" className={styles.row}>
+              <td />
+              {data_T.map((row) => {
+                let pointer = false;
+                // eslint-disable-next-line no-plusplus
+                for (let j = 0; j < row.length; j++) {
+                  if (row[j].selected1) {
+                    pointer = true;
+                  }
+                }
+                return (
+                  (pointer && (
+                    <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> j </span>
+                    </th>
+                  )) || <td className={classes(styles.col, styles.index)} />
+                );
+              })}
+            </tr>
+          )}
+          {algo === 'prim' &&
+            data.map(
+              (row, i) =>
+                i === 2 && (
+                  <AnimateSharedLayout>
+                    <tr layout className={styles.row} key={i}>
+                      {row.map((col, j) => (
+                        <td
+                          className={classes(styles.col, styles.variables)}
+                          key={j}
+                        >
+                          {col.variables.map((v) => (
+                            <motion.p
+                              layoutId={v}
+                              key={v}
+                              className={styles.variable}
+                            >
+                              {v}
+                            </motion.p>
+                          ))}
+                        </td>
+                      ))}
+                    </tr>
+                  </AnimateSharedLayout>
+                )
+            )}
         </tbody>
-        {
-          algo === 'tc' &&
-          <caption kth-tag='transitive_closure'>
-            k = { kth }
-          </caption>
-        }
-        {
-          algo == 'unionFind' &&
-          <motion.caption kth-tag='unionFind' className={styles.bottom_caption}
-          // If want dynamic movement:
-          // transition={{ type: 'tween'}}
-          // layout="position"
-          >
+        {algo === 'tc' && (
+          <caption kth-tag="transitive_closure">k = {kth}</caption>
+        )}
+        {algo == 'unionFind' && (
+          <motion.caption kth-tag="unionFind" className={styles.bottom_caption}>
             {kth}
           </motion.caption>
-        }
+        )}
       </table>
     );
   }

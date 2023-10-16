@@ -1,13 +1,13 @@
-name: Union-Find Algorithm CI
+name: 2-3-4 Tree Algorithm CI
 
 on:
   push:
-    branches: [ feature/no-ref/union-find-algorithm ]
+    branches: [ feature/no-ref/234-tree-algorithm ]
     paths-ignore:
       - 'doc/**'      # Ignore all files and subdirectories under "doc/"
       - 'docs/**'     # Ignore all files and subdirectories under "docs/"
   pull_request:
-   branches: [ feature/no-ref/union-find-algorithm ]
+   branches: [ feature/no-ref/234-tree-algorithm ]
 
 jobs:
   test:
@@ -21,4 +21,4 @@ jobs:
       - name: Install and Test 🔧
         run: |
           npm install
-          npm run test-uf
+          npm run test-234t
