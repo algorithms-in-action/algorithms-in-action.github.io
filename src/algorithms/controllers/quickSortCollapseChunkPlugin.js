@@ -7,6 +7,7 @@
  * @Description: logic for quickSort reachability
  */
 import { GlobalActions } from '../../context/actions';
+import { triggerButtonClick } from '../parameters/ButtonClickTrigger.js';
 
 const QS_NAME = 'quickSort';
 
@@ -56,5 +57,6 @@ export function isQuicksortExpanded() {
 export function onCollapseStateChangeQS() {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
+  triggerButtonClick();
   GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
 }
