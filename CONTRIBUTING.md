@@ -16,8 +16,8 @@ Hi there! 👋 We're thrilled that you'd like to contribute to AiA.
   - [Development cycle](#development-cycle)
     - [Test suite](#test-suite)
   - [Create new algorithms](#create-new-algorithms)
-  - [Reporting a bug](#reporting-a-bug)
-  - [Proposing a change](#proposing-a-change)
+  - [Report a bug](#report-a-bug)
+  - [Propose a change](#propose-a-change)
 
 ## Directory structure
 
@@ -123,10 +123,10 @@ If you run into any trouble, please check the available [npm scripts](package.js
 
 TODO: Add instructions on how to create new algorithms.
 
-## Reporting a bug
+## Report a bug
 
 If you'd like to report a bug, please [open an issue](https://github.com/algorithms-in-action/algorithms-in-action.github.io/issues).
 
-## Proposing a change
+## Propose a change
 
 If you'd like to propose a change, please [open a pull request](https://github.com/algorithms-in-action/algorithms-in-action.github.io/pulls).
