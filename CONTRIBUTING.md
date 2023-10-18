@@ -25,9 +25,9 @@ AiA is purely frontend code written in React.
 
 The most important directories:
 
-- [/src/algorithms](/src/algorithms) - Where the algorithms are implemented
-- [/src/components](/src/components) - Where the React components are implemented
-- [/src/pseudocode](/src/pseudocode) - How the pseudocodes are parsed
+- [`/src/algorithms`](/src/algorithms) - Where the algorithms are implemented
+- [`/src/components`](/src/components) - Where the React components are implemented
+- [`/src/pseudocode`](/src/pseudocode) - How the pseudocodes are parsed
 
 ## Development setup
 
@@ -121,7 +121,7 @@ If you run into any trouble, please check the available [npm scripts](package.js
 
 ## Create new algorithms
 
-TODO: Add instructions on how to create new algorithms.
+Follow the instructions in the [algorithms README](/src/algorithms/README.md).
 
 ## Report a bug
 
