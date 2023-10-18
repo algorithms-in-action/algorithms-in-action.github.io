@@ -55,6 +55,15 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
+export const genUniqueRandNumList = (num, min, max) => {
+
+  const set = new Set();
+  while (set.size < num) {
+    set.add(getRandomInt(min, max));
+  }
+  return Array.from(set);
+};
+
 export const quicksortPerfectPivotArray = (minA, maxA) => {
   function idealOrder(min, max, v, step) {
     if (max <= min) {

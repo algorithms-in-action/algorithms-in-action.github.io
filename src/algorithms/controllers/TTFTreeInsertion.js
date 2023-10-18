@@ -113,6 +113,10 @@ export default {
       '1',
       (vis, id, value) => {
         vis.tree.addVariableNode(id, value);
+        let toColour = vis.tree.findNode(value);
+        console.log(toColour);
+        //vis.tree.visit(toColour, toColour);
+
         vis.tree.layout();
       },
       [parent.id, value]
@@ -165,6 +169,7 @@ export default {
   ) {
     if (newRoot) {
       vis.tree.addVariableNode(ParentID, newParentValue);
+      console.log('new root', newParentValue);
       vis.tree.addEdge(0, ParentID);
     }
     // remove old child
@@ -172,10 +177,12 @@ export default {
 
     // add child1 and child2 which are new now to the tree
     vis.tree.addVariableNode(child1Info[0], child1Info[1]);
+    console.log('child 1', child1Info[1]);
     vis.tree.addVariableNode(child2Info[0], child2Info[1]);
+    console.log('child 2', child2Info[1]);
 
     // add to parent as well
-    vis.tree.addVariableNode(ParentID, newParentValue);    
+    vis.tree.addVariableNode(ParentID, newParentValue);
     if (!newRoot) {
       for (let i = 0; i < parentChildren.length; i++) {
         if (i != childIdx) {
@@ -183,7 +190,7 @@ export default {
         }
       }
     }
-    
+
     // now connect them properly to new parent and also the original children
 
     if (!newRoot) {
@@ -236,23 +243,24 @@ export default {
     return tree;
   },
 
-  run(chunker, { ignore }) {
+  run(chunker, { nodes }) {
+    // node?
+    if (nodes === null || nodes.length === 0) return;
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 
-    let values = [78,60,4,17,95,40,94,20,44,21];
 
     // initialising tree
-    let treeStruct = this.initTree(chunker, values[0], tree);
+    let treeStruct = this.initTree(chunker, nodes[0], tree);
 
-    if (values.length === 1) return;
+    if (nodes.length === 1) return;
 
-    treeStruct = this.insert(chunker, values[1], tree, newID);
+    treeStruct = this.insert(chunker, nodes[1], tree, newID);
 
     // remaining insertions
-    for (let i = 2; i < values.length; i++) {
+    for (let i = 2; i < nodes.length; i++) {
       treeStruct = this.insert(
         chunker,
-        values[i],
+        nodes[i],
         treeStruct['nTree'],
         treeStruct['id']
       );
