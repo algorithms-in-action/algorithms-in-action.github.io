@@ -1,7 +1,7 @@
 import { TTFExp } from '../explanations';
 import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
-
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeVariable';
+import { TREE_COLOUR_CODES } from './unionFindUnion';
 
 export default {
   explanation: TTFExp,
@@ -25,6 +25,39 @@ export default {
     }
     return child.children[child.getNodeLength()];
   },
+
+    // Highlight the current value.
+    highlightValue(visObj, value, colour) {
+      this.unhighlightValue(visObj, value);
+      visObj.visit1(value, value, colour);
+    },
+
+    // Unhighlight the current value.
+    unhighlightValue(visObj, value) {
+      visObj.leave1(value, value, TREE_COLOUR_CODES.RED);
+      visObj.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
+      visObj.leave1(value, value, TREE_COLOUR_CODES.GREEN);
+    },
+
+    // Highlight an entire 2-3-4 node.
+    highlightNode(visObj, node, colour) {
+      console.log("bbb", node);
+      this.unhighlightNode(visObj, node);
+      for (let i = 0; i < node.relatedNodeIDs.length; i++) {
+        let value = node.relatedNodeIDs[i];
+        visObj.visit1(value, value, colour);
+      }
+    },
+
+    // Unhighlight an entire 2-3-4 node.
+    unhighlightNode(visObj, node) {
+      for (let i = 0; i < node.relatedNodeIDs.length; i++) {
+        let value = node.relatedNodeIDs[i];
+        visObj.leave1(value, value, TREE_COLOUR_CODES.RED);
+        visObj.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
+        visObj.leave1(value, value, TREE_COLOUR_CODES.GREEN);
+      }
+    },
 
   // return tree and node id of inserted value. expands 4-nodes on the way
   traverseAndInsert(chunker, value, tree, newID) {
@@ -111,16 +144,22 @@ export default {
     parent.addRelatedNodeID(value);
     chunker.add(
       '1',
-      (vis, id, value) => {
-        vis.tree.addVariableNode(id, value);
-        let toColour = vis.tree.findNode(value);
-        console.log(toColour);
-        //vis.tree.visit(toColour, toColour);
-
+      (vis, parent, value) => {
+        vis.tree.addVariableNode(parent.id, value);
+        this.highlightNode(vis.tree, parent, TREE_COLOUR_CODES.GREEN);
         vis.tree.layout();
       },
-      [parent.id, value]
+      [parent, value]
     );
+
+    chunker.add(
+      '1',
+      (vis, parent) => {
+        this.unhighlightNode(vis.tree, parent);
+      },
+      [parent]
+    );
+
     return { nTree: tree, id: newID };
   },
 
