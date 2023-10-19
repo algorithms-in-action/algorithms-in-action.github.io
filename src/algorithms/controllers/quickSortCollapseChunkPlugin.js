@@ -17,6 +17,7 @@ function getGlobalAlgorithm() {
   return algorithmGetter();
 }
 
+// eslint-disable-next-line
 function getGlobalDispatch() {
   return dispatchGetter();
 }
