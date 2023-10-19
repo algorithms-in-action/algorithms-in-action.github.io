@@ -1,4 +1,3 @@
-import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
@@ -84,7 +83,6 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
 // ----------------------------------------------------------------------------------------------------------------------------
 
 export default {
-  explanation: QSExp,
 
   initVisualisers() {
     return {
