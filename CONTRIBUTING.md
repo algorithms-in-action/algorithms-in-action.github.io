@@ -96,8 +96,9 @@ While iterating on AiA code, you can run the following commands:
 3. Check if everything still runs in production mode:
 
    ```bash
-   npm build
-   npm start
+   npm run build
+   npm install -g serve
+   serve -s build
    ```
 
 4. Create tests
