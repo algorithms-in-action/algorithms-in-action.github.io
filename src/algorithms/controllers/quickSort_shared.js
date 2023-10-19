@@ -41,12 +41,15 @@ const QS_BOOKMARKS = {
   set_i_left_minus_1: 11,
   set_j_right: 12,
   swap_pivot_into_correct_position: 13,
-  // 14
-  // 15
-  // 16
-  // 17
-  // 18
+  mid_to_middle_index: 14,
+  first_swap_A_idx_left_with_A_idx_mid: 15,
+  swap_A_idx_right_with_A_idx_mid: 16,
+  second_swap_A_idx_left_with_A_idx_mid: 17,
+  swap_A_idx_mid_with_A_idx_right_minus_1: 18,
   done_qs_right: 19,
+  first_if_A_idx_left_greater_A_idx_right: 20,
+  if_A_idx_mid_greater_A_idx_right: 21,
+  second_if_A_idx_left_greater_A_idx_right: 22,
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------
