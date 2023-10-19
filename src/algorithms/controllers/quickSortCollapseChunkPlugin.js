@@ -7,6 +7,7 @@
  * @Description: logic for quickSort reachability
  */
 import { GlobalActions } from '../../context/actions';
+import { triggerButtonClick } from '../parameters/ButtonClickTrigger.js';
 
 const QS_NAME = 'quickSort';
 
@@ -44,28 +45,19 @@ export function isPartitionExpanded() {
   return collapse.quickSort.sort.Partition;
 }
 
-export function isQuicksortFirstHalfExpanded() {
+export function isRecursionExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.QuicksortFirstHalf;
-}
-
-export function isQuicksortSecondHalfExpanded() {
-  const algorithm = getGlobalAlgorithm();
-  if (algorithm.id.name !== QS_NAME) return false;
-  // , playing, chunker
-
-  // eslint-disable-next-line
-  const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.QuicksortSecondHalf;
+  return collapse.quickSort.sort.QuicksortBoth;
 }
 
 export function onCollapseStateChangeQS() {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
+  triggerButtonClick();
   GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
 }
