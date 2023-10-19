@@ -56,7 +56,7 @@ const algorithms = {
     instructions: Instructions.QSInstruction,
     extraInfo: ExtraInfo.QSM3Info,
     pseudocode: {
-      sort: Pseudocode.quickSort,
+      sort: Pseudocode.quickSortM3,
     },
     controller: {
       sort: Controller.quickSort,
