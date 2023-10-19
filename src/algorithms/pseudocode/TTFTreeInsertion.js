@@ -52,104 +52,14 @@ export default parse(`
 \\Note}
     
 \\Code{
-    T234_Search(t, k)
-    \\Note{  We separate comparison for equality with comparison for finding
-    the subtree to traverse down to next to simplify refinement
-    \\Note}
-    \\In{
-        while t not Empty
-        \\In{
-            if the root of t contains k, return t \\Ref Return_if_key_in_node
-            \\Expl{  There can be different kinds of node and multiple keys per node.
-            \\Expl}
-            \\Note{  Refinement is messy due to different kinds of node so we
-                    include return here and avoid else
-            \\Note}
-            t <- the child of t that may contain k \\Ref Find_child
-            \\Expl{  There can be different kinds of node and multiple children.
-            \\Expl}
-        \\In}
-        return NotFound
-    \\In}
-\\Code}
-    
-\\Code{
-    Return_if_key_in_node
-    if t is a two-node
-    \\In{
-        if t.key1 == k return t
-    \\In}
-    else if t is a three-node
-    \\In{
-        if t.key1 == k or t.key2 == k return t
-    \\In}
-    else // t is a four-node
-    \\In{
-        if t.key1 == k or t.key2 == k or t.key3 == k return t
-    \\In}
-\\Code}
-    
-\\Code{
-    Find_child
-    if t is a two-node
-    \\In{
-        if k < t.key1
-        \\In{
-            c <- t.child1
-        \\In}
-        else
-        \\In{
-            c <- t.child2
-        \\In}
-    \\In}
-    else if t is a three-node
-    \\In{
-        if k < t.key1
-        \\In{
-            c <- t.child1
-        \\In}
-        else if k < t.key2
-        \\In{
-            c <- t.child2
-        \\In}
-        else
-        \\In{
-            c <- t.child3
-        \\In}
-    \\In}
-    else // t is a four-node
-    \\Expl{ We could use nested if-then-else here so we always have two
-    key comparisons
-    \\Expl}
-    \\In{
-        if k < t.key1
-        \\In{
-            c <- t.child1
-        \\In}
-        else if k < t.key2
-        \\In{
-            c <- t.child2
-        \\In}
-        else if k < t.key3
-        \\In{
-            c <- t.child3
-        \\In}
-        else
-        \\In{
-            c <- t.child4
-        \\In}
-    \\In}
-\\Code}
-    
-\\Code{
     Main
-    T234_Insert(t, k) \\B 1
+    T234_Insert(t, k) \\B T234_Insert(t, k)
     \\In{
-        if t = Empty 
+        if t = Empty \\B if t = Empty
         \\In{
-            t <- a new two-node containing k and empty subtrees
+            t <- a new two-node containing k and empty subtrees \\B t <- a new two-node containing k and empty subtrees
         \\In}
-        else
+        else \\B else: T234_Insert(t, k)
         \\In{
             Traverse down to a leaf node p, transforming any four-nodes \\Ref Traverse 
             \\Expl{  Any four-node encountered is split into two two-nodes and the
@@ -168,18 +78,18 @@ export default parse(`
     
 \\Code{
     Insert
-    if p is a two-node
+    if p is a two-node \\B if p is a two-node
     \\In{
-        Change p to a three-node, containing the old p.key1 and k
+        Change p to a three-node, containing the old p.key1 and k \\B Change p to a three-node, containing the old p.key1 and k
         \\Note{ Expand this????
         \\Note}
         \\Expl{ We must compare the keys and ensure they are in the right
                order in the new node.  All subtrees are empty.
         \\Expl}
     \\In}
-    else // p is three-node (four-nodes have been split)
+    else // p is three-node (four-nodes have been split) \\B else // p is three-node (four-nodes have been split)
     \\In{
-        Change p to a four-node, containing the old p.key1 and p.key2 and k
+        Change p to a four-node, containing the old p.key1 and p.key2 and k \\B Change p to a four-node, containing the old p.key1 and p.key2 and k
         \\Note{ Expand this????
         \\Note}
         \\Expl{ We must compare the keys and ensure they are in the right
@@ -198,15 +108,15 @@ export default parse(`
     It's also more similar to the BST code to iterate until we fall off the
     tree then repeat some comparison.
     \\Note}
-    p <- Empty        // We keep track of the parent node, initially Empty
-    c <- t            // c traverses the path from the root down to a leaf
+    p <- Empty        // We keep track of the parent node, initially Empty \\B p <- Empty
+    c <- t            // c traverses the path from the root down to a leaf \\B c <- t
     \\Expl{  c (and parent node p) will follow a path down to a leaf where new key
             is to be inserted. We start from the root (t) and stop when p
             reaches a leaf.
     \\Expl}
     repeat
     \\In{
-        if c is a four-node
+        if c is a four-node \\B if c is a four-node
         \\In{
         Split c into two two-nodes and insert c.key2 into parent (p) \\Ref Split
            \\Expl{  c is assigned the left or right node depending on comparison
@@ -214,33 +124,33 @@ export default parse(`
                    and the height of the tree increases by one.
             \\Expl}
         \\In} 
-        p <- c
+        p <- c \\B p <- c
         \\Expl{  c will move down one level so the old c is the new p.
         \\Expl}
         c <- a child of c, dependent on key comparisons \\Ref MoveToChild
     \\In}
-    until c is Empty (and p is a leaf node)
+    until c is Empty (and p is a leaf node) \\B until c is Empty (and p is a leaf node)
 \\Code}
     
 \\Code{
     Split 
-    c1 <- new two-node with c.child1, c.key1 and c.child2
-    c2 <- new two-node with c.child3, c.key3 and c.child4
+    c1 <- new two-node with c.child1, c.key1 and c.child2 \\B c1 <- new two-node with c.child1, c.key1 and c.child2
+    c2 <- new two-node with c.child3, c.key3 and c.child4 \\B c2 <- new two-node with c.child3, c.key3 and c.child4
     Insert c1, c.key2 and c2 into parent node p, replacing c \\Ref InsertParent
     \\Expl{
         c1 and c2 will be children of p instead of c. p must be a two-node
         or three-node so there will be room for expansion, because
         four-nodes were split as we traversed down.
     \\Expl}
-    if k < c.key2
+    if k < c.key2 \\B if k < c.key2
     \\In{
-        c <- c1
+        c <- c1 \\B c <- c1
         \\Expl{ c is the new subtree that k belongs in
         \\Expl}
     \\In}
-    else
+    else \\B if k < c.key2 else
     \\In{
-        c <- c2
+        c <- c2 \\B c <- c2
         \\Expl{ c is the new subtree that k belongs in
         \\Expl}
     \\In}
@@ -248,16 +158,16 @@ export default parse(`
     
     \\Code{
     InsertParent
-    if p = Empty
+    if p = Empty \\B if p = Empty
     \\In{
-        t <- new two-node with c1, c.key2 and c2
+        t <- new two-node with c1, c.key2 and c2 \\B t <- new two-node with c1, c.key2 and c2
         \\Expl{  This is where the tree t grows by one level
         \\Expl}
-        p <- t
+        p <- t \\B p <- t
     \\In}
-    else if p is a two-node
+    else if p is a two-node \\B else if p is a two-node
     \\In{
-        Change p to a three-node, with c1, c.key2 and c2 replacing c
+        Change p to a three-node, with c1, c.key2 and c2 replacing c \\B Change p to a three-node, with c1, c.key2 and c2 replacing c
         \\Note{ Expand this????
         \\Note}
         \\Expl{  If the old p.child1 = c the new node contains c1, c.key2, c2,
@@ -265,7 +175,7 @@ export default parse(`
                 contains p.child1, p.key1, c1, c.key2 and c2.
         \\Expl}
     \\In}
-    else // p is three-node (four-nodes have been split)
+    else // p is three-node (four-nodes have been split) \\B else: InsertParent
     \\In{
         Change p to a four-node, with c1, c.key2 and c2 replacing c
         \\Note{ Expand this????
@@ -281,52 +191,52 @@ export default parse(`
     
 \\Code{
     MoveToChild
-    if c is a two-node
+    if c is a two-node \\B if c is a two-node
     \\In{
-        if k < c.key1
+        if k < c.key1 \\B if k < c.key1: if c is a two-node
         \\In{
-            c <- c.child1
+            c <- c.child1 \\B c <- c.child1: if c is a two-node
         \\In}
-        else
+        else \\B else: if c is a two-node
         \\In{
-            c <- c.child2
+            c <- c.child2 \\B c <-c.child2: if c is a two-node
         \\In}
     \\In}
-    else if c is a three-node
+    else if c is a three-node \\B else if c is a three-node
     \\In{
-        if k < c.key1
+        if k < c.key1 \\B if k < c.key1: else if c is a three-node
         \\In{
-            c <- c.child1
+            c <- c.child1 \\B c <- c.child1: if c is a two-node
         \\In}
-        else if k < c.key2
+        else if k < c.key2 \\B else if k < c.key2: else if c is a three-node
         \\In{
-            c <- c.child2
+            c <- c.child2 \\B c <- c.child2: else if c is a three-node
         \\In}
-        else
+        else \\B else: else if c is a three-node
         \\In{
-            c <- c.child3
+            c <- c.child3 \\B c <- c.child3: else if c is a three-node
         \\In}
     \\In}
-    else // c is a four-node
+    else // c is a four-node \\B else: MoveToChild
     \\Expl{ We could use nested if-then-else here so we always have two
     key comparisons
     \\Expl}
     \\In{
-        if k < c.key1
+        if k < c.key1 \\B if k < c.key1: else: MoveToChild
         \\In{
-            c <- c.child1
+            c <- c.child1 \\B if c <- c.child1: else: MoveToChild
         \\In}
-        else if k < c.key2
+        else if k < c.key2 \\B else if k < c.key2: else: MoveToChild
         \\In{
-            c <- c.child2
+            c <- c.child2 \\B c <- c.child2: else: MoveToChild
         \\In}
-        else if k < c.key3
+        else if k < c.key3 \\B else if k < c.key3
         \\In{
-            c <- c.child3
+            c <- c.child3 \\B c <- c.child3: else: MoveToChild
         \\In}
-        else
+        else \\B else: else: MoveToChild
         \\In{
-            c <- c.child4
+            c <- c.child4 \\B c <- c.child4
         \\In}
     \\In}
 \\Code}
