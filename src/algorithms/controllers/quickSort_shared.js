@@ -527,14 +527,3 @@ export function run_QS(is_qs_median_of_3) {
 }
 
 
-export function return_qs(is_qs_median_of_3) {
-
-  const run = run_QS(is_qs_median_of_3)
-
-  return {
-    initVisualisers, 
-    run
-  }
-}
-
-
