@@ -4,7 +4,7 @@ import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
   isPartitionExpanded,
-  isQuicksortExpanded,
+  isRecursionExpanded,
 } from './quickSortCollapseChunkPlugin';
 
 // visualisation variable strings
@@ -211,7 +211,7 @@ export default {
       const pivot = a[right];
 
       function boolShouldAnimate() {
-        return depth === 0 || isQuicksortExpanded();
+        return depth === 0 || isRecursionExpanded();
       }
 
       if (boolShouldAnimate()) {
@@ -373,7 +373,7 @@ export default {
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
       function boolShouldAnimate() {
-        return depth === 0 || isQuicksortExpanded();
+        return depth === 0 || isRecursionExpanded();
       }
 
       if (boolShouldAnimate()) {
@@ -386,7 +386,7 @@ export default {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-        if (depth === 0 || isQuicksortExpanded()) {
+        if (depth === 0 || isRecursionExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
@@ -408,7 +408,7 @@ export default {
 
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        if (depth === 0 || isQuicksortExpanded()) {
+        if (depth === 0 || isRecursionExpanded()) {
           chunker.add(QS_BOOKMARKS.quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
@@ -429,7 +429,7 @@ export default {
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
       else if (left < a.length) {
-        let size_one_bookmark = isQuicksortExpanded()
+        let size_one_bookmark = isRecursionExpanded()
           ? QS_BOOKMARKS.quicksort_left_to_i_minus_1
           : QS_BOOKMARKS.done_qs_right;
 

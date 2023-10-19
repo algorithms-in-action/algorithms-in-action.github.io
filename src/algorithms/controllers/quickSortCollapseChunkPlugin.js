@@ -44,7 +44,7 @@ export function isPartitionExpanded() {
   return collapse.quickSort.sort.Partition;
 }
 
-export function isQuicksortExpanded() {
+export function isRecursionExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (algorithm.id.name !== QS_NAME) return false;
   // , playing, chunker
