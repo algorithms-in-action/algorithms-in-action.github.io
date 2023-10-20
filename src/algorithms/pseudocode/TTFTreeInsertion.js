@@ -87,8 +87,8 @@ export default parse(`
                order in the new node.  All subtrees are empty.
         \\Expl}
     \\In}
-    else // p is three-node (four-nodes have been split) \\B else // p is three-node (four-nodes have been split)
-    \\In{
+    else // p is three-node (four-nodes have been split) \\B else: Insert
+        \\In{
         Change p to a four-node, containing the old p.key1 and p.key2 and k \\B Change p to a four-node, containing the old p.key1 and p.key2 and k
         \\Note{ Expand this????
         \\Note}
@@ -114,7 +114,7 @@ export default parse(`
             is to be inserted. We start from the root (t) and stop when p
             reaches a leaf.
     \\Expl}
-    repeat
+    repeat \\B repeat
     \\In{
         if c is a four-node \\B if c is a four-node
         \\In{
@@ -142,13 +142,13 @@ export default parse(`
         or three-node so there will be room for expansion, because
         four-nodes were split as we traversed down.
     \\Expl}
-    if k < c.key2 \\B if k < c.key2
+    if k < c.key2 \\B if k < c.key2: Split
     \\In{
         c <- c1 \\B c <- c1
         \\Expl{ c is the new subtree that k belongs in
         \\Expl}
     \\In}
-    else \\B if k < c.key2 else
+    else \\B else: Split
     \\In{
         c <- c2 \\B c <- c2
         \\Expl{ c is the new subtree that k belongs in
@@ -177,7 +177,7 @@ export default parse(`
     \\In}
     else // p is three-node (four-nodes have been split) \\B else: InsertParent
     \\In{
-        Change p to a four-node, with c1, c.key2 and c2 replacing c
+        Change p to a four-node, with c1, c.key2 and c2 replacing c \\B Change p to a four-node, with c1, c.key2 and c2 replacing c
         \\Note{ Expand this????
         \\Note}
         \\Expl{  If the old p.child1 = c the new node contains c1, c.key2, c2,
@@ -199,14 +199,14 @@ export default parse(`
         \\In}
         else \\B else: if c is a two-node
         \\In{
-            c <- c.child2 \\B c <-c.child2: if c is a two-node
+            c <- c.child2 \\B c <- c.child2: if c is a two-node
         \\In}
     \\In}
     else if c is a three-node \\B else if c is a three-node
     \\In{
         if k < c.key1 \\B if k < c.key1: else if c is a three-node
         \\In{
-            c <- c.child1 \\B c <- c.child1: if c is a two-node
+            c <- c.child1 \\B c <- c.child1: else if c is a three-node
         \\In}
         else if k < c.key2 \\B else if k < c.key2: else if c is a three-node
         \\In{
@@ -224,7 +224,7 @@ export default parse(`
     \\In{
         if k < c.key1 \\B if k < c.key1: else: MoveToChild
         \\In{
-            c <- c.child1 \\B if c <- c.child1: else: MoveToChild
+            c <- c.child1 \\B c <- c.child1: else: MoveToChild
         \\In}
         else if k < c.key2 \\B else if k < c.key2: else: MoveToChild
         \\In{
