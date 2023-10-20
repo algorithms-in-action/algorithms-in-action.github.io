@@ -236,7 +236,7 @@ export function run_QS(is_qs_median_of_3) {
 
         chunker.add(
           bookmark,
-          (vis, _n1, _n2) => {
+          (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             vis.array.swapElements(_n1, _n2);
   
             if (isPivotSwap) {
@@ -244,9 +244,11 @@ export function run_QS(is_qs_median_of_3) {
               // const Cur_pivot = n2
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
             }
+
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
   
           },
-          [n1, n2],
+          [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
         );
       };
 
