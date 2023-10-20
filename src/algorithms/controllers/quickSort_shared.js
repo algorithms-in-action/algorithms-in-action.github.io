@@ -272,11 +272,11 @@ export function run_QS(is_qs_median_of_3) {
           // TODO placeholder
           // TODO put in asserts
           const mid = Math.floor((left + right) / 2);
-          pivot_index = mid;
 
           chunker.add(QS_BOOKMARKS.M3_mid_to_middle_index, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, mid);
+            pivot_index = mid;
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [mid, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],); 
@@ -300,6 +300,7 @@ export function run_QS(is_qs_median_of_3) {
           chunker.add(QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, right-1);
+            pivot_index = right-1;
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [right-1, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],);
