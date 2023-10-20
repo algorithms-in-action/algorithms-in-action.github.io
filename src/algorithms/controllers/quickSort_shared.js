@@ -177,6 +177,8 @@ export function run_QS(is_qs_median_of_3) {
         stack[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
       }
 
+      if (!isPartitionExpanded()) { return stack; }
+
       if (cur_i !== undefined && cur_i !== -1) {
 
         stack[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
