@@ -84,6 +84,24 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
   return a;
 }
 
+
+const highlight = (vis, index, isPrimaryColor = true) => {
+  if (isPrimaryColor) {
+    vis.array.select(index);
+  } else {
+    vis.array.patch(index);
+  }
+};
+
+const unhighlight = (vis, index, isPrimaryColor = true) => {
+  if (isPrimaryColor) {
+    vis.array.deselect(index);
+  } else {
+    vis.array.depatch(index);
+  }
+};
+
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -273,14 +291,14 @@ export function run_QS(is_qs_median_of_3) {
           // TODO put in asserts
           const mid = Math.floor((left + right) / 2);
 
-          // assigning the pivot as the midpoint calculated above
-          chunker.add(QS_BOOKMARKS.M3_mid_to_middle_index, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, mid);
-            pivot_index = mid;
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+          // assigning the pivot as the midpoint calculated above
+          chunker.add(QS_BOOKMARKS.M3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
+            highlight(vis, cur_mid, false);
+            highlight(vis, cur_left, false);
+            highlight(vis, cur_right, false);
           },
-          [mid, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],); 
+          [mid, left, right],); 
 
           // if a[left] > a[mid]
           chunker.add(QS_BOOKMARKS.M3_first_if_A_idx_left_greater_A_idx_right); 
@@ -304,13 +322,16 @@ export function run_QS(is_qs_median_of_3) {
           swapAction(QS_BOOKMARKS.M3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
 
           // pivot <- A[right - 1]
-          chunker.add(QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, right-1);
-            pivot_index = right-1;
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+          pivot_index = right-1
+          chunker.add(QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, (vis, cur_right, cur_left) => {
+            unhighlight(vis, cur_right, false);
+            unhighlight(vis, cur_right -1, false);
+            unhighlight(vis, cur_left, false);
           },
-          [right-1, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],);
+          [right, left],);
+
+          // TODO why is this right -1 ?
 
         } else {
           chunker.add(
@@ -318,7 +339,7 @@ export function run_QS(is_qs_median_of_3) {
             (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
               assert(cur_right === cur_pivot);
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_right);
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot);
               refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
             },
             [right, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],
