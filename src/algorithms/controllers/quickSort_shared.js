@@ -284,6 +284,10 @@ export function run_QS(is_qs_median_of_3) {
 
 
         // pick pivot --------
+
+        // TODO THERE MAY BE A BUG HERE
+        // THIS DOESN"T RUN ON RECCURSIVE CALLS
+        // SO STUFF IS LIKELY NOT IN THE RIGHT PLACE
         
         if (is_qs_median_of_3) {
 
