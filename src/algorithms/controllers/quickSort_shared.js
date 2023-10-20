@@ -230,7 +230,7 @@ export function run_QS(is_qs_median_of_3) {
       let pivot_index = right
 
 
-      function swapAction(bookmark, n1, n2, { isPivotSwap }) {
+      function swapAction(bookmark, n1, n2) {
 
         [a[n1], a[n2]] = [a[n2], a[n1]]
 
@@ -238,13 +238,8 @@ export function run_QS(is_qs_median_of_3) {
           bookmark,
           (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             vis.array.swapElements(_n1, _n2);
-  
-            if (isPivotSwap) {
-              const Cur_i = n1
-              // const Cur_pivot = n2
-              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
-            }
-
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
+            
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
   
           },
@@ -349,13 +344,12 @@ export function run_QS(is_qs_median_of_3) {
               ? QS_BOOKMARKS.swap_array_i_j_vals
               : QS_BOOKMARKS.done_qs,
             i,
-            j,
-            {
-              isPivotSwap: false,
-            },
+            j
           );
         }
       }
+
+      pivot_index = i
 
       // swap pivot with i
       swapAction(
@@ -363,13 +357,10 @@ export function run_QS(is_qs_median_of_3) {
           ? QS_BOOKMARKS.swap_pivot_into_correct_position
           : QS_BOOKMARKS.done_qs,
         i,
-        right,
-        {
-          isPivotSwap: true,
-        },
+        right
       );
 
-      pivot_index = i
+
 
       if (boolShouldAnimate()) {
         chunker.add(
