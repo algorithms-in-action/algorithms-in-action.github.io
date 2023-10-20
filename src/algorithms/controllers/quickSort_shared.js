@@ -27,6 +27,7 @@ const STACK_FRAME_COLOR = {
 // bookmarks (id) into the REAL file for quicksort
 // (search \\B and find quicksort)
 // keep up to date with this file, ideally this would auto generate
+// tagged with M3 if only in median of 3
 const QS_BOOKMARKS = {
   quicksort_left_to_right: 1,
   if_left_less_right: 2,
@@ -41,15 +42,15 @@ const QS_BOOKMARKS = {
   set_i_left_minus_1: 11,
   set_j_right: 12,
   swap_pivot_into_correct_position: 13,
-  mid_to_middle_index: 14,
-  first_swap_A_idx_left_with_A_idx_mid: 15,
-  swap_A_idx_right_with_A_idx_mid: 16,
-  second_swap_A_idx_left_with_A_idx_mid: 17,
-  swap_A_idx_mid_with_A_idx_right_minus_1: 18,
+  M3_mid_to_middle_index: 14, // M3
+  M3_first_swap_A_idx_left_with_A_idx_mid: 15, // 
+  M3_swap_A_idx_right_with_A_idx_mid: 16,
+  M3_second_swap_A_idx_left_with_A_idx_mid: 17,
+  M3_swap_A_idx_mid_with_A_idx_right_minus_1: 18,
   done_qs: 19,
-  first_if_A_idx_left_greater_A_idx_right: 20,
-  if_A_idx_mid_greater_A_idx_right: 21,
-  second_if_A_idx_left_greater_A_idx_right: 22,
+  M3_first_if_A_idx_left_greater_A_idx_right: 20,
+  M3_if_A_idx_mid_greater_A_idx_right: 21,
+  M3_second_if_A_idx_left_greater_A_idx_right: 22,
 };
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -254,15 +255,37 @@ export function run_QS(is_qs_median_of_3) {
       }
 
       if (boolShouldAnimate()) {
-        chunker.add(
-          QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
-          (vis, p, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-          },
-          [right, real_stack, finished_stack_frames, undefined, undefined, right, depth],
-        );
+
+        // pick pivot --------
+
+        if (is_qs_median_of_3) {
+
+          // TODO placeholder
+
+          chunker.add(QS_BOOKMARKS.M3_mid_to_middle_index); 
+          chunker.add(QS_BOOKMARKS.M3_first_swap_A_idx_left_with_A_idx_mid); 
+          chunker.add(QS_BOOKMARKS.M3_swap_A_idx_right_with_A_idx_mid); 
+          chunker.add(QS_BOOKMARKS.M3_second_swap_A_idx_left_with_A_idx_mid); 
+          chunker.add(QS_BOOKMARKS.M3_swap_A_idx_mid_with_A_idx_right_minus_1); 
+
+          chunker.add(QS_BOOKMARKS.M3_first_if_A_idx_left_greater_A_idx_right); 
+          chunker.add(QS_BOOKMARKS.M3_if_A_idx_mid_greater_A_idx_right); 
+          chunker.add(QS_BOOKMARKS.M3_second_if_A_idx_left_greater_A_idx_right); 
+
+        } else {
+          chunker.add(
+            QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
+            (vis, p, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+  
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
+              refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+            },
+            [right, real_stack, finished_stack_frames, undefined, undefined, right, depth],
+          );  
+        }
+
+        // pick pivot end --------
 
         chunker.add(
           QS_BOOKMARKS.set_i_left_minus_1,
