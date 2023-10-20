@@ -43,7 +43,9 @@ export function isPartitionExpanded() {
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.Partition;
+  return algorithm.id.name === QS_NAME
+    ? collapse.quickSort.sort.Partition
+    : collapse.quickSortM3.sort.Partition;
 }
 
 export function isRecursionExpanded() {
@@ -53,7 +55,10 @@ export function isRecursionExpanded() {
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.quickSort.sort.QuicksortBoth;
+  console.log(algorithm);
+  return algorithm.id.name === QS_NAME
+    ? collapse.quickSort.sort.QuicksortBoth
+    : collapse.quickSortM3.sort.QuicksortBoth;
 }
 
 export function onCollapseStateChangeQS() {
