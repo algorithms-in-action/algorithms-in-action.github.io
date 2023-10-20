@@ -235,8 +235,8 @@ export function run_QS(is_qs_median_of_3) {
       
       const a = partition_num_array;
       let i = left - 1;
-      let j = right;
-      let pivot_index = right
+      let j = is_qs_median_of_3 ? right-1 : right;
+      let pivot_index = is_qs_median_of_3 ? right-1 : right;
 
 
       function swapAction(bookmark, n1, n2) {
@@ -256,7 +256,7 @@ export function run_QS(is_qs_median_of_3) {
         );
       };
 
-      function pivot_value() { return a[right] }; 
+      function pivot_value() { return a[pivot_index] }; 
 
       function boolShouldAnimate() {
         return depth === 0 || isRecursionExpanded();
@@ -304,10 +304,10 @@ export function run_QS(is_qs_median_of_3) {
           swapAction(QS_BOOKMARKS.M3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
 
           // pivot <- A[right - 1]
-          pivot_index = right-1
           chunker.add(QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, pivot_index);
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, right-1);
+            pivot_index = right-1;
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [right-1, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],);
@@ -420,7 +420,7 @@ export function run_QS(is_qs_median_of_3) {
           ? QS_BOOKMARKS.swap_pivot_into_correct_position
           : QS_BOOKMARKS.done_qs,
         i,
-        right
+        is_qs_median_of_3 ? right-1 : right
       );
 
 
@@ -573,5 +573,4 @@ export function run_QS(is_qs_median_of_3) {
     return result;
   }
 }
-
 

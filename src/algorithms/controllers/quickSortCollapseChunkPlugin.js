@@ -55,7 +55,6 @@ export function isRecursionExpanded() {
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  console.log(algorithm);
   return algorithm.id.name === QS_NAME
     ? collapse.quickSort.sort.QuicksortBoth
     : collapse.quickSortM3.sort.QuicksortBoth;
