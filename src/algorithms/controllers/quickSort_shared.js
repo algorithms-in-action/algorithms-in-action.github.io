@@ -304,10 +304,10 @@ export function run_QS(is_qs_median_of_3) {
           swapAction(QS_BOOKMARKS.M3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
 
           // pivot <- A[right - 1]
+          pivot_index = right-1
           chunker.add(QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right, (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, right-1);
-            pivot_index = right-1;
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, pivot_index);
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [right-1, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],);
