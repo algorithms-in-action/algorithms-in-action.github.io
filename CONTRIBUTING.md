@@ -1,17 +1,17 @@
-# Contributing to AiA
+# Contributing to AIA
 
-Hi there! 👋 We're thrilled that you'd like to contribute to AiA.
+Hi there! 👋 We're thrilled that you'd like to contribute to AIA.
 
 ## Contents
 
-- [Contributing to AiA](#contributing-to-aia)
+- [Contributing to AIA](#contributing-to-aia)
   - [Contents](#contents)
   - [Directory structure](#directory-structure)
   - [Development setup](#development-setup)
     - [Requirements](#requirements)
       - [Node.js](#nodejs)
       - [Python](#python)
-    - [Actual AiA setup](#actual-aia-setup)
+    - [Actual AIA setup](#actual-aia-setup)
     - [Start](#start)
   - [Development cycle](#development-cycle)
     - [Test suite](#test-suite)
@@ -21,7 +21,7 @@ Hi there! 👋 We're thrilled that you'd like to contribute to AiA.
 
 ## Directory structure
 
-AiA is purely frontend code written in React.
+AIA is purely frontend code written in React.
 
 The most important directories:
 
@@ -41,14 +41,14 @@ The most important directories:
 
 [Python](https://www.python.org/) version 3.9.6 or newer is required for development purposes.
 
-### Actual AiA setup
+### Actual AIA setup
 
 > **IMPORTANT**: All the steps below have to get executed at least once to get the development setup up and running!
 
-Now that everything AiA requires to run is installed, the actual AiA code can be
+Now that everything AIA requires to run is installed, the actual AIA code can be
 checked out and set up:
 
-1. [Fork](https://guides.github.com/activities/forking/#fork) the AiA repository.
+1. [Fork](https://guides.github.com/activities/forking/#fork) the AIA repository.
 
 2. Clone your forked repository:
 
@@ -62,7 +62,7 @@ checked out and set up:
    cd algorithms-in-action.github.io
    ```
 
-4. Add the original AiA repository as `upstream` to your forked repository:
+4. Add the original AIA repository as `upstream` to your forked repository:
 
    ```bash
    git remote add upstream https://github.com/algorithms-in-action/algorithms-in-action.github.io.git
@@ -76,7 +76,7 @@ checked out and set up:
 
 ### Start
 
-To start AiA execute:
+To start AIA execute:
 
 ```bash
 npm start
@@ -84,9 +84,9 @@ npm start
 
 ## Development cycle
 
-While iterating on AiA code, you can run the following commands:
+While iterating on AIA code, you can run the following commands:
 
-1. Start AiA:
+1. Start AIA:
 
    ```bash
    npm start
