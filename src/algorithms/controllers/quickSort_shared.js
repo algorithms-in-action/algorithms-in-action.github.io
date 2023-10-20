@@ -106,12 +106,8 @@ export function initVisualisers() {
  */
 
 export function run_QS(is_qs_median_of_3) {
-
-  console.log("Expect : 1 True, 1 False.  Cur is  " + is_qs_median_of_3) // REMOVE
   
   return function run(chunker, { nodes }) {
-
-    console.log("being run " + is_qs_median_of_3) // REMOVE
 
     // can't rename from nodes
 
