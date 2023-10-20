@@ -106,5 +106,68 @@ describe('2-3-4 Tree', () => {
     });
 
 
+
+  });
+  describe('formParentFourNode', () => {
+    it('should return -1 as child doesnt exist in parent', () => {
+      const child = new VariableTreeNode(1);
+      const parent = new VariableTreeNode(2);
+      parent.addRelatedNodeID(6);
+      parent.addRelatedNodeID(10);
+      child.addRelatedNodeID(2);
+      child.addRelatedNodeID(3);
+      child.addRelatedNodeID(4);
+
+      const result = TTFTreeInsertion.formParentFourNode(parent, child, null, null);
+      expect(result).toStrictEqual(-1);
+
+    });
+    it('should return 1 as child is second child in parent', () => {
+      const child = new VariableTreeNode(1);
+      const child1 = new VariableTreeNode(3);
+      const child2 = new VariableTreeNode(4);
+      const parent = new VariableTreeNode(2);
+
+      parent.addRelatedNodeID(6);
+      parent.addRelatedNodeID(10);
+      child.addRelatedNodeID(2);
+      child.addRelatedNodeID(3);
+      child.addRelatedNodeID(4);
+      child1.addRelatedNodeID(8);
+      child2.addRelatedNodeID(12);
+      parent.addChild(child);
+      parent.addChild(child1);
+      parent.addChild(child2);
+      const result = TTFTreeInsertion.formParentFourNode(parent, child1, null, null);
+      expect(result).toStrictEqual(1);
+
+    });
+
+    it('should return 3 as child is fourth child in parent', () => {
+      const child = new VariableTreeNode(1);
+      const child1 = new VariableTreeNode(3);
+      const child2 = new VariableTreeNode(4);
+      const child3 = new VariableTreeNode(5);
+      const parent = new VariableTreeNode(2);
+
+      parent.addRelatedNodeID(6);
+      parent.addRelatedNodeID(10);
+      parent.addRelatedNodeID(15);
+      child.addRelatedNodeID(2);
+      child.addRelatedNodeID(3);
+      child.addRelatedNodeID(4);
+      child1.addRelatedNodeID(8);
+      child2.addRelatedNodeID(9);
+      child3.addRelatedNodeID(11);
+      child3.addRelatedNodeID(12);
+      parent.addChild(child);
+      parent.addChild(child1);
+      parent.addChild(child2);
+      parent.addChild(child3);
+      const result = TTFTreeInsertion.formParentFourNode(parent, child3, null, null);
+      expect(result).toStrictEqual(3);
+
+    });
+
   });
 });
