@@ -207,26 +207,24 @@ export function run_QS(is_qs_median_of_3) {
     };
 
 
-    function swapAction(bookmark, [n1, n2], { isPivotSwap }) {
+    function swapAction(bookmark, n1, n2, { isPivotSwap }) {
 
       chunker.add(
         bookmark,
-        (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames) => {
+        (vis, _n1, _n2) => {
           vis.array.swapElements(_n1, _n2);
 
           if (isPivotSwap) {
             const Cur_i = n1
-            const Cur_pivot = n2
+            // const Cur_pivot = n2
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, Cur_pivot, undefined, Cur_i, undefined)
           }
 
         },
-        [n1, n2, real_stack, finished_stack_frames, ],
+        [n1, n2],
       );
 
-
-      return [n2, n1] // [n1, n2] = swapAction(..., [n1, n2], ...)
+      // return [n2, n1] // [n1, n2] = swapAction(..., [n1, n2], ...)
     };
 
     function assign_i_j(vis, variable_name, index) {
