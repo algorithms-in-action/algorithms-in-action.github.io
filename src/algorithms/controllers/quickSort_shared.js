@@ -171,31 +171,18 @@ export function run_QS(is_qs_median_of_3) {
         return stack;
       }
 
-      // preferentially display the indices over the depth
-      // TODO: display both, one on top of the other
-
       if (cur_pivot_index !== undefined && cur_pivot_index !== -1) {
 
-        console.log(stack)
-        console.log(cur_depth)
-        console.log(cur_pivot_index)
-
-        assert(stack[cur_depth][cur_pivot_index])
-        assert(stack[cur_depth][cur_pivot_index].extra)
         stack[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
       }
 
       if (cur_i !== undefined && cur_i !== -1) {
 
-        assert(stack[cur_depth][cur_i])
-        assert(stack[cur_depth][cur_i].extra)
         stack[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
       }
 
       if (cur_j !== undefined && cur_j !== -1) {
 
-        assert(stack[cur_depth][cur_j])
-        assert(stack[cur_depth][cur_j].extra)
         stack[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
       }
 
@@ -220,20 +207,26 @@ export function run_QS(is_qs_median_of_3) {
     };
 
 
-    const swapAction = (b, n1, n2, { isPivotSwap }) => {
-      chunker.add(
-        b,
-        (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-          vis.array.swapElements(_n1, _n2);
-          if (isPivotSwap) {
-            // n1 = i, n2 = pivot
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, n1);
+    function swapAction(bookmark, [n1, n2], { isPivotSwap }) {
 
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, _n2, cur_j, _n1, cur_depth)
+      chunker.add(
+        bookmark,
+        (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames) => {
+          vis.array.swapElements(_n1, _n2);
+
+          if (isPivotSwap) {
+            const Cur_i = n1
+            const Cur_pivot = n2
+            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
+            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, Cur_pivot, undefined, Cur_i, undefined)
           }
+
         },
-        [n1, n2, real_stack, finished_stack_frames, undefined, undefined, undefined, undefined],
+        [n1, n2, real_stack, finished_stack_frames, ],
       );
+
+
+      return [n2, n1] // [n1, n2] = swapAction(..., [n1, n2], ...)
     };
 
     function assign_i_j(vis, variable_name, index) {
@@ -253,11 +246,12 @@ export function run_QS(is_qs_median_of_3) {
     // Refer to the quicksort function for more information
     function partition(partition_num_array, left, right, depth) {
       const a = partition_num_array;
+
       let i = left - 1;
       let j = right;
-
       let pivot_index = right
-      const pivot_value = a[right]; 
+
+      function pivot_value() { return a[right] }; 
 
       function boolShouldAnimate() {
         return depth === 0 || isRecursionExpanded();
@@ -322,7 +316,7 @@ export function run_QS(is_qs_median_of_3) {
               [i, real_stack, finished_stack_frames, i, j, right, depth],
             );
           }
-        } while (a[i] < pivot_value);
+        } while (a[i] < pivot_value());
 
         do {
           j -= 1;
@@ -342,7 +336,7 @@ export function run_QS(is_qs_median_of_3) {
               [j, real_stack, finished_stack_frames, i, j, right, depth],
             );
           }
-        } while (i <= j && pivot_value < a[j]);
+        } while (i <= j && pivot_value() < a[j]);
 
         if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.if_j_greater_i);
@@ -366,7 +360,7 @@ export function run_QS(is_qs_median_of_3) {
       // swap pivot with i
       pivot_index = i
       a[right] = a[i];
-      a[i] = pivot_value;
+      a[i] = pivot_value();
 
 
       swapAction(
