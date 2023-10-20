@@ -207,26 +207,6 @@ export function run_QS(is_qs_median_of_3) {
     };
 
 
-    function swapAction(bookmark, n1, n2, { isPivotSwap }) {
-
-      chunker.add(
-        bookmark,
-        (vis, _n1, _n2) => {
-          vis.array.swapElements(_n1, _n2);
-
-          if (isPivotSwap) {
-            const Cur_i = n1
-            // const Cur_pivot = n2
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
-          }
-
-        },
-        [n1, n2],
-      );
-
-      // return [n2, n1] // [n1, n2] = swapAction(..., [n1, n2], ...)
-    };
-
     function assign_i_j(vis, variable_name, index) {
       if (isPartitionExpanded()) {
         vis.array.assignVariable(variable_name, index);
@@ -243,11 +223,35 @@ export function run_QS(is_qs_median_of_3) {
     // it prevents some chunkers to be added so that some animation can be done in one step.
     // Refer to the quicksort function for more information
     function partition(partition_num_array, left, right, depth) {
+      
       const a = partition_num_array;
-
       let i = left - 1;
       let j = right;
       let pivot_index = right
+
+
+      function swapAction(bookmark, n1, n2, { isPivotSwap }) {
+
+        [a[n1], a[n2]] = [a[n2], a[n1]]
+
+        chunker.add(
+          bookmark,
+          (vis, _n1, _n2) => {
+            vis.array.swapElements(_n1, _n2);
+  
+            if (isPivotSwap) {
+              const Cur_i = n1
+              // const Cur_pivot = n2
+              vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, Cur_i);
+            }
+  
+          },
+          [n1, n2],
+        );
+      };
+
+
+
 
       function pivot_value() { return a[right] }; 
 
@@ -340,7 +344,6 @@ export function run_QS(is_qs_median_of_3) {
           chunker.add(QS_BOOKMARKS.if_j_greater_i);
         }
         if (i < j) {
-          [a[j], a[i]] = [a[i], a[j]]; // swap a[j], a[i]
 
           swapAction(
             boolShouldAnimate()
@@ -356,11 +359,6 @@ export function run_QS(is_qs_median_of_3) {
       }
 
       // swap pivot with i
-      pivot_index = i
-      a[right] = a[i];
-      a[i] = pivot_value();
-
-
       swapAction(
         boolShouldAnimate()
           ? QS_BOOKMARKS.swap_pivot_into_correct_position
@@ -371,6 +369,8 @@ export function run_QS(is_qs_median_of_3) {
           isPivotSwap: true,
         },
       );
+
+      pivot_index = i
 
       if (boolShouldAnimate()) {
         chunker.add(
