@@ -46,7 +46,7 @@ const QS_BOOKMARKS = {
   swap_A_idx_right_with_A_idx_mid: 16,
   second_swap_A_idx_left_with_A_idx_mid: 17,
   swap_A_idx_mid_with_A_idx_right_minus_1: 18,
-  done_qs_right: 19,
+  done_qs: 19,
   first_if_A_idx_left_greater_A_idx_right: 20,
   if_A_idx_mid_greater_A_idx_right: 21,
   second_if_A_idx_left_greater_A_idx_right: 22,
@@ -250,9 +250,6 @@ export function run_QS(is_qs_median_of_3) {
         );
       };
 
-
-
-
       function pivot_value() { return a[right] }; 
 
       function boolShouldAnimate() {
@@ -267,7 +264,7 @@ export function run_QS(is_qs_median_of_3) {
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, p);
             refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
-          [right, real_stack, finished_stack_frames, undefined, undefined, right, depth ],
+          [right, real_stack, finished_stack_frames, undefined, undefined, right, depth],
         );
 
         chunker.add(
@@ -348,7 +345,7 @@ export function run_QS(is_qs_median_of_3) {
           swapAction(
             boolShouldAnimate()
               ? QS_BOOKMARKS.swap_array_i_j_vals
-              : QS_BOOKMARKS.done_qs_right,
+              : QS_BOOKMARKS.done_qs,
             i,
             j,
             {
@@ -362,7 +359,7 @@ export function run_QS(is_qs_median_of_3) {
       swapAction(
         boolShouldAnimate()
           ? QS_BOOKMARKS.swap_pivot_into_correct_position
-          : QS_BOOKMARKS.done_qs_right,
+          : QS_BOOKMARKS.done_qs,
         i,
         right,
         {
@@ -463,7 +460,7 @@ export function run_QS(is_qs_median_of_3) {
       else if (left < a.length) {
         let size_one_bookmark = isRecursionExpanded()
           ? QS_BOOKMARKS.quicksort_left_to_i_minus_1
-          : QS_BOOKMARKS.done_qs_right;
+          : QS_BOOKMARKS.done_qs;
 
         chunker.add(
           size_one_bookmark,
@@ -504,7 +501,7 @@ export function run_QS(is_qs_median_of_3) {
 
     // Fade out final node
     chunker.add(
-      QS_BOOKMARKS.done_qs_right,
+      QS_BOOKMARKS.done_qs,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
