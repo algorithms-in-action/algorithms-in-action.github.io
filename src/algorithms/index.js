@@ -59,7 +59,7 @@ const algorithms = {
       sort: Pseudocode.quickSortM3,
     },
     controller: {
-      sort: Controller.quickSort,
+      sort: Controller.quickSortM3,
     },
   },
   'heapSort': {
