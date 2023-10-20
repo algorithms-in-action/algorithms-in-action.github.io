@@ -256,7 +256,7 @@ function MatrixParam({
         )}
         
         
-        {(name === "BFS" || name === "DFS" || name === "aStar") && (
+        {(name === "BFS" || name === "DFS" || name === "aStar" || name === "dijkstra") && (
           <div className="endNodeInputContainer">
           <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
           <button 
