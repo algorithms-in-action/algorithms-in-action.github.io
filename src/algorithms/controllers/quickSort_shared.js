@@ -147,8 +147,8 @@ export function run_QS(is_qs_median_of_3) {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function derive_stack(
-      Cur_real_stack,
-      Cur_finished_stack_frames,
+      cur_real_stack,
+      cur_finished_stack_frames,
       cur_i,
       cur_j,
       cur_pivot_index,
@@ -168,7 +168,7 @@ export function run_QS(is_qs_median_of_3) {
         );
       }
 
-      Cur_finished_stack_frames.forEach((stack_frame) => {
+      cur_finished_stack_frames.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(
           stack,
           stack_frame,
@@ -176,7 +176,7 @@ export function run_QS(is_qs_median_of_3) {
         );
       });
 
-      Cur_real_stack.forEach((stack_frame) => {
+      cur_real_stack.forEach((stack_frame) => {
         stack = update_vis_with_stack_frame(
           stack,
           stack_frame,
@@ -184,10 +184,10 @@ export function run_QS(is_qs_median_of_3) {
         );
       });
 
-      if (Cur_real_stack.length !== 0) {
+      if (cur_real_stack.length !== 0) {
         stack = update_vis_with_stack_frame(
           stack,
-          Cur_real_stack[Cur_real_stack.length - 1],
+          cur_real_stack[cur_real_stack.length - 1],
           STACK_FRAME_COLOR.Current,
         );
       }
@@ -216,7 +216,7 @@ export function run_QS(is_qs_median_of_3) {
       return stack;
     }
 
-    const refresh_stack = (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
       // TODO
       // we can't render the -1 index 
@@ -225,11 +225,11 @@ export function run_QS(is_qs_median_of_3) {
       if (cur_j === -1) { cur_j = 0 } 
 
       assert(vis.array);
-      assert(Cur_real_stack && Cur_finished_stack_frames);
+      assert(cur_real_stack && cur_finished_stack_frames);
 
-      vis.array.setStackDepth(Cur_real_stack.length);
+      vis.array.setStackDepth(cur_real_stack.length);
       vis.array.setStack(
-      derive_stack(Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+      derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
       );
     };
 
@@ -263,11 +263,11 @@ export function run_QS(is_qs_median_of_3) {
 
         chunker.add(
           bookmark,
-          (vis, _n1, _n2, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+          (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             vis.array.swapElements(_n1, _n2);
             vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
             
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
   
           },
           [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
@@ -340,11 +340,11 @@ export function run_QS(is_qs_median_of_3) {
         } else {
           chunker.add(
             QS_BOOKMARKS.set_pivot_to_value_at_array_indx_right,
-            (vis, cur_right, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+            (vis, cur_right, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
               assert(cur_right === cur_pivot);
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot);
-              refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
             },
             [right, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],
           );  
@@ -354,7 +354,7 @@ export function run_QS(is_qs_median_of_3) {
 
         chunker.add(
           QS_BOOKMARKS.set_i_left_minus_1,
-          (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+          (vis, i1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
             if (i1 >= 0) {
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
@@ -362,20 +362,20 @@ export function run_QS(is_qs_median_of_3) {
               assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, 0);
             }
 
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [i, real_stack, finished_stack_frames, i, undefined, right, depth],
         );
 
         chunker.add(
           QS_BOOKMARKS.set_j_right,
-          (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+          (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
             if (j1 >= 0) {
               assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, j1);
             }
 
-            refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [j, real_stack, finished_stack_frames, i, j, right, depth],
         );
@@ -391,11 +391,11 @@ export function run_QS(is_qs_median_of_3) {
           if (boolShouldAnimate()) {
             chunker.add(
               QS_BOOKMARKS.incri_i_until_array_index_i_greater_eq_pivot,
-              (vis, i1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+              (vis, i1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
                 // assign_i_j already takes into account the isPartitionExpanded
                 assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
-                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               },
               [i, real_stack, finished_stack_frames, i, j, right, depth],
             );
@@ -407,7 +407,7 @@ export function run_QS(is_qs_median_of_3) {
           if (boolShouldAnimate()) {
             chunker.add(
               QS_BOOKMARKS.decri_j_until_array_index_j_less_i,
-              (vis, j1, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+              (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
                 if (j1 >= 0) {
                   assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, j1);
@@ -415,7 +415,7 @@ export function run_QS(is_qs_median_of_3) {
                   vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
                 }
 
-                refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               },
               [j, real_stack, finished_stack_frames, i, j, right, depth],
             );
@@ -453,13 +453,13 @@ export function run_QS(is_qs_median_of_3) {
       if (boolShouldAnimate()) {
         chunker.add(
           QS_BOOKMARKS.swap_pivot_into_correct_position,
-          (vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_depth, cur_pivot) => {
+          (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, cur_pivot) => {
 
             vis.array.sorted(cur_pivot);
 
             if (isPartitionExpanded()) {
               vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot);
-              refresh_stack(vis, Cur_real_stack, Cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
             }
           },
           
