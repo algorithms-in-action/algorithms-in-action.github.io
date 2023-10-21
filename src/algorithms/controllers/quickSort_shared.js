@@ -534,7 +534,7 @@ export function run_QS(is_qs_median_of_3) {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-        if (depth === 0 || isRecursionExpanded()) {
+        if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
