@@ -379,6 +379,29 @@ export function run_QS(is_qs_median_of_3) {
           },
           [j, real_stack, finished_stack_frames, i, j, right, depth],
         );
+      } else {
+        if (is_qs_median_of_3) {
+
+          // TODO placeholder
+          // TODO put in asserts
+          const mid = Math.floor((left + right) / 2);
+
+          // if a[left] > a[mid]
+          if (a[left] > a[mid]) {
+            swapAction(QS_BOOKMARKS.M3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
+          }
+
+          // if A[mid] > A[right]
+          if (a[mid] > a[right]) {
+            swapAction(QS_BOOKMARKS.M3_swap_A_idx_right_with_A_idx_mid, right, mid);
+            if (a[left] > a[mid]) {
+              swapAction(QS_BOOKMARKS.M3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
+            }
+          }
+          swapAction(QS_BOOKMARKS.M3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
+
+          pivot_index = right-1
+        }
       }
 
       while (i < j) {
