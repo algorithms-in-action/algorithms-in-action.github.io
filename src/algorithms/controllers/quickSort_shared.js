@@ -405,8 +405,8 @@ export function run_QS(is_qs_median_of_3) {
         } else {
           if (is_qs_median_of_3) {
   
-            // TODO placeholder
-            // TODO put in asserts
+            // TODO this is duplicate code
+            
             const mid = Math.floor((left + right) / 2);
   
             // if a[left] > a[mid]
@@ -512,25 +512,16 @@ export function run_QS(is_qs_median_of_3) {
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               }
             },
-            
-            
             [real_stack, finished_stack_frames, i, j, depth, pivot_index],
           );
+
         }
-  
-  
-        
-  
+
         return [i, a]; // Return [pivot location, array partition_num_array]
       }
 
-
-
-
       //// start quicksort -------------------------------------------------------- 
 
-
-      
       real_stack.push([left, right, depth]);
       max_depth_index = Math.max(max_depth_index, depth);
 
