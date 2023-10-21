@@ -132,7 +132,8 @@ export default {
                   // recolor its edge connecting to its parent
                   if(z[y] != null){
                     vis.graph.removeEdgeColor(z[y], y);
-                    vis.graph.colorEdge(z[y], y, 3);
+                    vis.graph.colorEdge(z[y], y, 3); 
+                    
                   }
                   
                 } 
