@@ -234,7 +234,7 @@ export function run_QS(is_qs_median_of_3) {
       return stack;
     }
 
-    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
+    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
       
       // we can't render the -1 index 
@@ -247,12 +247,18 @@ export function run_QS(is_qs_median_of_3) {
 
       vis.array.setStackDepth(cur_real_stack.length);
       vis.array.setStack(
-      derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth)
+      derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
       );
+
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
     };
 
 
     function assign_i_j(vis, variable_name, index) {
+
+      if (index === undefined) { vis.array.removeVariable(variable_name); return; }
 
       if (isPartitionExpanded()) {
         vis.array.assignVariable(variable_name, Math.max(index,0)); // TODO NEGATIVE_RENDER
@@ -385,8 +391,6 @@ export function run_QS(is_qs_median_of_3) {
           chunker.add(
             QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
             (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-  
-              assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
               refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
             },
             [real_stack, finished_stack_frames, i, j, pivot_index, depth],
@@ -396,8 +400,6 @@ export function run_QS(is_qs_median_of_3) {
           chunker.add(
             QS_BOOKMARKS.RIGHT_P_set_j_right,
             (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-  
-              assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, j1);
               refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
             },
             [j, real_stack, finished_stack_frames, i, j, pivot_index, depth],
@@ -406,7 +408,7 @@ export function run_QS(is_qs_median_of_3) {
           if (is_qs_median_of_3) {
   
             // TODO this is duplicate code
-            
+
             const mid = Math.floor((left + right) / 2);
   
             // if a[left] > a[mid]
@@ -439,8 +441,6 @@ export function run_QS(is_qs_median_of_3) {
                 QS_BOOKMARKS.SHARED_incri_i_until_array_index_i_greater_eq_pivot,
                 (vis, i1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
   
-                  // assign_i_j already takes into account the isPartitionExpanded
-                  assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
                   refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
                 },
                 [i, real_stack, finished_stack_frames, i, j, pivot_index, depth],
@@ -454,12 +454,6 @@ export function run_QS(is_qs_median_of_3) {
               chunker.add(
                 QS_BOOKMARKS.SHARED_decri_j_until,
                 (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-  
-                  if (j1 >= 0) {
-                    assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, j1);
-                  } else {
-                    vis.array.removeVariable(VIS_VARIABLE_STRINGS.j_right_index);
-                  }
   
                   refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
                 },
