@@ -377,7 +377,6 @@ export function run_QS(is_qs_median_of_3) {
               (vis, cur_right, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
   
                 assert(cur_right === cur_pivot);
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot);
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               },
               [right, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],
@@ -502,7 +501,6 @@ export function run_QS(is_qs_median_of_3) {
               vis.array.sorted(cur_pivot);
   
               if (isPartitionExpanded()) {
-                vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot);
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               }
             },
