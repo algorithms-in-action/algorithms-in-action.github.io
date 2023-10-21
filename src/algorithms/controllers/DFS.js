@@ -129,6 +129,7 @@ export default {
                   vis.graph.removeEdgeColor(x, y);  
                   // recolor its edge connecting to its parent
                   if(z[y] != null){
+                    vis.graph.removeEdgeColor(z[y], y, 3);
                     vis.graph.colorEdge(z[y], y, 3);
                   }
                   
@@ -390,8 +391,6 @@ export default {
 
 
 
-                        // NOTE: This part is missing. It looks like the pseudocode wants to assign 'n' as the parent of 'm', but it's not clear.
-                        // You would need an array to track this if you wish to.
                         // Parent[m] = n;
                         // push(Nodes,m) B18
                         Nodes.push(m); 
