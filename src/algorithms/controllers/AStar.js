@@ -15,7 +15,7 @@ export default {
     };
   },
 
-  run(chunker, { matrix }) {
+  run(chunker, { matrix, startNode, endNode }) {
     const numVertices = matrix.length;
     const INFINITY = Number.MAX_SAFE_INTEGER; 
     const E = [...matrix]  
@@ -123,7 +123,7 @@ export default {
 
     
    
-    
+    let currentVertex = null;
     while (visited.size < numVertices) { 
       ///while Nodes not Empty 
       findMinimum(); 
@@ -150,7 +150,7 @@ export default {
 
       // Find the unvisited vertex with the smallest cost
       
-      let currentVertex = null; 
+      currentVertex = null; 
       findMinimum();
       currentVertex = miniIndex;
       finalCosts[miniIndex+1] = cost[miniIndex];

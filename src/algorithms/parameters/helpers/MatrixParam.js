@@ -190,7 +190,6 @@ function MatrixParam({
         matrix, 
         endNode,  
         startNode,
-
       });
     //   setButtonMessage('Reset');
     } else {
@@ -257,7 +256,7 @@ function MatrixParam({
         )}
         
         
-        {(name === "BFS" || name === "DFS" || name === "aStar") && (
+        {(name === "BFS" || name === "DFS" || name === "aStar" || name === "dijkstra") && (
           <div className="endNodeInputContainer">
           <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
           <button 
@@ -288,7 +287,6 @@ function MatrixParam({
           onClick={() => updateTableSize(size - 1)}>
            Decrease Graph Size
         </button>
-        
         <button className="matrixBtn" onClick={resetData}>
           Revert
         </button>
