@@ -15,105 +15,99 @@ export default {
     };
   },
 
-  moveToChild(chunker, node, value) {
-    if (node === null) {
-      chunker.add('until c is Empty (and p is a leaf node)');
-      return null;
-    }
-
-    const nodeLength = node.getNodeLength();
-    const values = node.getIDs(); 
-
-    chunker.add('if c is a two-node');
-    if (nodeLength === 1) {
-      chunker.add('if k < c.key1: if c is a two-node');
-      if (value < values[0]) {
-        chunker.add('c <- c.child1: if c is a two-node');
-        return node.children[0];
-      }
-      else {
-        chunker.add('else: if c is a two-node');
-        chunker.add('c <- c.child2: if c is a two-node');
-        return node.children[1];
-      }
-    }
-    chunker.add('else if c is a three-node');
-    if (nodeLength === 2) {
-      chunker.add('if k < c.key1: else if c is a three-node');
-      if (value < values[0]) {
-        chunker.add('c <- c.child1: else if c is a three-node');
-        return node.children[0];
-      }
-      chunker.add('else if k < c.key2: else if c is a three-node');
-      if (value < values[1]) {
-        chunker.add('c <- c.child2: else if c is a three-node');
-        return node.children[1];
-      }
-      else {
-        chunker.add('else: else if c is a three-node');
-        chunker.add('c <- c.child3: else if c is a three-node');
-        return node.children[2];
-      }
-    }
-    // redundant code
-    else {
-      chunker.add('else: MoveToChild');
-      chunker.add('if k < c.key1: else: MoveToChild');
-      if (value < values[0]) {
-        chunker.add('c <- c.child1: else: MoveToChild');
-        return node.children[0];
-      }
-      chunker.add('else if k < c.key2: else: MoveToChild');
-      if (value < values[1]) {
-        chunker.add('c <- c.child2: else: MoveToChild');
-        return node.children[1];
-      }
-      chunker.add('else if k < c.key3')
-      if (value < values[2]) {
-        chunker.add('c <- c.child3: else: MoveToChild');
-        return node.children[2];
-      }
-      else {
-        chunker.add('else: else: MoveToChild');
-        chunker.add('c <- c.child4');
-        return node.children[3];
-      }
-    }
-  },
-
     // Highlight the current value.
-    highlightValue(visObj, value, colour) {
-      this.unhighlightValue(visObj, value);
-      visObj.visit1(value, value, colour);
+    highlightValue(tree, value, colour) {
+      this.unhighlightValue(tree, value);
+      tree.visit1(value, value, colour);
     },
 
     // Unhighlight the current value.
-    unhighlightValue(visObj, value) {
-      visObj.leave1(value, value, TREE_COLOUR_CODES.RED);
-      visObj.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
-      visObj.leave1(value, value, TREE_COLOUR_CODES.GREEN);
+    unhighlightValue(tree, value) {
+      tree.leave1(value, value, TREE_COLOUR_CODES.RED);
+      tree.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
+      tree.leave1(value, value, TREE_COLOUR_CODES.GREEN);
     },
 
     // Highlight an entire 2-3-4 node.
-    highlightNode(visObj, node, colour) {
-      console.log("bbb", node);
-      this.unhighlightNode(visObj, node);
+    highlightNode(tree, node, colour) {
+      this.unhighlightNode(tree, node);
       for (let i = 0; i < node.relatedNodeIDs.length; i++) {
         let value = node.relatedNodeIDs[i];
-        visObj.visit1(value, value, colour);
+        tree.visit1(value, value, colour);
       }
     },
 
     // Unhighlight an entire 2-3-4 node.
-    unhighlightNode(visObj, node) {
+    unhighlightNode(tree, node) {
+      console.log("weird tree", node, node.relatedNodeIDs);
       for (let i = 0; i < node.relatedNodeIDs.length; i++) {
         let value = node.relatedNodeIDs[i];
-        visObj.leave1(value, value, TREE_COLOUR_CODES.RED);
-        visObj.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
-        visObj.leave1(value, value, TREE_COLOUR_CODES.GREEN);
+        tree.leave1(value, value, TREE_COLOUR_CODES.RED);
+        tree.leave1(value, value, TREE_COLOUR_CODES.ORANGE);
+        tree.leave1(value, value, TREE_COLOUR_CODES.GREEN);
       }
     },
 
+    findChild(chunker, node, value) {
+      const nodeLength = node.getNodeLength();
+      const values = node.getIDs();
+      const children = node.children;
+  
+      chunker.add('if c is a two-node');
+      if (nodeLength === 1) {
+        chunker.add('if k < c.key1: if c is a two-node');
+        if (value < values[0]) {
+          return this.childOrNull(chunker, 'c <- c.child1: if c is a two-node', values[0], children, 0);
+        }
+        else {
+          chunker.add('else: if c is a two-node');
+          return this.childOrNull(chunker, 'c <- c.child2: if c is a two-node', values[0], children, 1);
+        }
+      }
+      chunker.add('else: MoveToChild');
+      if (nodeLength === 2) {
+        chunker.add('if k < c.key1: else: MoveToChild',
+        (vis, node, value1) => {
+          this.unhighlightNode(vis.tree, node);
+          this.highlightValue(vis.tree, value1, TREE_COLOUR_CODES.ORANGE);
+        },
+        [node, values[0]]);
+        if (value < values[0]) {
+          return this.childOrNull(chunker, 'c <- c.child1: else: MoveToChild', values[0], children, 0);
+        }
+        chunker.add('else if k < c.key2: else: MoveToChild',
+        (vis, value1, value2) => {
+          this.unhighlightValue(vis.tree, value1);
+          this.highlightValue(vis.tree, value2, TREE_COLOUR_CODES.ORANGE);
+        },
+        [values[0], values[1]]);
+        if (value < values[1]) {
+          return this.childOrNull(chunker, 'c <- c.child2: else: MoveToChild', values[1], children, 1);
+        }
+        else {
+          chunker.add('else: else: MoveToChild');
+          return this.childOrNull(chunker, 'c <- c.child3', values[1], children, 2);
+        }
+      }
+    },
+  
+    childOrNull(chunker, bookmark, nodeValue, children, index) {
+      if (children.length === 0) {
+        chunker.add(bookmark);
+        chunker.add('until c is Empty (and p is a leaf node)');
+        return null;
+      }
+      else {
+        chunker.add(bookmark, 
+        (vis, nodeValue, child) => {
+          this.unhighlightValue(vis.tree, nodeValue);
+          this.highlightNode(vis.tree, child, TREE_COLOUR_CODES.ORANGE);
+        },
+        [nodeValue, children[index]])
+        return children[index];
+      }
+    },
+  
   // return tree and node id of inserted value. expands 4-nodes on the way
   traverseAndInsert(chunker, value, tree, newID) {
     chunker.add('if t = Empty');
@@ -121,8 +115,13 @@ export default {
 
     chunker.add('p <- Empty');
     let parent = null;
-    chunker.add('c <- t');
     let child = tree;
+
+    chunker.add('c <- t',
+      (vis, child) => {
+        this.highlightNode(vis.tree, child, TREE_COLOUR_CODES.ORANGE);
+      }, 
+      [child]);
 
     while (child != null) {
       chunker.add('repeat');
@@ -196,20 +195,35 @@ export default {
           ]);
         }
 
-        chunker.add('if k < c.key2: Split');
+        chunker.add('if k < c.key2: Split',
+        (vis, child1, child2) => {
+          this.unhighlightNode(vis.tree, child1);
+          this.unhighlightNode(vis.tree, child2);
+        },
+        [child1, child2]);
         if (value < oldChild.getIDs()[1]) {
-          chunker.add('c <- c1');
+          chunker.add('c <- c1',
+          (vis, newParentValue, child1) => {
+            this.unhighlightValue(vis.tree, newParentValue);
+            this.highlightNode(vis.tree, child1, TREE_COLOUR_CODES.ORANGE);
+          },
+          [oldChild.getIDs()[1], child1]);
           child = child1;
         } else {
           chunker.add('else: Split');
-          chunker.add('c <- c2');
+          chunker.add('c <- c2',
+          (vis, newParentValue, child2) => {
+            this.unhighlightValue(vis.tree, newParentValue);
+            this.highlightNode(vis.tree, child2, TREE_COLOUR_CODES.ORANGE);
+          },
+          [oldChild.getIDs()[1], child2]);
           child = child2;
         }
       }
 
       chunker.add('p <- c');
       parent = child;
-      child = this.moveToChild(chunker, child, value);
+      child = this.findChild(chunker, child, value);
     }
 
     // insertion
@@ -220,7 +234,8 @@ export default {
         'Change p to a three-node, containing the old p.key1 and k',
         (vis, parent, value) => {
           vis.tree.addVariableNode(parent.id, value);
-          // this.highlightNode(vis.tree, parent, TREE_COLOUR_CODES.GREEN);
+          this.unhighlightNode(vis.tree, parent);
+          this.highlightValue(vis.tree, value, TREE_COLOUR_CODES.GREEN);
           vis.tree.layout();
         },
         [parent, value]
@@ -232,21 +247,13 @@ export default {
         'Change p to a four-node, containing the old p.key1 and p.key2 and k',
         (vis, parent, value) => {
           vis.tree.addVariableNode(parent.id, value);
-          // this.highlightNode(vis.tree, parent, TREE_COLOUR_CODES.GREEN);
+          this.unhighlightNode(vis.tree, parent);
+          this.highlightValue(vis.tree, value, TREE_COLOUR_CODES.GREEN);
           vis.tree.layout();
         },
         [parent, value]
       );
     }
-
-    // chunker.add(
-    //   '1',
-    //   (vis, parent) => {
-    //     this.unhighlightNode(vis.tree, parent);
-    //   },
-    //   [parent]
-    // );
-
     return { nTree: tree, id: newID };
   },
 
@@ -295,7 +302,6 @@ export default {
   ) {
     if (newRoot) {
       vis.tree.addVariableNode(ParentID, newParentValue);
-      console.log('new root', newParentValue);
       vis.tree.addEdge(0, ParentID);
     }
     // remove old child
@@ -303,9 +309,7 @@ export default {
 
     // add child1 and child2 which are new now to the tree
     vis.tree.addVariableNode(child1Info[0], child1Info[1]);
-    console.log('child 1', child1Info[1]);
     vis.tree.addVariableNode(child2Info[0], child2Info[1]);
-    console.log('child 2', child2Info[1]);
 
     // add to parent as well
     vis.tree.addVariableNode(ParentID, newParentValue);
@@ -344,9 +348,14 @@ export default {
     }
     vis.tree.layout();
   },
+
   // insertion of a node into tree. assumes the tree is not empty
-  insert(chunker, value, tree, newID) {
-    chunker.add('T234_Insert(t, k)');
+  insert(chunker, value, prevValue, tree, newID) {
+    chunker.add('T234_Insert(t, k)', 
+    (vis) => {
+      this.unhighlightValue(vis.tree, prevValue);
+    },
+    [prevValue]);
     let newInfo = this.traverseAndInsert(chunker, value, tree, newID);
     return newInfo;
   },
@@ -358,15 +367,16 @@ export default {
 
     chunker.add(
       't <- a new two-node containing k and empty subtrees',
-      (vis, nodeID, value) => {
+      (vis, tree, nodeID, value) => {
         vis.tree.variableNodes = true;
         vis.tree.isDirected = false;
         vis.tree.addVariableNode(0, '0');
         vis.tree.addVariableNode(nodeID, value);
         vis.tree.addEdge(0, nodeID);
+        this.highlightNode(vis.tree, tree, TREE_COLOUR_CODES.GREEN);
         vis.tree.layout();
       },
-      [tree.id, tree.getIDs()[0]]
+      [tree, tree.id, tree.getIDs()[0]]
     );
 
     return tree;
@@ -383,13 +393,14 @@ export default {
 
     if (nodes.length === 1) return;
 
-    treeStruct = this.insert(chunker, nodes[1], tree, newID);
+    treeStruct = this.insert(chunker, nodes[1], nodes[0], tree, newID);
 
     // remaining insertions
     for (let i = 2; i < nodes.length; i++) {
       treeStruct = this.insert(
         chunker,
         nodes[i],
+        nodes[i-1],
         treeStruct['nTree'],
         treeStruct['id']
       );
