@@ -38,7 +38,6 @@ describe('2-3-4 Tree', () => {
 
       child.addRelatedNodeID(55);
       child.addRelatedNodeID(65);
-      child.addRelatedNodeID(103);
 
       child1ofChild.addRelatedNodeID(35);
       child1ofChild.addRelatedNodeID(45);
