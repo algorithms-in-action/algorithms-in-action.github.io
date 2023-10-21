@@ -35,7 +35,6 @@ describe('2-3-4 Tree', () => {
       const child1ofChild = new VariableTreeNode(1);
       const child2ofChild = new VariableTreeNode(2);
       const child3ofChild = new VariableTreeNode(3);
-      const child4ofChild = new VariableTreeNode(4);
 
       child.addRelatedNodeID(55);
       child.addRelatedNodeID(65);
@@ -53,15 +52,10 @@ describe('2-3-4 Tree', () => {
       child3ofChild.addRelatedNodeID(82);
       child3ofChild.addRelatedNodeID(87);
 
-      child4ofChild.addRelatedNodeID(106);
-      child4ofChild.addRelatedNodeID(112);
-      child4ofChild.addRelatedNodeID(115);
-
       const value = 84;
       child.addChild(child1ofChild);
       child.addChild(child2ofChild);
       child.addChild(child3ofChild);
-      child.addChild(child4ofChild);
       const result = TTFTreeInsertion.findChild(chunker, child, value);
       expect(result.id).toStrictEqual(3);
     });
