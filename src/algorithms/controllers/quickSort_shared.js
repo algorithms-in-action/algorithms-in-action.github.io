@@ -314,6 +314,10 @@ export function run_QS(is_qs_median_of_3) {
         function chunker_add_if(bookmark, f, args_array) {
           // add if you should animate a step
 
+          if (args_array === undefined) {
+            args_array = [real_stack, finished_stack_frames, i, j, pivot_index, depth]
+          }
+
           if (boolShouldAnimate()) {
             chunker.add(bookmark, f, args_array)
           }
@@ -378,7 +382,7 @@ export function run_QS(is_qs_median_of_3) {
               unhighlight(vis, cur_right -1, false);
               unhighlight(vis, cur_left, false);
             },
-            [right, left],);
+            [right, left]);
   
           } else {
   
@@ -386,13 +390,7 @@ export function run_QS(is_qs_median_of_3) {
   
             chunker_add_if(
               QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
-              (vis, cur_right, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-  
-                assert(cur_right === cur_pivot);
-                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-              },
-              [right, real_stack, finished_stack_frames, undefined, undefined, pivot_index, depth],
-            );  
+              refresh_stack);  
           }
   
           // pick pivot end --------
@@ -401,20 +399,12 @@ export function run_QS(is_qs_median_of_3) {
           // TODO
           chunker_add_if(
             QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
-            (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-            },
-            [real_stack, finished_stack_frames, i, j, pivot_index, depth],
-          );
+            refresh_stack);
   
           // TODO
           chunker_add_if(
             QS_BOOKMARKS.RIGHT_P_set_j_right,
-            (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-            },
-            [j, real_stack, finished_stack_frames, i, j, pivot_index, depth],
-          );
+            refresh_stack);
         } else {
           if (is_qs_median_of_3) {
   
@@ -449,12 +439,7 @@ export function run_QS(is_qs_median_of_3) {
   
             chunker_add_if(
               QS_BOOKMARKS.SHARED_incri_i_until_array_index_i_greater_eq_pivot,
-              (vis, i1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-
-                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-              },
-              [i, real_stack, finished_stack_frames, i, j, pivot_index, depth],
-            );
+              refresh_stack);
             
           } while (a[i] < pivot_value());
   
@@ -463,12 +448,7 @@ export function run_QS(is_qs_median_of_3) {
 
             chunker_add_if(
               QS_BOOKMARKS.SHARED_decri_j_until,
-              (vis, j1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
-
-                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
-              },
-              [j, real_stack, finished_stack_frames, i, j, pivot_index, depth],
-            );
+              refresh_stack);
             
           } while (i <= j && pivot_value() < a[j]);
 
@@ -503,16 +483,14 @@ export function run_QS(is_qs_median_of_3) {
         // TODO
         chunker_add_if(
           QS_BOOKMARKS.RIGHT_P_swap_pivot_into_position_ie_index_i_and_right,
-          (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, cur_pivot) => {
+          (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
-            vis.array.sorted(cur_pivot);
+            vis.array.sorted(cur_pivot_index);
 
             if (isPartitionExpanded()) {
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
             }
-          },
-          [real_stack, finished_stack_frames, i, j, depth, pivot_index],
-        );
+          });
 
         return [i, a]; // Return [pivot location, array partition_num_array]
       }
