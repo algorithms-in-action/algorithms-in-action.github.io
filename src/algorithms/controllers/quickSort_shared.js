@@ -257,7 +257,7 @@ export function run_QS(is_qs_median_of_3) {
       let pivot_index = is_qs_median_of_3 ? right-1 : right;
 
 
-      function swapAction(bookmark, n1, n2) {
+      function swapAction(bookmark, n1, n2, assignPivot=true) {
 
         [a[n1], a[n2]] = [a[n2], a[n1]]
 
@@ -265,7 +265,7 @@ export function run_QS(is_qs_median_of_3) {
           bookmark,
           (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             vis.array.swapElements(_n1, _n2);
-            vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
+            if (assignPivot) vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
             
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
   
@@ -307,18 +307,18 @@ export function run_QS(is_qs_median_of_3) {
           // if a[left] > a[mid]
           chunker.add(QS_BOOKMARKS.M3_first_if_A_idx_left_greater_A_idx_right); 
           if (a[left] > a[mid]) {
-            swapAction(QS_BOOKMARKS.M3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
+            swapAction(QS_BOOKMARKS.M3_first_swap_A_idx_left_with_A_idx_mid, left, mid, false);
           }
 
           // if A[mid] > A[right]
           chunker.add(QS_BOOKMARKS.M3_if_A_idx_mid_greater_A_idx_right);
           if (a[mid] > a[right]) {
-            swapAction(QS_BOOKMARKS.M3_swap_A_idx_right_with_A_idx_mid, right, mid);
+            swapAction(QS_BOOKMARKS.M3_swap_A_idx_right_with_A_idx_mid, right, mid, false);
 
             //if A[left] > A[mid]
             chunker.add(QS_BOOKMARKS.M3_second_if_A_idx_left_greater_A_idx_right);
             if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.M3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
+              swapAction(QS_BOOKMARKS.M3_second_swap_A_idx_left_with_A_idx_mid, left, mid, false);
             }
           }
 
@@ -364,7 +364,7 @@ export function run_QS(is_qs_median_of_3) {
 
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
-          [i, real_stack, finished_stack_frames, i, undefined, right, depth],
+          [i, real_stack, finished_stack_frames, i, undefined, pivot_index, depth],
         );
 
         chunker.add(
@@ -377,7 +377,7 @@ export function run_QS(is_qs_median_of_3) {
 
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
-          [j, real_stack, finished_stack_frames, i, j, right, depth],
+          [j, real_stack, finished_stack_frames, i, j, pivot_index, depth],
         );
       } else {
         if (is_qs_median_of_3) {
@@ -420,7 +420,7 @@ export function run_QS(is_qs_median_of_3) {
                 assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               },
-              [i, real_stack, finished_stack_frames, i, j, right, depth],
+              [i, real_stack, finished_stack_frames, i, j, pivot_index, depth],
             );
           }
         } while (a[i] < pivot_value());
@@ -440,7 +440,7 @@ export function run_QS(is_qs_median_of_3) {
 
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
               },
-              [j, real_stack, finished_stack_frames, i, j, right, depth],
+              [j, real_stack, finished_stack_frames, i, j, pivot_index, depth],
             );
           }
         } while (i <= j && pivot_value() < a[j]);
