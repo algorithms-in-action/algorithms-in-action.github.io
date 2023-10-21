@@ -238,7 +238,7 @@ export function run_QS(is_qs_median_of_3) {
 
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-      // TODO NEGATIVE_RENDER
+      
       // we can't render the -1 index 
       // so this is a workaround
       if (cur_i === -1) { cur_i = 0 } 
@@ -256,13 +256,8 @@ export function run_QS(is_qs_median_of_3) {
 
     function assign_i_j(vis, variable_name, index) {
 
-      // TODO NEGATIVE_RENDER
-      if (index < 0) {
-        vis.array.removeVariable(variable_name);
-      }
-
       if (isPartitionExpanded()) {
-        vis.array.assignVariable(variable_name, index);
+        vis.array.assignVariable(variable_name, Math.max(index,0)); // TODO NEGATIVE_RENDER
       } else {
         vis.array.removeVariable(variable_name);
       }
@@ -392,7 +387,7 @@ export function run_QS(is_qs_median_of_3) {
             assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
-          [real_stack, finished_stack_frames, i, undefined, pivot_index, depth],
+          [real_stack, finished_stack_frames, i, j, pivot_index, depth],
         );
 
         // TODO
