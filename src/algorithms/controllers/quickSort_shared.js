@@ -328,18 +328,18 @@ export function run_QS(is_qs_median_of_3) {
           // if a[left] > a[mid]
           chunker.add(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
           if (a[left] > a[mid]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
+            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid, false);
           }
 
           // if A[mid] > A[right]
           chunker.add(QS_BOOKMARKS.MEDIAN3_if_A_idx_mid_greater_A_idx_right);
           if (a[mid] > a[right]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid);
+            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid, false);
 
             //if A[left] > A[mid]
             chunker.add(QS_BOOKMARKS.MEDIAN3_second_if_A_idx_left_greater_A_idx_right);
             if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
+              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid, false);
             }
           }
 
@@ -409,17 +409,17 @@ export function run_QS(is_qs_median_of_3) {
 
           // if a[left] > a[mid]
           if (a[left] > a[mid]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
+            swapAction(QS_BOOKMARKS.SHARED_done_qs, left, mid, false);
           }
 
           // if A[mid] > A[right]
           if (a[mid] > a[right]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid);
+            swapAction(QS_BOOKMARKS.SHARED_done_qs, right, mid, false);
             if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
+              swapAction(QS_BOOKMARKS.SHARED_done_qs, left, mid, false);
             }
           }
-          swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
+          swapAction(QS_BOOKMARKS.SHARED_done_qs, mid, right-1, false);
 
           pivot_index = right-1
         }
