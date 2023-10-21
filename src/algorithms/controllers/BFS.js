@@ -12,7 +12,7 @@ export default {
         instance: new Array2DTracer('array', null, 'Parent array, Finalized array & queue'),
         order: 1,
       }, 
-      
+
 
     };
   },
@@ -23,12 +23,12 @@ export default {
     function Queue() {
       this.items = [];
     }
-    
+
     // Enqueue function to add an item to the end of the queue
     Queue.prototype.enqueue = function(item) {
         this.items.push(item);
     }
-    
+
     // Dequeue function to remove an item from the front of the queue
     Queue.prototype.dequeue = function() {
         if(this.isEmpty()) {
@@ -36,7 +36,7 @@ export default {
         }
         return this.items.shift();
     }
-    
+
     // Helper function to check if the queue is empty
     Queue.prototype.isEmpty = function() {
         return this.items.length == 0;
@@ -48,19 +48,19 @@ export default {
     const visited = new Array(numVertices).fill(false); 
     const parent = new Array(numVertices).fill(null);
     const explored = new Array(numVertices).fill(false); 
-    
+
     //The fake ones for display
     const displayedVisited = []; 
     const displayedParent = []; 
     const displayedNodes = [];  
     let displayedQueue = [];
-    
+
     const start = startNode - 1;
     const end = endNode - 1; 
 
     let lastNeighbor = null;
     let n = null
-    
+
     // BFS(G, s) B1
     chunker.add(
       1,
@@ -68,11 +68,11 @@ export default {
         vis.graph.directed(false);
         vis.graph.weighted(false);
         vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
-        
+
       },
       [E]
     );
-    
+
     // initialise each element of array Parent to zero B6  
     displayedParent.push('Parent[i]');  
     displayedVisited.push('Seen[i]'); 
@@ -89,17 +89,16 @@ export default {
       6,
       (vis, x) => { 
         vis.array.set(x, 'BFS');   
-        
+
       },
       [[displayedNodes, displayedParent, displayedVisited]]
     );
-    
+
     // initialise each element of Seen to  B7
     for (let i = 0; i < numVertices; i += 1) {
       displayedVisited[i + 1] = "false";  
-
     }
-    
+
     chunker.add(
       7,
       (vis, x) => { 
@@ -107,17 +106,16 @@ export default {
       },
       [[displayedNodes, displayedParent, displayedVisited]]
     );
-    
+
     const bfs = (s) => {
-
-        //
-
-        // Seen[s] <- True B14
-        visited[s] = true;  
-        displayedVisited[s + 1] = "true";   
+               
+        // Seen[s] <- True B8
+        visited[s] = true;
+        displayedVisited[s+1] = "true";
         explored[s] = false;
+
         chunker.add(
-          14,
+          8,
           (vis, x, y, z, a, b) => { 
             vis.array.set(x, 'BFS');
             //add a string "n" below the currently dequeued out node
@@ -132,34 +130,31 @@ export default {
               }
             }
 
-            //highlight all finalized nodes in green in the array
+            //highlight alls seen nodes in green in the array
             for(let i = 0; i < a.length; i++)
             { 
               if(a[i] == true)
               { 
                 vis.array.select(0, i + 1, 0, i + 1, '1');  
               }
-            }  
-
-            //changed the finalized node's highlight color to green in the graph
+            } 
+              //changed the seen node's highlight color to green in the graph
             vis.graph.removeNodeColor(b); 
             vis.graph.colorNode(b, 1);
-            
-            vis.array.setList(y); 
-          },
-          [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s]
-        );
+              
+              vis.array.setList(y); 
+            },
+            [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s]
+        );       
 
-        //
-        
         // Nodes <- queue containing just s B9
-        //The real squeue
+        //The real queue
         const Nodes = [s];  
         explored[s] = true;
+        displayedQueue = [];
         displayedQueue.push(s+1);
-
         chunker.add(
-          9,
+          8,
           (vis, x, y, z) => { 
             
             vis.array.set(x, 'BFS');  
@@ -174,11 +169,11 @@ export default {
               }
             } 
 
-          
+           
 
           },
           [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored]
-        );
+        ); 
 
         // while Nodes not empty B2
         while (Nodes.length > 0) {
@@ -191,6 +186,7 @@ export default {
                 vis.graph.removeEdgeColor(x, y);  
                 // recolor its edge connecting to its parent
                 if(z[y] != null){
+                  vis.graph.removeEdgeColor(z[y], y);
                   vis.graph.colorEdge(z[y], y, 3);
                 }
                 
@@ -203,53 +199,47 @@ export default {
                   vis.graph.colorEdge(i, y, 3);
                 }
               }
-              
-
-
             },
             [n, lastNeighbor, parent]
             
           );
+
           // n <- dequeue(Nodes) B10
           n = Nodes.shift();  
           displayedQueue.shift();
           chunker.add(
             10,
             (vis, x, y, z, a, b) => { 
-              vis.array.set(x, 'BFS'); 
-              
-              //add a string "n" below the currently dequeed out node
-              vis.array.assignVariable('n', 2, b + 1); 
+              //reset
+              vis.array.set(x,'BFS');  
+              //add a string "n" below the currently popped out node
+              vis.array.assignVariable('n', 2, y + 1);  
               
               //highlight all nodes explored in blue 
               //
-              for (let i = 0; i < z.length; i ++){
-                if(z[i] == true){
+              for (let i = 0; i < a.length; i ++){
+                if(a[i] == true){
                   vis.array.select(0,i + 1);
                   
                 }
               }
 
               //highlight all finalized nodes in green
-              for(let i = 0; i < a.length; i++)
+              for(let i = 0; i < b.length; i++)
               { 
-                if(a[i] == true)
+                if(b[i] == true)
                 { 
-                  //vis.array.deselect(0, i + 1);
-                  vis.array.select(0, i + 1, 0, i + 1, '1');
+                  vis.array.select(0, i + 1, 0, i + 1, '1');  
                 }
-              }  
-
+              }                   
               
-
-              vis.array.setList(y); 
+              //redisplay queue
+              vis.array.setList(z);
             },
-            [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n]
-          );  
+            [[displayedNodes, displayedParent, displayedVisited], n, displayedQueue, explored, visited]
+          ); 
 
           // If is_end_node(n) B11  
-          
-
           chunker.add(
             11  
           );
@@ -264,45 +254,45 @@ export default {
 
           // for each node m neighbouring n B4
           for (let m = 0; m < numVertices; m++) {  
-            
+
             if (E[n][m] != 0) {
 
-                  chunker.add(
-                    4,
-                    (vis, x, y, z, a) => {
-                      //remove the color on Edge connecting the last neighbor 
-                      
-                      
+              chunker.add(
+                4,
+                (vis, x, y, z, a) => {
+                  //remove the color on Edge connecting the last neighbor 
+                  
+                  
 
-                      //remove the orange highlight from the edge connecting the last neighbour
-                      if (z != null)
-                      {
-                        vis.graph.removeEdgeColor(x, z); 
+                  //remove the orange highlight from the edge connecting the last neighbour
+                  if (z != null)
+                  {
+                    vis.graph.removeEdgeColor(x, z); 
 
-                        // recolor in red if it has a parent
-                        if(a[z] != null) 
-                        {
-                          vis.graph.removeEdgeColor(a[z], z);
-                          vis.graph.colorEdge(a[z], z, 3);
-                        }
+                    // recolor in red if it has a parent
+                    if(a[z] != null) 
+                    {
+                      vis.graph.removeEdgeColor(a[z], z);
+                      vis.graph.colorEdge(a[z], z, 3);
+                    }
 
-                        // recolor in red if it has a child
-                        for(let i = 0; i < a.length; i ++){
-                          if (a[i] == z){
-                            vis.graph.removeEdgeColor(i, z);
-                            vis.graph.colorEdge(i, z, 3);
-                          }
-                        }
-              
-                      } 
+                    // recolor in red if it has a child
+                    for(let i = 0; i < a.length; i ++){
+                      if (a[i] == z){
+                        vis.graph.removeEdgeColor(i, z);
+                        vis.graph.colorEdge(i, z, 3);
+                      }
+                    }
+          
+                  } 
 
-                      //highlight the edge connecting the neighbor
-                      vis.graph.removeEdgeColor(x,y);
-                      vis.graph.colorEdge(x, y, 2);
+                  //highlight the edge connecting the neighbor
+                  vis.graph.removeEdgeColor(x,y);
+                  vis.graph.colorEdge(x, y, 2);
 
-                    },
-                    [n, m, lastNeighbor, parent]
-                  ); 
+                },
+                [n, m, lastNeighbor, parent]
+              ); 
 
                   lastNeighbor = m;
                   // If not Seen[m] B12
@@ -318,7 +308,7 @@ export default {
                     chunker.add(
                       13,
                       (vis, x, y, z, a, b) => { 
-                        vis.array.set(x, 'BFS');
+                        vis.array.set(x, 'DFS');
                         //add a string "n" below the currently popped out node
                         vis.array.assignVariable('n', 2, b + 1); 
         
@@ -346,13 +336,13 @@ export default {
                         
                         vis.array.setList(y); 
                       },
-                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n]
+                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, m]
                     );
-                     
+
                     // Parent[m] <- n B14 
                     let lastParent = parent[m];
                     parent[m] = n;
-                    displayedParent[m + 1] = n + 1;   
+                    displayedParent[m + 1] = n + 1;
                     chunker.add(
                       14,
                       (vis, x, y, z, a, b, c, d) => { 
@@ -389,10 +379,10 @@ export default {
                         vis.array.setList(y); 
                       },
                       [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, lastParent]
-                    );
-
+                    );   
+      
                       // Parent[m] = n;
-                      // push(Nodes,m) B15
+                      // enqueue(Nodes,m) B15
                       Nodes.push(m); 
                       displayedQueue.push(m + 1);  
                       explored[m] = true;
@@ -420,7 +410,7 @@ export default {
         }
 
     }; // End of bfs    
-    
+
 
     bfs(start);
 
@@ -449,10 +439,7 @@ export default {
           }
         } 
         // color the path from the start node to the end node
-        
-        /*vis.graph.removeEdgeColor(a, b);
-        vis.graph.colorEdge(a, b, 4); */
-        
+
         let current = b;
         while((current != a) && (z[current] != null))
         { 
@@ -465,9 +452,11 @@ export default {
 
       },
       [n, lastNeighbor, parent, start, end]
-      
+
     ) 
   }
 
 };
+
+
 
