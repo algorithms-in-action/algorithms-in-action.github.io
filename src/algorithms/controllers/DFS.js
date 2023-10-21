@@ -17,318 +17,7 @@ export default {
     };
   },
 
-  run1(chunker, { matrix }) {
-    // String Variables used in displaying algo
-    const algNameStr = 'dijkstra';
-    const dashStr = '-';
-    const minStr = 'Min';
-    const infinityStr = '∞';
-    const lessThanStr = '<';
-    const notLessThanStr = '≮';
-
-    const numVertices = matrix.length;
-    const E = [...matrix];
-    const minCosts = [];
-    const parents = [];
-    const nodes = [];  
-    const finalCosts = [];
-    // Create a set to keep track of visited vertices
-    const visited = new Set();  
-    let miniIndex = 0;  
-    let last = [null, null]; // keep track of the last neighbour we visited
-    // initialize each element of array Cost to infinity
-    const cost = Array(numVertices).fill(Infinity);
-  
-    const findMinimum = () => {
-      let minCost = Infinity;
-      miniIndex = null;
-      for (let i = numVertices - 1; i >= 0; i--) {
-        if (!visited.has(i) && cost[i] <= minCost) {
-          minCost = cost[i];
-          miniIndex = i;
-        }
-      } 
-    };
-    
-    nodes.push('i'); // initialize the pq display
-    parents.push('Parent[i]');
-    minCosts.push('Cost[i] (PQ)'); 
-    finalCosts.push('Final Cost');
-    chunker.add(
-      1,
-      (vis, array, npmf,i) => {
-        vis.graph.directed(false);
-        vis.graph.weighted(true);
-        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
-        vis.graph.colorEdge(1,2,4);  
-        vis.graph.colorEdge(0,1,3);
-        vis.graph.colorNode(0,4); 
-        vis.graph.colorNode(1,3);
-        //vis.graph.removeEdgeColor(1,2);
-        vis.array.set([...matrix], 'DFS');
-        //vis.graph.setIstc();
-        vis.array.setList([1,2,3]); 
-        vis.array.select(1,2,1,2,'4'); 
-        
-        
-      },
-      [E,[nodes, parents, minCosts, finalCosts], 0]
-    ); 
-    chunker.add(
-      1,
-      (vis, array, npmf,i) => {
-        vis.graph.removeEdgeColor(1,2);  
-        vis.graph.removeNodeColor(1);
-       // vis.graph.removeEdgeColor(0,1); 
-       vis.array.deselect(1,2);
-        
-      },
-      [E,[nodes, parents, minCosts, finalCosts], 0]
-    ); 
-
-
-    // initialise each element of array Parent to zero 
-    const prev = Array(numVertices).fill(null);  
-
-    
-     
-    // Initialize the table
-    for (let i = 0; i < numVertices; i += 1) {
-      nodes[i + 1] = i + 1;
-      minCosts.push(dashStr);
-      parents.push(0); 
-      finalCosts.push(dashStr);
-    }
-
-    chunker.add(
-      5,
-      (vis, v) => {
-        vis.array.set(v, algNameStr);
-      },
-      [[nodes, parents, minCosts, finalCosts], 0]
-    );
-
-
-    for (let i = 0; i < numVertices; i += 1) {
-      minCosts[i + 1] = (Infinity);
-    }
-
-    chunker.add(
-      6,
-      (vis, v) => {
-        vis.array.set(v, algNameStr);
-      },
-      [[nodes, parents, minCosts, finalCosts], 0]
-    );
-    
-  
-    // Cost[s] <- 0
-    cost[0] = 0;
-    minCosts[1] = 0; 
-    chunker.add(
-      7,
-      (vis, v, w) => {
-        vis.array.set(v, algNameStr);
-        vis.array.select(2, w + 1);
-        vis.array.assignVariable(minStr, 2, w + 1);
-      },
-      [[nodes, parents, minCosts, finalCosts], 0]
-    );
-
-    
-    // Nodes <- PQ containing all nodes 
-    chunker.add(8);
-
-
-    while (visited.size < numVertices) { 
-      // while Nodes not Empty 
-      findMinimum(); 
-      
-      chunker.add( 
-        2,
-        (vis, v, w, x) => {
-          // visit1(x,y,2) highlights the edge xy,and nodes x and y
-          // in the 2nd color 
-          // leave1(x,y,2) removes the highlight on nodes x, y and 
-          // edge xy(placed by the visit1 function in the 2nd color)
-          if (x[0] != null) {
-            vis.graph.leave1(x[0], x[1], 2);
-          }
-          vis.array.set(v, algNameStr);
-          if (w != null) {
-            vis.array.select(2, w + 1); 
-            vis.array.assignVariable(minStr, 2, w + 1);
-          }
-        },
-        [[nodes, parents, minCosts, finalCosts], miniIndex, last]
-      );
-
-      // Find the unvisited vertex with the smallest cost
-      
-      let currentVertex = null; 
-      findMinimum();
-      currentVertex = miniIndex;
-      finalCosts[miniIndex + 1] = cost[miniIndex];
-      
-      // n <- RemoveMin(Nodes)  
-      minCosts[currentVertex + 1] = null; 
-      visited.add(currentVertex);
-      
-      // Update the miniIndex
-      findMinimum(); 
-      chunker.add(
-        9,
-        (vis, v, w, x, y) => {
-          if (y != null) {
-            vis.graph.deselect(y, x); 
-            vis.graph.select(y, y);
-            vis.graph.visit1(y, x, 1); 
-            vis.graph.leave1(x, x, 1); 
-            vis.graph.leave1(y, y, 1);
-          }
-          vis.graph.select(x, x);
-          vis.array.set(v, algNameStr);
-
-          if (w != null) {
-            vis.array.select(2, w + 1);
-            vis.array.assignVariable(minStr, 2, w + 1);
-          }
-        },
-        [[nodes, parents, minCosts, finalCosts], miniIndex, 
-            currentVertex, prev[currentVertex]]
-      );
-      
-      // If we can't find a reachable vertex, exit 
-      // if is_end_node(n) or Cost[n] = infinity 
-      chunker.add(10);
-      if (currentVertex === null) {
-        chunker.add(3);
-        // return
-        break; 
-      }
-      // Mark the vertex as visited
-      
-  
-      // Update the cost and prev arrays 
-      
-      // for each node m neighbouring n
-      for (let m = 0; m < numVertices; m++) {
-        if (matrix[currentVertex][m] !== 0
-            && !visited.has(m)) {  // Skip if no edge exists
-          // findMinimum();
-          chunker.add(
-            4,
-            (vis, v, w, z) => {
-              if (z[0] != null) {
-                vis.graph.leave1(z[0], z[1], 2);
-              }
-              
-              vis.array.set(v, algNameStr);
-              if (w != null) {
-                vis.array.select(2, w + 1); 
-                vis.array.assignVariable(minStr, 2, w + 1);
-              }
-            },
-            [[nodes, parents, minCosts, finalCosts], miniIndex, last]
-          );
-          
-          const newCost = cost[currentVertex] + matrix[currentVertex][m];
-          
-          // if Cost[n]+weight(n,m)<Cost[m]
-          let tempString = minCosts[m + 1];
-          if (minCosts[m + 1] === Infinity) {
-            tempString = infinityStr;
-          }
-          if (newCost < cost[m]) {
-            minCosts[m + 1] = (`${newCost} ${lessThanStr} ${tempString}`);
-          } 
-          else {
-            minCosts[m + 1] = (`${newCost} ${notLessThanStr} ${tempString}`);
-          }
-          
-          // findMinimum();
-          chunker.add(
-            11,
-            (vis, v, w, x, y) => {
-              vis.array.set(v, algNameStr);
-              if (w != null) {
-                vis.array.select(2, w + 1);
-                vis.array.assignVariable(minStr, 2, w + 1);
-              } 
-              vis.graph.visit1(x, y, 2);
-              vis.graph.leave1(x, x, 2);
-              vis.graph.leave1(y, y, 2);
-            },
-            [[nodes, parents, minCosts, finalCosts], miniIndex,
-                currentVertex, m]
-          ); 
-          last = [currentVertex, m];
-          minCosts[m + 1] = cost[m];
-          
-          if (newCost < cost[m]) {
-            // Cost[m] <- Cost[n] + weight(n,m)
-            cost[m] = newCost; 
-            minCosts[m + 1] = newCost;
-            // findMinimum();
-            chunker.add(
-              12,
-              (vis, v, w) => {
-                vis.array.set(v, algNameStr);
-                if (w != null) {
-                  vis.array.select(2, w + 1);
-                  vis.array.assignVariable(minStr, 2, w + 1);
-                }
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex]
-            );
-
-            // UpdateCost(Nodes,m,Cost[m])
-            findMinimum();
-            chunker.add(
-              13,
-              (vis, v, w) => {
-                vis.array.set(v, algNameStr);
-                vis.array.assignVariable('Min', 2, w + 1);
-           
-                vis.array.select(2, w + 1);
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex]
-            );
-
-            // Parent[m] <- n
-            parents[m + 1] = currentVertex + 1;
-            const lastParent = prev[m];
-            prev[m] = currentVertex;   
-          
-            // findMinimum();
-            chunker.add(
-              14,
-              (vis, v, w, x, y, z, z1) => {
-                vis.graph.leave1(z1, y, 2);
-                
-                vis.array.set(v, algNameStr);
-                vis.array.assignVariable(minStr, 2, w + 1);
-                vis.array.select(2, w + 1);
-                vis.graph.deselect(x, x);
-                vis.graph.select(x, y);  
-                
-                // disconnect from the previous parent
-                if (z != null) {
-                  // vis.graph.visit(y,[z]);
-                  vis.graph.deselect(z, y);
-                  vis.graph.select(z, z);
-                }
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex,
-                  prev[m], m, lastParent, currentVertex]
-            );
-          } 
-        }
-      }
-    }
-  }, 
-
-  run(chunker, { matrix, endNode}) {
+  run(chunker, { matrix, endNode, startNode}) {
     const E = [...matrix];
     const numVertices = matrix.length;   
     //The real Finalised array(visited) and Parent array(parent)
@@ -341,7 +30,13 @@ export default {
     const displayedParent = []; 
     const displayedNodes = []; 
     let displayedStack = [];  
-   
+
+    
+    const start = startNode - 1;
+    const end = endNode - 1; 
+
+    let lastNeighbor = null;
+    let n = null;
 
     // DFS(G, s) B1
     chunker.add(
@@ -361,6 +56,9 @@ export default {
     displayedVisited.push('Finalised[i]'); 
     displayedNodes.push('i');
     for (let i = 0; i < numVertices; i += 1) {
+
+      parent[i] = null;
+
       displayedParent.push(0); 
       displayedVisited.push(' ');  
       displayedNodes.push(i + 1);
@@ -368,15 +66,16 @@ export default {
     chunker.add(
       6,
       (vis, x) => { 
-        vis.array.set(x, 'DFS');  
+        vis.array.set(x, 'DFS');   
+        
       },
-      [[displayedNodes, displayedParent, displayedVisited], displayedStack]
+      [[displayedNodes, displayedParent, displayedVisited]]
     ); 
 
     // initialise each element of Finalised to  B7
     for (let i = 0; i < numVertices; i += 1) {
       displayedVisited[i + 1] = "false";  
-      displayedVisited[i + 1] = (endNode);
+
     }  
 
     chunker.add(
@@ -387,7 +86,7 @@ export default {
       [[displayedNodes, displayedParent, displayedVisited]]
     ); 
 
-
+/*--------------------------------------------------------*/
     
     const dfs = (s) => {
         // Nodes <- stack containing just s B8
@@ -409,7 +108,6 @@ export default {
               if(z[i] == true){
                 vis.array.select(0,i + 1);
                 vis.graph.colorNode(i, 4); 
-                
               }
             } 
 
@@ -422,9 +120,36 @@ export default {
 
         // while Nodes not empty B2
         while (Nodes.length > 0) {
-            chunker.add(2);
+            chunker.add(
+              2,
+              (vis, x, y, z) => {
+                // remove the highlight between n
+                // and the last visited neighbor
+                if((x != null) && (y != null)){
+                  vis.graph.removeEdgeColor(x, y);  
+                  // recolor its edge connecting to its parent
+                  if(z[y] != null){
+                    vis.graph.colorEdge(z[y], y, 3);
+                  }
+                  
+                } 
+
+                // recolor in red if it has a child
+                for(let i = 0; i < z.length; i ++){
+                  if (z[i] == y){
+                    vis.graph.removeEdgeColor(i, y);
+                    vis.graph.colorEdge(i, y, 3);
+                  }
+                }
+                
+
+
+              },
+              [n, lastNeighbor, parent]
+              
+              );
             // n <- pop(Nodes) B9
-            let n = Nodes.pop();  
+            n = Nodes.pop();  
             displayedStack.pop();
             chunker.add(
               9,
@@ -470,7 +195,9 @@ export default {
                 // If Node is empty B11
                 if (Nodes.length === 0) {
                     // Return B12
-                    chunker.add(12);
+                    chunker.add(
+                      12,
+                    ); 
                     return;
                 }
                 // n <- pop(Nodes) B13
@@ -552,35 +279,201 @@ export default {
 
 
 
-            // If is_end_node(n) B15
+            // If is_end_node(n) B15   
+            
+
+            chunker.add(
+              15  
+            );
+            if(n == end)
+            { 
+              chunker.add(
+                3,
+              ); 
+              // return B3
+              return;
+            }
             // NOTE: Assuming there's a function is_end_node to check for an end condition, or you can define your own condition here
             // if (is_end_node(n)) {
             //     return;
             // }
-            // for each node m neighbouring n
-            for (let m = 0; m < numVertices; m++) {
-                if (E[n][m] != 0) {
-                    // If not Finalised[m]
-                    if (!visited[m]) {
-                        // Parent[m]
+            // for each node m neighbouring n B4
+            for (let m = 0; m < numVertices; m++) {  
+              
+              if (E[n][m] != 0) {
+
+                    chunker.add(
+                      4,
+                      (vis, x, y, z, a) => {
+                        //remove the color on Edge connecting the last neighbor 
+                        
+                        
+
+                        //remove the orange highlight from the edge connecting the last neighbour
+                        if (z != null)
+                        {
+                          vis.graph.removeEdgeColor(x, z); 
+
+                          // recolor in red if it has a parent
+                          if(a[z] != null) 
+                          {
+                            vis.graph.removeEdgeColor(a[z], z);
+                            vis.graph.colorEdge(a[z], z, 3);
+                          }
+
+                          // recolor in red if it has a child
+                          for(let i = 0; i < a.length; i ++){
+                            if (a[i] == z){
+                              vis.graph.removeEdgeColor(i, z);
+                              vis.graph.colorEdge(i, z, 3);
+                            }
+                          }
+                
+                        } 
+
+                        //highlight the edge connecting the neighbor
+                        vis.graph.removeEdgeColor(x,y);
+                        vis.graph.colorEdge(x, y, 2);
+
+                      },
+                      [n, m, lastNeighbor, parent]
+                    ); 
+
+                    lastNeighbor = m;
+                    // If not Finalised[m] B16
+                    chunker.add(
+                      16,
+                    );
+                    if (!visited[m]) { 
+                       
+                        // Parent[m] <- n B17 
+                      let lastParent = parent[m];
+                      parent[m] = n;
+                      displayedParent[m + 1] = n + 1;   
+                      chunker.add(
+                        17,
+                        (vis, x, y, z, a, b, c, d) => { 
+                          vis.array.set(x, 'DFS');
+                          //add a string "n" below the currently popped out node
+                          vis.array.assignVariable('n', 2, b + 1); 
+          
+                          //highlight all nodes explored in blue in the array
+                          //
+                          for (let i = 0; i < z.length; i ++){
+                            if(z[i] == true){
+                              vis.array.select(0,i + 1);
+                              //vis.graph.colorNode(i, 4);
+                            }
+                          }
+          
+                          //highlight all finalized nodes in green in the array
+                          for(let i = 0; i < a.length; i++)
+                          { 
+                            if(a[i] == true)
+                            { 
+                              vis.array.select(0, i + 1, 0, i + 1, '1');  
+                            }
+                          }  
+                          
+                          //remove the highlight from this neighbour to its last parent
+                          vis.graph.removeEdgeColor(d, c);
+
+                          //highlight the edge from n to this neighbor in red
+                          vis.graph.removeEdgeColor(b, c);
+                          vis.graph.colorEdge(b, c, 3);
+                          
+                          
+                          vis.array.setList(y); 
+                        },
+                        [[displayedNodes, displayedParent, displayedVisited], displayedStack, explored, visited, n, m, lastParent]
+                      );
+
+
+
                         // NOTE: This part is missing. It looks like the pseudocode wants to assign 'n' as the parent of 'm', but it's not clear.
                         // You would need an array to track this if you wish to.
                         // Parent[m] = n;
-                        // push(Nodes,m)
-                        Nodes.push(m);
+                        // push(Nodes,m) B18
+                        Nodes.push(m); 
+                        displayedStack.push(m + 1);  
+                        explored[m] = true;
+                        chunker.add(
+                          18,
+                          (vis, x, y, z) => {
+                            vis.array.setList(x);
+                            
+                            // color the node in blue as explored 
+                            // if it has not been finalized
+                            if(y[z] == false){
+                              vis.array.deselect(0, z + 1);
+                              vis.array.select(0, z + 1); 
+                              vis.graph.removeNodeColor(z);
+                              vis.graph.colorNode(z, 4);
+                            }
+                            
+                          },
+                          [displayedStack, visited, m]
+                        );
+
                     }
                 }
             }
         }
     };
-
+    /*
     for (let i = 0; i < numVertices; i++) {
         // If not Finalised[m]
         if (!visited[i]) {
             dfs(i);
         }
-    }
-}
+    }*/ 
+
+    dfs(start); 
+   
+    //return B5
+    chunker.add(
+      5,
+      (vis, x, y, z, a, b) => { 
+        //remove the orange highlight from the last neighbour
+        if (y != null)
+        {
+          vis.graph.removeEdgeColor(y, x); 
+
+          // recolor in red if it has a parent
+          if(z[y] != null) 
+          {
+            vis.graph.removeEdgeColor(z[y], y);
+            vis.graph.colorEdge(z[y], y , 3);
+          } 
+
+          // recolor in red if it has a child
+          for(let i = 0; i < z.length; i ++){
+            if (z[i] == y){
+              vis.graph.removeEdgeColor(i, y);
+              vis.graph.colorEdge(i, y, 3);
+            }
+          }
+        } 
+        // color the path from the start node to the end node
+        
+        /*vis.graph.removeEdgeColor(a, b);
+        vis.graph.colorEdge(a, b, 4); */
+        
+        let current = b;
+        while((current != a) && (z[current] != null))
+        { 
+
+          vis.graph.removeEdgeColor(current, z[current]);
+          vis.graph.colorEdge(current, z[current], 1); 
+          current = z[current];
+        }
+
+
+      },
+      [n, lastNeighbor, parent, start, end]
+      
+    ) 
+  }
 
   
 };
