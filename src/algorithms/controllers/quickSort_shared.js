@@ -327,108 +327,78 @@ export function run_QS(is_qs_median_of_3) {
   
         function pivot_value() { return a[pivot_index] }; 
   
-        if (boolShouldAnimate()) {
-  
-  
-          // pick pivot --------
-  
-          // TODO THERE MAY BE A BUG HERE
-          // THIS DOESN"T RUN ON RECCURSIVE CALLS
-          // SO STUFF IS LIKELY NOT IN THE RIGHT PLACE
-          
-          if (is_qs_median_of_3) {
-  
-            // TODO placeholder
-            // TODO put in asserts
-            const mid = Math.floor((left + right) / 2);
-  
-  
-            // assigning the pivot as the midpoint calculated above
-            chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
-              highlight(vis, cur_mid, false);
-              highlight(vis, cur_left, false);
-              highlight(vis, cur_right, false);
-            },
-            [mid, left, right],); 
-  
-            // if a[left] > a[mid]
-            chunker_add_if(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
-            if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid, false);
-            }
-  
-            // if A[mid] > A[right]
-            chunker_add_if(QS_BOOKMARKS.MEDIAN3_if_A_idx_mid_greater_A_idx_right);
-            if (a[mid] > a[right]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid, false);
-  
-              //if A[left] > A[mid]
-              chunker_add_if(QS_BOOKMARKS.MEDIAN3_second_if_A_idx_left_greater_A_idx_right);
-              if (a[left] > a[mid]) {
-                swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid, false);
-              }
-            }
-  
-            // Swap(A[mid], A[right - 1])
-            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1, false);
-  
-            // pivot <- A[right - 1]
-  
-            pivot_index = right-1
-  
-            // TODO
-            chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, (vis, cur_right, cur_left) => {
-              unhighlight(vis, cur_right, false);
-              unhighlight(vis, cur_right -1, false);
-              unhighlight(vis, cur_left, false);
-            },
-            [right, left]);
-  
-          } else {
-  
-            pivot_index = right
-  
-            chunker_add_if(
-              QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
-              refresh_stack);  
-          }
-  
-          // pick pivot end --------
-  
-  
-          // TODO
-          chunker_add_if(
-            QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
-            refresh_stack);
-  
-          // TODO
-          chunker_add_if(
-            QS_BOOKMARKS.RIGHT_P_set_j_right,
-            refresh_stack);
-        } else {
-          if (is_qs_median_of_3) {
-  
-            // TODO this is duplicate code
+ 
+        // pick pivot --------
+        
+        if (is_qs_median_of_3) {
 
-            const mid = Math.floor((left + right) / 2);
-  
-            // if a[left] > a[mid]
-            if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
-            }
-  
-            // if A[mid] > A[right]
-            if (a[mid] > a[right]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid);
-              if (a[left] > a[mid]) {
-                swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
-              }
-            }
-            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
-  
-            pivot_index = right-1
+          // TODO placeholder
+          // TODO put in asserts
+          const mid = Math.floor((left + right) / 2);
+
+
+          // assigning the pivot as the midpoint calculated above
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
+            highlight(vis, cur_mid, false);
+            highlight(vis, cur_left, false);
+            highlight(vis, cur_right, false);
+          },
+          [mid, left, right],); 
+
+          // if a[left] > a[mid]
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
+          if (a[left] > a[mid]) {
+            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid, false);
           }
+
+          // if A[mid] > A[right]
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_if_A_idx_mid_greater_A_idx_right);
+          if (a[mid] > a[right]) {
+            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid, false);
+
+            //if A[left] > A[mid]
+            chunker_add_if(QS_BOOKMARKS.MEDIAN3_second_if_A_idx_left_greater_A_idx_right);
+            if (a[left] > a[mid]) {
+              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid, false);
+            }
+          }
+
+          // Swap(A[mid], A[right - 1])
+          swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1, false);
+
+          // pivot <- A[right - 1]
+
+          pivot_index = right-1
+
+          // TODO
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, (vis, cur_right, cur_left) => {
+            unhighlight(vis, cur_right, false);
+            unhighlight(vis, cur_right -1, false);
+            unhighlight(vis, cur_left, false);
+          },
+          [right, left]);
+
+        } else {
+
+          pivot_index = right
+
+          chunker_add_if(
+            QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
+            refresh_stack);  
         }
+
+        // pick pivot end --------
+
+        // TODO
+        chunker_add_if(
+          QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
+          refresh_stack);
+
+        // TODO
+        chunker_add_if(
+          QS_BOOKMARKS.RIGHT_P_set_j_right,
+          refresh_stack);
+
   
         while (i < j) {
 
