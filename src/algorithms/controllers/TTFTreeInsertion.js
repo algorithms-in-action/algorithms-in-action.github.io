@@ -49,6 +49,7 @@ export default {
     },
 
     findChild(chunker, node, value) {
+      if (node === null) return null;
       const nodeLength = node.getNodeLength();
       const values = node.getIDs();
       const children = node.children;
