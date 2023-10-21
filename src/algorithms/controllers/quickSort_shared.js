@@ -383,12 +383,7 @@ export function run_QS(is_qs_median_of_3) {
           QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
           (vis, i1, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth) => {
 
-            if (i1 >= 0) {
-              assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, i1);
-            } else {
-              assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, 0);
-            }
-
+            assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, Math.max(0, i1));
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot, cur_depth);
           },
           [i, real_stack, finished_stack_frames, i, undefined, pivot_index, depth],
