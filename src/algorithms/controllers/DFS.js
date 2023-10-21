@@ -2,6 +2,7 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 export default {
+
   initVisualisers() {
     return {
       graph: {
@@ -18,6 +19,7 @@ export default {
   },
 
   run(chunker, { matrix, endNode, startNode}) {
+    
     const E = [...matrix];
     const numVertices = matrix.length;   
     //The real Finalised array(visited) and Parent array(parent)
