@@ -330,7 +330,7 @@ export function run_QS(is_qs_median_of_3) {
  
         // pick pivot --------
         
-        if (is_qs_median_of_3) {
+        if (is_qs_median_of_3 && boolShouldAnimate()) {
 
           // TODO placeholder
           // TODO put in asserts
