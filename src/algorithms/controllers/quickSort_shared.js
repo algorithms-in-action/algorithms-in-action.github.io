@@ -314,11 +314,12 @@ export function run_QS(is_qs_median_of_3) {
         function chunker_add_if(bookmark, f, args_array) {
           // add if you should animate a step
 
-          if (args_array === undefined) {
-            args_array = [real_stack, finished_stack_frames, i, j, pivot_index, depth]
-          }
-
           if (boolShouldAnimate()) {
+
+            if (args_array === undefined) {
+              args_array = [real_stack, finished_stack_frames, i, j, pivot_index, depth]
+            }
+
             chunker.add(bookmark, f, args_array)
           }
         }
