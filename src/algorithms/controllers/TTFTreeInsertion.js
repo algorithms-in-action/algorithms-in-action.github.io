@@ -1,7 +1,7 @@
 import { TTFExp } from '../explanations';
-import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
+import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 
-import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeVariable';
+import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
 
 export default {
   explanation: TTFExp,
@@ -114,9 +114,6 @@ export default {
       (vis, id, value) => {
         vis.tree.addVariableNode(id, value);
         let toColour = vis.tree.findNode(value);
-        console.log(toColour);
-        //vis.tree.visit(toColour, toColour);
-
         vis.tree.layout();
       },
       [parent.id, value]
@@ -169,7 +166,6 @@ export default {
   ) {
     if (newRoot) {
       vis.tree.addVariableNode(ParentID, newParentValue);
-      console.log('new root', newParentValue);
       vis.tree.addEdge(0, ParentID);
     }
     // remove old child
@@ -177,9 +173,7 @@ export default {
 
     // add child1 and child2 which are new now to the tree
     vis.tree.addVariableNode(child1Info[0], child1Info[1]);
-    console.log('child 1', child1Info[1]);
     vis.tree.addVariableNode(child2Info[0], child2Info[1]);
-    console.log('child 2', child2Info[1]);
 
     // add to parent as well
     vis.tree.addVariableNode(ParentID, newParentValue);
@@ -220,6 +214,9 @@ export default {
   },
   // insertion of a node into tree. assumes the tree is not empty
   insert(chunker, value, tree, newID) {
+    chunker.add('1', (vis, value) => {
+      vis.tree.setText("Inserting " + value); // testing caption
+    }, [value]);
     let newInfo = this.traverseAndInsert(chunker, value, tree, newID);
     return newInfo;
   },
