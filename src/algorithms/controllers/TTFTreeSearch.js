@@ -4,24 +4,21 @@ import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
 export default {
   explanation: TTFExp,
 
-  initVisualisers() {
+  initVisualisers({ visualiser }) {
+
     return {
       tree: {
-        instance: new NTreeTracer('n-tree', null, 'Tree View'),
+        instance: visualiser.tree.instance,
         order: 0,
       },
     };
   },
 
-  run(chunker, { nodes }) {
-    if (nodes.length === 0) return;
+  run(chunker, { visualiser, target }) {
+    chunker.add('T234_Search(t, k)', (vis) => {
+      console.log(vis.tree.realNodes);
+      vis.tree.layout();
+    });
 
-    chunker.add(
-      '1',
-      (vis, elements) => {
-        vis.tree.set(elements);
-      },
-      [nodes]
-    );
   },
 };
