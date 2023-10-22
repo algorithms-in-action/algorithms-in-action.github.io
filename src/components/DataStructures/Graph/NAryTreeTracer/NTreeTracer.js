@@ -12,12 +12,16 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
-import { node } from 'prop-types';
-import Tracer from '../common/Tracer.jsx';
-import { distance } from '../common/util';
-import GraphRenderer from './GraphRenderer/index';
-import TreeNode from './NAryTree';
-import VariableTreeNode from './NAryTreeVariable';
+import Tracer from '../../common/Tracer.jsx';
+import NAryTreeRenderer from '../NAryTreeRenderer/index';
+import TreeNode from './NAryTree.js';
+import VariableTreeNode from './NAryTreeVariable.js';
+
+/**
+ * This is a modified version of the GraphRenderer.js.
+ * It is used to display NAry trees.
+ * Uses John Q. Walker II's "A node positioning algorithm for general trees" (1989).
+ */
 
 export class Element {
   constructor() {
@@ -27,7 +31,7 @@ export class Element {
 
 class NTreeTracer extends Tracer {
   getRendererClass() {
-    return GraphRenderer;
+    return NAryTreeRenderer;
   }
 
   init() {
@@ -41,18 +45,16 @@ class NTreeTracer extends Tracer {
       nodeWeightGap: 4,
       edgeWeightGap: 4,
     };
-    this.isDirected = true;
-    this.isWeighted = false;
-    //this.shape = 'square';
-    this.showSelfLoop = true;
-    this.callLayout = { method: this.layoutNTree, args: [] };
-    this.realEdges = [];
-    this.realNodes = [];
-    this.variableNodes = false;
-    this.isReversed = false;
 
-    this.logTracer = null;
-    this.istc = false;
+    this.isDirected = true; // whether to display arrows
+    this.showSelfLoop = true; // whether to display self-loop (see union-find)
+    this.callLayout = { method: this.layoutNTree, args: [] };
+    this.realEdges = []; // logical edges (for rendered edges, see edges)
+    this.realNodes = []; // logical nodes (for rendered nodes, see nodes)
+    this.variableNodes = false; // for logical variable size nodes (see 234 tree)
+    this.isReversed = false; // whether to reverse the arrows
+
+    // variables used in the tree placement algorithm
     this.SiblingSeparation = 50;
     this.xTopAdjustment = 0;
     this.yTopAdjustment = 0;
@@ -60,13 +62,15 @@ class NTreeTracer extends Tracer {
     this.SubtreeSeparation = 50;
     this.LevelSeparation = 100;
     this.levels = null;
+
+    this.text = null;
     this.swap = false;
   }
 
   /**
    * This is the original function provided by Tracer.js,
-   * but we add a second argument which accepts nodes' values
-   * @param {array} array2d 2D array of nodes
+   * but we add a second argument which accepts nodes' values.
+   * @param {array} array2d 2D array of nodes.
    */
   set(array2d = [], values = []) {
     this.nodes = [];
@@ -76,7 +80,7 @@ class NTreeTracer extends Tracer {
       for (let j = 0; j < array2d.length; j++) {
         const value = array2d[i][j];
         if (value) {
-          this.addEdge(i, j, this.isWeighted ? value : null);
+          this.addEdge(i, j, null);
         }
       }
     }
@@ -87,84 +91,26 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * clear existing trace, if any
-   * nodes and edges remain unchanged
+   * Checks whether the tree is empty.
+   * @returns whether the tree is empty or not.
    */
-  clear() {
-    this.edges.forEach((edge) => {
-      edge.visitedCount = 0;
-      edge.selectedCount = 0;
-    });
-    this.nodes.forEach((node) => {
-      node.visitedCount = 0;
-      node.selectedCount = 0;
-    });
-  }
-
-  clearHighlights() {
-    this.nodes.forEach((node) => {
-      this.leave(node.id, node.id);
-      // if want to generalise, may need to add more leave1 with different
-      // colour values
-      this.leave1(node.id, node.id, 2);
-      this.deselect(node.id, node.id);
-    });
-  }
-
   isEmpty() {
     return this.nodes.length === 0 && this.edges.length === 0;
   }
 
-  /**
-   * extract a tree object from edges and nodes
-   * @return {object} a tree object
-   */
-  getTree() {
-    const tree = {};
-
-    const setLeftOrRightChild = (t, parent, child) => {
-      if (parent < child) {
-        // right child
-        t[parent].right = child;
-      } else if (parent > child) {
-        // left child
-        t[parent].left = child;
-      }
-    };
-
-    this.edges.forEach((obj) => {
-      if (!tree.hasOwnProperty(obj.source)) {
-        tree[obj.source] = {};
-        setLeftOrRightChild(tree, obj.source, obj.target);
-      } else {
-        setLeftOrRightChild(tree, obj.source, obj.target);
-      }
-      if (!tree.hasOwnProperty(obj.target)) {
-        tree[obj.target] = {};
-      }
-    });
-
-    this.nodes.forEach((obj) => {
-      if (!tree.hasOwnProperty(obj.id)) {
-        tree[obj.id] = {};
-      }
-    });
-
-    return tree;
-  }
 
   /**
-   * extract a n-tree object from the edges and nodes given
-   * @return {object} a tree object
+   * Extracts a n-tree object from edges and nodes.
+   * @return {object} a tree object.
    */
   getNTree() {
-    // this will be the theoretical root node, and the handle for the tree
+    // handle for the tree (and theoretical root node)
     const nodeMap = {};
     const rootNodes = new Set(this.realNodes.map((node) => node.id));
     if (this.realNodes.length === 0) {
       return null;
     }
-    // create the TreeNode instances and map them by their ID
+    // create treenode instances and map them by their id
     this.realNodes.forEach((node) => {
       let treeNode;
       if (this.variableNodes) {
@@ -183,13 +129,12 @@ class NTreeTracer extends Tracer {
       const parent = nodeMap[edge.source];
       const child = nodeMap[edge.target];
 
-      // make sure this is a new child relationship
+      // ensuring this is a new child relationship
       if (parent && child && !parent.children.includes(child)) {
         parent.children.push(child);
         child.parent = parent;
 
-        // once we determine the parent of a node, it's no longer
-        // a root candidate
+        // no longer a root candidate as have found parent
         rootNodes.delete(child.id);
       }
     });
@@ -198,8 +143,7 @@ class NTreeTracer extends Tracer {
     const queue = [];
     const levels = [];
 
-    // assuming a single root for simplicity, but you can adjust if there
-    // are multiple roots
+    // assuming a single root for simplicity (but can adjust if multiple)
     const root = nodeMap[Array.from(rootNodes)[0]];
     root.level = 0;
     queue.push(root);
@@ -226,8 +170,8 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * extract the root from edges and nodes
-   * @return {number} root
+   * Extracts the root from edges and nodes.
+   * @return {number} root.
    */
   getRoot() {
     // in case there is only a single node in the graph
@@ -237,43 +181,49 @@ class NTreeTracer extends Tracer {
     const sources = this.edges.map((obj) => obj.source);
     const targets = this.edges.map((obj) => obj.target);
     const nodes = [...new Set([...sources, ...targets])];
-    // the node that does not a source is the root
+    // the node that does not have a source is the root
     return nodes.find((node) => !targets.includes(node));
   }
 
+  /**
+   * Swaps two nodes given their IDs.
+   * @param {*} nodeId1 id of the first node to be swapped.
+   * @param {*} nodeId2 id of the second node to be swapped.
+   */
   swapNodes(nodeId1, nodeId2) {
     this.swap = true;
     const node1 = this.findNode(nodeId1.toString());
     const node2 = this.findNode(nodeId2.toString());
-    // after tracking both nodes, we need to now swap them by changing the
-    // outging edges and ingoing edges
+
+    // swap them by changing the out-going edges and in-going edges
 
     //  swap edges
     for (const edge of this.realEdges) {
-      // Swap sources
+      // swap sources
       if (edge.source === node1.id) {
         edge.source = node2.id;
       } else if (edge.source === node2.id) {
         edge.source = node1.id;
       }
 
-      // Swap targets
+      // swap targets
       if (edge.target === node1.id) {
         edge.target = node2.id;
       } else if (edge.target === node2.id) {
         edge.target = node1.id;
       }
     }
-    // make sure you do this with the visible edge list as well
+
+    // repeating with the visible (i.e., rendered) edge list
     for (const edge of this.edges) {
-      // Swap sources
+      // swap sources
       if (edge.source === node1.id) {
         edge.source = node2.id;
       } else if (edge.source === node2.id) {
         edge.source = node1.id;
       }
 
-      // Swap targets
+      // swap targets
       if (edge.target === node1.id) {
         edge.target = node2.id;
       } else if (edge.target === node2.id) {
@@ -282,16 +232,21 @@ class NTreeTracer extends Tracer {
     }
   }
 
+  /**
+   * For NAry trees, used to decide whether the arrows are displayed.
+   * @param {*} isDirected whether arrows are shown or not.
+   */
   directed(isDirected = true) {
     this.isDirected = isDirected;
   }
 
-  weighted(isWeighted = true) {
-    this.isWeighted = isWeighted;
-  }
-
+  /**
+   * Checks whether the parent-child node relationship holds.
+   * @param {*} parent the parent node.
+   * @param {*} child the child node.
+   * @returns whether the parent-child node relationship holds.
+   */
   isParent(parent, child) {
-    // This function will check if parent is actually a parent of child node
     for (const edge of this.realEdges) {
       if (edge.source === parent && edge.target === child) {
         return true;
@@ -300,52 +255,58 @@ class NTreeTracer extends Tracer {
     return false;
   }
 
+  /**
+   * Adds a node to the tree.
+   * @param {*} id the id of the node to be added
+   * @param {*} value the value of the node to be added
+   * @param {*} shape the shape of the node to be added (circle or square)
+   * @param {*} fill the colour of the node to be added (default is white, but see fill)
+   * @param {*} x default is 0, will be updated during layout
+   * @param {*} y default is 0, will be updated during layout
+   * @param {*} key
+   */
   addNode(
     id,
     value = undefined,
     shape = 'circle',
-    color = 'blue',
-    weight = null,
+    fill = 0,
     x = 0,
     y = 0,
-    visitedCount = 0,
-    selectedCount = 0,
-    visitedCount1 = 0
+    key
   ) {
     if (this.findNode(id)) return;
     value = value === undefined ? id : value;
-    const key = id;
     // eslint-disable-next-line max-len
     if (!this.variableNodes) {
       this.realNodes.push({ id, x, y });
     }
-    if (id !== '0') {
+    if (id !== '0') { // hidden root node
       this.nodes.push({
         id,
         value,
         shape,
-        color,
-        weight,
+        fill,
         x,
         y,
-        visitedCount,
-        selectedCount,
-        key,
-        visitedCount1,
+        key
       });
     }
   }
 
-  // solely for real nodes
+  /**
+   * Adds a variable node to the tree.
+   * @param {*} varID the variable node id,
+   * @param {*} nodeID the node id to be added to the variable node.
+   */
   addVariableNode(varID, nodeID) {
     if (!this.variableNodes) return;
     const index = this.realNodes.findIndex((node) => node.id === varID);
 
     if (index === -1) {
-      // this means that the variable node does not exist yet
+      // the variable node does not exist yet
       this.realNodes.push({ id: varID, x: 0, y: 0, nodeIDs: [nodeID] });
     } else {
-      // this means that the variable node already exists
+      // the variable node already exists
       this.realNodes[index].nodeIDs.push(nodeID);
       this.realNodes[index].nodeIDs.sort((a, b) => a - b);
     }
@@ -353,28 +314,24 @@ class NTreeTracer extends Tracer {
     this.addNode(nodeID, undefined, 'square');
   }
 
-  updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
-    const node = this.findNode(id);
-    const update = { value, weight, x, y, visitedCount, selectedCount };
-    Object.keys(update).forEach((key) => {
-      if (update[key] === undefined) delete update[key];
-    });
-    Object.assign(node, update);
-  }
-  removeFullNode(id){
-    // intention of this function is to get rid of the whole node given a unique node id
-    // also any edges that point to such a node or point out from it
-    if (id === 4){
-      console.log("nodes", this.realNodes);
-      console.log("edges", this.realEdges);
-    }
+  /**
+   * Removes the whole variable node from the tree given its id.
+   * For removing a single (rendered) node, use removeNode.
+   * @param {*} id the id of the variable node to be removed.
+   */
+  removeFullNode(id) {
+    if (!this.variableNodes) return;
+
+    // remove edges that point to such a node or point out from it
     this.realNodes = this.realNodes.filter(node => node.id !== id);
     this.realEdges = this.realEdges.filter(edge => edge.source !== id && edge.target !== id);
-    //this.nodes = this.nodes.filter(node => node.id !== id);
     this.edges = this.edges.filter(edge => edge.source !== id && edge.target !== id);
-    console.log("afterNodes", this.realNodes);
-    console.log("afteredges", this.realEdges);
   }
+
+  /**
+   * Remove a single (rendered) node given its id. 
+   * @param {*} id the id of the node to be removed.
+   */
   removeNode(id) {
     if (this.variableNodes) {
       for (const node of this.realNodes) {
@@ -384,6 +341,7 @@ class NTreeTracer extends Tracer {
         }
       }
     }
+
     const node = this.findNode(id);
     if (!node) return;
     const index = this.nodes.indexOf(node);
@@ -391,41 +349,35 @@ class NTreeTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(
-    source,
-    target,
-    weight = null,
-    visitedCount = 0,
-    selectedCount = 0,
-    visitedCount1 = 0
-  ) {
+  /**
+   * Adds an edge to the tree given the source and target nodes.
+   * @param {*} source the source node.
+   * @param {*} target the target node.
+   * @returns 
+   */
+  addEdge(source, target) {
     if (this.findEdge(source, target)) return;
-    // for the sake of coding, check if the edge passed in involves
-    // the "hidden" node as a parent
-    if (source !== '0') {
-      // and not visited?
+
+    if (source !== '0') { // if the source is not the 'hidden' node
       this.edges.push({
         source,
         target,
-        weight,
-        visitedCount,
-        selectedCount,
-        visitedCount1,
       });
     }
 
-    if (!(source === target)) {
+    if (!(source === target)) { // else introduces infinite loop
       this.realEdges.push({
         source,
         target,
-        weight,
-        visitedCount,
-        selectedCount,
-        visitedCount1,
       });
     }
   }
 
+  /**
+   * Removes an edge from the tree given the source and target nodes.
+   * @param {*} source the source node.
+   * @param {*} target the target node.
+   */
   removeEdge(source, target) {
     const newEdges = this.edges.filter(
       (edge) => !(edge.source === source && edge.target === target)
@@ -439,28 +391,42 @@ class NTreeTracer extends Tracer {
     this.realEdges = newRealEdges;
   }
 
-  updateEdge(source, target, weight, visitedCount, selectedCount) {
-    const edge = this.findEdge(source, target);
-    const update = { weight, visitedCount, selectedCount };
-    Object.keys(update).forEach((key) => {
-      if (update[key] === undefined) delete update[key];
-    });
-    Object.assign(edge, update);
-  }
 
+  /**
+   * Finds the value of the node given the node id.
+   * @param {*} id the node id.
+   * @returns the value of the node.
+   */
   findValue(id) {
     return this.findNode(id).value;
   }
 
+  /**
+   * Finds the node given the node id.
+   * @param {*} id the node id.
+   * @returns the node.
+   */
   findNode(id) {
     return this.nodes.find((node) => node.id === id);
   }
 
+  /**
+   * Finds the variable node given the node id.
+   * @param {*} varID the variable node id.
+   * @returns the variable node.
+   */
   findVariableNode(varID) {
     if (!this.variableNodes) return;
     return this.realNodes.find((node) => node.id === varID);
   }
 
+  /**
+   * Finds the edge given the source and target nodes.
+   * @param {*} source the source node.
+   * @param {*} target the target node.
+   * @param {*} isDirected whether the graph is directed or not.
+   * @returns the edge if found. 
+   */
   findEdge(source, target, isDirected = this.isDirected) {
     if (isDirected) {
       return this.edges.find(
@@ -475,28 +441,10 @@ class NTreeTracer extends Tracer {
     }
   }
 
-  findLinkedEdges(source, isDirected = this.isDirected) {
-    if (isDirected) {
-      return this.edges.filter((edge) => edge.source === source);
-    } else {
-      return this.edges.filter(
-        (edge) => edge.source === source || edge.target === source
-      );
-    }
-  }
-
-  findLinkedNodeIds(source, isDirected = this.isDirected) {
-    const edges = this.findLinkedEdges(source, isDirected);
-    return edges.map((edge) =>
-      edge.source === source ? edge.target : edge.source
-    );
-  }
-
-  findLinkedNodes(source, isDirected = this.isDirected) {
-    const ids = this.findLinkedNodeIds(source, isDirected);
-    return ids.map((id) => this.findNode(id));
-  }
-
+  /**
+   * Gets the dimensions of the tree 'container'.
+   * @returns the dimensions of the container.
+   */
   getRect() {
     const { baseWidth, baseHeight, padding } = this.dimensions;
     const left = -baseWidth / 2 + padding;
@@ -508,11 +456,13 @@ class NTreeTracer extends Tracer {
     return { left, top, right, bottom, width, height };
   }
 
+  // intermediary function
   layout() {
     const { method, args } = this.callLayout;
     method.apply(this, args);
   }
 
+  // for use in node placement algorithm
   meanNodeSize(leftNode, rightNode) {
     const leftNodeSize =
       leftNode.getNodeLength() * (this.dimensions.nodeRadius * 2);
@@ -522,6 +472,7 @@ class NTreeTracer extends Tracer {
     return (leftNodeSize + rightNodeSize) / 2;
   }
 
+  // for use in node placement algorithm
   getLeftMost(node, lvl, depth) {
     if (lvl >= depth) {
       return node;
@@ -540,6 +491,7 @@ class NTreeTracer extends Tracer {
     }
   }
 
+  // for use in node placement algorithm
   apportion(node, lvl) {
     let leftmost = node.children[0];
     let neighbour = leftmost.getLeftNeighbour(this.levels);
@@ -605,6 +557,7 @@ class NTreeTracer extends Tracer {
     }
   }
 
+  // for use in node placement algorithm
   firstWalk(node, lvl) {
     if (node.children.length === 0) {
       const leftSibling = node.getLeftSibling();
@@ -635,51 +588,46 @@ class NTreeTracer extends Tracer {
     }
   }
 
-  checkExtentsRange(x, y) {
-    const rect = this.getRect();
-    return (
-      x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
-    );
-  }
-
+  // for use in node placement algorithm
   secondWalk(node, lvl, modsum) {
     let result = true;
     if (lvl <= this.maxDepth) {
       const xTemp = this.xTopAdjustment + node.prelimx + modsum;
       const yTemp = this.yTopAdjustment + lvl * this.LevelSeparation;
 
-      if (this.checkExtentsRange(xTemp, yTemp)) {
-        node.x = xTemp;
-        node.y = yTemp;
+      node.x = xTemp;
+      node.y = yTemp;
 
-        if (node.children.length !== 0) {
-          result = this.secondWalk(
-            node.children[0],
-            lvl + 1,
-            modsum + node.modifier
-          );
-        }
-        if (result && node.getRightSibling() !== null) {
-          result = this.secondWalk(node.getRightSibling(), lvl, modsum);
-        }
-      } else {
-        result = false;
+      if (node.children.length !== 0) {
+        result = this.secondWalk(
+          node.children[0],
+          lvl + 1,
+          modsum + node.modifier
+        );
       }
+      if (result && node.getRightSibling() !== null) {
+        result = this.secondWalk(node.getRightSibling(), lvl, modsum);
+      }
+
     }
     return result;
   }
 
+  /**
+   * Returns the variable node given the node id.
+   * @param {*} varID the variable node id.
+   * @returns the variable node.
+   */
   getVariableNode(varID) {
     if (!this.variableNodes) return;
     return this.realNodes.find((node) => node.varID === varID);
   }
 
+  // for use in node placement algorithm
   translateCoords() {
     const flattenedLevels = [].concat(...this.levels);
-    //console.log("here are the levels", this.levels )
-    const rect = this.getRect();
-    let offset = 308 - (this.levels.length-2)* 100;
-    // 
+    let offset = 308 - (this.levels.length - 2) * 100;
+
     flattenedLevels.forEach((levelNode) => {
       if (!this.variableNodes) {
         const nodeToUpdate = this.nodes.find(
@@ -691,257 +639,131 @@ class NTreeTracer extends Tracer {
           nodeToUpdate.y = levelNode.y;
         }
       } else {
-        // updating x and y in realNodes for rendering in variable
+        // getting coordinates for variable node
         const updateXandY = this.findVariableNode(levelNode.id);
         updateXandY.x = levelNode.x;
-        updateXandY.y = levelNode.y+(offset);
-
+        updateXandY.y = levelNode.y + (offset);
 
         let nodeLength = levelNode.getNodeLength();
-        console.log(levelNode);
 
-          const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
-          
-          //console.log(nodesToUpdate);
-          
-          // sort to account for later insertions
-          nodesToUpdate.sort((a, b) => a.id - b.id);
+        const nodesToUpdate = this.nodes.filter(node => levelNode.getIDs().includes(node.id));
+
+        // sort to account for later insertions
+        nodesToUpdate.sort((a, b) => a.id - b.id);
 
         if (nodesToUpdate) {
           const nodeRadius = this.dimensions.nodeRadius;
           const halfWidth = nodeRadius * nodeLength;
+
+          // determines the coordinates of the variable node given its size
           nodesToUpdate.forEach((nodeToUpdate, i) => {
             let valueX;
 
-              if (nodeLength === 1) {
-                valueX = levelNode.x ;
-              }
-              if (nodeLength === 2) {
-                valueX = levelNode.x + (i * nodeRadius * 2) - nodeRadius;
-                //console.log("SHOULD MAKE IT HERE!!");
-              } else if (nodeLength === 3) {
-                valueX = levelNode.x + ((i - 1) * nodeRadius * 2);
-              } else {
-                valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
-              }
-              //console.log("valueX", valueX, "levelNode.x", levelNode.x, "i", i);
-              nodeToUpdate.x = valueX;
-              nodeToUpdate.y = levelNode.y +(offset);
-              console.log(levelNode.y, nodeToUpdate.y);
-              
-            });
-          }
+            if (nodeLength === 1) {
+              valueX = levelNode.x;
+            }
+            if (nodeLength === 2) {
+              valueX = levelNode.x + (i * nodeRadius * 2) - nodeRadius;
+            } else if (nodeLength === 3) {
+              valueX = levelNode.x + ((i - 1) * nodeRadius * 2);
+            } else {
+              valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
+            }
+            nodeToUpdate.x = valueX;
+            nodeToUpdate.y = levelNode.y + (offset);
+          });
+        }
       }
     });
   }
 
+  /**
+   * Layout the tree.
+   */
   layoutNTree() {
-    // note that this function as of right now (haven't fully decided)
-    // will work only with a root that connects to the rest of the tree
     this.callLayout = { method: this.layoutNTree, args: arguments };
     const rect = this.getRect();
-    
-    if (this.realNodes.length === 0) {
-      // this means there is no tree to layout, so just return
 
-      return;
-    }
+    // no tree to layout
+    if (this.realNodes.length === 0) return;
+
+    // if there is only one node, place it in the middle
     if (this.realNodes.length === 1 && !this.variableNodes) {
       const [node] = this.realNodes;
       node.x = (rect.left + rect.right) / 2;
       node.y = (rect.top + rect.bottom) / 2;
-      
       return;
     }
 
-  
-    // now we need to grab the tree here
+    // getting the tree
     const { tree, levels } = this.getNTree();
     this.levels = levels;
     tree.x = (rect.left + rect.right) / 2;
     tree.y = rect.top
-    console.log(tree.y, "aint' his happening?");
 
+    // adjusting node positions 
     if (tree !== null) {
       this.firstWalk(tree, 0);
+
       this.xTopAdjustment = tree.x - tree.prelimx;
       this.yTopAdjustment = tree.y;
 
-      const outcome = this.secondWalk(tree, 0, 0);
+      this.secondWalk(tree, 0, 0);
+
       // move the node coordinates over
       this.translateCoords();
-
-      return outcome;
-    } else {
-      return true;
     }
+
   }
 
-  addSelfLoop(
-    nodeId,
-    weight = null,
-    visitedCount = 0,
-    selectedCount = 0,
-    visitedCount1 = 0
-  ) {
+  /**
+   * Add a self loop to a node (i.e., arrow pointing to self).
+   * @param {*} nodeId the node to be self-looped.
+   */
+  addSelfLoop(nodeId) {
     if (!this.findNode(nodeId)) {
       return;
     }
+    // adding solely to rendered edges
+    // adding to logical would introduce infinite loop
     this.addEdge(
       nodeId,
       nodeId,
-      weight,
-      visitedCount,
-      selectedCount,
-      visitedCount1
     );
   }
 
-  visit0(target, source, weight) {
-    this.visitOrLeave0(true, target, source, weight);
-  }
-
-  visit(target, source, weight) {
-    this.visitOrLeave(true, target, source, weight);
-  }
-
-  leave(target, source, weight) {
-    this.visitOrLeave(false, target, source, weight);
-  }
-
-  allLeave(target, sources, weight) {
-    for (let i = 0; i < sources.length; i += 1) {
-      this.visitOrLeave(false, target, sources[i], weight);
-    }
-  }
-
-  visitOrLeave0(visit, target, source = null, weight) {
-    const edge = this.findEdge(source, target);
+  /**
+   * A simple node fill to work with the AiA themes.
+   * Mapping 1=green, 2=yellow and 3=red under the default theme.
+   * @param {*} target the node to be coloured.
+   * @param {*} colourIndex the colour code.
+   */
+  fill(target, colourIndex = 0) {
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
-    if (!this.istc) {
-      node.visitedCount0 += visit ? 1 : -1;
-      if (edge && !(source === target)) edge.visitedCount0 += visit ? 1 : -1;
-    } else {
-      node.visitedCount0 = visit ? 1 : 0;
-      if (edge && !(source === target)) edge.visitedCount0 = visit ? 1 : 0;
-    }
-    if (this.logTracer) {
-      this.logTracer.println(
-        visit
-          ? (source || '') + ' -> ' + target
-          : (source || '') + ' <- ' + target
-      );
-    }
+    if (!node) return;
+    node.fill =
+      (colourIndex === 1 || // green
+        colourIndex === 2 || // orange/yellow
+        colourIndex === 3) ? // red
+        colourIndex : 0; // no colour
   }
 
-  visitOrLeave(visit, target, source = null, weight) {
-    const edge = this.findEdge(source, target);
+  /**
+   * A simple node unfill.
+   * @param {*} target node to be uncoloured.
+   */
+  unfill(target) {
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
-    if (!this.istc) {
-      node.visitedCount += visit ? 1 : -1;
-      if (edge && !(source === target)) edge.visitedCount += visit ? 1 : -1;
-    } else {
-      node.visitedCount = visit ? 1 : 0;
-      if (edge && !(source === target)) edge.visitedCount = visit ? 1 : 0;
-    }
-    if (this.logTracer) {
-      this.logTracer.println(
-        visit
-          ? (source || '') + ' -> ' + target
-          : (source || '') + ' <- ' + target
-      );
-    }
+    if (!node) return;
+    node.fill = 0;
   }
 
-  select(target, source) {
-    this.selectOrDeselect(true, target, source);
-  }
-
-  styledSelect(style, target, source) {
-    this.styledSelectOrDeselect(style, true, target, source);
-  }
-
-  styledDeselect(style, target, source) {
-    this.styledSelectOrDeselect(style, false, target, source);
-  }
-
-  deselect(target, source) {
-    this.selectOrDeselect(false, target, source);
-  }
-
-  visit1(target, source, colorIndex, weight) {
-    this.visitOrLeave1(true, target, source, weight, colorIndex);
-  }
-
-  leave0(target, source, colorIndex = 1, weight) {
-    this.visitOrLeave0(false, target, source, weight, colorIndex);
-  }
-
-  leave1(target, source, colorIndex = 1, weight) {
-    this.visitOrLeave1(false, target, source, weight, colorIndex);
-  }
-
-  visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
-    const edge = this.findEdge(source, target);
-    const node = this.findNode(target);
-    if (weight) node.weight = weight;
-
-    const node1 = this.findNode(source);
-    if (colorIndex === 1) {
-      if (edge && !(source === target)) edge.visitedCount1 = visit ? 1 : 0;
-      node.visitedCount1 = visit ? 1 : 0;
-      if (node1) node1.visitedCount1 = visit ? 1 : 0;
-    } else if (colorIndex === 2) {
-      if (edge && !(source === target)) edge.visitedCount2 = visit ? 1 : 0;
-      node.visitedCount2 = visit ? 1 : 0;
-      if (node1) node1.visitedCount2 = visit ? 1 : 0;
-    } else if (colorIndex === 3) {
-      // for red
-      node.visitedCount = visit ? 1 : 0;
-    }
-    if (this.logTracer) {
-      this.logTracer.println(
-        visit
-          ? (source || '') + ' -> ' + target
-          : (source || '') + ' <- ' + target
-      );
-    }
-  }
-
-  selectOrDeselect(select, target, source = null) {
-    const edge = this.findEdge(source, target);
-    if (edge && !(source === target)) edge.selectedCount += select ? 1 : -1;
-    const node = this.findNode(target.toString());
-    node.selectedCount = select ? 1 : 0;
-    if (this.logTracer) {
-      this.logTracer.println(
-        select
-          ? (source || '') + ' => ' + target
-          : (source || '') + ' <= ' + target
-      );
-    }
-  }
-
-  sorted(target) {
-    const node = this.findNode(target);
-    node.sorted = true;
-  }
-
-  styledSelectOrDeselect(style, select, target, source) {
-    this.selectOrDeselect(select, target, source);
-    const node = this.findNode(target);
-    node.style = style;
-  }
-
-  resetSelect(target, source) {
-    const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount = 0;
-    const node = this.findNode(target);
-    node.selectedCount = 0;
-  }
-
+  /**
+   * Checks whether two nodes are connected.
+   * @param {*} source the source node.
+   * @param {*} target the target node.
+   * @returns whether the two nodes are connected.
+   */
   isInterConnected(source, target) {
     return (
       this.edges.find(
@@ -953,13 +775,48 @@ class NTreeTracer extends Tracer {
     );
   }
 
-  log(key) {
-    this.logTracer = key ? this.getObject(key) : null;
+  /**
+   * To use with setNTree. Extracts edges and nodes (i.e., the tree).
+   * @returns the extracted tree object.
+   */
+  extractNTree() {
+    this.unfillAll();
+    return {
+      'realNodes': this.realNodes,
+      'realEdges': this.realEdges,
+      'nodes': this.nodes,
+      'edges': this.edges,
+    };
   }
 
-  setIstc() {
-    this.istc = true;
+  /**
+   * To use with extractNTree. Sets edges and nodes (i.e., the tree).
+   * @param {*} realNodes the logical nodes of the tree.
+   * @param {*} realEdges the logical edges of the tree.
+   * @param {*} nodes the rendered nodes of the tree.
+   * @param {*} edges the rendered edges of the tree.
+   */
+  setNTree(realNodes, realEdges, nodes, edges) {
+    this.realNodes = realNodes;
+    this.realEdges = realEdges;
+    this.nodes = nodes;
+    this.edges = edges;
   }
+
+  /**
+   * Unfill all nodes of the tree.
+   */
+  unfillAll() {
+    this.text = null;
+    this.nodes.forEach((node) => {
+      node.fill = 0;
+    });
+  }
+
+  setText(text) {
+    this.text = text;
+  }
+
 }
 
 export default NTreeTracer;

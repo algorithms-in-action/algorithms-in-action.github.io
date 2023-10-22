@@ -25,23 +25,39 @@ class TreeNode {
     this.rank = 0;
   }
 
+  /**
+   * Getting the ID of the node.
+   * @returns {number[]} the ID of the node in an array for compatibility.
+   */
   getIDs() {
     return [this.id];
   }
 
+  /**
+   * @returns 1.
+   */
   getNodeLength() {
     return 1;
   }
 
+  /**
+   * Adding the child node to the node.
+   * @param {*} childNode the child node to be added.
+   */
   addChild(childNode) {
     childNode.parent = this;
     this.children.push(childNode);
   }
 
+  /**
+   * Getting the parent node of the node.
+   * @returns {*} the parent node.
+   */
   getParent() {
     return this.parent;
   }
 
+  // for use in node placement algorithm
   getLeftSibling() {
     if (this.getParent() == null) {
       return null;
@@ -53,10 +69,16 @@ class TreeNode {
     return null;
   }
 
+  /**
+   * Gets the index of the child node.
+   * @param {*} child the child node.
+   * @returns the index of the child node.
+   */
   getChildIndex(child) {
     return this.children.findIndex((c) => c.id === child.id);
   }
 
+  // for use in node placement algorithm
   getRightSibling() {
     if (this.getParent() == null) {
       return null;
@@ -68,6 +90,7 @@ class TreeNode {
     return null;
   }
 
+  // for use in node placement algorithm
   getLeftNeighbour(hierarchy) {
     const leftSibling = this.getLeftSibling();
     if (leftSibling == null) {
@@ -76,10 +99,11 @@ class TreeNode {
       if (index !== 0) {
         return levelList[index - 1];
       }
-      // if it is the first node on a level, return null since it has no left neighbour
+      // if it is the first node on a level, will have no left neighbour
       return null;
     }
     return leftSibling;
   }
+
 }
 export default TreeNode;
