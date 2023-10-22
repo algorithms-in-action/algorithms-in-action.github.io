@@ -29,6 +29,7 @@ export class Element {
     this.key = key;
     this.variables = [];
     this.stack = [];
+    this.fill = 0;
   }
 }
 
@@ -44,13 +45,9 @@ class Array2DTracer extends Tracer {
   set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = '1';
+    this.kth = (algo === 'unionFind') ? '' : '1';
     this.motionOn = true;
     this.hideArrayAtIdx = null;
-    // For a blank inital state. 
-    if (algo === 'unionFind') {
-      this.kth = ' ';
-    }
     super.set();
   }
 
@@ -87,16 +84,26 @@ class Array2DTracer extends Tracer {
           case '3':
             this.data[x][y].selected3 = true;
             break;
-          case '4':
-            this.data[x][y].selected4 = true;
-            break;
-          case '5':
-            this.data[x][y].selected5 = true;
-            break;
           default:
             this.data[x][y].selected = true;
             break;
         }
+      }
+    }
+  }
+
+  fill(sx, sy, ex = sx, ey = sy, c = 0) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].fill = (c === 1 || c === 2 || c === 3) ? c : 0;
+      }
+    }
+  }
+
+  unfill(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].fill = 0;
       }
     }
   }
@@ -146,14 +153,8 @@ class Array2DTracer extends Tracer {
     this.data = newData;
   }
 
-  setMotion(bool=true) {
+  setMotion(bool = true) {
     this.motionOn = bool;
-  }
-
-  clearVariables() {
-    for (let y = 0; y < this.data[0].length; y++) {
-      this.data[0][y].variables = [];
-    }
   }
 
   // style = { backgroundStyle: , textStyle: }
@@ -181,8 +182,6 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
-        this.data[x][y].selected4 = false;
-        this.data[x][y].selected5 = false;
         this.data[x][y].style = undefined;
       }
     }
@@ -198,6 +197,10 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
+  }
+
+  getKth() {
+    return this.kth;
   }
 
   hideArrayAtIndex(index) {
