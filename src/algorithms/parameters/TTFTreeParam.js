@@ -35,17 +35,40 @@ function TTFTreeParam() {
 
     if (validateListInput(list)) {
       let nodes = list.split(',').map(Number);
-        // run search animation
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'TTFTree',
-          mode: 'insertion',
-          nodes, 
-        });
-        setMessage(successParamMsg(ALGORITHM_NAME));
-      } else {
-        setMessage(errorParamMsg(ALGORITHM_NAME, INSERTION_EXAMPLE));
-      }
+      // run search animation
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'TTFTree',
+        mode: 'insertion',
+        nodes,
+      });
+      setMessage(successParamMsg(ALGORITHM_NAME));
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, INSERTION_EXAMPLE));
+    }
   };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const inputValue = e.target[0].value;
+    if (!(isNaN(inputValue))) {
+      const target = {
+        arg1: parseInt(inputValue, 10)
+      };
+      const visualiser = algorithm.chunker.visualisers;
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'TTFTree',
+        mode: 'search',
+        visualiser,
+        target,
+      });
+      setMessage(successParamMsg(ALGORITHM_NAME));
+    }
+    else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, SEARCH_EXAMPLE));
+
+    }
+
+  };
+
 
 
   return (
@@ -67,16 +90,17 @@ function TTFTreeParam() {
         />
 
         {/* Search input */}
-        {/*<SingleValueParam
+        {<SingleValueParam
           name="TTFTree"
           buttonName="Search"
           mode="search"
           formClassName="formRight"
+          handleSubmit={handleSearch}
           DEFAULT_VAL={DEFAULT_TARGET}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           setMessage={setMessage}
-  />*/}
+        />}
       </div>
       {/* render success/error message */}
       {message}
