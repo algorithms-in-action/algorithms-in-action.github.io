@@ -384,7 +384,6 @@ export default {
     if (nodes === null || nodes.length === 0) return;
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 
-
     // initialising tree
     let treeStruct = this.initTree(chunker, nodes[0], tree);
 

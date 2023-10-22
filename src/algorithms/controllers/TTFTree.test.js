@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-
 import TTFTreeInsertion from './TTFTreeInsertion';
 import TTFTreeSearch from './TTFTreeSearch';
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
