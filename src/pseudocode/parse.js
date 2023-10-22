@@ -29,7 +29,7 @@ function extractCode(lines) {
       ind += 1;
     } else if (line.localeCompare('\\In}') === 0) {
       ind -= 1;
-    } else if (line.indexOf('\\Expl{ ') >= 0) {
+    } else if (line.indexOf('\\Expl{') >= 0) {
       explFlag = true;
       explanation = '';
       explanation += line.substring(7, line.length);
