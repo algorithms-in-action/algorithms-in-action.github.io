@@ -330,7 +330,7 @@ export function run_QS(is_qs_median_of_3) {
  
         // pick pivot --------
         
-        if (is_qs_median_of_3 && boolShouldAnimate()) {
+        if (is_qs_median_of_3) {
 
           // TODO placeholder
           // TODO put in asserts
@@ -371,12 +371,21 @@ export function run_QS(is_qs_median_of_3) {
           pivot_index = right-1
 
           // TODO
-          chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, (vis, cur_right, cur_left) => {
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, 
+            (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             unhighlight(vis, cur_right, false);
             unhighlight(vis, cur_right -1, false);
             unhighlight(vis, cur_left, false);
+
+            /* // TODO
+            assert(cur_pivot_index !== undefined);
+            assert(cur_i === undefined);
+            assert(cur_j === undefined);
+            */
+
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
           },
-          [right, left]);
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
 
         } else {
 
