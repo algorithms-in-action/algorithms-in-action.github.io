@@ -100,25 +100,7 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
     \\Expl} 
 \\In} 
 
-\\NewLine
-
-Find(n) // return root of tree containing n \\B Find(n)
-\\In{
-    while n != parent[n]  // while we are not at the root \\B while n != parent[n]
-    \\In{
-        shorten path from n to root \\Ref Shorten_path
-        \\Expl{ There are several ways of shortening the path back to the
-                root. The most obvious is to follow the path to the root
-                then follow it again, making each element point to the
-                root. The version here doesn't shorten the path as much
-                but is simpler and overall it works extremely well.
-                The animation allows path compression to be disabled so
-                you can compare the relative heights of the trees produced.
-        \\Expl} 
-        n <- parent[n]  // go up the tree one step \\B n <- parent[n]
-    \\In}
-    return n // return root \\B return n
-\\In} 
+Find(n) // return root of tree containing n \\Ref Find(n)
 \\Code}
 
 \\Code{
@@ -132,6 +114,26 @@ Maybe_swap
         swap(n, m) \\B swap(n, m)
         \\In}
 \\Code}
+
+\\Code{
+    Find(n)
+    \\In{
+        while n != parent[n]  // while we are not at the root \\B while n != parent[n]
+        \\In{
+            shorten path from n to root \\Ref Shorten_path
+            \\Expl{ There are several ways of shortening the path back to the
+                    root. The most obvious is to follow the path to the root
+                    then follow it again, making each element point to the
+                    root. The version here doesn't shorten the path as much
+                    but is simpler and overall it works e xtremely well.
+                    The animation allows path compression to be disabled so
+                    you can compare the relative heights of the trees produced.
+            \\Expl} 
+            n <- parent[n]  // go up the tree one step \\B n <- parent[n]
+        \\In}
+        return n // return root \\B return n
+    \\In} 
+    \\Code}
 
 \\Code{
     Adjust_rank
