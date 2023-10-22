@@ -366,12 +366,22 @@ export default {
                           }
                         }
         
-                        //highlight all finalized nodes in green in the array
+                        //BLA BLA BLA
                         for(let i = 0; i < a.length; i++)
                         { 
-                          if(a[i] == true && !Nodes.includes(i))
+                          if(a[i] == true && !Nodes.includes(i) && i ==s)
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
+                          }
+
+                          if(a[i] == true && !Nodes.includes(i) && i!=s)
+                          { 
+                            vis.array.select(0, i + 1);  
+                          }
+
+                          if(a[i] == true && !Nodes.includes(i) && i!=s && i!=m)
+                          { 
+                            vis.array.select(0, i + 1, 0, i+1, '1');  
                           }
                         } 
                         
@@ -464,6 +474,11 @@ export default {
   }
 
 };
+
+
+// green vis.array.select(0, i + 1, 0, i + 1, '1');
+// blue vis.array.select(0,i + 1);
+// red vis.array.select(0, i + 1, 0, i + 1, '4');
 
 
 
