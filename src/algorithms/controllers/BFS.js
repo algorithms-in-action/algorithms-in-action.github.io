@@ -109,6 +109,8 @@ export default {
     );
 
     const bfs = (s) => {
+
+      const Nodes = [s];      
                
         // Seen[s] <- True B8
         visited[s] = true;
@@ -126,7 +128,7 @@ export default {
             //highlight all nodes explored in blue in the array
             //
             for (let i = 0; i < z.length; i ++){
-              if(z[i] == true){
+              if(z[i] == true && Nodes.includes(i)){
                 vis.array.select(0,i + 1);
                 //vis.graph.colorNode(i, 4);
               }
@@ -135,7 +137,7 @@ export default {
             //highlight alls seen nodes in green in the array
             for(let i = 0; i < a.length; i++)
             { 
-              if(a[i] == true)
+              if(a[i] == true && !Nodes.includes(i))
               { 
                 vis.array.select(0, i + 1, 0, i + 1, '1');  
               }
@@ -146,35 +148,34 @@ export default {
               
               vis.array.setList(y); 
             },
-            [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s]
+            [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s, Nodes]
         );       
 
         // Nodes <- queue containing just s B9
         //The real queue
-        const Nodes = [s];  
+        //const Nodes = [s];  
         explored[s] = true;
         displayedQueue = [];
         displayedQueue.push(s+1);
         chunker.add(
-          8,
-          (vis, x, y, z) => { 
+          9,
+          (vis, x, y, z, Nodes) => { 
             
             vis.array.set(x, 'BFS');  
             vis.array.setList(y);  
 
             //select the explored node in blue 
+            //HEREEEE
 
             for (let i = 0; i < z.length; i ++){
-              if(z[i] == true){
+              if(z[i] == true && i !=s && Nodes.includes(i)){
                 vis.array.select(0,i + 1);
                 vis.graph.colorNode(i, 4); 
               }
-            } 
-
-           
+            }            
 
           },
-          [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored]
+          [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, Nodes]
         ); 
 
         // while Nodes not empty B2
@@ -211,16 +212,16 @@ export default {
           displayedQueue.shift();
           chunker.add(
             10,
-            (vis, x, y, z, a, b, c) => { 
+            (vis, x, y, z, a, b, Nodes) => { 
               //reset
               vis.array.set(x,'BFS');  
               //add a string "n" below the currently popped out node
-              vis.array.assignVariable('n', 2, y + 1);  
+              vis.array.assignVariable('n', 2, y + 1);
               
               //highlight all nodes explored in blue 
               //
               for (let i = 0; i < a.length; i ++){
-                if(a[i] == true){
+                if(a[i] == true && Nodes.includes(i)){
                   vis.array.select(0,i + 1);
                   
                 }
@@ -230,7 +231,7 @@ export default {
               //highlight all finalized nodes in green
               for(let i = 0; i < b.length; i++)
               { 
-                if(b[i] == true && !c.includes(i))
+                if(b[i] == true && !Nodes.includes(i))
                 { 
                   vis.array.select(0, i + 1, 0, i + 1, '1');
                   vis.graph.removeNodeColor(i);  
@@ -313,7 +314,7 @@ export default {
                     seen.push(m);
                     chunker.add(
                       13,
-                      (vis, x, y, z, a, b) => { 
+                      (vis, x, y, z, a, b, Nodes) => { 
                         vis.array.set(x, 'BFS');
                         //add a string "n" below the currently popped out node
                         vis.array.assignVariable('n', 2, b + 1); 
@@ -321,9 +322,8 @@ export default {
                         //highlight all nodes explored in blue in the array
                         //
                         for (let i = 0; i < z.length; i ++){
-                          if(z[i] == true){
+                          if(z[i] == true && Nodes.includes(i)){
                             vis.array.select(0,i + 1);
-                            //vis.graph.colorNode(i, 4);
                           }
                         }
                         
@@ -331,7 +331,7 @@ export default {
                         //highlight all finalized nodes in green in the array
                         for(let i = 0; i < a.length; i++)
                         { 
-                          if(a[i] == true)
+                          if(a[i] == true && !Nodes.includes(i))
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
                           }
@@ -343,7 +343,7 @@ export default {
                         
                         vis.array.setList(y); 
                       },
-                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, m]
+                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, m, Nodes]
                     );
 
                     // Parent[m] <- n B14 
@@ -352,7 +352,7 @@ export default {
                     displayedParent[m + 1] = n + 1;
                     chunker.add(
                       14,
-                      (vis, x, y, z, a, b, c, d) => { 
+                      (vis, x, y, z, a, b, c, d, Nodes) => { 
                         vis.array.set(x, 'BFS');
                         //add a string "n" below the currently popped out node
                         vis.array.assignVariable('n', 2, b + 1); 
@@ -360,7 +360,7 @@ export default {
                         //highlight all nodes explored in blue in the array
                         //
                         for (let i = 0; i < z.length; i ++){
-                          if(z[i] == true){
+                          if(z[i] == true && Nodes.includes(i)){
                             vis.array.select(0,i + 1);
                             //vis.graph.colorNode(i, 4);
                           }
@@ -369,7 +369,7 @@ export default {
                         //highlight all finalized nodes in green in the array
                         for(let i = 0; i < a.length; i++)
                         { 
-                          if(a[i] == true)
+                          if(a[i] == true && !Nodes.includes(i))
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
                           }
@@ -385,7 +385,7 @@ export default {
                         
                         vis.array.setList(y); 
                       },
-                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, lastParent]
+                      [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, lastParent, Nodes]
                     );   
       
                       // Parent[m] = n;
@@ -395,12 +395,12 @@ export default {
                       explored[m] = true;
                       chunker.add(
                         15,
-                        (vis, x, y, z) => {
+                        (vis, x, y, z, Nodes) => {
                           vis.array.setList(x);
                           
                           // color the node in blue as explored 
                           // if it has not been finalized
-                          if(y[z] == false){
+                          if(y[z] == false && Nodes.includes(z)){
                             vis.array.deselect(0, z + 1);
                             vis.array.select(0, z + 1); 
                             vis.graph.removeNodeColor(z);
@@ -408,7 +408,7 @@ export default {
                           }
                           
                         },
-                        [displayedQueue, visited, m]
+                        [displayedQueue, visited, m, Nodes]
                       );
 
                   }
@@ -464,6 +464,34 @@ export default {
   }
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
