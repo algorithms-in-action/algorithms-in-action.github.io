@@ -142,26 +142,33 @@ class Array2DRenderer extends Renderer {
                     <span className={styles.value}>{i}</span>
                   </td>
                 )}
-                {row.map((col, j) => (
-                  <td
-                    className={classes(
-                      styles.col,
-                      col.selected && styles.selected,
-                      col.patched && styles.patched,
-                      col.sorted && styles.sorted,
-                      col.selected1 && styles.selected1,
-                      col.selected2 && styles.selected2,
-                      col.selected3 && styles.selected3,
-                      col.selected4 && styles.selected4,
-                      col.selected5 && styles.selected5
-                    )}
-                    key={j}
-                  >
-                    <span className={styles.value}>
-                      {this.toString(col.value)}
-                    </span>
-                  </td>
-                ))}
+                {row.map((col, j) => {
+                  const varGreen = col.fill === 1;
+                  const varOrange = col.fill === 2;
+                  const varRed = col.fill === 3;
+
+                  return (
+                    <td
+                      className={classes(
+                        styles.col,
+                        col.selected && styles.selected,
+                        col.patched && styles.patched,
+                        col.sorted && styles.sorted,
+                        col.selected1 && styles.selected1,
+                        col.selected2 && styles.selected2,
+                        col.selected3 && styles.selected3,
+                        varGreen && styles.variableGreen,
+                        varOrange && styles.variableOrange,
+                        varRed && styles.variableRed
+                      )}
+                      key={j}
+                    >
+                      <span className={styles.value}>
+                        {this.toString(col.value)}
+                      </span>
+                    </td>
+                  );
+                })}
                 {(pointer && algo === 'tc' && (
                   <th className={classes(styles.col, styles.index)}>
                     <span className={styles.value}> i </span>

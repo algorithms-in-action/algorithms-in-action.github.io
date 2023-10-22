@@ -1,54 +1,61 @@
 import {
   N_ARRAY,
-  ARRAY_COLOUR_CODES,
-  TREE_COLOUR_CODES,
+  COLOUR_CODES,
   N_IDX,
   PARENT_IDX,
   default as unionFind,
 } from './unionFindUnion.js';
+import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 
 export default {
   initVisualisers({ visualiser }) {
-    // clearing tree from union
-    for (let i = 1; i < N_ARRAY.length; i++) {
-      let n = N_ARRAY[i];
-      unionFind.unhighlight(visualiser.tree.instance, n, n);
-    }
+    // need to clear here, otherwise we get a stepping back bug re highlighting - uncertain why.
+    visualiser.tree.instance.unfillAll();
+
+    // would ideally use the array and tree from union, but results in highlighting and child not returning to place when stepping back - uncertain why. 
     return {
       array: {
-        instance: visualiser.array.instance,
+        instance: new Array2DTracer('array', null, 'Array View'),
         order: 0,
       },
       tree: {
-        instance: visualiser.tree.instance,
+        instance: new NTreeTracer('n-tree', null, 'Tree View'),
         order: 1,
       },
     };
   },
 
-  run(chunker, { visualiser, target }) {
+  run(chunker, { visualiser, target, mode }) {
+    // extracting array data from visualiser
+    const value = target.arg1;
+    const pathCompression = target.arg2;
+
+    // extracting parent array from visualiser
+    let parentArray = this.extractParentArray(visualiser);
+
+    // extracting tree data from visualiser
+    let { 'realNodes': realNodes, 'realEdges': realEdges, 'nodes': nodes, 'edges': edges } = visualiser.tree.instance.extractNTree();
+
+    // restoring the visualisers
+    chunker.add(
+      `while n != parent[n]`,
+      (vis, parentArray) => {
+        vis.array.set([N_ARRAY, parentArray], 'unionFind');
+        vis.tree.setNTree(realNodes, realEdges, nodes, edges);
+        vis.tree.isReversed = true;
+      }, [parentArray]); // passing nodes etc introduces highlighting
+
+    this.find(chunker, parentArray, value, 'n', null, pathCompression, mode);
+
+  },
+
+  extractParentArray(visualiser) {
     let parentElems = visualiser.array.instance.data[1];
     let parentArray = parentElems.map((element) => parseInt(element.value, 10));
     parentArray[0] = 'Parent[i]';
 
-    visualiser.array.instance.set([N_ARRAY, parentArray], 'unionFind');
-
-    const value = target.arg1;
-    const pathCompression = target.arg2;
-
-    // highlighting the current n to find in tree and array
-    chunker.add(
-      `Find(n)`,
-      (vis, n) => {
-        vis.array.setMotion(true); // turning on smooth transition
-        unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
-        unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
-        vis.array.showKth(`Find(${n})`);
-      },
-      [value]
-    );
-
-    this.find(chunker, parentArray, value, 'n', null, pathCompression);
+    return parentArray;
   },
 
   /**
@@ -67,7 +74,7 @@ export default {
           vis.array,
           PARENT_IDX,
           n,
-          ARRAY_COLOUR_CODES.ORANGE
+          COLOUR_CODES.ORANGE
         );
       },
       [n]
@@ -83,15 +90,27 @@ export default {
    * @param {boolean} pathCompression Whether to use path compression.
    * @returns {number} The root of the current node.
    */
-  find(chunker, parentArr, n, name, m, pathCompression) {
+  find(chunker, parentArr, n, name, m, pathCompression, mode) {
+
+    // highlighting the current n to find in tree and array
+    chunker.add(
+      `while n != parent[n]`,
+      (vis, n) => {
+        vis.array.setMotion(true); // turning on smooth transition
+        unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.ORANGE);
+        unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
+      },
+      [n]
+    );
+
     while (this.notAtRoot(chunker, parentArr, n)) {
       // highlighting for 'fail state'
       chunker.add(
         `while n != parent[n]`,
         (vis, n) => {
-          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
-          unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
-          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.RED);
+          unionFind.highlight(vis.tree, n, n, COLOUR_CODES.RED);
         },
         [n]
       );
@@ -109,15 +128,15 @@ export default {
         (vis, n, m, nPrev) => {
           vis.array.assignVariable(`${name}`, N_IDX, n); // update 'n'
           if (n !== m && m !== null)
-            unionFind.highlight(vis.array, N_IDX, m, ARRAY_COLOUR_CODES.GREEN);
-          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.ORANGE);
+            unionFind.highlight(vis.array, N_IDX, m, COLOUR_CODES.GREEN);
+          unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.ORANGE);
           unionFind.highlight(
             vis.array,
             PARENT_IDX,
             nPrev,
-            ARRAY_COLOUR_CODES.ORANGE
+            COLOUR_CODES.ORANGE
           );
-          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
+          unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
           unionFind.unhighlight(vis.tree, nPrev, nPrev);
         },
         [n, m, nTempPrev]
@@ -128,16 +147,16 @@ export default {
     chunker.add(
       `while n != parent[n]`,
       (vis, n) => {
-        unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.GREEN);
-        unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.GREEN);
-        unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.GREEN);
+        unionFind.highlight(vis.tree, n, n, COLOUR_CODES.GREEN);
       },
       [n]
     );
 
     // returning found 'n'
     chunker.add(
-      `return n`,
+      mode === 'find' ? 'return n' : `${name} <- Find(${name})`,
       (vis, n) => {
         unionFind.unhighlight(vis.array, PARENT_IDX, n);
       },
@@ -162,16 +181,16 @@ export default {
           vis.array,
           PARENT_IDX,
           n,
-          ARRAY_COLOUR_CODES.ORANGE
+          COLOUR_CODES.ORANGE
         );
         unionFind.highlight(
           vis.array,
           N_IDX,
           parent,
-          ARRAY_COLOUR_CODES.ORANGE
+          COLOUR_CODES.ORANGE
         );
-        unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.ORANGE);
-        unionFind.highlight(vis.tree, parent, parent, TREE_COLOUR_CODES.ORANGE);
+        unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
+        unionFind.highlight(vis.tree, parent, parent, COLOUR_CODES.ORANGE);
       },
       [n, parentArr[n], parentArr[parentArr[n]]]
     );
@@ -185,14 +204,15 @@ export default {
           vis.array,
           PARENT_IDX,
           parent,
-          ARRAY_COLOUR_CODES.ORANGE
+          COLOUR_CODES.ORANGE
         );
         unionFind.highlight(
           vis.tree,
           grandparent,
           grandparent,
-          TREE_COLOUR_CODES.ORANGE
+          COLOUR_CODES.ORANGE
         );
+        vis.tree.layout(); // to resolve stepping back bug in find
       },
       [n, parentArr[n], parentArr[parentArr[n]]]
     );
@@ -207,8 +227,8 @@ export default {
         (vis, n, grandparent) => {
           vis.array.updateValueAt(PARENT_IDX, n, grandparent);
 
-          vis.tree.removeEdge(formerParent.toString(), n.toString());
-          vis.tree.addEdge(grandparent.toString(), n.toString());
+          vis.tree.removeEdge(formerParent, n);
+          vis.tree.addEdge(grandparent, n);
           vis.tree.layout();
         },
         [n, parentArr[parentArr[n]]]
@@ -220,9 +240,9 @@ export default {
           unionFind.unhighlight(vis.array, PARENT_IDX, formerParent);
           unionFind.unhighlight(vis.tree, newParent, newParent);
 
-          unionFind.highlight(vis.array, N_IDX, n, ARRAY_COLOUR_CODES.RED);
-          unionFind.highlight(vis.array, PARENT_IDX, n, ARRAY_COLOUR_CODES.RED);
-          unionFind.highlight(vis.tree, n, n, TREE_COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.RED);
+          unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.RED);
+          unionFind.highlight(vis.tree, n, n, COLOUR_CODES.RED);
         },
         [n, formerParent, parentArr[n]]
       );

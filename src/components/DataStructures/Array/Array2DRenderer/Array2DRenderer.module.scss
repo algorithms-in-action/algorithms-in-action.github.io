@@ -8,12 +8,10 @@
 
   .bottom_caption {
     caption-side: bottom;
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
     font-size: 13px;
-    font-weight: 500;
     color: var(--array-2d-row-col-value-color);
-
   }
 
   .top_variable {
@@ -28,7 +26,7 @@
   .row {
     display: table-row;
     height: 28px;
-  
+
 
     .col {
       display: table-cell;
@@ -82,23 +80,30 @@
         }
       }
 
-      &.selected4 {
-        // make this a variable
-        background-color: rgb(228, 148, 1);
+      &.variableGreen {
+        background-color: var(--simple-fill-var-green);
 
         span {
           color: var(--array-2d-row-col-selected);
         }
       }
 
-      &.selected5 {
-        // make this a variable
-        background-color: rgb(208, 55, 0);
+      &.variableOrange {
+        background-color: var(--simple-fill-var-orange);
+
+        span {
+          color: var(--array-2d-row-col);
+        }
+      }
+
+      &.variableRed {
+        background-color: var(--simple-fill-var-red);
 
         span {
           color: var(--array-2d-row-col-selected);
         }
       }
+
 
       &.patched {
         background-color: var(--array-2d-row-col-bg-patched);
@@ -111,7 +116,7 @@
 
       &.sorted {
         background-color: var(--array-2d-row-bg-sorted);
-        
+
         span {
           color: var(--array-2d-row-col-sorted);
         }
@@ -123,7 +128,7 @@
         background: var(--array-2d-row-col-bg-index);
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
-        
+
       }
 
       &.variables {
@@ -131,14 +136,14 @@
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
         vertical-align: text-top;
-        
+
       }
 
       &.faded {
         opacity: 0.2
       }
 
-      
+
     }
   }
 }

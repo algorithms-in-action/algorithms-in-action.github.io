@@ -1,6 +1,6 @@
 import { TTFExp } from '../explanations';
-import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
-import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeVariable';
+import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
+import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
 import { TREE_COLOUR_CODES } from './unionFindUnion';
 
 export default {

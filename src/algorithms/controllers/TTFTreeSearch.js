@@ -1,5 +1,5 @@
 import { TTFExp } from '../explanations';
-import NTreeTracer from '../../components/DataStructures/Graph/NTreeTracer';
+import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 
 export default {
   explanation: TTFExp,

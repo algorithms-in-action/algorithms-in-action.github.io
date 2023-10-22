@@ -154,11 +154,11 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     if (line.ref) {
       codeLines.push(
         <p
-        // key={i}
-        //className={(!algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
-        //  && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
-        //  role="presentation"
-        //  onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+          key={i}
+          className={(!algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
+            && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
+          role="presentation"
+        //onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
           <span>
