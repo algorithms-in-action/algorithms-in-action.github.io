@@ -529,7 +529,7 @@ export function run_QS(is_qs_median_of_3) {
 
         QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
 
-        if (depth === 0 || isRecursionExpanded()) {
+        if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
