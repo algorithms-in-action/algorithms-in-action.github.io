@@ -52,7 +52,8 @@ export default {
     //The fake ones for display
     const displayedVisited = []; 
     const displayedParent = []; 
-    const displayedNodes = [];  
+    const displayedNodes = [];
+    const seen = [];  
     let displayedQueue = [];
 
     const start = startNode - 1;
@@ -113,6 +114,7 @@ export default {
         visited[s] = true;
         displayedVisited[s+1] = "true";
         explored[s] = false;
+        seen.push(s);
 
         chunker.add(
           8,
@@ -209,7 +211,7 @@ export default {
           displayedQueue.shift();
           chunker.add(
             10,
-            (vis, x, y, z, a, b) => { 
+            (vis, x, y, z, a, b, c) => { 
               //reset
               vis.array.set(x,'BFS');  
               //add a string "n" below the currently popped out node
@@ -224,19 +226,22 @@ export default {
                 }
               }
 
+              // HEREEEE
               //highlight all finalized nodes in green
               for(let i = 0; i < b.length; i++)
               { 
-                if(b[i] == true)
+                if(b[i] == true && !c.includes(i))
                 { 
-                  vis.array.select(0, i + 1, 0, i + 1, '1');  
+                  vis.array.select(0, i + 1, 0, i + 1, '1');
+                  vis.graph.removeNodeColor(i);  
+                  vis.graph.colorNode(i, 1);
                 }
-              }                   
+              }
               
               //redisplay queue
               vis.array.setList(z);
             },
-            [[displayedNodes, displayedParent, displayedVisited], n, displayedQueue, explored, visited]
+            [[displayedNodes, displayedParent, displayedVisited], n, displayedQueue, explored, visited, Nodes]
           ); 
 
           // If is_end_node(n) B11  
@@ -305,10 +310,11 @@ export default {
                     visited[m] = true;
                     displayedVisited[m+1] = "true";
                     explored[m] = false;
+                    seen.push(m);
                     chunker.add(
                       13,
                       (vis, x, y, z, a, b) => { 
-                        vis.array.set(x, 'DFS');
+                        vis.array.set(x, 'BFS');
                         //add a string "n" below the currently popped out node
                         vis.array.assignVariable('n', 2, b + 1); 
         
@@ -320,7 +326,8 @@ export default {
                             //vis.graph.colorNode(i, 4);
                           }
                         }
-        
+                        
+                        
                         //highlight all finalized nodes in green in the array
                         for(let i = 0; i < a.length; i++)
                         { 
@@ -328,11 +335,11 @@ export default {
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
                           }
-                        }  
+                        } 
         
                         //changed the finalized node's highlight color to green in the graph
                         vis.graph.removeNodeColor(b); 
-                        vis.graph.colorNode(b, 1);
+                        vis.graph.colorNode(b, 4);
                         
                         vis.array.setList(y); 
                       },
@@ -366,7 +373,7 @@ export default {
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
                           }
-                        }  
+                        } 
                         
                         //remove the highlight from this neighbour to its last parent
                         vis.graph.removeEdgeColor(d, c);
@@ -457,6 +464,17 @@ export default {
   }
 
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 
