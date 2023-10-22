@@ -12,10 +12,9 @@ import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
 
 import '../../styles/Param.scss';
-import { set } from 'lodash';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-const DEFAULT_UNION = ['5-7', '8-5', '9-8', '3-9', '5-2'];
+const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
 const DEFAULT_FIND = '2';
 
 const ALGORITHM_NAME = 'Union Find';
@@ -116,7 +115,7 @@ function UFParam() {
           DEFAULT_VAL={unions}
           SET_VAL={setUnions}
           handleSubmit={handleUnion}
-          REFRESH_FUNCTION={() => ['5-7', '8-5', '9-8', '3-9', '5-2']}
+          REFRESH_FUNCTION={() => DEFAULT_UNION}
           ALGORITHM_NAME={UNION}
           EXAMPLE={UNION_EXAMPLE}
           setMessage={setMessage}
