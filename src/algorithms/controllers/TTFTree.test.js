@@ -1,12 +1,11 @@
 /* eslint-disable no-undef */
-
 import TTFTreeInsertion from './TTFTreeInsertion';
 import TTFTreeSearch from './TTFTreeSearch';
-import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeVariable';
+import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
 
 // simple stub for the chunker
 const chunker = {
-  add: () => {},
+  add: () => { },
 };
 
 describe('2-3-4 Tree', () => {
