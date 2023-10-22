@@ -73,6 +73,9 @@ const QS_BOOKMARKS = {
   MEDIAN3_second_if_A_idx_left_greater_A_idx_right: 22,
 };
 
+
+
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 // Define helper functions
@@ -214,20 +217,17 @@ export function run_QS(is_qs_median_of_3) {
         return stack;
       }
 
-      if (cur_pivot_index !== undefined && cur_pivot_index !== -1) {
-
+      if (cur_pivot_index !== undefined) {
         stack[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
       }
 
       if (!isPartitionExpanded()) { return stack; }
 
-      if (cur_i !== undefined && cur_i !== -1) {
-
+      if (cur_i !== undefined) {
         stack[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
       }
 
-      if (cur_j !== undefined && cur_j !== -1) {
-
+      if (cur_j !== undefined) {
         stack[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
       }
 
@@ -241,13 +241,22 @@ export function run_QS(is_qs_median_of_3) {
       // so this is a workaround
       if (cur_i === -1) { cur_i = 0 } 
       if (cur_j === -1) { cur_j = 0 } 
+      if (cur_pivot_index === -1) { cur_pivot_index = 0 } 
 
       assert(vis.array);
       assert(cur_real_stack && cur_finished_stack_frames);
 
+
+      if (!isPartitionExpanded()) {
+        // these variables should not show up in vis if partition is collapsed
+
+        cur_i = undefined
+        cur_j = undefined
+      }
+
       vis.array.setStackDepth(cur_real_stack.length);
       vis.array.setStack(
-      derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+        derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
       );
 
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
@@ -292,7 +301,12 @@ export function run_QS(is_qs_median_of_3) {
         let pivot_index = is_qs_median_of_3 ? right-1 : right;
   
   
-        function swapAction(bookmark, n1, n2, assignPivot=true) {
+        function swapAction(bookmark, n1, n2) {
+
+          // TODO will fix a bug with pivot assignment, 
+          // need to define pivot and other vars as undefined to start
+          // param is band aid
+          // if a var is showing up too early it is because it is defined too early
   
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
@@ -300,10 +314,7 @@ export function run_QS(is_qs_median_of_3) {
             bookmark,
             (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
               vis.array.swapElements(_n1, _n2);
-              if (assignPivot) vis.array.assignVariable(VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
-              
               refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
-    
             },
             [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
           );
@@ -344,28 +355,28 @@ export function run_QS(is_qs_median_of_3) {
             highlight(vis, cur_left, false);
             highlight(vis, cur_right, false);
           },
-          [mid, left, right],); 
+          [mid, left, right]); 
 
           // if a[left] > a[mid]
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
           if (a[left] > a[mid]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid, false);
+            swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
           }
 
           // if A[mid] > A[right]
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_if_A_idx_mid_greater_A_idx_right);
           if (a[mid] > a[right]) {
-            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid, false);
+            swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_right_with_A_idx_mid, right, mid);
 
             //if A[left] > A[mid]
             chunker_add_if(QS_BOOKMARKS.MEDIAN3_second_if_A_idx_left_greater_A_idx_right);
             if (a[left] > a[mid]) {
-              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid, false);
+              swapAction(QS_BOOKMARKS.MEDIAN3_second_swap_A_idx_left_with_A_idx_mid, left, mid);
             }
           }
 
           // Swap(A[mid], A[right - 1])
-          swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1, false);
+          swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
 
           // pivot <- A[right - 1]
 
@@ -467,9 +478,10 @@ export function run_QS(is_qs_median_of_3) {
 
             vis.array.sorted(cur_pivot_index);
 
-            if (isPartitionExpanded()) {
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
-            }
+
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+
+
           });
 
         return [i, a]; // Return [pivot location, array partition_num_array]
