@@ -385,10 +385,6 @@ export function run_QS(is_qs_median_of_3) {
             unhighlight(vis, cur_right -1, false);
             unhighlight(vis, cur_left, false);
 
-            assert(cur_pivot_index !== undefined);
-            assert(cur_i === undefined);
-            assert(cur_j === undefined);
-
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
           },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
@@ -401,6 +397,11 @@ export function run_QS(is_qs_median_of_3) {
             QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
             refresh_stack);  
         }
+
+        assert(pivot_index !== undefined);
+
+        assert(i === undefined);
+        assert(j === undefined);
 
         // pick pivot end --------
 
@@ -418,6 +419,10 @@ export function run_QS(is_qs_median_of_3) {
           j = right
           chunker_add_if(QS_BOOKMARKS.RIGHT_P_set_j_right, refresh_stack);
         }
+
+
+        assert(i !== undefined);
+        assert(j !== undefined);
 
 
         while (i < j) {
