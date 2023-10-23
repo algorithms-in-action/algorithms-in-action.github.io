@@ -147,7 +147,8 @@ function EuclideanMatrixParams({
     data1.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
-        if (singleNumberValidCheck(value)) {
+        const maxValue = 100;  // Maximum value a coordinate can take.
+        if (singleNumberValidCheck(value) && value < maxValue) {
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
@@ -185,10 +186,8 @@ function EuclideanMatrixParams({
     }
 
     const edges = [];
-
     for (let i = 0; i < coords.length; i++) {
       const temp_edges = [];
-      
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (isEuclidean === true) {
@@ -198,6 +197,9 @@ function EuclideanMatrixParams({
           // Calculate Manhattan Distances
           distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
         }
+
+        // Ensure distance is a positive integer.
+        distance = Math.ceil(distance);
 
         // If adjacent push distance if not then 0
         if (adjacent[i][j] === 1) {
