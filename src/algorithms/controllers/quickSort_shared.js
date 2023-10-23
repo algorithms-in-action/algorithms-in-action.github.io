@@ -38,11 +38,8 @@ const QS_BOOKMARKS = {
   SHARED_if_left_less_right: 2,
   SHARED_quicksort_left_to_i_minus_1: 3,
   SHARED_quicksort_i_plus_1_to_right: 4,
-
-  // TODO
   RIGHT_P_set_pivot_to_value_at_array_indx_right: 5,
   MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1: 5, 
-
   SHARED_while_i_less_j: 6,
   SHARED_incri_i_until_array_index_i_greater_eq_pivot: 7,
   SHARED_decri_j_until: 8, // shortened name
@@ -381,10 +378,8 @@ export function run_QS(is_qs_median_of_3) {
           swapAction(QS_BOOKMARKS.MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1, mid, right-1);
 
           // pivot <- A[right - 1]
-
           pivot_index = right-1
 
-          // TODO
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, 
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             unhighlight(vis, cur_right, false);
@@ -412,17 +407,22 @@ export function run_QS(is_qs_median_of_3) {
 
         // pick pivot end --------
 
-        // TODO
-        chunker_add_if(
-          QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, 
-          refresh_stack);
+        if (is_qs_median_of_3) {
 
-        // TODO
-        chunker_add_if(
-          QS_BOOKMARKS.RIGHT_P_set_j_right,
-          refresh_stack);
+          i = left
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_i_left, refresh_stack);
+          j = right - 1
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3__set_j_right_minus_1, refresh_stack);
 
-  
+        } else {
+
+          i = left - 1
+          chunker_add_if(QS_BOOKMARKS.RIGHT_P_set_i_left_minus_1, refresh_stack);
+          j = right
+          chunker_add_if(QS_BOOKMARKS.RIGHT_P_set_j_right, refresh_stack);
+        }
+
+
         while (i < j) {
 
           chunker_add_if(QS_BOOKMARKS.SHARED_while_i_less_j);
