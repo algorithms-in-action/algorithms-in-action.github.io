@@ -297,7 +297,10 @@ export function run_QS(is_qs_median_of_3) {
             bookmark,
             (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
               vis.array.swapElements(_n1, _n2);
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+
+              if (boolShouldAnimate()) {
+                refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+              }
             },
             [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
           );
@@ -331,6 +334,8 @@ export function run_QS(is_qs_median_of_3) {
 
           const mid = Math.floor((left + right) / 2);
 
+
+
           // assigning the pivot as the midpoint calculated above
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
             highlight(vis, cur_mid, false);
@@ -339,7 +344,6 @@ export function run_QS(is_qs_median_of_3) {
           },
           [mid, left, right]); 
 
-          // if a[left] > a[mid]
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
           if (a[left] > a[mid]) {
             swapAction(QS_BOOKMARKS.MEDIAN3_first_swap_A_idx_left_with_A_idx_mid, left, mid);
@@ -362,14 +366,13 @@ export function run_QS(is_qs_median_of_3) {
 
           // pivot <- A[right - 1]
           pivot_index = right-1
-
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, 
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             unhighlight(vis, cur_right, false);
             unhighlight(vis, cur_right -1, false);
             unhighlight(vis, cur_left, false);
 
-            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
           },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
 
