@@ -45,12 +45,8 @@ const QS_BOOKMARKS = {
   SHARED_decri_j_until: 8, // shortened name
   SHARED_if_j_greater_i: 9,
   SHARED_swap_array_i_j_vals: 10,
-
-  // TODO
   RIGHT_P_set_i_left_minus_1: 11,
   MEDIAN3_set_i_left: 11,
-
-  // TODO
   RIGHT_P_set_j_right: 12,
   MEDIAN3__set_j_right_minus_1: 12,
 
@@ -267,7 +263,7 @@ export function run_QS(is_qs_median_of_3) {
       if (index === undefined) { vis.array.removeVariable(variable_name); return; }
 
       if (isPartitionExpanded()) {
-        vis.array.assignVariable(variable_name, Math.max(index,0)); // TODO NEGATIVE_RENDER
+        vis.array.assignVariable(variable_name, index);
       } else {
         vis.array.removeVariable(variable_name);
       }
