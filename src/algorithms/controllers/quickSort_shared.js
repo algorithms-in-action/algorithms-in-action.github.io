@@ -325,6 +325,8 @@ export function run_QS(is_qs_median_of_3) {
         function chunker_add_if(bookmark, f, args_array) {
           // add if you should animate a step
 
+          assert(bookmark !== undefined); // helps catch bugs early, and trace them in stack
+
           if (boolShouldAnimate()) {
 
             if (args_array === undefined) {
