@@ -76,15 +76,10 @@ function assert(condition, message) {
   }
 }
 
-// stackframe : [left, right,  depth]
-const STACK_FRAME_LEFT_INDEX = 0;
-const STACK_FRAME_RGHT_INDEX = 1;
-const STACK_FRAME_DPTH_INDEX = 2;
 
 export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
-  let depth = stack_frame[STACK_FRAME_DPTH_INDEX];
-  let left = stack_frame[STACK_FRAME_LEFT_INDEX];
-  let right = stack_frame[STACK_FRAME_RGHT_INDEX];
+  let left, right,  depth;
+  [left, right,  depth] = stack_frame;
 
   for (let i = left; i <= right; i += 1) {
     // each element in the vis stack is a tuple:
