@@ -172,7 +172,15 @@ export default {
                 vis.array.select(0,i + 1);
                 vis.graph.colorNode(i, 4); 
               }
-            }            
+            } 
+            
+            for(let i = 0; i < visited.length; i++)
+            { 
+              if(i ==s)
+              { 
+                vis.array.select(0, i + 1, 0, i + 1, '1');  
+              }
+            }
 
           },
           [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, Nodes]
@@ -328,14 +336,33 @@ export default {
                         }
                         
                         
-                        //highlight all finalized nodes in green in the array
+                        /*//highlight all finalized nodes in green in the array
                         for(let i = 0; i < a.length; i++)
                         { 
                           if(a[i] == true && !Nodes.includes(i))
                           { 
                             vis.array.select(0, i + 1, 0, i + 1, '1');  
                           }
+                        }*/
+                        for(let i = 0; i < a.length; i++)
+                        { 
+                          if(a[i] == true && !Nodes.includes(i) && i ==s)
+                          { 
+                            vis.array.select(0, i + 1, 0, i + 1, '1');  
+                          }
+
+                          if(a[i] == true && !Nodes.includes(i) && i!=s)
+                          { 
+                            vis.array.select(0, i + 1);  
+                          }
+
+                          if(a[i] == true && !Nodes.includes(i) && i!=s && i!=m)
+                          { 
+                            vis.array.select(0, i + 1, 0, i+1, '1');  
+                          }
                         } 
+                        
+                        
         
                         //changed the finalized node's highlight color to green in the graph
                         vis.graph.removeNodeColor(b); 
