@@ -165,8 +165,6 @@ export default {
             vis.array.setList(y);  
 
             //select the explored node in blue 
-            //HEREEEE
-
             for (let i = 0; i < z.length; i ++){
               if(z[i] == true && i !=s && Nodes.includes(i)){
                 vis.array.select(0,i + 1);
@@ -174,6 +172,7 @@ export default {
               }
             } 
             
+            //select the seen node in green
             for(let i = 0; i < visited.length; i++)
             { 
               if(i ==s)
@@ -235,8 +234,7 @@ export default {
                 }
               }
 
-              // HEREEEE
-              //highlight all finalized nodes in green
+              //highlight all seen nodes in green
               for(let i = 0; i < b.length; i++)
               { 
                 if(b[i] == true && !Nodes.includes(i))
@@ -333,17 +331,10 @@ export default {
                           if(z[i] == true && Nodes.includes(i)){
                             vis.array.select(0,i + 1);
                           }
-                        }
+                        }            
                         
-                        
-                        /*//highlight all finalized nodes in green in the array
-                        for(let i = 0; i < a.length; i++)
-                        { 
-                          if(a[i] == true && !Nodes.includes(i))
-                          { 
-                            vis.array.select(0, i + 1, 0, i + 1, '1');  
-                          }
-                        }*/
+                        //highlight all seen nodes in green in the array
+    
                         for(let i = 0; i < a.length; i++)
                         { 
                           if(a[i] == true && !Nodes.includes(i) && i ==s)
@@ -364,7 +355,7 @@ export default {
                         
                         
         
-                        //changed the finalized node's highlight color to green in the graph
+                        //changed the explored node's highlight color to blue in the graph
                         vis.graph.removeNodeColor(b); 
                         vis.graph.colorNode(b, 4);
                         
@@ -393,7 +384,7 @@ export default {
                           }
                         }
         
-                        //BLA BLA BLA
+                        //highlight seen nodes in green in the array
                         for(let i = 0; i < a.length; i++)
                         { 
                           if(a[i] == true && !Nodes.includes(i) && i ==s)
@@ -425,7 +416,6 @@ export default {
                       [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, lastParent, Nodes]
                     );   
       
-                      // Parent[m] = n;
                       // enqueue(Nodes,m) B15
                       Nodes.push(m); 
                       displayedQueue.push(m + 1);  
@@ -436,7 +426,7 @@ export default {
                           vis.array.setList(x);
                           
                           // color the node in blue as explored 
-                          // if it has not been finalized
+                          // if it has not been seen
                           if(y[z] == false && Nodes.includes(z)){
                             vis.array.deselect(0, z + 1);
                             vis.array.select(0, z + 1); 
@@ -447,12 +437,10 @@ export default {
                         },
                         [displayedQueue, visited, m, Nodes]
                       );
-
                   }
               }
           }
         }
-
     }; // End of bfs    
 
 
@@ -501,7 +489,6 @@ export default {
   }
 
 };
-
 
 // green vis.array.select(0, i + 1, 0, i + 1, '1');
 // blue vis.array.select(0,i + 1);
