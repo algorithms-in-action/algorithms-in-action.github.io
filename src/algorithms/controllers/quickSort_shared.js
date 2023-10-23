@@ -293,10 +293,12 @@ export function run_QS(is_qs_median_of_3) {
         // partition is defined inside of quicksort so it can have access to boolShouldAnimate
         
         const a = partition_num_array;
-        let i = left - 1;
-        let j = is_qs_median_of_3 ? right-1 : right;
-        let pivot_index = is_qs_median_of_3 ? right-1 : right;
-  
+
+        // everything starts as undefined
+        let i = undefined
+        let j = undefined
+        let pivot_index = undefined
+
   
         function swapAction(bookmark, n1, n2) {
 
@@ -343,10 +345,7 @@ export function run_QS(is_qs_median_of_3) {
         
         if (is_qs_median_of_3) {
 
-          // TODO placeholder
-          // TODO put in asserts
           const mid = Math.floor((left + right) / 2);
-
 
           // assigning the pivot as the midpoint calculated above
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
@@ -386,11 +385,9 @@ export function run_QS(is_qs_median_of_3) {
             unhighlight(vis, cur_right -1, false);
             unhighlight(vis, cur_left, false);
 
-            /* // TODO
             assert(cur_pivot_index !== undefined);
             assert(cur_i === undefined);
             assert(cur_j === undefined);
-            */
 
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
           },
