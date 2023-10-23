@@ -49,12 +49,7 @@ const QS_BOOKMARKS = {
   MEDIAN3_set_i_left: 11,
   RIGHT_P_set_j_right: 12,
   MEDIAN3__set_j_right_minus_1: 12,
-
-
-  // TODO
-  RIGHT_P_swap_pivot_into_position_ie_index_i_and_right: 13,
-  MEDIAN3_swap_pivot_into_position_ie_index_i_and_right_minus_1: 13,
-
+  SHARED_swap_pivot_into_position: 13,
   MEDIAN3_mid_to_middle_index: 14, 
   MEDIAN3_first_swap_A_idx_left_with_A_idx_mid: 15, 
   MEDIAN3_swap_A_idx_right_with_A_idx_mid: 16,
@@ -239,7 +234,6 @@ export function run_QS(is_qs_median_of_3) {
       assert(vis.array);
       assert(cur_real_stack && cur_finished_stack_frames);
 
-
       if (!isPartitionExpanded()) {
         // these variables should not show up in vis if partition is collapsed
 
@@ -297,11 +291,6 @@ export function run_QS(is_qs_median_of_3) {
 
   
         function swapAction(bookmark, n1, n2) {
-
-          // TODO will fix a bug with pivot assignment, 
-          // need to define pivot and other vars as undefined to start
-          // param is band aid
-          // if a var is showing up too early it is because it is defined too early
   
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
@@ -462,27 +451,19 @@ export function run_QS(is_qs_median_of_3) {
   
         // swap pivot with i
   
-        // TODO
         swapAction(
           boolShouldAnimate()
-            ? QS_BOOKMARKS.RIGHT_P_swap_pivot_into_position_ie_index_i_and_right
+            ? QS_BOOKMARKS.SHARED_swap_pivot_into_position
             : QS_BOOKMARKS.SHARED_done_qs,
           i,
           is_qs_median_of_3 ? right-1 : right
         );
 
-        // TODO
         chunker_add_if(
-          QS_BOOKMARKS.RIGHT_P_swap_pivot_into_position_ie_index_i_and_right,
+          QS_BOOKMARKS.SHARED_swap_pivot_into_position,
           (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-
             vis.array.sorted(cur_pivot_index);
-
-
-            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
-
-
-          });
+        });
 
         return [i, a]; // Return [pivot location, array partition_num_array]
       }
