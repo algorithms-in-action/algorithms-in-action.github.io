@@ -272,8 +272,7 @@ export function run_QS(is_qs_median_of_3) {
     // Refer to the quicksort function for more information
 
 
-    function QuickSort(qs_num_array, left, right, _, depth) { // TODO what is this underline thing?
-
+    function QuickSort(qs_num_array, left, right, depth) { 
 
       function boolShouldAnimate() {
         return depth === 0 || isRecursionExpanded();
@@ -508,7 +507,7 @@ export function run_QS(is_qs_median_of_3) {
           );
         }
 
-        QuickSort(a, left, pivot - 1, `${left}/${pivot - 1}`, depth + 1);
+        QuickSort(a, left, pivot - 1, depth + 1);
 
         if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
@@ -526,7 +525,7 @@ export function run_QS(is_qs_median_of_3) {
             [pivot, right],
           );
         }
-        QuickSort(a, pivot + 1, right, `${right}/${pivot + 1}`, depth + 1);
+        QuickSort(a, pivot + 1, right, depth + 1);
       }
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
@@ -562,13 +561,7 @@ export function run_QS(is_qs_median_of_3) {
       [entire_num_array],
     );
 
-    const result = QuickSort(
-      entire_num_array,
-      0,
-      entire_num_array.length - 1,
-      `0/${entire_num_array.length - 1}`,
-      0,
-    );
+    const result = QuickSort(entire_num_array, 0, entire_num_array.length - 1, 0);
 
     assert(real_stack.length === 0);
 
