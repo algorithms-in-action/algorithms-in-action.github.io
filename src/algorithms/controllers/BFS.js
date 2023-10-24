@@ -498,10 +498,10 @@ export default {
 // green vis.array.select(0, i + 1, 0, i + 1, '1');
 // blue vis.array.select(0,i + 1);
 // red vis.array.select(0, i + 1, 0, i + 1, '4');
-    for (let i = 0; i < numVertices; i++) { // For each vertex v
-      if (!visited[i]) { // If v is not Seen
-        bfs(i); // Call BFS starting from v
-      }
-    }
-  }
-};
+//     for (let i = 0; i < numVertices; i++) { // For each vertex v
+//       if (!visited[i]) { // If v is not Seen
+//         bfs(i); // Call BFS starting from v
+//       }
+//     }
+//   }
+// };
