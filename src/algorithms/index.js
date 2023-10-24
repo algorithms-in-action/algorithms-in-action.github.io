@@ -34,6 +34,68 @@ const algorithms = {
       search: Controller.binaryTreeSearch,
     },
   },
+  'dijkstra': {
+    name: 'Dijkstra\'s',
+    category: 'Greedy',
+    param: <Param.DIJKParam />,
+    instructions: Instructions.DIJKInstruction,
+    explanation: Explanation.DIJKExp,
+    extraInfo: ExtraInfo.DIJKInfo,
+    pseudocode: {
+      find: Pseudocode.dijkstra,
+    },
+    controller: {
+      find: Controller.dijkstra,
+
+    },
+  }, 
+   'aStar': {
+    name: 'A* Algorithm',
+    category: 'Greedy',
+    param: <Param.ASTARParam />,
+    instructions: Instructions.ASTARInstruction,
+    explanation: Explanation.ASTARExp,
+    extraInfo: ExtraInfo.ASTARInfo,
+    pseudocode: {
+      find: Pseudocode.AStar,
+    },
+    controller: {
+      find: Controller.AStar,
+
+    },
+  }, 
+
+  'BFS': {
+    
+    name: 'Breadth First Search',
+    category: 'Searching',
+    param: <Param.BFSParam/>,
+    instructions: Instructions.BFSInstruction,
+    explanation: Explanation.BFSExp,
+    extraInfo: ExtraInfo.BFSInfo,
+    pseudocode: {
+      find: Pseudocode.BFS,
+    },
+    controller: {
+      find: Controller.BFS,
+    },
+  },
+
+  'DFS': {
+    name: 'Depth First Search',
+    category: 'Searching',
+    param: <Param.DFSParam />,
+    instructions: Instructions.DFSInstruction,
+    explanation: Explanation.DFSExp,
+    extraInfo: ExtraInfo.DFSInfo,
+    pseudocode: {
+      find: Pseudocode.DFS,
+    },
+    controller: {
+      find: Controller.DFS,
+    },
+  },
+
   'quickSort': {
     name: 'Quicksort',
     category: 'Sorting',

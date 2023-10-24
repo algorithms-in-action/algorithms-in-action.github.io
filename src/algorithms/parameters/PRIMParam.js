@@ -7,7 +7,7 @@ const DEFAULT_SIZE = 5;
 const PRIMS = 'New Prim\'s';
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
-function PrimsParam() {
+function PRIMParam() {
   const [message, setMessage] = useState(null);
 
   return (
@@ -32,4 +32,4 @@ function PrimsParam() {
   );
 }
 
-export default PrimsParam;
+export default PRIMParam;

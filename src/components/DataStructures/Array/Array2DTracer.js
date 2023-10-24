@@ -44,7 +44,8 @@ class Array2DTracer extends Tracer {
   set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = '1';
+    this.kth = '1'; 
+    this.listOfNumbers = '';
     super.set();
   }
 
@@ -80,7 +81,14 @@ class Array2DTracer extends Tracer {
             break;
           case '3':
             this.data[x][y].selected3 = true;
-            break;
+            break;  
+          case '4':
+            this.data[x][y].selected4 = true;
+            break;  
+          case '5':
+            this.data[x][y].selected5 = true;
+            break; 
+          
           default:
             this.data[x][y].selected = true;
             break;
@@ -159,7 +167,9 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected = false;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
-        this.data[x][y].selected3 = false;
+        this.data[x][y].selected3 = false; 
+        this.data[x][y].selected4 = false; 
+        this.data[x][y].selected5 = false;
         this.data[x][y].style = undefined;
       }
     }
@@ -175,7 +185,11 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
-  }
+  } 
+   
+  setList(array) {
+    this.listOfNumbers = array.join(', ');
+}
 }
 
 export default Array2DTracer;

@@ -1,4 +1,3 @@
-
 <style>
 a:link {
     color: #1e28f0;
@@ -15,8 +14,7 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Quick Sort - Median of Three**][G4GLink]
+Geeks for Geeks Link: [**Depth First Search**][G4GLink]
 
 
-[G4GLink]: https://www.geeksforgeeks.org/quick-sort/
-
+https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/

@@ -761,7 +761,60 @@ class GraphTracer extends Tracer {
 
   setIstc() {
     this.istc = true;
-  }
+  } 
+
+  // functions for coloring/decoloring edges and nodes
+  // that are not painful to use
+  colorEdge(source, target, colorIndex) {
+    const edge = this.findEdge(source, target);
+    if (!edge) return;  // Exit if edge is not found
+    
+    if (colorIndex === 1) {
+      edge.visitedCount1 = 1;
+    } else if (colorIndex === 2) {
+      edge.visitedCount2 = 1;
+    } else if (colorIndex === 3) {
+      edge.visitedCount3 = 1;
+    } else if (colorIndex === 4) {
+      edge.visitedCount4 = 1;
+    }
 }
+  
+  removeEdgeColor(source, target) {
+    const edge = this.findEdge(source, target);
+    if (!edge) return;  // Exit if edge is not found
+    
+    edge.visitedCount1 = 0;
+    edge.visitedCount2 = 0;
+    edge.visitedCount3 = 0;
+    edge.visitedCount4 = 0;
+  }
+
+  
+  colorNode(node, colorIndex) {
+    const _node = this.findNode(node);
+    if (!_node) return;  // Exit if node is not found
+    
+    if (colorIndex === 1) {
+      _node.visitedCount1 = 1;
+    } else if (colorIndex === 2) {
+      _node.visitedCount2 = 1;
+    } else if (colorIndex === 3) {
+      _node.visitedCount3 = 1;
+    } else if (colorIndex === 4) {
+      _node.visitedCount4 = 1;
+    }
+  }
+  
+  removeNodeColor(node) {
+    const _node = this.findNode(node);
+    if (!_node) return;  // Exit if node is not found
+    
+    _node.visitedCount1 = 0;
+    _node.visitedCount2 = 0;
+    _node.visitedCount3 = 0;
+    _node.visitedCount4 = 0;
+  }
+} 
 
 export default GraphTracer;

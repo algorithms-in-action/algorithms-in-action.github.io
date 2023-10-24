@@ -31,7 +31,9 @@ function Table({
     defaultColumn,
     updateData,
     algo,
-  });
+  }); 
+
+
   // add the header in left side of table
   let counter = 0;
   const incrementCounter = () => { counter += 1; };
@@ -62,7 +64,9 @@ function Table({
         </tbody>
       </table>
     </div>
-  );
+  ); 
+
+  
 }
 
 export default Table;

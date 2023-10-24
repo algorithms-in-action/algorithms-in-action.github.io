@@ -348,6 +348,12 @@ class GraphRenderer extends Renderer {
           <marker id="markerArrowVisited2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
             <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited2)} />
           </marker>
+          <marker id="markerArrowVisited3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited3)} />
+          </marker> 
+          <marker id="markerArrowVisited4" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 L0,0" className={classes(styles.arrow, styles.visited4)} />
+          </marker>
         </defs>
 
         { /* X axis and Y axis */}
@@ -355,7 +361,7 @@ class GraphRenderer extends Renderer {
 
         {
           edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2 } = edge;
+            const { source, target, weight, visitedCount, selectedCount, visitedCount0, visitedCount1, visitedCount2, visitedCount3, visitedCount4 } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -387,7 +393,8 @@ class GraphRenderer extends Renderer {
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
                   !selectedCount && visitedCount && styles.visited, visitedCount0 && styles.visited,
-                  visitedCount1 && styles.visited1, visitedCount2 && styles.visited2,
+                  visitedCount1 && styles.visited1, visitedCount2 && styles.visited2, visitedCount3 && styles.visited3,
+                  visitedCount4 && styles.visited4
                 )}
                 key={`${source}-${target}`}
               >
@@ -407,20 +414,22 @@ class GraphRenderer extends Renderer {
 
         {/* node graph */}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
+          const { x, y, weight, visitedCount0, visitedCount, visitedCount1, visitedCount2, visitedCount3, visitedCount4, selectedCount, value, key, style, sorted, isPointer, pointerText } = node;
           // only when selectedCount is 1, then highlight the node
           const selectNode = selectedCount === 1;
           const visitedNode0 = visitedCount0 === 1;
           const visitedNode = visitedCount === 1;
           const visitedNode1 = visitedCount1 === 1;
-          const visitedNode2 = visitedCount2 === 1;
-
+          const visitedNode2 = visitedCount2 === 1; 
+          const visitedNode3 = visitedCount3 === 1; 
+          const visitedNode4 = visitedCount4 === 1;
           return (
             <motion.g
                 animate={{ x, y }}
                 initial={false}
                 transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
+                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, 
+                  visitedNode2 && styles.visited2, visitedNode3 && styles.visited3, visitedNode4 && styles.visited4)}
                 key={key}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
