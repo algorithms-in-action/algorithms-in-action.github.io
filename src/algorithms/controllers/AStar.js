@@ -125,7 +125,6 @@ export default {
 
 
         vis.array.select(3, w + 1);
-        
       },
       [[nodes,heuristics, parents, minCosts,finalCosts], start]
     );

@@ -19,7 +19,7 @@ export default {
   },
 
   run(chunker, { matrix, endNode, startNode}) {
-    
+
     const E = [...matrix];
     const numVertices = matrix.length;   
     //The real Finalised array(visited) and Parent array(parent)
@@ -391,6 +391,7 @@ export default {
                         },
                         [[displayedNodes, displayedParent, displayedVisited], displayedStack, explored, visited, n, m, lastParent]
                       );
+
 
 
 
