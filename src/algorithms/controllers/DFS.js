@@ -2,6 +2,7 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
 export default {
+
   initVisualisers() {
     return {
       graph: {
@@ -18,6 +19,7 @@ export default {
   },
 
   run(chunker, { matrix, endNode, startNode}) {
+
     const E = [...matrix];
     const numVertices = matrix.length;   
     //The real Finalised array(visited) and Parent array(parent)
@@ -129,7 +131,9 @@ export default {
                   vis.graph.removeEdgeColor(x, y);  
                   // recolor its edge connecting to its parent
                   if(z[y] != null){
-                    vis.graph.colorEdge(z[y], y, 3);
+                    vis.graph.removeEdgeColor(z[y], y);
+                    vis.graph.colorEdge(z[y], y, 3); 
+                    
                   }
                   
                 } 
@@ -390,8 +394,7 @@ export default {
 
 
 
-                        // NOTE: This part is missing. It looks like the pseudocode wants to assign 'n' as the parent of 'm', but it's not clear.
-                        // You would need an array to track this if you wish to.
+
                         // Parent[m] = n;
                         // push(Nodes,m) B18
                         Nodes.push(m); 
