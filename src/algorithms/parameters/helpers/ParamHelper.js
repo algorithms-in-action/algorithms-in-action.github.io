@@ -154,10 +154,8 @@ export const makeRandomCoordinateData = (len, minDiff, maxDiff) => {
       else
       {
         // In current implementation we want y diffs to be less due to y axis cutoff.
-        const yMaxDiff = maxDiff / 2;
-        const yMinDiff = minDiff / 2 + 1;
         const x = getRandomInt(1, xMax); 
-        const y = getRandomInt(yMax + yMinDiff, yMax + yMaxDiff);
+        const y = getRandomInt(yMax + minDiff, yMax + maxDiff);
         coord.push(x);
         coord.push(y);
         if(y > yMax){
