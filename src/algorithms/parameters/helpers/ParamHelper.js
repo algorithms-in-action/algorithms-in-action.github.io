@@ -128,6 +128,62 @@ export const makeColumnCoords = () => {
   return arr;
 };
 
+/**
+ * Creates nicely spaced graph coordinate data.
+ * @param {number} len size of the matrix
+ * @param minDiff min diff from max coord val
+ * @param maxDiff max diff from max coord val
+ * @return array of object
+ */
+export const makeRandomCoordinateData = (len, minDiff, maxDiff) => {
+  let xMax = 0;
+  let yMax = 0; 
+  const coords = [];
+  for (let i = 0; i < len; i += 1) {
+    const coord = [];
+    // If even, x coordinate should at least be xMax.
+      if(i % 2 == 0){
+        const x = getRandomInt(xMax + minDiff, xMax + maxDiff); 
+        const y = getRandomInt(1, yMax);
+        coord.push(x);
+        coord.push(y);
+        if(x > xMax){
+          xMax = x;
+        }
+      }
+      else
+      {
+        // In current implementation we want y diffs to be less due to y axis cutoff.
+        const yMaxDiff = maxDiff / 2;
+        const yMinDiff = minDiff / 2 + 1;
+        const x = getRandomInt(1, xMax); 
+        const y = getRandomInt(yMax + yMinDiff, yMax + yMaxDiff);
+        coord.push(x);
+        coord.push(y);
+        if(y > yMax){
+          yMax = y;
+        }
+      }
+      coords.push(coord);
+    }
+
+    let arr = [];
+    for (let i = 0; i < len; i += 1) {
+      const data = {};
+      for (let j = 0; j < len; j += 1) {
+        if(j < 2)
+        {
+          data[`col${j}`] = `${coords[i][j]}`;
+        }
+        else
+        {
+          data[`col${j}`] = '0';
+        }
+      }
+      arr.push(data);
+    }
+    return arr;
+  };
 
 /**
  * Populate the data cells, see React-Table API
@@ -144,7 +200,7 @@ export const makeData = (len, min, max, symmetric) => {
     for (let i = 0; i < len; i += 1) {
       const row = [];
       for (let j = 0; j < len; j += 1) {
-        let val = 0; // i === j
+        let val = 0; 
         if (j < i) {
           val = rows[j][i];
         } else if (i !== j) {
@@ -168,34 +224,6 @@ export const makeData = (len, min, max, symmetric) => {
       }
     }
     arr.push(data);
-  }
-  if (len === 4 && symmetric !== true) {
-    arr = [
-      {
-        col0: '1',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '1',
-        col3: '0',
-      },
-      {
-        col0: '0',
-        col1: '0',
-        col2: '1',
-        col3: '1',
-      },
-    ];
   }
   return arr;
 };

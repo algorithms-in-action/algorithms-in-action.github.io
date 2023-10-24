@@ -11,6 +11,7 @@ import {
   makeColumnArray,
   makeColumnCoords,
   makeData,
+  makeRandomCoordinateData,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -59,11 +60,13 @@ function EuclideanMatrixParams({
   const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data1, setData1] = useState(() => makeData(size, min, max, symmetric));
+
+  // First table.
+  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 3, 5));
   const [originalData1, setOriginalData1] = useState(data1);
 
   // Second Table
-  const [data2, setData2] = useState(() => makeData(size, 1, 1, symmetric));
+  const [data2, setData2] = useState(() => makeData(size, 0, 1, symmetric));
   const [originalData2, setOriginalData2] = useState(data2);
 
   const [buttonMessage, setButtonMessage] = useState('Start');
@@ -72,16 +75,16 @@ function EuclideanMatrixParams({
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
-  // reset the Table when the size changes
+  // Reset first table when the size changes
   useEffect(() => {
-    const newData1 = makeData(size, min, max, symmetric);
+    const newData1 = makeRandomCoordinateData(size, 3, 5);
     setData1(newData1);
     setOriginalData1(newData1);
   }, [size, min, max, symmetric]);
 
-  // second table
+  // Reset second table when the size changes
   useEffect(() => {
-    const newData2 = makeData(size, 1, 1, symmetric);
+    const newData2 = makeData(size, 0, 1, symmetric);
     setData2(newData2);
     setOriginalData2(newData2);
   }, [size, 1, 1, symmetric]);
