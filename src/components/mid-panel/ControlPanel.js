@@ -1,9 +1,9 @@
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable import/no-named-as-default */
 import React, { useContext, useState, useEffect } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Slider from '@mui/material/Slider';
-import Grid from '@mui/material/Grid';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { Slider } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import Popup from 'reactjs-popup';
 import ReactMarkDown from 'react-markdown/with-html';
 import toc from 'remark-toc';
@@ -19,7 +19,7 @@ import '../../styles/ControlPanel.scss';
 import 'reactjs-popup/dist/index.css';
 import CodeBlock from '../../markdown/code-block';
 
-const muiTheme = createTheme({
+const muiTheme = createMuiTheme({
   overrides: {
     MuiSlider: {
       thumb: {
@@ -194,7 +194,7 @@ function ControlPanel() {
 
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className="close" onClick={closeModal}>
               &times;
             </a>

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable max-len */
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import '../../styles/About.scss';
 
 /**

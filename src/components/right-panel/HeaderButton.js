@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Tabs, Tab, Paper } from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-
+import { Tabs, Tab, Paper, makeStyles } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 function HeaderButton({ value, onChange }) {
   const [state, setState] = useState(0);
@@ -12,7 +10,7 @@ function HeaderButton({ value, onChange }) {
     onChange(newValue);
   };
 
-  const globalTheme = createTheme({
+  const globalTheme = createMuiTheme({
     palette: {
       primary: {
         main: "#027AFF",

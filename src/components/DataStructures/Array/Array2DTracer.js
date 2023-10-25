@@ -14,7 +14,6 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-/* eslint-disable import/no-unresolved */
 
 import { cloneDeepWith } from 'lodash';
 import Tracer from '../common/Tracer';

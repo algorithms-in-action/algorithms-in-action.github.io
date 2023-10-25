@@ -12,7 +12,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
-import Tracer from '../common/Tracer.jsx';
+import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import ArrayGraphRenderer from './ArrayGraphRenderer/index';
 

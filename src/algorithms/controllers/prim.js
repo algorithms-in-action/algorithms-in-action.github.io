@@ -12,7 +12,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Graph view', { displayAxis : false }),
+        instance: new GraphTracer('graph', null, 'Graph view'),
         order: 0,
       },
       array: {
