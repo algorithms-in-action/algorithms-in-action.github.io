@@ -62,7 +62,7 @@ function EuclideanMatrixParams({
   const { dispatch } = useParam();
 
   // First table.
-  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 3, 5));
+  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 4, 5));
   const [originalData1, setOriginalData1] = useState(data1);
 
   // Second Table
@@ -77,7 +77,7 @@ function EuclideanMatrixParams({
 
   // Reset first table when the size changes
   useEffect(() => {
-    const newData1 = makeRandomCoordinateData(size, 3, 5);
+    const newData1 = makeRandomCoordinateData(size, 4, 5);
     setData1(newData1);
     setOriginalData1(newData1);
   }, [size, min, max, symmetric]);
