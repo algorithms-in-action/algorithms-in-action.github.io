@@ -1,28 +1,36 @@
 module.exports = {
-  env: {
-    browser: true,
-    es6: true,
-    node: true
-  },
-  extends: ["plugin:react/recommended", "airbnb", "airbnb/hooks"],
-  globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly"
-  },
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true
+    env: {
+        browser: true,
+        es2021: true,
+        node: true
     },
-    ecmaVersion: 2018,
-    sourceType: "module"
-  },
-  plugins: ["react"],
-  rules: {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
-    "no-continue": 0,
-    "no-case-declarations": 0,
-    "no-underscore-dangle": 0,
-    "linebreak-style": 0
-  }
+    extends: [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+    ],
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true
+        },
+        ecmaVersion: 12,
+        sourceType: "module"
+    },
+    settings: {
+        react: {
+            version: "17.0.2"
+        }
+    },
+    plugins: [
+        "react",
+        "jsx-a11y",
+        "import"
+    ],
+    rules: {
+        "no-unused-vars": "off",
+        "react/jsx-key": "off",
+        "react/no-unknown-property": "off"
+    }
 };

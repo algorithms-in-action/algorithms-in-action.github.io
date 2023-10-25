@@ -14,6 +14,7 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
+/* eslint-disable import/no-unresolved */
 
 import Tracer from '../common/Tracer';
 import TwoArray2DRenderer from './TwoArray2DRenderer';
