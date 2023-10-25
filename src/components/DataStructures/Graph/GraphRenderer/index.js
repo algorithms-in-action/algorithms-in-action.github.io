@@ -130,14 +130,14 @@ class GraphRenderer extends Renderer {
   /**
    * Add scales to the axis
   */
-  computeScales(min, max, center, stepSize = 30, stepHeight=5) {
+  computeScales(min, max, center, stepSize = 30, stepHeight=5, increment = 1) {
     const scales = [];
     const alignMinX = center.x - stepHeight/2;
     const alignMaxX = center.x + stepHeight/2;
     const alignMinY = center.y - stepHeight/2;
     const alignMaxY = center.y + stepHeight/2;
 
-    for (let i=1;i <= (max-min)/stepSize; i++) {
+    for (let i=increment; i <= (max-min)/stepSize; i+= increment) {
       scales.push({label: 'x', x1: min + i * stepSize, x2: min + i * stepSize, y1: alignMinY, y2: alignMaxY, num: i});
       scales.push({label: 'y', x1: alignMinX, x2: alignMaxX, y1: -(min + i) * stepSize, y2: -(min + i) * stepSize, num: i});
     }
@@ -179,24 +179,46 @@ class GraphRenderer extends Renderer {
 
     // Determine scale up to multiple of 10.
     for(let i = 1; i < 10; ++i){
-      const scale = 10 * i;
-      if(trueMax < scale)
+      const maxCoord = 10 * i;
+      if(trueMax < maxCoord)
       {
-        return scale * stepSize;
+        return maxCoord * stepSize;
       }
     }
 
-    // Determine scale up to multiple of 100.
-    for(let i = 1; i < 10; ++i){
-      const scale = 100 * i;
-      if(trueMax < scale)
+    const maxCoord = 100;
+    return maxCoord * stepSize;
+  }
+
+  /*
+   * Calculate value increment of axis coordinate labels.
+  */
+  calculateIncrement(axisScale, stepSize = 30) {
+    const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
+    if(maxCoord <= 20)
+    {
+      return 1;
+    }
+    else if(maxCoord <= 50)
+    {
+      return 5
+    }
+    const maxIncrement = 10;
+    return maxIncrement;
+  }
+
+  /*
+   * Determine multiplier for size of all labels on the graph.
+  */ 
+  calculateLabelSizeMultiplier(axisScale, stepSize = 30) {
+    const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
+    for(let i = 1; i < 10; ++i) {
+      if(maxCoord <= i * 10)
       {
-        return scale * stepSize;
+        const multiplier = 1 + ((i - 1) * 0.2);
+        return multiplier;
       }
     }
-
-    const scale = 2000;
-    return scale * stepSize;
   }
 
   /*
@@ -204,9 +226,13 @@ class GraphRenderer extends Renderer {
   */
   renderAxis(maxScale) {
     const axisCenter = {x:0, y:0};  // axis position
-    const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
 
-    const scales = this.computeScales(0, axisScale, axisCenter); // list of scales
+    // Scaling variables.
+    const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
+    const increment = this.calculateIncrement(axisScale);  // Calculate value increment of axis coordinate labels.
+    const labelMultiplier = this.calculateLabelSizeMultiplier(axisScale);  // Multiplier for size of all labels.
+
+    const scales = this.computeScales(0, axisScale, axisCenter, undefined, undefined, increment); // list of scales
 
 
     const axisEndPoint = axisScale + 20;

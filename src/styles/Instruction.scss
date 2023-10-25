@@ -5,7 +5,7 @@ $padding: 24px;
 .coverShowInstructions{
   display: block;
   min-height: 0;
-  padding: ($padding+$padding/2) $padding;
+  padding: ($padding+calc($padding/2)) $padding;
 
   .instructionContainer {
     background-color: var(--mid-instruction-bg);

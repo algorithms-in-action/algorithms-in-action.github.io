@@ -19,7 +19,7 @@ import {
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
-import '../../../styles/PrimsMatrix.scss';
+import '../../../styles/EuclideanMatrix.scss';
 import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
 import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
@@ -283,8 +283,17 @@ function EuclideanMatrixParams({
           
         </div>
       </div>
-      <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
-      <Table columns={columns2} data={data2} updateData={updateData2} algo={name}/>
+
+      <div className="coord">
+        <text className="titles"> Coordinates (X,Y) </text>
+        <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
+      </div>
+      
+      <div className="edge">
+        <text className="titles"> Edges (0 or 1)</text>
+        <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
+      </div>
+      
     </div>
   );
 }
