@@ -50,7 +50,7 @@ This [link](https://aia.davidsha.me/) is showing current team's work. It's a fas
 
 ### Development
 
-The main/master branch for this team is `feature/no-ref/union-find-algorithm`. All official changes made by the Union-Find Algorithm team will be made in this branch.
+The main/master branch for this team is `feature/no-ref/234-tree-algorithm`. All official changes made by the Union-Find Algorithm team will be made in this branch.
 
 #### Changelog
 
@@ -58,3 +58,4 @@ Below we make notes on the dev process for the Union-Find Algorithm team.
 
 * [x] After rebasing with the new changes made by the intern, an additional package `run-scripts-os` was added to `package.json` to fix the issue of the app not running on Windows machines.
 * [x] Create new Union-Find algorithm.
+* [x] Create new 2-3-4 Tree algorithm.
