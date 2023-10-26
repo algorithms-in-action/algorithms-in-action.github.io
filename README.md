@@ -4,9 +4,9 @@
 
 Welcome to Algorithms In Action!
 
-Here is the [entry](https://algorithms-in-action.github.io/) for the algorithm visualiser.
+Here is the [link](https://algorithms-in-action.github.io/) to run the algorithm visualiser on your browser.
 
-You may want to read the [WIKI](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki) for more project details.
+We recommend you read the [WIKI](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki) for more project details.
 
 - [Algorithms in Action](#algorithms-in-action)
   - [Project Description](#project-description)
@@ -29,13 +29,9 @@ Algorithms in Action (AIA) is an animation software tool, developed for the purp
 
 ## Development History
 
-The original AIA eventually had modules for some 24 different algorithms, and was used by students at The University of Melbourne and elsewhere. With advances in web technology and changing versions of languages, libraries, and web browsers, the program became progressively slower and slower, and eventually was no longer usable.
+The original AIA eventually had modules for some 24 different algorithms, and was used by students at The University of Melbourne and elsewhere. It won two algorithm animation awards. With advances in web technology and changing versions of languages, libraries, and web browsers, the program became progressively slower and slower, and eventually was no longer usable.
 
-Starting in 2020, the program has been redeveloped by successive groups of Software Engineering and Computer Science students at The University of Melbourne, using the latest software tools.
-
-XXXLee ? as at <date> AIA has XX number of modules, covering: NAMES OF MODULES
-
-XXXLee Something about AIA on github.
+Starting in 2020, the program has been redeveloped by successive groups of Software Engineering, Computer Science and IT students plus interns at The University of Melbourne, using the latest software tools. In the second half (second semester) of 2023 there was a significant change to some of the core modules to keep up with the latest version of Javascript, Python and the packages AIA relies on, plus a revamp of the github repository, including the [WIKI](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki). The plan is to ensure the master branch and executable system hosted on github has only stable, high quality algorithm animations visible. The repository will also contain other algorithm animations at various stages of development. The three academics involved in the initial development are now retired but still supervise development; we would welcome contact with others who are interested in using and/or contributing to AIA.
 
 The detail version history can be accessed in wiki: [Version History](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki/Version-History).
 
@@ -67,7 +63,7 @@ node --version && npm --version && python --version
 
 #### Install Dependencies
 
-Navigate to the **root directory of the project** and run c to install all the dependencies in package.json
+Navigate to the **root directory of the project** and run npm to install all the dependencies in package.json
 
 ```bash
 npm install
@@ -83,7 +79,7 @@ npm start
 
 ### Branch Management
 
-Currently, this project use `dev` as main branch. The branch named like `dev-20XXSX` will be development branch for new version. Only the development branch should be merged into main branch.
+Currently, this project use `dev` as main branch. The branch named like `dev-20YYSX` (20YY = year, X = semester number) will be development branch for new version. Only the development branch should be merged into main branch.
 
 Therefore, if you are going to develop some new features or fix some bugs for the project, you should create a personal branch to write your code, and then merge your code into target branch.
 
