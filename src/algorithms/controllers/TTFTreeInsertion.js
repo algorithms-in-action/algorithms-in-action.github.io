@@ -340,6 +340,5 @@ export default {
         treeStruct['id']
       );
     }
-    console.log("trying to match", treeStruct);
   },
 };
