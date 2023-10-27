@@ -13,7 +13,7 @@ describe('2-3-4 Tree', () => {
     it('should return null when child is null', () => {
       const child = null;
       const value = 5;
-      const result = TTFTreeInsertion.findChild(chunker, child, value);
+      const result = TTFTreeSearch.findChild(chunker, child, value);
       expect(result).toBeNull();
     });
     it('should return first child for simple example', () => {
@@ -26,7 +26,7 @@ describe('2-3-4 Tree', () => {
       const value = 1;
       child.addChild(child1ofChild);
       child.addChild(child2ofChild);
-      const result = TTFTreeInsertion.findChild(chunker, child, value);
+      const result = TTFTreeSearch.findChild(chunker, child, value);
       expect(result.id).toStrictEqual(1);
     });
     it('should return third child in more complex example', () => {
@@ -54,7 +54,7 @@ describe('2-3-4 Tree', () => {
       child.addChild(child1ofChild);
       child.addChild(child2ofChild);
       child.addChild(child3ofChild);
-      const result = TTFTreeInsertion.findChild(chunker, child, value);
+      const result = TTFTreeSearch.findChild(chunker, child, value);
       expect(result.id).toStrictEqual(3);
     });
   });
