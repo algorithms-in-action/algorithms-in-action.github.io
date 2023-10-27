@@ -29,7 +29,7 @@ $containerTopBottomPad: 2%;
 
 .expand-collapse-button-active {
   @extend .expand-collopse-button;
-  background: none;
+  background: var(--right-code-expand-btn-bg);;
 
 }
 
