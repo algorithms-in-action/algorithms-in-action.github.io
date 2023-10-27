@@ -115,7 +115,11 @@ export default {
 
   // returns if key is found
   returnIfKeyInNode(chunker, value, node) {
-    chunker.add('if t is a two-node: Return_if_key_in_node');
+    chunker.add('if t is a two-node: Return_if_key_in_node',
+      (vis, node) => {
+        TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.ORANGE);
+      },
+      [node]);
     if (node.getNodeLength() === 1) {
       if (value === node.getIDs()[0]) {
         chunker.add('if t.key1 == k return t',
@@ -125,11 +129,7 @@ export default {
           [node]);
         return node;
       } else {
-        chunker.add('if t.key1 == k return t',
-          (vis, node) => {
-            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
-          },
-          [node]);
+        chunker.add('if t.key1 == k return t');
         return null;
       }
     }
@@ -143,11 +143,7 @@ export default {
           [node]);
         return node;
       } else {
-        chunker.add('if t.key1 == k or t.key2 == k return t',
-          (vis, node) => {
-            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
-          },
-          [node]);
+        chunker.add('if t.key1 == k or t.key2 == k return t');
         return null;
       }
     }
@@ -161,11 +157,7 @@ export default {
           [node]);
         return node;
       } else {
-        chunker.add('if t.key1 == k or t.key2 == k or t.key3 == k return t',
-          (vis, node) => {
-            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
-          },
-          [node]);
+        chunker.add('if t.key1 == k or t.key2 == k or t.key3 == k return t');
         return null;
       }
     }
@@ -175,15 +167,23 @@ export default {
   // search for given value in tree
   search(chunker, tree, value) {
     let node = tree;
+    let prev;
 
     chunker.add('while t not Empty');
     while (node !== null) {
 
       if (this.returnIfKeyInNode(chunker, value, node)) break;
+      prev = node;
       node = this.findChild(chunker, node, value);
+
     }
 
-    if (node === null) chunker.add('return NotFound');
+    if (node === null) {
+      chunker.add('return NotFound',
+        (vis, node) => {
+          TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
+        }, [prev]);
+    }
 
   },
 
