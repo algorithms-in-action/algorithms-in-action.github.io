@@ -2,6 +2,7 @@ import { TTFExp } from '../explanations';
 import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
 import { COLOUR_CODES } from './unionFindUnion';
+import TTFTreeSearch from './TTFTreeSearch';
 
 export default {
   explanation: TTFExp,
@@ -37,71 +38,9 @@ export default {
 
   // Unhighlight an entire 2-3-4 node.
   unhighlightNode(tree, node) {
-    console.log("weird tree", node, node.relatedNodeIDs);
     for (let i = 0; i < node.relatedNodeIDs.length; i++) {
       let value = node.relatedNodeIDs[i];
       tree.unfill(value, COLOUR_CODES.RED);
-    }
-  },
-
-  findChild(chunker, node, value) {
-    if (node === null) return null;
-    const nodeLength = node.getNodeLength();
-    const values = node.getIDs();
-    const children = node.children;
-
-    chunker.add('if c is a two-node');
-    if (nodeLength === 1) {
-      chunker.add('if k < c.key1: if c is a two-node');
-      if (value < values[0]) {
-        return this.childOrNull(chunker, 'c <- c.child1: if c is a two-node', values[0], children, 0);
-      }
-      else {
-        chunker.add('else: if c is a two-node');
-        return this.childOrNull(chunker, 'c <- c.child2: if c is a two-node', values[0], children, 1);
-      }
-    }
-    chunker.add('else: MoveToChild');
-    if (nodeLength === 2) {
-      chunker.add('if k < c.key1: else: MoveToChild',
-        (vis, node, value1) => {
-          this.unhighlightNode(vis.tree, node);
-          this.highlightValue(vis.tree, value1, COLOUR_CODES.ORANGE);
-        },
-        [node, values[0]]);
-      if (value < values[0]) {
-        return this.childOrNull(chunker, 'c <- c.child1: else: MoveToChild', values[0], children, 0);
-      }
-      chunker.add('else if k < c.key2: else: MoveToChild',
-        (vis, value1, value2) => {
-          this.unhighlightValue(vis.tree, value1);
-          this.highlightValue(vis.tree, value2, COLOUR_CODES.ORANGE);
-        },
-        [values[0], values[1]]);
-      if (value < values[1]) {
-        return this.childOrNull(chunker, 'c <- c.child2: else: MoveToChild', values[1], children, 1);
-      }
-      else {
-        chunker.add('else: else: MoveToChild');
-        return this.childOrNull(chunker, 'c <- c.child3', values[1], children, 2);
-      }
-    }
-  },
-
-  childOrNull(chunker, bookmark, nodeValue, children, index) {
-    if (children.length === 0) {
-      chunker.add(bookmark);
-      chunker.add('until c is Empty (and p is a leaf node)');
-      return null;
-    }
-    else {
-      chunker.add(bookmark,
-        (vis, nodeValue, child) => {
-          this.unhighlightValue(vis.tree, nodeValue);
-          this.highlightNode(vis.tree, child, COLOUR_CODES.ORANGE);
-        },
-        [nodeValue, children[index]])
-      return children[index];
     }
   },
 
@@ -220,7 +159,7 @@ export default {
 
       chunker.add('p <- c');
       parent = child;
-      child = this.findChild(chunker, child, value);
+      child = TTFTreeSearch.findChild(chunker, child, value);
     }
 
     // insertion
@@ -401,5 +340,6 @@ export default {
         treeStruct['id']
       );
     }
+    console.log("trying to match", treeStruct);
   },
 };
