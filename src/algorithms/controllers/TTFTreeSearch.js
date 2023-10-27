@@ -1,6 +1,6 @@
 import { TTFExp } from '../explanations';
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
-import TTFTreeInsertion from './TTFTreeInsertion'; // for highlighting
+import TTFTreeInsertion from './TTFTreeInsertion';
 import { COLOUR_CODES } from './unionFindUnion';
 
 
@@ -37,11 +37,21 @@ export default {
     }
     chunker.add('else: MoveToChild');
     if (nodeLength === 2) {
-      chunker.add('if k < c.key1: else: MoveToChild');
+      chunker.add('if k < c.key1: else: MoveToChild',
+        (vis, node, value1) => {
+          TTFTreeInsertion.unhighlightNode(vis.tree, node);
+          TTFTreeInsertion.highlightValue(vis.tree, value1, COLOUR_CODES.ORANGE);
+        },
+        [node, values[0]]);
       if (value < values[0]) {
         return this.childOrNull(chunker, 'c <- c.child1: else: MoveToChild', values[0], children, 0);
       }
-      chunker.add('else if k < c.key2: else: MoveToChild');
+      chunker.add('else if k < c.key2: else: MoveToChild',
+        (vis, value1, value2) => {
+          TTFTreeInsertion.unhighlightValue(vis.tree, value1);
+          TTFTreeInsertion.highlightValue(vis.tree, value2, COLOUR_CODES.ORANGE);
+        },
+        [values[0], values[1]]);
       if (value < values[1]) {
         return this.childOrNull(chunker, 'c <- c.child2: else: MoveToChild', values[1], children, 1);
       }
@@ -53,15 +63,30 @@ export default {
     // for search specifically:
     chunker.add('else: Find_child');
     if (nodeLength === 3) {
-      chunker.add('if k < t.key1: else: Find_child');
+      chunker.add('if k < t.key1: else: Find_child',
+        (vis, node, value1) => {
+          TTFTreeInsertion.unhighlightNode(vis.tree, node);
+          TTFTreeInsertion.highlightValue(vis.tree, value1, COLOUR_CODES.ORANGE);
+        },
+        [node, values[0]]);
       if (value < values[0]) {
         return this.childOrNull(chunker, 'c <- t.child1: else: Find_child', values[0], children, 0);
       }
-      chunker.add('else if k < t.key2: else: Find_child');
+      chunker.add('else if k < t.key2: else: Find_child',
+        (vis, value1, value2) => {
+          TTFTreeInsertion.unhighlightValue(vis.tree, value1);
+          TTFTreeInsertion.highlightValue(vis.tree, value2, COLOUR_CODES.ORANGE);
+        },
+        [values[0], values[1]]);
       if (value < values[1]) {
         return this.childOrNull(chunker, 'c <- t.child2: else: Find_child', values[1], children, 1);
       }
-      chunker.add('else if k < t.key3');
+      chunker.add('else if k < t.key3',
+        (vis, value2, value3) => {
+          TTFTreeInsertion.unhighlightValue(vis.tree, value2);
+          TTFTreeInsertion.highlightValue(vis.tree, value3, COLOUR_CODES.ORANGE);
+        },
+        [values[1], values[2]]);
       if (value < values[2]) {
         return this.childOrNull(chunker, 'c <- t.child3: else: Find_child', values[2], children, 2);
       }
@@ -75,11 +100,15 @@ export default {
   childOrNull(chunker, bookmark, nodeValue, children, index) {
     if (children.length === 0) {
       chunker.add(bookmark);
-      //chunker.add('until c is Empty (and p is a leaf node)');
       return null;
     }
     else {
-      chunker.add(bookmark);
+      chunker.add(bookmark,
+        (vis, nodeValue, child) => {
+          TTFTreeInsertion.unhighlightValue(vis.tree, nodeValue);
+          TTFTreeInsertion.highlightNode(vis.tree, child, COLOUR_CODES.ORANGE);
+        },
+        [nodeValue, children[index]]);
       return children[index];
     }
   },
@@ -88,24 +117,59 @@ export default {
   returnIfKeyInNode(chunker, value, node) {
     chunker.add('if t is a two-node: Return_if_key_in_node');
     if (node.getNodeLength() === 1) {
-      chunker.add('if t.key1 == k return t');
       if (value === node.getIDs()[0]) {
+        chunker.add('if t.key1 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.GREEN);
+          },
+          [node]);
         return node;
+      } else {
+        chunker.add('if t.key1 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
+          },
+          [node]);
+        return null;
       }
     }
+    chunker.add('if t is a three-node: Return_if_key_in_node');
     if (node.getNodeLength() === 2) {
-      chunker.add('if t.key1 == k or t.key2 == k return t');
       if (value === node.getIDs()[0] || value === node.getIDs()[1]) {
+        chunker.add('if t.key1 == k or t.key2 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.GREEN);
+          },
+          [node]);
         return node;
+      } else {
+        chunker.add('if t.key1 == k or t.key2 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
+          },
+          [node]);
+        return null;
       }
     }
+    chunker.add('else: Return_if_key_in_node');
     if (node.getNodeLength() === 3) {
-      chunker.add('if t.key1 == k or t.key2 == k or t.key3 == k return t');
       if (value === node.getIDs()[0] || value === node.getIDs()[1] || value === node.getIDs()[2]) {
+        chunker.add('if t.key1 == k or t.key2 == k or t.key3 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.GREEN);
+          },
+          [node]);
         return node;
+      } else {
+        chunker.add('if t.key1 == k or t.key2 == k or t.key3 == k return t',
+          (vis, node) => {
+            TTFTreeInsertion.highlightNode(vis.tree, node, COLOUR_CODES.RED);
+          },
+          [node]);
+        return null;
       }
     }
-    return null;
+    return null; // just in case
   },
 
   // search for given value in tree
@@ -150,6 +214,11 @@ export default {
     });
 
     let root = Object.values(tree).filter((node) => node.parent === null)[0];
+
+    // remove parent relationship, otherwise run into max stack error when passing node into chunker
+    Object.values(tree).forEach((node) => {
+      node.parent = null;
+    });
 
     return root;
   },

@@ -40,7 +40,7 @@ export default {
   unhighlightNode(tree, node) {
     for (let i = 0; i < node.relatedNodeIDs.length; i++) {
       let value = node.relatedNodeIDs[i];
-      tree.unfill(value, COLOUR_CODES.RED);
+      tree.unfill(value);
     }
   },
 
@@ -160,6 +160,9 @@ export default {
       chunker.add('p <- c');
       parent = child;
       child = TTFTreeSearch.findChild(chunker, child, value);
+      if (child === null) {
+        chunker.add('until c is Empty (and p is a leaf node)'); // try here
+      }
     }
 
     // insertion
