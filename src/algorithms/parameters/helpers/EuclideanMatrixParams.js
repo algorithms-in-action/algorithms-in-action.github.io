@@ -11,6 +11,7 @@ import {
   makeColumnArray,
   makeColumnCoords,
   makeData,
+  makeRandomCoordinateData,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -59,11 +60,13 @@ function EuclideanMatrixParams({
   const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data1, setData1] = useState(() => makeData(size, min, max, symmetric));
+
+  // First table.
+  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 4, 5));
   const [originalData1, setOriginalData1] = useState(data1);
 
   // Second Table
-  const [data2, setData2] = useState(() => makeData(size, 1, 1, symmetric));
+  const [data2, setData2] = useState(() => makeData(size, 0, 1, symmetric));
   const [originalData2, setOriginalData2] = useState(data2);
 
   const [buttonMessage, setButtonMessage] = useState('Start');
@@ -72,16 +75,16 @@ function EuclideanMatrixParams({
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
-  // reset the Table when the size changes
+  // Reset first table when the size changes
   useEffect(() => {
-    const newData1 = makeData(size, min, max, symmetric);
+    const newData1 = makeRandomCoordinateData(size, 4, 5);
     setData1(newData1);
     setOriginalData1(newData1);
   }, [size, min, max, symmetric]);
 
-  // second table
+  // Reset second table when the size changes
   useEffect(() => {
-    const newData2 = makeData(size, 1, 1, symmetric);
+    const newData2 = makeData(size, 0, 1, symmetric);
     setData2(newData2);
     setOriginalData2(newData2);
   }, [size, 1, 1, symmetric]);
@@ -147,7 +150,8 @@ function EuclideanMatrixParams({
     data1.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
-        if (singleNumberValidCheck(value)) {
+        const maxValue = 100;  // Maximum value a coordinate can take.
+        if (singleNumberValidCheck(value) && value < maxValue) {
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
@@ -185,10 +189,8 @@ function EuclideanMatrixParams({
     }
 
     const edges = [];
-
     for (let i = 0; i < coords.length; i++) {
       const temp_edges = [];
-      
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (isEuclidean === true) {
@@ -198,6 +200,9 @@ function EuclideanMatrixParams({
           // Calculate Manhattan Distances
           distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
         }
+
+        // Ensure distance is a positive integer.
+        distance = Math.ceil(distance);
 
         // If adjacent push distance if not then 0
         if (adjacent[i][j] === 1) {
@@ -285,7 +290,7 @@ function EuclideanMatrixParams({
       </div>
       
       <div className="edge">
-        <text className="titles"> Edges (0,1)</text>
+        <text className="titles"> Edges (0 or 1)</text>
         <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
       </div>
       
