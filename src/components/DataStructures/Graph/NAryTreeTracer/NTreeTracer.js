@@ -462,7 +462,12 @@ class NTreeTracer extends Tracer {
     method.apply(this, args);
   }
 
-  // for use in node placement algorithm
+  /**
+   * This function returns the average size of two nodes
+   * @param {*} leftNode 
+   * @param {*} rightNode 
+   * @returns 
+   */
   meanNodeSize(leftNode, rightNode) {
     const leftNodeSize =
       leftNode.getNodeLength() * (this.dimensions.nodeRadius * 2);
@@ -472,7 +477,13 @@ class NTreeTracer extends Tracer {
     return (leftNodeSize + rightNodeSize) / 2;
   }
 
-  // for use in node placement algorithm
+  /**
+   * This function returns the leftmost descendant of a node at a certain depth provided  
+   * @param {*} node 
+   * @param {*} lvl refers to the relative level below the node where the function was originally called on
+   * @param {*} depth 
+   * @returns 
+   */
   getLeftMost(node, lvl, depth) {
     if (lvl >= depth) {
       return node;
@@ -481,7 +492,7 @@ class NTreeTracer extends Tracer {
     } else {
       let rightmost = node.children[0];
       let leftmost = this.getLeftMost(rightmost, lvl + 1, depth);
-
+      // do postorder traversal of the subtree below the current node
       while (!leftmost && rightmost.getRightSibling()) {
         rightmost = rightmost.getRightSibling();
         leftmost = this.getLeftMost(rightmost, lvl + 1, depth);
@@ -491,8 +502,16 @@ class NTreeTracer extends Tracer {
     }
   }
 
-  // for use in node placement algorithm
+  /**
+   * Cleans up positioning of small subtrees that are siblings of each other
+   * The purpose is to avoid the problem of small subtrees having a large gap between them and the larger subtrees
+   * surrounding them. To avoid this, this function moves the interior subtrees to the right.
+   * @param {*} node 
+   * @param {*} lvl 
+   * @returns 
+   */
   apportion(node, lvl) {
+
     let leftmost = node.children[0];
     let neighbour = leftmost.getLeftNeighbour(this.levels);
 
@@ -500,6 +519,7 @@ class NTreeTracer extends Tracer {
     const depthToStop = this.maxDepth - lvl;
 
     while (leftmost && neighbour && compareDepth <= depthToStop) {
+      // calculate where leftmost should be with respect to neighbour
       let leftModsum = 0;
       let rightModsum = 0;
       let ancestorLeftmost = leftmost;
@@ -512,7 +532,8 @@ class NTreeTracer extends Tracer {
         rightModsum += ancestorLeftmost.modifier;
         leftModsum += ancestorNeighbour.modifier;
       }
-
+      // calculate the movedistance and apply it to the node's subtrees
+      // making sure to add appropriate portions to smaller subtrees
       let moveDistance =
         neighbour.prelimx +
         leftModsum +
@@ -523,13 +544,14 @@ class NTreeTracer extends Tracer {
       if (moveDistance > 0) {
         let tempPtr = node;
         let leftSiblings = 0;
-
+        // count interior sibling subtrees 
         while (tempPtr && tempPtr !== ancestorNeighbour) {
           leftSiblings++;
           tempPtr = tempPtr.getLeftSibling();
         }
 
         if (tempPtr) {
+          // apply portions to appropriate subtrees of the left sibling
           const portion = moveDistance / leftSiblings;
           tempPtr = node;
 
@@ -540,10 +562,14 @@ class NTreeTracer extends Tracer {
             tempPtr = tempPtr.getLeftSibling();
           }
         } else {
+          // don't need to move anything moving needs to be done by ancestor, 
+          // because the ancestor neighbour and ancestor leftmost aren't siblings
+
           return;
         }
       }
-
+      // determine leftmost descendant of the current node at the level below, and compare 
+      // the positioning of it against it's neighbour
       compareDepth++;
       if (leftmost.children.length === 0) {
         leftmost = this.getLeftMost(node, 0, compareDepth);
@@ -557,25 +583,44 @@ class NTreeTracer extends Tracer {
     }
   }
 
-  // for use in node placement algorithm
+  /** 
+   * Walks through tree in a postorder fashion and assigns preliminary x coordinates to nodes, along with modifiers
+   * that are used to move children of the node to the right
+   * @param {*} node the current node
+   * @param {*} lvl the current level where the node is at 
+  */
   firstWalk(node, lvl) {
+
+    // check if the node isa leaf node
     if (node.children.length === 0) {
+
       const leftSibling = node.getLeftSibling();
       if (leftSibling !== null) {
+        // calculate preliminary x coordinate based on preliminary x coord of left sibling, sibling separation length
+        // and the the mean size of the left sibling and the current node
+
         node.prelimx =
           leftSibling.prelimx +
           this.SiblingSeparation +
           this.meanNodeSize(leftSibling, node);
       } else {
+        // there is no sibling on the left of the node to worry about, so don't need to change anything 
         node.prelimx = 0;
       }
     } else {
+      // since this node is not a leaf node, call the function recursively on the children 
+      // and perform calculations for the preliminary x values
       node.children.forEach((child) => this.firstWalk(child, lvl + 1));
+      // find midpoint value of the children once you've assigned preliminary x coords
       const midpoint =
         (node.children[0].prelimx +
           node.children[node.children.length - 1].prelimx) /
         2;
+
       if (node.getLeftSibling() !== null) {
+        // node has a left sibling, so calculate preliminary x coordinate based on left sibling, sibling separation
+        // and mean node size of left sibling and node, then subtract the midpoint to ensure the node
+        // is placed in the middle of it's children
         node.prelimx =
           node.getLeftSibling().prelimx +
           this.SiblingSeparation +
@@ -583,12 +628,20 @@ class NTreeTracer extends Tracer {
         node.modifier = node.prelimx - midpoint;
         this.apportion(node, lvl);
       } else {
+        // otherwise if it's got no left sibling we simply place it in the middle of it's children as normal
         node.prelimx = midpoint;
       }
     }
   }
 
-  // for use in node placement algorithm
+  /** 
+   * Walks through tree in preorder fashion, assigning a final x coordinate to each node based on adding
+   * it's preliminary coordinat and the modifier values of all it's ancestors
+   * @param {*} node the current node 
+   * @param {*} lvl current level
+   * @param {*} modsum the current sum of all the modifier values of the ancestors of this node
+   * @returns a boolean, true if no errors, false if errors
+  */
   secondWalk(node, lvl, modsum) {
     let result = true;
     if (lvl <= this.maxDepth) {
@@ -623,7 +676,11 @@ class NTreeTracer extends Tracer {
     return this.realNodes.find((node) => node.varID === varID);
   }
 
-  // for use in node placement algorithm
+  /**
+   * This function converts the internal node representation which is covered by the NAryTree class,
+   * and converts it into a set of nodes that can be rendered, adjusting the coordinates if the current tree
+   * is a 2-3-4 tree, including accounting for the tree rising in size rather than falling
+   */
   translateCoords() {
     const flattenedLevels = [].concat(...this.levels);
     let offset = 308 - (this.levels.length - 2) * 100;
@@ -678,7 +735,8 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * Layout the tree.
+   * Determines coordinates of every node so that the tree can be rendered in an aesthetic fashion with even gaps
+   * between nodes and levels
    */
   layoutNTree() {
     this.callLayout = { method: this.layoutNTree, args: arguments };
