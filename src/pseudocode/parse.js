@@ -126,7 +126,7 @@ function addIndentation(originalBlocks, blockName, baseIndent, outputBlocks) {
 }
 
 export default function parse(input) {
-  const inputRemovedNotes = input.replace(/\\Note\{[^}]*\}/gs, '');
+  const inputRemovedNotes = input.replace(/\\Note\{[^}]*\}/gs, ''); // removing all flat notes
   const rawCode = removeLineContinuation(inputRemovedNotes);
   const rawCodeBlocks = extractCodeBlock(rawCode);
   if (Object.keys(rawCodeBlocks).length > 0) {

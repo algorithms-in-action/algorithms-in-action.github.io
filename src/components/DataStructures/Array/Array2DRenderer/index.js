@@ -74,7 +74,7 @@ class Array2DRenderer extends Renderer {
         }}
       >
         <tbody>
-          {algo === 'unionFind' && (
+          {algo === 'unionFind' && ( // adding the array indicies for union find
             <AnimateSharedLayout>
               <tr>
                 {data[0].map((col, idx) => (
@@ -143,7 +143,7 @@ class Array2DRenderer extends Renderer {
                   </td>
                 )}
                 {row.map((col, j) => {
-                  const varGreen = col.fill === 1;
+                  const varGreen = col.fill === 1; // for simple fill
                   const varOrange = col.fill === 2;
                   const varRed = col.fill === 3;
 
@@ -234,7 +234,7 @@ class Array2DRenderer extends Renderer {
         {algo === 'tc' && (
           <caption kth-tag="transitive_closure">k = {kth}</caption>
         )}
-        {algo == 'unionFind' && (
+        {algo == 'unionFind' && ( // bottom centre caption for union find
           <motion.caption kth-tag="unionFind" className={styles.bottom_caption}>
             {kth}
           </motion.caption>
