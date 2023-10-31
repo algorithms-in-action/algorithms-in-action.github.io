@@ -1,6 +1,5 @@
 import { TTFExp } from '../explanations';
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
-import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 import TTFTreeInsertion from './TTFTreeInsertion';
 import { COLOUR_CODES } from './unionFindUnion';
 
@@ -284,7 +283,7 @@ export default {
     let root = this.initTreeReturnRoot(realNodes, realEdges);
 
     // searching tree
-    this.search(chunker, root, target.arg1);
+    this.search(chunker, root, target);
   },
 
 };
