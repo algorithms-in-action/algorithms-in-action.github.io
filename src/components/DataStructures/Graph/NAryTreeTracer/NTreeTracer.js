@@ -63,8 +63,11 @@ class NTreeTracer extends Tracer {
     this.LevelSeparation = 100;
     this.levels = null;
 
+    this.functionName = ''; // for fancy code style caption
     this.text = null;
     this.swap = false;
+
+    this.baseOffset = 20; // used to position text/caption above base of rect
   }
 
   /**
@@ -685,6 +688,7 @@ class NTreeTracer extends Tracer {
     let offset = 308 - (this.levels.length - 2) * 100; // for 2-3-4 trees/variable nodes to grow upwards (as top-down implementation)
 
     flattenedLevels.forEach((levelNode) => {
+      // might want to implement treeBaseY for caption for regular nodes
       if (!this.variableNodes) {
         const nodeToUpdate = this.nodes.find(
           (node) => node.id === levelNode.id
@@ -698,7 +702,7 @@ class NTreeTracer extends Tracer {
         // getting coordinates for variable node
         const updateXandY = this.findVariableNode(levelNode.id);
         updateXandY.x = levelNode.x;
-        updateXandY.y = levelNode.y + (offset);
+        updateXandY.y = levelNode.y + (offset) - (this.baseOffset * 1.5);
 
         let nodeLength = levelNode.getNodeLength();
 
@@ -726,12 +730,16 @@ class NTreeTracer extends Tracer {
               valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
             }
             nodeToUpdate.x = valueX;
-            nodeToUpdate.y = levelNode.y + (offset); // would need to adjust if don't want variable node tree growing from base
+            // would need to adjust 'offset' if don't want variable node tree growing from base
+            // baseoffset used to account for the caption
+            nodeToUpdate.y = levelNode.y + (offset) - (this.baseOffset * 1.5);
+
           });
         }
       }
     });
   }
+
 
   /**
    * Determines coordinates of every node so that the tree can be rendered 
@@ -876,6 +884,15 @@ class NTreeTracer extends Tracer {
    */
   setText(text) {
     this.text = text;
+  }
+
+  /**
+   * Sets the function name to be displayed in a code style.
+   * See example at T234_Insert.
+   * @param {*} name the function name.
+   */
+  setFunctionName(name) {
+    this.functionName = name;
   }
 
 }

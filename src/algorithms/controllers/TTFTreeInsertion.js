@@ -308,6 +308,7 @@ export default {
   insert(chunker, value, prevValue, tree, newID) {
     chunker.add('T234_Insert(t, k)',
       (vis) => {
+        vis.tree.setText(`(t, ${value})`);
         this.unhighlightValue(vis.tree, prevValue);
       },
       [prevValue]);
@@ -317,7 +318,11 @@ export default {
 
   initTree(chunker, value, tree) {
     chunker.add('T234_Insert(t, k)');
-    chunker.add('if t = Empty');
+    chunker.add('if t = Empty',
+      (vis) => {
+        vis.tree.setFunctionName('T234_Insert');
+        vis.tree.setText(`(t, ${value})`);
+      });
     tree.addRelatedNodeID(value);
 
     chunker.add(
