@@ -12,6 +12,8 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
+
+
 class TreeNode {
   constructor(id) {
     this.id = id;
@@ -34,7 +36,8 @@ class TreeNode {
   }
 
   /**
-   * @returns 1.
+   * Getting the node length.
+   * @returns {number} 1.
    */
   getNodeLength() {
     return 1;
@@ -72,7 +75,7 @@ class TreeNode {
   /**
    * Gets the index of the child node.
    * @param {*} child the child node.
-   * @returns the index of the child node.
+   * @returns {number} the index of the child node.
    */
   getChildIndex(child) {
     return this.children.findIndex((c) => c.id === child.id);
