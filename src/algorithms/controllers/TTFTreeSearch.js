@@ -35,40 +35,40 @@ export default {
     const values = node.getIDs();
     const children = node.children;
 
-    chunker.add('if c is a two-node');
+    chunker.add('if t is a two-node');
     if (nodeLength === 1) {
-      chunker.add('if k < c.key1: if c is a two-node');
+      chunker.add('if k < t.key1: if t is a two-node');
       if (value < values[0]) {
-        return this.childOrNull(chunker, 'c <- c.child1: if c is a two-node', values[0], children, 0);
+        return this.childOrNull(chunker, 'c <- t.child1: if t is a two-node', values[0], children, 0);
       }
       else {
-        chunker.add('else: if c is a two-node');
-        return this.childOrNull(chunker, 'c <- c.child2: if c is a two-node', values[0], children, 1);
+        chunker.add('else: if t is a two-node');
+        return this.childOrNull(chunker, 'c <- t.child2: if t is a two-node', values[0], children, 1);
       }
     }
-    chunker.add('else: MoveToChild'); // if three node
+    chunker.add('else if t is a three-node');
     if (nodeLength === 2) {
-      chunker.add('if k < c.key1: else: MoveToChild',
+      chunker.add('if k < t.key1: else if t is a three-node',
         (vis, node, value1) => {
           TTFTreeInsertion.unhighlightNode(vis.tree, node);
           TTFTreeInsertion.highlightValue(vis.tree, value1, COLOUR_CODES.ORANGE);
         },
         [node, values[0]]);
       if (value < values[0]) {
-        return this.childOrNull(chunker, 'c <- c.child1: else: MoveToChild', values[0], children, 0);
+        return this.childOrNull(chunker, 'c <- t.child1: else if t is a three-node', values[0], children, 0);
       }
-      chunker.add('else if k < c.key2: else: MoveToChild',
+      chunker.add('else if k < t.key2: else if t is a three-node',
         (vis, value1, value2) => {
           TTFTreeInsertion.unhighlightValue(vis.tree, value1);
           TTFTreeInsertion.highlightValue(vis.tree, value2, COLOUR_CODES.ORANGE);
         },
         [values[0], values[1]]);
       if (value < values[1]) {
-        return this.childOrNull(chunker, 'c <- c.child2: else: MoveToChild', values[1], children, 1);
+        return this.childOrNull(chunker, 'c <- t.child2: else if t is a three-node', values[1], children, 1);
       }
       else {
-        chunker.add('else: else: MoveToChild');
-        return this.childOrNull(chunker, 'c <- c.child3', values[1], children, 2);
+        chunker.add('else: else if t is a three-node');
+        return this.childOrNull(chunker, 'c <- t.child3: else if t is a three-node', values[1], children, 2);
       }
     }
     // for search specifically (as insert splits 4 nodes, rather than searches them):
