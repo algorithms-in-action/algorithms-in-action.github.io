@@ -22,12 +22,11 @@
 
   .top_variable {
     // for indices across the top of the array
-    caption-side: top;
     text-align: center;
-    margin-bottom: -15px;
     font-size: 13px;
     font-weight: 400;
     color: var(--array-2d-row-col-value-color);
+    margin-bottom: -5px;
   }
 
   .row {
