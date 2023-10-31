@@ -305,13 +305,12 @@ export default {
   },
 
   // insertion of a node into tree. assumes the tree is not empty
-  insert(chunker, value, prevValue, tree, newID) {
+  insert(chunker, value, tree, newID) {
     chunker.add('T234_Insert(t, k)',
       (vis) => {
         vis.tree.setText(`(t, ${value})`);
-        this.unhighlightValue(vis.tree, prevValue);
-      },
-      [prevValue]);
+        vis.tree.unfillAll();
+      });
     let newInfo = this.traverseAndInsert(chunker, value, tree, newID);
     return newInfo;
   },
@@ -351,14 +350,13 @@ export default {
 
     if (nodes.length === 1) return;
 
-    treeStruct = this.insert(chunker, nodes[1], nodes[0], tree, newID);
+    treeStruct = this.insert(chunker, nodes[0], tree, newID);
 
     // remaining insertions
     for (let i = 2; i < nodes.length; i++) {
       treeStruct = this.insert(
         chunker,
         nodes[i],
-        nodes[i - 1],
         treeStruct['nTree'],
         treeStruct['id']
       );
