@@ -26,6 +26,7 @@
   transition: 0.4s;
   background: var(--mid-control-param-btn-bg-col-hover);
 }
+
 .blueWordBtn:active {
   transition: 0.2s;
   background: var(--mid-control-param-btn-bg-col-active);
@@ -40,18 +41,8 @@
 .blueWordBtnDisabled:hover {
   background: none;
 }
+
 .blueWordBtnDisabled:active {
-  background: none;
-}
-
-.greyWordBtn {
-  @extend .blueWordBtn;
-  color: grey;
-}
-
-.greyWordBtn:hover {
-  transition: 0.4s;
-  color: lightgrey;
   background: none;
 }
 
@@ -59,7 +50,7 @@
   color: var(--mid-control-font);
   font-size: 0.8em;
   // font: 13px "Roboto", sans-serif !important;
-  font-family: Menlo, 'Liberation Mono', Courier, monospace;
+  font-family: Menlo, "Liberation Mono", Courier, monospace;
 }
 
 .greyRoundBtn {
@@ -84,15 +75,19 @@
   background: var(--mid-control-param-btn-bg-hover);
   @include border-radius(14px);
 }
+
 .greyRoundBtn:active {
   transition: 0.2s;
   background: var(--mid-control-param-btn-bg-active);
   @include border-radius(14px);
 }
+
 .stringContainer {
   margin-right: 15px;
   padding: 0px 5px;
+
 }
+
 .inputContainer {
   border: 0.1px solid var(--mid-control-param-border);
   border-radius: 4px;
@@ -102,6 +97,7 @@
   margin-right: 15px;
   padding: 0px 5px;
 }
+
 
 .outerInput {
   border: 1px solid var(--mid-control-param-border);
@@ -140,20 +136,25 @@
   .formLeft {
     width: 62%;
     align-items: center;
+
     .rightmost-btn {
       // margin-left: 20px;
       @extend .blueWordBtn;
     }
+
     .medianthree-btn {
       // margin-left: 20px;
       @extend .blueWordBtn;
     }
+
     .MuiFormControlLabel-root {
       color: var(--mid-control-param-blue-btn-col);
+
       &:first-of-type {
         margin-left: 20px;
       }
     }
+
     .MuiCheckbox-colorPrimary.Mui-checked {
       color: var(--mid-control-param-blue-btn-col);
     }
@@ -182,6 +183,7 @@
 .greyRoundBtnDisabled {
   @extend .greyRoundBtn;
   cursor: not-allowed !important;
+
   svg {
     path {
       fill: var(--mid-control-param-btn-disabled);
@@ -192,54 +194,11 @@
 .greyRoundBtnDisabled:hover {
   background: none;
 }
+
 .greyRoundBtnDisabled:active {
   background: none;
 }
+
 .generalText {
   color: var(--mid-control-font);
-}
-
-.dualColumnWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.dualAddInput,
-.dualTextInput {
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-}
-
-.dualAddInput input:focus,
-.dualTextInput input:focus {
-  outline: none;
-}
-
-.dualAddInput input,
-.dualTextInput input {
-  width: 50px;
-  height: 25px;
-  flex-grow: 0;
-
-  margin-right: 15px;
-  border: 0.1px solid var(--mid-control-param-border);
-  border-radius: 4px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 0px 5px;
-
-  //font-family:'Roboto', sans-serif;
-  font-size: 1.05em;
-  //font-weight: 200;
-
-  background-color: var(--mid-control-bg);
-  color: var(--mid-control-font);
-}
-
-.dualTextInput input {
-  flex-grow: 1;
-  margin-right: 10px;
-  height: 35px;
 }
