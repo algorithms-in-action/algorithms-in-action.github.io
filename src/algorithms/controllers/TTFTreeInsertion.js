@@ -308,8 +308,8 @@ export default {
   insert(chunker, value, tree, newID) {
     chunker.add('T234_Insert(t, k)',
       (vis) => {
-        vis.tree.setText(`(t, ${value})`);
         vis.tree.unfillAll();
+        vis.tree.setText(`(t, ${value})`);
       });
     let newInfo = this.traverseAndInsert(chunker, value, tree, newID);
     return newInfo;
