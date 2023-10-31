@@ -234,7 +234,7 @@ class NAryTreeRenderer extends Renderer {
                         fill,
                         value,
                         shape,
-                        key,
+                        key
                     } = node;
                     const varGreen = fill === 1;
                     const varOrange = fill === 2;

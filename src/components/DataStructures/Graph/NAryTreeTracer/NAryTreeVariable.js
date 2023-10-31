@@ -23,7 +23,7 @@ class VariableTreeNode extends TreeNode {
 
   /**
    * Getting the IDs of the rendered nodes within the variable node.
-   * @returns {*[]} the IDs of the rendered nodes.
+   * @returns {number[]} the IDs of the rendered nodes.
    */
   getIDs() {
     return this.relatedNodeIDs;
@@ -31,7 +31,7 @@ class VariableTreeNode extends TreeNode {
 
   /**
    * Adding the ID of the rendered node to the variable node.
-   * @param {*} nodeID the ID of the rendered node.
+   * @param {number} nodeID the ID of the rendered node.
    */
   addRelatedNodeID(nodeID) {
     if (this.relatedNodeIDs.includes(nodeID)) {
@@ -43,7 +43,7 @@ class VariableTreeNode extends TreeNode {
 
   /**
    * Removing the ID of the rendered node from the variable node.
-   * @param {*} nodeID the ID of the rendered node.
+   * @param {number} nodeID the ID of the rendered node.
    */
   removeRelatedNodeID(nodeID) {
     const index = this.relatedNodeIDs.indexOf(nodeID);
@@ -69,8 +69,8 @@ class VariableTreeNode extends TreeNode {
 
   /**
    * Checks whether the variable node contains some rendered node.
-   * @param {*} nodeID the ID of the rendered node.
-   * @returns whether the variable node contains the rendered node.
+   * @param {number} nodeID the ID of the rendered node.
+   * @returns {boolean} whether the variable node contains the rendered node.
    */
   hasRelatedNodeID(nodeID) {
     return this.relatedNodeIDs.includes(nodeID);

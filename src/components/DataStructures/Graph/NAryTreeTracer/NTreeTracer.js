@@ -17,18 +17,17 @@ import NAryTreeRenderer from '../NAryTreeRenderer/index';
 import TreeNode from './NAryTree.js';
 import VariableTreeNode from './NAryTreeVariable.js';
 
-/**
- * This is a modified version of the GraphRenderer.js.
- * It is used to display NAry trees.
- * Uses John Q. Walker II's "A node positioning algorithm for general trees" (1989).
- */
-
 export class Element {
   constructor() {
     this.variables = [];
   }
 }
 
+/**
+ * The NTreeTracer class is used to represent NAry trees.
+ * Utilises John Q. Walker II's "A node positioning algorithm for general trees" (1989).
+ * @class
+ */
 class NTreeTracer extends Tracer {
   getRendererClass() {
     return NAryTreeRenderer;
@@ -95,12 +94,11 @@ class NTreeTracer extends Tracer {
 
   /**
    * Checks whether the tree is empty.
-   * @returns whether the tree is empty or not.
+   * @returns {boolean} whether the tree is empty or not.
    */
   isEmpty() {
     return this.nodes.length === 0 && this.edges.length === 0;
   }
-
 
   /**
    * Extracts a n-tree object from edges and nodes.
@@ -174,7 +172,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * Extracts the root from edges and nodes.
-   * @return {number} root.
+   * @return {*} the root.
    */
   getRoot() {
     // in case there is only a single node in the graph
@@ -190,8 +188,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Swaps two nodes given their IDs.
-   * @param {*} nodeId1 id of the first node to be swapped.
-   * @param {*} nodeId2 id of the second node to be swapped.
+   * @param {number} nodeId1 id of the first node to be swapped.
+   * @param {number} nodeId2 id of the second node to be swapped.
    */
   swapNodes(nodeId1, nodeId2) {
     this.swap = true;
@@ -237,7 +235,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * For NAry trees, used to decide whether the arrows are displayed.
-   * @param {*} isDirected whether arrows are shown or not.
+   * @param {boolean} isDirected whether arrows are shown or not.
    */
   directed(isDirected = true) {
     this.isDirected = isDirected;
@@ -247,7 +245,7 @@ class NTreeTracer extends Tracer {
    * Checks whether the parent-child node relationship holds.
    * @param {*} parent the parent node.
    * @param {*} child the child node.
-   * @returns whether the parent-child node relationship holds.
+   * @returns {boolean} whether the parent-child node relationship holds.
    */
   isParent(parent, child) {
     for (const edge of this.realEdges) {
@@ -260,13 +258,12 @@ class NTreeTracer extends Tracer {
 
   /**
    * Adds a node to the tree.
-   * @param {*} id the id of the node to be added.
-   * @param {*} value the value of the node to be added.
-   * @param {*} shape the shape of the node to be added (circle or square).
-   * @param {*} fill the colour of the node to be added (default is white, but see fill).
-   * @param {*} x default is 0, will be updated during layout.
-   * @param {*} y default is 0, will be updated during layout.
-   * @param {*} key
+   * @param {number} id the id of the node to be added.
+   * @param {number} value the value of the node to be added.
+   * @param {string} shape the shape of the node to be added (circle or square).
+   * @param {number} fill the colour of the node to be added (default is white, but see fill).
+   * @param {number} x default is 0, will be updated during layout.
+   * @param {number} y default is 0, will be updated during layout.
    */
   addNode(
     id,
@@ -275,7 +272,6 @@ class NTreeTracer extends Tracer {
     fill = 0,
     x = 0,
     y = 0,
-    key
   ) {
     if (this.findNode(id)) return;
     value = value === undefined ? id : value;
@@ -283,6 +279,7 @@ class NTreeTracer extends Tracer {
     if (!this.variableNodes) {
       this.realNodes.push({ id, x, y });
     }
+    const key = id;
     if (id !== '0') { // hidden root node
       this.nodes.push({
         id,
@@ -298,8 +295,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Adds a variable node to the tree.
-   * @param {*} varID the variable node id,
-   * @param {*} nodeID the node id to be added to the variable node.
+   * @param {number} varID the variable node id,
+   * @param {number} nodeID the node id to be added to the variable node.
    */
   addVariableNode(varID, nodeID) {
     if (!this.variableNodes) return;
@@ -320,7 +317,7 @@ class NTreeTracer extends Tracer {
   /**
    * Removes the whole variable node from the tree given its id.
    * For removing a single (rendered) node, use removeNode.
-   * @param {*} id the id of the variable node to be removed.
+   * @param {number} id the id of the variable node to be removed.
    */
   removeFullNode(id) {
     if (!this.variableNodes) return;
@@ -333,7 +330,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * Remove a single (rendered) node given its id. 
-   * @param {*} id the id of the node to be removed.
+   * @param {number} id the id of the node to be removed.
    */
   removeNode(id) {
     if (this.variableNodes) {
@@ -396,8 +393,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Finds the value of the node given the node id.
-   * @param {*} id the node id.
-   * @returns the value of the node.
+   * @param {number} id the node id.
+   * @returns {number} the value of the node.
    */
   findValue(id) {
     return this.findNode(id).value;
@@ -405,8 +402,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Finds the node given the node id.
-   * @param {*} id the node id.
-   * @returns the node.
+   * @param {number} id the node id.
+   * @returns {*} the node.
    */
   findNode(id) {
     return this.nodes.find((node) => node.id === id);
@@ -414,8 +411,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Finds the variable node given the node id.
-   * @param {*} varID the variable node id.
-   * @returns the variable node.
+   * @param {number} varID the variable node id.
+   * @returns {*} the variable node.
    */
   findVariableNode(varID) {
     if (!this.variableNodes) return;
@@ -426,8 +423,8 @@ class NTreeTracer extends Tracer {
    * Finds the edge given the source and target nodes.
    * @param {*} source the source node.
    * @param {*} target the target node.
-   * @param {*} isDirected whether the graph is directed or not.
-   * @returns the edge if found. 
+   * @param {boolean} isDirected whether the graph is directed or not.
+   * @returns {*} the edge if found. 
    */
   findEdge(source, target, isDirected = this.isDirected) {
     if (isDirected) {
@@ -445,7 +442,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * Gets the dimensions of the tree 'container'.
-   * @returns the dimensions of the container.
+   * @returns {number[]} the dimensions of the container.
    */
   getRect() {
     const { baseWidth, baseHeight, padding } = this.dimensions;
@@ -468,7 +465,7 @@ class NTreeTracer extends Tracer {
    * This function returns the average size of two nodes.
    * @param {*} leftNode the left node.
    * @param {*} rightNode the right node.
-   * @returns the average size of the two given nodes.
+   * @returns {number} the average size of the two given nodes.
    */
   meanNodeSize(leftNode, rightNode) {
     const leftNodeSize =
@@ -482,9 +479,9 @@ class NTreeTracer extends Tracer {
   /**
    * This function returns the leftmost descendant of a node at the given depth.
    * @param {*} node the node to find descendent of. 
-   * @param {*} lvl the relative level below the node where the function was originally called on.
-   * @param {*} depth the absolute depth where the leftmost descendent is to be found.
-   * @returns the descendent.
+   * @param {number} lvl the relative level below the node where the function was originally called on.
+   * @param {number} depth the absolute depth where the leftmost descendent is to be found.
+   * @returns {*} the descendent.
    */
   getLeftMost(node, lvl, depth) {
     if (lvl >= depth) {
@@ -509,8 +506,8 @@ class NTreeTracer extends Tracer {
    * The purpose is to avoid the problem of small subtrees having a large gap between them and the larger subtrees
    * surrounding them. To avoid this, this function moves the interior subtrees to the right.
    * @param {*} node starting point of the subtree to be cleaned up.
-   * @param {*} lvl the level of the node.
-   * @returns modifies tree in-place
+   * @param {number} lvl the level of the node.
+   * @returns modifies tree in-place.
    */
   apportion(node, lvl) {
 
@@ -589,7 +586,7 @@ class NTreeTracer extends Tracer {
    * Walks through tree in a postorder fashion and assigns preliminary x coordinates to nodes, 
    * along with modifiers that are used to move children of the node to the right.
    * @param {*} node the current node.
-   * @param {*} lvl the current level where the node is at.
+   * @param {number} lvl the current level where the node is at.
   */
   firstWalk(node, lvl) {
 
@@ -640,9 +637,9 @@ class NTreeTracer extends Tracer {
    * Walks through tree in preorder fashion, assigning a final x coordinate to each node based on adding
    * it's preliminary coordinate and the modifier values of all its ancestors.
    * @param {*} node the current node.
-   * @param {*} lvl current level.
-   * @param {*} modsum the current sum of all the modifier values of the ancestors of this node.
-   * @returns true if no errors, false otherwise.
+   * @param {number} lvl current level.
+   * @param {number} modsum the current sum of all the modifier values of the ancestors of this node.
+   * @returns {boolean} true if no errors, false otherwise.
   */
   secondWalk(node, lvl, modsum) {
     let result = true;
@@ -670,8 +667,8 @@ class NTreeTracer extends Tracer {
 
   /**
    * Returns the variable node given the node id.
-   * @param {*} varID the variable node id.
-   * @returns the variable node.
+   * @param {number} varID the variable node id.
+   * @returns {*} the variable node.
    */
   getVariableNode(varID) {
     if (!this.variableNodes) return;
@@ -783,7 +780,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * Add a self loop to a node (i.e., arrow pointing to self).
-   * @param {*} nodeId the node to be self-looped.
+   * @param {number} nodeId the node to be self-looped.
    */
   addSelfLoop(nodeId) {
     if (!this.findNode(nodeId)) {
@@ -801,7 +798,7 @@ class NTreeTracer extends Tracer {
    * A simple node fill to work with the AiA themes.
    * Mapping 1=green, 2=yellow and 3=red under the default theme.
    * @param {*} target the node to be coloured.
-   * @param {*} colourIndex the colour code.
+   * @param {number} colourIndex the colour code.
    */
   fill(target, colourIndex = 0) {
     const node = this.findNode(target);
@@ -880,7 +877,7 @@ class NTreeTracer extends Tracer {
 
   /**
    * Sets the tree 'caption'.
-   * @param {*} text the text to be displayed.
+   * @param {string} text the text to be displayed.
    */
   setText(text) {
     this.text = text;
@@ -889,7 +886,7 @@ class NTreeTracer extends Tracer {
   /**
    * Sets the function name to be displayed in a code style.
    * See example at T234_Insert.
-   * @param {*} name the function name.
+   * @param {string} name the function name.
    */
   setFunctionName(name) {
     this.functionName = name;

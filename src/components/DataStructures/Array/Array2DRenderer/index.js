@@ -79,21 +79,23 @@ class Array2DRenderer extends Renderer {
               <tr>
                 {data[0].map((col, idx) => (
                   <td key={idx}>
-                    {col.variables.map((v) => (
-                      <motion.div
-                        layoutId={v}
-                        key={v}
-                        className={classes(
-                          styles.variable,
-                          styles.top_variable
-                        )}
-                        transition={
-                          motionOn ? { type: 'tween' } : { duration: 0 }
-                        }
-                      >
-                        {v}
-                      </motion.div>
-                    ))}
+                    <div style={{ position: 'absolute', height: '15px', width: '37px' }}>
+                      {col.variables.map((v) => (
+                        <motion.div
+                          layoutId={v}
+                          key={v}
+                          className={classes(
+                            styles.variable,
+                            styles.top_variable
+                          )}
+                          transition={
+                            motionOn ? { type: 'tween' } : { duration: 0 }
+                          }
+                        >
+                          {v}
+                        </motion.div>
+                      ))}
+                    </div>
                   </td>
                 ))}
               </tr>
@@ -110,7 +112,7 @@ class Array2DRenderer extends Renderer {
                 i += 1;
               }
               if (algo === 'prim' || algo == 'unionFind') {
-                i = ' ';
+                return <React.Fragment key={i} />;
               }
               return (
                 <th className={classes(styles.col, styles.index)} key={i}>
@@ -235,10 +237,10 @@ class Array2DRenderer extends Renderer {
           <caption kth-tag="transitive_closure">k = {kth}</caption>
         )}
         {algo == 'unionFind' && ( // bottom centre caption for union find
-          <motion.caption kth-tag="unionFind" className={styles.bottom_caption}>
+          <caption kth-tag="unionFind" className={styles.bottom_caption}>
             <span className={styles.pseudocode_function}>Union</span>
             ({kth})
-          </motion.caption>
+          </caption>
         )}
       </table>
     );
