@@ -51,7 +51,7 @@
             }
 
             .id {
-                fill: var(--graph-node-id-fill);
+                fill: var(--graph-node-circle-stroke);
             }
         }
 
@@ -94,5 +94,11 @@
         dominant-baseline: central;
         text-anchor: middle;
         font-size: 20px;
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
+    }
+
+    .pseudocode_function {
+        fill: var(--right-code-function-font);
+        dominant-baseline: central;
     }
 }

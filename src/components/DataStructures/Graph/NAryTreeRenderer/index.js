@@ -87,6 +87,8 @@ class NAryTreeRenderer extends Renderer {
             isReversed,
             dimensions,
             text,
+            baseOffset,
+            functionName
         } = this.props.data;
         const {
             baseWidth,
@@ -270,9 +272,8 @@ class NAryTreeRenderer extends Renderer {
                         </motion.g>
                     );
                 })}
-                <text
-                    className={classes(styles.text)} x="0" y="-200"
-                >
+                <text className={classes(styles.text)} x="0" y={`${(dimensions.baseHeight / 2) - this.props.data.baseOffset}`}>
+                    <tspan className={styles.pseudocode_function}>{this.props.data.functionName}</tspan>
                     {text}
                 </text>
             </svg>

@@ -13,6 +13,11 @@
     margin-top: 15px;
     font-size: 13px;
     color: var(--array-2d-row-col-value-color);
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+  }
+
+  .pseudocode_function {
+    color: var(--right-code-function-font);
   }
 
   .top_variable {
@@ -21,7 +26,7 @@
     text-align: center;
     margin-bottom: -15px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--array-2d-row-col-value-color);
   }
 
