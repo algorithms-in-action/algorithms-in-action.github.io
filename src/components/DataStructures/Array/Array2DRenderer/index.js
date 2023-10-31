@@ -236,7 +236,8 @@ class Array2DRenderer extends Renderer {
         )}
         {algo == 'unionFind' && ( // bottom centre caption for union find
           <motion.caption kth-tag="unionFind" className={styles.bottom_caption}>
-            {kth}
+            <span className={styles.pseudocode_function}>Union</span>
+            ({kth})
           </motion.caption>
         )}
       </table>

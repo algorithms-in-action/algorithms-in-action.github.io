@@ -154,7 +154,7 @@ export default {
         vis.array.setMotion(false);
         vis.array.assignVariable('n', N_IDX, n);
         vis.array.assignVariable('m', N_IDX, m);
-        vis.array.showKth(`Union(${n}, ${m})`);
+        vis.array.showKth(`${n}, ${m}`);
       },
       [n, m]
     );
@@ -182,7 +182,7 @@ export default {
     chunker.add(
       'if n == m',
       (vis, n, m, root1, root2) => {
-        vis.array.showKth(`Union(${n}, ${m})`);
+        vis.array.showKth(`${n}, ${m}`);
 
         this.highlight(vis.array, N_IDX, root1, COLOUR_CODES.ORANGE);
         this.highlight(vis.array, N_IDX, root2, COLOUR_CODES.ORANGE);
