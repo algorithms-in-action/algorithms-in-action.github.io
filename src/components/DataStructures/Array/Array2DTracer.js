@@ -42,10 +42,10 @@ class Array2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], algo) {
+  set(array2d = [], algo, kth = 1) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = (algo === 'unionFind') ? '' : '1'; // initial kth value on load
+    this.kth = kth;
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     super.set();
