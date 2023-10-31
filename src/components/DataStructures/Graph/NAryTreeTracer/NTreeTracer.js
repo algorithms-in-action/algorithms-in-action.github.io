@@ -110,7 +110,7 @@ class NTreeTracer extends Tracer {
     if (this.realNodes.length === 0) {
       return null;
     }
-    // create treenode instances and map them by their id
+    // create tree node instances and map them by their id
     this.realNodes.forEach((node) => {
       let treeNode;
       if (this.variableNodes) {
@@ -257,12 +257,12 @@ class NTreeTracer extends Tracer {
 
   /**
    * Adds a node to the tree.
-   * @param {*} id the id of the node to be added
-   * @param {*} value the value of the node to be added
-   * @param {*} shape the shape of the node to be added (circle or square)
-   * @param {*} fill the colour of the node to be added (default is white, but see fill)
-   * @param {*} x default is 0, will be updated during layout
-   * @param {*} y default is 0, will be updated during layout
+   * @param {*} id the id of the node to be added.
+   * @param {*} value the value of the node to be added.
+   * @param {*} shape the shape of the node to be added (circle or square).
+   * @param {*} fill the colour of the node to be added (default is white, but see fill).
+   * @param {*} x default is 0, will be updated during layout.
+   * @param {*} y default is 0, will be updated during layout.
    * @param {*} key
    */
   addNode(
@@ -353,7 +353,6 @@ class NTreeTracer extends Tracer {
    * Adds an edge to the tree given the source and target nodes.
    * @param {*} source the source node.
    * @param {*} target the target node.
-   * @returns 
    */
   addEdge(source, target) {
     if (this.findEdge(source, target)) return;
@@ -463,10 +462,10 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * This function returns the average size of two nodes
-   * @param {*} leftNode 
-   * @param {*} rightNode 
-   * @returns 
+   * This function returns the average size of two nodes.
+   * @param {*} leftNode the left node.
+   * @param {*} rightNode the right node.
+   * @returns the average size of the two given nodes.
    */
   meanNodeSize(leftNode, rightNode) {
     const leftNodeSize =
@@ -478,11 +477,11 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * This function returns the leftmost descendant of a node at a certain depth provided  
-   * @param {*} node 
-   * @param {*} lvl refers to the relative level below the node where the function was originally called on
-   * @param {*} depth 
-   * @returns 
+   * This function returns the leftmost descendant of a node at the given depth.
+   * @param {*} node the node to find descendent of. 
+   * @param {*} lvl the relative level below the node where the function was originally called on.
+   * @param {*} depth the absolute depth where the leftmost descendent is to be found.
+   * @returns the descendent.
    */
   getLeftMost(node, lvl, depth) {
     if (lvl >= depth) {
@@ -503,12 +502,12 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * Cleans up positioning of small subtrees that are siblings of each other
+   * Cleans up positioning of small subtrees that are siblings of each other.
    * The purpose is to avoid the problem of small subtrees having a large gap between them and the larger subtrees
    * surrounding them. To avoid this, this function moves the interior subtrees to the right.
-   * @param {*} node 
-   * @param {*} lvl 
-   * @returns 
+   * @param {*} node starting point of the subtree to be cleaned up.
+   * @param {*} lvl the level of the node.
+   * @returns modifies tree in-place
    */
   apportion(node, lvl) {
 
@@ -562,14 +561,14 @@ class NTreeTracer extends Tracer {
             tempPtr = tempPtr.getLeftSibling();
           }
         } else {
-          // don't need to move anything moving needs to be done by ancestor, 
-          // because the ancestor neighbour and ancestor leftmost aren't siblings
+          // don't need to move anything, as movement should be done by ancestor 
+          // ancestor neighbour and ancestor leftmost aren't siblings
 
           return;
         }
       }
       // determine leftmost descendant of the current node at the level below, and compare 
-      // the positioning of it against it's neighbour
+      // the positioning of it against its neighbour
       compareDepth++;
       if (leftmost.children.length === 0) {
         leftmost = this.getLeftMost(node, 0, compareDepth);
@@ -584,14 +583,14 @@ class NTreeTracer extends Tracer {
   }
 
   /** 
-   * Walks through tree in a postorder fashion and assigns preliminary x coordinates to nodes, along with modifiers
-   * that are used to move children of the node to the right
-   * @param {*} node the current node
-   * @param {*} lvl the current level where the node is at 
+   * Walks through tree in a postorder fashion and assigns preliminary x coordinates to nodes, 
+   * along with modifiers that are used to move children of the node to the right.
+   * @param {*} node the current node.
+   * @param {*} lvl the current level where the node is at.
   */
   firstWalk(node, lvl) {
 
-    // check if the node isa leaf node
+    // check if the node is a leaf node
     if (node.children.length === 0) {
 
       const leftSibling = node.getLeftSibling();
@@ -628,7 +627,7 @@ class NTreeTracer extends Tracer {
         node.modifier = node.prelimx - midpoint;
         this.apportion(node, lvl);
       } else {
-        // otherwise if it's got no left sibling we simply place it in the middle of it's children as normal
+        // otherwise, if it has no left sibling we simply place it in the middle of its children as normal
         node.prelimx = midpoint;
       }
     }
@@ -636,11 +635,11 @@ class NTreeTracer extends Tracer {
 
   /** 
    * Walks through tree in preorder fashion, assigning a final x coordinate to each node based on adding
-   * it's preliminary coordinat and the modifier values of all it's ancestors
-   * @param {*} node the current node 
-   * @param {*} lvl current level
-   * @param {*} modsum the current sum of all the modifier values of the ancestors of this node
-   * @returns a boolean, true if no errors, false if errors
+   * it's preliminary coordinate and the modifier values of all its ancestors.
+   * @param {*} node the current node.
+   * @param {*} lvl current level.
+   * @param {*} modsum the current sum of all the modifier values of the ancestors of this node.
+   * @returns true if no errors, false otherwise.
   */
   secondWalk(node, lvl, modsum) {
     let result = true;
@@ -679,11 +678,11 @@ class NTreeTracer extends Tracer {
   /**
    * This function converts the internal node representation which is covered by the NAryTree class,
    * and converts it into a set of nodes that can be rendered, adjusting the coordinates if the current tree
-   * is a 2-3-4 tree, including accounting for the tree rising in size rather than falling
+   * is a 2-3-4 tree, including accounting for the tree rising in size rather than falling.
    */
   translateCoords() {
     const flattenedLevels = [].concat(...this.levels);
-    let offset = 308 - (this.levels.length - 2) * 100;
+    let offset = 308 - (this.levels.length - 2) * 100; // for 2-3-4 trees/variable nodes to grow upwards (as top-down implementation)
 
     flattenedLevels.forEach((levelNode) => {
       if (!this.variableNodes) {
@@ -727,7 +726,7 @@ class NTreeTracer extends Tracer {
               valueX = levelNode.x - halfWidth + (i * nodeRadius * 2) + nodeRadius;
             }
             nodeToUpdate.x = valueX;
-            nodeToUpdate.y = levelNode.y + (offset);
+            nodeToUpdate.y = levelNode.y + (offset); // would need to adjust if don't want variable node tree growing from base
           });
         }
       }
@@ -735,8 +734,8 @@ class NTreeTracer extends Tracer {
   }
 
   /**
-   * Determines coordinates of every node so that the tree can be rendered in an aesthetic fashion with even gaps
-   * between nodes and levels
+   * Determines coordinates of every node so that the tree can be rendered 
+   * in an aesthetic fashion, with even gaps between nodes and levels.
    */
   layoutNTree() {
     this.callLayout = { method: this.layoutNTree, args: arguments };
@@ -871,6 +870,10 @@ class NTreeTracer extends Tracer {
     });
   }
 
+  /**
+   * Sets the tree 'caption'.
+   * @param {*} text the text to be displayed.
+   */
   setText(text) {
     this.text = text;
   }

@@ -16,18 +16,18 @@ export default {
     };
   },
 
-  // Highlight the current value.
+  // highlights the current value
   highlightValue(tree, value, colour) {
     this.unhighlightValue(tree, value);
     tree.fill(value, colour);
   },
 
-  // Unhighlight the current value.
+  // unhighlights the current value
   unhighlightValue(tree, value) {
     tree.unfill(value);
   },
 
-  // Highlight an entire 2-3-4 node.
+  // highlight an entire variable node
   highlightNode(tree, node, colour) {
     this.unhighlightNode(tree, node);
     for (let i = 0; i < node.relatedNodeIDs.length; i++) {
@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  // Unhighlight an entire 2-3-4 node.
+  // unhighlight an entire variable node
   unhighlightNode(tree, node) {
     for (let i = 0; i < node.relatedNodeIDs.length; i++) {
       let value = node.relatedNodeIDs[i];
@@ -44,7 +44,14 @@ export default {
     }
   },
 
-  // return tree and node id of inserted value. expands 4-nodes on the way
+  /**
+   * Returns the tree and node id of inserted value, expanding 4-nodes on the way.
+   * @param {*} chunker 
+   * @param {*} value the value to be inserted into the tree.
+   * @param {*} tree the tree.
+   * @param {*} newID 'global' counter for variable node id. 
+   * @returns the tree and updated variable node id. 
+   */
   traverseAndInsert(chunker, value, tree, newID) {
     chunker.add('if t = Empty');
     chunker.add('else: T234_Insert(t, k)');
@@ -196,6 +203,7 @@ export default {
     return { nTree: tree, id: newID };
   },
 
+  // helper function for node splitting
   formParentThreeNode(parent, child, child1, child2) {
     let parentnodeIDs = parent.getIDs();
     parent.clearRelatedNodeIDs();
@@ -208,6 +216,7 @@ export default {
     return childIdx;
   },
 
+  // helper function for node splitting
   formParentFourNode(parent, child, child1, child2) {
     let parentnodeIDs = parent.getIDs();
     parent.clearRelatedNodeIDs();
@@ -221,13 +230,20 @@ export default {
     return childIdx;
   },
 
+  /**
+   * Creates a new variable node and increments the id.
+   * @param {*} id the current 'global' id counter. 
+   * @returns the new node and the updated id.
+   */
   createNodeAndIncrement(id) {
+    // easiest way to keep variable node ids unique is to increment some counter
     if (id === null) id = 1;
     const node = new VariableTreeNode(id);
     id++;
     return { node, id };
   },
 
+  // helper function to visualise node splitting
   handleChunkerAdd(
     vis,
     ParentID,
@@ -322,7 +338,6 @@ export default {
   },
 
   run(chunker, { nodes }) {
-    // node?
     if (nodes === null || nodes.length === 0) return;
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 

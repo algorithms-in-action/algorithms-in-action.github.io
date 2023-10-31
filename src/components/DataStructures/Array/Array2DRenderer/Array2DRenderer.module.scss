@@ -7,6 +7,7 @@
   border-collapse: collapse;
 
   .bottom_caption {
+    // centres 'caption' (kth) below array
     caption-side: bottom;
     text-align: center;
     margin-top: 15px;
@@ -15,6 +16,7 @@
   }
 
   .top_variable {
+    // for indices across the top of the array
     caption-side: top;
     text-align: center;
     margin-bottom: -15px;
@@ -89,6 +91,7 @@
       }
 
       &.variableOrange {
+        // more of a yellow, really
         background-color: var(--simple-fill-var-orange);
 
         span {

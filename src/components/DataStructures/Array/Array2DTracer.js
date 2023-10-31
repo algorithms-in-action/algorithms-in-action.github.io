@@ -45,9 +45,9 @@ class Array2DTracer extends Tracer {
   set(array2d = [], algo) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = (algo === 'unionFind') ? '' : '1';
-    this.motionOn = true;
-    this.hideArrayAtIdx = null;
+    this.kth = (algo === 'unionFind') ? '' : '1'; // initial kth value on load
+    this.motionOn = true; // whether to use animation
+    this.hideArrayAtIdx = null; // to hide array at given index
     super.set();
   }
 
@@ -92,6 +92,8 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  // a simple fill function based on aia themes
+  // where green=1, yellow=2, and red=3
   fill(sx, sy, ex = sx, ey = sy, c = 0) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
@@ -100,6 +102,7 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  // unfills the given element (used with fill)
   unfill(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
@@ -153,6 +156,11 @@ class Array2DTracer extends Tracer {
     this.data = newData;
   }
 
+  /**
+   * Whether to use animation. Could be used to immediately update the state.
+   * For instance, where there are two 'distinct' operation and the sliding motion complicates.
+   * @param {*} bool 
+   */
   setMotion(bool = true) {
     this.motionOn = bool;
   }
@@ -203,10 +211,20 @@ class Array2DTracer extends Tracer {
     return this.kth;
   }
 
+  /**
+   * Hides the array at the given index.
+   * @param {*} index the index of the array to hide.
+   */
   hideArrayAtIndex(index) {
     this.hideArrayAtIdx = index;
   }
 
+  /**
+   * Updates the value at the given position of the array.
+   * @param {*} x the row index.
+   * @param {*} y the column index.
+   * @param {*} newValue the new value.
+   */
   updateValueAt(x, y, newValue) {
     if (!this.data[x] || !this.data[x][y]) {
       return;

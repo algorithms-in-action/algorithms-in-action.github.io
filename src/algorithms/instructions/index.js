@@ -88,7 +88,7 @@ const unionFindInstructions = [{
     `Select nodes to union by entering a list of union operations in the left input box and click ${KEY_UF_UNION}.`,
     `Click ${KEY_UF_PC_ON} or ${KEY_UF_PC_OFF} to toggle path compression.`,
     `Click on ${KEY_PLAY}, ${KEY_PAUSE}, or the ${KEY_BACK} and ${KEY_FORWARD} arrows to watch the algorithm run.`,
-    `Enter a node in the right input box and click ${KEY_FIND} and then ${KEY_PLAY} to search for the node's set representative.`,
+    `Enter a node in the right input box and click ${KEY_UF_FIND} and then ${KEY_PLAY} to search for the node's set representative.`,
   ]
 }];
 
