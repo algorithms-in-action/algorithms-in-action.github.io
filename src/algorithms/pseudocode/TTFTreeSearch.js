@@ -46,30 +46,30 @@ export default parse(`
     \\Code{
     Find_child 
     // Find child c of root node t that may contain key k
-    if c is a two-node \\B if c is a two-node
+    if t is a two-node \\B if t is a two-node
     \\In{
-        if k < t.key1 \\B if k < c.key1: if c is a two-node
+        if k < t.key1 \\B if k < t.key1: if t is a two-node
         \\In{
-            c <- t.child1 \\B c <- c.child1: if c is a two-node
+            c <- t.child1 \\B c <- t.child1: if t is a two-node
         \\In}
-        else \\B else: if c is a two-node
+        else \\B else: if t is a two-node
         \\In{
-            c <- t.child2 \\B c <- c.child2: if c is a two-node
+            c <- t.child2 \\B c <- t.child2: if t is a two-node
         \\In}
     \\In}
-    else if t is a three-node \\B else: MoveToChild
+    else if t is a three-node \\B else if t is a three-node
     \\In{
-        if k < t.key1 \\B if k < c.key1: else: MoveToChild
+        if k < t.key1 \\B if k < t.key1: else if t is a three-node
         \\In{
-            c <- t.child1 \\B c <- c.child1: else: MoveToChild
+            c <- t.child1 \\B c <- t.child1: else if t is a three-node
         \\In}
-        else if k < t.key2 \\B else if k < c.key2: else: MoveToChild
+        else if k < t.key2 \\B else if k < t.key2: else if t is a three-node
         \\In{
-            c <- t.child2 \\B c <- c.child2: else: MoveToChild
+            c <- t.child2 \\B c <- t.child2: else if t is a three-node
         \\In}
-        else \\B else: else: MoveToChild
+        else \\B else: else if t is a three-node
         \\In{
-            c <- t.child3 \\B c <- c.child3
+            c <- t.child3 \\B c <- t.child3: else if t is a three-node
         \\In}
     \\In}
     else // t is a four-node \\B else: Find_child
