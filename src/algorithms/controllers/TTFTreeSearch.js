@@ -12,6 +12,7 @@ export default {
   initVisualisers({ visualiser }) {
     // removing highlights
     visualiser.tree.instance.unfillAll();
+    visualiser.tree.instance.setFunctionName(null);
 
     return {
       tree: {
