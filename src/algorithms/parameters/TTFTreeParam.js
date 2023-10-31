@@ -20,8 +20,9 @@ const SEARCH = 'Search';
 const DEFAULT_NODES = genUniqueRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 
-const INSERTION_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4. Digits should be unique.';
+const INSERTION_EXAMPLE = 'Please follow the example provided: 1,2,3,4. Values should also be unique.';
 const SEARCH_EXAMPLE = 'Please follow the example provided: 16.';
+const NO_TREE_ERROR = 'Please build a tree before running search.';
 
 function TTFTreeParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -49,27 +50,30 @@ function TTFTreeParam() {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    if (!(isNaN(inputValue))) {
-      const target = {
-        arg1: parseInt(inputValue, 10)
-      };
-      const visualiser = algorithm.chunker.visualisers;
-      dispatch(GlobalActions.RUN_ALGORITHM, {
-        name: 'TTFTree',
-        mode: 'search',
-        visualiser,
-        target,
-      });
-      setMessage(successParamMsg(ALGORITHM_NAME));
+
+    if (singleNumberValidCheck(inputValue)) {
+      const target = parseInt(inputValue, 10);
+
+      if (
+        Object.prototype.hasOwnProperty.call(algorithm, 'visualisers')
+        && !algorithm.visualisers.tree.instance.isEmpty()
+      ) {
+        const visualiser = algorithm.chunker.visualisers;
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'TTFTree',
+          mode: 'search',
+          visualiser,
+          target,
+        });
+        setMessage(successParamMsg(ALGORITHM_NAME));
+      } else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, NO_TREE_ERROR));
+      }
     }
     else {
       setMessage(errorParamMsg(ALGORITHM_NAME, SEARCH_EXAMPLE));
-
     }
-
   };
-
-
 
   return (
     <>
