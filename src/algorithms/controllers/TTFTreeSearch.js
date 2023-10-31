@@ -1,5 +1,6 @@
 import { TTFExp } from '../explanations';
 import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
+import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
 import TTFTreeInsertion from './TTFTreeInsertion';
 import { COLOUR_CODES } from './unionFindUnion';
 
@@ -7,7 +8,9 @@ import { COLOUR_CODES } from './unionFindUnion';
 export default {
   explanation: TTFExp,
 
+  // initialising the visualiser from insert
   initVisualisers({ visualiser }) {
+    // removing highlights
     visualiser.tree.instance.unfillAll();
 
     return {
@@ -18,6 +21,13 @@ export default {
     };
   },
 
+  /**
+   * Finding the child node that may contain the value.
+   * @param {*} chunker 
+   * @param {*} node the node to search for the child.
+   * @param {*} value the value to search for.
+   * @returns the node, if exists, that may contain the value, else null.
+   */
   findChild(chunker, node, value) {
     if (node === null) return null;
     const nodeLength = node.getNodeLength();
@@ -35,7 +45,7 @@ export default {
         return this.childOrNull(chunker, 'c <- c.child2: if c is a two-node', values[0], children, 1);
       }
     }
-    chunker.add('else: MoveToChild');
+    chunker.add('else: MoveToChild'); // if three node
     if (nodeLength === 2) {
       chunker.add('if k < c.key1: else: MoveToChild',
         (vis, node, value1) => {
@@ -60,7 +70,7 @@ export default {
         return this.childOrNull(chunker, 'c <- c.child3', values[1], children, 2);
       }
     }
-    // for search specifically:
+    // for search specifically (as insert splits 4 nodes, rather than searches them):
     chunker.add('else: Find_child');
     if (nodeLength === 3) {
       chunker.add('if k < t.key1: else: Find_child',
@@ -97,6 +107,16 @@ export default {
     }
   },
 
+  /**
+   * Helper function for findChild. 
+   * Adds bookmark and highlights the child node if it exists, else returns null.
+   * @param {*} chunker 
+   * @param {*} bookmark 
+   * @param {*} nodeValue the value of the parent node.
+   * @param {*} children the children of the parent node.
+   * @param {*} index the index of the child node within parent.
+   * @returns 
+   */
   childOrNull(chunker, bookmark, nodeValue, children, index) {
     if (children.length === 0) {
       chunker.add(bookmark);
@@ -113,7 +133,14 @@ export default {
     }
   },
 
-  // returns if key is found
+  /**
+   * Helper function for search.
+   * Returns the node if it contains the value being searched for, else null.
+   * @param {*} chunker
+   * @param {*} value the value to search for.
+   * @param {*} node the node to search in.
+   * @returns the node if it contains the value, else null.
+   */
   returnIfKeyInNode(chunker, value, node) {
     chunker.add('if t is a two-node: Return_if_key_in_node',
       (vis, node) => {
@@ -164,7 +191,13 @@ export default {
     return null; // just in case
   },
 
-  // search for given value in tree
+  /**
+   * Searches the tree for the value. 
+   * Outputs the node if found, else outputs NotFound.
+   * @param {*} chunker
+   * @param {*} tree the (root of the) tree to search in.
+   * @param {*} value the value to search for.
+   */
   search(chunker, tree, value) {
     let node = tree;
     let prev;
@@ -172,9 +205,9 @@ export default {
     chunker.add('while t not Empty');
     while (node !== null) {
 
-      if (this.returnIfKeyInNode(chunker, value, node)) break;
-      prev = node;
-      node = this.findChild(chunker, node, value);
+      if (this.returnIfKeyInNode(chunker, value, node)) break; // root of subtree contains value
+      prev = node; // for highlighting if not found
+      node = this.findChild(chunker, node, value); // find child that may contain value
 
     }
 
@@ -187,15 +220,22 @@ export default {
 
   },
 
-  // restoring tree internal representation
+  /**
+   * Restores the internal tree representation given the nodes and edges.
+   * @param {*} realNodes the logical nodes in the tree.
+   * @param {*} realEdges the logical edges in the tree.
+   * @returns the root of the tree.
+   */
   initTreeReturnRoot(realNodes, realEdges) {
     let tree = {};
 
+    // creating the variable tree nodes
     let nodes = realNodes.filter((node) => node.id !== 0)
     nodes.forEach((node) => {
       tree[node.id] = new VariableTreeNode(node.id);
     });
 
+    // adding the visual nodes to the logical variable nodes
     nodes.forEach((node) => {
       const treeNode = tree[node.id];
       node.nodeIDs.forEach((nodeID) => {
@@ -203,6 +243,7 @@ export default {
       });
     });
 
+    // adding the edges to the logical variable nodes
     realEdges.forEach((edge) => {
       const parentTreeNode = tree[edge.source];
       const childTreeNode = tree[edge.target];
@@ -213,6 +254,7 @@ export default {
       }
     });
 
+    // finding the root of the tree
     let root = Object.values(tree).filter((node) => node.parent === null)[0];
 
     // remove parent relationship, otherwise run into max stack error when passing node into chunker
@@ -223,18 +265,24 @@ export default {
     return root;
   },
 
+  /**
+   * Running the algorithm.
+   * @param {*} chunker 
+   * @param {*} param1 the insertion visualiser and value to search for.
+   */
   run(chunker, { visualiser, target }) {
     let { 'realNodes': realNodes, 'realEdges': realEdges, 'nodes': renderedNodes, 'edges': renderedEdges } = visualiser.tree.instance.extractNTree();
 
-    // restoring tree visualiser
+    // restoring the tree visualiser
     chunker.add('T234_Search(t, k)', (vis) => {
       vis.tree.setNTree(realNodes, realEdges, renderedNodes, renderedEdges);
       vis.tree.layout();
     },);
 
+    // restoring the tree internal representation
     let root = this.initTreeReturnRoot(realNodes, realEdges);
 
-    // search tree
+    // searching tree
     this.search(chunker, root, target.arg1);
   },
 

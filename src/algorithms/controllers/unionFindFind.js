@@ -50,6 +50,7 @@ export default {
 
   },
 
+  // getting the parent array from the visualiser
   extractParentArray(visualiser) {
     let parentElems = visualiser.array.instance.data[1];
     let parentArray = parentElems.map((element) => parseInt(element.value, 10));

@@ -20,13 +20,18 @@ export const N_ARRAY = ['i', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const N_GRAPH = ['0', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 let isRankVisible = false;
-export function unionFindChunkerRefresh(algorithm) {
+
+/**
+ * Updates the rank array visibility when user expands code panel.
+ * @param {*} algorithm the state of the algorithm.
+ */
+export function unionFindToggleRank(algorithm) {
   if (!algorithm || algorithm.id.name != 'unionFind') return;
   let vis = algorithm.chunker.visualisers;
   let isVisible =
     algorithm.collapse.unionFind.union.Maybe_swap ||
-    algorithm.collapse.unionFind.union.Adjust_rank;
-  vis.array.instance.hideArrayAtIndex(isVisible ? null : RANK_IDX);
+    algorithm.collapse.unionFind.union.Adjust_rank; // determines whether rank shown in code panel
+  vis.array.instance.hideArrayAtIndex(isVisible ? null : RANK_IDX); // hiding the rank array
   isRankVisible = isVisible;
 }
 
@@ -94,11 +99,11 @@ export default {
   },
 
   /**
-   * Highlight the current node.
-   * @param {*} visObj
-   * @param {*} index1
-   * @param {*} index2
-   * @param {*} colour
+   * Highlights the object given colour.
+   * @param {*} visObj the visualiser object (e.g., vis.array).
+   * @param {*} index1 either the index row of the array or the node of the tree.
+   * @param {*} index2 the index column if an array.
+   * @param {*} colour the colour to highlight.
    */
   highlight(visObj, index1, index2, colour) {
     if (visObj.key === 'array') {
@@ -112,11 +117,11 @@ export default {
   },
 
   /**
-   * Unhighlight the current node.
-   * @param {*} visObj
-   * @param {*} index1
-   * @param {*} index2
-   * @param {*} deselectForRow
+   * Unhighlights the given object.
+   * @param {*} visObj the visualiser object.
+   * @param {*} index1 either the index row of the array or the node of the tree.
+   * @param {*} index2 the index column if an array.
+   * @param {*} deselectForRow if array, whether to deselect the entire row.
    */
   unhighlight(visObj, index1, index2, deselectForRow = false) {
     if (visObj.key === 'array') {
@@ -134,12 +139,12 @@ export default {
 
   /**
    * Union two nodes together.
-   * @param {Chunker} chunker The chunker object.
-   * @param {Array} parentArr The parent array.
-   * @param {Array} rankArr The rank array.
-   * @param {Number} n The first node.
-   * @param {Number} m The second node.
-   * @param {Boolean} pathCompression Whether to use path compression.
+   * @param {Chunker} chunker
+   * @param {Array} parentArr the parent array.
+   * @param {Array} rankArr the rank array.
+   * @param {Number} n the first node to union.
+   * @param {Number} m the second node to union.
+   * @param {Boolean} pathCompression whether to use path compression.
    */
   union(chunker, parentArr, rankArr, n, m, pathCompression) {
     // initialising current union operation
@@ -154,6 +159,7 @@ export default {
       [n, m]
     );
 
+    // finding representative of first node
     let root1 = unionFindFind.find(
       chunker,
       parentArr,
@@ -163,6 +169,7 @@ export default {
       pathCompression
     );
 
+    // finding representative of second node
     let root2 = unionFindFind.find(
       chunker,
       parentArr,
@@ -198,7 +205,6 @@ export default {
       return;
     }
 
-    // 'if rank[n] > rank[m]'
     chunker.add(
       'if rank[n] > rank[m]',
       (vis, root1, root2) => {
@@ -211,7 +217,7 @@ export default {
     );
 
     if (rankArr[root1] > rankArr[root2]) {
-      // swap n and m
+      // swap n and m so smaller subtree is joined to larger
       const tempRoot1 = root1;
       root1 = root2;
       root2 = tempRoot1;
@@ -240,6 +246,7 @@ export default {
       [root1, root2]
     );
 
+    // joining the two nodes
     parentArr[root1] = root2;
 
     chunker.add(
@@ -275,6 +282,7 @@ export default {
       [root1, root2]
     );
 
+    // updating rank
     if (rankArr[root1] == rankArr[root2]) {
       rankArr[root2] += 1;
       rankArr[root1] = null;
