@@ -100,4 +100,4 @@ export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
-export const TTFInstruction = stringInstructions;
+export const TTFInstruction = bstInstructions;
