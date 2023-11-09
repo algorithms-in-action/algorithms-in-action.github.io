@@ -81,7 +81,7 @@ class GraphTracer extends Tracer {
     {
       if(maxCoord < (i + 1) * 10)
       {
-        const radiusIncrease = (i - 1) * 4
+        const radiusIncrease = (i - 1) * 4;
         this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius + radiusIncrease;
         return;
       }

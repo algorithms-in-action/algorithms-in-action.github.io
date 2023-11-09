@@ -173,35 +173,39 @@ class GraphRenderer extends Renderer {
 
   /*
    * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
+   * REMOVE STEPSIZE DEFAULT VARIABLE AND CREATE A VARIABLE IN THE FILE FOR THIS!!!
   */
   calculateAxisScale(maxScale, stepSize = 30) {
     const trueMax = Math.max(maxScale.x, maxScale.y) / stepSize;  // Maximum individual coordinate value.
 
     // Determine scale up to multiple of 10.
     for(let i = 1; i < 10; ++i){
-      const maxCoord = 10 * i;
+      const increment = 10;
+      const maxCoord = increment * i;
       if(trueMax < maxCoord)
       {
         return maxCoord * stepSize;
       }
     }
 
-    const maxCoord = 100;
-    return maxCoord * stepSize;
+    const maxCoordCap = 100;
+    return maxCoordCap * stepSize;
   }
 
   /*
    * Calculate value increment of axis coordinate labels.
   */
-  calculateIncrement(axisScale, stepSize = 30) {
+  calculateTickIncrement(axisScale, stepSize = 30) {
     const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
     if(maxCoord <= 20)
     {
-      return 1;
+      const increment = 1;
+      return increment;
     }
     else if(maxCoord <= 50)
     {
-      return 5
+      const increment = 5;
+      return increment;
     }
     const maxIncrement = 10;
     return maxIncrement;
@@ -215,7 +219,8 @@ class GraphRenderer extends Renderer {
     for(let i = 1; i < 10; ++i) {
       if(maxCoord <= i * 10)
       {
-        const multiplier = 1 + ((i - 1) * 0.2);
+        const increment = 0.2;
+        const multiplier = 1 + ((i - 1) * increment);
         return multiplier;
       }
     }
@@ -229,7 +234,7 @@ class GraphRenderer extends Renderer {
 
     // Scaling variables.
     const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
-    const increment = this.calculateIncrement(axisScale);  // Calculate value increment of axis coordinate labels.
+    const increment = this.calculateTickIncrement(axisScale);  // Calculate value increment of axis coordinate labels.
     const labelMultiplier = this.calculateLabelSizeMultiplier(axisScale);  // Multiplier for size of all labels.
 
     const scales = this.computeScales(0, axisScale, axisCenter, undefined, undefined, increment); // list of scales
