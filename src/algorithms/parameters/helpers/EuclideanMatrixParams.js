@@ -14,7 +14,9 @@ import {
   makeRandomCoordinateData,
   singleNumberValidCheck,
   errorParamMsg,
-  successParamMsg, matrixValidCheck,
+  successParamMsg, 
+  matrixValidCheck, 
+  makeSparseEdgeData
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -62,12 +64,13 @@ function EuclideanMatrixParams({
   const { dispatch } = useParam();
 
   // First table.
-  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 4, 5));
-  const [originalData1, setOriginalData1] = useState(data1);
+  const [coordinateData, setCoordinateData] = useState(() => makeRandomCoordinateData(size, 4, 5));
+  const [originalCoordinateData, setOriginalCoordinateData] = useState(coordinateData);
 
   // Second Table
-  const [data2, setData2] = useState(() => makeData(size, 0, 1, symmetric));
-  const [originalData2, setOriginalData2] = useState(data2);
+  //const [edgeData, setEdgeData] = useState(() => makeData(size, 0, 1, symmetric));
+  const [edgeData, setEdgeData] = useState(() => makeSparseEdgeData(size));
+  const [originalEdgeData, setOriginalEdgeData] = useState(edgeData);
 
   const [buttonMessage, setButtonMessage] = useState('Start');
   
@@ -77,16 +80,17 @@ function EuclideanMatrixParams({
 
   // Reset first table when the size changes
   useEffect(() => {
-    const newData1 = makeRandomCoordinateData(size, 4, 5);
-    setData1(newData1);
-    setOriginalData1(newData1);
+    const newCoordinateData = makeRandomCoordinateData(size, 4, 5);
+    setCoordinateData(newCoordinateData);
+    setOriginalCoordinateData(newCoordinateData);
   }, [size, min, max, symmetric]);
 
   // Reset second table when the size changes
   useEffect(() => {
-    const newData2 = makeData(size, 0, 1, symmetric);
-    setData2(newData2);
-    setOriginalData2(newData2);
+    // const newEdgeData = makeData(size, 0, 1, symmetric);
+    const newEdgeData = makeSparseEdgeData(size);
+    setEdgeData(newEdgeData);
+    setOriginalEdgeData(newEdgeData);
   }, [size, 1, 1, symmetric]);
 
   useEffect(() => {
@@ -97,8 +101,8 @@ function EuclideanMatrixParams({
   // Reset the matrix to the inital set
   const resetData = () => {
     setMessage(null);
-    setData1(originalData1);
-    setData2(originalData2);
+    setCoordinateData(originalCoordinateData);
+    setEdgeData(originalEdgeData);
   };
 
   const updateTableSize = (newSize) => {
@@ -121,7 +125,7 @@ function EuclideanMatrixParams({
   // the rowIndex, columnId and new value to update the
   // original data
   const updateData1 = (rowIndex, columnId, value) => {
-    setData1((old) => old.map((row, index) => {
+    setCoordinateData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -133,7 +137,7 @@ function EuclideanMatrixParams({
   };
 
   const updateData2 = (rowIndex, columnId, value) => {
-    setData2((old) => old.map((row, index) => {
+    setEdgeData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -147,7 +151,7 @@ function EuclideanMatrixParams({
   // Get and parse the coordinates of each node
   const getCoordinateMatrix = () => {
     const coords = [];
-    data1.forEach((row) => {
+    coordinateData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         const maxValue = 100;  // Maximum value a coordinate can take.
@@ -168,7 +172,7 @@ function EuclideanMatrixParams({
   const getEdgeValueMatrix = () => {
 
     const adjacent = [];
-    data2.forEach((row) => {
+    edgeData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         if (singleNumberValidCheck(value)) {
@@ -286,12 +290,12 @@ function EuclideanMatrixParams({
 
       <div className="coord">
         <text className="titles"> Coordinates (X,Y) </text>
-        <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
+        <Table columns={columns1} data={coordinateData} updateData={updateData1} algo={name} />
       </div>
       
       <div className="edge">
         <text className="titles"> Edges (0 or 1)</text>
-        <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
+        <Table columns={columns2} data={edgeData} updateData={updateData2} algo={name} />
       </div>
       
     </div>
