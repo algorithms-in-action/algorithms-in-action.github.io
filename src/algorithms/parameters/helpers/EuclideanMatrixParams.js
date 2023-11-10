@@ -107,6 +107,11 @@ function EuclideanMatrixParams({
 
   // Sets table size.
   const updateTableSize = (newSize) => {
+    const maxSize = 30;
+    if(newSize > maxSize)
+    {
+      return;
+    }
     setMessage(null);
     setSize(newSize);
   };
