@@ -119,7 +119,6 @@ export const makeColumnArray = (len) => {
  * Return XY columns for new params user interface
  * @return array of object
  */
-
 export const makeColumnCoords = () => {
   const arr = [];
   arr.push({Header: 'X', accessor: `col${0}`,});

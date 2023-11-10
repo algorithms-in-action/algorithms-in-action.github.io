@@ -74,7 +74,7 @@ function EuclideanMatrixParams({
 
   const [buttonMessage, setButtonMessage] = useState('Start');
   
-  // With the buton toggle Euclidean/Manhattan
+  // With the button toggle Euclidean/Manhattan
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
@@ -105,11 +105,13 @@ function EuclideanMatrixParams({
     setEdgeData(originalEdgeData);
   };
 
+  // Sets table size.
   const updateTableSize = (newSize) => {
     setMessage(null);
     setSize(newSize);
   };
 
+  // Changes edge calculation for euclidean distance to manhattan distance.
   const changeCalcMethod = (state) => {
     setMessage(null);
     setCalcMethod(state);
@@ -234,7 +236,7 @@ function EuclideanMatrixParams({
     return edges;
   };
 
-  // Run the animation
+  // Dispatches run function of algorithm, passing required information as parameters.
   const handleSearch = () => {
     closeInstructions(); // remove instruction
     setMessage(null);

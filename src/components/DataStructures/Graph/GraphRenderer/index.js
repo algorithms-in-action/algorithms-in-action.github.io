@@ -65,6 +65,8 @@ class GraphRenderer extends Renderer {
     this.elementRef = React.createRef();
     this.selectedNode = null;
 
+    this.defaultStepSize = 30;
+
     this.togglePan(true);
     this.toggleZoom(true);
   }
@@ -97,6 +99,16 @@ class GraphRenderer extends Renderer {
     }
   }
 
+  /**
+ * Change the axis label size dynamically.
+ * @param {string} newSize - The new font size for the axis label.
+ */
+  setAxisLabelSize(newSize) {
+    const root = document.documentElement;
+    root.style.setProperty('--axis-label-size', `${newSize}px`);
+    root.style.setProperty('--edge-label-size', `${newSize}px`);
+  }
+
   computeCoords(e) {
     const svg = this.elementRef.current;
     const s = svg.createSVGPoint();
@@ -108,7 +120,8 @@ class GraphRenderer extends Renderer {
 
 
   /**
-   * Compute the max x and y from nodes coordinates for auto scalling
+   * Compute the max x and y from nodes coordinates for auto scaling
+   * @param {array} nodes - 2d array of x y coordinates of graph nodes.
    */
   computeMax(nodes) {
     var xMax = 0;
@@ -126,11 +139,10 @@ class GraphRenderer extends Renderer {
     return {x:xMax, y:yMax};
   }
 
-
   /**
    * Add scales to the axis
   */
-  computeScales(min, max, center, stepSize = 30, stepHeight=5, increment = 1) {
+  computeScales(min, max, center, stepSize = this.defaultStepSize, stepHeight=5, increment = 1) {
     const scales = [];
     const alignMinX = center.x - stepHeight/2;
     const alignMaxX = center.x + stepHeight/2;
@@ -175,7 +187,7 @@ class GraphRenderer extends Renderer {
    * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
    * REMOVE STEPSIZE DEFAULT VARIABLE AND CREATE A VARIABLE IN THE FILE FOR THIS!!!
   */
-  calculateAxisScale(maxScale, stepSize = 30) {
+  calculateAxisScale(maxScale, stepSize = this.defaultStepSize) {
     const trueMax = Math.max(maxScale.x, maxScale.y) / stepSize;  // Maximum individual coordinate value.
 
     // Determine scale up to multiple of 10.
@@ -195,7 +207,7 @@ class GraphRenderer extends Renderer {
   /*
    * Calculate value increment of axis coordinate labels.
   */
-  calculateTickIncrement(axisScale, stepSize = 30) {
+  calculateTickIncrement(axisScale, stepSize = this.defaultStepSize) {
     const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
     if(maxCoord <= 20)
     {
@@ -214,14 +226,15 @@ class GraphRenderer extends Renderer {
   /*
    * Determine multiplier for size of all labels on the graph.
   */ 
-  calculateLabelSizeMultiplier(axisScale, stepSize = 30) {
+  calculateLabelSize(axisScale, stepSize = this.defaultStepSize) {
+    const baseSize = 17;
     const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
     for(let i = 1; i < 10; ++i) {
       if(maxCoord <= i * 10)
       {
-        const increment = 0.2;
+        const increment = 0.25;
         const multiplier = 1 + ((i - 1) * increment);
-        return multiplier;
+        return baseSize * multiplier;
       }
     }
   }
@@ -235,10 +248,10 @@ class GraphRenderer extends Renderer {
     // Scaling variables.
     const axisScale = this.calculateAxisScale(maxScale); // Largest coordinate value of each axis.
     const increment = this.calculateTickIncrement(axisScale);  // Calculate value increment of axis coordinate labels.
-    const labelMultiplier = this.calculateLabelSizeMultiplier(axisScale);  // Multiplier for size of all labels.
-
+    const labelSize = this.calculateLabelSize(axisScale);  // Multiplier for size of all labels.
     const scales = this.computeScales(0, axisScale, axisCenter, undefined, undefined, increment); // list of scales
 
+    this.setAxisLabelSize(labelSize);
 
     const axisEndPoint = axisScale + 20;
     const axisArrowX = this.computeArrows('x', {x:axisEndPoint, y:axisCenter.y}, 8, 8); // list containing fragments to form arrow on x
@@ -258,7 +271,7 @@ class GraphRenderer extends Renderer {
       );
     }
 
-    
+    const tickOffset = (labelSize / 2); // Offset tick positions based on font size.
 
     return (
       <g>
@@ -289,17 +302,17 @@ class GraphRenderer extends Renderer {
         </text>
 
         {/* Origin Label */}
-        <text x={originCoords.x} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}>
+        <text x={originCoords.x - tickOffset } y={originCoords.y + tickOffset} textAnchor="middle" className={styles.axisLabel}>
           0
         </text>
         
-        {/* Scales */}
+        {/* Axis Ticks */}
         {scales.map((scale) => {
           if (scale.label === 'x') {
             return (
               <g>
                 <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
-                <text x={scale.x1} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+                <text x={scale.x1} y={originCoords.y + tickOffset} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
               </g>
             );
 
@@ -307,7 +320,7 @@ class GraphRenderer extends Renderer {
             return (
               <g>
                 <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
-                <text x={originCoords.x} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+                <text x={originCoords.x - tickOffset} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
               </g>
             );
           }
