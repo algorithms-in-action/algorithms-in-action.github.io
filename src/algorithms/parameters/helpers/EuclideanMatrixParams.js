@@ -164,7 +164,6 @@ function EuclideanMatrixParams({
   // Get and parse the coordinates of each node
   const getCoordinateMatrix = () => {
     const coords = [];
-    var validCoords = true;
     coordinateData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
@@ -173,15 +172,12 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          validCoords = false;
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
+          return [[]];
         }
       }
       coords.push(temp);
     });
-    if (!validCoords) {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
-      return [[]];
-    }
     return coords;
   };
 
@@ -268,7 +264,6 @@ function EuclideanMatrixParams({
         coordsMatrix,
         edgeValueMatrix
       });
-    //   setButtonMessage('Reset');
     }
   };
 
