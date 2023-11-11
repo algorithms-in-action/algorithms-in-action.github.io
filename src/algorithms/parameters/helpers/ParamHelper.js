@@ -261,6 +261,15 @@ export const makeSparseEdgeData = (len) => {
         edges[j][i] = 1;
       }
     }
+
+    // Ensure that an odd numbered node has a connection with an even numbered node.
+    // This condition in context of prior algorithm ensures connectedness of graph.
+    if(len >= 1){
+      const connectingNode1 = getRandomInt(1, len - 1);
+      const connectingNode2 = connectingNode1 - 1;
+      edges[connectingNode1][connectingNode2] = 1;
+      edges[connectingNode2][connectingNode1] = 1;
+    }
   }
 
   // Convert to array of objects

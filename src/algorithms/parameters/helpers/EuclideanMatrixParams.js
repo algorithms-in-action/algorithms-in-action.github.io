@@ -142,8 +142,8 @@ function EuclideanMatrixParams({
     if (newSize > maxNodes) {
       setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not exceed " + maxNodes));
       return;
-    } else if (newSize < 1) {
-      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not be lower than 1 "));
+    } else if (newSize < 3) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not be lower than 3"));
       return;
     }
     setMessage(null);
