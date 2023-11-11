@@ -82,6 +82,11 @@ function EuclideanMatrixParams({
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
+  // Toggle data
+  const listEdgeDataValueMessages = ['Default', '0s', '1s'];
+  const [edgeDataValue, setEdgeDataIndex] = useState(0);
+  const [edgeDataValueMessage, setEdgeDataMessage] = useState('0s');
+
   // Reset first table when the size changes
   useEffect(() => {
     const newCoordinateData = makeRandomCoordinateData(size, 5, 6);
@@ -104,18 +109,41 @@ function EuclideanMatrixParams({
 
   // Reset the matrix to the inital set
   const resetData = () => {
-    const zerosEdges = makeSparseEdgeZerosData(size);
     setMessage(null);
     setCoordinateData(originalCoordinateData);
-    setEdgeData(zerosEdges);
+    setEdgeData(originalEdgeData);
   };
+
+  const toggleEdgeData = (index) => {
+    if (index >= 3) {index = 0;}
+
+    var edgeData;
+    if (index === 1) {
+      // 0s
+      edgeData = makeSparseEdgeZerosData(size);
+    } else if (index === 2) {
+      // 1s
+      edgeData = makeData(size, 1, 1, symmetric);
+    } else {
+      // Default
+      edgeData = originalEdgeData;
+    }
+    setCoordinateData(originalCoordinateData);
+    setEdgeDataIndex(index);
+    var nextIndex = index + 1;
+    if (nextIndex >= 3) {nextIndex = 0;}
+    setEdgeDataMessage(listEdgeDataValueMessages[nextIndex]);
+    setEdgeData(edgeData);
+  }
 
   // Sets table size.
   const updateTableSize = (newSize) => {
     
-    if(newSize > maxNodes)
-    {
+    if (newSize > maxNodes) {
       setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not exceed " + maxNodes));
+      return;
+    } else if (newSize < 1) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not be lower than 1 "));
       return;
     }
     setMessage(null);
@@ -283,21 +311,6 @@ function EuclideanMatrixParams({
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
         <div className="sLineButtonContainer">
-          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
-            −
-          </button>
-          <span className='size'>Num Nodes: {size}</span>
-          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
-            +
-          </button>
-          
-        </div>
-
-        <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
-          Edge Weight: {isEuclideanButtonMessage}
-        </button>
-
-        <div className="sLineButtonContainer">
           <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
             {buttonMessage}
           </button>
@@ -306,8 +319,24 @@ function EuclideanMatrixParams({
             className="greyRoundBtn"
             id="refreshMatrix"
             onClick={resetData}/>
-          
         </div>
+        <div className="bLineButtonContainer">
+          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
+            −
+          </button>
+          <span className='size'>Num Nodes: {size}</span>
+          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
+            +
+          </button>
+        </div>
+
+        <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
+          Edge Weight: {isEuclideanButtonMessage}
+        </button>
+
+        <button className="toggleEdgeData" onClick={() => toggleEdgeData(edgeDataValue + 1)}>
+          Reset Edge Values to: {edgeDataValueMessage}
+        </button>
       </div>
 
       <div className="coord">
