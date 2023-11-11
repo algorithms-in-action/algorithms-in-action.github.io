@@ -191,11 +191,15 @@ export const makeSparseEdgeData = (len) => {
   let edges;
   if (len === 1) {
     edges = [[0]];
-  } else if (len === 2) {
+  } 
+  else if (len === 2) {
     edges = [[0, 1], [1, 0]];
-  } else if (len === 3) {
+  } 
+  else if (len === 3) 
+  {
     edges = [[0, 1, 1], [1, 0, 1], [1, 1, 0]];
-  } else {
+  } 
+  else {
     // Generate random 1s in the array.
     edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
 
@@ -210,6 +214,15 @@ export const makeSparseEdgeData = (len) => {
         {
           --remainingEdges;
         }
+        if(remainingEdges === 0)
+        {
+          break;
+        }
+      }
+
+      // Ensures graph connected.
+      if(remainingEdges === 0){
+        remainingEdges = 1;
       }
 
       let priorityNodes = [ i-2, i-4, i-6 ];  // Nodes prioritised for edges.
