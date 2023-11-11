@@ -119,7 +119,6 @@ export const makeColumnArray = (len) => {
  * Return XY columns for new params user interface
  * @return array of object
  */
-
 export const makeColumnCoords = () => {
   const arr = [];
   arr.push({Header: 'X', accessor: `col${0}`,});
@@ -142,46 +141,160 @@ export const makeRandomCoordinateData = (len, minDiff, maxDiff) => {
   for (let i = 0; i < len; i += 1) {
     const coord = [];
     // If even, x coordinate should at least be xMax.
-      if(i % 2 == 0){
-        const x = getRandomInt(xMax + minDiff, xMax + maxDiff); 
-        const y = getRandomInt(1, yMax);
-        coord.push(x);
-        coord.push(y);
-        if(x > xMax){
-          xMax = x;
-        }
+    if(i % 2 == 0){
+      const x = getRandomInt(xMax + minDiff, xMax + maxDiff); 
+      const y = getRandomInt(1, yMax);
+      coord.push(x);
+      coord.push(y);
+      if(x > xMax){
+        xMax = x;
+      }
+    }
+    else
+    {
+      // In current implementation we want y diffs to be less due to y axis cutoff.
+      const x = getRandomInt(1, xMax); 
+      const y = getRandomInt(yMax + minDiff, yMax + maxDiff);
+      coord.push(x);
+      coord.push(y);
+      if(y > yMax){
+          yMax = y;
+      }
+    }
+    coords.push(coord);
+  }
+
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+      if(j < 2)
+      {
+        data[`col${j}`] = `${coords[i][j]}`;
       }
       else
       {
-        // In current implementation we want y diffs to be less due to y axis cutoff.
-        const x = getRandomInt(1, xMax); 
-        const y = getRandomInt(yMax + minDiff, yMax + maxDiff);
-        coord.push(x);
-        coord.push(y);
-        if(y > yMax){
-          yMax = y;
+        data[`col${j}`] = '0';
+      }
+    }
+    arr.push(data);
+  }
+  return arr;
+};
+
+/**
+ * Creates edge data for a sparse connected graph.
+ * @param {number} len size of the matrix
+ * @return array of object
+ */
+export const makeSparseEdgeData = (len) => {
+  let edges;
+  if (len === 1) {
+    edges = [[0]];
+  } 
+  else if (len === 2) {
+    edges = [[0, 1], [1, 0]];
+  } 
+  else if (len === 3) 
+  {
+    edges = [[0, 1, 1], [1, 0, 1], [1, 1, 0]];
+  } 
+  else {
+    // Generate random 1s in the array.
+    edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
+
+    for (let i = len - 1; i >= 0; --i) {
+      const maxEdges = 3;
+      const minEdges = 1;
+      let remainingEdges = getRandomInt(minEdges, maxEdges);
+      // Reduce remaining edges for each preexisting edge.
+      for(let j = 0; j < len; ++j)
+      {
+        if(edges[i][j] == 1)
+        {
+          --remainingEdges;
+        }
+        if(remainingEdges === 0)
+        {
+          break;
         }
       }
-      coords.push(coord);
+
+      // Ensures graph connected.
+      if(remainingEdges === 0){
+        remainingEdges = 1;
+      }
+
+      let priorityNodes = [ i-2, i-4, i-6 ];  // Nodes prioritised for edges.
+      for(let n = 0; n < 2; ++n)
+      {
+        let prioNum = getRandomInt(0, priorityNodes.length - 1);
+        let priorityNode = priorityNodes[prioNum];
+        if(priorityNode >= 0 && remainingEdges > 0)
+        {
+          edges[i][priorityNode] = 1;
+          edges[priorityNode][i] = 1;
+          remainingEdges--;
+        }
+      }
+
+      while (remainingEdges > 0) {
+        // Place edge at random position on row.
+        const j = getRandomInt(0, len - 1);
+        if(i !== j)
+        {
+          edges[i][j] = 1;
+          edges[j][i] = 1;
+        }
+        remainingEdges--;
+      }
     }
 
-    let arr = [];
-    for (let i = 0; i < len; i += 1) {
-      const data = {};
-      for (let j = 0; j < len; j += 1) {
-        if(j < 2)
-        {
-          data[`col${j}`] = `${coords[i][j]}`;
-        }
-        else
-        {
-          data[`col${j}`] = '0';
-        }
+    // Ensure that each row has at least one 1.
+    for (let i = 0; i < len; i++) {
+      if (edges[i].every(val => val === 0)) {
+        let j;
+        do {
+          j = getRandomInt(0, len-1);
+        } while (j === i);
+        edges[i][j] = 1;
+        edges[j][i] = 1;
       }
-      arr.push(data);
     }
-    return arr;
-  };
+  }
+
+  // Convert to array of objects
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+        data[`col${j}`] = `${edges[i][j]}`;
+    }
+    arr.push(data);
+  }
+  return arr;
+}
+
+/**
+ * Creates edge data with 0s for a sparse connected graph.
+ * @param {number} len size of the matrix
+ * @return array of object
+ */
+export const makeSparseEdgeZerosData = (len) => {
+  let edges;
+    edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
+
+  // Convert to array of objects
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+        data[`col${j}`] = `${edges[i][j]}`;
+    }
+    arr.push(data);
+  }
+  return arr;
+}
 
 /**
  * Populate the data cells, see React-Table API
@@ -209,7 +322,8 @@ export const makeData = (len, min, max, symmetric) => {
       rows.push(row);
     }
   }
-  // const arr = [];
+
+  // Construct array of required form for use.
   let arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};

@@ -14,7 +14,10 @@ import {
   makeRandomCoordinateData,
   singleNumberValidCheck,
   errorParamMsg,
-  successParamMsg, matrixValidCheck,
+  successParamMsg, 
+  matrixValidCheck, 
+  makeSparseEdgeData,
+  makeSparseEdgeZerosData
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -44,6 +47,7 @@ function EuclideanMatrixParams({
   defaultSize,
   min,
   max,
+  maxNodes,
   name,
   symmetric,
   mode,
@@ -51,6 +55,7 @@ function EuclideanMatrixParams({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
+  EXAMPLE3,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -62,31 +67,39 @@ function EuclideanMatrixParams({
   const { dispatch } = useParam();
 
   // First table.
-  const [data1, setData1] = useState(() => makeRandomCoordinateData(size, 4, 5));
-  const [originalData1, setOriginalData1] = useState(data1);
+  const [coordinateData, setCoordinateData] = useState(() => makeRandomCoordinateData(size, 5, 6));
+  const [originalCoordinateData, setOriginalCoordinateData] = useState(coordinateData);
 
   // Second Table
-  const [data2, setData2] = useState(() => makeData(size, 0, 1, symmetric));
-  const [originalData2, setOriginalData2] = useState(data2);
+  //const [edgeData, setEdgeData] = useState(() => makeData(size, 0, 1, symmetric));
+  const [edgeData, setEdgeData] = useState(() => makeSparseEdgeData(size));
+  const [originalEdgeData, setOriginalEdgeData] = useState(edgeData);
+
 
   const [buttonMessage, setButtonMessage] = useState('Start');
   
-  // With the buton toggle Euclidean/Manhattan
+  // With the button toggle Euclidean/Manhattan
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
+  // Toggle data
+  const listEdgeDataValueMessages = ['Default', '0s', '1s'];
+  const [edgeDataValue, setEdgeDataIndex] = useState(0);
+  const [edgeDataValueMessage, setEdgeDataMessage] = useState('0s');
+
   // Reset first table when the size changes
   useEffect(() => {
-    const newData1 = makeRandomCoordinateData(size, 4, 5);
-    setData1(newData1);
-    setOriginalData1(newData1);
+    const newCoordinateData = makeRandomCoordinateData(size, 5, 6);
+    setCoordinateData(newCoordinateData);
+    setOriginalCoordinateData(newCoordinateData);
   }, [size, min, max, symmetric]);
 
   // Reset second table when the size changes
   useEffect(() => {
-    const newData2 = makeData(size, 0, 1, symmetric);
-    setData2(newData2);
-    setOriginalData2(newData2);
+    // const newEdgeData = makeData(size, 0, 1, symmetric);
+    const newEdgeData = makeSparseEdgeData(size);
+    setEdgeData(newEdgeData);
+    setOriginalEdgeData(newEdgeData);
   }, [size, 1, 1, symmetric]);
 
   useEffect(() => {
@@ -97,15 +110,47 @@ function EuclideanMatrixParams({
   // Reset the matrix to the inital set
   const resetData = () => {
     setMessage(null);
-    setData1(originalData1);
-    setData2(originalData2);
+    setCoordinateData(originalCoordinateData);
+    setEdgeData(originalEdgeData);
   };
 
+  const toggleEdgeData = (index) => {
+    if (index >= 3) {index = 0;}
+
+    var edgeData;
+    if (index === 1) {
+      // 0s
+      edgeData = makeSparseEdgeZerosData(size);
+    } else if (index === 2) {
+      // 1s
+      edgeData = makeData(size, 1, 1, symmetric);
+    } else {
+      // Default
+      edgeData = originalEdgeData;
+    }
+    // setCoordinateData(originalCoordinateData);
+    setEdgeDataIndex(index);
+    var nextIndex = index + 1;
+    if (nextIndex >= 3) {nextIndex = 0;}
+    setEdgeDataMessage(listEdgeDataValueMessages[nextIndex]);
+    setEdgeData(edgeData);
+  }
+
+  // Sets table size.
   const updateTableSize = (newSize) => {
+    
+    if (newSize > maxNodes) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not exceed " + maxNodes));
+      return;
+    } else if (newSize < 1) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not be lower than 1 "));
+      return;
+    }
     setMessage(null);
     setSize(newSize);
   };
 
+  // Changes edge calculation for euclidean distance to manhattan distance.
   const changeCalcMethod = (state) => {
     setMessage(null);
     setCalcMethod(state);
@@ -121,7 +166,7 @@ function EuclideanMatrixParams({
   // the rowIndex, columnId and new value to update the
   // original data
   const updateData1 = (rowIndex, columnId, value) => {
-    setData1((old) => old.map((row, index) => {
+    setCoordinateData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -133,7 +178,7 @@ function EuclideanMatrixParams({
   };
 
   const updateData2 = (rowIndex, columnId, value) => {
-    setData2((old) => old.map((row, index) => {
+    setEdgeData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
           ...old[rowIndex],
@@ -147,7 +192,8 @@ function EuclideanMatrixParams({
   // Get and parse the coordinates of each node
   const getCoordinateMatrix = () => {
     const coords = [];
-    data1.forEach((row) => {
+    var validMatrix = true;
+    coordinateData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         const maxValue = 100;  // Maximum value a coordinate can take.
@@ -155,29 +201,33 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
-          return;
+          // check value
+          validMatrix = false;
         }
       }
       coords.push(temp);
     });
-    return coords;
+    if (validMatrix) {
+      return coords;
+    } else {
+      return [];
+    }
+
+    
   };
 
   // Get and parse the edges between nodes of 0s and 1s
   const getEdgeValueMatrix = () => {
 
     const adjacent = [];
-    data2.forEach((row) => {
+    edgeData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
         if (singleNumberValidCheck(value)) {
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          // when the input cannot be converted to a number
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
-          return;
+          return [];
         }
       }
       adjacent.push(temp);
@@ -210,7 +260,6 @@ function EuclideanMatrixParams({
         } else if (adjacent[i][j] === 0) {
           temp_edges.push(0);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
           return [];
         }
 
@@ -222,23 +271,31 @@ function EuclideanMatrixParams({
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
-        // eslint-disable-next-line consistent-return
-        return [];
+        // check symmetry and return null if not
+        return null;
       }
     }
     return edges;
   };
 
-  // Run the animation
+  // Dispatches run function of algorithm, passing required information as parameters.
   const handleSearch = () => {
     closeInstructions(); // remove instruction
     setMessage(null);
 
     const coordsMatrix = getCoordinateMatrix();
     const edgeValueMatrix = getEdgeValueMatrix();
-
-    if (edgeValueMatrix.length !== 0) {
+    
+    if (coordsMatrix.length == 0) {
+      // Error on input from coords matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
+    } else if (edgeValueMatrix == null) {
+      // Error on symmetry from coords matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+    } else if (edgeValueMatrix.length == 0) {
+      // Error on input from edge value matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+    } else {
       // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
@@ -247,30 +304,12 @@ function EuclideanMatrixParams({
         coordsMatrix,
         edgeValueMatrix
       });
-    //   setButtonMessage('Reset');
-    } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
   };
 
   return (
     <div className="matrixContainer">
       <div className="matrixButtonContainer">
-        <div className="sLineButtonContainer">
-          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
-            −
-          </button>
-          <span className='size'>Num Nodes: {size}</span>
-          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
-            +
-          </button>
-          
-        </div>
-
-        <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
-          Edge Weight: {isEuclideanButtonMessage}
-        </button>
-
         <div className="sLineButtonContainer">
           <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
             {buttonMessage}
@@ -280,18 +319,34 @@ function EuclideanMatrixParams({
             className="greyRoundBtn"
             id="refreshMatrix"
             onClick={resetData}/>
-          
         </div>
+        <div className="bLineButtonContainer">
+          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
+            −
+          </button>
+          <span className='size'>Num Nodes: {size}</span>
+          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
+            +
+          </button>
+        </div>
+
+        <button className="algorithmBtn" onClick={() => changeCalcMethod(!isEuclidean)}>
+          Edge Weight: {isEuclideanButtonMessage}
+        </button>
+
+        <button className="algorithmBtn" onClick={() => toggleEdgeData(edgeDataValue + 1)}>
+          Reset Edges to: {edgeDataValueMessage}
+        </button>
       </div>
 
       <div className="coord">
         <text className="titles"> Coordinates (X,Y) </text>
-        <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
+        <Table columns={columns1} data={coordinateData} updateData={updateData1} algo={name} />
       </div>
       
       <div className="edge">
         <text className="titles"> Edges (0 or 1)</text>
-        <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
+        <Table columns={columns2} data={edgeData} updateData={updateData2} algo={name} />
       </div>
       
     </div>

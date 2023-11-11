@@ -23,8 +23,8 @@
       text-transform: uppercase;
       @include removeBtnStyling;
       height: 35px;
-      margin-top: 1px;
-
+      margin-top: 7px;
+      margin-bottom: 1px;
       @include border-radius(1px);
       text-align: Left;
       cursor: pointer;
@@ -49,20 +49,64 @@
     display: flex;
     flex-direction: row; /* Change to row to display buttons in a single line */
     justify-content: flex-start; 
-    padding: 10px 0px;
+    // padding-top: 1px;
     @include border-radius(6px);
     white-space: nowrap;
     text-align: center;
     height: 10px;
     font-size: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    margin-left: 17px;
+
+    .matrixBtn {
+      text-transform: uppercase;
+      @include removeBtnStyling;
+      width: 100px;
+      height: 35px;
+      @include border-radius(1px);
+      text-align: center;
+      cursor: pointer;
+      color: var(--mid-control-param-btn-active-col);
+
+    }
+
+    .matrixBtn:hover {
+      transition: .4s;
+      background: var(--mid-control-param-btn-bg-col-hover);
+    }
+    .matrixBtn:active {
+      transition: .2s;
+      background: var(--mid-control-param-btn-bg-col-active);
+    }
+
+    .greyRoundBtn {
+      text-align: right;
+      width: 30px;
+      height: 30px;
+    }
+
+  }
+
+
+  .bLineButtonContainer {
+    background-color: var(--mid-control-param-matrix-btn-bg);
+    display: flex;
+    flex-direction: row; /* Change to row to display buttons in a single line */
+    justify-content: flex-start; 
+    // padding-top: 1px;
+    @include border-radius(6px);
+    white-space: nowrap;
+    text-align: center;
+    height: 10px;
+    font-size: 12px;
+    margin-bottom: 25px;
 
     .sizeBtn {
       text-transform: uppercase;
       display: inline-block;
       @include removeBtnStyling;
       padding: 6px 6px 12px;
-      margin-top: 1px;
+      margin-top: 0px;
       width: 50px;
       height: 35px;
       font-size: 20px;
@@ -92,37 +136,6 @@
       color: var(--mid-control-param-btn-active-col);
     }
 
-    .matrixBtn {
-      text-transform: uppercase;
-      @include removeBtnStyling;
-      width: 100px;
-      height: 35px;
-      @include border-radius(1px);
-      text-align: center;
-      cursor: pointer;
-      padding: 4px;
-      color: var(--mid-control-param-btn-active-col);
-
-    }
-
-    .matrixBtn:hover {
-      transition: .4s;
-      background: var(--mid-control-param-btn-bg-col-hover);
-    }
-    .matrixBtn:active {
-      transition: .2s;
-      background: var(--mid-control-param-btn-bg-col-active);
-    }
-
-    .greyRoundBtn {
-      text-align: right;
-      margin-top: 3.5px;
-      width: 35px;
-      height: 35px;
-    }
-
-    
-    
   }
 
   .table {

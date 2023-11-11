@@ -3,6 +3,11 @@
 
 // --graph-node-fill: orange;
 
+:root {
+  --axis-label-size: 60px; /* Default font size */
+  --edge-label-size: 60px;
+}  
+
 .graph {
   flex: 1;
   align-self: stretch;
@@ -24,6 +29,7 @@
       fill: var(--graph-node-id-fill);
       dominant-baseline: central;
       text-anchor: middle;
+      font-size: var(--axis-label-size);
     }
 
     .weight {
@@ -121,7 +127,7 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
-      font-size: 15px;
+      font-size: var(--edge-label-size);
     }
 
     &.selected {
@@ -213,11 +219,10 @@
     stroke: var(--axis);
     stroke-width: 1;
     fill: none;
-
   }
 
   .axisLabel {
-    font-size: 15px;
+    font-size: var(--axis-label-size);
     font-weight: 1;
   }
 
