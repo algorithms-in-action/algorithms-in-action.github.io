@@ -254,6 +254,27 @@ export const makeSparseEdgeData = (len) => {
 }
 
 /**
+ * Creates edge data with 0s for a sparse connected graph.
+ * @param {number} len size of the matrix
+ * @return array of object
+ */
+export const makeSparseEdgeZerosData = (len) => {
+  let edges;
+    edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
+
+  // Convert to array of objects
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+        data[`col${j}`] = `${edges[i][j]}`;
+    }
+    arr.push(data);
+  }
+  return arr;
+}
+
+/**
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix

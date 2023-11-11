@@ -16,7 +16,8 @@ import {
   errorParamMsg,
   successParamMsg, 
   matrixValidCheck, 
-  makeSparseEdgeData
+  makeSparseEdgeData,
+  makeSparseEdgeZerosData
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -75,6 +76,7 @@ function EuclideanMatrixParams({
   const [edgeData, setEdgeData] = useState(() => makeSparseEdgeData(size));
   const [originalEdgeData, setOriginalEdgeData] = useState(edgeData);
 
+
   const [buttonMessage, setButtonMessage] = useState('Start');
   
   // With the button toggle Euclidean/Manhattan
@@ -103,9 +105,10 @@ function EuclideanMatrixParams({
 
   // Reset the matrix to the inital set
   const resetData = () => {
+    const zerosEdges = makeSparseEdgeZerosData(size);
     setMessage(null);
     setCoordinateData(originalCoordinateData);
-    setEdgeData(originalEdgeData);
+    setEdgeData(zerosEdges);
   };
 
   // Sets table size.
