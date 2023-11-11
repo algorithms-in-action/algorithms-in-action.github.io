@@ -53,6 +53,7 @@ function EuclideanMatrixParams({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
+  EXAMPLE3,
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -166,7 +167,7 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
           return;
         }
       }
@@ -221,7 +222,7 @@ function EuclideanMatrixParams({
         } else if (adjacent[i][j] === 0) {
           temp_edges.push(0);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
           return [];
         }
 
@@ -233,7 +234,7 @@ function EuclideanMatrixParams({
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
         // eslint-disable-next-line consistent-return
         return [];
       }

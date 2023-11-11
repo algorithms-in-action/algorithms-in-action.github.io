@@ -229,7 +229,7 @@ class GraphRenderer extends Renderer {
   calculateLabelSize(axisScale, stepSize = this.defaultStepSize) {
     const baseSize = 17;
     const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
-    for(let i = 1; i < 10; ++i) {
+    for(let i = 1; i <= 10; ++i) {
       if(maxCoord <= i * 10)
       {
         const increment = 0.25;
