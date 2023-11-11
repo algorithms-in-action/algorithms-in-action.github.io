@@ -243,6 +243,7 @@ function EuclideanMatrixParams({
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
+        // check symmetry and return null if not
         return null;
       }
     }
