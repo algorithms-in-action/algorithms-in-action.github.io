@@ -172,7 +172,7 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
+          // check value
           return [[]];
         }
       }
@@ -192,9 +192,7 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          // when the input cannot be converted to a number
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
-          return;
+          return [[]];
         }
       }
       adjacent.push(temp);
@@ -227,7 +225,6 @@ function EuclideanMatrixParams({
         } else if (adjacent[i][j] === 0) {
           temp_edges.push(0);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
           return [];
         }
 
@@ -239,8 +236,6 @@ function EuclideanMatrixParams({
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
-        // eslint-disable-next-line consistent-return
         return [];
       }
     }
@@ -253,18 +248,26 @@ function EuclideanMatrixParams({
     setMessage(null);
 
     const coordsMatrix = getCoordinateMatrix();
-    const edgeValueMatrix = getEdgeValueMatrix();
-
-    if (coordsMatrix.length !== 0 && edgeValueMatrix.length !== 0) {
-      // setMessage(successParamMsg(ALGORITHM_NAME));
-      dispatch(GlobalActions.RUN_ALGORITHM, {
-        name,
-        mode,
-        size,
-        coordsMatrix,
-        edgeValueMatrix
-      });
+    if (coordsMatrix.length == 0) {
+      // Error on input from coords matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
     }
+
+    const edgeValueMatrix = getEdgeValueMatrix();
+    if (edgeValueMatrix.length == 0) {
+      // Error on input from edge value matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+    }
+
+    // setMessage(successParamMsg(ALGORITHM_NAME));
+    dispatch(GlobalActions.RUN_ALGORITHM, {
+      name,
+      mode,
+      size,
+      coordsMatrix,
+      edgeValueMatrix
+    });
+    
   };
 
   return (
