@@ -243,7 +243,8 @@ function EuclideanMatrixParams({
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
-        return [];
+        // check symmetry and return null if not
+        return null;
       }
     }
     return edges;
@@ -255,26 +256,27 @@ function EuclideanMatrixParams({
     setMessage(null);
 
     const coordsMatrix = getCoordinateMatrix();
+    const edgeValueMatrix = getEdgeValueMatrix();
+    
     if (coordsMatrix.length == 0) {
       // Error on input from coords matrix
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
-    }
-
-    const edgeValueMatrix = getEdgeValueMatrix();
-    if (coordsMatrix.length != 0 && edgeValueMatrix.length == 0) {
+    } else if (edgeValueMatrix == null) {
+      // Error on symmetry from coords matrix
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+    } else if (edgeValueMatrix.length == 0) {
       // Error on input from edge value matrix
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+    } else {
+      // setMessage(successParamMsg(ALGORITHM_NAME));
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name,
+        mode,
+        size,
+        coordsMatrix,
+        edgeValueMatrix
+      });
     }
-
-    // setMessage(successParamMsg(ALGORITHM_NAME));
-    dispatch(GlobalActions.RUN_ALGORITHM, {
-      name,
-      mode,
-      size,
-      coordsMatrix,
-      edgeValueMatrix
-    });
-    
   };
 
   return (
