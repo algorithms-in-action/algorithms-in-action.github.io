@@ -16,7 +16,8 @@ import {
   errorParamMsg,
   successParamMsg, 
   matrixValidCheck, 
-  makeSparseEdgeData
+  makeSparseEdgeData,
+  makeSparseEdgeZerosData
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -28,6 +29,9 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 import { template } from 'lodash';
+
+const MAX_NODES = "Number of nodes must not exceed 30";
+const MAX_SIZE = 30;
 
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -73,6 +77,7 @@ function EuclideanMatrixParams({
   const [edgeData, setEdgeData] = useState(() => makeSparseEdgeData(size));
   const [originalEdgeData, setOriginalEdgeData] = useState(edgeData);
 
+
   const [buttonMessage, setButtonMessage] = useState('Start');
   
   // With the button toggle Euclidean/Manhattan
@@ -101,16 +106,18 @@ function EuclideanMatrixParams({
 
   // Reset the matrix to the inital set
   const resetData = () => {
+    const zerosEdges = makeSparseEdgeZerosData(size);
     setMessage(null);
     setCoordinateData(originalCoordinateData);
-    setEdgeData(originalEdgeData);
+    setEdgeData(zerosEdges);
   };
 
   // Sets table size.
   const updateTableSize = (newSize) => {
-    const maxSize = 30;
-    if(newSize > maxSize)
+    
+    if(newSize > MAX_SIZE)
     {
+      setMessage(MAX_NODES);
       return;
     }
     setMessage(null);
