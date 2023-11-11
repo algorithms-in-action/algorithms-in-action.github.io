@@ -112,6 +112,7 @@ function EuclideanMatrixParams({
     setMessage(null);
     setCoordinateData(originalCoordinateData);
     setEdgeData(originalEdgeData);
+    toggleEdgeData(0);
   };
 
   const toggleEdgeData = (index) => {
@@ -218,7 +219,6 @@ function EuclideanMatrixParams({
 
   // Get and parse the edges between nodes of 0s and 1s
   const getEdgeValueMatrix = () => {
-
     const adjacent = [];
     edgeData.forEach((row) => {
       const temp = [];
