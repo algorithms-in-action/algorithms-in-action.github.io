@@ -199,7 +199,7 @@ export const makeSparseEdgeData = (len) => {
     // Generate random 1s in the array.
     edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
 
-    for (let i = 0; i < len; i++) {
+    for (let i = len - 1; i >= 0; --i) {
       const maxEdges = 3;
       const minEdges = 1;
       let remainingEdges = getRandomInt(minEdges, maxEdges);
@@ -211,14 +211,23 @@ export const makeSparseEdgeData = (len) => {
           --remainingEdges;
         }
       }
+
+      let priorityNodes = [ i-2, i-4, i-6 ];  // Nodes prioritised for edges.
+      for(let n = 0; n < 2; ++n)
+      {
+        let prioNum = getRandomInt(0, priorityNodes.length - 1);
+        let priorityNode = priorityNodes[prioNum];
+        if(priorityNode >= 0 && remainingEdges > 0)
+        {
+          edges[i][priorityNode] = 1;
+          edges[priorityNode][i] = 1;
+          remainingEdges--;
+        }
+      }
+
       while (remainingEdges > 0) {
         // Place edge at random position on row.
-        //
-        // MUST IMPLEMENT:
-        // INSTEAD PLACING EDGE AT RANDOM ROW POSITION, PRIORITISE PLACING EDGE AT NODE WITH NODE VALUE CLOSE TO OWN VALUE
-        // SHOULD STILL BE RANDOM HOWEVER BUT WITH BIAS TO CLOSER NODES. NOT COMPLETE BIAS!
-        // DEFINE A FUNCTION CALLED CREATEXXXXXXXEDGE TO MAKE CODE LOOK A BIT CLEANER.
-        const j = getRandomInt(i, len - 1);
+        const j = getRandomInt(0, len - 1);
         if(i !== j)
         {
           edges[i][j] = 1;
@@ -233,7 +242,7 @@ export const makeSparseEdgeData = (len) => {
       if (edges[i].every(val => val === 0)) {
         let j;
         do {
-          j = Math.floor(Math.random() * len);
+          j = getRandomInt(0, len-1);
         } while (j === i);
         edges[i][j] = 1;
         edges[j][i] = 1;
