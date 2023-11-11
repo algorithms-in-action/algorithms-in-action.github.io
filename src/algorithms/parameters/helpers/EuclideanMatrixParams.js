@@ -164,6 +164,7 @@ function EuclideanMatrixParams({
   // Get and parse the coordinates of each node
   const getCoordinateMatrix = () => {
     const coords = [];
+    var validMatrix = true;
     coordinateData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
@@ -173,12 +174,18 @@ function EuclideanMatrixParams({
           temp.push(num);
         } else {
           // check value
-          return [[]];
+          validMatrix = false;
         }
       }
       coords.push(temp);
     });
-    return coords;
+    if (validMatrix) {
+      return coords;
+    } else {
+      return [];
+    }
+
+    
   };
 
   // Get and parse the edges between nodes of 0s and 1s
@@ -192,7 +199,7 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          return [[]];
+          return [];
         }
       }
       adjacent.push(temp);
@@ -254,7 +261,7 @@ function EuclideanMatrixParams({
     }
 
     const edgeValueMatrix = getEdgeValueMatrix();
-    if (edgeValueMatrix.length == 0) {
+    if (coordsMatrix.length != 0 && edgeValueMatrix.length == 0) {
       // Error on input from edge value matrix
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
