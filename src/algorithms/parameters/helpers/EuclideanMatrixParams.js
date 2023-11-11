@@ -128,7 +128,7 @@ function EuclideanMatrixParams({
       // Default
       edgeData = originalEdgeData;
     }
-    setCoordinateData(originalCoordinateData);
+    // setCoordinateData(originalCoordinateData);
     setEdgeDataIndex(index);
     var nextIndex = index + 1;
     if (nextIndex >= 3) {nextIndex = 0;}
@@ -334,8 +334,8 @@ function EuclideanMatrixParams({
           Edge Weight: {isEuclideanButtonMessage}
         </button>
 
-        <button className="toggleEdgeData" onClick={() => toggleEdgeData(edgeDataValue + 1)}>
-          Reset Edge Values to: {edgeDataValueMessage}
+        <button className="algorithmBtn" onClick={() => toggleEdgeData(edgeDataValue + 1)}>
+          Reset Edges to: {edgeDataValueMessage}
         </button>
       </div>
 

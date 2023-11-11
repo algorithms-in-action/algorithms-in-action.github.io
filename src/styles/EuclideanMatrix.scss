@@ -42,25 +42,6 @@
       background: var(--mid-control-param-btn-bg-col-active);
     }
 
-    .toggleEdgeData {
-      text-transform: uppercase;
-      @include removeBtnStyling;
-      height: 50px;
-      @include border-radius(1px);
-      text-align: center;
-      cursor: pointer;
-      color: var(--mid-control-param-btn-active-col);
-    }
-
-    .toggleEdgeData:hover {
-      transition: .4s;
-      background: var(--mid-control-param-btn-bg-col-hover);
-    }
-    .toggleEdgeData:active {
-      transition: .2s;
-      background: var(--mid-control-param-btn-bg-col-active);
-    }
-
   }
 
   .sLineButtonContainer {
