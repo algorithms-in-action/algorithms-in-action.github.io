@@ -29,6 +29,9 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 import ControlButton from '../../../components/common/ControlButton';
 import { template } from 'lodash';
 
+const MAX_NODES = "Number of nodes must not exceed 30";
+const MAX_SIZE = 30;
+
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
 function simulateMouseClick(element) {
@@ -107,9 +110,10 @@ function EuclideanMatrixParams({
 
   // Sets table size.
   const updateTableSize = (newSize) => {
-    const maxSize = 30;
-    if(newSize > maxSize)
+    
+    if(newSize > MAX_SIZE)
     {
+      setMessage(MAX_NODES);
       return;
     }
     setMessage(null);

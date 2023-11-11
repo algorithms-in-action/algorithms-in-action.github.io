@@ -161,7 +161,7 @@ class GraphRenderer extends Renderer {
   /**
    * Add arrows to the end of axis using two lines
    */
-  computeArrows(label, axisEndPoint, length, width) {
+  computeArrows(label, axisEndPoint, length=8, width=8) {
     var arrow1;
     var arrow2;
 
@@ -254,8 +254,8 @@ class GraphRenderer extends Renderer {
     this.setAxisLabelSize(labelSize);
 
     const axisEndPoint = axisScale + 20;
-    const axisArrowX = this.computeArrows('x', {x:axisEndPoint, y:axisCenter.y}, 8, 8); // list containing fragments to form arrow on x
-    const axisArrowY = this.computeArrows('y', {x:axisCenter.x, y:axisEndPoint}, 8, 8); // list containing fragments to form arrow on y
+    const axisArrowX = this.computeArrows('x', {x:axisEndPoint, y:axisCenter.y}, undefined, undefined); // list containing fragments to form arrow on x
+    const axisArrowY = this.computeArrows('y', {x:axisCenter.x, y:axisEndPoint}, undefined, undefined); // list containing fragments to form arrow on y
 
 
     const labelPadding = 20;
