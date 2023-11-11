@@ -20,6 +20,7 @@ function PrimsParam() {
         defaultSize={DEFAULT_SIZE}
         min={0}
         max={9}
+        maxNodes={30}
         symmetric
         ALGORITHM_NAME={PRIMS}
         EXAMPLE={PRIMS_EXAMPLE}

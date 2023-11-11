@@ -30,9 +30,6 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 import ControlButton from '../../../components/common/ControlButton';
 import { template } from 'lodash';
 
-const MAX_NODES = "Number of nodes must not exceed 30";
-const MAX_SIZE = 30;
-
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
 function simulateMouseClick(element) {
@@ -50,6 +47,7 @@ function EuclideanMatrixParams({
   defaultSize,
   min,
   max,
+  maxNodes,
   name,
   symmetric,
   mode,
@@ -115,9 +113,9 @@ function EuclideanMatrixParams({
   // Sets table size.
   const updateTableSize = (newSize) => {
     
-    if(newSize > MAX_SIZE)
+    if(newSize > maxNodes)
     {
-      setMessage(MAX_NODES);
+      setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not exceed " + maxNodes));
       return;
     }
     setMessage(null);
@@ -166,6 +164,7 @@ function EuclideanMatrixParams({
   // Get and parse the coordinates of each node
   const getCoordinateMatrix = () => {
     const coords = [];
+    var validCoords = true;
     coordinateData.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
@@ -174,12 +173,15 @@ function EuclideanMatrixParams({
           const num = parseInt(value, 10);
           temp.push(num);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
-          return;
+          validCoords = false;
         }
       }
       coords.push(temp);
     });
+    if (!validCoords) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE3));
+      return [[]];
+    }
     return coords;
   };
 
@@ -257,7 +259,7 @@ function EuclideanMatrixParams({
     const coordsMatrix = getCoordinateMatrix();
     const edgeValueMatrix = getEdgeValueMatrix();
 
-    if (edgeValueMatrix.length !== 0) {
+    if (coordsMatrix.length !== 0 && edgeValueMatrix.length !== 0) {
       // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
@@ -267,8 +269,6 @@ function EuclideanMatrixParams({
         edgeValueMatrix
       });
     //   setButtonMessage('Reset');
-    } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
   };
 
