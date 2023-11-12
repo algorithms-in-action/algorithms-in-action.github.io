@@ -122,6 +122,7 @@ class GraphRenderer extends Renderer {
   /**
    * Compute the max x and y from nodes coordinates for auto scaling
    * @param {array} nodes - 2d array of x y coordinates of graph nodes.
+   * @return {array} x and y max.
    */
   computeMax(nodes) {
     var xMax = 0;
@@ -141,6 +142,13 @@ class GraphRenderer extends Renderer {
 
   /**
    * Add scales to the axis
+   * @param {int} min - min position.
+   * @param {int} max - max position.
+   * @param {object} center - contains x and y position of center.
+   * @param {int} stepSize - graphical distance between coordinates.
+   * @param {int} stepHeight - 
+   * @param {int} increment - difference between tick values.
+   * @return {array}
   */
   computeScales(min, max, center, stepSize = this.defaultStepSize, stepHeight=5, increment = 1) {
     const scales = [];
@@ -160,6 +168,11 @@ class GraphRenderer extends Renderer {
 
   /**
    * Add arrows to the end of axis using two lines
+   * @param {string} label - label displayed at end of axis.
+   * @param {object} axisEndPoint - specifies end point of axis.
+   * @param {int} length - length of arrow.
+   * @param {int} width - width of arrow.
+   * @return {array} containing x and y axis arrows.
    */
   computeArrows(label, axisEndPoint, length=8, width=8) {
     var arrow1;
@@ -180,12 +193,13 @@ class GraphRenderer extends Renderer {
     }
 
     return [arrow1, arrow2];
-
   }
 
-  /*
+  /** 
    * Calculate the scale of the x y axes dependant on the maximum x and y coordinates.
-   * REMOVE STEPSIZE DEFAULT VARIABLE AND CREATE A VARIABLE IN THE FILE FOR THIS!!!
+   * @param {object} maxScale - object containing maximum x and y coordinate.
+   * @param {int} stepSize - graphical distance between coordinates.
+   * @return {int} axis scale - width from 0 to max coordinate.
   */
   calculateAxisScale(maxScale, stepSize = this.defaultStepSize) {
     const trueMax = Math.max(maxScale.x, maxScale.y) / stepSize;  // Maximum individual coordinate value.
@@ -204,8 +218,11 @@ class GraphRenderer extends Renderer {
     return maxCoordCap * stepSize;
   }
 
-  /*
+  /** 
    * Calculate value increment of axis coordinate labels.
+   * @param {int} axisScale - width of axis to max coordinate.
+   * @param {int} stepSize - graphical distance between coordinates.
+   * @return {int} tick increment.
   */
   calculateTickIncrement(axisScale, stepSize = this.defaultStepSize) {
     const maxCoord = axisScale /= stepSize;  // The maximum coordinate each axis displays.
@@ -223,8 +240,10 @@ class GraphRenderer extends Renderer {
     return maxIncrement;
   }
 
-  /*
+  /** 
    * Determine multiplier for size of all labels on the graph.
+   * @param {int} axisScale - width of axis to max coordinate.
+   * @return {int} label size.
   */ 
   calculateLabelSize(axisScale, stepSize = this.defaultStepSize) {
     const baseSize = 17;
@@ -239,8 +258,9 @@ class GraphRenderer extends Renderer {
     }
   }
 
-  /*
+  /** 
    * Render x y axis
+   * @param {object} maxScale - object containing maximum x and y coordinate.
   */
   renderAxis(maxScale) {
     const axisCenter = {x:0, y:0};  // axis position
@@ -265,7 +285,7 @@ class GraphRenderer extends Renderer {
     const originCoords = {x: axisCenter.x - 12, y: axisCenter.y + 16};
 
     if (this.props.title !== 'Graph view') {
-      // Do not render axis if its not graph
+      // Do not render axis if its not graph.
       return (
         <g></g>
       );

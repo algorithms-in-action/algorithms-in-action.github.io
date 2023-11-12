@@ -17,7 +17,7 @@ import {
   successParamMsg, 
   matrixValidCheck, 
   makeSparseEdgeData,
-  makeSparseEdgeZerosData
+  makeEdgeZerosData
 } from './ParamHelper';
 
 import useParam from '../../../context/useParam';
@@ -71,7 +71,6 @@ function EuclideanMatrixParams({
   const [originalCoordinateData, setOriginalCoordinateData] = useState(coordinateData);
 
   // Second Table
-  //const [edgeData, setEdgeData] = useState(() => makeData(size, 0, 1, symmetric));
   const [edgeData, setEdgeData] = useState(() => makeSparseEdgeData(size));
   const [originalEdgeData, setOriginalEdgeData] = useState(edgeData);
 
@@ -87,14 +86,14 @@ function EuclideanMatrixParams({
   const [edgeDataValue, setEdgeDataIndex] = useState(0);
   const [edgeDataValueMessage, setEdgeDataMessage] = useState('0s');
 
-  // Reset first table when the size changes
+  // Reset coordinate table when the size changes
   useEffect(() => {
     const newCoordinateData = makeRandomCoordinateData(size, 5, 6);
     setCoordinateData(newCoordinateData);
     setOriginalCoordinateData(newCoordinateData);
   }, [size, min, max, symmetric]);
 
-  // Reset second table when the size changes
+  // Reset edge table when the size changes
   useEffect(() => {
     // const newEdgeData = makeData(size, 0, 1, symmetric);
     const newEdgeData = makeSparseEdgeData(size);
@@ -107,7 +106,7 @@ function EuclideanMatrixParams({
     simulateMouseClick(element);
   }, []);
 
-  // Reset the matrix to the inital set
+  // Reset the input table to the inital set
   const resetData = () => {
     setMessage(null);
     setCoordinateData(originalCoordinateData);
@@ -120,16 +119,17 @@ function EuclideanMatrixParams({
 
     var edgeData;
     if (index === 1) {
-      // 0s
-      edgeData = makeSparseEdgeZerosData(size);
-    } else if (index === 2) {
-      // 1s
+      // Set edge table to all 0s.
+      edgeData = makeEdgeZerosData(size);
+    } 
+    else if (index === 2) {
+      // Set edge table to all 1s.
       edgeData = makeData(size, 1, 1, symmetric);
-    } else {
-      // Default
+    } 
+    else {
+      // Set edge table to default edge table.
       edgeData = originalEdgeData;
     }
-    // setCoordinateData(originalCoordinateData);
     setEdgeDataIndex(index);
     var nextIndex = index + 1;
     if (nextIndex >= 3) {nextIndex = 0;}
@@ -139,11 +139,11 @@ function EuclideanMatrixParams({
 
   // Sets table size.
   const updateTableSize = (newSize) => {
-    
     if (newSize > maxNodes) {
       setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not exceed " + maxNodes));
       return;
-    } else if (newSize < 3) {
+    } 
+    else if (newSize < 3) {
       setMessage(errorParamMsg(ALGORITHM_NAME, "Number of nodes must not be lower than 3"));
       return;
     }
@@ -166,7 +166,7 @@ function EuclideanMatrixParams({
   // When cell renderer calls updateData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
-  const updateData1 = (rowIndex, columnId, value) => {
+  const updateCoordinateData = (rowIndex, columnId, value) => {
     setCoordinateData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
@@ -178,7 +178,7 @@ function EuclideanMatrixParams({
     }));
   };
 
-  const updateData2 = (rowIndex, columnId, value) => {
+  const updateEdgeData = (rowIndex, columnId, value) => {
     setEdgeData((old) => old.map((row, index) => {
       if (index === rowIndex) {
         return {
@@ -217,7 +217,10 @@ function EuclideanMatrixParams({
     
   };
 
-  // Get and parse the edges between nodes of 0s and 1s
+  /**
+   * Calculate the edge values of each edge.
+   * @return {array} matrix of edge values.
+   */
   const getEdgeValueMatrix = () => {
     const adjacent = [];
     edgeData.forEach((row) => {
@@ -232,12 +235,13 @@ function EuclideanMatrixParams({
       }
       adjacent.push(temp);
     });
-    // Calculate edges based on adjacent matrix
+
     const coords = getCoordinateMatrix();
     if (coords.length !== adjacent.length || coords[0].length !== adjacent[0].length) {
       return [];
     }
 
+    // Calculate edge values of each node.
     const edges = [];
     for (let i = 0; i < coords.length; i++) {
       const temp_edges = [];
@@ -341,12 +345,12 @@ function EuclideanMatrixParams({
 
       <div className="coord">
         <text className="titles"> Coordinates (X,Y) </text>
-        <Table columns={columns1} data={coordinateData} updateData={updateData1} algo={name} />
+        <Table columns={columns1} data={coordinateData} updateData={updateCoordinateData} algo={name} />
       </div>
       
       <div className="edge">
         <text className="titles"> Edges (0 or 1)</text>
-        <Table columns={columns2} data={edgeData} updateData={updateData2} algo={name} />
+        <Table columns={columns2} data={edgeData} updateData={updateEdgeData} algo={name} />
       </div>
       
     </div>

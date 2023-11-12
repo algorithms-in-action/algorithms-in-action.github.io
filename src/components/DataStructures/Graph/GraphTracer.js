@@ -48,8 +48,9 @@ class GraphTracer extends Tracer {
     this.istc = false;
   }
 
-  /* 
+  /** 
    * Calcluates the maximum individual coordinate from an array of x y coordinates.
+   * @param {array} 2d array of x y coordinates.
   */
   calculateMaximumCoordinate(coordinates) {
     let max = 0;
@@ -66,8 +67,9 @@ class GraphTracer extends Tracer {
     return max;
   }
 
-  /*
+  /** 
    * Sets the node radius dependant on the maximum node coordinate from an array of coordinates.
+   * @param {array} coordinates 2d array of x y coordinates.
   */
   setNodeRadius(coordinates = [])
   {
@@ -86,9 +88,6 @@ class GraphTracer extends Tracer {
         return;
       }
     }
-
-    // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
-    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
   }
 
   /**
@@ -96,6 +95,8 @@ class GraphTracer extends Tracer {
    * but we add a second argument which accepts nodes' values
    * and a third argument which accepts nodes' coordinates.
    * @param {array} array2d 2D array of nodes
+   * @param {array} values 2D array of edge values.
+   * @param {array} coordinates 2d array of coordinates.
    */
   set(array2d = [], values = [], coordinates = []) {
     this.setNodeRadius(coordinates);

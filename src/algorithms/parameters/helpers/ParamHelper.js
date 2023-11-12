@@ -138,6 +138,7 @@ export const makeRandomCoordinateData = (len, minDiff, maxDiff) => {
   let xMax = 0;
   let yMax = 0; 
   const coords = [];
+  // Iterate through all nodes and assign coordinates, dependant on parity of node number.
   for (let i = 0; i < len; i += 1) {
     const coord = [];
     // If even, x coordinate should at least be xMax.
@@ -289,7 +290,7 @@ export const makeSparseEdgeData = (len) => {
  * @param {number} len size of the matrix
  * @return array of object
  */
-export const makeSparseEdgeZerosData = (len) => {
+export const makeEdgeZerosData = (len) => {
   let edges;
     edges = new Array(len).fill(0).map(() => new Array(len).fill(0));
 
