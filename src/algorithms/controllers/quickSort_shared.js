@@ -143,7 +143,7 @@ export function run_QS(is_qs_median_of_3) {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes;
-    let max_depth_index = -1;
+    let max_depth_index = -1; // indexes into 2D array, starts at zero
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack = []; // [ [left, right,  depth], ...]
 
