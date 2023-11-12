@@ -279,15 +279,31 @@ function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
       </div>,
     );
   }
+
+
+  /*
+
+    Logic for maxStackDepth needs to be fixed before it can be added in again
+
+    Bugs with
+      maxStackDepth not being correct
+      changing array and maxStackDepth staying the same
+
+          <p>
+          {stack.length > 0 && stackDepth !== undefined ? `Maximum stack depth: ${maxStackDepth}` : ''}
+          </p>
+
+      
+
+  */
+
   return (
     <div className={styles.stack}>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         <p>
           {stack.length > 0 && stackDepth !== undefined ? `Current stack depth: ${stackDepth}` : ''}
         </p>
-        <p>
-          {stack.length > 0 && stackDepth !== undefined ? `Maximum stack depth: ${maxStackDepth}` : ''}
-        </p>
+
       </div>
       {stackItems}
     </div>
