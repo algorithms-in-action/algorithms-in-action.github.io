@@ -56,6 +56,7 @@ const QS_BOOKMARKS = {
   MEDIAN3_second_swap_A_idx_left_with_A_idx_mid: 17,
   MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1: 18,
   SHARED_done_qs: 19,
+  SHARED_skip_step : 19, // idk how this works
   MEDIAN3_first_if_A_idx_left_greater_A_idx_right: 20,
   MEDIAN3_if_A_idx_mid_greater_A_idx_right: 21,
   MEDIAN3_second_if_A_idx_left_greater_A_idx_right: 22,
@@ -289,7 +290,7 @@ export function run_QS(is_qs_median_of_3) {
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
           chunker.add(
-            boolShouldAnimate() ? bookmark : QS_BOOKMARKS.SHARED_done_qs,
+            boolShouldAnimate() ? bookmark : QS_BOOKMARKS.SHARED_skip_step,
             (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
               vis.array.swapElements(_n1, _n2);
 
@@ -437,7 +438,7 @@ export function run_QS(is_qs_median_of_3) {
             swapAction(
               boolShouldAnimate()
                 ? QS_BOOKMARKS.SHARED_swap_array_i_j_vals
-                : QS_BOOKMARKS.SHARED_done_qs,
+                : QS_BOOKMARKS.SHARED_skip_step,
               i,
               j
             );
@@ -451,7 +452,7 @@ export function run_QS(is_qs_median_of_3) {
         swapAction(
           boolShouldAnimate()
             ? QS_BOOKMARKS.SHARED_swap_pivot_into_position
-            : QS_BOOKMARKS.SHARED_done_qs,
+            : QS_BOOKMARKS.SHARED_skip_step,
           i,
           is_qs_median_of_3 ? right-1 : right
         );
@@ -530,7 +531,7 @@ export function run_QS(is_qs_median_of_3) {
       else if (left < a.length) {
         let size_one_bookmark = isRecursionExpanded()
           ? QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1
-          : QS_BOOKMARKS.SHARED_done_qs;
+          : QS_BOOKMARKS.SHARED_skip_step;
 
         chunker.add(
           size_one_bookmark,
