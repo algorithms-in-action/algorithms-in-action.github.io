@@ -263,10 +263,6 @@ export function run_QS(is_qs_median_of_3) {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    // any if statements with depth === 0 and isQuicksort...Expanded is related to the independent recursion animation
-    // it prevents some chunkers to be added so that some animation can be done in one step.
-    // Refer to the quicksort function for more information
-
 
     function QuickSort(qs_num_array, left, right, depth) { 
 
