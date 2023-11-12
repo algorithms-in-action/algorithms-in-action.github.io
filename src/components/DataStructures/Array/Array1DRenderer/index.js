@@ -53,6 +53,8 @@ class Array1DRenderer extends Array2DRenderer {
   }
 
   renderData() {
+
+    // eslint-disable-next-line
     const { data, algo, stack, stackDepth } = this.props.data;
 
     const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
