@@ -434,26 +434,14 @@ export function run_QS(is_qs_median_of_3) {
           chunker_add_if(QS_BOOKMARKS.SHARED_if_j_greater_i);
           
           if (i < j) {
-  
-            swapAction(
-              boolShouldAnimate()
-                ? QS_BOOKMARKS.SHARED_swap_array_i_j_vals
-                : QS_BOOKMARKS.SHARED_skip_step,
-              i,
-              j
-            );
+            swapAction(QS_BOOKMARKS.SHARED_swap_array_i_j_vals, i, j);
           }
         }
   
         pivot_index = i
   
         // swap pivot with i
-  
-        swapAction(
-          boolShouldAnimate()
-            ? QS_BOOKMARKS.SHARED_swap_pivot_into_position
-            : QS_BOOKMARKS.SHARED_skip_step,
-          i,
+        swapAction(QS_BOOKMARKS.SHARED_swap_pivot_into_position, i,
           is_qs_median_of_3 ? right-1 : right
         );
 
