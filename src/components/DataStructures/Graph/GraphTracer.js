@@ -562,6 +562,7 @@ class GraphTracer extends Tracer {
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
+
     if (weight) node.weight = weight;
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;
@@ -678,7 +679,7 @@ class GraphTracer extends Tracer {
 
   isInterConnected(source, target) {
     return this.edges.find(edge => edge.source === source && edge.target === target)
-        && this.edges.find(edge => edge.source === target && edge.target === source);
+      && this.edges.find(edge => edge.source === target && edge.target === source);
   }
 
   log(key) {

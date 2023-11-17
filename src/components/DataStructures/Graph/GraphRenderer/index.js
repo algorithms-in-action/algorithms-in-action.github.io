@@ -33,7 +33,7 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
-function calculateControlCord(x1, y1, x2, y2) {
+export function calculateControlCord(x1, y1, x2, y2) {
   // Slope for line that perpendicular to (x1,y1) (x2,y2)
   const slope = -(x2 - x1) / (y2 - y1);
   let cx; let cy;
@@ -168,7 +168,7 @@ class GraphRenderer extends Renderer {
                   isWeighted &&
                   <g transform={`translate(${mx},${my})`}>
                     <text className={styles.weight} transform="rotate(0)"
-                          y={-edgeWeightGap}>{this.toString(weight)}</text>
+                      y={-edgeWeightGap}>{this.toString(weight)}</text>
                   </g>
                 }
               </g>
@@ -186,11 +186,11 @@ class GraphRenderer extends Renderer {
           const visitedNode2 = visitedCount2 === 1;
           return (
             <motion.g
-                animate={{ x, y }}
-                initial={false}
-                transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
-                key={key}
+              animate={{ x, y }}
+              initial={false}
+              transition={{ duration: 1 }}
+              className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode0 && styles.visited0, visitedNode && styles.visited, visitedNode1 && styles.visited1, visitedNode2 && styles.visited2)}
+              key={key}
             >
               <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
               <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
@@ -202,9 +202,9 @@ class GraphRenderer extends Renderer {
                 )
               }
               {
-                  isPointer &&
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
-                }
+                isPointer &&
+                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
+              }
             </motion.g>
           );
         })}

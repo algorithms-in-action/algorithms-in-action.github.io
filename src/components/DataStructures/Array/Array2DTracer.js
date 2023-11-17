@@ -29,6 +29,7 @@ export class Element {
     this.key = key;
     this.variables = [];
     this.stack = [];
+    this.fill = 0;
   }
 }
 
@@ -41,10 +42,12 @@ class Array2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], algo) {
+  set(array2d = [], algo, kth = 1) {
     this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
     this.algo = algo;
-    this.kth = '1';
+    this.kth = kth;
+    this.motionOn = true; // whether to use animation
+    this.hideArrayAtIdx = null; // to hide array at given index
     super.set();
   }
 
@@ -85,6 +88,25 @@ class Array2DTracer extends Tracer {
             this.data[x][y].selected = true;
             break;
         }
+      }
+    }
+  }
+
+  // a simple fill function based on aia themes
+  // where green=1, yellow=2, and red=3
+  fill(sx, sy, ex = sx, ey = sy, c = 0) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].fill = (c === 1 || c === 2 || c === 3) ? c : 0;
+      }
+    }
+  }
+
+  // unfills the given element (used with fill)
+  unfill(sx, sy, ex = sx, ey = sy) {
+    for (let x = sx; x <= ex; x++) {
+      for (let y = sy; y <= ey; y++) {
+        this.data[x][y].fill = 0;
       }
     }
   }
@@ -134,6 +156,14 @@ class Array2DTracer extends Tracer {
     this.data = newData;
   }
 
+  /**
+   * Whether to use animation. Could be used to immediately update the state.
+   * For instance, where there are two 'distinct' operation and the sliding motion complicates.
+   * @param {*} bool 
+   */
+  setMotion(bool = true) {
+    this.motionOn = bool;
+  }
 
   // style = { backgroundStyle: , textStyle: }
   styledSelect(style, sx, sy, ex = sx, ey = sy) {
@@ -175,6 +205,31 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
+  }
+
+  getKth() {
+    return this.kth;
+  }
+
+  /**
+   * Hides the array at the given index.
+   * @param {*} index the index of the array to hide.
+   */
+  hideArrayAtIndex(index) {
+    this.hideArrayAtIdx = index;
+  }
+
+  /**
+   * Updates the value at the given position of the array.
+   * @param {*} x the row index.
+   * @param {*} y the column index.
+   * @param {*} newValue the new value.
+   */
+  updateValueAt(x, y, newValue) {
+    if (!this.data[x] || !this.data[x][y]) {
+      return;
+    }
+    this.data[x][y].value = newValue;
   }
 }
 
