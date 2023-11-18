@@ -24,13 +24,19 @@ const STACK_FRAME_COLOR = {
   P_color: 6, // pivot
 };
 
-// bookmarks (id) into the REAL file for quicksort
-// (search \\B and find quicksort)
-// keep up to date with this file, ideally this would auto generate
+
 /* 
-  MEDIAN3_
-  SHARED_ if same instruction between MEDIAN3 and RIGHT_PIVOT
-  RIGHT_P_
+
+(loc is line of code)
+bookmarks are loc identifiers into a REAL file
+REAL files are the pseudocode files
+(search \\B and find quicksort)
+keep up to date with this file
+
+MEDIAN3_      if loc is only in median of 3 quicksort
+SHARED_       if shared loc between MEDIAN3 and RIGHT_PIVOT
+RIGHT_P_      if an loc is only in the right pivot quicksort
+
 */
 
 const QS_BOOKMARKS = {
@@ -133,9 +139,6 @@ export function initVisualisers() {
 export function run_QS(is_qs_median_of_3) {
 
   return function run(chunker, { nodes }) {
-
-
-
     // can't rename from nodes
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -278,12 +281,14 @@ export function run_QS(is_qs_median_of_3) {
         function swapAction(bookmark, n1, n2) {
 
           assert(bookmark !== undefined);
+          assert(n1 !== undefined);
+          assert(n2 !== undefined);
   
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
           chunker.add(bookmark,
             (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-              
+
               vis.array.swapElements(_n1, _n2);
               if (boolShouldAnimate()) {
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
@@ -314,14 +319,11 @@ export function run_QS(is_qs_median_of_3) {
   
         function pivot_value() { return a[pivot_index] }; 
   
- 
         // pick pivot --------
         
         if (is_qs_median_of_3) {
 
           const mid = Math.floor((left + right) / 2);
-
-
 
           // assigning the pivot as the midpoint calculated above
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
