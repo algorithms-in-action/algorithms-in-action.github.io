@@ -12,6 +12,7 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
+/* eslint-disable import/no-unresolved */
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -561,6 +562,7 @@ class GraphTracer extends Tracer {
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
+
     if (weight) node.weight = weight;
     if (!this.istc) {
       node.visitedCount += visit ? 1 : -1;
@@ -677,7 +679,7 @@ class GraphTracer extends Tracer {
 
   isInterConnected(source, target) {
     return this.edges.find(edge => edge.source === source && edge.target === target)
-        && this.edges.find(edge => edge.source === target && edge.target === source);
+      && this.edges.find(edge => edge.source === target && edge.target === source);
   }
 
   log(key) {

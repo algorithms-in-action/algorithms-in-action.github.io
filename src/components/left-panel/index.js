@@ -72,7 +72,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
 
   const mouseEvs = ['mousedown', 'click', 'mouseup'];
   let startButtonClick = null;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // eslint-disable-next-line no-use-before-define
     startButtonClick();

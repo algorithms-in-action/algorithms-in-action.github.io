@@ -5,7 +5,8 @@ import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
-import { onCollapseStateChangeQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
+import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
+
 const DEFAULT_ALGORITHM = 'binarySearchTree';
 const DEFAULT_MODE = 'insertion';
 
@@ -196,10 +197,8 @@ export const GlobalActions = {
     );
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
-    const firstLineExplan = findBookmark(
-      procedurePseudocode,
-      bookmarkInfo.bookmark,
-    ).explanation;
+    //const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
+    const firstLineExplan = null;
     previousState = [];
 
     return {
@@ -241,11 +240,7 @@ export const GlobalActions = {
     } while (
       !result.pauseInCollapse &&
       !result.finished &&
-      !isBookmarkVisible(
-        state.pseudocode,
-        state.collapse[state.id.name][state.id.mode],
-        result.bookmark,
-      )
+      !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark)
     );
     if (result.finished) {
       previousState = [];
@@ -301,7 +296,7 @@ export const GlobalActions = {
     }
 
     onCollapseStateChange();
-    onCollapseStateChangeQS();
+    unionFindToggleRank(state);
 
     return {
       ...state,

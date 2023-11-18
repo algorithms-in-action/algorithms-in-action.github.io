@@ -9,9 +9,9 @@
 /* eslint-disable dot-notation */
 /* eslint-disable linebreak-style */
 import React, { useContext, useEffect } from 'react';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import HelpIcon from '@material-ui/icons/Help';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import HelpIcon from '@mui/icons-material/Help';
 import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -144,7 +144,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
     if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][blockName] && line.lineExplanButton !== undefined) {
       lineExplanButton =
         <button
-          id={"buttonexpl"+i}
+          id={"buttonexpl" + i}
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
@@ -158,7 +158,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           className={(!algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
             && blockContainsBookmark(algorithm, line.ref)) ? 'active' : ''}
           role="presentation"
-          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+        //onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
           <span>
@@ -183,7 +183,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           </span>
           <span
             id={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'activebtn' : ''}>
-              {lineExplanButton}</span>
+            {lineExplanButton}</span>
           {pseudoceArary}
         </p>,
       );
@@ -198,7 +198,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           key={i}
           className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
-          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+        //onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
           <span>{null}</span>
@@ -249,7 +249,7 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
         {cl}
         {pseudoCodePad}
       </div>
-      { algorithm.lineExplanation ? (
+      {algorithm.lineExplanation ? (
         <LineExplanation
           explanation={algorithm.lineExplanation}
           fontSize={fontSize}

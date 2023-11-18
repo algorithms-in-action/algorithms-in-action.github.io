@@ -14,7 +14,7 @@ $headerHeight: 30px;
   position: absolute;
   display: block;
   z-index: 10;
-  right: $headerOffset/2;
+  right: calc($headerOffset/2);
   top: $headerHeight + $headerOffset;
   
   // Dimension
@@ -120,38 +120,38 @@ $outerBorder: 2px;
     .left {
       @include border-radii($btnSize,0,0,$btnSize);
       height: $btnSize - ($outerBorder * 4);
-      width: $btnSize /2 - ($outerBorder * 2);
+      width: calc($btnSize /2) - ($outerBorder * 2);
     }
 
     .right {
       height: $btnSize - ($outerBorder * 4);
-      width: $btnSize /2 - ($outerBorder * 2);
+      width: calc($btnSize /2) - ($outerBorder * 2);
       @include border-radii(0,$btnSize,$btnSize,0);
 
     }
     .top-left {
     
       @include border-radii($btnSize,0,0,0);
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
+      height: calc($btnSize/2) - ($outerBorder * 4);
+      width: calc($btnSize/2)  - ($outerBorder * 2);
     }
     .top-right {
       
       @include border-radii(0,$btnSize,0,0);
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
+      height: calc($btnSize/2) - ($outerBorder * 4);
+      width: calc($btnSize/2)  - ($outerBorder * 2);
     }
     .bottom-right {
       
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
+      height: calc($btnSize/2) - ($outerBorder * 4);
+      width: calc($btnSize/2)  - ($outerBorder * 2);
       @include border-radii(0,0,$btnSize,0);
 
     }
     .bottom-left {
       
-      height: $btnSize/2 - ($outerBorder * 4);
-      width: $btnSize/2  - ($outerBorder * 2);
+      height: calc($btnSize/2) - ($outerBorder * 4);
+      width: calc($btnSize/2)  - ($outerBorder * 2);
       @include border-radii(0,0,0,$btnSize);
 
     }

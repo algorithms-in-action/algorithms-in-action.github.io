@@ -3,8 +3,12 @@ name: Deploy
 on:
   workflow_dispatch: # enables manual deploy
   push:
-    branches:
-      - dev
+    branches: [ dev ]
+    paths-ignore:
+      - 'doc/**'      # Ignore all files and subdirectories under "doc/"
+      - 'docs/**'     # Ignore all files and subdirectories under "docs/"
+  #pull_request:
+  #  branches: [ dev ]
 
 jobs:
   build:
@@ -17,14 +21,7 @@ jobs:
       - name: Deploy 🚀
         uses: akhileshns/heroku-deploy@v3.12.14 
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "aia-g007"
-          heroku_email: "bensampsondev@gmail.com"
-          buildpack: "mars/create-react-app"
-          stack: "heroku-20"
-          # action should not succeed if app crashes
-          healthcheck: "https://aia-g007-5158289162d4.herokuapp.com/"
-          # don't deploy if healthcheck fails
-          rollbackonhealthcheckfailed: true 
-          # delay health check since it takes time to boot up
-          delay: 30
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: master # The branch the action should deploy to.
+          FOLDER: build # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch

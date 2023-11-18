@@ -55,6 +55,22 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
+/**
+ * Generate a list of unique random numbers given size.
+ * @param {*} num the length of the list to generate.
+ * @param {*} min the minimum value of the random number.
+ * @param {*} max the maximum value of the random number.
+ * @returns the generated list.
+ */
+export const genUniqueRandNumList = (num, min, max) => {
+
+  const set = new Set();
+  while (set.size < num) {
+    set.add(getRandomInt(min, max));
+  }
+  return Array.from(set);
+};
+
 export const quicksortPerfectPivotArray = (minA, maxA) => {
   function idealOrder(min, max, v, step) {
     if (max <= min) {
