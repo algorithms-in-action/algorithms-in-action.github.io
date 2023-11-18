@@ -276,14 +276,15 @@ export function run_QS(is_qs_median_of_3) {
 
   
         function swapAction(bookmark, n1, n2) {
+
+          assert(bookmark !== undefined);
   
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
-          chunker.add(
-            boolShouldAnimate() ? bookmark : QS_BOOKMARKS.SHARED_skip_step,
+          chunker.add(bookmark,
             (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+              
               vis.array.swapElements(_n1, _n2);
-
               if (boolShouldAnimate()) {
                 refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
               }
