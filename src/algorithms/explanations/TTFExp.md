@@ -3,7 +3,7 @@
 A 234 tree is a form of balanced search tree (and a simple instance
 of a B-tree).  All leaves are at the same level of the tree. The
 tree is made up of three kinds of nodes: two-nodes, three-nodes
-and four-nodes, named for the number of childred the node has.
+and four-nodes, named for the number of children the node has.
 Two-nodes are the same as binary search tree nodes,
 containing a left subtree (child1), a key (key1) and a right subtree
 (child2). Ordinarily they would also hold a data field, which the user
