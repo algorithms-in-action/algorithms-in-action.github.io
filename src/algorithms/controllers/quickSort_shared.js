@@ -15,7 +15,7 @@ const VIS_VARIABLE_STRINGS = {
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
-  Not_started_stackFrame: 0,
+  No_color: 0,
   In_progress_stackFrame: 1,
   Current_stackFrame: 2,
   Finished_stackFrame: 3,
@@ -164,7 +164,7 @@ export function run_QS(is_qs_median_of_3) {
         // for whatever reason fill() does not work here... JavaScript
         stack_vis.push(
           [...Array.from({ length: entire_num_array.length })].map(() => ({
-            base: STACK_FRAME_COLOR.Not_started_stackFrame,
+            base: STACK_FRAME_COLOR.No_color,
             extra: [],
           })),
         );
