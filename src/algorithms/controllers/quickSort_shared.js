@@ -151,21 +151,15 @@ export function run_QS(is_qs_median_of_3) {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(
-      cur_real_stack,
-      cur_finished_stack_frames,
-      cur_i,
-      cur_j,
-      cur_pivot_index,
-      cur_depth,
-    ) {
-      // pass in curr_i, curr_j, curr_depth as -1 if they are not to be rendered
-
-      let stack = [];
+    function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) {
+      // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
+      // for visualise this data
+      
+      let stack_vis = [];
 
       for (let i = 0; i < max_depth_index + 1; i++) {
         // for whatever reason fill() does not work here... JavaScript
-        stack.push(
+        stack_vis.push(
           [...Array.from({ length: entire_num_array.length })].map(() => ({
             base: STACK_FRAME_COLOR.Not_started,
             extra: [],
@@ -174,53 +168,53 @@ export function run_QS(is_qs_median_of_3) {
       }
 
       cur_finished_stack_frames.forEach((stack_frame) => {
-        stack = update_vis_with_stack_frame(
-          stack,
+        stack_vis = update_vis_with_stack_frame(
+          stack_vis,
           stack_frame,
           STACK_FRAME_COLOR.Finished,
         );
       });
 
       cur_real_stack.forEach((stack_frame) => {
-        stack = update_vis_with_stack_frame(
-          stack,
+        stack_vis = update_vis_with_stack_frame(
+          stack_vis,
           stack_frame,
           STACK_FRAME_COLOR.In_progress,
         );
       });
 
       if (cur_real_stack.length !== 0) {
-        stack = update_vis_with_stack_frame(
-          stack,
+        stack_vis = update_vis_with_stack_frame(
+          stack_vis,
           cur_real_stack[cur_real_stack.length - 1],
           STACK_FRAME_COLOR.Current,
         );
       }
 
       if (cur_depth === undefined) {
-        return stack;
+        return stack_vis;
       }
 
       if (cur_pivot_index !== undefined) {
-        stack[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
+        stack_vis[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
       }
 
-      if (!isPartitionExpanded()) { return stack; }
+      if (!isPartitionExpanded()) { return stack_vis; }
 
       if (cur_i !== undefined) {
-        stack[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
+        stack_vis[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
       }
 
       if (cur_j !== undefined) {
-        stack[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
+        stack_vis[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
       }
 
-      return stack;
+      return stack_vis;
     }
 
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
-      
+      // TODO
       // we can't render the -1 index 
       // so this is a workaround
       if (cur_i === -1) { cur_i = 0 } 
