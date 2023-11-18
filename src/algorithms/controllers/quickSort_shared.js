@@ -15,10 +15,10 @@ const VIS_VARIABLE_STRINGS = {
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
-  Not_started: 0,
-  In_progress: 1,
-  Current: 2,
-  Finished: 3,
+  Not_started_stackFrame: 0,
+  In_progress_stackFrame: 1,
+  Current_stackFrame: 2,
+  Finished_stackFrame: 3,
   I_color: 4,
   J_color: 5,
   P_color: 6, // pivot
@@ -164,7 +164,7 @@ export function run_QS(is_qs_median_of_3) {
         // for whatever reason fill() does not work here... JavaScript
         stack_vis.push(
           [...Array.from({ length: entire_num_array.length })].map(() => ({
-            base: STACK_FRAME_COLOR.Not_started,
+            base: STACK_FRAME_COLOR.Not_started_stackFrame,
             extra: [],
           })),
         );
@@ -174,7 +174,7 @@ export function run_QS(is_qs_median_of_3) {
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
           stack_frame,
-          STACK_FRAME_COLOR.Finished,
+          STACK_FRAME_COLOR.Finished_stackFrame,
         );
       });
 
@@ -182,7 +182,7 @@ export function run_QS(is_qs_median_of_3) {
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
           stack_frame,
-          STACK_FRAME_COLOR.In_progress,
+          STACK_FRAME_COLOR.In_progress_stackFrame,
         );
       });
 
@@ -190,7 +190,7 @@ export function run_QS(is_qs_median_of_3) {
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
           cur_real_stack[cur_real_stack.length - 1],
-          STACK_FRAME_COLOR.Current,
+          STACK_FRAME_COLOR.Current_stackFrame,
         );
       }
 
