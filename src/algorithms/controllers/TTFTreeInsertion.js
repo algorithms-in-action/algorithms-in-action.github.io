@@ -350,10 +350,10 @@ export default {
 
     if (nodes.length === 1) return;
 
-    treeStruct = this.insert(chunker, nodes[0], tree, newID);
+    treeStruct = this.insert(chunker, nodes[1], tree, newID);
 
     // remaining insertions
-    for (let i = 1; i < nodes.length; i++) {
+    for (let i = 2; i < nodes.length; i++) {
       treeStruct = this.insert(
         chunker,
         nodes[i],
