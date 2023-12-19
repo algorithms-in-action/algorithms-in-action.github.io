@@ -169,7 +169,7 @@ const allalgs = {
   },
   'TTFTree': {
     name: '2-3-4 Tree',
-    category: 'Other',
+    category: 'Searching',
     param: <Param.TTFTreeParam/>,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
