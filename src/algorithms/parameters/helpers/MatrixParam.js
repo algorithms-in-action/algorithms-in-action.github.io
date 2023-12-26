@@ -8,7 +8,7 @@ import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
   makeColumnArray,
-  makeData,
+  makeWeights,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -35,6 +35,7 @@ function simulateMouseClick(element) {
 /**
  * This matrix param component can be used when
  * the param input accepts a matrix
+ * (currently assumes matrix represents edge weights of a graph)
  */
 function MatrixParam({
   defaultSize,
@@ -59,8 +60,9 @@ function MatrixParam({
   // window.alert(columns.Header);
   const { dispatch } = useParam();
 
-  //modified this so that the graph is synchronized with the matrix at the start
-  const [data, setData] = useState(() => makeData(size, min, max, symmetric, unweighted));
+  // modified this so that the graph is synchronized with the matrix at the start
+  // XXX its not for Prims...
+  const [data, setData] = useState(() => makeWeights(size, min, max, symmetric, unweighted));
 
 
   const [originalData, setOriginalData] = useState(data);
@@ -68,7 +70,7 @@ function MatrixParam({
 
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size, min, max, symmetric, unweighted);
+    const newData = makeWeights(size, min, max, symmetric, unweighted);
     setData(newData);
     setOriginalData(newData);
   }, [size, min, max, symmetric, unweighted]);
@@ -315,3 +317,4 @@ export default MatrixParam;
           id="refreshMatrix"
           onClick={resetData}
         /> */
+

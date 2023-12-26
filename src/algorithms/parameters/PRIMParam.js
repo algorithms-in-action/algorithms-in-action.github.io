@@ -5,6 +5,7 @@ import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
 const PRIMS = 'New Prim\'s';
+// XXX fix up error messages some time
 const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
 function PRIMParam() {
@@ -17,7 +18,16 @@ function PRIMParam() {
         name="prim"
         mode="find"
         defaultSize={DEFAULT_SIZE}
-        min={0}
+        // XXX
+        // min&max for weights originally, then used for X&Y coordinates
+        // as well (DOH!) (maybe avoid for weights in the future but
+        // beware legacy use of min and max in weight-related code!)
+        // Best avoid 0 so we don't get edges along axes.
+        // Good to have max=50 *if we can fix size of display* so it fits ok
+        // - means precision is reasonably but both Manhattan and
+        // Euclidean distances are at most two digits. Using something
+        // smaller for now due to display size being a mystery...
+        min={1}
         max={9}
         symmetric
         ALGORITHM_NAME={PRIMS}

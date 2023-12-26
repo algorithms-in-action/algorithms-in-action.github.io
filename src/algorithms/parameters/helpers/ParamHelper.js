@@ -138,7 +138,14 @@ export const makeColumnCoords = () => {
  * @param symmetric
  * @return array of object
  */
-export const makeData = (len, min, max, symmetric, unweighted) => {
+// Create random-ish edge matrix
+// Was called with min=max=1 so we get a complete graph every time -
+// visually confusing! Best arrange things so we have a small number of
+// edges per node (2-3 seems reasonable), so we could use size + random
+// number to determine if there is an edge and min&max (or 1) to get edge
+// length if there is one. To make sure we have a connected graph we could
+// force node n to be connected to node n+1
+export const makeWeights = (len, min, max, symmetric, unweighted) => {
   const rows = [];
   if (symmetric) {
     for (let i = 0; i < len; i += 1) {
@@ -175,7 +182,7 @@ export const makeData = (len, min, max, symmetric, unweighted) => {
     }
     arr.push(data);
   }
-  if (len === 4 && symmetric !== true) {
+  if (len === 4 && symmetric !== true) { // XXX WTF?
     arr = [
       {
         col0: '1',
@@ -202,6 +209,37 @@ export const makeData = (len, min, max, symmetric, unweighted) => {
         col3: '1',
       },
     ];
+  }
+  return arr;
+};
+
+// Create random-ish XY coordinates
+// Copied from makeEdges (was makeData) above, which was used for both
+// purposes before. Gradually modifying but there might be some
+// leftover rubbish from previous use/code
+export const makeXYCoords = (len, min, max, symmetric, unweighted) => {
+  const rows = [];
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    // To make the graph more readable it helps to spread the X values
+    // across the range rather than have everything clumped up.
+    // We break up the range min to max into columns xmin-xmax for each
+    // i value. If sep=0 there is no separation of columns: xmin is
+    // min and xmax is max for all i. If sep=1 the columns are separated
+    // as much as possible, X_{i} <= X_{i+1} for all i and we get even
+    // spread of X values over the whole range. For 0<sep<1 we get more
+    // spread than purely random but the xmin-xmax columns overlap.
+    // const sep = 0; // no attempt to spread X values
+    // const sep = 1; // X values spread pretty evenly
+    const sep = 0.8;
+    let xmin = Math.floor(min + sep*(max-min)*i/len);
+    let xmax = Math.ceil(max - sep*(max-min)*(len-1-i)/len);
+    data[`col0`] = `${getRandomInt(xmin, xmax)}`;
+    // Ideally, spreading the Y values would also be good but we dont
+    // want them correlated with the X values so its not so easy
+    data[`col1`] = `${getRandomInt(min, max)}`;
+    arr.push(data);
   }
   return arr;
 };

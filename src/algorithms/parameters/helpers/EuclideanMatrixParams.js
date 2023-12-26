@@ -10,7 +10,8 @@ import Table from './Table';
 import {
   makeColumnArray,
   makeColumnCoords,
-  makeData,
+  makeXYCoords,
+  makeWeights,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -50,6 +51,7 @@ function EuclideanMatrixParams({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
+  unweighted
 }) {
   // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
@@ -59,32 +61,44 @@ function EuclideanMatrixParams({
   const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data1, setData1] = useState(() => makeData(size, min, max, symmetric));
+
+  // X&Y coordinate table
+  const [data1, setData1] = useState(() => makeXYCoords(size, min, max));
   const [originalData1, setOriginalData1] = useState(data1);
 
-  // Second Table
-  const [data2, setData2] = useState(() => makeData(size, 1, 1, symmetric));
+  // Edge weight table
+  // XXXX use 0-2 for weights for now so reduce number of edges - should
+  // have bigger max but more zeros (currently non-zero is replaced by
+  // Euclid or Manhattan anyway)
+  const [data2, setData2] = useState(() => makeWeights(size, 0, 2, symmetric, unweighted));
   const [originalData2, setOriginalData2] = useState(data2);
 
+  // XXX why is this 'Start' but 'Restart' in MatrixParam.js???
   const [buttonMessage, setButtonMessage] = useState('Start');
   
-  // With the buton toggle Euclidean/Manhattan
+  // With the button toggle Euclidean/Manhattan
+  // XXX Would be better to have Euclidean/Manhattan/As Input for
+  // flexibility (allow weights other than 0/1 in matrix but treat them as
+  // 0 or 1 when Euclidean or Manhattan are selected). Best make it more
+  // visually obvious you can click to change also.
   const [isEuclidean, setCalcMethod] = useState(true);
   const [isEuclideanButtonMessage, setCalcMethodButtonMessage] = useState('Euclidean');
 
-  // reset the Table when the size changes
+  // reset the XY coordinates when the size changes
+  // XXX Could just trim/extend
   useEffect(() => {
-    const newData1 = makeData(size, min, max, symmetric);
+    const newData1 = makeXYCoords(size, min, max);
     setData1(newData1);
     setOriginalData1(newData1);
-  }, [size, min, max, symmetric]);
+  }, [size, min, max, symmetric, unweighted]);
 
-  // second table
+  // reset the edge weight matrix when the size changes
+  // XXX Could just trim/extend
   useEffect(() => {
-    const newData2 = makeData(size, 1, 1, symmetric);
+    const newData2 = makeWeights(size, 0, 2, symmetric, unweighted);
     setData2(newData2);
     setOriginalData2(newData2);
-  }, [size, 1, 1, symmetric]);
+  }, [size, 0, 2, symmetric, unweighted]);
 
   useEffect(() => {
     const element = document.querySelector('button[id="startBtnGrp"]');
@@ -92,6 +106,9 @@ function EuclideanMatrixParams({
   }, []);
 
   // Reset the matrix to the inital set
+  // XXX Not sure if we want this? Should be able to choose from a
+  // couple of different supplied examples plus generate random plus
+  // edit data.
   const resetData = () => {
     setMessage(null);
     setData1(originalData1);
@@ -103,6 +120,8 @@ function EuclideanMatrixParams({
     setSize(newSize);
   };
 
+  // XXX should include just getting values from matrix as an option for
+  // maximum flexibility
   const changeCalcMethod = (state) => {
     setMessage(null);
     setCalcMethod(state);
@@ -179,8 +198,10 @@ function EuclideanMatrixParams({
       adjacent.push(temp);
     });
     // Calculate edges based on adjacent matrix
+    // XXX should figure out an appropriate error message if things are
+    // screwed up
     const coords = getCoordinateMatrix();
-    if (coords.length !== adjacent.length || coords[0].length !== adjacent[0].length) {
+    if (coords.length !== adjacent.length || coords.length !== adjacent[0].length || coords[0].length !== 2) {
       return [];
     }
 
@@ -192,25 +213,25 @@ function EuclideanMatrixParams({
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (isEuclidean === true) {
-          // Calculate Euclidean Distances
-          distance = Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2));
+          // Calculate *rounded up* Euclidean Distances
+          // Want to avoid floating point + have the option of
+          // admissible and inadmissible heuristics in A*
+          distance = Math.ceil(Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2)));
         } else {
           // Calculate Manhattan Distances
           distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
         }
 
         // If adjacent push distance if not then 0
-        if (adjacent[i][j] === 1) {
+// XXX move distance computation inside this if? Use adjacent[i][j] as
+// distance if flag value is appropriate.
+        if (adjacent[i][j] !== 0) {
           temp_edges.push(distance);
-        } else if (adjacent[i][j] === 0) {
-          temp_edges.push(0);
         } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
-          return [];
+          temp_edges.push(0);
         }
 
       }
-      
       edges.push(temp_edges);
     }
 
@@ -230,6 +251,11 @@ function EuclideanMatrixParams({
     closeInstructions(); // remove instruction
     setMessage(null);
 
+    // XXX graph display is different from data display on startup
+    // for some reason; works after clicking on START which
+    // runs this code.  Maybe next two lines need to be copied
+    // elsewhere or this function should be called?
+
     const coordsMatrix = getCoordinateMatrix();
     const edgeValueMatrix = getEdgeValueMatrix();
 
@@ -244,7 +270,7 @@ function EuclideanMatrixParams({
       });
     //   setButtonMessage('Reset');
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE)); // FIX message
     }
   };
 

@@ -69,6 +69,13 @@ class GraphTracer extends Tracer {
   /*
    * Sets the node radius dependant on the maximum node coordinate from an array of coordinates.
   */
+// XXX
+// Better for node radius to depend on number of nodes (and
+// perhaps the shortest edge length).  We want the coordinate
+// values to be up to 50 generally so we can have reasonable
+// precision with Euclidean distance.  Currently things are
+// way too small with larger coordinate values and the scaling
+// and font size control is a mystery to me...
   setNodeRadius(coordinates = [])
   {
     if(coordinates.length === 0)
