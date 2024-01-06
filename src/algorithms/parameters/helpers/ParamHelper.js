@@ -213,11 +213,9 @@ export const makeWeights = (len, min, max, symmetric, unweighted) => {
   return arr;
 };
 
-// Create random-ish XY coordinates
-// Copied from makeEdges (was makeData) above, which was used for both
-// purposes before. Gradually modifying but there might be some
-// leftover rubbish from previous use/code
-export const makeXYCoords = (len, min, max, symmetric, unweighted) => {
+// Create len random-ish XY coordinates in range min to max for
+// Euclidean graphs
+export const makeXYCoords = (len, min, max) => {
   const rows = [];
   let arr = [];
   for (let i = 0; i < len; i += 1) {
@@ -237,7 +235,9 @@ export const makeXYCoords = (len, min, max, symmetric, unweighted) => {
     let xmax = Math.ceil(max - sep*(max-min)*(len-1-i)/len);
     data[`col0`] = `${getRandomInt(xmin, xmax)}`;
     // Ideally, spreading the Y values would also be good but we dont
-    // want them correlated with the X values so its not so easy
+    // want them correlated with the X values so its not so easy.
+    // Also good to avoid nodes that are too close together - you can't
+    // see the edge because of the circles depicting the nodes.
     data[`col1`] = `${getRandomInt(min, max)}`;
     arr.push(data);
   }
