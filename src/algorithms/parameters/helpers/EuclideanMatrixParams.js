@@ -7,7 +7,7 @@
 // Support for graphs with Euclidean (X-Y) coordinates defined for each
 // node. In flux currently. Student version used tables for input of
 // graphs - lots of screen real-estate.  Also a bunch of other problems
-// and annoyances/limitations.  Working towards input of X-Y cordinates
+// and annoyances/limitations.  Now supports input of X-Y cordinates
 // and edges/weights via text boxes, plus having predefined example
 // graphs, allowing user-defined weights as well as Euclidean/Manhattan
 // weights based on X-Y coordinates, etc. Old input method still
@@ -15,36 +15,43 @@
 // much harm if its off-screen.
 // NOTE: There are (at least) three different representations for
 // graphs: strings (the "new" one - comma separated pairs of numbers etc)
-// the one for rendering tables (YUK!), and a more sensible 2D edge
+// the one for rendering tables (YUK!), and more sensible 2D edge
 // matrix (plus coordinates). These must be kept synchronised, and
 // synchronised with the representation used for rendering the graph at
 // certain points (a separate representation again with code elsewhere).
 // It's a bit tricky because setState in React is asynchronous - if you
 // call setState then immediately read the state it will be the old
-// state returned.
+// state returned.  It's particularly tricky with size.  Basically,
+// whenever anything is changed, you want to have the changed value in a
+// local variable thats passed around as needed, rather than relying on
+// the state version, which might be out of date. The flow of control
+// through normal function calls + also the calls that are triggered
+// through useEffect and UI interactions is also rather tricky.  Best
+// minimise triggering if you want to not tax your brain too much.
 // CURRENT STATUS:
 // Text boxes for data input are there and there are sample graphs with
-// switch to select them or random but data is not copied elsewhere.
-// Data input from tables gets reflected in text boxes.
+// switch to select them or random, coordinate data copied and size
+// updated accordingly and edge/coordinate data is copied to tables.
+// Data input from tables also gets reflected in text boxes.
 // TO DO:
-// FiXXX BUG: sometimes if you try to edit a matrix cell with a backspace
-// it "freezes" and you can't change it from zero (no idea why).
-// Code to parse lists of pairs etc (can re-use work by
-// Union-Find group) and convert to/from internal graph representation
-// and copy this data elsewhere when button is pressed (maybe use
-// sensible data structure for graph representation in the state and
-// copy to/from other representations).
 // Work more on input data display - use sccs for everything, define
 // new classes etc instead of just reusing existing ones.
-// Size adjustment should just trim/grow tables etc.
-// Keep track of size for random graphs?
-// Coordinates editing should change size?
+// Size adjustment should just trim/grow tables etc instead of
+// regenerating a random graph each time. However, it would also be nice
+// to easily generate new random graphs of a given size.
 // Example graphs should be passed in somehow (so they are algorithm
 // specific).
 // Optional start node and end nodes (algorithm specific)
-// Sync initial data with rendered graph (seems like there are default
+// Better random graph creation (seems like there are default
 // functions for creating a random graph in the renderer but no way of
-// getting from there to the data input display)
+// getting from there to the data input display - could copy and modify
+// that code or get some ideas at least)
+// Rethink (and probably delete) stuff for re-setting values - doesn't
+// seem like it's needed now.
+// FiXXX BUG: sometimes if you try to edit a matrix cell with a backspace
+// it "froze" and you couldn't change it from zero (no idea why; maybe
+// it's fixed now??).
+// A bunch of other things with XXX comments in code.
 //
 // Separate work on graph rendering - currently too small with decent
 // range of X-Y values plus
@@ -88,14 +95,14 @@ const graphChoiceName = ['Random', 'Example 1', 'Example 2'];
 // const graphChoice = 0; // DEFAULT
 
 const SIZE_EG1 = 5;
-const COORDS_TXT_EG1 = '1-1,3-4,4-1,6-5,7-8';
+const COORDS_TXT_EG1 = '1-1, 3-5, 4-1, 6-5, 7-3';
 const EDGES_TXT_EG1 = '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5';
 
-const SIZE_EG2 = 6;
-const COORDS_TXT_EG2 = '1-2,3-2,5-1,6-5,7-8,9-3';
-const EDGES_TXT_EG2 = '1-3-5,3-4,2-4-4,1-5-9,4-5,3-5,3-6-8';
+const SIZE_EG2 = 4;
+const COORDS_TXT_EG2 = '1-2, 3-5, 5-1, 6-5';
+const EDGES_TXT_EG2 = '1-3-5,1-4-4,3-4,2-4-4';
 
-const SIZE_RANDOM = SIZE_EG2;  // could change
+const SIZE_RANDOM = 6;  // could change
 const SIZE_EGS = [SIZE_RANDOM, SIZE_EG1, SIZE_EG2];
 // COORDS etc for random graphs will be generated; use anything here
 const COORDS_EGS = ['1-1', COORDS_TXT_EG1, COORDS_TXT_EG2];
@@ -131,7 +138,6 @@ function EuclideanMatrixParams({
   EXAMPLE2,
   unweighted
 }) {
-  // const [size, setSize] = useState(defaultSize);
   const [size, setSize] = useState(defaultSize);
  
   // With the button toggle Euclidean/Manhattan/As Input
@@ -166,33 +172,37 @@ function EuclideanMatrixParams({
   // and text list or pairs/triples for edges/weights,
   // eg 1-2,1-3-10,2-3-12,3-4,3-5 where first two numbers are nodes
   // and third is weight (if third is missing, weight defaults to 1)
-  // The following breaks something, somehow...
+  // The following broke something, somehow...
   // const [edgesTxt, setEdgesTxt] = useState(getEdgeList(data2));
   // but the initial values get reset somewhere or other
   const [coordsTxt, setCoordsTxt] = useState('');
   const [edgesTxt, setEdgesTxt] = useState('');
   const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
 
-  // XXX why is this 'Start' but 'Restart' in MatrixParam.js???
-  const [buttonMessage, setButtonMessage] = useState('Start');
+  // why is this 'Start' but 'Restart' in MatrixParam.js???
+  // No longer used - sync with animation done without an extra button
+  // click
+  // const [buttonMessage, setButtonMessage] = useState('Start');
 
   // reset the XY coordinates when the size changes
-  // XXX Could just trim/extend
+  // XXX Best just trim/extend
   useEffect(() => {
     const newData1 = makeXYCoords(size, min, max);
     setData1(newData1);
     setCoordsTxt(getCoordinateList(newData1));
     setOriginalData1(newData1);
-  }, [size, min, max, symmetric, unweighted]);
+  // }, [size, min, max, symmetric, unweighted]);
+  }, [min, max, symmetric, unweighted]);
 
   // reset the edge weight matrix when the size changes
-  // XXX Could just trim/extend
+  // XXX Best just trim/extend
   useEffect(() => {
     const newData2 = makeWeights(size, 0, 2, symmetric, unweighted);
     setData2(newData2);
-    setEdgesTxt(getEdgeList(newData2));
+    setEdgesTxt(getEdgeList(newData2, size));
     setOriginalData2(newData2);
-  }, [size, min, max, symmetric, unweighted]);
+  // }, [size, min, max, symmetric, unweighted]);
+  }, [min, max, symmetric, unweighted]);
 
   // synchonise input data with rendered graph etc
   // if graph data or weightCalc change
@@ -200,50 +210,48 @@ function EuclideanMatrixParams({
     // const element = document.querySelector('button[id="startBtnGrp"]');
     // simulateMouseClick(element);
     handleSearch();
-  }, [data1, data2, weightCalc]);
-
-  // Reset the matrix to the inital set
-  // XXX Not sure if we want this?
-  const resetData = () => {
-    setMessage(null);
-    setData1(originalData1);
-    setData2(originalData2);
-    setCoordsTxt(getCoordinateList(originalData1));
-    setEdgesTxt(originalData2);
-  };
-
-  const handleCoords = () => {
-    setMessage('under construction');
-  };
+  }, [size, data1, data2, weightCalc]);
 
   // change graph choice; Note setData1 etc are asynchronous
   const changeGraphChoice = (graphChoice) => {
     graphChoice = (graphChoice + 1) % GRAPHCHOICENUM;
     setgraphChoice(graphChoice);
-    // if we change size here it triggers a bunch of other things we
-    // don't want so we avoid setSize.  XXX would be nice to display
-    // size without triggering things (possibly when we handle example
-    // graphs properly everything will be ok)
-    // setSize(SIZE_EGS[graphChoice]);
+    const newSize = SIZE_EGS[graphChoice];
+    setSize(newSize);
     if (graphChoice === GRAPHCHOICERAND) {
-      const edges = makeWeights(size, 0, 2, symmetric, unweighted);
-      const coords = makeXYCoords(size, min, max);
+      const edges = makeWeights(newSize, 0, 2, symmetric, unweighted);
+      const coords = makeXYCoords(newSize, min, max);
       setData1(coords);
       setCoordsTxt(getCoordinateList(coords));
       setData2(edges);
-      setEdgesTxt(getEdgeList(edges));
+      setEdgesTxt(getEdgeList(edges, newSize));
     } else {
       setCoordsTxt(COORDS_EGS[graphChoice]);
       setEdgesTxt(EDGES_EGS[graphChoice]);
-      // XXX copy to other representations (data1, data2)
+      // setMessage(errorParamMsg(ALGORITHM_NAME, COORDS_EGS[graphChoice]));
+      coordTxt2Data1(COORDS_EGS[graphChoice], newSize);
+      edgeTxt2Data2(EDGES_EGS[graphChoice], newSize);
     }
   };
 
-  // XXX currently just affects random graph generation but should allow
-  // example graphs to be edited with this also
+  // Update number of nodes
+  // XXX currently generates new random graph - best avoid so
+  // any displayed graph can be edited with this easily
+  // XXX alternative to explicit size adjustment is just editing the
+  // coordinates to add/delete some (which works), but it would be nice
+  // to generate new random graphs of any size (thats still a bit
+  // cumbersome with the current setup)
   const updateTableSize = (newSize) => {
+    if (newSize < 1) return;
     setMessage(null);
     setSize(newSize);
+    const newData1 = makeXYCoords(newSize, min, max);
+    setData1(newData1);
+    setCoordsTxt(getCoordinateList(newData1));
+    const newData2 = makeWeights(newSize, 0, 2, symmetric, unweighted);
+    setData2(newData2);
+    setEdgesTxt(getEdgeList(newData2, newSize));
+    // handleSearch();
   };
 
   // change weight calculation method
@@ -294,7 +302,7 @@ function EuclideanMatrixParams({
       return row;
     });
     setData2(newData2);
-    setEdgesTxt(getEdgeList(newData2));
+    setEdgesTxt(getEdgeList(newData2, size));
   };
 
   // Get and parse the coordinates of each node
@@ -313,9 +321,6 @@ function EuclideanMatrixParams({
       }
       coords.push(temp);
     });
-    // XXX move/copy this elsewhere?
-    // set pair list version of coordinates to that in table
-    // setCoordsTxt(getCoordinateList(data1));
     return coords;
   };
 
@@ -368,7 +373,7 @@ function EuclideanMatrixParams({
             // Calculate *rounded up* Euclidean Distance
             // Want to avoid floating point + have the option of
             // admissible and inadmissible heuristics in A*
-            // XXX move to separate function
+            // XXX best move to separate function
             distance = Math.ceil(Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2)));
           } else if (weightCalc === W_MANHATTAN) {
             distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
@@ -394,7 +399,7 @@ function EuclideanMatrixParams({
   };
 
   // Get edges from table and build list text (string)
-  const getEdgeList = (data2) => {
+  const getEdgeList = (data2, size) => {
     let edgesTxt = ``;
     for (var rowNum = 0; rowNum < size; rowNum++) {
       for (const [colId, val] of Object.entries(data2[rowNum])) {
@@ -421,11 +426,6 @@ function EuclideanMatrixParams({
     closeInstructions(); // remove instruction
     setMessage(null);
 
-    // XXX graph display is different from data display on startup
-    // for some reason; works after clicking on START which
-    // runs this code.  Maybe next two lines need to be copied
-    // elsewhere or this function should be called?
-
     const coordsMatrix = getCoordinateMatrix();
     const edgeValueMatrix = getEdgeValueMatrix();
 
@@ -443,6 +443,74 @@ function EuclideanMatrixParams({
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE)); // FIX message
     }
   };
+
+  // Handle text input for coordinates
+  // modified from the Union-Find code (that team seemed to know what
+  // they were doing!)
+  const handleXYTxt = (e) => {
+    e.preventDefault();
+    setMessage(null);
+    const newSize = coordTxt2Data1(e.target[0].value, size);
+    setSize(newSize);
+  }
+
+  // better to return data than set it here?
+  const coordTxt2Data1 = (value, size) => {
+    const textInput = value.replace(/\s+/g, '');
+
+    if (isListofTuples(textInput, 2, 2)) {
+      const coordMatrix =
+        textInput
+          .split(',')
+          .map((pair) => pair.trim().split('-')) ;
+      const newSize = coordMatrix.length;
+      let newData1 = [];
+      for (let i=0; i < coordMatrix.length; i++) {
+        const xyArray = coordMatrix[i];
+        newData1.push({col0: xyArray[0], col1: xyArray[1]});
+      }
+      setData1(newData1);
+      return newSize;
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, COORDS_EXAMPLE));
+      return size;
+    }
+  };
+
+  // Handle text input for edges/weights
+  const handleEdgeTxt = (e) => {
+    e.preventDefault();
+    setMessage(null);
+    edgeTxt2Data2(e.target[0].value, size);
+  }
+
+  // better to return data than set it here?
+  const edgeTxt2Data2 = (value, size) => {
+    const textInput = value.replace(/\s+/g, '');
+    // accept pairs and triples; pairs are padded out with default
+    // weight of 1; XXX should check node values are in 1 to size
+    if (isListofTuples(textInput, 2, 3)) {
+      // edgeList represented as 2D array
+      let edgeList =
+        textInput
+          .split(',')
+          .map((pair) => pair.trim().split('-')) ;
+      const newSize = edgeList.length;
+      let newData2 = [];
+      for (let i = 0; i < size; i += 1) {
+        const data = {};
+        for (let j = 0; j < size; j += 1) {
+          data[`col${j}`] = searchEdgeList(edgeList, i+1, j+1, unweighted, symmetric);
+        }
+        newData2.push(data);
+      }
+
+      setData2(newData2);
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, EDGES_EXAMPLE));
+    }
+  };
+
 
   return (
   <>
@@ -472,6 +540,7 @@ function EuclideanMatrixParams({
           buttonName="Set&nbsp;X-Y&nbsp;Coordinates"
           formClassName="formLeft"
           mode="search"
+          handleSubmit={handleXYTxt}
           DEFAULT_VAL={coordsTxt}
           SET_VAL={setCoordsTxt}
           REFRESH_FUNCTION={() => COORDS_TXT_EG1}
@@ -486,6 +555,7 @@ function EuclideanMatrixParams({
           buttonName="Set&nbsp;Edges/Weights"
           formClassName="formLeft"
           mode="search"
+          handleSubmit={handleEdgeTxt}
           DEFAULT_VAL={edgesTxt}
           SET_VAL={setEdgesTxt}
           REFRESH_FUNCTION={() => EDGES_TXT_EG1}
@@ -514,3 +584,49 @@ function EuclideanMatrixParams({
 }
 
 export default EuclideanMatrixParams;
+
+// check if string is list of pairs/triples etc of numbers
+// XXX could generalise a bit and use for other code, eg Union Find
+function isListofTuples(value, minLen, maxLen) {
+  if (!value) return false;
+
+  // ensuring only allowable characters
+  if (!/^[0-9,-\s]+$/.test(value)) return false;
+
+  // splits the string into an array of tuples
+  const tuples = value.split(',').map((tuple) => tuple.trim());
+
+  // checks if each tuple is valid
+  for (let i = 0; i < tuples.length; i++) {
+    const tuple = tuples[i].split('-');
+
+    // checks minLen up to maxLen values in tuple
+    if (tuple.length < minLen || tuple.length > maxLen) return false;
+
+    // checks if each value in pair is in domain
+    // XXX could do better here
+    if (tuple.some((val) => isNaN(val))) return false;
+  }
+  return true;
+}
+
+// searches through edge list represented as a 2D array and returns
+// weight if there is an edge between i and j, otherwise zero
+function searchEdgeList(edgeList, i, j, unweighted, symmetric) {
+  for (var r = 0; r < edgeList.length; r++) {
+    const node1 = edgeList[r][0];
+    const node2 = edgeList[r][1];
+    let weight = (edgeList[r].length == 2? '1' : edgeList[r][2]);
+    if (unweighted && weight > 0) {
+      weight = '1';
+    }
+    if (i == node1 && j == node2) {
+      return weight;
+    }
+    if (symmetric && i == node2 && j == node1) {
+      return weight;
+    }
+  }
+  return '0';
+}
+
