@@ -141,7 +141,8 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
-      font-size: 15px;
+      // font-size: 15px;
+      font-size: 35px;
     }
 
     &.selected {
@@ -273,7 +274,8 @@
   }
 
   .axisLabel {
-    font-size: 15px;
+    // font-size: 15px;
+    font-size: 35px;
     font-weight: 1;
   }
 

@@ -70,7 +70,7 @@ class GraphTracer extends Tracer {
    * Sets the node radius dependant on the maximum node coordinate from an array of coordinates.
   */
 // XXX
-// Better for node radius to depend on number of nodes (and
+// Better for node radius to also depend on number of nodes (and
 // perhaps the shortest edge length).  We want the coordinate
 // values to be up to 50 generally so we can have reasonable
 // precision with Euclidean distance.  Currently things are
@@ -88,7 +88,7 @@ class GraphTracer extends Tracer {
     {
       if(maxCoord < (i + 1) * 10)
       {
-        const radiusIncrease = (i - 1) * 4
+        const radiusIncrease = (i - 1) * 6
         this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius + radiusIncrease;
         return;
       }

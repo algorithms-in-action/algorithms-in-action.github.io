@@ -95,11 +95,11 @@ const graphChoiceName = ['Random', 'Example 1', 'Example 2'];
 // const graphChoice = 0; // DEFAULT
 
 const SIZE_EG1 = 5;
-const COORDS_TXT_EG1 = '1-1, 3-5, 4-1, 6-5, 7-3';
+const COORDS_TXT_EG1 = '5-5, 15-18, 25-16, 35-4, 45-20';
 const EDGES_TXT_EG1 = '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5';
 
 const SIZE_EG2 = 4;
-const COORDS_TXT_EG2 = '1-2, 3-5, 5-1, 6-5';
+const COORDS_TXT_EG2 = '5-10, 15-20, 23-4, 32-17';
 const EDGES_TXT_EG2 = '1-3-5,1-4-4,3-4,2-4-4';
 
 const SIZE_RANDOM = 6;  // could change

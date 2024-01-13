@@ -213,6 +213,80 @@ export const makeWeights = (len, min, max, symmetric, unweighted) => {
   return arr;
 };
 
+// attempt at better version - causes occasional crash for some reason
+// it seems
+export const makeWeightsNew = (len, min, max, symmetric, unweighted) => {
+  const rows = [];
+
+  // get pseudm-random len*len edge matrix
+  // Try to get average degree around 3, edges being more likely between
+  // nodes with similar numbers
+  for (let i = 0; i < len; i += 1) {
+    const row = [];
+    let edgeCount = 0; // edge count for this node/row
+    let tries = 0; // we try 5 times to get edgeCount > 0 then give up
+    while (tries < 5 || edgeCount === 0 || len === 1) {
+      tries++;
+      for (let j = 0; j < len; j += 1) {
+        let val = 0;
+        if (j < i && symmetric) {
+          val = rows[j][i];
+        } else if (i == j) {
+          // XXX using symmetric flag to determine if leading
+          // diagonal is 1 or 0 is a bit sus but thats what earlier
+          // code did...
+          val = (symmetric? 0 : 1);
+          // else determine if we want an edge between i and j
+          // - if i&j differ more we reduce likelyhood
+        } else if (Math.random() < 0.7**Math.abs(i-j)) {
+          val = (unweighted? 1: getRandomInt(min, max));
+        }
+        if (val > 0) edgeCount++;
+        row.push(val);
+      }
+    }
+    rows.push(row);
+  }
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    const data = {};
+    for (let j = 0; j < len; j += 1) {
+      data[`col${j}`] = `${rows[i][j]}`;
+    }
+    arr.push(data);
+  }
+  if (len === 4 && symmetric !== true) { // XXX WTF?
+    arr = [
+      {
+        col0: '1',
+        col1: '0',
+        col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '1',
+        col2: '0',
+        col3: '1',
+      },
+      {
+        col0: '1',
+        col1: '1',
+        col2: '1',
+        col3: '0',
+      },
+      {
+        col0: '0',
+        col1: '0',
+        col2: '1',
+        col3: '1',
+      },
+    ];
+  }
+  return arr;
+};
+
+
 // Create len random-ish XY coordinates in range min to max for
 // Euclidean graphs
 export const makeXYCoords = (len, min, max) => {
@@ -238,7 +312,9 @@ export const makeXYCoords = (len, min, max) => {
     // want them correlated with the X values so its not so easy.
     // Also good to avoid nodes that are too close together - you can't
     // see the edge because of the circles depicting the nodes.
-    data[`col1`] = `${getRandomInt(min, max)}`;
+    // We use max/3 as the max Y value because the screen space for the
+    // graph is wide but not high
+    data[`col1`] = `${getRandomInt(min, max/3)}`;
     arr.push(data);
   }
   return arr;

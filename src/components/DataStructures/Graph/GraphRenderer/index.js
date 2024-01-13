@@ -294,7 +294,7 @@ class GraphRenderer extends Renderer {
             return (
               <g>
                 <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
-                <text x={scale.x1} y={originCoords.y} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+                <text x={scale.x1} y={originCoords.y + 20} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
               </g>
             );
 
@@ -302,7 +302,7 @@ class GraphRenderer extends Renderer {
             return (
               <g>
                 <line x1={scale.x1} y1={scale.y1} x2={scale.x2} y2={scale.y2} className={styles.axis} />
-                <text x={originCoords.x} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
+                <text x={originCoords.x - 15} y={scale.y1 + 6} textAnchor="middle" className={styles.axisLabel}> {scale.num} </text>
               </g>
             );
           }
