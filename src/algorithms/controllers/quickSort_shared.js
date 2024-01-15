@@ -296,7 +296,7 @@ export function run_QS(is_qs_median_of_3) {
             },
             [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
           );
-        };
+        }
 
         /////
 
@@ -317,7 +317,7 @@ export function run_QS(is_qs_median_of_3) {
 
         /////
   
-        function pivot_value() { return a[pivot_index] }; 
+        function pivot_value() { return a[pivot_index] }
   
         // pick pivot --------
         
