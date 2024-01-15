@@ -26,7 +26,9 @@ function getChildren(blockName, pseudocode, acc) {
     return [];
   }
   for (let i = 0; i < current.length; i += 1) {
-    accumulator = acc.concat(getChildren(current[i].ref, pseudocode, [])).concat([current[i].ref]);
+    accumulator = acc
+      .concat(getChildren(current[i].ref, pseudocode, []))
+      .concat([current[i].ref]);
   }
   return accumulator;
 }
@@ -45,8 +47,18 @@ function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
   }
   for (const name of Object.keys(pseudocode)) {
     for (let i = 0; i < pseudocode[name].length; i += 1) {
-      if (Object.prototype.hasOwnProperty.call(pseudocode[name][i], 'ref') !== undefined && pseudocode[name][i].ref === blockName) {
-        return acc.concat([name].concat(getFullPseudocodeTree(name, collapse, pseudocode, acc))).concat(getChildren(name, pseudocode, []));
+      if (
+        Object.prototype.hasOwnProperty.call(pseudocode[name][i], 'ref') !==
+          undefined &&
+        pseudocode[name][i].ref === blockName
+      ) {
+        return acc
+          .concat(
+            [name].concat(
+              getFullPseudocodeTree(name, collapse, pseudocode, acc),
+            ),
+          )
+          .concat(getChildren(name, pseudocode, []));
       }
     }
   }
@@ -68,8 +80,15 @@ function isBookmarkVisible(pseudocode, collapse, bookmark) {
           return true;
         }
         const children = getChildren(containingBlock, pseudocode, []);
-        const result = getFullPseudocodeTree(containingBlock, collapse, pseudocode, [containingBlock]);
-        const newState = [...new Set(previousState.concat(result).concat(children))];
+        const result = getFullPseudocodeTree(
+          containingBlock,
+          collapse,
+          pseudocode,
+          [containingBlock],
+        );
+        const newState = [
+          ...new Set(previousState.concat(result).concat(children)),
+        ];
         if (previousState.includes(containingBlock)) {
           previousState = newState;
           return false; // already visited
@@ -103,10 +122,13 @@ function getCollapseController(procedureAlgorithms) {
   const collapseController = {};
   for (const algorithmName of Object.keys(procedureAlgorithms)) {
     const algorithmCollapseController = {};
-    for (const modeName of Object.keys(procedureAlgorithms[algorithmName].pseudocode)) {
-      algorithmCollapseController[modeName] = getCollapseControllerForSinglePseudocode(
-        procedureAlgorithms[algorithmName].pseudocode[modeName],
-      );
+    for (const modeName of Object.keys(
+      procedureAlgorithms[algorithmName].pseudocode,
+    )) {
+      algorithmCollapseController[modeName] =
+        getCollapseControllerForSinglePseudocode(
+          procedureAlgorithms[algorithmName].pseudocode[modeName],
+        );
     }
     collapseController[algorithmName] = algorithmCollapseController;
   }
@@ -132,9 +154,8 @@ export const GlobalActions = {
   // load an algorithm by returning its relevant components
   LOAD_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
-    const {
-      param, name, explanation, extraInfo, pseudocode, instructions,
-    } = data;
+    const { param, name, explanation, extraInfo, pseudocode, instructions } =
+      data;
     previousState = [];
     const procedurePseudocode = pseudocode[params.mode];
     addLineExplanation(procedurePseudocode);
@@ -147,7 +168,10 @@ export const GlobalActions = {
       extraInfo,
       param,
       pseudocode: procedurePseudocode,
-      collapse: state === undefined || state.collapse === undefined ? getCollapseController(algorithms) : state.collapse,
+      collapse:
+        state === undefined || state.collapse === undefined
+          ? getCollapseController(algorithms)
+          : state.collapse,
       lineExplanation: '',
     };
   },
@@ -156,13 +180,21 @@ export const GlobalActions = {
   RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
     const {
-      param, controller, name, explanation, extraInfo, pseudocode, instructions,
+      param,
+      controller,
+      name,
+      explanation,
+      extraInfo,
+      pseudocode,
+      instructions,
     } = data;
     const procedurePseudocode = pseudocode[params.mode];
 
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
-    const chunker = new Chunker(() => controller[params.mode].initVisualisers(params));
+    const chunker = new Chunker(() =>
+      controller[params.mode].initVisualisers(params),
+    );
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
     //const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
@@ -181,7 +213,10 @@ export const GlobalActions = {
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
       visualisers: chunker.visualisers,
-      collapse: state === undefined || state.collapse === undefined ? getCollapseController(algorithms) : state.collapse,
+      collapse:
+        state === undefined || state.collapse === undefined
+          ? getCollapseController(algorithms)
+          : state.collapse,
       playing: false,
       lineExplanation: firstLineExplan,
     };
@@ -225,7 +260,13 @@ export const GlobalActions = {
     let result;
     do {
       result = state.chunker.prev();
-    } while (!isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark));
+    } while (
+      !isBookmarkVisible(
+        state.pseudocode,
+        state.collapse[state.id.name][state.id.mode],
+        result.bookmark,
+      )
+    );
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
 
@@ -246,7 +287,8 @@ export const GlobalActions = {
     const result = state.collapse;
 
     if (expandOrCollapase === undefined) {
-      result[state.id.name][state.id.mode][codeblockname] = !result[state.id.name][state.id.mode][codeblockname];
+      result[state.id.name][state.id.mode][codeblockname] =
+        !result[state.id.name][state.id.mode][codeblockname];
     } else if (expandOrCollapase) {
       result[state.id.name][state.id.mode][codeblockname] = true; // expand
     } else {
@@ -275,5 +317,8 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
-  return GlobalActions.LOAD_ALGORITHM(undefined, { name: DEFAULT_ALGORITHM, mode: DEFAULT_MODE });
+  return GlobalActions.LOAD_ALGORITHM(undefined, {
+    name: DEFAULT_ALGORITHM,
+    mode: DEFAULT_MODE,
+  });
 }

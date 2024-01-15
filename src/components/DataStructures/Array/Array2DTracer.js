@@ -68,7 +68,8 @@ class Array2DTracer extends Tracer {
     this.data[x][y].sorted = true;
   }
 
-  select(sx, sy, ex = sx, ey = sy, c = '0') { // Color blue
+  select(sx, sy, ex = sx, ey = sy, c = '0') {
+    // Color blue
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         switch (c) {
@@ -146,7 +147,9 @@ class Array2DTracer extends Tracer {
 
     // remove all current occurences of the variable
     for (let y = 0; y < newData[row].length; y++) {
-      newData[row][y].variables = newData[row][y].variables.filter((val) => val !== v);
+      newData[row][y].variables = newData[row][y].variables.filter(
+        (val) => val !== v
+      );
     }
 
     // add variable to item

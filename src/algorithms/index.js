@@ -55,11 +55,9 @@ const allalgs = {
     extraInfo: ExtraInfo.QSInfo,
     pseudocode: {
       sort: Pseudocode.quickSort,
-      // medianSort: Pseudocode.quickSortM3,
     },
     controller: {
       sort: Controller.quickSort,
-      // medianSort: Controller.quickSortM3,
     },
   },
   'quickSortM3': {

@@ -5,12 +5,29 @@
 
 /* eslint-disable no-undef */
 
+import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Chunker from '../../context/chunker';
 import transitiveClosure from './transitiveClosure';
 
+
 // Simple stub for the chunker
-const chunker = {
-  add: () => {},
-};
+// const chunker = {
+//   add: () => {},
+// };
+
+const chunker = new Chunker(() => {
+  return {
+    graph: {
+      instance: new GraphTracer('graph', null, 'Graph view'),
+      order: 0,
+    },
+    array: {
+      instance: new Array2DTracer('array', null, 'Parent array & Priority Queue'),
+      order: 1,
+    },
+  };
+})
 
 describe('transitiveClosure', () => {
   it('Test an empty array', () => {
