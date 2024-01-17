@@ -26,6 +26,7 @@
   transition: 0.4s;
   background: var(--mid-control-param-btn-bg-col-hover);
 }
+
 .blueWordBtn:active {
   transition: 0.2s;
   background: var(--mid-control-param-btn-bg-col-active);
@@ -40,9 +41,11 @@
 .blueWordBtnDisabled:hover {
   background: none;
 }
+
 .blueWordBtnDisabled:active {
   background: none;
 }
+
 .checkbox {
   color: var(--mid-control-font);
   font-size: 0.8em;
@@ -72,17 +75,20 @@
   background: var(--mid-control-param-btn-bg-hover);
   @include border-radius(14px);
 }
+
 .greyRoundBtn:active {
   transition: 0.2s;
   background: var(--mid-control-param-btn-bg-active);
   @include border-radius(14px);
 }
+
 .stringContainer {
   margin-right: 15px;
   padding: 0px 5px;
 
-  }
-.inputContainer{
+}
+
+.inputContainer {
   border: 0.1px solid var(--mid-control-param-border);
   border-radius: 4px;
   // display: flex;
@@ -130,20 +136,25 @@
   .formLeft {
     width: 62%;
     align-items: center;
+
     .rightmost-btn {
       // margin-left: 20px;
       @extend .blueWordBtn;
     }
+
     .medianthree-btn {
       // margin-left: 20px;
       @extend .blueWordBtn;
     }
+
     .MuiFormControlLabel-root {
       color: var(--mid-control-param-blue-btn-col);
+
       &:first-of-type {
         margin-left: 20px;
       }
     }
+
     .MuiCheckbox-colorPrimary.Mui-checked {
       color: var(--mid-control-param-blue-btn-col);
     }
@@ -172,6 +183,7 @@
 .greyRoundBtnDisabled {
   @extend .greyRoundBtn;
   cursor: not-allowed !important;
+
   svg {
     path {
       fill: var(--mid-control-param-btn-disabled);
@@ -182,9 +194,11 @@
 .greyRoundBtnDisabled:hover {
   background: none;
 }
+
 .greyRoundBtnDisabled:active {
   background: none;
 }
+
 .generalText {
   color: var(--mid-control-font);
 }

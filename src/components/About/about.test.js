@@ -9,7 +9,11 @@ import Router from '../../router/Router';
 
 test('full app rendering', () => {
   const history = createMemoryHistory();
-  render(<BrowserRouter history={history}><Router /></BrowserRouter>);
+  render(
+    <BrowserRouter history={history}>
+      <Router />
+    </BrowserRouter>,
+  );
 
   // verify page content for '/' route, i.e. rendering <App /> component
   // should see 'Sorting' on the left panel and 'Binary Search Tree' as default algorithm
@@ -17,9 +21,10 @@ test('full app rendering', () => {
   expect(screen.getAllByText(/Binary Search Tree/i)[0]).toBeInTheDocument();
 
   // simulate click the 'About' button link to the About page
-  const leftClick = { button: 0 };
-  userEvent.click(screen.getByText(/About/i), leftClick);
+  userEvent.click(screen.getByText(/About/i));
   // check that the content changed to the about page
   expect(screen.getByText(/Algorithms in Action/i)).toBeInTheDocument();
-  expect(screen.getByText(/Core Team/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/An All New Algorithm Visualiser/i),
+  ).toBeInTheDocument();
 });

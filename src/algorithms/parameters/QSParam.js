@@ -80,7 +80,7 @@ function QuicksortParam() {
       <div className="form">
         <ListParam
           name="quickSort"
-          buttonName="Sort"
+          buttonName="Reset"
           mode="sort"
           formClassName="formLeft"
           DEFAULT_VAL={array}

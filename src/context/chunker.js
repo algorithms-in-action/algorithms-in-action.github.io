@@ -29,8 +29,10 @@ export default class {
   }
 
   // values is a list of arguments passed to func when it is called to perform its task.
+  // bookmark relates to the number directly after the \\B notation in the psuedocode
   add(bookmark, func, values) {
-    let bookmarkValue = ''; let pauseInCollapse = false;
+    let bookmarkValue = '';
+    let pauseInCollapse = false;
     if (typeof bookmark === 'object') {
       bookmarkValue = bookmark.bookmark;
       pauseInCollapse = bookmark.pauseInCollapse;
@@ -40,7 +42,7 @@ export default class {
     this.chunks.push({
       bookmark: String(bookmarkValue),
       mutator: defer(func, clone(values)),
-      pauseInCollapse
+      pauseInCollapse,
     });
   }
 
@@ -48,49 +50,59 @@ export default class {
     return currentChunk >= 0 && currentChunk <= this.chunks.length;
   }
 
+  // Returns sorted array of visualizer instances
   getVisualisers() {
     return Object.values(this.visualisers)
       .sort((a, b) => a.order - b.order)
       .map((o) => o.instance);
   }
 
+  // Applies chunk at index, this applies its mutation to the visualisers, updating them
   doChunk(index) {
-    this.chunks[index].mutator(Object.fromEntries(Object.entries(this.visualisers)
-      .map(([k, v]) => [k, v.instance])));
+    this.chunks[index].mutator(
+      Object.fromEntries(
+        Object.entries(this.visualisers).map(([k, v]) => [k, v.instance])
+      )
+    );
   }
 
-  checkChunkPause(){
+  checkChunkPause() {
     let nextIndex = -1;
     if (this.currentChunk === null) {
-      nextIndex = 0
-    }else if(this.currentChunk >= 0 && this.currentChunk <= this.chunks.length - 2){
-      nextIndex = this.currentChunk + 1
-    }else if (this.currentChunk === this.chunks.length - 1) {
-      nextIndex = this.currentChunk + 1
+      nextIndex = 0;
+    } else if (
+      this.currentChunk >= 0 &&
+      this.currentChunk <= this.chunks.length - 2
+    ) {
+      nextIndex = this.currentChunk + 1;
+    } else if (this.currentChunk === this.chunks.length - 1) {
+      nextIndex = this.currentChunk + 1;
     }
-    if(nextIndex === -1) return false;
-    if(!this.chunks[nextIndex]) return false;
+    if (nextIndex === -1) return false;
+    if (!this.chunks[nextIndex]) return false;
     return this.chunks[nextIndex].pauseInCollapse;
   }
 
+  // Applies next chunks mutation
   next(triggerPauseInCollapse = false) {
-    let pauseInCollapse = this.checkChunkPause();
-    if(!pauseInCollapse){
+    const pauseInCollapse = this.checkChunkPause();
+    if (!pauseInCollapse) {
       if (this.currentChunk === null) {
         this.visualisers = this.init();
         this.doChunk(0);
         this.currentChunk = 0;
-      } else if (this.currentChunk >= 0 && this.currentChunk <= this.chunks.length - 2) {
+      } else if (
+        this.currentChunk >= 0 &&
+        this.currentChunk <= this.chunks.length - 2
+      ) {
         this.doChunk(this.currentChunk + 1);
         this.currentChunk += 1;
       } else if (this.currentChunk === this.chunks.length - 1) {
         this.currentChunk += 1;
       }
-    }else{
-      if(!triggerPauseInCollapse){
-        this.doChunk(this.currentChunk + 1);
-        this.currentChunk += 1;
-      }
+    } else if (!triggerPauseInCollapse) {
+      this.doChunk(this.currentChunk + 1);
+      this.currentChunk += 1;
     }
     if (this.currentChunk < this.chunks.length) {
       return {
@@ -106,6 +118,7 @@ export default class {
     };
   }
 
+  // Goes back one chunk, undoing last mutation
   prev() {
     this._inPrevState = true;
     if (this.currentChunk > 0) {
@@ -122,7 +135,7 @@ export default class {
     };
   }
 
-  refresh(){
+  refresh() {
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk; i += 1) {

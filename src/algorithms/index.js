@@ -10,15 +10,27 @@ import * as Instructions from './instructions';
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
- add new algorithms.
+ add new algorithms. There are two versions of this: allalgs
+ is all algorithms, whatever the quality etc, and algorithms is the
+ subset that are selected to be made visible and can be run. The idea is
+ that during development we can merge all algorithms into a single
+ branch of the repository but only deploy some of them to the users.
+ For developers etc we can change a single line of code below where
+ algorithms is defined to deploy all algorithms. For allalgs we use a
+ noDeploy flag for each entry; if it is missing the default is the
+ algorithm is deployed. Note that the DEFAULT_ALGORITHM from
+ src/context/actions.js had better be deployed!
+ XXX Design of noDeploy stuff was done with the aim of minimal code change
+ and could be re-thought when there are fewer merges going on.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
  */
 
 // Very Important: The key for the algorithms must be unique!
-const algorithms = {
+const allalgs = {
   'binarySearchTree': {
+    noDeploy: false,
     name: 'Binary Search Tree',
     category: 'Searching',
     param: <Param.BSTParam />,
@@ -105,11 +117,9 @@ const algorithms = {
     extraInfo: ExtraInfo.QSInfo,
     pseudocode: {
       sort: Pseudocode.quickSort,
-      // medianSort: Pseudocode.quickSortM3,
     },
     controller: {
       sort: Controller.quickSort,
-      // medianSort: Controller.quickSortM3,
     },
   },
   'quickSortM3': {
@@ -201,7 +211,45 @@ const algorithms = {
       search: Controller.horspoolStringSearch,
     },
   },
+  'unionFind': {
+    name: 'Union Find',
+    category: 'Other',
+    param: <Param.UFParam />,
+    instructions: Instructions.UFInstruction,
+    explanation: Explanation.UFExp,
+    extraInfo: ExtraInfo.UFInfo,
+    pseudocode: {
+      union: Pseudocode.unionFindUnion,
+      find: Pseudocode.unionFindFind,
+    },
+    controller: {
+      union: Controller.unionFindUnion,
+      find: Controller.unionFindFind,
+    },
+  },
+  'TTFTree': {
+    name: '2-3-4 Tree',
+    category: 'Searching',
+    param: <Param.TTFTreeParam/>,
+    instructions: Instructions.TTFInstruction,
+    explanation: Explanation.TTFExp,
+    extraInfo: ExtraInfo.TTFInfo,
+    pseudocode: {
+      insertion: Pseudocode.TTFTreeInsertion,
+      search: Pseudocode.TTFTreeSearch,
+    },
+    controller: {
+      insertion: Controller.TTFTreeInsertion,
+      search: Controller.TTFTreeSearch,
+    },
+  },
 };
+
+const algorithms =
+  // Use next line for a version that includes all the algorithms
+  // allalgs;
+  // Use next line for the deployed version
+  Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy));
 
 /**
  * Get the first mode of an algorithm

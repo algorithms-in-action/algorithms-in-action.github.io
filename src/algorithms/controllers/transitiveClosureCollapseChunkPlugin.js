@@ -1,5 +1,5 @@
-// eslint-disable-next-line import/no-cycle
-import { GlobalActions } from '../../context/actions';
+// Uncommenting this will cause dependency errors:
+// import { GlobalActions } from '../../context/actions';
 
 /*
  * @Author: huimin huang
@@ -16,6 +16,8 @@ let dispatchGetter = () => null;
 function getGlobalAlgotithm() {
   return algorithmGetter();
 }
+
+// eslint-disable-next-line
 function getGlobalDispatch() {
   return dispatchGetter();
 }
@@ -39,7 +41,9 @@ export function isCurrentLineInCollapseState() {
   const { bookmark, pseudocode, collapse } = algorithm;
   if (collapse.transitiveClosure.tc.Reachable) return false;
   const { Reachable } = pseudocode;
-  return typeof Reachable.find((item) => item.bookmark === bookmark) !== 'undefined';
+  return (
+    typeof Reachable.find((item) => item.bookmark === bookmark) !== 'undefined'
+  );
 }
 // window.isCurrentLineInCollapseState = isCurrentLineInCollapseState;
 
@@ -86,7 +90,9 @@ export function onCollapseStateChange() {
 }
 
 export function releaseChunkCache() {
-  chunkCache.forEach((fn) => { fn(); });
+  chunkCache.forEach((fn) => {
+    fn();
+  });
   chunkCache = [];
   inCollapseStateFlag = false;
 }
@@ -94,16 +100,16 @@ export function releaseChunkCache() {
 export function runChunkWithEnterCollapse() {
   if (isInCollapseState()) {
     const algorithm = getGlobalAlgotithm();
-    const dispatch = getGlobalDispatch();
+    // const dispatch = getGlobalDispatch();
     // const algorithm = getGlobalAlgotithm();
     // algorithm.chunker.next();
     if (!algorithm.chunker._inPrevState && !inCollapseStateFlag) {
-      setTimeout(() => {
-        dispatch(GlobalActions.NEXT_LINE, {
-          triggerPauseInCollapse: true,
-          playing: algorithm.playing,
-        });
-      });
+      // setTimeout(() => {
+      //   dispatch(GlobalActions.NEXT_LINE, {
+      //     triggerPauseInCollapse: true,
+      //     playing: algorithm.playing,
+      //   });
+      // });
     }
     inCollapseStateFlag = true;
   }
