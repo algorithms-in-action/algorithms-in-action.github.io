@@ -55,8 +55,8 @@ function getFullPseudocodeTree(blockName, collapse, pseudocode, acc) {
         return acc
           .concat(
             [name].concat(
-              getFullPseudocodeTree(name, collapse, pseudocode, acc),
-            ),
+              getFullPseudocodeTree(name, collapse, pseudocode, acc)
+            )
           )
           .concat(getChildren(name, pseudocode, []));
       }
@@ -84,7 +84,7 @@ function isBookmarkVisible(pseudocode, collapse, bookmark) {
           containingBlock,
           collapse,
           pseudocode,
-          [containingBlock],
+          [containingBlock]
         );
         const newState = [
           ...new Set(previousState.concat(result).concat(children)),
@@ -123,11 +123,11 @@ function getCollapseController(procedureAlgorithms) {
   for (const algorithmName of Object.keys(procedureAlgorithms)) {
     const algorithmCollapseController = {};
     for (const modeName of Object.keys(
-      procedureAlgorithms[algorithmName].pseudocode,
+      procedureAlgorithms[algorithmName].pseudocode
     )) {
       algorithmCollapseController[modeName] =
         getCollapseControllerForSinglePseudocode(
-          procedureAlgorithms[algorithmName].pseudocode[modeName],
+          procedureAlgorithms[algorithmName].pseudocode[modeName]
         );
     }
     collapseController[algorithmName] = algorithmCollapseController;
@@ -193,7 +193,7 @@ export const GlobalActions = {
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
     const chunker = new Chunker(() =>
-      controller[params.mode].initVisualisers(params),
+      controller[params.mode].initVisualisers(params)
     );
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
@@ -240,7 +240,11 @@ export const GlobalActions = {
     } while (
       !result.pauseInCollapse &&
       !result.finished &&
-      !isBookmarkVisible(state.pseudocode, state.collapse[state.id.name][state.id.mode], result.bookmark)
+      !isBookmarkVisible(
+        state.pseudocode,
+        state.collapse[state.id.name][state.id.mode],
+        result.bookmark
+      )
     );
     if (result.finished) {
       previousState = [];
@@ -264,7 +268,7 @@ export const GlobalActions = {
       !isBookmarkVisible(
         state.pseudocode,
         state.collapse[state.id.name][state.id.mode],
-        result.bookmark,
+        result.bookmark
       )
     );
 
