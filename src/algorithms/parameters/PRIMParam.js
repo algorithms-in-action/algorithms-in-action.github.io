@@ -4,10 +4,32 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
+const DEFAULT_START = '2'; // XXX
+const DEFAULT_END = ''; // XXX should be able to switch off end node display
 const PRIMS = 'New Prim\'s';
-// XXX fix up error messages some time
+// XXX fix up error messages some time and change from 'EXAMPLE'
 const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
+const GRAPH_EGS = [
+        { name: 'Example 1',
+          size: 5,
+          coords: '5-5, 15-18, 25-16, 35-4, 45-20',
+          edges: '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5'
+        },
+        { name: 'Example 2',
+          size: 4,
+          coords: '5-10, 15-20, 23-4, 32-17',
+          edges: '1-3-5,1-4-4,3-4,2-4-4'
+        }];
+
+const SIZE_EG1 = 5;
+const COORDS_TXT_EG1 = '5-5, 15-18, 25-16, 35-4, 45-20';
+const EDGES_TXT_EG1 = '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5';
+
+const SIZE_EG2 = 4;
+const COORDS_TXT_EG2 = '5-10, 15-20, 23-4, 32-17';
+const EDGES_TXT_EG2 = '1-3-5,1-4-4,3-4,2-4-4';
+
 function PRIMParam() {
   const [message, setMessage] = useState(null);
 
@@ -18,6 +40,8 @@ function PRIMParam() {
         name="prim"
         mode="find"
         defaultSize={DEFAULT_SIZE}
+        defaultStart={DEFAULT_START}
+        defaultEnd={DEFAULT_END}
         // XXX
         // min&max for weights originally, then used for X&Y coordinates
         // as well (DOH!) (maybe avoid for weights in the future but
@@ -30,6 +54,7 @@ function PRIMParam() {
         min={1}
         // max={9}
         max={49}
+        graphEgs={GRAPH_EGS}
         symmetric
         ALGORITHM_NAME={PRIMS}
         EXAMPLE={PRIMS_EXAMPLE}

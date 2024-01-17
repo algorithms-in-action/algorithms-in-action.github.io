@@ -28,7 +28,7 @@ export default {
    * @param {array} nodes array of numbers needs to be sorted
    * 
    */
-  run(chunker, { edgeValueMatrix, coordsMatrix }) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, startNode }) {
 
     const E = [...edgeValueMatrix];
     const coords = [...coordsMatrix];  // Potentially empty.
@@ -183,6 +183,13 @@ export default {
       prev[i] = 0;
       pending[i] = 1;
     }
+    // XXXX need to adjust code here so we use startNode instead of
+    // the first element of the cost and pqCost arrays, the position of
+    // the Min etc + update pseudocode.  Animation not quite linked to
+    // pseudocode properly either with init + reassigning start cost to
+    // 0 (probably not worth spending too much time fixing issues such
+    // as this  - move to new pseudocode thats more similar to BFS/DFS
+    // etc)
     cost[0] = 0;
     pqCost.push('Cost[i]');  // initialize the pq cost
     pqDisplay.push('i'); // initialize the pq display

@@ -5,12 +5,13 @@
 /* eslint-disable react/prop-types */
 
 // Support for graphs with Euclidean (X-Y) coordinates defined for each
-// node. In flux currently. Student version used tables for input of
+// node. In flux currently. Student version used tables only for input of
 // graphs - lots of screen real-estate.  Also a bunch of other problems
 // and annoyances/limitations.  Now supports input of X-Y cordinates
 // and edges/weights via text boxes, plus having predefined example
 // graphs, allowing user-defined weights as well as Euclidean/Manhattan
-// weights based on X-Y coordinates, etc. Old input method still
+// weights based on X-Y coordinates, etc. Also start node and end nodes
+// (latter not quite supported). Old input method still
 // supported if you scroll down - could delete eventually but doesn't do
 // much harm if its off-screen.
 // NOTE: There are (at least) three different representations for
@@ -33,15 +34,17 @@
 // switch to select them or random, coordinate data copied and size
 // updated accordingly and edge/coordinate data is copied to tables.
 // Data input from tables also gets reflected in text boxes.
+// Example graphs passed in from algorithm; one random graph option
+// added here.
+// Start node and End node input and editing.
 // TO DO:
 // Work more on input data display - use sccs for everything, define
-// new classes etc instead of just reusing existing ones.
+// new classes etc instead of just reusing existing ones, rethink some
+// input methods (such as graph size) to reduce screen space required.
 // Size adjustment should just trim/grow tables etc instead of
 // regenerating a random graph each time. However, it would also be nice
 // to easily generate new random graphs of a given size.
-// Example graphs should be passed in somehow (so they are algorithm
-// specific).
-// Optional start node and end nodes (algorithm specific)
+// Start node and end nodes should be optional (algorithm specific)
 // Better random graph creation (seems like there are default
 // functions for creating a random graph in the renderer but no way of
 // getting from there to the data input display - could copy and modify
@@ -82,31 +85,18 @@ import { template } from 'lodash';
 import ListParam from './ListParam';
 import '../../../styles/Param.scss';
 
-// Example graphs XXX refine this; probably want different examples for
-// different algorithms so these should be defined in the algorithm
-// files and imported/passed in here.
-// For some algorithms we need to specify start and end nodes also;
-// ideally these should be displayed differently. XXX
-// Might want different random graphs for different algorithms at
-// some point...
-const GRAPHCHOICENUM = 3; // number of graph choice options
-const GRAPHCHOICERAND = 0; // random graph
-const graphChoiceName = ['Random', 'Example 1', 'Example 2'];
-// const graphChoice = 0; // DEFAULT
 
-const SIZE_EG1 = 5;
-const COORDS_TXT_EG1 = '5-5, 15-18, 25-16, 35-4, 45-20';
-const EDGES_TXT_EG1 = '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5';
-
-const SIZE_EG2 = 4;
-const COORDS_TXT_EG2 = '5-10, 15-20, 23-4, 32-17';
-const EDGES_TXT_EG2 = '1-3-5,1-4-4,3-4,2-4-4';
-
-const SIZE_RANDOM = 6;  // could change
-const SIZE_EGS = [SIZE_RANDOM, SIZE_EG1, SIZE_EG2];
+// We have an initial graph that is generated randomly (we could add
+// other graph here that are independent of the algorithm) and other
+// example graphs (passed in from algorithm) are appended onto these
+const GRAPHCHOICERAND = 0; // choice 0 is random graph
+let namesEgsInit = ['Random'];
+const SIZE_RANDOM = 6;  // size for random graphs - could change
+const sizeEgsInit = [SIZE_RANDOM];
 // COORDS etc for random graphs will be generated; use anything here
-const COORDS_EGS = ['1-1', COORDS_TXT_EG1, COORDS_TXT_EG2];
-const EDGES_EGS = ['1-1', EDGES_TXT_EG1, EDGES_TXT_EG2];
+const coordsEgsInit = ['1-1'];
+const edgesEgsInit = ['1-2'];
+
 const COORDS_EXAMPLE =
  "Please follow example: 1-1,3-4,4-1,6-6 giving the X-Y coordinates for each of the nodes in the graph.";
 const EDGES_EXAMPLE =
@@ -127,6 +117,9 @@ function simulateMouseClick(element) {
  */
 function EuclideanMatrixParams({
   defaultSize,
+  defaultStart,
+  defaultEnd,
+  graphEgs,
   min,
   max,
   name,
@@ -138,6 +131,20 @@ function EuclideanMatrixParams({
   EXAMPLE2,
   unweighted
 }) {
+
+  // XXX these get re-evaluated when anything much changes - could
+  // possibly redesign so that doesn't happen; the difficulty is that
+  // they depend on graphEgs, which is passed in as a parameter.  It
+  // would also be nicer to initialize all these together (something I
+  // wrote code for initially but for some reason it didn't quite work)
+  let graphChoiceNum = 1+graphEgs.length; // number of graph choice options
+  // let sizeEgs = [SIZE_RANDOM, 5, 4];
+  // let coordsEgs = ['1-1', COORDS_TXT_EG1, COORDS_TXT_EG2];
+  // let edgesEgs = ['1-1', EDGES_TXT_EG1, EDGES_TXT_EG2];
+  let sizeEgs = graphEgsSizes(graphEgs);
+  let coordsEgs = graphEgsCoords(graphEgs);
+  let edgesEgs = graphEgsEdges(graphEgs);
+  let namesEgs = graphEgsNames(graphEgs);
   const [size, setSize] = useState(defaultSize);
  
   // With the button toggle Euclidean/Manhattan/As Input
@@ -172,16 +179,17 @@ function EuclideanMatrixParams({
   // and text list or pairs/triples for edges/weights,
   // eg 1-2,1-3-10,2-3-12,3-4,3-5 where first two numbers are nodes
   // and third is weight (if third is missing, weight defaults to 1)
-  // The following broke something, somehow...
-  // const [edgesTxt, setEdgesTxt] = useState(getEdgeList(data2));
-  // but the initial values get reset somewhere or other
+  // The initial '' values get reset somewhere or other
   const [coordsTxt, setCoordsTxt] = useState('');
   const [edgesTxt, setEdgesTxt] = useState('');
+  const [startNode, setStartNode] = useState(defaultStart);
+  const [endNodesTxt, setEndNodesTxt] = useState(defaultEnd);
+  const [endNodes, setEndNodes] = useState([]);
   const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
 
-  // why is this 'Start' but 'Restart' in MatrixParam.js???
   // No longer used - sync with animation done without an extra button
   // click
+  // why is this 'Start' but 'Restart' in MatrixParam.js???
   // const [buttonMessage, setButtonMessage] = useState('Start');
 
   // reset the XY coordinates when the size changes
@@ -210,13 +218,15 @@ function EuclideanMatrixParams({
     // const element = document.querySelector('button[id="startBtnGrp"]');
     // simulateMouseClick(element);
     handleSearch();
-  }, [size, data1, data2, weightCalc]);
+  }, [size, startNode, data1, data2, weightCalc]);
 
   // change graph choice; Note setData1 etc are asynchronous
   const changeGraphChoice = (graphChoice) => {
-    graphChoice = (graphChoice + 1) % GRAPHCHOICENUM;
+    graphChoice = (graphChoice + 1) % graphChoiceNum;
     setgraphChoice(graphChoice);
-    const newSize = SIZE_EGS[graphChoice];
+    const newSize = sizeEgs[graphChoice];
+    console.log('graphChoice = ' + graphChoice);
+    console.log('size ' + newSize);
     setSize(newSize);
     if (graphChoice === GRAPHCHOICERAND) {
       const edges = makeWeights(newSize, 0, 2, symmetric, unweighted);
@@ -226,15 +236,16 @@ function EuclideanMatrixParams({
       setData2(edges);
       setEdgesTxt(getEdgeList(edges, newSize));
     } else {
-      setCoordsTxt(COORDS_EGS[graphChoice]);
-      setEdgesTxt(EDGES_EGS[graphChoice]);
-      // setMessage(errorParamMsg(ALGORITHM_NAME, COORDS_EGS[graphChoice]));
-      coordTxt2Data1(COORDS_EGS[graphChoice], newSize);
-      edgeTxt2Data2(EDGES_EGS[graphChoice], newSize);
+      setCoordsTxt(coordsEgs[graphChoice]);
+      setEdgesTxt(edgesEgs[graphChoice]);
+      // setMessage(errorParamMsg(ALGORITHM_NAME, coordsEgs[graphChoice]));
+      coordTxt2Data1(coordsEgs[graphChoice], newSize);
+      edgeTxt2Data2(edgesEgs[graphChoice], newSize);
     }
   };
 
   // Update number of nodes
+  // useEffect() triggers handleSearch() to update animation
   // XXX currently generates new random graph - best avoid so
   // any displayed graph can be edited with this easily
   // XXX alternative to explicit size adjustment is just editing the
@@ -243,6 +254,9 @@ function EuclideanMatrixParams({
   // cumbersome with the current setup)
   const updateTableSize = (newSize) => {
     if (newSize < 1) return;
+    if (newSize < startNode)
+        setStartNode(newSize);
+    // XXX check endNodes also
     setMessage(null);
     setSize(newSize);
     const newData1 = makeXYCoords(newSize, min, max);
@@ -251,6 +265,15 @@ function EuclideanMatrixParams({
     const newData2 = makeWeights(newSize, 0, 2, symmetric, unweighted);
     setData2(newData2);
     setEdgesTxt(getEdgeList(newData2, newSize));
+    // handleSearch();
+  };
+
+  // Update start node
+  // useEffect() triggers handleSearch() to update animation
+  const updateStartNode = (newStart) => {
+    if (newStart < 1 || newStart > size) return;
+    setMessage(null);
+    setStartNode(newStart);
     // handleSearch();
   };
 
@@ -435,6 +458,7 @@ function EuclideanMatrixParams({
         name,
         mode,
         size,
+        startNode,
         coordsMatrix,
         edgeValueMatrix
       });
@@ -452,6 +476,16 @@ function EuclideanMatrixParams({
     setMessage(null);
     const newSize = coordTxt2Data1(e.target[0].value, size);
     setSize(newSize);
+  }
+
+  // Handle text input for coordinates
+  // As above (stub) XXX
+  const handleEndNodesTxt = (e) => {
+    e.preventDefault();
+    // setMessage(null);
+    setMessage('End nodes not yet fully implemented');
+    // const newEndNodes = endTxt2EndNodes(e.target[0].value, size);
+    // setEndNodes(newEndNodes);
   }
 
   // better to return data than set it here?
@@ -512,13 +546,18 @@ function EuclideanMatrixParams({
   };
 
 
+  // XXX need to fix sccs for some things, don't need refresh buttons
+  // Better for size and start node to be single editable text box
+  // instead of + and - buttons(?) -> space for end nodes on same line?
+  // Start node and End nodes should probably be optional (not used in
+  // all algorithms)
   return (
   <>
       <div className="matrixButtonContainer">
         <div className="sLineButtonContainer">
   <div className="form">
         <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice)}>
-          Graph: {graphChoiceName[graphChoice]}
+          Graph: {namesEgs[graphChoice]}
         </button>
         <div className="sLineButtonContainer">
           <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
@@ -533,7 +572,32 @@ function EuclideanMatrixParams({
         <button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
           Edge Weight: {weightCalcName[weightCalc]}
         </button>
+        <div className="sLineButtonContainer">
+          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
+            −
+          </button>
+          <span className='size'>Start Node: {startNode}</span>
+          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
+            +
+          </button>
+          
+        </div>
   </div>
+        <div className="disabled">
+          <ListParam
+            name="EndNodes"
+            buttonName="Set&nbsp;End&nbsp;Nodes"
+            formClassName="formLeft"
+            mode="search"
+            handleSubmit={handleEndNodesTxt}
+            DEFAULT_VAL={endNodesTxt}
+            SET_VAL={setEndNodesTxt}
+            REFRESH_FUNCTION={() => ''}
+            ALGORITHM_NAME={ALGORITHM_NAME}
+            EXAMPLE={COORDS_EXAMPLE}
+            setMessage={setMessage}
+          />
+        </div>
   <div className="disabled">
         <ListParam
           name="graphCoords"
@@ -543,7 +607,7 @@ function EuclideanMatrixParams({
           handleSubmit={handleXYTxt}
           DEFAULT_VAL={coordsTxt}
           SET_VAL={setCoordsTxt}
-          REFRESH_FUNCTION={() => COORDS_TXT_EG1}
+          REFRESH_FUNCTION={() => '1,1'}
           ALGORITHM_NAME={ALGORITHM_NAME}
           EXAMPLE={COORDS_EXAMPLE}
           setMessage={setMessage}
@@ -558,7 +622,7 @@ function EuclideanMatrixParams({
           handleSubmit={handleEdgeTxt}
           DEFAULT_VAL={edgesTxt}
           SET_VAL={setEdgesTxt}
-          REFRESH_FUNCTION={() => EDGES_TXT_EG1}
+          REFRESH_FUNCTION={() => '1-2'}
           ALGORITHM_NAME={ALGORITHM_NAME}
           EXAMPLE={EDGES_EXAMPLE}
           setMessage={setMessage}
@@ -629,4 +693,49 @@ function searchEdgeList(edgeList, i, j, unweighted, symmetric) {
   }
   return '0';
 }
+
+// Extract sizes from graphEgs param; add to random
+const graphEgsSizes = (graphEgs) => {
+  let sizeEgs = [...sizeEgsInit];
+  const nExtras = graphEgs.length;
+  for (let i = 0; i < nExtras; i++) {
+    const graphEg = graphEgs[i];
+    sizeEgs.push(graphEg.size);
+  }
+  return sizeEgs;
+}
+
+// Extract coords from graphEgs param; add to random
+const graphEgsCoords = (graphEgs) => {
+  let coordsEgs = [...coordsEgsInit];
+  const nExtras = graphEgs.length;
+  for (let i = 0; i < nExtras; i++) {
+    const graphEg = graphEgs[i];
+    coordsEgs.push(graphEg.coords);
+  }
+  return coordsEgs;
+}
+
+// Extract edges from graphEgs param; add to random
+const graphEgsEdges = (graphEgs) => {
+  let edgesEgs = [...edgesEgsInit];
+  const nExtras = graphEgs.length;
+  for (let i = 0; i < nExtras; i++) {
+    const graphEg = graphEgs[i];
+    edgesEgs.push(graphEg.edges);
+  }
+  return edgesEgs;
+}
+
+// Extract edges from graphEgs param; add to random
+const graphEgsNames = (graphEgs) => {
+  let namesEgs = [...namesEgsInit];
+  const nExtras = graphEgs.length;
+  for (let i = 0; i < nExtras; i++) {
+    const graphEg = graphEgs[i];
+    namesEgs.push(graphEg.name);
+  }
+  return namesEgs;
+}
+
 
