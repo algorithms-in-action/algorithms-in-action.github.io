@@ -39,6 +39,7 @@ const bstInstructions = [
 ];
 
 
+
 const stringInstructions = [{
   title: 'Searching Strings',
   content: [
@@ -101,3 +102,7 @@ export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
 export const TTFInstruction = bstInstructions;
+export const DIJKInstruction = graphInstructions; //TODO
+export const ASTARInstruction = graphInstructions; //TODO
+export const BFSInstruction = graphInstructions; //TODO
+export const DFSInstruction = graphInstructions; //TODO

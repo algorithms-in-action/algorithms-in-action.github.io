@@ -4,26 +4,27 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const PRIMS = 'Prim\'s';
-const PRIMS_EXAMPLE = 'Please follow the example provided: 0,1';
-const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
-function PrimsParam() {
+const ASTAR = 'A* Algorithm';
+const ASTAR_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
+const ASTAR_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
+function ASTParam() {
   const [message, setMessage] = useState(null);
 
   return (
     <>
       {/* Matrix input */}
       <MatrixParam
-        name="prim"
+        name="aStar"
         mode="find"
         defaultSize={DEFAULT_SIZE}
         min={0}
         max={9}
         symmetric
-        ALGORITHM_NAME={PRIMS}
-        EXAMPLE={PRIMS_EXAMPLE}
-        EXAMPLE2={PRIMS_EXAMPLE2}
-        setMessage={setMessage}
+        ALGORITHM_NAME={ASTAR}
+        EXAMPLE={ASTAR_EXAMPLE}
+        EXAMPLE2={ASTAR_EXAMPLE2}
+        setMessage={setMessage} 
+        
       />
 
       {/* render success/error message */}
@@ -32,4 +33,4 @@ function PrimsParam() {
   );
 }
 
-export default PrimsParam;
+export default ASTParam;

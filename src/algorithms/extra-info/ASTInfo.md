@@ -15,8 +15,7 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Quick Sort - Median of Three**][G4GLink]
+Geeks for Geeks Link: [**Astar Algorithm**][G4GLink]
 
 
-[G4GLink]: https://www.geeksforgeeks.org/quick-sort/
-
+[G4GLink]: https://www.geeksforgeeks.org/a-search-algorithm/

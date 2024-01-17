@@ -43,11 +43,14 @@ class Array2DTracer extends Tracer {
    * @param {string} algo used to mark if it is a specific algorithm
    */
   set(array2d = [], algo, kth = 1) {
-    this.data = array2d.map(array1d => [...array1d].map((value, i) => new Element(value, i)));
+    this.data = array2d.map((array1d) =>
+      [...array1d].map((value, i) => new Element(value, i))
+    );
     this.algo = algo;
     this.kth = kth;
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
+    this.listOfNumbers = '';
     super.set();
   }
 
@@ -85,6 +88,13 @@ class Array2DTracer extends Tracer {
           case '3':
             this.data[x][y].selected3 = true;
             break;
+          case '4':
+            this.data[x][y].selected4 = true;
+            break;
+          case '5':
+            this.data[x][y].selected5 = true;
+            break;
+
           default:
             this.data[x][y].selected = true;
             break;
@@ -98,7 +108,7 @@ class Array2DTracer extends Tracer {
   fill(sx, sy, ex = sx, ey = sy, c = 0) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].fill = (c === 1 || c === 2 || c === 3) ? c : 0;
+        this.data[x][y].fill = c === 1 || c === 2 || c === 3 ? c : 0;
       }
     }
   }
@@ -162,7 +172,7 @@ class Array2DTracer extends Tracer {
   /**
    * Whether to use animation. Could be used to immediately update the state.
    * For instance, where there are two 'distinct' operation and the sliding motion complicates.
-   * @param {*} bool 
+   * @param {*} bool
    */
   setMotion(bool = true) {
     this.motionOn = bool;
@@ -193,6 +203,8 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;
+        this.data[x][y].selected4 = false;
+        this.data[x][y].selected5 = false;
         this.data[x][y].style = undefined;
       }
     }
@@ -208,6 +220,10 @@ class Array2DTracer extends Tracer {
 
   showKth(k = '0') {
     this.kth = k;
+  }
+
+  setList(array) {
+    this.listOfNumbers = array.join(', ');
   }
 
   getKth() {
