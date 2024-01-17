@@ -51,7 +51,7 @@
 
       .variable {
         font-size: 18px;
-        color: var(--array-2d-row-col-sorted);
+        color: var(--array-2d-row-col-value-color);//var(--array-2d-row-col-sorted);
       }
 
       &.selected {
@@ -84,7 +84,7 @@
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }
+      } 
 
       &.variableGreen {
         background-color: var(--simple-fill-var-green);
@@ -110,6 +110,24 @@
           color: var(--array-2d-row-col-selected);
         }
       }
+
+
+      &.selected4 {
+        background-color: var(--array-2d-row-col-bg-selected4);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }  
+
+      &.selected5 {
+        background-color: var(--array-2d-row-col-bg-selected5);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }  
+
 
 
       &.patched {
@@ -149,8 +167,22 @@
       &.faded {
         opacity: 0.2
       }
-
-
+      
     }
   }
+}
+.captionDFS {
+  caption-side: bottom;
+}  
+
+.captionBFS {
+  caption-side: bottom;
+} 
+
+.captionDFS {
+  color: var(--array-2d-row-col-value-color); 
+}
+
+.captionBFS {
+  color: var(--array-2d-row-col-value-color); 
 }

@@ -13,29 +13,63 @@ const EditableCell = ({
 }) => {
   const [value, setValue] = useState(initialValue || 0);
 
-  const onChange = (e) => {
-    if (algo === 'transitiveClosure') {
+  const onChange = (e) => { 
+    let newValue = e.target.value; 
+
+    // Ensure only numeric values are allowed
+    if (!/^\d+$/.test(newValue) && newValue !== "") {
+      return;
+    } 
+
+    // Remove leading zeros
+    newValue = String(parseInt(newValue, 10) || 0);
+
+    if (algo === 'transitiveClosure' || algo === 'BFS'
+    || algo === 'DFS') {
       // eslint-disable-next-line radix
-      if (parseInt(e.target.value) > 1) {
-        e.target.value = '1';
+      if (parseInt(newValue) > 1) {
+        newValue = '1';
       }
       // eslint-disable-next-line radix
-      if (parseInt(e.target.value) < 0) {
-        e.target.value = '0';
+      if (parseInt(newValue) < 0) {
+        newValue = '0';
       }
       // window.alert(id[3]);
       // eslint-disable-next-line radix
       if (index === parseInt(id[3])) {
-        e.target.value = '1';
+        newValue = '1';
+      }
+    }  
+  
+    //make sure the diagonal is 0
+    if (algo != 'transitiveClosure'){
+      if (index === parseInt(id[3])) {
+        newValue = '0';
       }
     }
-    setValue(e.target.value);
+
+
+    if (newValue === "") {
+      newValue = '0';
+    }  
+    
+    setValue(newValue); 
+    
+    
+    
+    //setValue(e.target.value); 
+
+    // Update data immediately on value change
+    updateData(index, id, newValue);
   };
 
   // update the data when the input is blurred
   const onBlur = () => {
-    updateData(index, id, value);
-  };
+    //updateData(index, id, value);
+  }; 
+  
+ 
+
 
   // If the initialValue is changed external,
   // sync it up with the initial state

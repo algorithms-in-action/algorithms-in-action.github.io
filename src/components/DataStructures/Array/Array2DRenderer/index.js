@@ -51,7 +51,8 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    const { data, algo, kth, motionOn, hideArrayAtIdx } = this.props.data;
+    const { data, algo, kth, listOfNumbers, motionOn, hideArrayAtIdx } =
+      this.props.data;
     const isArray1D = true;
     // eslint-disable-next-line camelcase
     let data_T;
@@ -79,7 +80,13 @@ class Array2DRenderer extends Renderer {
               <tr>
                 {data[0].map((col, idx) => (
                   <td key={idx}>
-                    <div style={{ position: 'absolute', height: '15px', width: '37px' }}>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        height: '15px',
+                        width: '37px',
+                      }}
+                    >
                       {col.variables.map((v) => (
                         <motion.div
                           layoutId={v}
@@ -107,19 +114,23 @@ class Array2DRenderer extends Renderer {
             {algo === 'tc' && ( // Leave a blank cell at the header row
               <td />
             )}
-            {longestRow.map((_, i) => {
-              if (algo === 'tc') {
-                i += 1;
-              }
-              if (algo === 'prim' || algo == 'unionFind') {
-                return <React.Fragment key={i} />;
-              }
-              return (
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{i}</span>
-                </th>
-              );
-            })}
+            {algo !== 'BFS' &&
+              algo !== 'DFS' &&
+              algo !== 'dijkstra' &&
+              algo !== 'aStar' &&
+              longestRow.map((_, i) => {
+                if (algo === 'tc') {
+                  i += 1;
+                }
+                if (algo === 'prim' || algo == 'unionFind') {
+                  return <React.Fragment key={i} />;
+                }
+                return (
+                  <th className={classes(styles.col, styles.index)} key={i}>
+                    <span className={styles.value}>{i}</span>
+                  </th>
+                );
+              })}
           </tr>
           {data.map((row, i) => {
             let pointer = false;
@@ -206,7 +217,11 @@ class Array2DRenderer extends Renderer {
               })}
             </tr>
           )}
-          {algo === 'prim' &&
+          {(algo === 'prim' ||
+            algo === 'dijkstra' ||
+            algo === 'aStar' ||
+            algo === 'DFS' ||
+            algo == 'BFS') &&
             data.map(
               (row, i) =>
                 i === 2 && (
@@ -238,12 +253,28 @@ class Array2DRenderer extends Renderer {
         )}
         {algo == 'unionFind' && ( // bottom centre caption for union find
           <caption kth-tag="unionFind" className={styles.bottom_caption}>
-            <span className={styles.pseudocode_function}>Union</span>
-            ({kth})
+            <span className={styles.pseudocode_function}>Union</span>({kth})
+          </caption>
+        )}
+        {algo === 'DFS' && (
+          <caption
+            className={algo === 'DFS' ? styles.captionDFS : ''}
+            kth-tag="dfs_caption"
+          >
+            Nodes(stack): {listOfNumbers}
+          </caption>
+        )}
+        {algo === 'BFS' && (
+          <caption
+            className={algo === 'BFS' ? styles.captionBFS : ''}
+            kth-tag="bfs_caption"
+          >
+            Nodes(queue): {listOfNumbers}
           </caption>
         )}
       </table>
     );
   }
 }
+
 export default Array2DRenderer;
