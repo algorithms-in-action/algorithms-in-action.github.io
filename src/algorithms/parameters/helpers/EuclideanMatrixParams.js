@@ -581,8 +581,26 @@ function EuclideanMatrixParams({
   // XXX need to fix sccs for some things, don't need refresh buttons
   // Better for size and start node to be single editable text box
   // instead of + and - buttons(?) -> space for end nodes on same line?
-  // Start node and End nodes should probably be optional (not used in
-  // all algorithms)
+  // End nodes are optional (not used in all algorithms); should do the
+  // same for start node
+  let endNodeDiv = '';
+  if (defaultEnd !== null)
+    endNodeDiv = 
+        (<div className="disabled">
+          <ListParam
+            name="EndNodes"
+            buttonName="Set&nbsp;End&nbsp;Nodes"
+            formClassName="formLeft"
+            mode="search"
+            handleSubmit={handleEndNodesTxt}
+            DEFAULT_VAL={endNodesTxt}
+            SET_VAL={setEndNodesTxt}
+            REFRESH_FUNCTION={() => ''}
+            ALGORITHM_NAME={ALGORITHM_NAME}
+            EXAMPLE={COORDS_EXAMPLE}
+            setMessage={setMessage}
+          />
+        </div>);
   return (
   <>
       <div className="matrixButtonContainer">
@@ -595,7 +613,7 @@ function EuclideanMatrixParams({
           <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
             −
           </button>
-          <span className='size'>Num Nodes: {size}</span>
+          <span className="size">Num Nodes: {size}</span>
           <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
             +
           </button>
@@ -615,21 +633,7 @@ function EuclideanMatrixParams({
           
         </div>
   </div>
-        <div className="disabled">
-          <ListParam
-            name="EndNodes"
-            buttonName="Set&nbsp;End&nbsp;Nodes"
-            formClassName="formLeft"
-            mode="search"
-            handleSubmit={handleEndNodesTxt}
-            DEFAULT_VAL={endNodesTxt}
-            SET_VAL={setEndNodesTxt}
-            REFRESH_FUNCTION={() => ''}
-            ALGORITHM_NAME={ALGORITHM_NAME}
-            EXAMPLE={COORDS_EXAMPLE}
-            setMessage={setMessage}
-          />
-        </div>
+  {endNodeDiv}
   <div className="disabled">
         <ListParam
           name="graphCoords"
