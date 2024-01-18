@@ -180,17 +180,14 @@ export default {
     n = vertex;
     for (i = 0; i < n; i += 1) {
       cost[i] = Infinity;
-      prev[i] = 0;
+      prev[i] = -1;
       pending[i] = 1;
     }
-    // XXXX need to adjust code here so we use startNode instead of
-    // the first element of the cost and pqCost arrays, the position of
-    // the Min etc + update pseudocode.  Animation not quite linked to
+    // XXX  Note: Animation not quite linked to
     // pseudocode properly either with init + reassigning start cost to
     // 0 (probably not worth spending too much time fixing issues such
     // as this  - move to new pseudocode thats more similar to BFS/DFS
     // etc)
-    cost[0] = 0;
     pqCost.push('Cost[i]');  // initialize the pq cost
     pqDisplay.push('i'); // initialize the pq display
     prevNode.push('Parent[i]'); // initialize the prev list
@@ -200,9 +197,18 @@ export default {
       pqCost.push(Infinity);
       prevNode.push('-');
     }
+    // init start node cost to zero
+    // (note cost+pq arrays start at 0 and pqCost starts at 1,
+    // just to confuse things?)
+    cost[startNode-1] = 0;
+    pqCost[startNode] = 0; // add the minimum cost to pq cost
+    pq[0] = startNode-1;
+    prev[startNode-1] = startNode-1;
+    prevNode[startNode] = startNode;
+    pq[startNode-1] = 0;
+    miniIndex = startNode; // point the mini index in the pq cost
+    
     pqStart = 0;
-    pqCost[1] = cost[0]; // add the minimum cost to pq cost
-    miniIndex = 1; // point the mini index in the pq cost
     /* the chunker add select the minimum cost one */
     chunker.add(
         2,

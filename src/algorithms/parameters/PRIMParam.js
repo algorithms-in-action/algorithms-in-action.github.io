@@ -4,8 +4,8 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const DEFAULT_START = '2'; // XXX
-const DEFAULT_END = ''; // XXX should be able to switch off end node display
+const DEFAULT_START = 2; // XXX should have way to disable display
+const DEFAULT_END = ''; // XXX should have way to disable display
 const PRIMS = 'New Prim\'s';
 // XXX fix up error messages some time and change from 'EXAMPLE'
 const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';

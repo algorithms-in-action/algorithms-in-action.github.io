@@ -7,20 +7,19 @@ export default parse(`
 
 \\Code{
 Main
-Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \\B 1
-           // find a minimum spanning tree for G.
+Prim(E, n, s) // Given a weighted connected graph G with nodes 1..n \\B 1
 \\In{
-    PQ <- InitPriorityQueue(n) \\Ref InitPQ
+\\In{
+           // and edges E, start at node s to find a minimum spanning tree for G.
+\\In}
+\\In}
+\\In{
+    PQ <- InitPriorityQueue(n, s) \\Ref InitPQ
     \\Expl{  Nodes are put in a priority queue PQ according to their
             Cost. Smaller cost means higher priority and initially 
-            node 1 has the minimum cost.
-    \\Expl}
-
-    Cost[1] <- 0
-    \\Expl{  We arrange for the tree construction to start with node 1;
-            this is achieved by setting the cost of node 1 to 0 (to get
-            from node 1 to itself costs nothing).  Other nodes are 
-            initially assigned the largest possible cost.
+            all nodes have the highest possible cost, except the start
+            node s, which has cost zero (we start building the tree from
+            s and it costs nothing to get from s to s).
     \\Expl}
 
     while PQ not Empty \\B 3
@@ -63,6 +62,7 @@ InitPQ
                     thus all nodes are in the spanning tree.
             \\Expl}
         \\In}
+        Cost[s] <- 0
 \\Code}
 
 \\Code{

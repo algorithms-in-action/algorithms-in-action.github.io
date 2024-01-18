@@ -225,9 +225,9 @@ function EuclideanMatrixParams({
     graphChoice = (graphChoice + 1) % graphChoiceNum;
     setgraphChoice(graphChoice);
     const newSize = sizeEgs[graphChoice];
-    console.log('graphChoice = ' + graphChoice);
-    console.log('size ' + newSize);
     setSize(newSize);
+    if (newSize < startNode)
+        setStartNode(newSize);
     if (graphChoice === GRAPHCHOICERAND) {
       const edges = makeWeights(newSize, 0, 2, symmetric, unweighted);
       const coords = makeXYCoords(newSize, min, max);
