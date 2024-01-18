@@ -183,8 +183,9 @@ function EuclideanMatrixParams({
   const [coordsTxt, setCoordsTxt] = useState('');
   const [edgesTxt, setEdgesTxt] = useState('');
   const [startNode, setStartNode] = useState(defaultStart);
-  const [endNodesTxt, setEndNodesTxt] = useState(defaultEnd);
-  const [endNodes, setEndNodes] = useState([]);
+  // XXX not sure if endNodesTxt needs to be in State
+  const [endNodesTxt, setEndNodesTxt] = useState(nums2Txt(defaultEnd));
+  const [endNodes, setEndNodes] = useState(defaultEnd);
   const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
 
   // No longer used - sync with animation done without an extra button
@@ -228,6 +229,12 @@ function EuclideanMatrixParams({
     setSize(newSize);
     if (newSize < startNode)
         setStartNode(newSize);
+    // remove and end nodes > newSize
+    if (endNodes.some((e) => e > newSize)) {
+      const newEndNodes = endNodes.filter((e) => e <= newSize);
+      setEndNodesTxt(nums2Txt(newEndNodes));
+      setEndNodes(newEndNodes);
+    }
     if (graphChoice === GRAPHCHOICERAND) {
       const edges = makeWeights(newSize, 0, 2, symmetric, unweighted);
       const coords = makeXYCoords(newSize, min, max);
@@ -256,7 +263,12 @@ function EuclideanMatrixParams({
     if (newSize < 1) return;
     if (newSize < startNode)
         setStartNode(newSize);
-    // XXX check endNodes also
+    // remove and end nodes > newSize
+    if (endNodes.some((e) => e > newSize)) {
+      const newEndNodes = endNodes.filter((e) => e <= newSize);
+      setEndNodesTxt(nums2Txt(newEndNodes));
+      setEndNodes(newEndNodes);
+    }
     setMessage(null);
     setSize(newSize);
     const newData1 = makeXYCoords(newSize, min, max);
@@ -482,11 +494,31 @@ function EuclideanMatrixParams({
   // As above (stub) XXX
   const handleEndNodesTxt = (e) => {
     e.preventDefault();
-    // setMessage(null);
-    setMessage('End nodes not yet fully implemented');
-    // const newEndNodes = endTxt2EndNodes(e.target[0].value, size);
-    // setEndNodes(newEndNodes);
+    setMessage(null);
+    const newEndNodes = endTxt2EndNodes(e.target[0].value, size);
+    // console.log(newEndNodes);
+    if (newEndNodes !== null)
+      setEndNodes(newEndNodes);
   }
+
+
+  // converts '1,2,3' into [1,2,3] etc; checks numbers are <= size
+  // XXX should have method to restrict how many (eg, some algorithms
+  // must have just one, others can have several)
+  const endTxt2EndNodes = (value, size) => {
+    const textInput = value.replace(/\s+/g, '');
+
+    if (isListofTuples(textInput, 1, 1)) {
+      const endNodes =
+        textInput
+          .split(',')
+          .map((s) => parseInt(s, 10));
+      if (!(endNodes.some((val) => val > size))) // check is NaN also?
+        return endNodes;
+    }
+    setMessage(errorParamMsg(ALGORITHM_NAME, 'Input a list of comma-separated node numbers, eg 1,2'));
+    return null;
+  };
 
   // better to return data than set it here?
   const coordTxt2Data1 = (value, size) => {
@@ -738,4 +770,15 @@ const graphEgsNames = (graphEgs) => {
   return namesEgs;
 }
 
+
+  // converts [1,2,3] into '1,2,3' etc
+  const nums2Txt = (nums) => {
+    if (nums === null) return '';
+    let txt = ``;
+    nums.forEach((n) => {
+      txt += n + `,`;
+    });
+    txt = txt.substring(0,txt.length-1); // strip final `,`
+    return txt;
+  };
 
