@@ -185,7 +185,7 @@ function EuclideanMatrixParams({
   const [startNode, setStartNode] = useState(defaultStart);
   // XXX not sure if endNodesTxt needs to be in State
   const [endNodesTxt, setEndNodesTxt] = useState(nums2Txt(defaultEnd));
-  const [endNodes, setEndNodes] = useState(defaultEnd);
+  const [endNodes, setEndNodes] = useState((defaultEnd===null?[]:defaultEnd));
   const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
 
   // No longer used - sync with animation done without an extra button
