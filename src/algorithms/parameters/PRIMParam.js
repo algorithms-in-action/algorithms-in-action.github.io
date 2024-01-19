@@ -4,7 +4,7 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5;
-const DEFAULT_START = 2; // XXX null should disable
+const DEFAULT_START = 1; // XXX null should disable
 const DEFAULT_END = null; // disable end nodes display/input
 // const DEFAULT_END = [2,4]
 const PRIMS = 'New Prim\'s';

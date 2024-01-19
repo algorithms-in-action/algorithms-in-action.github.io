@@ -55,14 +55,15 @@ InitPQ
             \\Expl}
             Parent[i] <- Null
             \\Expl{  The array Parent will be used to track how nodes are 
-                    connected into the resulting spanning tree. Node 1
+                    connected into the resulting spanning tree. Node s
                     will be the root of the spanning tree and an edge (j,i)
                     is added to the tree by setting Parent[i] to j.
-                    Eventually all nodes except 1 have a (non-Null) Parent,
+                    Eventually all nodes have a (non-Null) Parent,
                     thus all nodes are in the spanning tree.
             \\Expl}
         \\In}
         Cost[s] <- 0
+        Parent[s] <- s // the parent of the tree root s points to itself
 \\Code}
 
 \\Code{
