@@ -11,9 +11,9 @@
 // and edges/weights via text boxes, plus having predefined example
 // graphs, allowing user-defined weights as well as Euclidean/Manhattan
 // weights based on X-Y coordinates, etc. Also start node and end nodes
-// (latter not quite supported). Old input method still
+// (latter is optional - start nodes should be also). Old input method still
 // supported if you scroll down - could delete eventually but doesn't do
-// much harm if its off-screen.
+// much harm if its off-screen, though it hides error messages.
 // NOTE: There are (at least) three different representations for
 // graphs: strings (the "new" one - comma separated pairs of numbers etc)
 // the one for rendering tables (YUK!), and more sensible 2D edge
@@ -35,8 +35,9 @@
 // updated accordingly and edge/coordinate data is copied to tables.
 // Data input from tables also gets reflected in text boxes.
 // Example graphs passed in from algorithm; one random graph option
-// added here.
-// Start node and End node input and editing.
+// added here. Input + editing of start node and optional end nodes
+// (if the initial value is null, end nodes are not displayed and thus
+// can't be changed).
 // TO DO:
 // Work more on input data display - use sccs for everything, define
 // new classes etc instead of just reusing existing ones, rethink some
@@ -188,13 +189,8 @@ function EuclideanMatrixParams({
   const [endNodes, setEndNodes] = useState((defaultEnd===null?[]:defaultEnd));
   const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
 
-  // No longer used - sync with animation done without an extra button
-  // click
-  // why is this 'Start' but 'Restart' in MatrixParam.js???
-  // const [buttonMessage, setButtonMessage] = useState('Start');
-
   // reset the XY coordinates when the size changes
-  // XXX Best just trim/extend
+  // (now done in updateTableSize - this is probably not needed XXX)
   useEffect(() => {
     const newData1 = makeXYCoords(size, min, max);
     setData1(newData1);
@@ -204,6 +200,7 @@ function EuclideanMatrixParams({
   }, [min, max, symmetric, unweighted]);
 
   // reset the edge weight matrix when the size changes
+  // (now done in updateTableSize - this is probably not needed XXX)
   // XXX Best just trim/extend
   useEffect(() => {
     const newData2 = makeWeights(size, 0, 2, symmetric, unweighted);
@@ -411,6 +408,7 @@ function EuclideanMatrixParams({
             // XXX best move to separate function
             distance = Math.ceil(Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2)));
           } else if (weightCalc === W_MANHATTAN) {
+            // XXX best move to separate function
             distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
           } else { // W_INPUT
             distance = adjacent[i][j];
@@ -491,7 +489,7 @@ function EuclideanMatrixParams({
   }
 
   // Handle text input for coordinates
-  // As above (stub) XXX
+  // As above
   const handleEndNodesTxt = (e) => {
     e.preventDefault();
     setMessage(null);
