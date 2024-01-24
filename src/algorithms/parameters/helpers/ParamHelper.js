@@ -129,6 +129,7 @@ export const makeColumnCoords = () => {
 };
 
 
+// XXX OLD version - could probably delete now
 /**
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
@@ -145,7 +146,7 @@ export const makeColumnCoords = () => {
 // number to determine if there is an edge and min&max (or 1) to get edge
 // length if there is one. To make sure we have a connected graph we could
 // force node n to be connected to node n+1
-export const makeWeights = (len, min, max, symmetric, unweighted) => {
+export const makeWeightsOld = (len, min, max, symmetric, unweighted) => {
   const rows = [];
   if (symmetric) {
     for (let i = 0; i < len; i += 1) {
@@ -213,20 +214,35 @@ export const makeWeights = (len, min, max, symmetric, unweighted) => {
   return arr;
 };
 
-// attempt at better version - causes occasional crash for some reason
-// it seems
-export const makeWeightsNew = (len, min, max, symmetric, unweighted) => {
+/**
+ * Populate the data cells, see React-Table API
+ * https://react-table.tanstack.com/docs/quick-start
+ * @param {number} len size of the matrix
+ * @param min
+ * @param max
+ * @param symmetric
+ * @return array of object
+ */
+// Attempt at better version of random graph. Makes sure a connected
+// graph is returned. Attempt to limit degree of nodes (still tends to
+// be a bit sparse for a small number of nodes and perhaps a bit dense
+// for a large number - could make some adjustments.  Could be nice for
+// this to have the X-Y coordinates passed in; currently they are done
+// independently, which limits things somewhat.
+export const makeWeights = (len, min, max, symmetric, unweighted) => {
   const rows = [];
 
-  // get pseudm-random len*len edge matrix
+  // get pseudo-random len*len edge matrix
   // Try to get average degree around 3, edges being more likely between
   // nodes with similar numbers
   for (let i = 0; i < len; i += 1) {
-    const row = [];
-    let edgeCount = 0; // edge count for this node/row
-    let tries = 0; // we try 5 times to get edgeCount > 0 then give up
-    while (tries < 5 || edgeCount === 0 || len === 1) {
+    let row = [];
+    let edgeCount = 0;
+    let tries = 0; // we try several times to get 0<edgeCount<5 then give up
+    do {
       tries++;
+      row = [];
+      edgeCount = 0; // edge count for this node/row
       for (let j = 0; j < len; j += 1) {
         let val = 0;
         if (j < i && symmetric) {
@@ -236,15 +252,22 @@ export const makeWeightsNew = (len, min, max, symmetric, unweighted) => {
           // diagonal is 1 or 0 is a bit sus but thats what earlier
           // code did...
           val = (symmetric? 0 : 1);
+          // always have an edge between i and i+1 to make sure graph is
+          // connected (may not always want this but you can edit graphs
+          // if desired)
+        } else if (j == i+1) {
+          val = (unweighted? 1: getRandomInt(min, max));
           // else determine if we want an edge between i and j
-          // - if i&j differ more we reduce likelyhood
-        } else if (Math.random() < 0.7**Math.abs(i-j)) {
+          // - if i&j differ more we reduce likelihood
+        } else if (Math.random() < 0.75**(Math.abs(i-j)*3 - 6)) {
           val = (unweighted? 1: getRandomInt(min, max));
         }
         if (val > 0) edgeCount++;
         row.push(val);
       }
-    }
+      // console.log('try ' + tries + 'edgeCount = ' + edgeCount);
+    } while (tries < 40 && (edgeCount === 0 || edgeCount > 4) && len > 1)
+    // console.log('row' + i + ': ' + row);
     rows.push(row);
   }
   let arr = [];
@@ -255,36 +278,8 @@ export const makeWeightsNew = (len, min, max, symmetric, unweighted) => {
     }
     arr.push(data);
   }
-  if (len === 4 && symmetric !== true) { // XXX WTF?
-    arr = [
-      {
-        col0: '1',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '1',
-        col3: '0',
-      },
-      {
-        col0: '0',
-        col1: '0',
-        col2: '1',
-        col3: '1',
-      },
-    ];
-  }
   return arr;
-};
+}
 
 
 // Create len random-ish XY coordinates in range min to max for
@@ -292,6 +287,10 @@ export const makeWeightsNew = (len, min, max, symmetric, unweighted) => {
 export const makeXYCoords = (len, min, max) => {
   const rows = [];
   let arr = [];
+  let prevX = 0;  // keep track of previous 2 X,Y values to reduce close nodes
+  let prevY = 0;
+  let prevX1 = 0;
+  let prevY1 = 0;
   for (let i = 0; i < len; i += 1) {
     const data = {};
     // To make the graph more readable it helps to spread the X values
@@ -304,21 +303,46 @@ export const makeXYCoords = (len, min, max) => {
     // spread than purely random but the xmin-xmax columns overlap.
     // const sep = 0; // no attempt to spread X values
     // const sep = 1; // X values spread pretty evenly
-    const sep = 0.8;
+    const sep = 0.9;
     let xmin = Math.floor(min + sep*(max-min)*i/len);
     let xmax = Math.ceil(max - sep*(max-min)*(len-1-i)/len);
-    data[`col0`] = `${getRandomInt(xmin, xmax)}`;
+    let x = getRandomInt(xmin, xmax);
+    data[`col0`] = `${x}`;
     // Ideally, spreading the Y values would also be good but we dont
     // want them correlated with the X values so its not so easy.
     // Also good to avoid nodes that are too close together - you can't
-    // see the edge because of the circles depicting the nodes.
+    // see the edge because of the circles depicting the nodes, so we
+    // have several tries at avoiding having a node close to the
+    // previous two.
     // We use max/3 as the max Y value because the screen space for the
     // graph is wide but not high
-    data[`col1`] = `${getRandomInt(min, max/3)}`;
+    let y = 0;
+    let tries = 0;
+    do {
+      y = getRandomInt(min, max/3);
+      tries++;
+    } while(tries < 20 && (euclidean(x,y,prevX,prevY) < 5 || euclidean(x,y,prevX1,prevY1) < 5));
+    data[`col1`] = `${y}`;
+    prevX1 = prevX;
+    prevY1 = prevY;
+    prevX = x;
+    prevY = y;
     arr.push(data);
   }
   return arr;
-};
+}
+
+// Euclidean distance between two points (rounded up)
+// We round up so we can have the choice of admissible and inadmissible
+// heuristics in A* more easily (and avoid floating point)
+export const euclidean = (x1, y1, x2, y2) => {
+  return Math.ceil(Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2)));
+}
+
+// Manhattan distance between two points
+export const manhattan = (x1, y1, x2, y2) => {
+  return Math.abs(x1-x2) + Math.abs(y1-y2);
+}
 
 
 export const balanceBSTArray = (nodes) => {

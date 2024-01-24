@@ -46,10 +46,10 @@
 // regenerating a random graph each time. However, it would also be nice
 // to easily generate new random graphs of a given size.
 // Start node and end nodes should be optional (algorithm specific)
-// Better random graph creation (seems like there are default
+// Better random graph creation? Seems like there are default
 // functions for creating a random graph in the renderer but no way of
-// getting from there to the data input display - could copy and modify
-// that code or get some ideas at least)
+// getting from there to the data input display - could get some ideas
+// from that but it's not too bad as is.
 // Rethink (and probably delete) stuff for re-setting values - doesn't
 // seem like it's needed now.
 // FiXXX BUG: sometimes if you try to edit a matrix cell with a backspace
@@ -69,6 +69,8 @@ import {
   makeColumnCoords,
   makeXYCoords,
   makeWeights,
+  euclidean,
+  manhattan,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -169,10 +171,10 @@ function EuclideanMatrixParams({
   const [originalData1, setOriginalData1] = useState(data1);
 
   // Edge weight table
-  // XXX use 0-2 for weights for now so reduce number of edges - should
-  // have bigger max but more zeros (non-zero can be replaced by
-  // Euclid or Manhattan anyway)
-  const [data2, setData2] = useState(() => makeWeights(size, 0, 2, symmetric, unweighted));
+  // We use 1-10 for weights here and elsewhere (should define consts for
+  // these instead); these are the weights for edges - makeWeights has a
+  // separate way of determining if an edge should exist.
+  const [data2, setData2] = useState(() => makeWeights(size, 1, 10, symmetric, unweighted));
   const [originalData2, setOriginalData2] = useState(data2);
 
   // New version of graph input:
@@ -203,7 +205,7 @@ function EuclideanMatrixParams({
   // (now done in updateTableSize - this is probably not needed XXX)
   // XXX Best just trim/extend
   useEffect(() => {
-    const newData2 = makeWeights(size, 0, 2, symmetric, unweighted);
+    const newData2 = makeWeights(size, 1, 10, symmetric, unweighted);
     setData2(newData2);
     setEdgesTxt(getEdgeList(newData2, size));
     setOriginalData2(newData2);
@@ -233,7 +235,7 @@ function EuclideanMatrixParams({
       setEndNodes(newEndNodes);
     }
     if (graphChoice === GRAPHCHOICERAND) {
-      const edges = makeWeights(newSize, 0, 2, symmetric, unweighted);
+      const edges = makeWeights(newSize, 1, 10, symmetric, unweighted);
       const coords = makeXYCoords(newSize, min, max);
       setData1(coords);
       setCoordsTxt(getCoordinateList(coords));
@@ -271,7 +273,7 @@ function EuclideanMatrixParams({
     const newData1 = makeXYCoords(newSize, min, max);
     setData1(newData1);
     setCoordsTxt(getCoordinateList(newData1));
-    const newData2 = makeWeights(newSize, 0, 2, symmetric, unweighted);
+    const newData2 = makeWeights(newSize, 1, 10, symmetric, unweighted);
     setData2(newData2);
     setEdgesTxt(getEdgeList(newData2, newSize));
     // handleSearch();
@@ -402,14 +404,9 @@ function EuclideanMatrixParams({
         let distance = 0;
         if (adjacent[i][j] !== 0) {
           if (weightCalc === W_EUCLIDEAN) {
-            // Calculate *rounded up* Euclidean Distance
-            // Want to avoid floating point + have the option of
-            // admissible and inadmissible heuristics in A*
-            // XXX best move to separate function
-            distance = Math.ceil(Math.sqrt(Math.pow(coords[j][0] - coords[i][0], 2) + Math.pow(coords[j][1] - coords[i][1], 2)));
+            distance = euclidean(coords[j][0], coords[j][1], coords[i][0], coords[i][1]);
           } else if (weightCalc === W_MANHATTAN) {
-            // XXX best move to separate function
-            distance = Math.abs(coords[j][0] - coords[i][0]) + Math.abs(coords[j][1] - coords[i][1]);
+            distance = manhattan(coords[j][0], coords[j][1], coords[i][0], coords[i][1]);
           } else { // W_INPUT
             distance = adjacent[i][j];
           }
