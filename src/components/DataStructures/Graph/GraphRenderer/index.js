@@ -57,10 +57,12 @@ class GraphRenderer extends Renderer {
     
     if (this.props.title === 'Graph view') {
       // Center to new axis origin
-      this.centerX = 180;
-      this.centerY = -180;
+      // this.centerX = 180;
+      this.centerX = 650;  // shift graph display left
+      this.centerY = -200;
 
     }
+    this.zoom = 0.85;  // zoom out a bit to fit graph on screen
 
     this.elementRef = React.createRef();
     this.selectedNode = null;

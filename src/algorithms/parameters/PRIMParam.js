@@ -11,15 +11,15 @@ const PRIMS = 'New Prim\'s';
 // XXX fix up error messages some time and change from 'EXAMPLE'
 const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
-const GRAPH_EGS = [
+const GRAPH_EGS = [ // XXX think up better examples
         { name: 'Example 1',
           size: 5,
-          coords: '5-5, 15-18, 25-16, 35-4, 45-20',
+          coords: '5-5, 15-15, 25-13, 30-4, 45-15',
           edges: '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5'
         },
         { name: 'Example 2',
           size: 4,
-          coords: '5-10, 15-20, 23-4, 32-17',
+          coords: '5-9, 15-15, 23-4, 32-12',
           edges: '1-3-5,1-4-4,3-4,2-4-4'
         }];
 

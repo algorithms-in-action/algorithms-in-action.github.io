@@ -24,11 +24,13 @@
       fill: var(--graph-node-id-fill);
       dominant-baseline: central;
       text-anchor: middle;
+      font-size: 35px; // font size for labels inside nodes
     }
 
     .weight {
       fill: var(--graph-node-weight-fill);
       font-weight: bold;
+      font-size: 15px;
       alignment-baseline: central;
       text-anchor: left;
     }
