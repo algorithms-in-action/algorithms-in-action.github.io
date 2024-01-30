@@ -17,7 +17,7 @@ export default {
     };
   },
 
-  run(chunker, { matrix, endNode, startNode}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, endNode, startNode}) {
 
     //Defining queue
     function Queue() {
@@ -42,8 +42,9 @@ export default {
         return this.items.length == 0;
     }
 
-    const E = [...matrix];
-    const numVertices = matrix.length;   
+    const E = [...edgeValueMatrix];
+    const coords = [...coordsMatrix];
+    const numVertices = edgeValueMatrix.length;   
     //The real Seen array(visited) and Parent array(parent)
     const visited = new Array(numVertices).fill(false); 
     const parent = new Array(numVertices).fill(null);
@@ -65,13 +66,13 @@ export default {
     // BFS(G, s) B1
     chunker.add(
       1,
-      (vis, array) => {
+      (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(false);
-        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
 
       },
-      [E]
+      [E, coords]
     );
 
     // initialise each element of array Parent to zero B6  
