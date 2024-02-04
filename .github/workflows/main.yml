@@ -6,7 +6,7 @@ name: CI
 # events but only for the dev branch
 on:
   push:
-    branches: [ dev ]
+    branches: [ dev-2023S2 ]
     paths-ignore:
       - 'doc/**'      # Ignore all files and subdirectories under "doc/"
       - 'docs/**'     # Ignore all files and subdirectories under "docs/"
