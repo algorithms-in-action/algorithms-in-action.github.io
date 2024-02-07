@@ -1,4 +1,4 @@
-# Brute Force String Search demo 2
+# Brute Force String Search
 
 ---
 
