@@ -32,19 +32,19 @@ export default {
 
     const E = [...edgeValueMatrix];
     const coords = [...coordsMatrix];  // Potentially empty.
-    const vertex = edgeValueMatrix.length;
+    const numVertices = edgeValueMatrix.length;
 
-    let weight = new Array(edgeValueMatrix.length);
+    let weight = new Array(numVertices);
     for (let i = 0; i < weight.length; i += 1) {
-      weight[i] = new Array(edgeValueMatrix.length);
+      weight[i] = new Array(numVertices);
     }
 
-    const cost = new Array(edgeValueMatrix.length);
-    const pending = new Array(edgeValueMatrix.length);
-    const prev = new Array(edgeValueMatrix.length);
-    const pq = new Array(edgeValueMatrix.length);
+    const cost = new Array(numVertices);
+    const pending = new Array(numVertices);
+    const prev = new Array(numVertices);
+    const pq = new Array(numVertices);
     const pqDisplay = [];
-    const prevDisplay = new Array(edgeValueMatrix.length).fill('');
+    const prevDisplay = new Array(numVertices).fill('');
     let pqStart;
     let n;
     let miniIndex;
@@ -58,7 +58,7 @@ export default {
       (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
-        vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
+        vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)), coordsArray);
       },
       [E, coords]
     );
@@ -177,7 +177,7 @@ export default {
 
     let i;
     weight = [...E];
-    n = vertex;
+    n = numVertices;
     for (i = 0; i < n; i += 1) {
       cost[i] = Infinity;
       prev[i] = -1;
