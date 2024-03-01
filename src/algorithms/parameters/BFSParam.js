@@ -34,8 +34,8 @@ function BFSParam() {
         defaultSize={DEFAULT_SIZE}
         defaultStart={DEFAULT_START}
         defaultEnd={DEFAULT_END}
-        min={0}
-        max={9}
+        min={1}
+        max={49}
         symmetric
         graphEgs={GRAPH_EGS}
         ALGORITHM_NAME={BFS}

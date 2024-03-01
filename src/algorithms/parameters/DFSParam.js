@@ -35,8 +35,8 @@ function DFSParam() {
         defaultSize={DEFAULT_SIZE}
         defaultStart={DEFAULT_START}
         defaultEnd={DEFAULT_END}
-        min={0}
-        max={9}
+        min={1}
+        max={49}
         graphEgs={GRAPH_EGS}
         symmetric
         ALGORITHM_NAME={DFS}

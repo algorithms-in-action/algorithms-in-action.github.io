@@ -33,8 +33,8 @@ function DijkstraParam() {
         defaultStart={DEFAULT_START}
         defaultEnd={DEFAULT_END}
         graphEgs={GRAPH_EGS}
-        min={0}
-        max={9}
+        min={1}
+        max={49}
         symmetric
         ALGORITHM_NAME={DIJK}
         EXAMPLE={DIJK_EXAMPLE}
