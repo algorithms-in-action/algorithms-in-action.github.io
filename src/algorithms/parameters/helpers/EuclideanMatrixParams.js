@@ -221,10 +221,14 @@ function EuclideanMatrixParams({
   }, [size, startNode, data1, data2, weightCalc]);
 
   // change graph choice; Note setData1 etc are asynchronous
-  const changeGraphChoice = (graphChoice) => {
+  // newSize is passed in for random graphs; if it is zero the default
+  // size for random graphs is used (XXX could use previous size?)
+  const changeGraphChoice = (graphChoice, newSize) => {
     graphChoice = (graphChoice + 1) % graphChoiceNum;
     setgraphChoice(graphChoice);
-    const newSize = sizeEgs[graphChoice];
+    if (newSize === 0) {
+       newSize = sizeEgs[graphChoice];
+    }
     setSize(newSize);
     if (newSize < startNode)
         setStartNode(newSize);
@@ -258,6 +262,7 @@ function EuclideanMatrixParams({
   // coordinates to add/delete some (which works), but it would be nice
   // to generate new random graphs of any size (thats still a bit
   // cumbersome with the current setup)
+  // XXX maybe we should have a text box for the size instead of + and -
   const updateTableSize = (newSize) => {
     if (newSize < 1) return;
     if (newSize < startNode)
@@ -269,14 +274,10 @@ function EuclideanMatrixParams({
       setEndNodes(newEndNodes);
     }
     setMessage(null);
-    setSize(newSize);
-    const newData1 = makeXYCoords(newSize, min, max);
-    setData1(newData1);
-    setCoordsTxt(getCoordinateList(newData1));
-    const newData2 = makeWeights(newSize, 1, 10, symmetric, unweighted);
-    setData2(newData2);
-    setEdgesTxt(getEdgeList(newData2, newSize));
-    // handleSearch();
+    // make new random graph; this also calls setSize (see XXX note above)
+    // Note changeGraphChoice takes the previous graph choice as it's
+    // first argument and increments it (with modulo) to get new choice
+    changeGraphChoice(GRAPHCHOICERAND-1, newSize);
   };
 
   // Update start node
@@ -478,6 +479,12 @@ function EuclideanMatrixParams({
   // Handle text input for coordinates
   // modified from the Union-Find code (that team seemed to know what
   // they were doing!)
+  // BUG XXX if editing the XY coordinates changes the number of
+  // coordinates the edge matrix display ends up not square and the
+  // graph display is not updated - the edge matrix should be trimmed or
+  // extended in this code if the size changes. If the edges text is
+  // later edited in a compatible way it all works out fine but the
+  // mangled intermmediate state is best avoided.
   const handleXYTxt = (e) => {
     e.preventDefault();
     setMessage(null);
@@ -601,7 +608,7 @@ function EuclideanMatrixParams({
       <div className="matrixButtonContainer">
         <div className="sLineButtonContainer">
   <div className="form">
-        <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice)}>
+        <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice, 0)}>
           Graph: {namesEgs[graphChoice]}
         </button>
         <div className="sLineButtonContainer">
