@@ -13,9 +13,9 @@ const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
 const GRAPH_EGS = [ // XXX think up better examples
         { name: 'Example 1',
-          size: 5,
-          coords: '5-5, 15-15, 25-13, 30-4, 45-15',
-          edges: '1-2,1-4,2-3,2-4,1-5-9,4-5,3-5'
+          size: 12,
+          coords: '5-9,10-8,11-14,14-6,23-4,24-12,29-7,33-8,31-15,39-11,42-4,45-9',
+          edges: '1-2-4,1-3-3,2-4-2,3-6-9,4-5-2,5-6-3,5-7-8,6-7-2,6-9-4,7-8-7,8-10-10,9-10-4,10-11-6,11-12-5'
         },
         { name: 'Example 2',
           size: 4,
