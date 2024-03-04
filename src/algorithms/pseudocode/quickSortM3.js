@@ -32,24 +32,17 @@ Quicksort(A, left, right) \\B 1
                 There are various ways this can be coded, often with
                 some subtle points.
         \\Expl}
-         Quicksort FirstHalf    \\Ref QuicksortFirstHalf 
-        \\Expl{  Sort elements left of (smaller or equal to) the pivot,
-                which is in A[i].
-        \\Expl}
-        Quicksort SecondHalf    \\Ref QuicksortSecondHalf
-        \\Expl{  Sort elements right of (greater or equal to) the pivot,
-                which is in A[i].
+        Quicksort FirstHalf, SecondHalf    \\Ref QuicksortBoth 
+        \\Expl{  Sort elements left of (smaller or equal to) the
+                pivot, which is in A[i]. Then sort elements right of (greater or equal to) the
+                pivot, which is in A[i].
         \\Expl}
     \\In}
 \\Code}
     
 \\Code{
-QuicksortFirstHalf
+QuicksortBoth
 Quicksort(A, left, i - 1) \\B 3
-\\Code}
-    
-\\Code{
-QuicksortSecondHalf
 Quicksort(A, i + 1, right) \\B 4
 // Done \\B 19
 \\Code}

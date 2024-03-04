@@ -193,9 +193,6 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-bg-sorted: #aeaeae;
 	--array-2d-row-col-sorted: #FFFFFF;
 
-	--array-1d-future-stack-todo-section: rgba(0, 0, 0, 0.2);
-
-
 	--array-graph-row-col-bg: #ffffff;
 	--array-graph-row-col-border: #4f4f4f;
 	--array-graph-row-col-value-color: #3e3e3e;
@@ -329,9 +326,9 @@ $yellowLine: #FFDE3C;
 	--right-code-line-num: #475164;
 	--right-code-line-explain-btn-active: #9b9b9b;
 	--right-code-line-explain-btn-inactive: #3f3f3f;
-	--right-code-expand-btn-bg: #1d1d1d;
+	--right-code-expand-btn-bg: #101010;
 	--right-code-expand-btn: #5b5b5b;
-	--right-code-expand-btn-bg-hover: #171717;
+	--right-code-expand-btn-bg-hover: #000000;
 
 	--right-code-line-explain-bg: #16171B;
 	--right-code-line-explain-title: #a2a2a2;
@@ -407,9 +404,7 @@ $yellowLine: #FFDE3C;
 	--two-array-2d-row-col-bg-selected: #83d489;
 	--two-array-2d-row-col-selected: #FFFFFF;
 	--two-array-2d-row-col-bg-patched: #83d489;
-	--two-array-2d-row-col-patched: #FFFFFF;	
-
-	--array-1d-future-stack-todo-section: rgba(255, 255, 255, 0.4);
+	--two-array-2d-row-col-patched: #FFFFFF;
 
 	--array-graph-row-col-bg: #343434;
 	--array-graph-row-col-border: #212121;
@@ -489,7 +484,7 @@ $yellowLine: #FFDE3C;
 	--two-array-2d-row-col-bg-selected: #83d489;
 	--two-array-2d-row-col-selected: #FFFFFF;
 	--two-array-2d-row-col-bg-patched: #83d489;
-	--two-array-2d-row-col-patched: #FFFFFF;	
+	--two-array-2d-row-col-patched: #FFFFFF;
 
 	--array-graph-row-col-bg-selected: #2289ff;
 	--array-graph-row-col-bg-patched: #ee0970;
@@ -506,6 +501,9 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-arrow-fill-selected: #2289ff;
 	--array-graph-edge-arrow-fill-visited: #ee0970;
 
+	--simple-fill-var-green: #83d489;
+	--simple-fill-var-orange: #f5d651;
+	--simple-fill-var-red: #e75c49;
 }
 
 
@@ -557,6 +555,10 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-weight-fill-visited: #e42fd5;
 	--array-graph-edge-arrow-fill-selected: #059847;
 	--array-graph-edge-arrow-fill-visited: #e42fd5;
+
+	--simple-fill-var-green: #418f45;
+	--simple-fill-var-orange: #f2c988;
+	--simple-fill-var-red: #e50c70;
 }
 
 // Override Algorithm Theme Colors [Green]
@@ -607,6 +609,10 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-weight-fill-visited: #9f2fe4;
 	--array-graph-edge-arrow-fill-selected: #0d9eae;
 	--array-graph-edge-arrow-fill-visited: #9f2fe4;
+
+	--simple-fill-var-green: #469847;
+	--simple-fill-var-orange: #f1f513;
+	--simple-fill-var-red: #9f2ee4;
 }
 
 

@@ -1,0 +1,104 @@
+@import "../../common/stylesheet/index";
+
+.graph {
+    flex: 1;
+    align-self: stretch;
+
+    .node {
+        .circle {
+            fill: var(--graph-node-circle-fill);
+            stroke: var(--graph-node-circle-stroke);
+            stroke-width: 1;
+        }
+
+        .rect {
+            fill: var(--graph-node-circle-fill);
+            stroke: var(--graph-node-circle-stroke);
+            stroke-width: 1;
+        }
+
+        .id {
+            fill: var(--graph-node-id-fill);
+            dominant-baseline: central;
+            text-anchor: middle;
+        }
+
+        &.variableGreen {
+            .circle {
+                fill: var(--simple-fill-var-green);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .rect {
+                fill: var(--simple-fill-var-green);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .id {
+                fill: var(--graph-node-id-fill-selected);
+            }
+        }
+
+        &.variableOrange {
+            .circle {
+                fill: var(--simple-fill-var-orange);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .rect {
+                fill: var(--simple-fill-var-orange);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .id {
+                fill: var(--graph-node-circle-stroke);
+            }
+        }
+
+        &.variableRed {
+            .circle {
+                fill: var(--simple-fill-var-red);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .rect {
+                fill: var(--simple-fill-var-red);
+                stroke: var(--graph-node-circle-stroke);
+            }
+
+            .id {
+                fill: var(--graph-node-id-fill-selected);
+            }
+        }
+
+    }
+
+    .edge {
+        .line {
+            stroke: var(--graph-edge-line-stroke);
+            stroke-width: 3.5;
+            fill: none;
+
+            &.directed {
+                marker-end: url(#markerArrow);
+            }
+        }
+    }
+
+    .arrow {
+        fill: var(--graph-arrow-fill);
+    }
+
+    .text {
+        fill: var(--array-2d-row-col-value-color); // to support light and dark mode
+        dominant-baseline: central;
+        text-anchor: middle;
+        font-size: 20px;
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
+    }
+
+    .pseudocode_function {
+        fill: var(--right-code-function-font);
+        dominant-baseline: central;
+    }
+}

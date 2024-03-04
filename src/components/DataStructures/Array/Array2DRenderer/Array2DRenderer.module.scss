@@ -1,13 +1,38 @@
 @import "../../common/stylesheet/index";
 
+
 .array_2d {
   flex-shrink: 0;
   display: table;
   border-collapse: collapse;
 
+  .bottom_caption {
+    // centres 'caption' (kth) below array
+    caption-side: bottom;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: var(--array-2d-row-col-value-color);
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+  }
+
+  .pseudocode_function {
+    color: var(--right-code-function-font);
+  }
+
+  .top_variable {
+    // for indices across the top of the array
+    text-align: center;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--array-2d-row-col-value-color);
+    margin-bottom: -5px;
+  }
+
   .row {
     display: table-row;
     height: 28px;
+
 
     .col {
       display: table-cell;
@@ -61,6 +86,32 @@
         }
       } 
 
+      &.variableGreen {
+        background-color: var(--simple-fill-var-green);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.variableOrange {
+        // more of a yellow, really
+        background-color: var(--simple-fill-var-orange);
+
+        span {
+          color: var(--array-2d-row-col);
+        }
+      }
+
+      &.variableRed {
+        background-color: var(--simple-fill-var-red);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+
       &.selected4 {
         background-color: var(--array-2d-row-col-bg-selected4);
 
@@ -90,7 +141,7 @@
 
       &.sorted {
         background-color: var(--array-2d-row-bg-sorted);
-        
+
         span {
           color: var(--array-2d-row-col-sorted);
         }
@@ -102,7 +153,7 @@
         background: var(--array-2d-row-col-bg-index);
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
-        
+
       }
 
       &.variables {
@@ -110,15 +161,12 @@
         border: var(--array-2d-row-col-border-index);
         color: var(--array-2d-row-col-color-index);
         vertical-align: text-top;
-        
+
       }
 
       &.faded {
         opacity: 0.2
       }
-
-
-
       
     }
   }

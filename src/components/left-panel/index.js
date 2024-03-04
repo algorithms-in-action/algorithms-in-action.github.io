@@ -78,7 +78,6 @@ function LeftPanel({ fontSize, fontSizeIncrement }) {
   }, [startButtonClick]);
   startButtonClick = () => {
     const startButton = document.getElementById('startBtnGrp');
-    console.log(startButton);
     if (startButton !== null) {
       mouseEvs.forEach(
         (mouseEventType) => startButton.dispatchEvent(

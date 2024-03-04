@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
-import {initGlobalAlgotithmGetter} from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { initGlobalAlgorithmGetterQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
 import { dispatcher, initialState } from './actions';
 
 /* What's going on here?
@@ -30,8 +31,15 @@ export const GlobalProvider = ({ children }) => {
     algorithm: state,
     dispatch,
   };
-  
-  initGlobalAlgotithmGetter(()=>globalState.algorithm, ()=>dispatch);
+
+  initGlobalAlgotithmGetter(
+    () => globalState.algorithm,
+    () => dispatch,
+  );
+  initGlobalAlgorithmGetterQS(
+    () => globalState.algorithm,
+     () => dispatch,
+     );
 
   return (
     <GlobalContext.Provider value={globalState}>
