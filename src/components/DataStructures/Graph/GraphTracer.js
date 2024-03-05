@@ -34,7 +34,8 @@ class GraphTracer extends Tracer {
       baseWidth: 480,
       baseHeight: 480,
       padding: 32,
-      nodeRadius: 20,
+      defaultNodeRadius: 20,
+      nodeRadius: 20,  // Should be identical to default node radius.
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -47,16 +48,87 @@ class GraphTracer extends Tracer {
     this.istc = false;
   }
 
+  /* 
+   * Calcluates the maximum individual coordinate from an array of x y coordinates.
+  */
+  calculateMaximumCoordinate(coordinates) {
+    let max = 0;
+    for (let i = 0; i < coordinates.length; i++) {
+      if(coordinates[i][0] > max)
+      {
+        max = coordinates[i][0];
+      }
+      else if(coordinates[i][1] > max)
+      {
+        max = coordinates[i][1];
+      }
+    }
+    return max;
+  }
+
+  /*
+   * Sets the node radius dependant on the maximum node coordinate from an array of coordinates.
+  */
+// XXX
+// Better for node radius to also depend on number of nodes (and
+// perhaps the shortest edge length).  We want the coordinate
+// values to be up to 50 generally so we can have reasonable
+// precision with Euclidean distance.  Currently things are
+// way too small with larger coordinate values and the scaling
+// and font size control is a mystery to me...
+  setNodeRadius(coordinates = [])
+  {
+    if(coordinates.length === 0)
+    {
+      this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius;
+    }
+
+    const maxCoord = this.calculateMaximumCoordinate(coordinates);
+    for(let i = 0; i <= 10; ++i)
+    {
+      if(maxCoord < (i + 1) * 10)
+      {
+        const radiusIncrease = (i - 1) * 6
+        this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius + radiusIncrease;
+        return;
+      }
+    }
+
+    // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
+    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
+  }
+
   /**
    * This is the original function provided by Tracer.js,
    * but we add a second argument which accepts nodes' values
+   * and a third argument which accepts nodes' coordinates.
    * @param {array} array2d 2D array of nodes
    */
-  set(array2d = [], values = []) {
+  set(array2d = [], values = [], coordinates = []) {
+    this.setNodeRadius(coordinates);
+
+    // Set layout to null if nodes are to be displayed by coordinates.
+    if(coordinates.length > 0)
+    {
+      this.callLayout = null;
+    }
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
-      this.addNode(i, values[i] ? values[i] : i);
+      const nodeValue = values[i] ? values[i] : i;
+      if(coordinates.length === 0)
+      {
+        this.addNode(i, nodeValue);
+      }
+      else
+      {
+        // Do not change this value unless you also change axis scales
+        const scaleSize = 30;
+        const x = coordinates[i][0] * scaleSize;
+        const y = -coordinates[i][1] * scaleSize;
+        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
+      }
+
       for (let j = 0; j < array2d.length; j++) {
         const value = array2d[i][j];
         if (value) {
@@ -305,6 +377,10 @@ class GraphTracer extends Tracer {
   }
 
   layout() {
+    if(this.callLayout === null)
+    {
+      return;
+    }
     const { method, args } = this.callLayout;
     method.apply(this, args);
   }

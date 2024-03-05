@@ -7,20 +7,19 @@ export default parse(`
 
 \\Code{
 Main
-Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \\B 1
-           // find a minimum spanning tree for G.
+Prim(E, n, s) // Given a weighted connected graph G with nodes 1..n \\B 1
 \\In{
-    PQ <- InitPriorityQueue(n) \\Ref InitPQ
+\\In{
+           // and edges E, start at node s to find a minimum spanning tree for G.
+\\In}
+\\In}
+\\In{
+    PQ <- InitPriorityQueue(n, s) \\Ref InitPQ
     \\Expl{  Nodes are put in a priority queue PQ according to their
             Cost. Smaller cost means higher priority and initially 
-            node 1 has the minimum cost.
-    \\Expl}
-
-    Cost[1] <- 0
-    \\Expl{  We arrange for the tree construction to start with node 1;
-            this is achieved by setting the cost of node 1 to 0 (to get
-            from node 1 to itself costs nothing).  Other nodes are 
-            initially assigned the largest possible cost.
+            all nodes have the highest possible cost, except the start
+            node s, which has cost zero (we start building the tree from
+            s and it costs nothing to get from s to s).
     \\Expl}
 
     while PQ not Empty \\B 3
@@ -56,13 +55,15 @@ InitPQ
             \\Expl}
             Parent[i] <- Null
             \\Expl{  The array Parent will be used to track how nodes are 
-                    connected into the resulting spanning tree. Node 1
+                    connected into the resulting spanning tree. Node s
                     will be the root of the spanning tree and an edge (j,i)
                     is added to the tree by setting Parent[i] to j.
-                    Eventually all nodes except 1 have a (non-Null) Parent,
+                    Eventually all nodes have a (non-Null) Parent,
                     thus all nodes are in the spanning tree.
             \\Expl}
         \\In}
+        Cost[s] <- 0
+        Parent[s] <- s // the parent of the tree root s points to itself
 \\Code}
 
 \\Code{

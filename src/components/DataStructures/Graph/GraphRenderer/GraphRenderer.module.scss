@@ -24,11 +24,13 @@
       fill: var(--graph-node-id-fill);
       dominant-baseline: central;
       text-anchor: middle;
+      font-size: 35px; // font size for labels inside nodes
     }
 
     .weight {
       fill: var(--graph-node-weight-fill);
       font-weight: bold;
+      font-size: 15px;
       alignment-baseline: central;
       text-anchor: left;
     }
@@ -129,7 +131,7 @@
   .edge {
     .line {
       stroke: var(--graph-edge-line-stroke);
-      stroke-width: 3.5;
+      stroke-width: 2.5;
       fill: none;
 
       &.directed {
@@ -141,7 +143,8 @@
       fill: var(--graph-edge-line-weight-fill);
       alignment-baseline: baseline;
       text-anchor: middle;
-      font-size: 24px;
+      // font-size: 15px;
+      font-size: 35px;
     }
 
     &.selected {
@@ -262,4 +265,20 @@
       fill: var(--graph-arrow-fill-visited4);
     }
   }
+
+
+  // X, Y axis
+  .axis {
+    stroke: var(--axis);
+    stroke-width: 1;
+    fill: none;
+
+  }
+
+  .axisLabel {
+    // font-size: 15px;
+    font-size: 35px;
+    font-weight: 1;
+  }
+
 }

@@ -12,7 +12,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Graph view'),
+        instance: new GraphTracer('graph', null, 'Graph view', { displayAxis : false }),
         order: 0,
       },
       array: {
@@ -26,22 +26,25 @@ export default {
    *
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be sorted
+   * 
    */
-  run(chunker, { matrix }) {
-    const E = [...matrix];
-    const vertex = matrix.length;
+  run(chunker, { edgeValueMatrix, coordsMatrix, startNode }) {
 
-    let weight = new Array(matrix.length);
+    const E = [...edgeValueMatrix];
+    const coords = [...coordsMatrix];  // Potentially empty.
+    const numVertices = edgeValueMatrix.length;
+
+    let weight = new Array(numVertices);
     for (let i = 0; i < weight.length; i += 1) {
-      weight[i] = new Array(matrix.length);
+      weight[i] = new Array(numVertices);
     }
 
-    const cost = new Array(matrix.length);
-    const pending = new Array(matrix.length);
-    const prev = new Array(matrix.length);
-    const pq = new Array(matrix.length);
+    const cost = new Array(numVertices);
+    const pending = new Array(numVertices);
+    const prev = new Array(numVertices);
+    const pq = new Array(numVertices);
     const pqDisplay = [];
-    const prevDisplay = new Array(matrix.length).fill('');
+    const prevDisplay = new Array(numVertices).fill('');
     let pqStart;
     let n;
     let miniIndex;
@@ -52,12 +55,12 @@ export default {
 
     chunker.add(
       1,
-      (vis, array) => {
+      (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
-        vis.graph.set(array, Array.from({ length: matrix.length }, (v, k) => (k + 1)));
+        vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)), coordsArray);
       },
-      [E]
+      [E, coords]
     );
 
     const PqSort = () => {
@@ -174,13 +177,17 @@ export default {
 
     let i;
     weight = [...E];
-    n = vertex;
+    n = numVertices;
     for (i = 0; i < n; i += 1) {
       cost[i] = Infinity;
-      prev[i] = 0;
+      prev[i] = -1;
       pending[i] = 1;
     }
-    cost[0] = 0;
+    // XXX  Note: Animation not quite linked to
+    // pseudocode properly either with init + reassigning start cost to
+    // 0 (probably not worth spending too much time fixing issues such
+    // as this  - move to new pseudocode thats more similar to BFS/DFS
+    // etc)
     pqCost.push('Cost[i]');  // initialize the pq cost
     pqDisplay.push('i'); // initialize the pq display
     prevNode.push('Parent[i]'); // initialize the prev list
@@ -190,9 +197,18 @@ export default {
       pqCost.push(Infinity);
       prevNode.push('-');
     }
+    // init start node cost to zero
+    // (note cost+pq arrays start at 0 and pqCost starts at 1,
+    // just to confuse things?)
+    cost[startNode-1] = 0;
+    pqCost[startNode] = 0; // add the minimum cost to pq cost
+    pq[0] = startNode-1;
+    prev[startNode-1] = startNode-1;
+    prevNode[startNode] = startNode;
+    pq[startNode-1] = 0;
+    miniIndex = startNode; // point the mini index in the pq cost
+    
     pqStart = 0;
-    pqCost[1] = cost[0]; // add the minimum cost to pq cost
-    miniIndex = 1; // point the mini index in the pq cost
     /* the chunker add select the minimum cost one */
     chunker.add(
         2,
