@@ -92,6 +92,10 @@ import '../../../styles/Param.scss';
 // We have an initial graph that is generated randomly (we could add
 // other graph here that are independent of the algorithm) and other
 // example graphs (passed in from algorithm) are appended onto these
+// XXX best use graph 1 as the default if any sample graphs are supplied
+// and random graph otherwise (messy to do init like this; not sure
+// where to trigger graph change, so we assume there is at least 1 graph
+// supplied)
 const GRAPHCHOICERAND = 0; // choice 0 is random graph
 let namesEgsInit = ['Random'];
 const SIZE_RANDOM = 6;  // size for random graphs - could change
@@ -198,7 +202,6 @@ function EuclideanMatrixParams({
     setData1(newData1);
     setCoordsTxt(getCoordinateList(newData1));
     setOriginalData1(newData1);
-  // }, [size, min, max, symmetric, unweighted]);
   }, [min, max, symmetric, unweighted]);
 
   // reset the edge weight matrix when the size changes
@@ -209,7 +212,6 @@ function EuclideanMatrixParams({
     setData2(newData2);
     setEdgesTxt(getEdgeList(newData2, size));
     setOriginalData2(newData2);
-  // }, [size, min, max, symmetric, unweighted]);
   }, [min, max, symmetric, unweighted]);
 
   // synchonise input data with rendered graph etc
@@ -249,8 +251,11 @@ function EuclideanMatrixParams({
       setCoordsTxt(coordsEgs[graphChoice]);
       setEdgesTxt(edgesEgs[graphChoice]);
       // setMessage(errorParamMsg(ALGORITHM_NAME, coordsEgs[graphChoice]));
-      coordTxt2Data1(coordsEgs[graphChoice], newSize);
-      edgeTxt2Data2(edgesEgs[graphChoice], newSize);
+      // let newData1 = null;
+      // let s1 = null;
+      let [newData1, s1] = coordTxt2Data1(coordsEgs[graphChoice], newSize);
+      setData1(newData1);
+      setData2(edgeTxt2Data2(edgesEgs[graphChoice], newSize));
     }
   };
 
@@ -488,8 +493,11 @@ function EuclideanMatrixParams({
   const handleXYTxt = (e) => {
     e.preventDefault();
     setMessage(null);
-    const newSize = coordTxt2Data1(e.target[0].value, size);
+    const [newData1, newSize] = coordTxt2Data1(e.target[0].value, size);
+    setData1(newData1);
     setSize(newSize);
+    if (newSize !== size)
+      setData2(edgeTxt2Data2(edgesTxt, newSize));
   }
 
   // Handle text input for coordinates
@@ -522,10 +530,12 @@ function EuclideanMatrixParams({
     return null;
   };
 
-  // better to return data than set it here?
+  // Note: if the new size differs from the old size we should need
+  // to setData2 or we get into an inconsistent state and the new graph
+  // is not rendered until that is done
   const coordTxt2Data1 = (value, size) => {
     const textInput = value.replace(/\s+/g, '');
-
+ 
     if (isListofTuples(textInput, 2, 2)) {
       const coordMatrix =
         textInput
@@ -537,11 +547,10 @@ function EuclideanMatrixParams({
         const xyArray = coordMatrix[i];
         newData1.push({col0: xyArray[0], col1: xyArray[1]});
       }
-      setData1(newData1);
-      return newSize;
+      return [newData1, newSize];
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, COORDS_EXAMPLE));
-      return size;
+      return [data1, size];
     }
   };
 
@@ -549,10 +558,9 @@ function EuclideanMatrixParams({
   const handleEdgeTxt = (e) => {
     e.preventDefault();
     setMessage(null);
-    edgeTxt2Data2(e.target[0].value, size);
+    setData2(edgeTxt2Data2(e.target[0].value, size));
   }
 
-  // better to return data than set it here?
   const edgeTxt2Data2 = (value, size) => {
     const textInput = value.replace(/\s+/g, '');
     // accept pairs and triples; pairs are padded out with default
@@ -573,11 +581,12 @@ function EuclideanMatrixParams({
         newData2.push(data);
       }
 
-      setData2(newData2);
+      return newData2;
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EDGES_EXAMPLE));
     }
   };
+
 
 
   // XXX need to fix sccs for some things, don't need refresh buttons
@@ -603,32 +612,38 @@ function EuclideanMatrixParams({
             setMessage={setMessage}
           />
         </div>);
+  let weightButton = '';
+  if (!unweighted)
+    weightButton = 
+        (<button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
+          Weights: {weightCalcName[weightCalc]}
+        </button>);
+  // simulateMouseClick("graphChoiceBtn");
+  // changeGraphChoice(graphChoice, 0);
   return (
   <>
       <div className="matrixButtonContainer">
         <div className="sLineButtonContainer">
   <div className="form">
         <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice, 0)}>
-          Graph: {namesEgs[graphChoice]}
+          {namesEgs[graphChoice]}
         </button>
         <div className="sLineButtonContainer">
           <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
             −
           </button>
-          <span className="size">Num Nodes: {size}</span>
+          <span className="size">Size: {size}</span>
           <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
             +
           </button>
           
         </div>
-        <button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
-          Edge Weight: {weightCalcName[weightCalc]}
-        </button>
+        {weightButton}
         <div className="sLineButtonContainer">
           <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
             −
           </button>
-          <span className='size'>Start Node: {startNode}</span>
+          <span className='size'>Start: {startNode}</span>
           <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
             +
           </button>
