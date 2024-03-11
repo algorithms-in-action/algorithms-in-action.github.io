@@ -29,88 +29,24 @@ import * as Instructions from './instructions';
 
 // Very Important: The key for the algorithms must be unique!
 const allalgs = {
-  'binarySearchTree': {
-    noDeploy: false,
-    name: 'Binary Search Tree',
-    category: 'Searching',
-    param: <Param.BSTParam />,
-    instructions: Instructions.BSTInstruction,
-    explanation: Explanation.BSTExp,
-    extraInfo: ExtraInfo.BSTInfo,
+
+  'heapSort': {
+    name: 'Heapsort',
+    category: 'Sort',
+    explanation: Explanation.HSExp,
+    param: <Param.HSParam />,
+    instructions: Instructions.HSInstruction,
+    extraInfo: ExtraInfo.HSInfo,
     pseudocode: {
-      insertion: Pseudocode.binaryTreeInsertion,
-      search: Pseudocode.binaryTreeSearch,
+      sort: Pseudocode.heapSort,
     },
     controller: {
-      insertion: Controller.binaryTreeInsertion,
-      search: Controller.binaryTreeSearch,
+      sort: Controller.heapSort,
     },
   },
-  'dijkstra': {
-    name: 'Dijkstra\'s',
-    category: 'Greedy',
-    param: <Param.DIJKParam />,
-    instructions: Instructions.DIJKInstruction,
-    explanation: Explanation.DIJKExp,
-    extraInfo: ExtraInfo.DIJKInfo,
-    pseudocode: {
-      find: Pseudocode.dijkstra,
-    },
-    controller: {
-      find: Controller.dijkstra,
-
-    },
-  }, 
-   'aStar': {
-    name: 'A* Algorithm',
-    category: 'Greedy',
-    param: <Param.ASTARParam />,
-    instructions: Instructions.ASTARInstruction,
-    explanation: Explanation.ASTARExp,
-    extraInfo: ExtraInfo.ASTARInfo,
-    pseudocode: {
-      find: Pseudocode.AStar,
-    },
-    controller: {
-      find: Controller.AStar,
-
-    },
-  }, 
-
-  'BFS': {
-    
-    name: 'Breadth First Search',
-    category: 'Searching',
-    param: <Param.BFSParam/>,
-    instructions: Instructions.BFSInstruction,
-    explanation: Explanation.BFSExp,
-    extraInfo: ExtraInfo.BFSInfo,
-    pseudocode: {
-      find: Pseudocode.BFS,
-    },
-    controller: {
-      find: Controller.BFS,
-    },
-  },
-
-  'DFS': {
-    name: 'Depth First Search',
-    category: 'Searching',
-    param: <Param.DFSParam />,
-    instructions: Instructions.DFSInstruction,
-    explanation: Explanation.DFSExp,
-    extraInfo: ExtraInfo.DFSInfo,
-    pseudocode: {
-      find: Pseudocode.DFS,
-    },
-    controller: {
-      find: Controller.DFS,
-    },
-  },
-
   'quickSort': {
     name: 'Quicksort',
-    category: 'Sorting',
+    category: 'Sort',
     explanation: Explanation.QSExp,
     param: <Param.QSParam />,
     instructions: Instructions.QSInstruction,
@@ -124,7 +60,7 @@ const allalgs = {
   },
   'quickSortM3': {
     name: 'Quicksort (Median of 3)',
-    category: 'Sorting',
+    category: 'Sort',
     explanation: Explanation.QSM3Exp,
     param: <Param.QSM3Param />,
     instructions: Instructions.QSInstruction,
@@ -136,23 +72,103 @@ const allalgs = {
       sort: Controller.quickSortM3,
     },
   },
-  'heapSort': {
-    name: 'Heapsort',
-    category: 'Sorting',
-    explanation: Explanation.HSExp,
-    param: <Param.HSParam />,
-    instructions: Instructions.HSInstruction,
-    extraInfo: ExtraInfo.HSInfo,
+
+  'binarySearchTree': {
+    noDeploy: false,
+    name: 'Binary Search Tree',
+    category: 'Insert/Search',
+    param: <Param.BSTParam />,
+    instructions: Instructions.BSTInstruction,
+    explanation: Explanation.BSTExp,
+    extraInfo: ExtraInfo.BSTInfo,
     pseudocode: {
-      sort: Pseudocode.heapSort,
+      insertion: Pseudocode.binaryTreeInsertion,
+      search: Pseudocode.binaryTreeSearch,
     },
     controller: {
-      sort: Controller.heapSort,
+      insertion: Controller.binaryTreeInsertion,
+      search: Controller.binaryTreeSearch,
     },
   },
+  'TTFTree': {
+    name: '2-3-4 Tree',
+    category: 'Insert/Search',
+    param: <Param.TTFTreeParam/>,
+    instructions: Instructions.TTFInstruction,
+    explanation: Explanation.TTFExp,
+    extraInfo: ExtraInfo.TTFInfo,
+    pseudocode: {
+      insertion: Pseudocode.TTFTreeInsertion,
+      search: Pseudocode.TTFTreeSearch,
+    },
+    controller: {
+      insertion: Controller.TTFTreeInsertion,
+      search: Controller.TTFTreeSearch,
+    },
+  },
+
+  'BFS': {
+    
+    name: 'Breadth First Search',
+    category: 'Graph',
+    param: <Param.BFSParam/>,
+    instructions: Instructions.BFSInstruction,
+    explanation: Explanation.BFSExp,
+    extraInfo: ExtraInfo.BFSInfo,
+    pseudocode: {
+      find: Pseudocode.BFS,
+    },
+    controller: {
+      find: Controller.BFS,
+    },
+  },
+  'DFS': {
+    name: 'Depth First Search',
+    category: 'Graph',
+    param: <Param.DFSParam />,
+    instructions: Instructions.DFSInstruction,
+    explanation: Explanation.DFSExp,
+    extraInfo: ExtraInfo.DFSInfo,
+    pseudocode: {
+      find: Pseudocode.DFS,
+    },
+    controller: {
+      find: Controller.DFS,
+    },
+  },
+  'dijkstra': {
+    name: 'Dijkstra\'s (shortest path)',
+    category: 'Graph',
+    param: <Param.DIJKParam />,
+    instructions: Instructions.DIJKInstruction,
+    explanation: Explanation.DIJKExp,
+    extraInfo: ExtraInfo.DIJKInfo,
+    pseudocode: {
+      find: Pseudocode.dijkstra,
+    },
+    controller: {
+      find: Controller.dijkstra,
+
+    },
+  }, 
+   'aStar': {
+    name: 'A* (heuristic search)',
+    category: 'Graph',
+    param: <Param.ASTARParam />,
+    instructions: Instructions.ASTARInstruction,
+    explanation: Explanation.ASTARExp,
+    extraInfo: ExtraInfo.ASTARInfo,
+    pseudocode: {
+      find: Pseudocode.AStar,
+    },
+    controller: {
+      find: Controller.AStar,
+
+    },
+  }, 
   'prim': {
-    name: 'Prim\'s Algorithm',
-    category: 'Greedy',
+    name: 'Prim\'s (min. spanning tree)',
+    category: 'Graph',
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
     instructions: Instructions.PrimsInstruction,
@@ -165,8 +181,8 @@ const allalgs = {
     },
   },
   'transitiveClosure': {
-    name: 'Transitive Closure',
-    category: 'Dynamic Programming',
+    name: 'Warshall\'s (transitive closure)',
+    category: 'Graph',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     instructions: Instructions.TCInstruction,
@@ -178,8 +194,26 @@ const allalgs = {
       tc: Controller.transitiveClosure,
     },
   },
+
+  'unionFind': {
+    name: 'Union Find',
+    category: 'Set',
+    param: <Param.UFParam />,
+    instructions: Instructions.UFInstruction,
+    explanation: Explanation.UFExp,
+    extraInfo: ExtraInfo.UFInfo,
+    pseudocode: {
+      union: Pseudocode.unionFindUnion,
+      find: Pseudocode.unionFindFind,
+    },
+    controller: {
+      union: Controller.unionFindUnion,
+      find: Controller.unionFindFind,
+    },
+  },
+
   'bruteForceStringSearch': {
-    name: 'Brute Force String Search',
+    name: 'Brute Force',
     category: 'String Search',
     explanation: Explanation.BFSSExp,
     param: <Param.BFSSParam />,
@@ -193,7 +227,7 @@ const allalgs = {
     },
   },
   'horspoolStringSearch': {
-    name: 'Horspool String Search',
+    name: 'Horspool\'s',
     category: 'String Search',
     /*
     Todo:
@@ -211,38 +245,7 @@ const allalgs = {
       search: Controller.horspoolStringSearch,
     },
   },
-  'unionFind': {
-    name: 'Union Find',
-    category: 'Other',
-    param: <Param.UFParam />,
-    instructions: Instructions.UFInstruction,
-    explanation: Explanation.UFExp,
-    extraInfo: ExtraInfo.UFInfo,
-    pseudocode: {
-      union: Pseudocode.unionFindUnion,
-      find: Pseudocode.unionFindFind,
-    },
-    controller: {
-      union: Controller.unionFindUnion,
-      find: Controller.unionFindFind,
-    },
-  },
-  'TTFTree': {
-    name: '2-3-4 Tree',
-    category: 'Searching',
-    param: <Param.TTFTreeParam/>,
-    instructions: Instructions.TTFInstruction,
-    explanation: Explanation.TTFExp,
-    extraInfo: ExtraInfo.TTFInfo,
-    pseudocode: {
-      insertion: Pseudocode.TTFTreeInsertion,
-      search: Pseudocode.TTFTreeSearch,
-    },
-    controller: {
-      insertion: Controller.TTFTreeInsertion,
-      search: Controller.TTFTreeSearch,
-    },
-  },
+
 };
 
 const algorithms =

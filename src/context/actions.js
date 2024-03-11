@@ -7,8 +7,10 @@ import findBookmark from '../pseudocode/findBookmark';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 
-const DEFAULT_ALGORITHM = 'binarySearchTree';
-const DEFAULT_MODE = 'insertion';
+const DEFAULT_ALGORITHM = 'heapSort';
+const DEFAULT_MODE = 'sort';
+// const DEFAULT_ALGORITHM = 'binarySearchTree';
+// const DEFAULT_MODE = 'insertion';
 
 let previousState = [];
 
