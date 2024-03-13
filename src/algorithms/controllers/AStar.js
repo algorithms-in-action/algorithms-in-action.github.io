@@ -17,7 +17,7 @@ export default {
 
   
 
-  run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNode}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes, heuristicFn}) {
     // String Variables used in displaying algo
     const algNameStr = 'aStar';
     const dashStr = '-';
@@ -37,7 +37,7 @@ export default {
     const heuristics = [];
     const calculatedHeuristics = [];
     const start = startNode - 1; 
-    const end = endNode - 1;
+    const end = endNodes[0] - 1;
     // Create a set to keep track of visited vertices
     const visited = new Set();  
     let miniIndex = 0;  
@@ -49,20 +49,17 @@ export default {
       let minCost = Infinity;
       miniIndex = null;
       for (let i = numVertices - 1; i >= 0; i--) {
-        if (!visited.has(i) && cost[i] <= minCost) {
-          minCost = cost[i];
+        if (!visited.has(i) && cost[i]+calculatedHeuristics[i] <= minCost) {
+          minCost = cost[i]+calculatedHeuristics[i];
           miniIndex = i;
         }
       } 
     }; 
 
-    //Change this to the function for calculating heuristic distances
-    const calculateHDistance = () => {
-      return 0;
-    }
-
+    const endX = coords[end][0];
+    const endY = coords[end][1];
     for (let i = 0; i < numVertices; i++) {
-        calculatedHeuristics[i] = calculateHDistance();
+        calculatedHeuristics[i] = heuristicFn(coords[i][0], coords[i][1], endX, endY);
     }
 
     chunker.add(
@@ -126,6 +123,7 @@ export default {
 
 
         vis.array.select(3, w + 1);
+        vis.array.select(1, w + 1);
       },
       [[nodes,heuristics, parents, minCosts,finalCosts], start]
     );
@@ -195,6 +193,7 @@ export default {
             }
 
             vis.array.select(3, w + 1); 
+            vis.array.select(1, w + 1);
           } 
 
           // color the finalized cells in green
@@ -248,6 +247,7 @@ export default {
             
             
             vis.array.select(3, w + 1); 
+            vis.array.select(1, w + 1);
           }
 
           if(x != null){
@@ -326,6 +326,7 @@ export default {
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, b + 1);
                 vis.array.select(3, w + 1); 
+                vis.array.select(1, w + 1);
                 
               }
 
@@ -365,6 +366,7 @@ export default {
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, x + 1);
                 vis.array.select(3, w + 1);
+                vis.array.select(1, w + 1);
                 
               }  
 
@@ -400,6 +402,7 @@ export default {
                   vis.array.assignVariable(minStr, 2, w + 1); 
                   vis.array.assignVariable(nStr, 2, x + 1);
                   vis.array.select(3, w + 1);
+                  vis.array.select(1, w + 1);
                   
                 } 
 
@@ -433,6 +436,7 @@ export default {
                   }
                 }
                 vis.array.select(3, w + 1);
+                vis.array.select(1, w + 1);
               },
               [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, currentVertex]
             );
@@ -454,6 +458,7 @@ export default {
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, z1 + 1);
                 vis.array.select(3, w + 1);
+                vis.array.select(1, w + 1);
                 
                 //color all finalized nodes in the array in green
                 for(let i = 0; i < v[4].length - 1; i ++){

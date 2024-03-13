@@ -184,6 +184,7 @@ function EuclideanMatrixParams({
   defaultSize,
   defaultStart,
   defaultEnd,
+  defaultHeur,
   graphEgs,
   min,
   max,
@@ -212,14 +213,21 @@ function EuclideanMatrixParams({
   let namesEgs = graphEgsNames(graphEgs);
   // Now use Example graph 0 passed in rather than random initially
   const [size, setSize] = useState(graphEgs[0].size);
- 
-  // With the button toggle Euclidean/Manhattan/As Input
+
+  // Button toggles Euclidean/Manhattan/As Input for weights
   const WEIGHTCALCMAX = 3; // number of weight calculation options
   const W_EUCLIDEAN = 0;
   const W_MANHATTAN = 1;
   const W_INPUT = 2; // as defined by input
   const weightCalcName = ['Euclidean', 'Manhattan', 'As input'];
   const [weightCalc, setCalcMethod] = useState(W_EUCLIDEAN);
+
+  // Button toggles Euclidean/Manhattan for heuristic
+  const HEURCALCMAX = 2; // number of heuristic calculation options
+  const H_EUCLIDEAN = 0;
+  const H_MANHATTAN = 1;
+  const heurCalcName = ['Euclidean', 'Manhattan'];
+  const [heurCalc, setHeurCalc] = useState(H_EUCLIDEAN);
 
   // (size) affects number of columns.
   const columns1 = useMemo(() => makeColumnCoords(size), [size]);
@@ -252,11 +260,8 @@ function EuclideanMatrixParams({
   // and text list or pairs/triples for edges/weights,
   // eg 1-2,1-3-10,2-3-12,3-4,3-5 where first two numbers are nodes
   // and third is weight (if third is missing, weight defaults to 1)
-  // The initial values get reset somewhere or other ??? XXX
-  // const [coordsTxt, setCoordsTxt] = useState(graphEgs[0].coords);
-  // const [edgesTxt, setEdgesTxt] = useState(graphEgs[0].edges);
-  const [coordsTxt, setCoordsTxt] = useState('');
-  const [edgesTxt, setEdgesTxt] = useState('');
+  const [coordsTxt, setCoordsTxt] = useState(graphEgs[0].coords);
+  const [edgesTxt, setEdgesTxt] = useState(graphEgs[0].edges);
   const [startNode, setStartNode] = useState(defaultStart);
   // XXX not sure if endNodesTxt needs to be in State
   const [endNodesTxt, setEndNodesTxt] = useState(nums2Txt(defaultEnd));
@@ -284,12 +289,12 @@ function EuclideanMatrixParams({
 //   }, [min, max, symmetric, unweighted]);
 
   // synchonise input data with rendered graph etc
-  // if graph data or weightCalc change
+  // if graph data etc change
   useEffect(() => {
     // const element = document.querySelector('button[id="startBtnGrp"]');
     // simulateMouseClick(element);
     handleSearch();
-  }, [size, startNode, endNodes, data1, data2, weightCalc]);
+  }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc]);
 
   // change graph choice; Note setData1 etc are asynchronous
   // newSize is passed in for random graphs; if it is zero the default
@@ -368,6 +373,12 @@ function EuclideanMatrixParams({
   const changeCalcMethod = (state) => {
     setMessage(null);
     setCalcMethod((state+1) % WEIGHTCALCMAX);
+  };
+
+  // change weight calculation method
+  const changeHeurCalc= (state) => {
+    setMessage(null);
+    setHeurCalc((state+1) % HEURCALCMAX);
   };
 
   // When cell renderer calls updateData1, we'll use
@@ -542,6 +553,8 @@ function EuclideanMatrixParams({
         mode,
         size,
         startNode,
+        endNodes,
+        heuristicFn,
         coordsMatrix,
         edgeValueMatrix
       });
@@ -607,6 +620,16 @@ function EuclideanMatrixParams({
     return null;
   };
 
+  // Heuristic function (for A Star); could possibly move the heuristic
+  // function stuff elsewhere but for layout it's handy to have it here and
+  // it's easier to get at the state here and pass the function.  Uses the
+  // XY coordinates of the nodes (possibly could generalise some time)
+  const heuristicFn = (x1, y1, x2, y2) => {
+    if (heurCalc === H_EUCLIDEAN)
+      return euclidean(x1, y1, x2, y2);
+    else
+      return manhattan(x1, y1, x2, y2);
+  };
 
 
   // XXX need to fix sccs for some things, don't need refresh buttons
@@ -638,8 +661,13 @@ function EuclideanMatrixParams({
         (<button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
           Weights: {weightCalcName[weightCalc]}
         </button>);
-  // simulateMouseClick("graphChoiceBtn");
-  // changeGraphChoice(graphChoice, 0);
+  let heurButton = '';
+  if (defaultHeur !== null)
+    heurButton = 
+        (<button className="algorithmBtn" onClick={() => changeHeurCalc(heurCalc)}>
+          Heuristic: {heurCalcName[heurCalc]}
+        </button>);
+
   return (
   <>
       <div className="matrixButtonContainer">
@@ -659,6 +687,7 @@ function EuclideanMatrixParams({
           
         </div>
         {weightButton}
+        {heurButton}
         <div className="sLineButtonContainer">
           <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
             −
