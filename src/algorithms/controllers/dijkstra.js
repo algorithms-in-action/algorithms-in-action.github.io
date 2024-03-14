@@ -1,3 +1,4 @@
+// XXX add support for multiple end nodes
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
@@ -15,7 +16,7 @@ export default {
     };
   },
 
-  run(chunker, { edgeValueMatrix, coordsMatrix, /*matrix,*/ startNode, endNode}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, /*matrix,*/ startNode, endNodes}) {
     // String Variables used in displaying algo
     const algNameStr = 'dijkstra';
     const dashStr = '-';
@@ -34,7 +35,7 @@ export default {
     const nodes = [];  
     const finalCosts = []; 
     const start = startNode - 1; 
-    const end = endNode - 1;
+    const end = endNodes[0] - 1;
     // Create a set to keep track of visited vertices
     const visited = new Set();  
     let miniIndex = 0;  

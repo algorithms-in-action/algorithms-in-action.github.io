@@ -37,15 +37,16 @@
 // Example graphs passed in from algorithm; one random graph option
 // added here. Input + editing of start node and optional end nodes
 // (if the initial value is null, end nodes are not displayed and thus
-// can't be changed).
+// can't be changed). Temp changed to only have a single end node to
+// re-use display code and avoid extra testing for A*. Optional
+// weight and heuristic function toggles.
 // TO DO:
 // Work more on input data display - use sccs for everything, define
 // new classes etc instead of just reusing existing ones, rethink some
-// input methods (such as graph size) to reduce screen space required.
+// input methods (such as size + start) to reduce screen space required.
 // Size adjustment should just trim/grow tables etc instead of
 // regenerating a random graph each time. However, it would also be nice
 // to easily generate new random graphs of a given size.
-// Start node and end nodes should be optional (algorithm specific)
 // Better random graph creation? Seems like there are default
 // functions for creating a random graph in the renderer but no way of
 // getting from there to the data input display - could get some ideas
@@ -54,11 +55,8 @@
 // seem like it's needed now.
 // FiXXX BUG: sometimes if you try to edit a matrix cell with a backspace
 // it "froze" and you couldn't change it from zero (no idea why; maybe
-// it's fixed now??).
+// it's fixed now - hasn't cropped up for a while??).
 // A bunch of other things with XXX comments in code.
-//
-// Separate work on graph rendering - currently too small with decent
-// range of X-Y values plus
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { GlobalActions } from '../../../context/actions';
@@ -369,6 +367,19 @@ function EuclideanMatrixParams({
     // handleSearch();
   };
 
+  // Update (single) end node; we just use modulo size+1, zero
+  // representing no end node; special case for A* where an end node is
+  // required
+  // useEffect() triggers handleSearch() to update animation
+  const updateEndNode = (newEnd) => {
+    newEnd = (newEnd + size+1) % (size+1);
+    if (newEnd === 0 && ALGORITHM_NAME === 'A* Algorithm')
+      newEnd = size;
+    setMessage(null);
+    setEndNodes([newEnd]);
+    // handleSearch();
+  };
+
   // change weight calculation method
   const changeCalcMethod = (state) => {
     setMessage(null);
@@ -591,6 +602,8 @@ function EuclideanMatrixParams({
     setData2(edgeTxt2Data2(e.target[0].value, size, unweighted, symmetric, setMessage, ALGORITHM_NAME));
   }
 
+  // XXX Temporarily not used as we just support a single end node in
+  // the same way as the start node
   // Handle text input for coordinates
   // As above
   const handleEndNodesTxt = (e) => {
@@ -638,23 +651,37 @@ function EuclideanMatrixParams({
   // End nodes are optional (not used in all algorithms); should do the
   // same for start node
   let endNodeDiv = '';
+  let endButton = '';
   if (defaultEnd !== null)
-    endNodeDiv = 
-        (<div className="disabled">
-          <ListParam
-            name="EndNodes"
-            buttonName="Set&nbsp;End&nbsp;Nodes"
-            formClassName="formLeft"
-            mode="search"
-            handleSubmit={handleEndNodesTxt}
-            DEFAULT_VAL={endNodesTxt}
-            SET_VAL={setEndNodesTxt}
-            REFRESH_FUNCTION={() => ''}
-            ALGORITHM_NAME={ALGORITHM_NAME}
-            EXAMPLE={COORDS_EXAMPLE}
-            setMessage={setMessage}
-          />
+    // Temp disabled version supporting multiple end nodes
+ // endNodeDiv = 
+ //     (<div className="disabled">
+ //       <ListParam
+ //         name="EndNodes"
+ //         buttonName="Set&nbsp;End&nbsp;Nodes"
+ //         formClassName="formLeft"
+ //         mode="search"
+ //         handleSubmit={handleEndNodesTxt}
+ //         DEFAULT_VAL={endNodesTxt}
+ //         SET_VAL={setEndNodesTxt}
+ //         REFRESH_FUNCTION={() => ''}
+ //         ALGORITHM_NAME={ALGORITHM_NAME}
+ //         EXAMPLE={COORDS_EXAMPLE}
+ //         setMessage={setMessage}
+ //       />
+ //     </div>);
+    // XXX would be nice to display ' ' instead of '0'
+    endButton =
+        (<div className="sLineButtonContainer">
+          <button className="endBtn" onClick={() => updateEndNode(endNodes[0] - 1)}>
+            −
+          </button>
+          <span className='size'>End: {endNodes[0]}</span>
+          <button className="sizeBtn" onClick={() => updateEndNode(endNodes[0] + 1)}>
+            +
+          </button>
         </div>);
+ 
   let weightButton = '';
   if (!unweighted)
     weightButton = 
@@ -698,6 +725,7 @@ function EuclideanMatrixParams({
           </button>
           
         </div>
+        {endButton}
   </div>
   {endNodeDiv}
   <div className="disabled">

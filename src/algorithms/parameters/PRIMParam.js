@@ -4,9 +4,12 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 
 const DEFAULT_SIZE = 5; // gets overwritten by GRAPH_EGS[0] now
-const DEFAULT_START = 1; // XXX null should disable
+const DEFAULT_START = 5; // XXX null should disable
 const DEFAULT_END = null; // disable end nodes display/input
-// const DEFAULT_END = [10]
+// XXX For now we support at most one end node
+// const DEFAULT_END = [8,9] // XXX not currently supported
+// const DEFAULT_END = [0] // enable end node but start with none
+// const DEFAULT_END = [10] // start with 10 as end node
 const DEFAULT_HEUR = null;  // disable heuristic display/input
 // const DEFAULT_HEUR = 0;  // 0 = Euclidean
 const PRIMS = 'New Prim\'s';
@@ -15,9 +18,9 @@ const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
 const GRAPH_EGS = [ // XXX think up better examples?
         { name: 'Graph 1',
-          size: 12,
-          coords: '5-9,10-8,11-14,14-6,23-4,24-12,29-7,33-8,31-15,39-11,42-4,45-9',
-          edges: '1-2-4,1-3-3,2-4-2,3-6-9,4-5-2,5-6-3,5-7-8,6-7-2,6-9-4,7-8-7,8-10-10,9-10-4,10-11-6,11-12-5'
+          size: 14,
+          coords: '4-3,2-7,7-11,9-3,12-6,13-2,12-16,17-2,20-4,34-4,26-9,30-6,34-10,38-5',
+          edges: '1-2-3,1-4-6,2-3-4,3-4-2,3-5-4,4-5-3,5-6-2,5-7-10,6-8-5,7-11-10,8-9-6,9-10-3,10-12-8,11-12-5,12-13-3,13-14-4'
         },
         { name: 'Graph 2',
           size: 17,

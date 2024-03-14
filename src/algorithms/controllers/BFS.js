@@ -1,3 +1,4 @@
+// XXX add support for multiple end nodes
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
@@ -17,7 +18,7 @@ export default {
     };
   },
 
-  run(chunker, { edgeValueMatrix, coordsMatrix, endNode, startNode}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, endNodes, startNode}) {
 
     //Defining queue
     function Queue() {
@@ -58,7 +59,7 @@ export default {
     let displayedQueue = [];
 
     const start = startNode - 1;
-    const end = endNode - 1; 
+    const end = endNodes[0] - 1; 
 
     let lastNeighbor = null;
     let n = null
