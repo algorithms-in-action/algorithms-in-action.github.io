@@ -303,12 +303,16 @@ function EuclideanMatrixParams({
     if (newSize === 0) {
        newSize = sizeEgs[graphChoice];
     }
+    // some repeated code from updateTableSize here...
     setSize(newSize);
     if (newSize < startNode)
         setStartNode(newSize);
     // remove and end nodes > newSize
     if (endNodes.some((e) => e > newSize)) {
-      const newEndNodes = endNodes.filter((e) => e <= newSize);
+      let newEndNodes = endNodes.filter((e) => e <= newSize);
+      if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
+        newEndNodes = [newSize];
+      // console.log(newEndNodes);
       setEndNodesTxt(nums2Txt(newEndNodes));
       setEndNodes(newEndNodes);
     }
@@ -346,8 +350,11 @@ function EuclideanMatrixParams({
     if (newSize < startNode)
         setStartNode(newSize);
     // remove and end nodes > newSize
+    // A* must have end node so we pick size if needed
     if (endNodes.some((e) => e > newSize)) {
-      const newEndNodes = endNodes.filter((e) => e <= newSize);
+      let newEndNodes = endNodes.filter((e) => e <= newSize);
+      if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
+          newEndNodes = [newSize];
       setEndNodesTxt(nums2Txt(newEndNodes));
       setEndNodes(newEndNodes);
     }
@@ -870,7 +877,6 @@ const graphEgsNames = (graphEgs) => {
   }
   return namesEgs;
 }
-
 
   // converts [1,2,3] into '1,2,3' etc
   const nums2Txt = (nums) => {

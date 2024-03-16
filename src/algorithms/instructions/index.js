@@ -60,15 +60,28 @@ const sortInstructions = [{
   ],
 }];
 
-const graphInstructions = [{
-  title: 'Create Graph ',
+const graphInstructions = [
+  { title: 'To Run Animation',
   content: [
+    'Choose graph (see below)',
+    'Choose algorithm parameters: heuristic function, start node, end node',
     `Click on ${KEY_CODE} on the right panel`,
-    'Enter a graph in the transition matrix',
-    `Click on ${KEY_LOAD} to load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run.`,
-  ],
-}];
+    `Click on ${KEY_PLAY} (or ${KEY_FORWARD}) for the animation.`,
+    `Note: the right panel can be expanded/contracted by dragging the vertical
+"...", the left panel (algorithm choice) can be collapsed and you can
+zoom in/out and drag elements in the animation panel`,
+  ]},
+  { title: 'To Choose Graph',
+  content: [
+    `The graph input panel is at the bottom and may need to be revealed
+by dragging the "..." up temporarily`,
+    `Toggle between sample graphs (eg Graph 1) and random graphs, or`,
+    'edit text for X-Y node coordinates (this can change the graph size) and edges/weights, or',
+    'enter X-Y node coordinates and edges/weights in tables.',
+    `The graph size can also be explicitly increased/decreased - this generates a new random graph.`,
+    `Edge weights can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
+  ]},
+];
 
 const graphInstructionsTC = [{
   title: 'Create Graph ',
