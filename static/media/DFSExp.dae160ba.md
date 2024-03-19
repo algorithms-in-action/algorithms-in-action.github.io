@@ -7,7 +7,7 @@ condition).
 It is one of several algorithms that can be viewed as having a similar
 structure. Some of these work with weighted graphs (with positive weights
 for all edges), where the aim is to find the shortest path(s) (or the
-minimum spanning tree in the case of Prim's algorithm) but BFS ignores
+minimum spanning tree in the case of Prim's algorithm) but DFS ignores
 weights. These graph search algorithms can be used for both directed
 and undirected graphs; here we use undirected graphs for simplicity.
 The way paths are represented is for each node to point to the previous
@@ -41,3 +41,12 @@ graph representation, the parent pointers, etc.  For many important
 applications, particularly in artificial intelligence, the graphs can
 be huge and arrays are impractical for representing the graph so other
 data structures are needed.
+
+For consistency with other algorithm animations, the layout of the
+graph is on a two-dimensional grid where each node has (x,y) integer
+coordinates.  You can choose the start and end nodes and change the
+graph choice (see the instructions tab for more details).  Weights of
+edges can be included in the text box input but DFS will ignore weights
+and positions of nodes.  Only a single end node is supported; choosing
+0 results in finding paths to all connected nodes.
+
