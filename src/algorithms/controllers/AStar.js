@@ -77,9 +77,9 @@ export default {
 
     nodes.push('i'); // initialize the pq display
     parents.push('Parent[i]');
-    minCosts.push('Cost[i] (PQ)');  
-    heuristics.push('h(i)');
-    finalCosts.push('Final Cost');
+    minCosts.push('Length[i] (so far)');  
+    heuristics.push('heur(i)');
+    finalCosts.push('Final Length');
      
     // Initialize the table
     for (let i = 0; i < numVertices; i += 1) {
@@ -95,7 +95,7 @@ export default {
       (vis, v) => {
         vis.array.set(v, algNameStr);
       },
-      [[nodes,heuristics, parents, minCosts,finalCosts], 0]
+      [[nodes,heuristics, minCosts, parents, finalCosts], 0]
     );
 
 
@@ -108,7 +108,7 @@ export default {
       (vis, v) => {
         vis.array.set(v, algNameStr);
       },
-      [[nodes,heuristics, parents, minCosts,finalCosts],0]
+      [[nodes,heuristics, minCosts, parents, finalCosts],0]
     );
     
   
@@ -122,10 +122,10 @@ export default {
         vis.array.assignVariable(minStr, 2, w + 1);
 
 
-        vis.array.select(3, w + 1);
+        vis.array.select(2, w + 1);
         vis.array.select(1, w + 1);
       },
-      [[nodes,heuristics, parents, minCosts,finalCosts], start]
+      [[nodes,heuristics, minCosts, parents, finalCosts], start]
     );
 
     
@@ -192,7 +192,7 @@ export default {
               vis.array.assignVariable(nStr, 2, b + 1);
             }
 
-            vis.array.select(3, w + 1); 
+            vis.array.select(2, w + 1); 
             vis.array.select(1, w + 1);
           } 
 
@@ -205,7 +205,7 @@ export default {
             }
           }
         },
-        [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, last, prev, currentVertex]
+        [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex, last, prev, currentVertex]
       );
 
       // Find the unvisited vertex with the smallest cost
@@ -246,7 +246,7 @@ export default {
             
             
             
-            vis.array.select(3, w + 1); 
+            vis.array.select(2, w + 1); 
             vis.array.select(1, w + 1);
           }
 
@@ -265,7 +265,7 @@ export default {
           }
 
         },
-        [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, 
+        [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex, 
             currentVertex, prev[currentVertex]]
       );
       
@@ -325,7 +325,7 @@ export default {
               if (w != null) {
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, b + 1);
-                vis.array.select(3, w + 1); 
+                vis.array.select(2, w + 1); 
                 vis.array.select(1, w + 1);
                 
               }
@@ -339,7 +339,7 @@ export default {
                 }
               }
             },
-            [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, last, prev, currentVertex,
+            [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex, last, prev, currentVertex,
             m]
           );
           
@@ -365,7 +365,7 @@ export default {
               if (w != null) {
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, x + 1);
-                vis.array.select(3, w + 1);
+                vis.array.select(2, w + 1);
                 vis.array.select(1, w + 1);
                 
               }  
@@ -383,7 +383,7 @@ export default {
               //vis.graph.leave1(x, x, 2);
               //vis.graph.leave1(y, y, 2);
             },
-            [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex,
+            [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex,
                 currentVertex, m]
           ); 
           last = [currentVertex, m];
@@ -401,7 +401,7 @@ export default {
                 if (w != null) {
                   vis.array.assignVariable(minStr, 2, w + 1); 
                   vis.array.assignVariable(nStr, 2, x + 1);
-                  vis.array.select(3, w + 1);
+                  vis.array.select(2, w + 1);
                   vis.array.select(1, w + 1);
                   
                 } 
@@ -415,7 +415,7 @@ export default {
                   }
                 }
               },
-              [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, currentVertex]
+              [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex, currentVertex]
             );
 
             // UpdateCost(Nodes,m,Cost[m])
@@ -435,10 +435,10 @@ export default {
                     vis.array.select(0, i + 1, 0, i + 1, '1');
                   }
                 }
-                vis.array.select(3, w + 1);
+                vis.array.select(2, w + 1);
                 vis.array.select(1, w + 1);
               },
-              [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex, currentVertex]
+              [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex, currentVertex]
             );
 
             // Parent[m] <- n
@@ -457,7 +457,7 @@ export default {
                 vis.array.set(v, algNameStr);
                 vis.array.assignVariable(minStr, 2, w + 1); 
                 vis.array.assignVariable(nStr, 2, z1 + 1);
-                vis.array.select(3, w + 1);
+                vis.array.select(2, w + 1);
                 vis.array.select(1, w + 1);
                 
                 //color all finalized nodes in the array in green
@@ -487,7 +487,7 @@ export default {
                   //vis.graph.select(z, z);
                 }
               },
-              [[nodes,heuristics, parents, minCosts,finalCosts], miniIndex,
+              [[nodes,heuristics, minCosts, parents, finalCosts], miniIndex,
                   prev[m], m, lastParent, currentVertex]
             );
           } 
