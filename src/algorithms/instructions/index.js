@@ -5,6 +5,7 @@ const KEY_PAUSE = 'PAUSE';
 const KEY_BACK = 'BACK';
 const KEY_FORWARD = 'FORWARD';
 const KEY_SEARCH = 'SEARCH';
+const KEY_PROGRESS = 'PROGRESS';
 const KEY_SORT = 'SORT';
 const KEY_LOAD = 'START';
 const KEY_FIND = 'FIND STRING';
@@ -63,23 +64,23 @@ const sortInstructions = [{
 const graphInstructions = [
   { title: 'To Run Animation',
   content: [
-    'Choose graph (see below)',
-    'Choose algorithm parameters: heuristic function, start node, end node',
-    `Click on ${KEY_CODE} on the right panel`,
-    `Click on ${KEY_PLAY} (or ${KEY_FORWARD}) for the animation.`,
-    `Note: the right panel can be expanded/contracted by dragging the vertical
-"...", the left panel (algorithm choice) can be collapsed and you can
-zoom in/out and drag elements in the animation panel`,
+    `Click on ${KEY_CODE} at the top of the right-hand panel`,
+    `Either step through the algorithm (click on ${KEY_FORWARD}) or play continuously (click on ${KEY_PLAY}). Code and animation will follow in lockstep.`,
+    `The graph can be chosen (see below; default Graph 1 is shown initially)`,
+    `Algorithm parameters (eg, Start node) can be chosen below the ${KEY_PROGRESS} bar`,
+    `Screen layout can be altered (depending on your browser/platform):
+the left panel can be rendered invisible by clicking
+on the arrow in its middle, the right and bottom panels can be enlarged or shrunk by dragging the ellipsis ("..."), and you can zoom in/out and drag elements in the animation panel`,
   ]},
   { title: 'To Choose Graph',
   content: [
     `The graph input panel is at the bottom and may need to be revealed
 by dragging the "..." up temporarily`,
-    `Toggle between sample graphs (eg Graph 1) and random graphs, or`,
-    'edit text for X-Y node coordinates (this can change the graph size) and edges/weights, or',
+    `Under the ${KEY_PLAY} button, toggle between sample graphs (eg Graph 1) and random graphs, or`,
+    'edit text for X-Y node coordinates (this can change the graph size) and edges/weights (weights are ignored for unweighted graph algorithms), or',
     'enter X-Y node coordinates and edges/weights in tables.',
     `The graph size can also be explicitly increased/decreased - this generates a new random graph.`,
-    `Edge weights can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
+    `Edge weights (for weighted graph algorithms) can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
   ]},
 ];
 
