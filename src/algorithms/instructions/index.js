@@ -67,7 +67,8 @@ const graphInstructions = [
     `Click on ${KEY_CODE} at the top of the right-hand panel`,
     `Either step through the algorithm (click on ${KEY_FORWARD}) or play continuously (click on ${KEY_PLAY}). Code and animation will follow in lockstep.`,
     `The graph can be chosen (see below; default Graph 1 is shown initially)`,
-    `Algorithm parameters (eg, Start node) can be chosen below the ${KEY_PROGRESS} bar`,
+    `Algorithm parameters (eg, Start node) can be chosen below the
+${KEY_PROGRESS} bar; this will reset the animation to the start`,
     `Screen layout can be altered (depending on your browser/platform):
 the left panel can be rendered invisible by clicking
 on the arrow in its middle, the right and bottom panels can be enlarged or shrunk by dragging the ellipsis ("..."), and you can zoom in/out and drag elements in the animation panel`,
