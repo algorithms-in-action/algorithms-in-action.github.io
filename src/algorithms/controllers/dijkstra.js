@@ -1,3 +1,5 @@
+// XXX termination when there is no end node needs fixing
+// XXX add extra highlighting of code etc for UpdateNodes, like BFS
 // XXX add support for multiple end nodes
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
@@ -477,6 +479,8 @@ export default {
         }
       }
     }
+    // XXX add stuff to deal with while loop termination due to
+    // PQ being empty
   }, 
 
 

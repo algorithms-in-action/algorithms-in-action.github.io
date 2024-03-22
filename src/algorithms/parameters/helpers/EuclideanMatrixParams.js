@@ -359,7 +359,8 @@ function EuclideanMatrixParams({
       setEndNodes(newEndNodes);
     }
     setMessage(null);
-    // make new random graph; this also calls setSize (see XXX note above)
+    // make new random graph (updating data1 and data2)
+    // This also calls setSize (see XXX note above)
     // Note changeGraphChoice takes the previous graph choice as it's
     // first argument and increments it (with modulo) to get new choice
     changeGraphChoice(GRAPHCHOICERAND-1, newSize);
@@ -598,6 +599,18 @@ function EuclideanMatrixParams({
     if (newData1 !== null)
       setData1(newData1);
     setSize(newSize);
+    // some repeated code from updateTableSize here...
+    if (newSize < startNode)
+        setStartNode(newSize);
+    // remove and end nodes > newSize
+    if (endNodes.some((e) => e > newSize)) {
+      let newEndNodes = endNodes.filter((e) => e <= newSize);
+      if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
+        newEndNodes = [newSize];
+      // console.log(newEndNodes);
+      setEndNodesTxt(nums2Txt(newEndNodes));
+      setEndNodes(newEndNodes);
+    }
     if (newSize !== size)
       setData2(edgeTxt2Data2(edgesTxt, newSize, unweighted, symmetric, setMessage, ALGORITHM_NAME));
   }

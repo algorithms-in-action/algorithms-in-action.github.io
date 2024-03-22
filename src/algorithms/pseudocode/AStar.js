@@ -14,7 +14,8 @@ export default parse(`
                     remove next node n from Nodes and finalise it \\Ref Next_node
                     // The Parent of n has now been determined
                     if task_completed(n) \\Ref Completed
-                    \\Expl{ Have we found the end node?
+                    \\Expl{ Have we found the end node, or explored the
+                            whole connected component of the graph?
                     \\Expl}
                     \\In{
                         return \\B 3
@@ -28,9 +29,11 @@ export default parse(`
                         update Nodes, Parent etc with n & m \\Ref UpdateNodes
                     \\In}
                 \\In}
-                \\Expl{ The whole component of the graph connected to s has been
-                        explored but we have failed to find e
-                        and some indication of this should be returned.
+                return \\B 99
+                \\Expl{ We have failed to find e and some indication of
+                        this should be returned. In this animation we
+                        restrict e to be some node in the graph so this
+                        line is never reached.
                 \\Expl}
             \\In}
     \\Code}
@@ -71,7 +74,7 @@ export default parse(`
         
     \\Code{
         UpdateNodes
-            if n is in Nodes PQ and Length[n] + weight(n,m) < Length[m] \\B 11
+            if m is in Nodes PQ and Length[n] + weight(n,m) < Length[m] \\B 11
             \\Expl{ The path from s to n to m is shorter than the current
                 shortest known path from s to m. If Length[m] == infinity
                 it will be replaced with a finite weight, implicitly moving

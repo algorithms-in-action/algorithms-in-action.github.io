@@ -1,3 +1,4 @@
+// XXX add extra highlighting of code etc for UpdateNodes, like BFS
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
@@ -274,6 +275,8 @@ export default {
       chunker.add(10);
       if (currentVertex === null || currentVertex === end || 
         cost[currentVertex] === Infinity) {
+        // XXX if currentVertex === null we should remove it from
+        // visited and remove the green colour
         chunker.add(3);
         // return
         break; 
