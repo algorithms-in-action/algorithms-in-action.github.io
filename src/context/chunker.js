@@ -59,6 +59,11 @@ export default class {
 
   // Applies chunk at index, this applies its mutation to the visualisers, updating them
   doChunk(index) {
+    // XXX in Warshall's this is called with this.chunks undefined -
+    // Repeatable: run warshall's to completion with everything
+    // collapsed then expand everything - refresh() is called - see
+    // algorithms/controllers/transitiveClosureCollapseChunkPlugin.js
+    // Not sure why - works ok for intermediate states typically
     this.chunks[index].mutator(
       Object.fromEntries(
         Object.entries(this.visualisers).map(([k, v]) => [k, v.instance])
@@ -119,10 +124,16 @@ export default class {
   }
 
   // Goes back one chunk, undoing last mutation
+  // XXX probably better to have a gotoChunk(c) function - prev() gets
+  // called repeatedly for collapsed code, resulting on O(N^2)
+  // complexity; Maybe goBackTo() and goForwardTo() due to _inPrevState
+  // flag (used in controllers/transitiveClosureCollapseChunkPlugin.js
+  // for some mysterious reason)
   prev() {
     this._inPrevState = true;
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
+      console.log(['prev()', this.currentChunk]);
       for (let i = 0; i <= this.currentChunk - 1; i += 1) {
         this.doChunk(i);
       }
@@ -135,13 +146,40 @@ export default class {
     };
   }
 
+  // Returns previous chunk, but doesn't undo last mutation
+  prevChunk(currentChunk) {
+    const chunkNum = (currentChunk > 0? currentChunk-1 : 0);
+    return {
+      bookmark: this.chunks[chunkNum].bookmark,
+      chunk: chunkNum,
+    };
+  }
+
+  // Goes back to given chunk, undoing mutations
+  goBackTo(chunkNum) {
+    this._inPrevState = true;
+    this.visualisers = this.init();
+    console.log(['prev()', chunkNum]);
+    for (let i = 0; i <= chunkNum; i += 1) {
+      this.doChunk(i);
+    }
+    this.currentChunk = chunkNum;
+    this._inPrevState = false;
+    return {
+      bookmark: this.chunks[this.currentChunk].bookmark,
+      finished: false,
+    };
+  }
+
+  // XXX causes error in Warshall's
   refresh() {
+    console.log(["refresh", this.currentChunk]);
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk; i += 1) {
         this.doChunk(i);
       }
-      this.currentChunk -= 1;
+      this.currentChunk -= 1; // XXX ?????
     }
   }
 }
