@@ -39,21 +39,29 @@ Quicksort(A, left, right) \\B 1
                 There are various ways this can be coded, often with
                 some subtle points.
         \\Expl}
-        Quicksort FirstHalf, SecondHalf    \\Ref QuicksortBoth 
+        Sort FirstPart   \\Ref QuicksortFirst
+        Sort SecondPart  \\Ref QuicksortSecond
         \\Expl{  Sort elements left of (smaller or equal to) the
                 pivot, which is in A[i]. Then sort elements right of (greater or equal to) the
                 pivot, which is in A[i].
         \\Expl}
         
     \\In}
-    // Done \\B 50
+    // Done \\B 19
 \\Code}
 
 \\Code{
-QuicksortBoth
+QuicksortFirst
+// Recursively sort first part: \\B 300
 Quicksort(A, left, i - 1) \\B 3
+// Done \\B 301
+\\Code}
+
+\\Code{
+QuicksortSecond
+// Recursively sort second part: \\B 400
 Quicksort(A, i + 1, right) \\B 4
-// Done \\B 19
+// Done \\B 401
 \\Code}
 
 \\Code{

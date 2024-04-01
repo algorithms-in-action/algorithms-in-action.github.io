@@ -61,7 +61,6 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   chunkNum += 1; // go to next chunk
   let bookmark = chunks[chunkNum].bookmark;
   let block = bookmarkBlock(bookmark, pseudocode);
-  console.log(["findNext", chunkNum, bookmark, block]);
   if (collapse[block]) { // code line is fully expanded -> stop at this chunk
     return chunkNum;
   }
@@ -76,6 +75,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   // get recursionLevel after chunkNum += 1 and make sure there is a
   // chunk before we get into the next recursive cal
   let callRecLevel = chunks[chunkNum].recursionLevel;
+  console.log(['findNext', chunkNum, bookmark, block, callRecLevel]);
   // find the outermost ancestor of 'block' where collapse===false
   // - this will block of the pseudocode line that is displayed
   // Eg, for a fully collapsed Heapsort we will find BuildHeap, and the code
@@ -101,7 +101,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
     bookmark = chunks[chunkNum].bookmark;
     block = bookmarkBlock(bookmark, pseudocode);
     ancestors = ancestorBlocks(block, pseudocode);
-    console.log(ancestors.concat([chunkNum, bookmark, block]));
+    console.log(ancestors.concat([chunkNum, bookmark, block, callRecLevel, chunks[chunkNum].recursionLevel]));
   } while (chunks[chunkNum].recursionLevel > callRecLevel
             || ancestors.includes(blockToSkip));
   return chunkNum-1;

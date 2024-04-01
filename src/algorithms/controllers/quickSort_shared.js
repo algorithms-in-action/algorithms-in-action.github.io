@@ -61,6 +61,10 @@ const QS_BOOKMARKS = {
   MEDIAN3_swap_A_idx_right_with_A_idx_mid: 16,
   MEDIAN3_second_swap_A_idx_left_with_A_idx_mid: 17,
   MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1: 18,
+  SHARED_pre_left: 300,
+  SHARED_done_left: 301,
+  SHARED_pre_right: 400,
+  SHARED_done_right: 401,
   SHARED_done_qs: 19, // in expanded rec calls 
   SHARED_skip_step : 19, // idk how this works
   SHARED_done_top_level_qs: 50, // Done at end of top level
@@ -265,7 +269,8 @@ export function run_QS(is_qs_median_of_3) {
     function QuickSort(qs_num_array, left, right, depth) { 
 
       function boolShouldAnimate() {
-        return depth === 0 || isRecursionExpanded();
+        return true;
+        // return depth === 0 || isRecursionExpanded();
       }
 
       function partition(partition_num_array, left, right) {
@@ -468,6 +473,17 @@ export function run_QS(is_qs_median_of_3) {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
+        // dummy chunk for before recursive call
+        // XXX Maybe this should be instead of
+        // SHARED_quicksort_left_to_i_minus_1 as we don't really want to
+        // stop on that line *before* the recursive call is completed -
+        // SHARED_quicksort_left_to_i_minus_1 could be moved until after
+        // the call, replacing the dummy call there
+        chunker.add(
+          QS_BOOKMARKS.SHARED_pre_left,
+          (vis) => { },
+          [],
+        depth);
         if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
@@ -490,6 +506,20 @@ export function run_QS(is_qs_median_of_3) {
 
         QuickSort(a, left, pivot - 1, depth + 1);
 
+        // dummy chunk after recursive call
+        // XXX might need to add something to redo stack depth etc
+        // here and/or elsewhere
+        chunker.add(
+          QS_BOOKMARKS.SHARED_done_left,
+          (vis) => { },
+          [],
+        depth);
+        // dummy chunk before recursive call
+        chunker.add(
+          QS_BOOKMARKS.SHARED_pre_right,
+          (vis) => { },
+          [],
+        depth);
         if (boolShouldAnimate()) {
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
@@ -507,6 +537,12 @@ export function run_QS(is_qs_median_of_3) {
           depth);
         }
         QuickSort(a, pivot + 1, right, depth + 1);
+        // dummy chunk after recursive call
+        chunker.add(
+          QS_BOOKMARKS.SHARED_done_right,
+          (vis) => { },
+          [],
+        depth);
       }
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
@@ -526,12 +562,14 @@ export function run_QS(is_qs_median_of_3) {
 
       finished_stack_frames.push(real_stack.pop());
 
+/*
       // Add "do nothing" chunk for the "Done" line
       chunker.add(
-        QS_BOOKMARKS.SHARED_done_top_level_qs,
+        QS_BOOKMARKS.SHARED_done_qs,
         (vis) => { },
         [],
-      0);
+      depth);
+*/
 
       return a; // Facilitates testing
     }
@@ -553,12 +591,11 @@ export function run_QS(is_qs_median_of_3) {
 
     assert(real_stack.length === 0);
 
-    // Fade out final node
-    // Hmm, doesn't seem to do anything and seems never reached if
-    // recursive calls not expanded
+    // Fade out final node - fixes up stack
+    // XXX should fix recursion level somewhere also
+    // repeats final bookmark
     chunker.add(
-      QS_BOOKMARKS.SHARED_done_top_level_qs,
-      // QS_BOOKMARKS.SHARED_done_qs,
+      QS_BOOKMARKS.SHARED_done_qs,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
