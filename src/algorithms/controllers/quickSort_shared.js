@@ -61,8 +61,9 @@ const QS_BOOKMARKS = {
   MEDIAN3_swap_A_idx_right_with_A_idx_mid: 16,
   MEDIAN3_second_swap_A_idx_left_with_A_idx_mid: 17,
   MEDIAN3_swap_A_idx_mid_with_A_idx_right_minus_1: 18,
-  SHARED_done_qs: 19,
+  SHARED_done_qs: 19, // in expanded rec calls 
   SHARED_skip_step : 19, // idk how this works
+  SHARED_done_top_level_qs: 50, // Done at end of top level
   MEDIAN3_first_if_A_idx_left_greater_A_idx_right: 20,
   MEDIAN3_if_A_idx_mid_greater_A_idx_right: 21,
   MEDIAN3_second_if_A_idx_left_greater_A_idx_right: 22,
@@ -525,6 +526,13 @@ export function run_QS(is_qs_median_of_3) {
 
       finished_stack_frames.push(real_stack.pop());
 
+      // Add "do nothing" chunk for the "Done" line
+      chunker.add(
+        QS_BOOKMARKS.SHARED_done_top_level_qs,
+        (vis) => { },
+        [],
+      0);
+
       return a; // Facilitates testing
     }
 
@@ -546,8 +554,11 @@ export function run_QS(is_qs_median_of_3) {
     assert(real_stack.length === 0);
 
     // Fade out final node
+    // Hmm, doesn't seem to do anything and seems never reached if
+    // recursive calls not expanded
     chunker.add(
-      QS_BOOKMARKS.SHARED_done_qs,
+      QS_BOOKMARKS.SHARED_done_top_level_qs,
+      // QS_BOOKMARKS.SHARED_done_qs,
       (vis, idx) => {
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
