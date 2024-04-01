@@ -30,7 +30,9 @@ export default class {
 
   // values is a list of arguments passed to func when it is called to perform its task.
   // bookmark relates to the number directly after the \\B notation in the psuedocode
-  add(bookmark, func, values) {
+  // recursionLevel used for recursive algorithms so we can skip over
+  // collapsed recursive calls
+  add(bookmark, func, values, recursionLevel=0) {
     let bookmarkValue = '';
     let pauseInCollapse = false;
     if (typeof bookmark === 'object') {
@@ -43,6 +45,7 @@ export default class {
       bookmark: String(bookmarkValue),
       mutator: defer(func, clone(values)),
       pauseInCollapse,
+      recursionLevel,
     });
   }
 
@@ -63,7 +66,8 @@ export default class {
     // Repeatable: run warshall's to completion with everything
     // collapsed then expand everything - refresh() is called - see
     // algorithms/controllers/transitiveClosureCollapseChunkPlugin.js
-    // Not sure why - works ok for intermediate states typically
+    // Not sure why - works ok for intermediate states typically.  Might
+    // be that ChunkNum goes out of range at end
     this.chunks[index].mutator(
       Object.fromEntries(
         Object.entries(this.visualisers).map(([k, v]) => [k, v.instance])
@@ -103,6 +107,9 @@ export default class {
         this.doChunk(this.currentChunk + 1);
         this.currentChunk += 1;
       } else if (this.currentChunk === this.chunks.length - 1) {
+        // XXX do we really want to get out of range??? It's used
+        // to trigger finished for some reason but causes other
+        // potential problems we need to work around.
         this.currentChunk += 1;
       }
     } else if (!triggerPauseInCollapse) {
@@ -171,15 +178,18 @@ export default class {
     };
   }
 
-  // XXX causes error in Warshall's
   refresh() {
+    // if we have gone to the end, currentChunk needs adjusting
+    if (this.currentChunk >= this.chunks.length-1) {
+      this.currentChunk = this.chunks.length-1;
+    }
     console.log(["refresh", this.currentChunk]);
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk; i += 1) {
         this.doChunk(i);
       }
-      this.currentChunk -= 1; // XXX ?????
+      // this.currentChunk -= 1; // WTF ?????
     }
   }
 }
