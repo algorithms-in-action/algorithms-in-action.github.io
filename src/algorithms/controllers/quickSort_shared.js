@@ -1,3 +1,27 @@
+// Quicksort common code
+// Example of a recursive algorithm that could serve as a guide to
+// implementing others.  Some things to note:
+// 1) A depth parameter is added to the recursive code and also passed
+// to chunker.add()
+// 2) Recursive calls are in code blocks that can be collapsed, so the
+// whole recursive call can be done in a single step. To do this we must
+// have chunks at the recursion level of the call at the start and end
+// of the collapsed computation. Here the start chunk is a comment line.
+// It does nothing but notes that the call on the next line is recursive.
+// At the next step control goes back to the start of the function so
+// an extra comment is not a bad thing to do for clarity in any case.
+// The chunk after the recursive computation is at the line of code with
+// the call, so the call is highlighted when it returns, as we would
+// want.
+// 3) The stack is visualised in the animation, to help understanding of
+// the algorithm overall and also where we are in the recursion.
+// 4) There is chunk at the end of the whole computation that cleans up
+// the final display a bit.
+
+// XXX this code need a clean up - there is a bunch of stuff left over
+// from a previous version that didn't encapsulate the recursive calls
+// properly
+
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
@@ -473,19 +497,12 @@ export function run_QS(is_qs_median_of_3) {
       if (left < right) {
         [pivot, a] = partition(a, left, right, depth);
 
-        // dummy chunk for before recursive call
-        // XXX Maybe this should be instead of
-        // SHARED_quicksort_left_to_i_minus_1 as we don't really want to
-        // stop on that line *before* the recursive call is completed -
-        // SHARED_quicksort_left_to_i_minus_1 could be moved until after
-        // the call, replacing the dummy call there
-        chunker.add(
-          QS_BOOKMARKS.SHARED_pre_left,
-          (vis) => { },
-          [],
-        depth);
+        // dummy chunk for before recursive call - we need this so there
+        // is a chunk at this recursion level as the first chunk in the
+        // collapsed code for the recursive call
         if (boolShouldAnimate()) {
-          chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
+          chunker.add(QS_BOOKMARKS.SHARED_pre_left, refresh_stack, [
+          // chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
             real_stack,
             finished_stack_frames,
           ], depth);
@@ -506,22 +523,13 @@ export function run_QS(is_qs_median_of_3) {
 
         QuickSort(a, left, pivot - 1, depth + 1);
 
-        // dummy chunk after recursive call
-        // XXX might need to add something to redo stack depth etc
-        // here and/or elsewhere
-        chunker.add(
-          QS_BOOKMARKS.SHARED_done_left,
-          (vis) => { },
-          [],
-        depth);
-        // dummy chunk before recursive call
-        chunker.add(
-          QS_BOOKMARKS.SHARED_pre_right,
-          (vis) => { },
-          [],
-        depth);
+        // dummy chunk after recursive call - it's good to highlight the
+        // recursive call once it has returned plus we need a chunk at
+        // this level when the recursive code is collapsed
+        // XXX might rename bookmarks
         if (boolShouldAnimate()) {
-          chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
+          chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
+          // chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
           ], depth);
@@ -536,17 +544,35 @@ export function run_QS(is_qs_median_of_3) {
             [pivot, right],
           depth);
         }
-        QuickSort(a, pivot + 1, right, depth + 1);
-        // dummy chunk after recursive call
+        // dummy chunk before recursive call, as above
         chunker.add(
-          QS_BOOKMARKS.SHARED_done_right,
+          QS_BOOKMARKS.SHARED_pre_right,
+          //QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1,
+          //QS_BOOKMARKS.SHARED_done_left,
           (vis) => { },
           [],
         depth);
+        QuickSort(a, pivot + 1, right, depth + 1);
+        // dummy chunk after recursive call, as above, after adjusting
+        // stack frames/depth etc
+          chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
+            real_stack,
+            finished_stack_frames,
+          ], depth);
+        finished_stack_frames.push(real_stack.pop());
+/*
+        chunker.add(
+          QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right,
+          // QS_BOOKMARKS.SHARED_done_right,
+          (vis) => { },
+          [],
+        depth);
+*/
       }
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
       else if (left < a.length) {
+        finished_stack_frames.push(real_stack.pop());
         let size_one_bookmark = isRecursionExpanded()
           ? QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1
           : QS_BOOKMARKS.SHARED_skip_step;
@@ -558,9 +584,14 @@ export function run_QS(is_qs_median_of_3) {
           },
           [left],
         depth);
+      } else {
+        finished_stack_frames.push(real_stack.pop());
+        chunker.add(QS_BOOKMARKS.SHARED_done_qs, refresh_stack, [
+          real_stack,
+          finished_stack_frames,
+        ], depth);
       }
 
-      finished_stack_frames.push(real_stack.pop());
 
 /*
       // Add "do nothing" chunk for the "Done" line
@@ -592,11 +623,12 @@ export function run_QS(is_qs_median_of_3) {
     assert(real_stack.length === 0);
 
     // Fade out final node - fixes up stack
-    // XXX should fix recursion level somewhere also
-    // repeats final bookmark
+    console.log(finished_stack_frames[finished_stack_frames.length-1]);
+    console.log(finished_stack_frames[0]);
     chunker.add(
       QS_BOOKMARKS.SHARED_done_qs,
       (vis, idx) => {
+        vis.array.setStackDepth(0);
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
         for (let i = 0; i < entire_num_array.length; i += 1) {

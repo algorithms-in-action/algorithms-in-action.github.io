@@ -52,16 +52,14 @@ Quicksort(A, left, right) \\B 1
 
 \\Code{
 QuicksortFirst
-// Recursively sort first part: \\B 300
+// *Recursively* sort first part: \\B 300
 Quicksort(A, left, i - 1) \\B 3
-// Done \\B 301
 \\Code}
 
 \\Code{
 QuicksortSecond
-// Recursively sort second part: \\B 400
+// *Recursively* sort second part: \\B 400
 Quicksort(A, i + 1, right) \\B 4
-// Done \\B 401
 \\Code}
 
 \\Code{
