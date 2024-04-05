@@ -140,7 +140,7 @@ export default class {
     this._inPrevState = true;
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
-      console.log(['prev()', this.currentChunk]);
+      // console.log(['prev()', this.currentChunk]);
       for (let i = 0; i <= this.currentChunk - 1; i += 1) {
         this.doChunk(i);
       }
@@ -166,7 +166,7 @@ export default class {
   goBackTo(chunkNum) {
     this._inPrevState = true;
     this.visualisers = this.init();
-    console.log(['prev()', chunkNum]);
+    // console.log(['prev()', chunkNum]);
     for (let i = 0; i <= chunkNum; i += 1) {
       this.doChunk(i);
     }
@@ -183,7 +183,7 @@ export default class {
     if (this.currentChunk >= this.chunks.length-1) {
       this.currentChunk = this.chunks.length-1;
     }
-    console.log(["refresh", this.currentChunk]);
+    // console.log(["refresh", this.currentChunk]);
     if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk; i += 1) {

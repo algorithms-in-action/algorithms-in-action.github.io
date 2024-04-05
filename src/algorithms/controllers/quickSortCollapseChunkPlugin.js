@@ -64,6 +64,8 @@ export function isRecursionExpanded() {
               collapse.quickSortM3.sort.QuicksortSecond;
 }
 
+// XXX doesn't seem to trigger refresh of display when code is
+// expanded/collapsed.  Maybe see how Warshall's handles it?
 export function onCollapseStateChangeQS() {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();

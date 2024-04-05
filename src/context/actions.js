@@ -75,7 +75,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   // get recursionLevel after chunkNum += 1 and make sure there is a
   // chunk before we get into the next recursive cal
   let callRecLevel = chunks[chunkNum].recursionLevel;
-  console.log(['findNext', chunkNum, bookmark, block, callRecLevel]);
+  // console.log(['findNext', chunkNum, bookmark, block, callRecLevel]);
   // find the outermost ancestor of 'block' where collapse===false
   // - this will block of the pseudocode line that is displayed
   // Eg, for a fully collapsed Heapsort we will find BuildHeap, and the code
@@ -85,8 +85,8 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
           (currentValue, index, arr) => !collapse[currentValue]);
   // This is the block we need to skip to the end of
   let blockToSkip = ancestors[index];
-  console.log(ancestors.concat([blockToSkip]));
-  console.log(ancestors.map(i => collapse[i]));
+  // console.log(ancestors.concat([blockToSkip]));
+  // console.log(ancestors.map(i => collapse[i]));
   // We skip forward until we find a chunk that is not in this ancestor
   // block, then go back one step (we want the last chunk in this block)
   // eg, we search until we find a point which doesn't have BuildHeap as an
@@ -101,7 +101,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
     bookmark = chunks[chunkNum].bookmark;
     block = bookmarkBlock(bookmark, pseudocode);
     ancestors = ancestorBlocks(block, pseudocode);
-    console.log(ancestors.concat([chunkNum, bookmark, block, callRecLevel, chunks[chunkNum].recursionLevel]));
+    // console.log(ancestors.concat([chunkNum, bookmark, block, callRecLevel, chunks[chunkNum].recursionLevel]));
   } while (chunks[chunkNum].recursionLevel > callRecLevel
             || ancestors.includes(blockToSkip));
   return chunkNum-1;
@@ -127,7 +127,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
   let callRecLevel = chunks[chunkNum].recursionLevel;
   let bookmark = chunks[chunkNum].bookmark;
   let block = bookmarkBlock(bookmark, pseudocode);
-  console.log(["findPrev", chunkNum, bookmark, block]);
+  // console.log(["findPrev", chunkNum, bookmark, block]);
   if (collapse[block]) { // code line is fully expanded -> back 1 step
     return chunkNum-1;
   }
@@ -140,7 +140,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
           (currentValue, index, arr) => !collapse[currentValue]);
   // This is the block we need skip over (SortHeap in the example above)
   let blockToSkip = ancestors[index];
-  console.log(ancestors.concat([blockToSkip]));
+  // console.log(ancestors.concat([blockToSkip]));
   // We skip back until we find a chunk that is not in this ancestor
   // block
   // eg, we search until we find a point which doesn't have SortHeap as an
@@ -155,7 +155,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
     bookmark = chunks[chunkNum].bookmark;
     block = bookmarkBlock(bookmark, pseudocode);
     ancestors = ancestorBlocks(block, pseudocode);
-    console.log(ancestors.concat([chunkNum, bookmark, block]));
+    // console.log(ancestors.concat([chunkNum, bookmark, block]));
   } while (chunks[chunkNum].recursionLevel > callRecLevel
            || ancestors.includes(blockToSkip));
   return chunkNum;
@@ -301,7 +301,7 @@ export const GlobalActions = {
       playing = playing.playing;
     }
 
-    console.log(['NEXT_LINE', playing, triggerPauseInCollapse]);
+    // console.log(['NEXT_LINE', playing, triggerPauseInCollapse]);
     // figure out what chunk we need to stop at
     let stopAt = findNext(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
     // step forward until we are at stopAt, or last chunk, or some weird
@@ -311,7 +311,7 @@ export const GlobalActions = {
       if (!triggerPauseInCollapse) {
         result.pauseInCollapse = false;
       }
-      console.log(['chunker.next', state.chunker.currentChunk, result.pauseInCollapse, result.finished, state.id.name, state.id.mode, result.bookmark]);
+      // console.log(['chunker.next', state.chunker.currentChunk, result.pauseInCollapse, result.finished, state.id.name, state.id.mode, result.bookmark]);
     } while (
       !result.pauseInCollapse &&
       !result.finished &&
@@ -327,9 +327,9 @@ export const GlobalActions = {
     if (state.chunker.currentChunk === state.chunker.chunks.length-1) {
       state.chunker.currentChunk += 1;
       result.finished = true;
-      console.log('fake next');
+      // console.log('fake next');
     }
-    console.log('NEXT_LINE DONE');
+    // console.log('NEXT_LINE DONE');
     return {
       ...state,
       ...result,
@@ -349,7 +349,7 @@ export const GlobalActions = {
     // "finished" is triggered when state.chunker.currentChunk gets out
     // of range (perhaps should change this XXX); we need check for
     // that here
-    console.log(['PREV_LINE', state.chunker.currentChunk, state.chunker.chunks.length]);
+    // console.log(['PREV_LINE', state.chunker.currentChunk, state.chunker.chunks.length]);
     if (state.chunker.currentChunk > state.chunker.chunks.length ) {
       state.chunker.currentChunk = state.chunker.chunks.length - 1;
     }
