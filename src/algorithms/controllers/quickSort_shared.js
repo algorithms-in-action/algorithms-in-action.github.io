@@ -31,9 +31,13 @@ import {
 } from './quickSortCollapseChunkPlugin';
 
 // visualisation variable strings
+// XXX for now we use a special case for i&j running off the left of the
+// array since we can't easily render them in the right place
 const VIS_VARIABLE_STRINGS = {
   i_left_index: 'i',
   j_right_index: 'j',
+  i_eq_0: 'i=0',
+  j_eq_0: 'j=0',
   pivot: 'pivot',
 };
 
@@ -246,21 +250,43 @@ export function run_QS(is_qs_median_of_3) {
 
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
-      // TODO
+      // TODO XXX
       // we can't render the -1 index 
       // so this is a workaround
-      if (cur_i === -1) { cur_i = 0 } 
-      if (cur_j === -1) { cur_j = 0 } 
-      if (cur_pivot_index === -1) { cur_pivot_index = 0 } 
+      // if (cur_i === -1) { cur_i = 0 } 
+      // if (cur_j === -1) { cur_j = 0 } 
+      // if (cur_pivot_index === -1) { cur_pivot_index = 0 } 
+      // better for things to vanish than be misleading?
+      // Could we also have a var named 'i=0' for example?
+      // Yes - see VIS_VARIABLE_STRINGS XXX
+      let cur_i_too_low;
+      let cur_j_too_low;
+      if (cur_i === -1) {
+        cur_i = undefined;
+        cur_i_too_low = 0;
+      } else {
+        cur_i_too_low = undefined;
+      }
+      if (cur_j === -1) {
+        cur_j = undefined;
+        cur_j_too_low = 0;
+      } else {
+        cur_j_too_low = undefined;
+      }
+      // never occurs?
+      // if (cur_pivot_index === -1) { cur_pivot_index = undefined }
 
       assert(vis.array);
       assert(cur_real_stack && cur_finished_stack_frames);
 
       if (!isPartitionExpanded()) {
-        // these variables should not show up in vis if partition is collapsed
-
-        cur_i = undefined
+        // j should not show up in vis if partition is collapsed
         cur_j = undefined
+      }
+
+      if (!isPartitionExpanded() && !isRecursionExpanded()) {
+        // i should not show up in vis if partition + recursion is collapsed
+        cur_i = undefined
       }
 
       vis.array.setStackDepth(cur_real_stack.length);
@@ -269,8 +295,10 @@ export function run_QS(is_qs_median_of_3) {
       );
 
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.i_eq_0, cur_i_too_low);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
     };
 
 
@@ -278,11 +306,16 @@ export function run_QS(is_qs_median_of_3) {
 
       if (index === undefined) { vis.array.removeVariable(variable_name); return; }
 
+      // we just used undefined to stop var display since i and pivot
+      // should be displayed even when !isPartitionExpanded()
+      vis.array.assignVariable(variable_name, index);
+/*
       if (isPartitionExpanded()) {
         vis.array.assignVariable(variable_name, index);
       } else {
         vis.array.removeVariable(variable_name);
       }
+*/
     }
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -397,11 +430,15 @@ export function run_QS(is_qs_median_of_3) {
 
         } else {
 
-          pivot_index = right
+          pivot_index = right;
 
           chunker_add_if(
             QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
-            refresh_stack);  
+            (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
+         },
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
+            //refresh_stack);  
         }
 
         assert(pivot_index !== undefined);
@@ -495,17 +532,31 @@ export function run_QS(is_qs_median_of_3) {
       }
 
       if (left < right) {
+        // Code structure a bit sus here: normally choose pivot then call
+        // partition with the pivot but we accomodate simple QS plus
+        // M3QS so it's a bit weird, possibly for that reason.
         [pivot, a] = partition(a, left, right, depth);
+
 
         // dummy chunk for before recursive call - we need this so there
         // is a chunk at this recursion level as the first chunk in the
         // collapsed code for the recursive call
+        // We no longer want to display 'pivot' or 'j' but want 'i'
+        let pivot_index = undefined;
+        let j = undefined;
+        let i = pivot;
         if (boolShouldAnimate()) {
-          chunker.add(QS_BOOKMARKS.SHARED_pre_left, refresh_stack, [
+            chunker.add(QS_BOOKMARKS.SHARED_pre_left,
+            (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+            refresh_stack(vis, cur_real_stack,
+cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+         },
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
+          // chunker.add(QS_BOOKMARKS.SHARED_pre_left, refresh_stack, [
           // chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
-            real_stack,
-            finished_stack_frames,
-          ], depth);
+            // real_stack,
+            // finished_stack_frames,
+          // ], depth);
         } else {
           // this part animates the recursion when it is collapsed
           // can also add a function to animate the swap actions in one step here instead of in the partition function
@@ -527,12 +578,19 @@ export function run_QS(is_qs_median_of_3) {
         // recursive call once it has returned plus we need a chunk at
         // this level when the recursive code is collapsed
         // XXX might rename bookmarks
+        // XXX Should show 'i' if recursion is expanded
         if (boolShouldAnimate()) {
-          chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1, refresh_stack, [
-          // chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
+          chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1,
+          (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+          },
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
+/*
+          chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
           ], depth);
+*/
         } else {
           chunker.add(
             QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1,
@@ -545,6 +603,13 @@ export function run_QS(is_qs_median_of_3) {
           depth);
         }
         // dummy chunk before recursive call, as above
+        // XXX Should show 'i' if recursion is expanded
+          chunker.add(QS_BOOKMARKS.SHARED_pre_right,
+          (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+          },
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
+/*
         chunker.add(
           QS_BOOKMARKS.SHARED_pre_right,
           //QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1,
@@ -552,6 +617,7 @@ export function run_QS(is_qs_median_of_3) {
           (vis) => { },
           [],
         depth);
+*/
         QuickSort(a, pivot + 1, right, depth + 1);
         // dummy chunk after recursive call, as above, after adjusting
         // stack frames/depth etc

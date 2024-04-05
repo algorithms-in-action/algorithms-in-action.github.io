@@ -48,6 +48,8 @@ export function isPartitionExpanded() {
     : collapse.quickSortM3.sort.Partition;
 }
 
+// checks if either recursive call is expanded (needed to determine if i
+// should be displayed)
 export function isRecursionExpanded() {
   const algorithm = getGlobalAlgorithm();
   if (!isInQuickSort()) return false;
@@ -56,8 +58,10 @@ export function isRecursionExpanded() {
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
   return algorithm.id.name === QS_NAME
-    ? collapse.quickSort.sort.QuicksortBoth
-    : collapse.quickSortM3.sort.QuicksortBoth;
+    ? collapse.quickSort.sort.QuicksortFirst ||
+              collapse.quickSort.sort.QuicksortSecond
+    : collapse.quickSortM3.sort.QuicksortFirst ||
+              collapse.quickSortM3.sort.QuicksortSecond;
 }
 
 export function onCollapseStateChangeQS() {
