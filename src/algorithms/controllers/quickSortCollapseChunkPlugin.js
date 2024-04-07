@@ -64,11 +64,15 @@ export function isRecursionExpanded() {
               collapse.quickSortM3.sort.QuicksortSecond;
 }
 
-// XXX doesn't seem to trigger refresh of display when code is
-// expanded/collapsed.  Maybe see how Warshall's handles it?
-export function onCollapseStateChangeQS() {
+// Trigger refresh of display when code is expanded/collapsed.
+// Not so efficient - runs through all the chunks from the start. XXX
+// However, it seems to work and is pretty general - could possibly use it for
+// other algorithms rather than have specific triggers for each algorithm.
+export function onCollapseStateChangeQS(chunker) {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
-  triggerButtonClick();
-  GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
+  chunker.refresh();
+  // XX re-runs algorithm from start - Not what we want
+  //triggerButtonClick();
+  //GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
 }

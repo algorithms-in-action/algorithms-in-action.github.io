@@ -62,12 +62,7 @@ export default class {
 
   // Applies chunk at index, this applies its mutation to the visualisers, updating them
   doChunk(index) {
-    // XXX in Warshall's this is called with this.chunks undefined -
-    // Repeatable: run warshall's to completion with everything
-    // collapsed then expand everything - refresh() is called - see
-    // algorithms/controllers/transitiveClosureCollapseChunkPlugin.js
-    // Not sure why - works ok for intermediate states typically.  Might
-    // be that ChunkNum goes out of range at end
+    // Previous bug in Warshall's fixed
     this.chunks[index].mutator(
       Object.fromEntries(
         Object.entries(this.visualisers).map(([k, v]) => [k, v.instance])
@@ -108,8 +103,8 @@ export default class {
         this.currentChunk += 1;
       } else if (this.currentChunk === this.chunks.length - 1) {
         // XXX do we really want to get out of range??? It's used
-        // to trigger finished for some reason but causes other
-        // potential problems we need to work around.
+        // to trigger finished for some reason but caused other
+        // potential problems we needed to work around.
         this.currentChunk += 1;
       }
     } else if (!triggerPauseInCollapse) {
@@ -131,11 +126,12 @@ export default class {
   }
 
   // Goes back one chunk, undoing last mutation
-  // XXX probably better to have a gotoChunk(c) function - prev() gets
+  // Better to have a gotoChunk(c) function - prev() gets
   // called repeatedly for collapsed code, resulting on O(N^2)
   // complexity; Maybe goBackTo() and goForwardTo() due to _inPrevState
   // flag (used in controllers/transitiveClosureCollapseChunkPlugin.js
-  // for some mysterious reason)
+  // for some mysterious reason) DONE
+/*
   prev() {
     this._inPrevState = true;
     if (this.currentChunk > 0) {
@@ -152,6 +148,7 @@ export default class {
       finished: false,
     };
   }
+*/
 
   // Returns previous chunk, but doesn't undo last mutation
   prevChunk(currentChunk) {

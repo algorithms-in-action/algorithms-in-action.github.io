@@ -81,14 +81,14 @@ export function runChunkWithCheckCollapseState(chunkFn) {
 }
 
 // Not sure what this is meant to do - maybe make vars (in)visible
-// depending on collapse but it breaks things XXX
+// depending on collapse but refresh() broke things (fixed)
 // eslint-disable-next-line consistent-return
 export function onCollapseStateChange() {
   if (!isInTransitiveClosure()) return false;
   const collapseState = isInCollapseState();
   setJTagVisible(!collapseState);
   const algorithm = getGlobalAlgotithm();
-  algorithm.chunker.refresh(); // XXX runtime error with chunk num
+  algorithm.chunker.refresh();
 }
 
 export function releaseChunkCache() {

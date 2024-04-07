@@ -5,6 +5,7 @@ import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
+import { onCollapseStateChangeQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 
 const DEFAULT_ALGORITHM = 'heapSort';
@@ -384,10 +385,13 @@ export const GlobalActions = {
     } else if (expandOrCollapase) {
       result[state.id.name][state.id.mode][codeblockname] = true; // expand
     } else {
-      result[state.id.name][state.id.mode][codeblockname] = false; // collapase
+      result[state.id.name][state.id.mode][codeblockname] = false; // collapse
     }
 
-    onCollapseStateChange();
+    // XXX Quicksort plugin seems pretty generic - possibll use that for other
+    // algorithms (though not so efficient)
+    onCollapseStateChange(); // Transitive closure plugin
+    onCollapseStateChangeQS(state.chunker); // Quicksort plugin
     unionFindToggleRank(state);
 
     return {
