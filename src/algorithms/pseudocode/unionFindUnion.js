@@ -66,9 +66,12 @@ how much this aspect of the algorithm reduces tree height.
 
 \\Overview}
 
+\\Note{n changed to k in pseudocode to reduce confusion but bookmarks
+still use n
+\\Note}
 \\Code{
 Shorten_path
-    parent[n] <- parent[parent[n]] (if enabled) // point to grandparent, not parent \\B parent[n] <- parent[parent[n]]
+    parent[k] <- parent[parent[k]] (if enabled) // point to grandparent, not parent \\B parent[n] <- parent[parent[n]]
     \\Expl{ By replacing the parent pointer by a pointer to the
         grandparent at each step up the tree, the path length is
         halved. This turns out to be sufficient to keep paths very
@@ -100,7 +103,11 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
     \\Expl} 
 \\In} 
 
-Find(n) // return root of tree containing n \\Ref Find(n)
+//=======================================================
+\\Note{n changed to k in pseudocode to reduce confusion but bookmarks
+still use n
+\\Note}
+Find(k) // return the root of tree containing k \\Ref Find(n)
 \\Code}
 
 \\Code{
@@ -115,12 +122,15 @@ Maybe_swap
         \\In}
 \\Code}
 
+\\Note{n changed to k in pseudocode to reduce confusion but bookmarks
+still use n
+\\Note}
 \\Code{
     Find(n)
     \\In{
-        while n != parent[n]  // while we are not at the root \\B while n != parent[n]
+        while k != parent[k]  // while we are not at the root \\B while n != parent[n]
         \\In{
-            shorten path from n to root \\Ref Shorten_path
+            shorten path from k to root \\Ref Shorten_path
             \\Expl{ There are several ways of shortening the path back to the
                     root. The most obvious is to follow the path to the root
                     then follow it again, making each element point to the
@@ -129,9 +139,9 @@ Maybe_swap
                     The animation allows path compression to be disabled so
                     you can compare the relative heights of the trees produced.
             \\Expl} 
-            n <- parent[n]  // go up the tree one step \\B n <- parent[n]
+            k <- parent[k]  // go up the tree one step \\B n <- parent[n]
         \\In}
-        return n // return root \\B return n
+        return k // return root \\B return n
     \\In} 
     \\Code}
 

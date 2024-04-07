@@ -34,8 +34,8 @@ class GraphTracer extends Tracer {
       baseWidth: 480,
       baseHeight: 480,
       padding: 32,
-      defaultNodeRadius: 20,
-      nodeRadius: 20,  // Should be identical to default node radius.
+      defaultNodeRadius: 40,
+      nodeRadius: 40,  // Should be identical to default node radius.
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,

@@ -17,7 +17,9 @@ const ALGORITHM_NAME = '2-3-4 Trees';
 const INSERTION = 'Insertion';
 const SEARCH = 'Search';
 
-const DEFAULT_NODES = genUniqueRandNumList(10, 1, 100);
+// DEFAULT input - enough for a tree with a few levels
+// Should be the same as in REFRESH_FUNCTION
+const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
 const DEFAULT_TARGET = '2';
 
 const INSERTION_EXAMPLE = 'Please follow the example provided: 1,2,3,4. Values should also be unique.';
@@ -87,7 +89,7 @@ function TTFTreeParam() {
           DEFAULT_VAL={nodes}
           handleSubmit={handleInsertion}
           SET_VAL={setNodes}
-          REFRESH_FUNCTION={(() => genUniqueRandNumList(10, 1, 100))}
+          REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
           setMessage={setMessage}
