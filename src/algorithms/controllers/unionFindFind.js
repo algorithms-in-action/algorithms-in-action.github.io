@@ -10,10 +10,8 @@ import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NT
 
 export default {
   initVisualisers({ visualiser }) {
-    // need to clear here, otherwise we get a stepping back bug re highlighting - uncertain why.
+    // needed for going to prev line since we redo from chunk 0
     visualiser.tree.instance.unfillAll();
-
-    // would ideally use the array and tree from union, but results in highlighting and child not returning to place when stepping back - uncertain why. 
     return {
       array: {
         instance: new Array2DTracer('array', null, 'Array View'),
@@ -44,6 +42,7 @@ export default {
         vis.array.set([N_ARRAY, parentArray], 'unionFind');
         vis.tree.setNTree(realNodes, realEdges, nodes, edges);
         vis.tree.isReversed = true;
+        vis.tree.layout(); // needed for going to prev line since we redo from chunk 0
       }, [parentArray]); // passing nodes etc introduces highlighting
 
     this.find(chunker, parentArray, value, 'n', null, pathCompression, mode);
@@ -213,7 +212,7 @@ export default {
           grandparent,
           COLOUR_CODES.ORANGE
         );
-        vis.tree.layout(); // to resolve stepping back bug in find
+        vis.tree.layout(); // needed for going to prev line since we redo from chunk 0
       },
       [n, parentArr[n], parentArr[parentArr[n]]]
     );
