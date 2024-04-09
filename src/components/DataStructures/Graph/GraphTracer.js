@@ -34,8 +34,12 @@ class GraphTracer extends Tracer {
       baseWidth: 480,
       baseHeight: 480,
       padding: 32,
-      defaultNodeRadius: 40,
-      nodeRadius: 40,  // Should be identical to default node radius.
+      // nodeRadius is used in binary trees and graphs but font size and
+      // zoom(?) has been adjusted for Euclidean graphs so nodes look a
+      // bit fat there and a bit think in other places - should make
+      // them all look similar if possible XXX
+      defaultNodeRadius: 33,
+      nodeRadius: 33,  // Should be identical to default node radius.
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,

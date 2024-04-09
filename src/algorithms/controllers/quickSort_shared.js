@@ -18,9 +18,8 @@
 // 4) There is chunk at the end of the whole computation that cleans up
 // the final display a bit.
 
-// XXX this code need a clean up - there is a bunch of stuff left over
-// from a previous version that didn't encapsulate the recursive calls
-// properly
+// There may be remnants of code from a previous version that didn't
+// encapsulate the recursive calls properly
 
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
@@ -248,8 +247,8 @@ export function run_QS(is_qs_median_of_3) {
 
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
-      // TODO?
-      // We can't render the -1 index 
+      // XXX
+      // We can't render the -1 index in the array
       // For now we display i==0/j==0 at left of array if appropriate
       let cur_i_too_low;
       let cur_j_too_low;
@@ -271,12 +270,14 @@ export function run_QS(is_qs_median_of_3) {
 
       if (!isPartitionExpanded()) {
         // j should not show up in vis if partition is collapsed
-        cur_j = undefined
+        cur_j = undefined;
+        cur_j_too_low = undefined;
       }
 
       if (!isPartitionExpanded() && !isRecursionExpanded()) {
         // i should not show up in vis if partition + recursion is collapsed
-        cur_i = undefined
+        cur_i = undefined;
+        cur_i_too_low = undefined;
       }
 
       vis.array.setStackDepth(cur_real_stack.length);
