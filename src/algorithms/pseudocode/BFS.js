@@ -49,6 +49,11 @@ export default parse(`
     \\Code{
     Next_node
         n <- dequeue(Nodes) // remove the front element of the Nodes queue \\B 10
+        \\Expl{ Finalised nodes are implicit: they are nodes that are in
+                Seen but not in the Nodes queue. Frontier nodes are
+                those than are in Seen and in Nodes. By removing n from
+                Nodes we remove it from the frontier and finalise it.
+        \\Expl}
     \\Code}
     
     \\Code{

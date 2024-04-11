@@ -47,10 +47,20 @@ export default parse(`
     
     \\Code{
     Next_node
+\\Note{ XXX could re-code this as follows (not sure if its and more
+clear but worth considering). Current coding emphasises we pop a node
+then have to deal with "special" cases.
+        repeat
+            n <- pop(Nodes)
+        until !Finalised[n] || Nodes is empty
+        if Nodes is empty
+            return
+\\Note}
         n <- pop(Nodes) // pop n from the top of the Nodes stack \\B 9
         while Finalised[n] // ignore finalised nodes \\B 10
         \\Expl{ The Nodes stack can have finalised nodes, which must be
-            ignored to avoid repeated search.
+            ignored to avoid repeated search. The frontier is implicit:
+            it is everything in the Nodes stack that is not in Finalised.
         \\Expl}
         \\In{
             if Nodes is empty // need to check this before popping a node \\B 11

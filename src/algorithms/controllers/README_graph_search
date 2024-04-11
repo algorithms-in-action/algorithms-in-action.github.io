@@ -1,0 +1,36 @@
+The aim is to have BFS/DFS/Dijkstra/A* (and eventually Prim's) look as
+similar as possible.
+
+For modifying the code it would help if they were coded as similarly
+as possible.  Unfortunately thats not the case.  Modifying the BFS
+code to color the frontier blue like DFS did took *way* longer than it
+should have. It would be nice to move things in the direction of easier
+to modify code, eg:
+
+Use the same bookmarks for the same code.  Using sequential numbers for
+bookmarks is not a good idea.  Better to use more meaningful strings.
+
+Use the same variable names where possible.  Not a big thing but maybe PQ
+could be used for all algorithms, noting that its a queue/stack/priority
+queue depending on the algorithm.
+
+Node numbers in the arrays are colored green by "selecting" them and
+colored blue explicitly.  Unfortunately, for any other change to the
+arrays (if we want it rendered), such as assigning a different value to
+a variable, seems to do some kind of reset which unselects the nodes.  That
+means we have more code than we should need for (re)coloring nodes.  Maybe
+rather than selecting nodes we could color them explicitly to avoid this.
+
+Functions could be used to avoid lots of code duplication inside
+chunker.add, particularly if the point above can't easily be addressed.
+It would also be good to have functions that encapsulate coloring a
+node/array element green/blue.
+
+The whole "(vis, x, y, z, a, b, c) => {..." pattern inside chunker.add is a
+pain, especially when there are different arguments/ordering in different
+places.  Much better to use, eg c_n or curr_n if the argument is n, etc.
+It might be a good idea to pass all the relevant variables all the time for
+consistency.  Basically, you should ideally be able to copy/paste code from
+one chunker.add call to another without having to rename variables, etc.
+
+
