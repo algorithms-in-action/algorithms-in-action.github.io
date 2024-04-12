@@ -24,7 +24,9 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                         \\Expl{ If there may be several end nodes we may want to
                             return which one was found as well as the Parent
                             array, and if we have explored the whole graph
-                            component that should be indicated.
+                            component that should be indicated. Here we
+                            highlight the path found in the Parent array,
+                            if successful.
                         \\Expl} 
                     \\In} 
                     for each node m neighbouring n // G has edge from n to m \\B 4
@@ -33,8 +35,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                     \\In}
                 \\In}
                 return \\B 5a
-                \\Expl{ The whole graph has been
-                        explored and all shortest paths have been found.
+                \\Expl{ The shortest path to every node connected to s has been found.
                         If we were searching for an end node we have failed
                         and some indication of this should be returned.
                 \\Expl}

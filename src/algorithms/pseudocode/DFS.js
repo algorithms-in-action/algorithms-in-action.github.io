@@ -21,8 +21,9 @@ export default parse(`
             \\Expl}
             \\In{
                 return \\B 3
-                \\Expl{ If there may be several end nodes we may want to
+                \\Expl{ If there can be several end nodes we may want to
                        return which one is found as well as the Parent array.
+                       Here we highlight the path found in the Parent array.
                 \\Expl}
             \\In}
             for each node m neighbouring n // G has edge from n to m \\B 4
@@ -31,8 +32,8 @@ export default parse(`
             \\In}
         \\In}
         return \\B 5
-        \\Expl{ The whole component of the graph connected to s has been
-                explored. If we were searching for an end node we have failed
+        \\Expl{ A path to every node connected to s has been found.
+                If we were searching for an end node we have failed
                 and some indication of this should be returned.
         \\Expl}
     \\In}
@@ -66,8 +67,8 @@ then have to deal with "special" cases.
             if Nodes is empty // need to check this before popping a node \\B 11
             \\In{
                 return \\B 12
-                \\Expl{ The whole component of the graph connected to s has been
-                    explored. If we were searching for an end node we have failed
+                \\Expl{ A path to every node connected to s has been found.
+                    If we were searching for an end node we have failed
                     and some indication of this should be returned.
                 \\Expl}
             \\In}

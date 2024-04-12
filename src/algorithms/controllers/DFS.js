@@ -1,6 +1,17 @@
-// XXX add support for multiple end nodes
+// XXX add support for multiple end nodes?
+// XXX see README_graph_search
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+
+// OMG, colors for array and graph require different types and are
+// inconsistent!
+// XXX not sure how this interracts with color perception options -
+// doesnt seem to work like this
+// XXX should do similar for edge colors?
+const FRONTIER_COLOR_A = '0';  // Blue
+const FRONTIER_COLOR_G = 4;  // Blue
+const FINALISED_COLOR_A = '1'; // Green
+const FINALISED_COLOR_G = 1; // Green
 
 export default {
 
@@ -96,8 +107,7 @@ export default {
         // Nodes <- stack containing just s B8
         //The real stack
         const Nodes = [s];  
-        displayedStack = [];
-        displayedStack.push(s+1); 
+        displayedStack = Nodes.toReversed();
         explored[s] = true;
         chunker.add(
           8,
@@ -126,11 +136,33 @@ export default {
         while (Nodes.length > 0) {
             chunker.add(
               2,
-              (vis, x, y, z) => {
+              (vis, c_n, y, z, c_visited, c_explored) => {
+                // removes m if it exists; need to redo colors
+                // for green nodes:(
+                vis.array.assignVariable('m', 2, undefined); // removes m if there
+                //highlight all nodes explored in blue 
+                //
+                for (let i = 0; i < c_explored.length; i ++){
+                  if(c_explored[i] == true){
+                    vis.array.select(0,i + 1);
+                    
+                  }
+                }
+                //highlight all finalized nodes in green
+                for(let i = 0; i < c_visited.length; i++)
+                { 
+                  if(c_visited[i] == true)
+                  { 
+                    //vis.array.deselect(0, i + 1);
+                    vis.array.select(0, i + 1, 0, i + 1, '1');
+                  }
+                }  
+
+
                 // remove the highlight between n
                 // and the last visited neighbor
-                if((x != null) && (y != null)){
-                  vis.graph.removeEdgeColor(x, y);  
+                if((c_n != null) && (y != null)){
+                  vis.graph.removeEdgeColor(c_n, y);  
                   // recolor its edge connecting to its parent
                   if(z[y] != null){
                     vis.graph.removeEdgeColor(z[y], y);
@@ -147,37 +179,34 @@ export default {
                     vis.graph.colorEdge(i, y, 3);
                   }
                 }
-                
-
-
               },
-              [n, lastNeighbor, parent]
+              [n, lastNeighbor, parent, visited, explored]
               
               );
             // n <- pop(Nodes) B9
             n = Nodes.pop();  
-            displayedStack.pop();
+            displayedStack = Nodes.toReversed();
             chunker.add(
               9,
-              (vis, x, y, z, a, b) => { 
+              (vis, x, y, c_explored, c_visited, c_n) => {
                 vis.array.set(x, 'DFS'); 
                 
                 //add a string "n" below the currently popped out node
-                vis.array.assignVariable('n', 2, b + 1); 
-                
+                vis.array.assignVariable('n', 2, c_n + 1); 
+
                 //highlight all nodes explored in blue 
                 //
-                for (let i = 0; i < z.length; i ++){
-                  if(z[i] == true){
+                for (let i = 0; i < c_explored.length; i ++){
+                  if(c_explored[i] == true){
                     vis.array.select(0,i + 1);
                     
                   }
                 }
 
                 //highlight all finalized nodes in green
-                for(let i = 0; i < a.length; i++)
+                for(let i = 0; i < c_visited.length; i++)
                 { 
-                  if(a[i] == true)
+                  if(c_visited[i] == true)
                   { 
                     //vis.array.deselect(0, i + 1);
                     vis.array.select(0, i + 1, 0, i + 1, '1');
@@ -194,8 +223,8 @@ export default {
 
 
             // While Finalised[n] B10 
+            chunker.add(10);
             while (visited[n]) { 
-                chunker.add(10);
 
                 chunker.add(11);
                 // If Node is empty B11
@@ -203,12 +232,36 @@ export default {
                     // Return B12
                     chunker.add(
                       12,
-                    ); 
+                      (vis, x, y, z, a, b) => { 
+                        //remove the orange highlight from the last neighbour
+                        // not needed??
+                        if (y != null)
+                        {
+                          vis.graph.removeEdgeColor(y, x); 
+          
+                          // recolor in red if it has a parent
+                          if(z[y] != null) 
+                          {
+                            vis.graph.removeEdgeColor(z[y], y);
+                            vis.graph.colorEdge(z[y], y , 3);
+                          } 
+    
+                          // recolor in red if it has a child
+                          for(let i = 0; i < z.length; i ++){
+                            if (z[i] == y){
+                              vis.graph.removeEdgeColor(i, y);
+                              vis.graph.colorEdge(i, y, 3);
+                            }
+                          }
+                        } 
+                      },
+                      [n, lastNeighbor, parent, start, end]
+                    );
                     return;
                 }
                 // n <- pop(Nodes) B13
                 n = Nodes.pop();  
-                displayedStack.pop(); 
+                displayedStack = Nodes.toReversed();
                 chunker.add(
                   13,
                   (vis, x, y, z, a, b) => { 
@@ -292,10 +345,56 @@ export default {
               15  
             );
             if(n == end)
+              // End node found!
             { 
               chunker.add(
                 3,
-              ); 
+                (vis, x, y, c_parent, a, c_end) => { 
+                  //remove the orange highlight from the last neighbour
+                  // not needed??
+                  if (y != null)
+                  {
+                    vis.graph.removeEdgeColor(y, x); 
+          
+                    // recolor in red if it has a parent
+                    if(c_parent[y] != null) 
+                    {
+                      vis.graph.removeEdgeColor(c_parent[y], y);
+                      vis.graph.colorEdge(c_parent[y], y , 3);
+                    } 
+    
+                    // recolor in red if it has a child
+                    for(let i = 0; i < c_parent.length; i ++){
+                      if (c_parent[i] == y){
+                        vis.graph.removeEdgeColor(i, y);
+                        vis.graph.colorEdge(i, y, 3);
+                      }
+                    }
+
+                  } 
+
+                  // remove n, add start and end
+                  // vis.array.set(x, 'BFS');
+                  vis.array.assignVariable('n', 2, undefined);
+                  vis.array.assignVariable('end', 2, c_end + 1);
+                  vis.array.assignVariable('start', 2, s + 1);
+                  // remove color from node numbers
+                  for(let i = 0; i < c_parent.length; i++){
+                    vis.array.deselect(0, i);
+                  }
+                  // color the path from the start node to the end node
+                  let current = c_end;
+                  // + color parent array
+                  while((current != a) && (c_parent[current] != null))
+                  {
+                    vis.array.select(1, current + 1, 1, current + 1, FINALISED_COLOR_A);
+                    vis.graph.removeEdgeColor(current, c_parent[current]);
+                    vis.graph.colorEdge(current, c_parent[current], 1);
+                    current = c_parent[current];
+                  }
+                },
+                [n, lastNeighbor, parent, start, end]
+              );
               // return B3
               return;
             }
@@ -310,7 +409,7 @@ export default {
 
                     chunker.add(
                       4,
-                      (vis, x, y, z, a) => {
+                      (vis, c_n, c_m, z, c_parent, c_visited, c_explored) => {
                         //remove the color on Edge connecting the last neighbor 
                         
                         
@@ -318,18 +417,18 @@ export default {
                         //remove the orange highlight from the edge connecting the last neighbour
                         if (z != null)
                         {
-                          vis.graph.removeEdgeColor(x, z); 
+                          vis.graph.removeEdgeColor(c_n, z); 
 
                           // recolor in red if it has a parent
-                          if(a[z] != null) 
+                          if(c_parent[z] != null) 
                           {
-                            vis.graph.removeEdgeColor(a[z], z);
-                            vis.graph.colorEdge(a[z], z, 3);
+                            vis.graph.removeEdgeColor(c_parent[z], z);
+                            vis.graph.colorEdge(c_parent[z], z, 3);
                           }
 
                           // recolor in red if it has a child
-                          for(let i = 0; i < a.length; i ++){
-                            if (a[i] == z){
+                          for(let i = 0; i < c_parent.length; i ++){
+                            if (c_parent[i] == z){
                               vis.graph.removeEdgeColor(i, z);
                               vis.graph.colorEdge(i, z, 3);
                             }
@@ -338,11 +437,31 @@ export default {
                         } 
 
                         //highlight the edge connecting the neighbor
-                        vis.graph.removeEdgeColor(x,y);
-                        vis.graph.colorEdge(x, y, 2);
+                        vis.graph.removeEdgeColor(c_n,c_m);
+                        vis.graph.colorEdge(c_n, c_m, 2);
+
+                        // add var m; need to color elements again
+                        vis.array.assignVariable('m', 2, c_m + 1);
+                        //highlight all nodes explored in blue 
+                        //
+                        for (let i = 0; i < c_explored.length; i ++){
+                          if(c_explored[i] == true){
+                            vis.array.select(0,i + 1);
+                            
+                          }
+                        }
+                        //highlight all finalized nodes in green
+                        for(let i = 0; i < c_visited.length; i++)
+                        { 
+                          if(c_visited[i] == true)
+                          { 
+                            //vis.array.deselect(0, i + 1);
+                            vis.array.select(0, i + 1, 0, i + 1, '1');
+                          }
+                        }  
 
                       },
-                      [n, m, lastNeighbor, parent]
+                      [n, m, lastNeighbor, parent, visited, explored]
                     ); 
 
                     lastNeighbor = m;
@@ -358,10 +477,11 @@ export default {
                       displayedParent[m + 1] = n + 1;   
                       chunker.add(
                         17,
-                        (vis, x, y, z, a, b, c, d) => { 
+                        (vis, x, y, z, a, b, c_m, d) => { 
                           vis.array.set(x, 'DFS');
                           //add a string "n" below the currently popped out node
                           vis.array.assignVariable('n', 2, b + 1); 
+                          vis.array.assignVariable('m', 2, c_m + 1);
           
                           //highlight all nodes explored in blue in the array
                           //
@@ -382,11 +502,11 @@ export default {
                           }  
                           
                           //remove the highlight from this neighbour to its last parent
-                          vis.graph.removeEdgeColor(d, c);
+                          vis.graph.removeEdgeColor(d, c_m);
 
                           //highlight the edge from n to this neighbor in red
-                          vis.graph.removeEdgeColor(b, c);
-                          vis.graph.colorEdge(b, c, 3);
+                          vis.graph.removeEdgeColor(b, c_m);
+                          vis.graph.colorEdge(b, c_m, 3);
                           
                           
                           vis.array.setList(y); 
@@ -400,7 +520,7 @@ export default {
                         // Parent[m] = n;
                         // push(Nodes,m) B18
                         Nodes.push(m); 
-                        displayedStack.push(m + 1);  
+                        displayedStack = Nodes.toReversed();
                         explored[m] = true;
                         chunker.add(
                           18,
@@ -424,6 +544,34 @@ export default {
                 }
             }
         }
+        //return B5
+        chunker.add(
+          5,
+          (vis, x, y, z, a, b) => { 
+            //remove the orange highlight from the last neighbour
+            // not needed??
+            if (y != null)
+            {
+              vis.graph.removeEdgeColor(y, x); 
+    
+              // recolor in red if it has a parent
+              if(z[y] != null) 
+              {
+                vis.graph.removeEdgeColor(z[y], y);
+                vis.graph.colorEdge(z[y], y , 3);
+              } 
+    
+              // recolor in red if it has a child
+              for(let i = 0; i < z.length; i ++){
+                if (z[i] == y){
+                  vis.graph.removeEdgeColor(i, y);
+                  vis.graph.colorEdge(i, y, 3);
+                }
+              }
+            } 
+          },
+          [n, lastNeighbor, parent, start, end]
+        );
     };
     /*
     for (let i = 0; i < numVertices; i++) {
@@ -435,49 +583,6 @@ export default {
 
     dfs(start); 
    
-    //return B5
-    chunker.add(
-      5,
-      (vis, x, y, z, a, b) => { 
-        //remove the orange highlight from the last neighbour
-        if (y != null)
-        {
-          vis.graph.removeEdgeColor(y, x); 
-
-          // recolor in red if it has a parent
-          if(z[y] != null) 
-          {
-            vis.graph.removeEdgeColor(z[y], y);
-            vis.graph.colorEdge(z[y], y , 3);
-          } 
-
-          // recolor in red if it has a child
-          for(let i = 0; i < z.length; i ++){
-            if (z[i] == y){
-              vis.graph.removeEdgeColor(i, y);
-              vis.graph.colorEdge(i, y, 3);
-            }
-          }
-        } 
-        // color the path from the start node to the end node
-        
-        /*vis.graph.removeEdgeColor(a, b);
-        vis.graph.colorEdge(a, b, 4); */
-        
-        let current = b;
-        while((current != a) && (z[current] != null))
-        { 
-
-          vis.graph.removeEdgeColor(current, z[current]);
-          vis.graph.colorEdge(current, z[current], 1); 
-          current = z[current];
-        }
-
-
-      },
-      [n, lastNeighbor, parent, start, end]
-      
-    ) 
   }
 
   

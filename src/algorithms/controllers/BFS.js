@@ -1,7 +1,17 @@
-// XXX add support for multiple end nodes
+// XXX add support for multiple end nodes?
 // XXX see README_graph_search
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+
+// OMG, colors for array and graph require different types and are
+// inconsistent!
+// XXX not sure how this interracts with color perception options -
+// doesnt seem to work like this
+// XXX should do similar for edge colors?
+const FRONTIER_COLOR_A = '0';  // Blue
+const FRONTIER_COLOR_G = 4;  // Blue
+const FINALISED_COLOR_A = '1'; // Green
+const FINALISED_COLOR_G = 1; // Green
 
 export default {
   initVisualisers() {
@@ -128,7 +138,7 @@ export default {
             
             // select start node in blue
             vis.array.select(0,b + 1);
-            vis.graph.colorNode(b, 4);
+            vis.graph.colorNode(b, FRONTIER_COLOR_G);
             },
             [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s, Nodes]
         );       
@@ -162,12 +172,10 @@ export default {
               {
                 if(c_visited[i] == true)
                   if(!c_Nodes.includes(i)) {
-                    vis.array.select(0, i + 1, 0, i + 1, '1');
-                    // console.log(['Green', i+1]);
+                    vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
                   } else {
                     // vis.array.deselect(0, i + 1);
-                    vis.array.select(0, i + 1);
-                    // console.log(['Blue', i+1]);
+                    vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
                   }
               }
 
@@ -209,8 +217,7 @@ export default {
               // highlight all finalised nodes in blue
               for (let i = 0; i < a.length; i ++){
                 if(a[i] == true && Nodes.includes(i)){
-                  vis.array.select(0,i + 1);
-                                console.log(['Blue?', i+1]);
+                  vis.array.select(0,i + 1, 0, i + 1, FRONTIER_COLOR_A);
                   // vis.array.select(0,i + 1, 0, i + 1, '1');
                   
                 }
@@ -221,10 +228,9 @@ export default {
               { 
                 if(b[i] == true && !Nodes.includes(i))
                 { 
-                                console.log(['Green?', i+1]);
-                  vis.array.select(0, i + 1, 0, i + 1, '1');
+                  vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
                   vis.graph.removeNodeColor(i);  
-                  vis.graph.colorNode(i, 1);
+                  vis.graph.colorNode(i, FINALISED_COLOR_G);
                 }
               }
               
@@ -240,13 +246,10 @@ export default {
           );
           if(n == end)
           { 
-            chunker.add(
-              3,
-            ); 
             // return B3
             chunker.add(
               3,
-              (vis, x, y, z, a, b) => { 
+              (vis, x, y, c_parent, a, c_end) => { 
                 //remove the orange highlight from the last neighbour
                 // XXX not needed?
                 if (y != null)
@@ -254,27 +257,38 @@ export default {
                   vis.graph.removeEdgeColor(y, x); 
         
                   // recolor in red if it has a parent
-                  if(z[y] != null) 
+                  if(c_parent[y] != null) 
                   {
-                    vis.graph.removeEdgeColor(z[y], y);
-                    vis.graph.colorEdge(z[y], y , 3);
+                    vis.graph.removeEdgeColor(c_parent[y], y);
+                    vis.graph.colorEdge(c_parent[y], y , 3);
                   } 
         
                   // recolor in red if it has a child
-                  for(let i = 0; i < z.length; i ++){
-                    if (z[i] == y){
+                  for(let i = 0; i < c_parent.length; i ++){
+                    if (c_parent[i] == y){
                       vis.graph.removeEdgeColor(i, y);
                       vis.graph.colorEdge(i, y, 3);
                     }
                   }
                 } 
+                // remove n, add start and end
+                // vis.array.set(x, 'BFS');
+                vis.array.assignVariable('n', 2, undefined);
+                vis.array.assignVariable('end', 2, c_end + 1);
+                vis.array.assignVariable('start', 2, s + 1);
+                // remove color from node numbers
+                for(let i = 0; i < c_parent.length; i++){
+                  vis.array.deselect(0, i);
+                }
                 // color the path from the start node to the end node
-                let current = b;
-                while((current != a) && (z[current] != null))
+                let current = c_end;
+                // + color parent array
+                while((current != a) && (c_parent[current] != null))
                 { 
-                  vis.graph.removeEdgeColor(current, z[current]);
-                  vis.graph.colorEdge(current, z[current], 1); 
-                  current = z[current];
+                  vis.array.select(1, current + 1, 1, current + 1, FINALISED_COLOR_A);
+                  vis.graph.removeEdgeColor(current, c_parent[current]);
+                  vis.graph.colorEdge(current, c_parent[current], 1); 
+                  current = c_parent[current];
                 }
               },
               [n, lastNeighbor, parent, start, end]
@@ -319,6 +333,7 @@ export default {
 
                   //highlight the edge connecting the neighbor
                   vis.graph.removeEdgeColor(c_n,c_m);
+                  // color 2 = orange doesn't show up well - 4 = green better?
                   vis.graph.colorEdge(c_n, c_m, 2);
 
                   // add var m; need to color elements again:(
@@ -329,12 +344,10 @@ export default {
                   {
                     if(c_visited[i] == true)
                       if(!c_Nodes.includes(i)) {
-                        vis.array.select(0, i + 1, 0, i + 1, '1');
-                        // console.log(['Green', i+1]);
+                        vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
                       } else {
                         // vis.array.deselect(0, i + 1);
-                        vis.array.select(0, i + 1);
-                        // console.log(['Blue', i+1]);
+                        vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
                       }
                   }
                 },
@@ -371,19 +384,17 @@ export default {
                           {
                             if(c_visited[i] == true)
                               if(!(c_Nodes.includes(i) || i === c_m)) {
-                                vis.array.select(0, i + 1, 0, i + 1, '1');
-                                // console.log(['Green', i+1]);
+                                vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
                               } else {
                                 // vis.array.deselect(0, i + 1);
-                                vis.array.select(0, i + 1);
-                                // console.log(['Blue', i+1]);
+                                vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
                               }
                           }
                           vis.array.setList(y);
 
                           // color the graph node in blue as seen
                           vis.graph.removeNodeColor(c_m);
-                          vis.graph.colorNode(c_m, 4);
+                          vis.graph.colorNode(c_m, FRONTIER_COLOR_G);
                       },
 
                       [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, Nodes]
@@ -401,21 +412,18 @@ export default {
                           vis.array.assignVariable('n', 2, b + 1);
                           vis.array.assignVariable('m', 2, c + 1);
 
-
-                          console.log(z);
-                          console.log(c);
+                          // console.log(z);
+                          // console.log(c);
                           // highlight all nodes explored in green in the array
                           // and all other seen nodes in blue in the array
                           for(let i = 0; i < a.length; i++)
                           {
                             if(z[i] == true || i === c)
                               if(i !==c && !Nodes.includes(i)) {
-                                vis.array.select(0, i + 1, 0, i + 1, '1');
-                                console.log(['Green', i+1]);
+                                vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
                               } else {
                                 // vis.array.deselect(0, i + 1);
-                                vis.array.select(0, i + 1);
-                                console.log(['Blue', i+1]);
+                                vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
                               }
                           }
                           vis.array.setList(y);
@@ -448,7 +456,7 @@ export default {
                           // if it has not been seen
                           if(y[z] == false && Nodes.includes(z)){
                             vis.array.deselect(0, z + 1);
-                            vis.array.select(0, z + 1, 0, z + 1, '1'); 
+                            vis.array.select(0, z + 1, 0, z + 1, FINALISED_COLOR_A); 
                             //vis.graph.removeNodeColor(z);
                             //vis.graph.colorNode(z, 4);
                           }
