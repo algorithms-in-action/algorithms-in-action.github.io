@@ -93,11 +93,14 @@ class GraphTracer extends Tracer {
       if(maxCoord < (i + 1) * 10)
       {
         const radiusIncrease = (i - 1) * 6
-        this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius + radiusIncrease;
+        // XXX makes graph nodes rather fat compared with tree nodes
+        // with default values so I've deleted it for now
+        // this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius + radiusIncrease;
         return;
       }
     }
 
+    // XXX
     // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
     // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
   }

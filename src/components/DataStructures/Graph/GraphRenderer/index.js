@@ -125,14 +125,14 @@ class GraphRenderer extends Renderer {
   }
 
   /**
-   * Add scales to the axis
+   * Add scale tick marks to the axis
    */
   computeScales(
     min,
     max,
     center,
     stepSize = 30,
-    stepHeight = 5,
+    stepHeight = 15, // size of scale mark tick on axes
     increment = 1
   ) {
     const scales = [];
@@ -273,14 +273,14 @@ class GraphRenderer extends Renderer {
     const axisArrowX = this.computeArrows(
       'x',
       { x: axisEndPoint, y: axisCenter.y },
-      8,
-      8
+      18,
+      18
     ); // list containing fragments to form arrow on x
     const axisArrowY = this.computeArrows(
       'y',
       { x: axisCenter.x, y: axisEndPoint },
-      8,
-      8
+      18,
+      18
     ); // list containing fragments to form arrow on y
 
     const labelPadding = 20;
@@ -383,7 +383,7 @@ class GraphRenderer extends Renderer {
                 />
                 <text
                   x={scale.x1}
-                  y={originCoords.y + 20}
+                  y={originCoords.y + 30}
                   textAnchor="middle"
                   className={styles.axisLabel}
                 >
@@ -403,7 +403,7 @@ class GraphRenderer extends Renderer {
                   className={styles.axis}
                 />
                 <text
-                  x={originCoords.x - 15}
+                  x={originCoords.x - 25}
                   y={scale.y1 + 6}
                   textAnchor="middle"
                   className={styles.axisLabel}
