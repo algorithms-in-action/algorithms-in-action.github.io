@@ -2,23 +2,7 @@
 // XXX see README_graph_search
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-
-// Colors for array, graph nodes, graph edges
-// OMG, colors for array and graph require different types and are
-// inconsistent!
-// XXX not sure how this interracts with color perception options -
-// doesnt seem to work like this
-// XXX should do similar for edge colors?
-const FRONTIER_COLOR_A = '0';  // Blue
-const FRONTIER_COLOR_N = 4;  // Blue
-const FRONTIER_COLOR_E = 4;  // Blue
-const N_M_COLOR_E = 2; // Orange - edge between n and m
-const FINALISED_COLOR_A = '1'; // Green
-const FINALISED_COLOR_N = 1; // Green
-const FINALISED_COLOR_E = 3; // Red
-// if we find a path to end node:
-const SUCCESS_COLOR_A = '1'; // Green
-const SUCCESS_COLOR_E = 1; // Green
+import {colors} from './graphSearchColours';
 
 export default {
   initVisualisers() {
@@ -31,8 +15,6 @@ export default {
         instance: new Array2DTracer('array', null, 'Parent array, Seen array & Queue'),
         order: 1,
       }, 
-
-
     };
   },
 
@@ -145,7 +127,7 @@ export default {
             
             // select start node in blue
             vis.array.select(0,b + 1);
-            vis.graph.colorNode(b, FRONTIER_COLOR_N);
+            vis.graph.colorNode(b, colors.FRONTIER_N);
             },
             [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s, Nodes]
         );       
@@ -166,12 +148,17 @@ export default {
         ); 
 
         // while Nodes not empty B2
-        while (Nodes.length > 0) {
+        // XXX ?nice to have while true and break out of the
+        // loop after the chunk (conditionally) so when the loop exits
+        // we have an extra chunk at the start of the loop
+        // while (Nodes.length > 0) {
+        /* eslint-disable no-constant-condition */
+        while (true) {
           chunker.add(
             2,
             (vis, c_n, c_lastNei, c_parent, c_visited, c_Nodes) => {
               // removes m if it exists; need to redo node selection etc
-              // for green nodes:(
+              // for green nodes:
               vis.array.assignVariable('m', 2, undefined); // removes m if there
               // highlight all nodes explored in green in the array
               // and all other seen nodes in blue in the array
@@ -179,10 +166,10 @@ export default {
               {
                 if(c_visited[i] == true)
                   if(!c_Nodes.includes(i)) {
-                    vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
+                    vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                   } else {
                     // vis.array.deselect(0, i + 1);
-                    vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
+                    vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
                   }
               }
 
@@ -193,24 +180,17 @@ export default {
                 vis.graph.removeEdgeColor(c_n, c_lastNei);  
                   let prevColor;
                   if (c_Nodes.includes(c_lastNei))
-                    prevColor = FRONTIER_COLOR_E;
+                    prevColor = colors.FRONTIER_E;
                   else
-                    prevColor = FINALISED_COLOR_E;
+                    prevColor = colors.FINALISED_E;
                   vis.graph.removeEdgeColor(c_n, c_lastNei);
                   vis.graph.colorEdge(c_n, c_lastNei, prevColor);
               } 
-
-              // // recolor in red if it has a child
-              // for(let i = 0; i < c_parent.length; i ++){
-                // if (c_parent[i] == c_lastNei){
-                  // vis.graph.removeEdgeColor(i, c_lastNei);
-                  // vis.graph.colorEdge(i, c_lastNei, FRONTIER_COLOR_E);
-                // }
-              // }
             },
             [n, lastNeighbor, parent, visited, Nodes]
-            
           );
+          if (!(Nodes.length > 0))
+            break;
 
           // n <- dequeue(Nodes) B10
           n = Nodes.shift();  
@@ -226,7 +206,7 @@ export default {
               // highlight all frontier nodes
               for (let i = 0; i < a.length; i ++){
                 if(a[i] == true && Nodes.includes(i)){
-                  vis.array.select(0,i + 1, 0, i + 1, FRONTIER_COLOR_A);
+                  vis.array.select(0,i + 1, 0, i + 1, colors.FRONTIER_A);
                   // vis.array.select(0,i + 1, 0, i + 1, '1');
                   
                 }
@@ -237,23 +217,23 @@ export default {
               { 
                 if(b[i] == true && !Nodes.includes(i))
                 { 
-                  vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
+                  vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                   vis.graph.removeNodeColor(i);  
-                  vis.graph.colorNode(i, FINALISED_COLOR_N);
+                  vis.graph.colorNode(i, colors.FINALISED_N);
                 }
               }
 
               // finalise edge color to n from parent
               if (c_parent[c_n] !== null) {
                   vis.graph.removeEdgeColor(c_n, c_parent[c_n]);
-                vis.graph.colorEdge(c_n, c_parent[c_n], FINALISED_COLOR_E);
+                vis.graph.colorEdge(c_n, c_parent[c_n], colors.FINALISED_E);
               }
               
               //redisplay queue
               vis.array.setList(z);
             },
             [[displayedNodes, displayedParent, displayedVisited], n,
-displayedQueue, explored, visited, parent, Nodes]
+              displayedQueue, explored, visited, parent, Nodes]
           ); 
 
           // If is_end_node(n) B11  
@@ -276,14 +256,14 @@ displayedQueue, explored, visited, parent, Nodes]
                   if(c_parent[y] != null) 
                   {
                     vis.graph.removeEdgeColor(c_parent[y], y);
-                    vis.graph.colorEdge(c_parent[y], y , FRONTIER_COLOR_E);
+                    vis.graph.colorEdge(c_parent[y], y , colors.FRONTIER_E);
                   } 
         
                   // recolor in red if it has a child
                   for(let i = 0; i < c_parent.length; i ++){
                     if (c_parent[i] == y){
                       vis.graph.removeEdgeColor(i, y);
-                      vis.graph.colorEdge(i, y, FRONTIER_COLOR_E);
+                      vis.graph.colorEdge(i, y, colors.FRONTIER_E);
                     }
                   }
                 } 
@@ -301,9 +281,9 @@ displayedQueue, explored, visited, parent, Nodes]
                 // + color parent array
                 while((current != a) && (c_parent[current] != null))
                 { 
-                  vis.array.select(1, current + 1, 1, current + 1, SUCCESS_COLOR_A);
+                  vis.array.select(1, current + 1, 1, current + 1, colors.SUCCESS_A);
                   vis.graph.removeEdgeColor(current, c_parent[current]);
-                  vis.graph.colorEdge(current, c_parent[current], SUCCESS_COLOR_E); 
+                  vis.graph.colorEdge(current, c_parent[current], colors.SUCCESS_E); 
                   current = c_parent[current];
                 }
               },
@@ -334,27 +314,17 @@ displayedQueue, explored, visited, parent, Nodes]
                     // recolor if node has a parent or is start
                     if(c_parent[c_lastNei] != null || c_lastNei == start)  {
                       vis.graph.removeEdgeColor(c_n, c_lastNei);
-                      // XXX  if not just added or previously FINALISED_COLOR_E
                       if (c_parent[c_n] === c_lastNei)
-                        vis.graph.colorEdge(c_n, c_lastNei, FINALISED_COLOR_E);
+                        vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
                       else if (c_parent[c_lastNei] === c_n)
-                        vis.graph.colorEdge(c_n, c_lastNei, FRONTIER_COLOR_E);
+                        vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
                     }
-
-                    // recolor in red if it has a child
-                    // for(let i = 0; i < c_parent.length; i ++){
-                      // if (c_parent[i] == c_lastNei){
-                        // vis.graph.removeEdgeColor(i, c_lastNei);
-                        // vis.graph.colorEdge(i, c_lastNei, FRONTIER_COLOR_E);
-                      // }
-                    // }
-          
                   } 
 
                   //highlight the edge connecting the neighbor
                   vis.graph.removeEdgeColor(c_n,c_m);
                   // color 2 = orange doesn't show up well - 4 = green better?
-                  vis.graph.colorEdge(c_n, c_m, N_M_COLOR_E);
+                  vis.graph.colorEdge(c_n, c_m, colors.N_M_E);
 
                   // add var m; need to color elements again
                   vis.array.assignVariable('m', 2, c_m + 1);
@@ -364,10 +334,10 @@ displayedQueue, explored, visited, parent, Nodes]
                   {
                     if(c_visited[i] == true)
                       if(!c_Nodes.includes(i)) {
-                        vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
+                        vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                       } else {
                         // vis.array.deselect(0, i + 1);
-                        vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
+                        vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
                       }
                   }
                 },
@@ -404,17 +374,17 @@ displayedQueue, explored, visited, parent, Nodes]
                           {
                             if(c_visited[i] == true)
                               if(!(c_Nodes.includes(i) || i === c_m)) {
-                                vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
+                                vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                               } else {
                                 // vis.array.deselect(0, i + 1);
-                                vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
+                                vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
                               }
                           }
                           vis.array.setList(y);
 
                           // color the graph node in blue as seen
                           vis.graph.removeNodeColor(c_m);
-                          vis.graph.colorNode(c_m, FRONTIER_COLOR_N);
+                          vis.graph.colorNode(c_m, colors.FRONTIER_N);
                       },
 
                       [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, n, m, Nodes]
@@ -440,10 +410,10 @@ displayedQueue, explored, visited, parent, Nodes]
                           {
                             if(z[i] == true || i === c)
                               if(i !==c && !Nodes.includes(i)) {
-                                vis.array.select(0, i + 1, 0, i + 1, FINALISED_COLOR_A);
+                                vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                               } else {
                                 // vis.array.deselect(0, i + 1);
-                                vis.array.select(0, i + 1, 0, i + 1, FRONTIER_COLOR_A);
+                                vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
                               }
                           }
                           vis.array.setList(y);
@@ -453,7 +423,7 @@ displayedQueue, explored, visited, parent, Nodes]
 
                         //highlight the edge from n to this neighbor in red
                         vis.graph.removeEdgeColor(b, c);
-                        vis.graph.colorEdge(b, c, FRONTIER_COLOR_E);
+                        vis.graph.colorEdge(b, c, colors.FRONTIER_E);
                         
                         
                         // vis.array.set(x, 'BFS');
@@ -476,7 +446,7 @@ displayedQueue, explored, visited, parent, Nodes]
                           // if it has not been seen
                           if(y[z] == false && Nodes.includes(z)){
                             vis.array.deselect(0, z + 1);
-                            vis.array.select(0, z + 1, 0, z + 1, FINALISED_COLOR_A); 
+                            vis.array.select(0, z + 1, 0, z + 1, colors.FINALISED_A); 
                             //vis.graph.removeNodeColor(z);
                             //vis.graph.colorNode(z, 4);
                           }
@@ -490,50 +460,48 @@ displayedQueue, explored, visited, parent, Nodes]
         }
         // no path found
         //return B5
-        chunker.add(
-          5,
-          (vis, x, y, z, a, b) => { 
-            //remove the orange highlight from the last neighbour
-            // XXX not needed?
-            if (y != null)
-            {
-              vis.graph.removeEdgeColor(y, x); 
-    
-              // recolor in red if it has a parent
-              if(z[y] != null) 
+          chunker.add(
+            5,
+            (vis, c_n, c_lastNei, c_parent, c_visited, c_Nodes) => {
+              // We don't actually need to do anything here if we have a
+              // chunk before breaking out of the outer while loop, but
+              // it does no harm and we need to fix one edge color at
+              // least if we don't use the break coding.
+              //
+              // removes m if it exists; need to redo node selection etc
+              // for green nodes:
+              vis.array.assignVariable('m', 2, undefined); // removes m if there
+              // highlight all nodes explored in green in the array
+              // and all other seen nodes in blue in the array
+              for(let i = 0; i < c_visited.length; i++)
               {
-                vis.graph.removeEdgeColor(z[y], y);
-                vis.graph.colorEdge(z[y], y , FRONTIER_COLOR_E);
-              } 
-    
-              // recolor in red if it has a child
-              for(let i = 0; i < z.length; i ++){
-                if (z[i] == y){
-                  vis.graph.removeEdgeColor(i, y);
-                  vis.graph.colorEdge(i, y, FRONTIER_COLOR_E);
-                }
+                if(c_visited[i] == true)
+                  if(!c_Nodes.includes(i)) {
+                    vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
+                  } else {
+                    // vis.array.deselect(0, i + 1);
+                    vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
+                  }
               }
-            } 
-          },
-          [n, lastNeighbor, parent, start, end]
 
-        ) ;
+              // remove the highlight between n
+              // and the last visited neighbor
+              if((c_n != null) && (c_lastNei != null)){
+
+                vis.graph.removeEdgeColor(c_n, c_lastNei);  
+                  let prevColor;
+                  if (c_Nodes.includes(c_lastNei))
+                    prevColor = colors.FRONTIER_E;
+                  else
+                    prevColor = colors.FINALISED_E;
+                  vis.graph.removeEdgeColor(c_n, c_lastNei);
+                  vis.graph.colorEdge(c_n, c_lastNei, prevColor);
+              } 
+            },
+            [n, lastNeighbor, parent, visited, Nodes]
+          );
     }; // End of bfs    
 
-
     bfs(start);
-
   }
-
 };
-
-// green vis.array.select(0, i + 1, 0, i + 1, '1');
-// blue vis.array.select(0,i + 1);
-// red vis.array.select(0, i + 1, 0, i + 1, '4');
-//     for (let i = 0; i < numVertices; i++) { // For each vertex v
-//       if (!visited[i]) { // If v is not Seen
-//         bfs(i); // Call BFS starting from v
-//       }
-//     }
-//   }
-// };
