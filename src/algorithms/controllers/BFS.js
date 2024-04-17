@@ -121,15 +121,15 @@ export default {
 
         chunker.add(
           8,
-          (vis, x, y, z, a, b) => { 
+          (vis, x, y) => { 
             vis.array.set(x, 'BFS');
             vis.array.setList(y); 
             
             // select start node in blue
-            vis.array.select(0,b + 1);
-            vis.graph.colorNode(b, colors.FRONTIER_N);
+            vis.array.select(0, s + 1, 0, s + 1, colors.FRONTIER_A);
+            vis.graph.colorNode(s, colors.FRONTIER_N);
             },
-            [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, visited, s, Nodes]
+            [[displayedNodes, displayedParent, displayedVisited], displayedQueue]
         );       
 
         // Nodes <- queue containing just s B9
@@ -148,7 +148,7 @@ export default {
         ); 
 
         // while Nodes not empty B2
-        // XXX ?nice to have while true and break out of the
+        // ?nice to have while true and break out of the
         // loop after the chunk (conditionally) so when the loop exits
         // we have an extra chunk at the start of the loop
         // while (Nodes.length > 0) {
@@ -175,17 +175,16 @@ export default {
 
               // remove the highlight between n
               // and the last visited neighbor
-              if((c_n != null) && (c_lastNei != null)){
-
-                vis.graph.removeEdgeColor(c_n, c_lastNei);  
-                  let prevColor;
-                  if (c_Nodes.includes(c_lastNei))
-                    prevColor = colors.FRONTIER_E;
-                  else
-                    prevColor = colors.FINALISED_E;
+               if((c_n != null) && (c_lastNei != null)) {
                   vis.graph.removeEdgeColor(c_n, c_lastNei);
-                  vis.graph.colorEdge(c_n, c_lastNei, prevColor);
-              } 
+                  if((c_n != null) && (c_lastNei != null)){
+                    vis.graph.removeEdgeColor(c_n, c_lastNei);
+                    if (c_parent[c_lastNei] === c_n)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
+                    else if (c_parent[c_n] === c_lastNei)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
+                  }
+                } 
             },
             [n, lastNeighbor, parent, visited, Nodes]
           );
@@ -225,7 +224,7 @@ export default {
 
               // finalise edge color to n from parent
               if (c_parent[c_n] !== null) {
-                  vis.graph.removeEdgeColor(c_n, c_parent[c_n]);
+                vis.graph.removeEdgeColor(c_n, c_parent[c_n]);
                 vis.graph.colorEdge(c_n, c_parent[c_n], colors.FINALISED_E);
               }
               
@@ -302,23 +301,14 @@ export default {
               chunker.add(
                 4,
                 (vis, c_n, c_m, c_lastNei, c_parent, c_visited, c_Nodes) => {
-                  //remove the color on Edge connecting the last neighbor 
-                  
-                  
-
-                  //remove the orange highlight from the edge connecting the last neighbour
-                  if (c_lastNei != null)
-                  {
+                  // remove the highlight between n
+                  // and the last visited neighbor
+                  if((c_n != null) && (c_lastNei != null)) {
                     vis.graph.removeEdgeColor(c_n, c_lastNei); 
-
-                    // recolor if node has a parent or is start
-                    if(c_parent[c_lastNei] != null || c_lastNei == start)  {
-                      vis.graph.removeEdgeColor(c_n, c_lastNei);
-                      if (c_parent[c_n] === c_lastNei)
-                        vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
-                      else if (c_parent[c_lastNei] === c_n)
-                        vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
-                    }
+                    if (c_parent[c_n] === c_lastNei)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
+                    else if (c_parent[c_lastNei] === c_n)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
                   } 
 
                   //highlight the edge connecting the neighbor
@@ -486,17 +476,16 @@ export default {
 
               // remove the highlight between n
               // and the last visited neighbor
-              if((c_n != null) && (c_lastNei != null)){
-
-                vis.graph.removeEdgeColor(c_n, c_lastNei);  
-                  let prevColor;
-                  if (c_Nodes.includes(c_lastNei))
-                    prevColor = colors.FRONTIER_E;
-                  else
-                    prevColor = colors.FINALISED_E;
+               if((c_n != null) && (c_lastNei != null)) {
                   vis.graph.removeEdgeColor(c_n, c_lastNei);
-                  vis.graph.colorEdge(c_n, c_lastNei, prevColor);
-              } 
+                  if((c_n != null) && (c_lastNei != null)){
+                    vis.graph.removeEdgeColor(c_n, c_lastNei);
+                    if (c_parent[c_lastNei] === c_n)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
+                    else if (c_parent[c_n] === c_lastNei)
+                      vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
+                  }
+                } 
             },
             [n, lastNeighbor, parent, visited, Nodes]
           );
