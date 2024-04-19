@@ -162,8 +162,8 @@ class Array2DTracer extends Tracer {
       );
     }
 
-    // add variable to item if not undefined
-    if (idx !== undefined)
+    // add variable to item if not undefined or null
+    if (idx !== null && idx !== undefined)
        newData[row][idx].variables.push(v);
 
     // update this.data

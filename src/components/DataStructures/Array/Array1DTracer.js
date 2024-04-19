@@ -118,8 +118,9 @@ class Array1DTracer extends Array2DTracer {
       newData[0][y].variables = newVars;
     }
 
-    // add variable to item
-    newData[0][idx].variables.push(v);
+    // add variable to item if not undefined or null
+    if (idx !== null && idx !== undefined)
+      newData[0][idx].variables.push(v);
 
     // update this.data
     this.data = newData;
