@@ -1,5 +1,3 @@
-// XXX termination when there is no end node needs fixing
-// XXX add extra highlighting of code etc for UpdateNodes, like BFS
 // XXX add support for multiple end nodes
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
@@ -40,6 +38,14 @@ export default {
     const finalCosts = []; 
     const start = startNode - 1; 
     const end = endNodes[0] - 1;
+
+    // Display has table [nodes, parents, minCosts, finalCosts]
+    // and display code indexes into this table; we define the indices here
+    const NODE = 0;
+    const PAR = 1;
+    const MCOST = 2;
+    const FCOST = 3;
+    
     // Create a set to keep track of visited vertices
     const visited = new Set();  
     let miniIndex = start;  
@@ -89,12 +95,12 @@ export default {
 
       // highlight nodes as finalised/frontier in array
       for (let i = 0; i < numVertices; i++) {
-        if (c_nodes_etc[2][i+1] === null) {
-          vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
+        if (c_nodes_etc[MCOST][i+1] === null) {
+          vis.array.select(NODE, i + 1, NODE, i + 1, colors.FINALISED_A);
           vis.graph.removeNodeColor(i);
           vis.graph.colorNode(i, colors.FINALISED_N);
-        } else if (isNumber(c_nodes_etc[2][i+1])) {
-          vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
+        } else if (isNumber(c_nodes_etc[MCOST][i+1])) {
+          vis.array.select(NODE, i + 1, NODE, i + 1, colors.FRONTIER_A);
           vis.graph.removeNodeColor(i);
           vis.graph.colorNode(i, colors.FRONTIER_N);
         }
@@ -102,7 +108,7 @@ export default {
 
       // color Min in PQ
       if (c_Min != null)
-        vis.array.select(2, c_Min + 1, 2, c_Min + 1, colors.PQ_MIN_A);
+        vis.array.select(MCOST, c_Min + 1, MCOST, c_Min + 1, colors.PQ_MIN_A);
     }
 
     chunker.add(
@@ -159,20 +165,27 @@ export default {
     chunker.add(
       7,
       (vis, v, w) => {
+        // re-render table with new cost
         vis.array.set(v, algNameStr);
-        vis.array.assignVariable(minStr, 2, w + 1);
-        vis.array.select(2, w + 1, 2, w + 1, colors.PQ_MIN_A);
-
         // color start node in array + graph
-        vis.array.select(0, w + 1, 0, w + 1, colors.FRONTIER_A);
+        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
         vis.graph.colorNode(w, colors.FRONTIER_N);
-        
       },
       [[nodes, parents, minCosts, finalCosts], start]
     );
 
     // Nodes <- PQ containing all nodes 
-    chunker.add(8);
+    chunker.add(
+      8,
+      (vis, v, w) => {
+        // add min to display
+        vis.array.set(v, algNameStr);
+        vis.array.assignVariable(minStr, 2, w + 1);
+        vis.array.select(MCOST, w + 1, MCOST, w + 1, colors.PQ_MIN_A);
+        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
+      },
+      [[nodes, parents, minCosts, finalCosts], start]
+    );
 
     let currentVertex = null;
     // while Nodes not Empty 
@@ -187,35 +200,30 @@ export default {
         2,
         (vis, c_nodes_etc, c_miniIndex, c_last, c_prev, c_cV) => {
           refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
-          // visit1(x,y,2) highlights the edge xy,and nodes x and y
-          // in the 2nd color 
-          // leave1(x,y,2) removes the highlight on nodes x, y and 
-          // edge xy(placed by the visit1 function in the 2nd color)
+          
           if (c_last[0] != null) {
             vis.graph.removeEdgeColor(c_last[0], c_last[1]); 
-
-            
             
             // restore the original color of the edge
-            if(c_prev[c_last[0]] != null && c_nodes_etc[3][c_last[0]+1] == dashStr)
+            if(c_prev[c_last[0]] != null && c_nodes_etc[FCOST][c_last[0]+1] == dashStr)
             {
               vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
               vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FRONTIER_E);
             }
 
-            if(c_prev[c_last[1]] != null && c_nodes_etc[3][c_last[1]+1] == dashStr)
+            if(c_prev[c_last[1]] != null && c_nodes_etc[FCOST][c_last[1]+1] == dashStr)
             {
               vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
               vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
             }
 
-            if(c_nodes_etc[3][c_last[0]+1] != dashStr)
+            if(c_nodes_etc[FCOST][c_last[0]+1] != dashStr)
             {
               vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
               vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
             }
 
-            if(c_nodes_etc[3][c_last[1]+1] != dashStr)
+            if(c_nodes_etc[FCOST][c_last[1]+1] != dashStr)
             {
               vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
               vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);
@@ -226,8 +234,10 @@ export default {
         },
         [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex]
       );
-      if (!(visited.size < numVertices))
+      if (!(visited.size < numVertices)) {
+        chunker.add(99); // return at end of function
         break;
+      }
 
       // Find the unvisited vertex with the smallest cost
       
@@ -245,24 +255,11 @@ export default {
       chunker.add(
         9,
         (vis, c_nodes_etc, c_miniIndex, c_cV, c_prev_cV) => {
-          // color graph node
-          //vis.graph.colorNode(c_cV, colors.FINALISED_N);
-
-          // reset
+          // reset previous highlight if any
           if (c_prev_cV != null) {
             vis.graph.removeEdgeColor(c_prev_cV, c_cV);
-            // vis.graph.colorNode(c_prev_cV, 1);
-            // vis.graph.colorEdge(c_prev_cV, c_cV, 1);
             vis.graph.colorEdge(c_prev_cV, c_cV, colors.FINALISED_E);
-            //vis.graph.deselect(y, x); 
-            //vis.graph.select(y, y);
-            //vis.graph.visit1(y, x, 1); 
-            //vis.graph.leave1(x, x, 1); 
-            //vis.graph.leave1(y, y, 1);
           }
-          // vis.graph.colorNode(c_cV, 1);
-          //vis.graph.select(x, x);
-
           refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
         },
         [[nodes, parents, minCosts, finalCosts], miniIndex, 
@@ -272,14 +269,45 @@ export default {
       // If we can't find a reachable vertex, exit 
       // if is_end_node(n) or Cost[n] = infinity 
       chunker.add(10);
-      if (currentVertex === null || currentVertex === end || 
-        cost[currentVertex] === Infinity) {
+      if (currentVertex === null // || currentVertex === end
+        || cost[currentVertex] === Infinity) {
+        // terminate without finding end node
         chunker.add(3);
         // return
         break; 
       }
+      if (currentVertex === end) {
+        // found end node - highlight path
+        chunker.add(3, 
+          (vis, c_nodes_etc) => {
+                // remove n, add start and end
+                vis.array.set(c_nodes_etc, 'BFS');
+                vis.array.assignVariable('n', 2, null);
+                vis.array.assignVariable('end', 2, end + 1);
+                vis.array.assignVariable('start', 2, start + 1);
+                // remove color from node numbers
+                for(let i = 0; i < c_nodes_etc[NODE].length; i++){
+                  vis.array.deselect(0, i);
+                }
+                // color the path from the start node to the end node
+                // + color nodes and parent array
+                let current = end;
+                while((current != start) && (c_nodes_etc[PAR][current+1] != null))
+                { 
+                  vis.array.select(NODE, current + 1, NODE, current + 1, colors.SUCCESS_A);
+                  vis.array.select(PAR, current + 1, PAR, current + 1, colors.SUCCESS_A);
+                  vis.graph.removeEdgeColor(current, c_nodes_etc[PAR][current+1]-1);
+                  vis.graph.colorEdge(current, c_nodes_etc[PAR][current+1]-1, colors.SUCCESS_E);
+                  current = c_nodes_etc[PAR][current+1]-1;
+                }
+
+          },
+          [[nodes, parents, minCosts, finalCosts]]
+        )
+        break; 
+      }
+
       // Mark the vertex as visited
-      
   
       // Update the cost and prev arrays 
       
@@ -320,14 +348,10 @@ colors.FRONTIER_E);
                 }
               } 
 
-              
-              // console.log(['vis.graph.colorEdge', c_cV, c_m, colors.N_M_E]);
               vis.graph.removeEdgeColor(c_cV, c_m);
               vis.graph.colorEdge(c_cV, c_m, colors.N_M_E);
 
               refresh(vis, v, c_miniIndex, c_cV, c_m);
-
-
             },
             [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex,
             m]
@@ -401,19 +425,10 @@ colors.FRONTIER_E);
                 vis.graph.removeNodeColor(c_prev_m);
                 vis.graph.colorEdge(c_prev_m, c_m, colors.FRONTIER_E);
                 vis.graph.colorNode(c_prev_m, 1);
-                //vis.graph.deselect(c_prev_m, c_prev_m);
-                //vis.graph.select(c_prev_m, c_m);  
                 
                 // disconnect from the previous parent
                 if (c_lastP != null) {
-                  
-                  // vis.graph.visit(c_m,[c_lastP]);
-                  
                   vis.graph.removeEdgeColor(c_lastP, c_m);
-                  //vis.graph.deselect(c_lastP, c_m);
-
-                  // vis.graph.colorNode(c_lastP, 1);
-                  //vis.graph.select(c_lastP, c_lastP);
                 }
 
                 refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
@@ -425,11 +440,6 @@ colors.FRONTIER_E);
         }
       }
     }
-    // XXX add stuff to deal with while loop termination due to
-    // PQ being empty
   }, 
-
-
-  
 
 };

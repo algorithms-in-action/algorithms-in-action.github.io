@@ -324,9 +324,10 @@ displayedStack, explored, visited, n, parent]
                   }
                   // color the path from the start node to the end node
                   let current = c_end;
-                  // + color parent array
+                  // + color nodes and parent array
                   while((current != a) && (c_parent[current] != null))
                   {
+                    vis.array.select(0, current + 1, 0, current + 1, colors.SUCCESS_A);
                     vis.array.select(1, current + 1, 1, current + 1, colors.SUCCESS_A);
                     vis.graph.removeEdgeColor(current, c_parent[current]);
                     vis.graph.colorEdge(current, c_parent[current], colors.SUCCESS_E);

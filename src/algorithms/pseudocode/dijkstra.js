@@ -34,7 +34,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                         update Nodes, Parent etc with n & m \\Ref UpdateNodes
                     \\In}
                 \\In}
-                return \\B 5a
+                return \\B 99
                 \\Expl{ The shortest path to every node connected to s has been found.
                         If we were searching for an end node we have failed
                         and some indication of this should be returned.
