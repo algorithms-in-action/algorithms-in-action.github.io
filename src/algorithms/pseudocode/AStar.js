@@ -12,6 +12,9 @@ export default parse(`
      \\In{
           initialise, with fontier={s}, stored in Nodes \\Ref Init
             while Nodes not empty \\B 2
+            \\Expl{Nodes is the data structure where we store the nodes that are 
+					in the frontier.  In the A* algorithm, Nodes is a Priority Queue.
+            \\Expl}
             \\In{
                 remove next node n from Nodes and finalise it \\Ref Next_node
                 // The Parent of n has now been determined
