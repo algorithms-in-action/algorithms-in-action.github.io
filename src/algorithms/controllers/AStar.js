@@ -1,6 +1,6 @@
 // Copied and modified from dijkstra.js (might have been better to put
 // common code in a single file - they are very similar and could be
-// made moreso).
+// made more-so).
 // If we add support for multiple end nodes elsewhere, we may need to
 // check there is a single end node here
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';

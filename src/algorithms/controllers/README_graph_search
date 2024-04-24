@@ -35,4 +35,7 @@ It might be a good idea to pass all the relevant variables all the time for
 consistency.  Basically, you should ideally be able to copy/paste code from
 one chunker.add call to another without having to rename variables, etc.
 
+dijkstra.js has been moved in the right direction wrt the points above
+and AStar.js is a copied and edited version (might have been better to
+generalise some code and use a file with common code).
 
