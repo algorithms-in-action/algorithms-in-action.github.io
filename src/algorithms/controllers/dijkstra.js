@@ -280,7 +280,7 @@ export default {
         chunker.add(3, 
           (vis, c_nodes_etc) => {
                 // remove n, add start and end
-                vis.array.set(c_nodes_etc, 'BFS');
+                vis.array.set(c_nodes_etc, algNameStr);
                 vis.array.assignVariable('n', 2, null);
                 vis.array.assignVariable('end', 2, end + 1);
                 vis.array.assignVariable('start', 2, start + 1);
