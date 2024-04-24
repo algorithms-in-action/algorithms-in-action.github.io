@@ -54,7 +54,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
 
 \\Code{
         Next_node
-            n <- RemoveMin(Nodes) // remove lowest cost element of Nodes PQ \\B 9
+            n <- PQRemoveMin(Nodes) // remove lowest cost element of Nodes PQ \\B 9
             \\Expl{ n is the node in the frontier with the shortest known path
                     back to s (if it has infinite cost it must be in a component
                     not connected to s; not actually in the frontier).
@@ -83,7 +83,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
             \\Expl} 
             \\In{
                 Cost[m] <- Cost[n] + weight(n,m) // new cost is path length from s \\B 12
-                UpdateCost(Nodes, m, Cost[m]) // update cost in Nodes PQ \\B 13
+                PQUpdateCost(Nodes, m, Cost[m]) // update cost in Nodes PQ \\B 13
                 Parent[m] <- n \\B 14
                 \\Expl{ The shortest known path to m now goes via n.
                 \\Expl}

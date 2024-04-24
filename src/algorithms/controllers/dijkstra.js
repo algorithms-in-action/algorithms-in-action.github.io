@@ -7,7 +7,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Graph view', { displayAxis : false }),
+        instance: new GraphTracer('graph', null, 'Graph view'),
         order: 0,
       },
       array: {
@@ -17,7 +17,7 @@ export default {
     };
   },
 
-  run(chunker, { edgeValueMatrix, coordsMatrix, /*matrix,*/ startNode, endNodes}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes}) {
     // String Variables used in displaying algo
     const algNameStr = 'dijkstra';
     const dashStr = '-';
@@ -28,10 +28,9 @@ export default {
     const lessThanStr = '<';
     const notLessThanStr = '≮';
 
-    const numVertices = edgeValueMatrix ? edgeValueMatrix.length : 0;
-    const E = Array.isArray(edgeValueMatrix) ? [...edgeValueMatrix] : [];
-    const coords = Array.isArray(coordsMatrix) ? [...coordsMatrix] : [];
-
+    const E = [...edgeValueMatrix];
+    const coords = [...coordsMatrix];
+    const numVertices = edgeValueMatrix.length;
     const minCosts = [];
     const parents = [];
     const nodes = [];  
@@ -322,26 +321,26 @@ export default {
               if (c_last[0] != null) { 
                 vis.graph.removeEdgeColor(c_last[0], c_last[1]);
                 //vis.graph.leave1(c_last[0], c_last[1], 2); 
-                if(c_prev[c_last[0]] != null && v[3][c_last[0]+1] == dashStr)
+                if(c_prev[c_last[0]] != null && v[FCOST][c_last[0]+1] == dashStr)
                 {
                   vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
                   vis.graph.colorEdge(c_prev[c_last[0]], c_last[0],
 colors.FRONTIER_E);
                 }
 
-                if(c_prev[c_last[1]] != null && v[3][c_last[1]+1] == dashStr)
+                if(c_prev[c_last[1]] != null && v[FCOST][c_last[1]+1] == dashStr)
                 {
                   vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
                   vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
                 }
 
-                if(v[3][c_last[0]+1] != dashStr)
+                if(v[FCOST][c_last[0]+1] != dashStr)
                 {
                   vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
                   vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
                 }
 
-                if(v[3][c_last[1]+1] != dashStr)
+                if(v[FCOST][c_last[1]+1] != dashStr)
                 {
                   vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
                   vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);

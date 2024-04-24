@@ -55,7 +55,7 @@ export default parse(`
 
 \\Code{
     Next_node 
-        n <- RemoveMin(Nodes) // remove lowest cost element of Nodes PQ \\B 9
+        n <- PQRemoveMin(Nodes) // remove lowest cost element of Nodes PQ \\B 9
         \\Expl{ n is the node in the frontier with the shortest known path
                 length back to s plus heuristic value (if it has infinite
                 cost it must be in a component not connected to s; not
@@ -86,7 +86,7 @@ export default parse(`
         \\Expl} 
         \\In{
             Length[m] <- Length[n] + weight(n,m) // smaller path length from s \\B 12
-            UpdateCost(Nodes, m, Length[m]+heur(m)) // update cost in Nodes PQ \\B 13
+            PQUpdateCost(Nodes, m, Length[m]+heur(m)) // update cost in Nodes PQ \\B 13
             Parent[m] <- n \\B 14
             \\Expl{ The shortest known path to m now goes via n.
             \\Expl}
