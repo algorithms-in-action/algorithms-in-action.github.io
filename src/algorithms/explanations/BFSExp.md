@@ -13,7 +13,7 @@ structure.
 Others of these algorithms work with weighted graphs (with positive weights
 for all edges), where the aim is to find the least cost path(s), while Prim's
 algorithm finds a minumum spanning tree of the graph (the least cost 
-path that connects all edges).  
+set of edges that connects all nodes, if the graph is connected).  
 
 These graph search algorithms can be used for both directed
 and undirected graphs; in AIA we use undirected graphs for simplicity.

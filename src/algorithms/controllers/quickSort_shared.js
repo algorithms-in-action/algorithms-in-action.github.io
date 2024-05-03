@@ -569,6 +569,10 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
       }
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
+      // XXX not sure this is a good idea - recursion clearer in
+      // animation if final "// Done" is stopped at
+      // for each recursive call - user can mentally prepare for what we
+      // jump back to?
       else if (left < a.length) {
         finished_stack_frames.push(real_stack.pop());
         let size_one_bookmark = isRecursionExpanded()

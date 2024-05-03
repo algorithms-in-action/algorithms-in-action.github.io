@@ -1,6 +1,7 @@
 export { default as HSInfo } from './HSInfo.md';
 export { default as BSTInfo } from './BSTInfo.md';
 export { default as QSInfo } from './QSInfo.md';
+export { default as Prims_oldInfo } from './PRIM_oldInfo.md';
 export { default as PrimsInfo } from './PRIMInfo.md';
 export { default as TCInfo } from './TCInfo.md';
 export { default as BFSSInfo } from './BFSSInfo.md';

@@ -167,6 +167,7 @@ const allalgs = {
     },
   }, 
   'prim': {
+    noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',
     category: 'Graph',
     explanation: Explanation.PrimsExp,
@@ -178,6 +179,21 @@ const allalgs = {
     },
     controller: {
       find: Controller.prim,
+    },
+  },
+  'prim_old': {
+    noDeploy: false,
+    name: 'Prim\'s (older version)',
+    category: 'Graph',
+    explanation: Explanation.Prims_oldExp,
+    param: <Param.Prims_oldParam />,
+    instructions: Instructions.Prims_oldInstruction,
+    extraInfo: ExtraInfo.Prims_oldInfo,
+    pseudocode: {
+      find: Pseudocode.prim_old,
+    },
+    controller: {
+      find: Controller.prim_old,
     },
   },
   'transitiveClosure': {

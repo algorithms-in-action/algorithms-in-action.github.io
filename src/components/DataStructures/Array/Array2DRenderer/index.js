@@ -143,6 +143,9 @@ class Array2DRenderer extends Renderer {
                 pointer = true;
               }
             }
+            // XXX should use style sheets for formatting stack for DFS
+            // - currently messing about attempting to make it look
+            // better and more stack-like using float (deprecated)
             return (
               <tr className={styles.row} key={i}>
                 {algo === 'tc' && ( // generate vertical index, which starts from 1
@@ -261,7 +264,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'DFS' ? styles.captionDFS : ''}
             kth-tag="dfs_caption"
           >
-            Nodes(stack): {listOfNumbers}
+             <div style={{float:"right"}}>Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </div>
           </caption>
         )}
         {algo === 'BFS' && (
@@ -269,7 +272,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'BFS' ? styles.captionBFS : ''}
             kth-tag="bfs_caption"
           >
-            Nodes(queue): {listOfNumbers}
+            Nodes (queue): {listOfNumbers}
           </caption>
         )}
       </table>

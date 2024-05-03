@@ -1,6 +1,7 @@
 export { default as HSExp } from './HSExp.md';
 export { default as BSTExp } from './BSTExp.md';
 export { default as QSExp } from './QSExp.md';
+export { default as Prims_oldExp } from './PRIM_oldExp.md';
 export { default as PrimsExp } from './PRIMExp.md';
 export { default as TCExp } from './TCExp.md';
 export { default as BFSSExp } from './BFSSExp.md';

@@ -112,6 +112,7 @@ export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructionsTC;
+export const Prims_oldInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;

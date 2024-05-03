@@ -1,18 +1,15 @@
-/* eslint-disable brace-style */
-/* eslint-disable no-plusplus */
-/* eslint-disable comma-dangle */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable no-multi-spaces,indent,prefer-destructuring */
+// Prim's MST algorithm; code copied+modified from Dijkstra's shortest
+// path algorithm animation
+// XXX display total cost at end
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-
-// merge test 
+import {colors} from './graphSearchColours';
 
 export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Graph view', { displayAxis : false }),
+        instance: new GraphTracer('graph', null, 'Graph view'),
         order: 0,
       },
       array: {
@@ -22,270 +19,398 @@ export default {
     };
   },
 
-  /**
-   *
-   * @param {object} chunker
-   * @param {array} nodes array of numbers needs to be sorted
-   * 
-   */
-  run(chunker, { edgeValueMatrix, coordsMatrix, startNode }) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes}) {
+    // String Variables used in displaying algo
+    const algNameStr = 'dijkstra';
+    const dashStr = '-';
+    const minStr = 'Min'; 
+    const nStr = 'n';
+    const mStr = 'm';
+    const infinityStr = '∞';
+    const lessThanStr = '<';
+    const notLessThanStr = '≮';
 
     const E = [...edgeValueMatrix];
-    const coords = [...coordsMatrix];  // Potentially empty.
+    const coords = [...coordsMatrix];
     const numVertices = edgeValueMatrix.length;
+    const minCosts = [];
+    const parents = [];
+    const nodes = [];  
+    const finalCosts = []; 
+    const start = startNode - 1; 
+    const end = endNodes[0] - 1;
 
-    let weight = new Array(numVertices);
-    for (let i = 0; i < weight.length; i += 1) {
-      weight[i] = new Array(numVertices);
+    // Display has table [nodes, parents, minCosts, finalCosts]
+    // and display code indexes into this table; we define the indices here
+    const NODE = 0;
+    const PAR = 1;
+    const MCOST = 2;
+    const FCOST = 3;
+    
+    // Create a set to keep track of visited vertices
+    const visited = new Set();  
+    let miniIndex = start;  
+    let last = [null, null]; // keep track of the last neighbour we visited
+    // initialize each element of array Cost to infinity
+    const cost = Array(numVertices).fill(Infinity);
+
+      
+    const findMinimum = () => {
+      let minCost = Infinity;
+      miniIndex = null;
+      for (let i = numVertices - 1; i >= 0; i--) {
+        if (!visited.has(i) && cost[i] <= minCost) {
+          minCost = cost[i];
+          miniIndex = i;
+        }
+      } 
+    };
+
+    // If the node cost is a number, the node is in the PQ but not Infinity
+    // (can be null, Infinity or some expression for comparison) - used
+    // for checking if a node is in the frontier
+    const isNumber = (value) =>
+    {
+       return typeof value === 'number' && isFinite(value);
     }
 
-    const cost = new Array(numVertices);
-    const pending = new Array(numVertices);
-    const prev = new Array(numVertices);
-    const pq = new Array(numVertices);
-    const pqDisplay = [];
-    const prevDisplay = new Array(numVertices).fill('');
-    let pqStart;
-    let n;
-    let miniIndex;
-    let prevIndex;
-    const closed = [];
-    const pqCost = [];
-    const prevNode = [];
+    // refresh display.  Ideally one would think we could do incremental
+    // changes but there are all kinds of subtelties like what triggers
+    // re-rendering, some selected colors vanishing with some apparently
+    // unrelated operations, etc.  For sanity, and to avoid code thats
+    // duplicated countless times, we put lots of it here. And we name
+    // the parameters something more readable than x,y,z,z1,a,b,c etc...
+    // c_nodes_etc: 2D array with node number, parents etc
+    // c_Min: miniIndex
+    // c_cV: currentVertex
+    // c_m: m (neighbour of currentVertex)
+    const refresh = (vis, c_nodes_etc, c_Min, c_cV, c_m) => {
+      vis.array.set(c_nodes_etc, algNameStr);
+      // set n, m, Min as required
+      let c_m1 = (c_m === null? null: c_m+1);
+      let c_cV1 = (c_cV === null? null: c_cV+1);
+      let c_Min1 = (c_Min === null? null: c_Min+1);
+      vis.array.assignVariable(nStr, 2, c_cV1);
+      vis.array.assignVariable(mStr, 2, c_m1);
+      vis.array.assignVariable(minStr, 2, c_Min1); 
+
+      // highlight nodes as finalised/frontier in array
+      for (let i = 0; i < numVertices; i++) {
+        if (c_nodes_etc[MCOST][i+1] === null) {
+          vis.array.select(NODE, i + 1, NODE, i + 1, colors.FINALISED_A);
+          vis.graph.removeNodeColor(i);
+          vis.graph.colorNode(i, colors.FINALISED_N);
+        } else if (isNumber(c_nodes_etc[MCOST][i+1])) {
+          vis.array.select(NODE, i + 1, NODE, i + 1, colors.FRONTIER_A);
+          vis.graph.removeNodeColor(i);
+          vis.graph.colorNode(i, colors.FRONTIER_N);
+        }
+      }
+
+      // color Min in PQ
+      if (c_Min != null)
+        vis.array.select(MCOST, c_Min + 1, MCOST, c_Min + 1, colors.PQ_MIN_A);
+    }
 
     chunker.add(
       1,
       (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
-        vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)), coordsArray);
+        vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
       },
       [E, coords]
     );
 
-    const PqSort = () => {
-      let i;
-      let j;
-      let v;
-      for (i = pqStart; i < n; i += 1) {
-        v = pq[i];
-        for (j = i - 1; j >= pqStart && cost[v] < cost[pq[j]]; j -= 1) {
-          pq[j + 1] = pq[j];
-        }
-        pq[j + 1] = v;
-      }
-    };
-    /*
-    * find minimum function would loop the pq cost and point to the minimum element
-    * */
-    const findMinimum = () => {
-        let tmp = Infinity;
-      // eslint-disable-next-line no-unused-vars
-        for (let c = 1; c < pqCost.length; c++) {
-          if (pqCost[c] != null && pqCost[c] < tmp) {
-            tmp = pqCost[c];
-            miniIndex = c;
-          }
-        }
-    };
+    // initialise each element of array Parent to zero 
+    const prev = Array(numVertices).fill(null);  
 
-    const PqUpdate = (i) => {
-      chunker.add(5);
-      let j;
-      let w;
-      let preIndex;
-      for (j = 0; j < n; j += 1) {
-        w = weight[i][j];
-        if (w > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
-          chunker.add(
-            5,
-            (vis, n1, n2) => {
-              vis.graph.visit0(n1, n2);
-            },
-            [i, j]
-          );
-        }
-        /*
-        * this function would compared the new cost with the pq cost and update the pq cost
-        * */
-        if (w > 0 && pending[j] && w < cost[j]) {
-          // show the comparison between weight(i,j) and cost[j]
-          cost[j] = w;
-          if (pqCost[j + 1] === Infinity) {
-            pqCost[j + 1] = `${cost[j].toString()}<∞`;
-          } else if (cost[j] !== null && pqCost[j + 1] != null) {
-            pqCost[j + 1] = `${cost[j].toString()}<${pqCost[j + 1].toString()}`;
+    nodes.push('i'); // initialize the pq display
+    parents.push('Parent[i]');
+    minCosts.push('Cost[i] (PQ)'); 
+    finalCosts.push('Final Cost');
+     
+    // Initialize the table
+    for (let i = 0; i < numVertices; i += 1) {
+      nodes[i + 1] = i + 1;
+      minCosts.push(dashStr);
+      parents.push(0); 
+      finalCosts.push(dashStr);
+    }
+
+    chunker.add(
+      5,
+      (vis, v) => {
+        vis.array.set(v, algNameStr);
+      },
+      [[nodes, parents, minCosts, finalCosts], 0]
+    );
+
+
+    for (let i = 0; i < numVertices; i += 1) {
+      minCosts[i + 1] = (Infinity);
+    }
+
+    chunker.add(
+      6,
+      (vis, v) => {
+        vis.array.set(v, algNameStr);
+      },
+      [[nodes, parents, minCosts, finalCosts],0]
+    );
+    
+  
+    // Cost[s] <- 0
+    cost[start] = 0;
+    minCosts[start + 1] = 0; 
+    chunker.add(
+      7,
+      (vis, v, w) => {
+        // re-render table with new cost
+        vis.array.set(v, algNameStr);
+        // color start node in array + graph
+        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
+        vis.graph.colorNode(w, colors.FRONTIER_N);
+      },
+      [[nodes, parents, minCosts, finalCosts], start]
+    );
+
+    // Nodes <- PQ containing all nodes 
+    chunker.add(
+      8,
+      (vis, v, w) => {
+        // add min to display
+        vis.array.set(v, algNameStr);
+        vis.array.assignVariable(minStr, 2, w + 1);
+        vis.array.select(MCOST, w + 1, MCOST, w + 1, colors.PQ_MIN_A);
+        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
+      },
+      [[nodes, parents, minCosts, finalCosts], start]
+    );
+
+    let currentVertex = null;
+    // while Nodes not Empty 
+    // while (visited.size < numVertices) { 
+    // extra chunk before break to make loop termination clearer
+    /* eslint-disable no-constant-condition */
+    while (true) {
+      
+      findMinimum(); 
+      
+      chunker.add( 
+        2,
+        (vis, c_nodes_etc, c_miniIndex, c_last, c_prev, c_cV) => {
+          refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
+          
+          if (c_last[0] != null) {
+            vis.graph.removeEdgeColor(c_last[0], c_last[1]); 
+            
+            // restore the original color of the edge
+            if(c_prev[c_last[0]] != null && c_nodes_etc[FCOST][c_last[0]+1] == dashStr)
+            {
+              vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
+              vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FRONTIER_E);
+            }
+
+            if(c_prev[c_last[1]] != null && c_nodes_etc[FCOST][c_last[1]+1] == dashStr)
+            {
+              vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
+              vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
+            }
+
+            if(c_nodes_etc[FCOST][c_last[0]+1] != dashStr)
+            {
+              vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
+              vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
+            }
+
+            if(c_nodes_etc[FCOST][c_last[1]+1] != dashStr)
+            {
+              vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
+              vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);
+            }
+
           }
+
+        },
+        [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex]
+      );
+      if (!(visited.size < numVertices)) {
+        chunker.add(99); // return at end of function
+        break;
+      }
+
+      // Find the unvisited vertex with the smallest cost
+      
+      currentVertex = null; 
+      findMinimum();
+      currentVertex = miniIndex;
+      finalCosts[miniIndex + 1] = cost[miniIndex];
+      
+      // n <- RemoveMin(Nodes)  
+      minCosts[currentVertex + 1] = null; 
+      visited.add(currentVertex);
+      
+      // Update the miniIndex
+      findMinimum(); 
+      chunker.add(
+        9,
+        (vis, c_nodes_etc, c_miniIndex, c_cV, c_prev_cV) => {
+          // reset previous highlight if any
+          if (c_prev_cV != null) {
+            vis.graph.removeEdgeColor(c_prev_cV, c_cV);
+            vis.graph.colorEdge(c_prev_cV, c_cV, colors.FINALISED_E);
+          }
+          refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
+        },
+        [[nodes, parents, minCosts, finalCosts], miniIndex, 
+            currentVertex, prev[currentVertex]]
+      );
+      
+      // If we can't find a reachable vertex, exit 
+      // if Cost[n] = infinity 
+      chunker.add(10);
+      if (currentVertex === null // || currentVertex === end
+        || cost[currentVertex] === Infinity) {
+        // terminate without finding end node
+        chunker.add(3);
+        // return
+        break; 
+      }
+
+      // Mark the vertex as visited
+  
+      // Update the cost and prev arrays 
+      
+      // for each node m neighbouring n
+      for (let m = 0; m < numVertices; m++) {
+        if (edgeValueMatrix[currentVertex][m] !== 0) { //TODO: check
+            // && !visited.has(m)) {  // Skip if no edge exists
+          // findMinimum();
           chunker.add(
-              6,
-              (vis, v, u) => {
-                vis.array.set(v, 'prim');
-                if (v[2][u] != null) {
-                  vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
+            4,
+            (vis, v, c_miniIndex, c_last, c_prev, c_cV, c_m) => {
+              if (c_last[0] != null) { 
+                vis.graph.removeEdgeColor(c_last[0], c_last[1]);
+                //vis.graph.leave1(c_last[0], c_last[1], 2); 
+                if(c_prev[c_last[0]] != null && v[FCOST][c_last[0]+1] == dashStr)
+                {
+                  vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
+                  vis.graph.colorEdge(c_prev[c_last[0]], c_last[0],
+colors.FRONTIER_E);
                 }
-              },
-              [[pqDisplay, prevNode, pqCost], miniIndex]
+
+                if(c_prev[c_last[1]] != null && v[FCOST][c_last[1]+1] == dashStr)
+                {
+                  vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
+                  vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
+                }
+
+                if(v[FCOST][c_last[0]+1] != dashStr)
+                {
+                  vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
+                  vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
+                }
+
+                if(v[FCOST][c_last[1]+1] != dashStr)
+                {
+                  vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
+                  vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);
+                }
+              } 
+
+              vis.graph.removeEdgeColor(c_cV, c_m);
+              vis.graph.colorEdge(c_cV, c_m, colors.N_M_E);
+
+              refresh(vis, v, c_miniIndex, c_cV, c_m);
+            },
+            [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex,
+            m]
           );
           
-          // update cost[j]
-          pqCost[j + 1] = cost[j];
+          const newCost = edgeValueMatrix[currentVertex][m];
+          
+          // if Cost[n]+weight(n,m)<Cost[m]
+          let tempString = minCosts[m + 1];
+          if (minCosts[m + 1] === Infinity) {
+            tempString = infinityStr;
+          }
+          if (!visited.has(m)) {
+            if (newCost < cost[m]) {
+              minCosts[m + 1] = (`${newCost} ${lessThanStr} ${tempString}`);
+            } else {
+              minCosts[m + 1] = (`${newCost} ${notLessThanStr} ${tempString}`);
+            }
+          }
+          
+          // findMinimum();
           chunker.add(
-              7,
-              (vis, v, u) => {
-                vis.array.set(v, 'prim');
-                if (v[2][u] != null) {
-                  vis.array.select(2, u);
-                  vis.array.assignVariable('Min', 2, u);
-                }
-              },
-              [[pqDisplay, prevNode, pqCost], miniIndex]
-          );
-
-          // show the process of updating PQ
-          PqSort();
-          prev[j] = i;
-          preIndex = miniIndex;
-          findMinimum();
-          chunker.add(
-            8,
-            // eslint-disable-next-line no-shadow
-            (vis, u, v, w) => {
-              vis.array.deselect(2, u);
-              if (w[v] !== null) {
-                vis.array.select(2, v);
-                vis.array.assignVariable('Min', 2, v);
-              }
+            11,
+            (vis, v, c_miniIndex, c_cV, c_m) => {
+              refresh(vis, v, c_miniIndex, c_cV, c_m);
             },
-            [preIndex, miniIndex, pqCost]
+            [[nodes, parents, minCosts, finalCosts], miniIndex,
+                currentVertex, m]
           ); 
 
-          // update prev[j]
-          prevNode[j + 1] = i + 1;
-          chunker.add(
-            9,
-            (vis, u, v) => {
-              vis.array.set(u, 'prim');
-              vis.array.select(2, v);
-              vis.array.assignVariable('Min', 2, v);
-            },
-            [[pqDisplay, prevNode, pqCost], miniIndex]
-          );
+           if (!visited.has(m))
+            minCosts[m + 1] = cost[m];
+
+          last = [currentVertex, m];
+          
+          if (!visited.has(m) && newCost < cost[m]) {
+            // Cost[m] <- Cost[n] + weight(n,m)
+            cost[m] = newCost; 
+            minCosts[m + 1] = newCost;
+            // findMinimum();
+            chunker.add(
+              12,
+              (vis, c_nodes_etc, c_miniIndex, c_cV, c_m) => {
+                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
+              },
+              [[nodes, parents, minCosts, finalCosts], miniIndex, currentVertex, m]
+            );
+
+            // UpdateCost(Nodes,m,Cost[m])
+            findMinimum();
+            chunker.add(
+              13,
+              (vis, c_nodes_etc, c_miniIndex, c_cV, c_m) => {
+                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
+              },
+              [[nodes, parents, minCosts, finalCosts], miniIndex, currentVertex, m]
+            );
+
+            // Parent[m] <- n
+            parents[m + 1] = currentVertex + 1;
+            const lastParent = prev[m];
+            prev[m] = currentVertex;   
+          
+            // findMinimum();
+            chunker.add(
+              14,
+              (vis, c_nodes_etc, c_miniIndex, c_prev_m, c_m, c_lastP, c_cV) => {
+
+                vis.graph.removeEdgeColor(c_cV, c_m);
+                
+                vis.graph.removeNodeColor(c_prev_m);
+                vis.graph.colorEdge(c_prev_m, c_m, colors.FRONTIER_E);
+                vis.graph.colorNode(c_prev_m, 1);
+                
+                // disconnect from the previous parent
+                if (c_lastP != null) {
+                  vis.graph.removeEdgeColor(c_lastP, c_m);
+                }
+
+                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
+              },
+              [[nodes, parents, minCosts, finalCosts], miniIndex,
+                  prev[m], m, lastParent, currentVertex]
+            );
+          } 
         }
       }
-    };
-
-    let i;
-    weight = [...E];
-    n = numVertices;
-    for (i = 0; i < n; i += 1) {
-      cost[i] = Infinity;
-      prev[i] = -1;
-      pending[i] = 1;
     }
-    // XXX  Note: Animation not quite linked to
-    // pseudocode properly either with init + reassigning start cost to
-    // 0 (probably not worth spending too much time fixing issues such
-    // as this  - move to new pseudocode thats more similar to BFS/DFS
-    // etc)
-    pqCost.push('Cost[i]');  // initialize the pq cost
-    pqDisplay.push('i'); // initialize the pq display
-    prevNode.push('Parent[i]'); // initialize the prev list
-    for (i = 0; i < n; i += 1) {
-      pq[i] = i;
-      pqDisplay[i + 1] = i + 1;
-      pqCost.push(Infinity);
-      prevNode.push('-');
-    }
-    // init start node cost to zero
-    // (note cost+pq arrays start at 0 and pqCost starts at 1,
-    // just to confuse things?)
-    cost[startNode-1] = 0;
-    pqCost[startNode] = 0; // add the minimum cost to pq cost
-    pq[0] = startNode-1;
-    prev[startNode-1] = startNode-1;
-    prevNode[startNode] = startNode;
-    pq[startNode-1] = 0;
-    miniIndex = startNode; // point the mini index in the pq cost
-    
-    pqStart = 0;
-    /* the chunker add select the minimum cost one */
-    chunker.add(
-        2,
-        (vis, v, w) => {
-          vis.array.set(v, 'prim');
-          vis.array.select(2, w);
-          vis.array.assignVariable('Min', 2, w);
-        },
-        [[pqDisplay, prevNode, pqCost], miniIndex]
-    );
-    chunker.add(
-        3,
-        (vis, v, w) => {
-          vis.array.set(v, 'prim');
-          vis.array.select(2, w);
-          vis.array.assignVariable('Min', 2, w);
-        },
-        [[pqDisplay, prevNode, pqCost], miniIndex]
-    );
+  }, 
 
-    while (pqStart < n) {
-      i = pq[pqStart];
-      prevDisplay[pqStart] = i + 1;
-      /* pop the miniIndex one and add it to spinning tree to extend more connections */
-      pending[i] = 0;
-      pqStart += 1;
-      /* change the miniIndex to null */
-      pqCost[miniIndex] = null;
-      /* get the next minimum value index and select it */
-      prevIndex = miniIndex;
-      findMinimum();
-      chunker.add(
-          4,
-          (vis, v, w, u, n1, n2, index) => {
-            vis.graph.visit0(n1, n2);
-            vis.graph.select(n1, n2);
-            vis.array.deselect(index);
-            vis.array.set(v, 'prim');
-            vis.array.deselect(2, u);
-            if (u !== w && v[2][w] !== null) {
-              vis.array.select(2, w);
-              vis.array.assignVariable('Min', 2, w);
-            }
-          },
-          [[pqDisplay, prevNode, pqCost], miniIndex, prevIndex, i, prev[i], miniIndex]
-      );
-
-      PqUpdate(i);
-      findMinimum();// once update the cost, find the next minimum cost in pq cost and select it
-
-      const newEdges = [];
-      for (let j = 0; j < n; j += 1) {
-        if (weight[i][j] > 0 && !prev.includes(j) && pqStart < n && !closed.includes(j)) {
-          newEdges.push(j);
-        }
-      }
-      if (pq[pqStart]) {
-        chunker.add(
-          5,
-          (vis, n1, n2) => {
-            vis.graph.visit0(n1, n2);
-          },
-          [prev[pq[pqStart]], pq[pqStart]]
-        );
-      }
-      chunker.add(
-        5,
-        (vis, n1, n2) => {
-          vis.graph.allLeave(n1, n2);
-          vis.graph.visit0(n1, n1);
-        },
-        [i, newEdges]
-      );
-      chunker.add(3);
-      closed.push(i);
-    }
-    // for test
-    return prev;
-  },
 };
