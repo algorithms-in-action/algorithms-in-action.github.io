@@ -1,19 +1,23 @@
-# Breadth First Search Algorithm
+# Prim's MST Algorithm
 ---
 
-Breadth first search (BFS) for graphs can be used to find a path from
-a single start node to either a single end node; to one of several end
-nodes; or to all nodes that are connected to the start node, depending on the termination
-condition. BFS returns the path to this (these) node(s) 
-that can be reached with the minimum number of edges traversed, regardless of 
-edge weights.
+A minimum spanning tree (MST) of a weighted connected graph G is
+a connected acyclic subgraph of the tree of lowest weight.
+Each edge `(i,j)` in a weighted graph has a weight (or distance)
+associated with it, and the weight of the tree is the sum of
+the weights of the edges between the nodes in the tree.
+Graph G is undirected and there may be more than one
+minimum spanning tree with equal weight (thus "minimal" spanning
+tree is a more precise term).  If G is not connected we may wish to find
+a minimal spanning tree of each component (a minimal spanning forest).
+This can be done by Prim's algorithm with a minor change to the
+termination condition.
 
-BFS is one of a related group of graph traversal algorithms that can be viewed as having a similar
+Prim's is one of a related group of graph traversal algorithms that can be viewed as having a similar
 structure.
-Others of these algorithms work with weighted graphs (with positive weights
-for all edges), where the aim is to find the least cost path(s), while Prim's
-algorithm finds a minumum spanning tree of the graph (the least cost 
-path that connects all edges).  
+Others of these algorithms attempt to minimise the cost of individual
+paths (rather than the whole tree) or may ignore costs, and may
+terminate when certain nodes are reached.
 
 These graph search algorithms can be used for both directed
 and undirected graphs; in AIA we use undirected graphs for simplicity.
@@ -22,8 +26,8 @@ Paths are represented by having each node point to the previous
 we have a tree with "parent" pointers and the start node at the
 root, that is a tree of reversed paths. This allows these algorithms to return
 multiple end nodes that each have a single path from the start node. 
-BFS will find paths with
-the minimum number of edges. 
+Prim's will find a tree that includes all nodes and has
+minimum total cost for the edges. 
 
 As these algorithms execute, we can classify nodes into three sets.
 These are:
@@ -42,9 +46,12 @@ Some of the algorithms also need a way to check if a node has already been seen 
 The frontier initially contains just the start node. The algorithms repeatedly
 pick a frontier node, finalise the node (its current parent becomes
 its final parent) and update information about the neighbours of the node.
-BFS uses a queue for the frontier nodes.  At each stage the node at the front of the
-queue is removed for processing, and its neighbors that have not yet been seen
-are added to the end of the queue. Other algorithms use other data structures to keep track 
+Prim's uses a priority queue for the frontier nodes, with the cost of
+each node being the minimum known distance
+to a finalised node.  At each stage the node with minumum cost
+is removed for processing, and its neighbors that have not yet
+been finalised
+have their costs recomputed. Other algorithms use other data structures to keep track 
 of the frontier nodes.
 
 
@@ -57,9 +64,6 @@ data structures are needed.
 
 For consistency with other algorithm animations, the layout of the
 graph is on a two-dimensional grid where each node has (x,y) integer
-coordinates.  You can choose the start and end nodes and change the
-graph choice (see the instructions tab for more details).  Weights of
-edges can be included in the text box input but BFS will ignore weights
-and positions of nodes.  Only a single end node is supported; choosing
-0 results in finding paths to all connected nodes.
+coordinates.  You can choose the start node and change the
+graph choice (see the instructions tab for more details).
 
