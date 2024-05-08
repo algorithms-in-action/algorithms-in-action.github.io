@@ -22,7 +22,8 @@ Prim(G, s) // Given a weighted graph G, return a minimum spanning tree \\B 1
                     \\Expl} 
                     \\In{
                         return \\B 3
-                        \\Expl{ The Parent array has a MST for the component containing s
+                        \\Expl{ The Parent array has a MST for the component containing s.
+                           We reset the Nodes PQ etc to show the component more clearly.
                         \\Expl} 
                     \\In} 
                     for each node m neighbouring n // G has edge from n to m \\B 4

@@ -151,7 +151,7 @@ export default {
         // ?nice to have while true and break out of the
         // loop after the chunk (conditionally) so when the loop exits
         // we have an extra chunk at the start of the loop
-        // while (Nodes.length > 0) {
+        // while (Nodes.length > 0)
         /* eslint-disable no-constant-condition */
         while (true) {
           chunker.add(
@@ -286,6 +286,8 @@ export default {
                   vis.graph.colorEdge(current, c_parent[current], colors.SUCCESS_E); 
                   current = c_parent[current];
                 }
+                // also color start node
+                vis.array.select(0, start + 1, 0, start + 1, colors.SUCCESS_A);
               },
               [n, lastNeighbor, parent, start, end]
    
@@ -462,6 +464,7 @@ export default {
               // removes m if it exists; need to redo node selection etc
               // for green nodes:
               vis.array.assignVariable('m', 2, undefined); // removes m if there
+              vis.array.assignVariable('n', 2, undefined); // removes n
               // highlight all nodes explored in green in the array
               // and all other seen nodes in blue in the array
               for(let i = 0; i < c_visited.length; i++)
@@ -476,7 +479,7 @@ export default {
               }
 
               // remove the highlight between n
-              // and the last visited neighbor
+              // and the last visited neighbor (XXX not needed?)
                if((c_n != null) && (c_lastNei != null)) {
                   vis.graph.removeEdgeColor(c_n, c_lastNei);
                   if((c_n != null) && (c_lastNei != null)){

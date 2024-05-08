@@ -1,5 +1,5 @@
 // XXX add support for multiple end nodes?
-// XXX see README_graph_search
+// XXX see README_graph_search - this code is a nightmare to maintain
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import {colors} from './graphSearchColours';
@@ -119,7 +119,7 @@ export default {
         // ?nice to have while true and break out of the
         // loop after the chunk (conditionally) so when the loop exits
         // we have an extra chunk at the start of the loop
-        // while (Nodes.length > 0) {
+        // while (Nodes.length > 0)
         /* eslint-disable no-constant-condition */
         while (true) {
             chunker.add(
@@ -212,9 +212,22 @@ export default {
                     // Return B12
                     chunker.add(
                       12,
-                      (vis, x, y, z, a, b) => { 
+                      (vis, x, a, b) => { 
+
+                        vis.array.set(x, 'DFS');
+                        // remove 'n'
+                        vis.array.assignVariable('n', 2, undefined); 
+
+                        //highlight all finalized nodes in green in the array
+                        for(let i = 0; i < a.length; i++)
+                        { 
+                          if(a[i] == true)
+                          { 
+                            vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);  
+                          }
+                        }  
                       },
-                      [n, lastNeighbor, parent, start, end]
+                      [[displayedNodes, displayedParent, displayedVisited], visited]
                     );
                     return;
                 }
@@ -333,6 +346,8 @@ displayedStack, explored, visited, n, parent]
                     vis.graph.colorEdge(current, c_parent[current], colors.SUCCESS_E);
                     current = c_parent[current];
                   }
+                  // color start node
+                  vis.array.select(0, start + 1, 0, start + 1, colors.SUCCESS_A);
                 },
                 [n, lastNeighbor, parent, start, end]
               );
@@ -469,30 +484,22 @@ i+1);
         //return B5
         chunker.add(
           5,
-          (vis, x, y, z, a, b) => { 
-            //remove the orange highlight from the last neighbour
-            // not needed??
-            if (y != null)
-            {
-              vis.graph.removeEdgeColor(y, x); 
-    
-              // recolor in red if it has a parent
-              if(z[y] != null) 
-              {
-                vis.graph.removeEdgeColor(z[y], y);
-                vis.graph.colorEdge(z[y], y , colors.FINALISED_E);
-              } 
-    
-              // recolor in red if it has a child
-              for(let i = 0; i < z.length; i ++){
-                if (z[i] == y){
-                  vis.graph.removeEdgeColor(i, y);
-                  vis.graph.colorEdge(i, y, colors.FINALISED_E);
-                }
+          (vis, x, a, b) => { 
+
+            vis.array.set(x, 'DFS');
+            // remove 'n'
+            vis.array.assignVariable('n', 2, undefined); 
+
+            //highlight all finalized nodes in green in the array
+            for(let i = 0; i < a.length; i++)
+            { 
+              if(a[i] == true)
+              { 
+                vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);  
               }
-            } 
+            }  
           },
-          [n, lastNeighbor, parent, start, end]
+          [[displayedNodes, displayedParent, displayedVisited], visited]
         );
     };
     /*

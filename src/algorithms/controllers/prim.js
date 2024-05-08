@@ -1,6 +1,5 @@
 // Prim's MST algorithm; code copied+modified from Dijkstra's shortest
 // path algorithm animation
-// XXX display total cost at end
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import {colors} from './graphSearchColours';
@@ -21,11 +20,12 @@ export default {
 
   run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes}) {
     // String Variables used in displaying algo
-    const algNameStr = 'dijkstra';
+    const algNameStr = 'prim';
     const dashStr = '-';
     const minStr = 'Min'; 
     const nStr = 'n';
     const mStr = 'm';
+    const totalStrs = ['Cost', 'Tot.', ' = '];
     const infinityStr = '∞';
     const lessThanStr = '<';
     const notLessThanStr = '≮';
@@ -39,6 +39,7 @@ export default {
     const finalCosts = []; 
     const start = startNode - 1; 
     const end = endNodes[0] - 1;
+    let totalCost = 0;
 
     // Display has table [nodes, parents, minCosts, finalCosts]
     // and display code indexes into this table; we define the indices here
@@ -84,15 +85,29 @@ export default {
     // c_Min: miniIndex
     // c_cV: currentVertex
     // c_m: m (neighbour of currentVertex)
-    const refresh = (vis, c_nodes_etc, c_Min, c_cV, c_m) => {
+    // c_Total: total cost (at end)
+    const refresh = (vis, c_nodes_etc, c_Min, c_cV, c_m, c_Total = null) => {
       vis.array.set(c_nodes_etc, algNameStr);
-      // set n, m, Min as required
-      let c_m1 = (c_m === null? null: c_m+1);
-      let c_cV1 = (c_cV === null? null: c_cV+1);
-      let c_Min1 = (c_Min === null? null: c_Min+1);
-      vis.array.assignVariable(nStr, 2, c_cV1);
-      vis.array.assignVariable(mStr, 2, c_m1);
-      vis.array.assignVariable(minStr, 2, c_Min1); 
+      // XXX Hack to display total cost near left of array
+      // aligned near the left of the array if c_Total != null and
+      // room permits; otherwise we set and display n, m, Min as required
+      // XXX could do similar for other algorithms to display 'Path'
+      // 'Len.' ' = ' ...
+      if (c_Total != null && c_nodes_etc[MCOST].length > 3) {
+        // vis.array.assignVariable('Tot. Cost', 2, 0); 
+        vis.array.assignVariable(totalStrs[0], 2, 0); 
+        vis.array.assignVariable(totalStrs[1], 2, 1); 
+        vis.array.assignVariable(totalStrs[2], 2, 2); 
+        vis.array.assignVariable(c_Total, 2, 3); 
+      } else {
+        let c_m1 = (c_m === null? null: c_m+1);
+        let c_cV1 = (c_cV === null? null: c_cV+1);
+        let c_Min1 = (c_Min === null? null: c_Min+1);
+        let c_Total1 = (c_Total === null? null: c_Total);
+        vis.array.assignVariable(nStr, 2, c_cV1);
+        vis.array.assignVariable(mStr, 2, c_m1);
+        vis.array.assignVariable(minStr, 2, c_Min1); 
+      }
 
       // highlight nodes as finalised/frontier in array
       for (let i = 0; i < numVertices; i++) {
@@ -190,7 +205,7 @@ export default {
 
     let currentVertex = null;
     // while Nodes not Empty 
-    // while (visited.size < numVertices) { 
+    // while (visited.size < numVertices)  
     // extra chunk before break to make loop termination clearer
     /* eslint-disable no-constant-condition */
     while (true) {
@@ -236,7 +251,19 @@ export default {
         [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex]
       );
       if (!(visited.size < numVertices)) {
-        chunker.add(99); // return at end of function
+        // return at end of function
+
+        // sum of all numbers in finalCosts array
+        totalCost = finalCosts.reduce((acc, el) => 
+            (isNumber(el)? acc + el: acc), 0);
+        chunker.add(
+          99,
+          (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
+            refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
+          },
+          [[nodes, parents, minCosts, finalCosts], null,
+              null, null, totalCost]
+        );
         break;
       }
 
@@ -272,8 +299,25 @@ export default {
       chunker.add(10);
       if (currentVertex === null // || currentVertex === end
         || cost[currentVertex] === Infinity) {
-        // terminate without finding end node
-        chunker.add(3);
+        // return without exploring all components
+
+        // undo last "remove next element" operation
+        minCosts[currentVertex+1] = infinityStr;
+        finalCosts[currentVertex+1] = dashStr;
+        miniIndex = currentVertex;
+        // sum all numbers in finalCosts array
+        totalCost = finalCosts.reduce((acc, el) => 
+            (isNumber(el)? acc + el: acc), 0);
+        console.log(['totalCost', totalCost]);
+        chunker.add(
+          3,
+          (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
+            vis.graph.removeNodeColor(currentVertex);
+            refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
+          },
+          [[nodes, parents, minCosts, finalCosts], miniIndex,
+              currentVertex, null, totalCost]
+        );
         // return
         break; 
       }
@@ -285,7 +329,7 @@ export default {
       // for each node m neighbouring n
       for (let m = 0; m < numVertices; m++) {
         if (edgeValueMatrix[currentVertex][m] !== 0) { //TODO: check
-            // && !visited.has(m)) {  // Skip if no edge exists
+            // && !visited.has(m))   // Skip if no edge exists
           // findMinimum();
           chunker.add(
             4,

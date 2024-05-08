@@ -26,7 +26,7 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
                             array, and if we have explored the whole graph
                             component that should be indicated. Here we
                             highlight the path found in the Parent array,
-                            if successful.
+                            if successful, and the explored component otherwise.
                         \\Expl} 
                     \\In} 
                     for each node m neighbouring n // G has edge from n to m \\B 4

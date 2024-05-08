@@ -188,7 +188,7 @@ export default {
 
     let currentVertex = null;
     // while Nodes not Empty 
-    // while (visited.size < numVertices) { 
+    // while (visited.size < numVertices)  
     // extra chunk before break to make loop termination clearer
     /* eslint-disable no-constant-condition */
     while (true) {
@@ -235,6 +235,15 @@ export default {
       );
       if (!(visited.size < numVertices)) {
         chunker.add(99); // return at end of function
+        chunker.add(
+          99,
+          (vis, v, c_miniIndex, c_cV, c_m) => {
+// XXXXXX
+            // refresh(vis, v, c_miniIndex, c_cV, c_m);
+          },
+          [[nodes, parents, minCosts, finalCosts], miniIndex,
+              null, null]
+        );
         break;
       }
 
@@ -270,8 +279,21 @@ export default {
       chunker.add(10);
       if (currentVertex === null // || currentVertex === end
         || cost[currentVertex] === Infinity) {
-        // terminate without finding end node
-        chunker.add(3);
+        // return without exploring all components & no end node
+
+        // undo last "remove next element" operation
+        minCosts[currentVertex+1] = infinityStr;
+        finalCosts[currentVertex+1] = dashStr;
+        miniIndex = currentVertex;
+        chunker.add(
+          3,
+          (vis, v, c_miniIndex, c_cV, c_m) => {
+            vis.graph.removeNodeColor(currentVertex);
+            refresh(vis, v, c_miniIndex, c_cV, c_m);
+          },
+          [[nodes, parents, minCosts, finalCosts], miniIndex,
+              null, null]
+        );
         // return
         break; 
       }
@@ -281,25 +303,31 @@ export default {
           (vis, c_nodes_etc) => {
                 // remove n, add start and end
                 vis.array.set(c_nodes_etc, algNameStr);
-                vis.array.assignVariable('n', 2, null);
                 vis.array.assignVariable('end', 2, end + 1);
                 vis.array.assignVariable('start', 2, start + 1);
+                vis.array.assignVariable('n', 2, null);
                 // remove color from node numbers
-                for(let i = 0; i < c_nodes_etc[NODE].length; i++){
-                  vis.array.deselect(0, i);
-                }
+                // (done by vis.array.assignVariable, it seems):
+                // for(let i = 0; i < c_nodes_etc[NODE].length; i++){
+                  // vis.array.deselect(0, i);
+                // }
+
                 // color the path from the start node to the end node
                 // + color nodes and parent array
                 let current = end;
+                let next = 0;
                 while((current != start) && (c_nodes_etc[PAR][current+1] != null))
                 { 
+                  next = c_nodes_etc[PAR][current+1]-1;
                   vis.array.select(NODE, current + 1, NODE, current + 1, colors.SUCCESS_A);
                   vis.array.select(PAR, current + 1, PAR, current + 1, colors.SUCCESS_A);
-                  vis.graph.removeEdgeColor(current, c_nodes_etc[PAR][current+1]-1);
-                  vis.graph.colorEdge(current, c_nodes_etc[PAR][current+1]-1, colors.SUCCESS_E);
-                  current = c_nodes_etc[PAR][current+1]-1;
+                  vis.graph.removeEdgeColor(current, next);
+                  vis.graph.colorEdge(current, next, colors.SUCCESS_E);
+                  current = next;
                 }
-
+                // also colour start node in array + final cost for end
+                vis.array.select(NODE, start + 1, NODE, start + 1, colors.SUCCESS_A);
+                vis.array.select(FCOST, end + 1, FCOST, end + 1, colors.SUCCESS_A);
           },
           [[nodes, parents, minCosts, finalCosts]]
         )

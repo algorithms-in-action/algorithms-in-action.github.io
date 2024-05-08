@@ -82,6 +82,8 @@ import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
 
 import ControlButton from '../../../components/common/ControlButton';
 import { template } from 'lodash';
+// XXX ListParam used here - better to use something simpler - see
+// comments elsewhere (search for ListParam)
 import ListParam from './ListParam';
 import '../../../styles/Param.scss';
 
@@ -312,7 +314,6 @@ function EuclideanMatrixParams({
       let newEndNodes = endNodes.filter((e) => e <= newSize);
       if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
         newEndNodes = [newSize];
-      // console.log(newEndNodes);
       setEndNodesTxt(nums2Txt(newEndNodes));
       setEndNodes(newEndNodes);
     }
@@ -493,6 +494,7 @@ function EuclideanMatrixParams({
       }
       adjacent.push(temp);
     });
+
     // Calculate edges based on adjacent matrix
     // XXX should figure out an appropriate error message if things are
     // screwed up
@@ -586,12 +588,12 @@ function EuclideanMatrixParams({
   // Handle text input for coordinates
   // modified from the Union-Find code (that team seemed to know what
   // they were doing!)
-  // BUG XXX if editing the XY coordinates changes the number of
-  // coordinates the edge matrix display ends up not square and the
-  // graph display is not updated - the edge matrix should be trimmed or
-  // extended in this code if the size changes. If the edges text is
-  // later edited in a compatible way it all works out fine but the
-  // mangled intermmediate state is best avoided.
+  // XXX ListParam is used. It stores a comma separated list as an array
+  // of strings, which we don't really want for coordinates or edges.
+  // Using an array for edgesTxt, but only when the edges are edited is
+  // horrible and we use a hack here to convert it back to a string.
+  // We should really have something like ListParam that doesn't mess
+  // about with things.
   const handleXYTxt = (e) => {
     e.preventDefault();
     setMessage(null);
@@ -607,15 +609,23 @@ function EuclideanMatrixParams({
       let newEndNodes = endNodes.filter((e) => e <= newSize);
       if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
         newEndNodes = [newSize];
-      // console.log(newEndNodes);
       setEndNodesTxt(nums2Txt(newEndNodes));
       setEndNodes(newEndNodes);
     }
-    if (newSize !== size)
-      setData2(edgeTxt2Data2(edgesTxt, newSize, unweighted, symmetric, setMessage, ALGORITHM_NAME));
+    // console.log('handleXYTxt');
+    // console.log(edgesTxt);
+    // XXX ListParam hack - see above
+    let edgesTxt1 = edgesTxt;
+    if (typeof edgesTxt !== "string")
+      edgesTxt1 = edgesTxt.join();
+    // console.log(edgesTxt1);
+    if (newSize !== size) {
+      setData2(edgeTxt2Data2(edgesTxt1, newSize, unweighted, symmetric, setMessage, ALGORITHM_NAME));
+    }
   }
 
   // Handle text input for edges/weights
+  // XXX ListParam used - see above
   const handleEdgeTxt = (e) => {
     e.preventDefault();
     setMessage(null);
@@ -630,7 +640,6 @@ function EuclideanMatrixParams({
     e.preventDefault();
     setMessage(null);
     const newEndNodes = endTxt2EndNodes(e.target[0].value, size);
-    // console.log(newEndNodes);
     if (newEndNodes !== null)
       setEndNodes(newEndNodes);
   }

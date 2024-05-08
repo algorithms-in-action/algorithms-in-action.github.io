@@ -28,7 +28,7 @@ export default parse(`
                         finding the end node that should be indicated, otherwise
                         the Parent array has the desired path information.  Here we
                         highlight the path found in the Parent array,
-                        if successful.
+                        if successful, and the explored component otherwise.
                     \\Expl}
                 \\In}
                 for each node m neighbouring n // G has edge from n to m \\B 4
