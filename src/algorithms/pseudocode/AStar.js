@@ -11,9 +11,15 @@ export default parse(`
             // on a measure of the distance from each node to e).
      \\In{
           initialise, with fontier={s}, stored in Nodes \\Ref Init
-            while Nodes not empty \\B 2
-            \\Expl{Nodes is the data structure where we store the nodes that are 
-		in the frontier.  In the A* algorithm, Nodes is a Priority Queue.
+            while Nodes is not empty \\B 2
+            \\Expl{ Nodes is the data structure used to represent the frontier.
+		For A*, Nodes is a priority queue, ordered on Length (the minumum
+                found so far) plus the heuristic value. Here we highlight the Min
+                value. The priority queue also contains nodes that have not been
+                seen, which have infinite Length. The frontier nodes are those
+                shown with a finite Length so far. Nodes with no Length shown
+                have been finalised. The frontier and finalised nodes are also
+                highlighted in the graph display.
             \\Expl}
             \\In{
                 remove next node n from Nodes and finalise it \\Ref Next_node

@@ -11,7 +11,16 @@ Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
         // node i (if one has been found; Parent[i] = 0 otherwise). 
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
-                while Nodes not empty \\B 2
+                while Nodes is not empty \\B 2
+            \\Expl{ Nodes is the data structure used to represent the frontier.
+                For Dijkstra's algorithm, Nodes is a priority queue, ordered on
+                Cost (the minumum path length found so far). Here we highlight the Min
+                value. The priority queue also contains nodes that have not been
+                seen, which have infinite Cost. The frontier nodes are those
+                shown with a finite Cost. Nodes with no Cost shown
+                have been finalised. The frontier and finalised nodes are also
+                highlighted in the graph display.
+            \\Expl}
                 \\In{
                     remove next node n from Nodes and finalise it \\Ref Next_node
                     // The Parent of n has now been determined

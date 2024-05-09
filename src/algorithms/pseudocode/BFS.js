@@ -11,7 +11,14 @@ export default parse(`
             // node i (if one has been found; Parent[i] = 0 otherwise).
     \\In{
         initialise, with fontier={s}, stored in Nodes \\Ref Init
-        while Nodes not empty \\B 2
+        while Nodes is not empty \\B 2
+            \\Expl{ Nodes is the data structure used to represent the frontier.
+                For BFS, Nodes is a queue, shown below the arrays.  The frontier
+                nodes are simply those in the queue (they are also marked as
+                Seen). The Seen nodes that are no longer in the queue are
+                finalised.  The frontier and finalised nodes are also highlighted
+                in the graph display.
+            \\Expl}
         \\In{
             remove next node n from Nodes and finalise it \\Ref Next_node 
             // The Parent of n has now been determined

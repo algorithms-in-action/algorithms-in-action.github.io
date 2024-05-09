@@ -11,7 +11,15 @@ export default parse(`
             // node i (if one has been found; Parent[i] = 0 otherwise).
     \\In{
         initialise, with fontier={s}, stored in Nodes \\Ref Init
-        while Nodes not empty \\B 2
+        while Nodes is not empty \\B 2
+            \\Expl{ Nodes is the data structure used to represent the frontier.
+                For DFS, Nodes is a stack, shown below the arrays.
+                The stack can have repeated elements and when we pop a node off
+                the stack it is ignored if it has already been finalised.
+                The frontier nodes are those in the stack that are not finalised.
+                The frontier and finalised nodes are also highlighted in the
+                graph display.
+            \\Expl}
         \\In{
             remove next node n from Nodes and finalise it \\Ref Next_node
             // The Parent of n has now been determined

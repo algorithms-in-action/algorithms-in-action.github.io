@@ -12,7 +12,16 @@ Prim(G, s) // Given a weighted graph G, return a minimum spanning tree \\B 1
         // the root s (which has 0 as the parent).
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
-                while Nodes not empty \\B 2
+                while Nodes is not empty \\B 2
+           \\Expl{ Nodes is the data structure used to represent the frontier.
+                For Prim's algorithm, Nodes is a priority queue, ordered on
+                Cost (the minumum edge weight found so far). Here we highlight the Min
+                value. The priority queue also contains nodes that have not been
+                seen, which have infinite Cost. The frontier nodes are those
+                shown with a finite Cost. Nodes with no Cost shown
+                have been finalised. The frontier and finalised nodes are also
+                highlighted in the graph display.
+            \\Expl}
                 \\In{
                     remove next node n from Nodes and finalise it \\Ref Next_node
                     // The Parent of n has now been determined
