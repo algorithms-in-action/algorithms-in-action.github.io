@@ -8,7 +8,7 @@ import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
   makeColumnArray,
-  makeData,
+  makeWeights,
   singleNumberValidCheck,
   errorParamMsg,
   successParamMsg, matrixValidCheck,
@@ -35,6 +35,7 @@ function simulateMouseClick(element) {
 /**
  * This matrix param component can be used when
  * the param input accepts a matrix
+ * (currently assumes matrix represents edge weights of a graph)
  */
 function MatrixParam({
   defaultSize,
@@ -46,24 +47,33 @@ function MatrixParam({
   setMessage,
   ALGORITHM_NAME,
   EXAMPLE,
-  EXAMPLE2,
+  EXAMPLE2, 
+  unweighted
 }) {
-  // const [size, setSize] = useState(defaultSize);
+  // const [size, setSize] = useState(defaultSize); 
+  
   const [size, setSize] = useState(defaultSize);
+  const [endNode, setEndNode] = useState(defaultSize); 
+  const [startNode, setStartNode] = useState(1);
 
   const columns = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
-  const [data, setData] = useState(() => makeData(size, min, max, symmetric));
+
+  // modified this so that the graph is synchronized with the matrix at the start
+  // XXX its not for Prims...
+  const [data, setData] = useState(() => makeWeights(size, min, max, symmetric, unweighted));
+
+
   const [originalData, setOriginalData] = useState(data);
-  const [buttonMessage, setButtonMessage] = useState('Start');
+  const [buttonMessage, setButtonMessage] = useState('Restart');
 
   // reset the Table when the size changes
   useEffect(() => {
-    const newData = makeData(size, min, max, symmetric);
+    const newData = makeWeights(size, min, max, symmetric, unweighted);
     setData(newData);
     setOriginalData(newData);
-  }, [size, min, max, symmetric]);
+  }, [size, min, max, symmetric, unweighted]);
 
   useEffect(() => {
     const element = document.querySelector('button[id="startBtnGrp"]');
@@ -75,26 +85,66 @@ function MatrixParam({
     setMessage(null);
     setData(originalData);
   };
-
+  
+  //The size does not go above 10 or below one
   const updateTableSize = (newSize) => {
-    setMessage(null);
-    setSize(newSize);
+    if (newSize >= 1 && newSize <= 10) {  
+      setMessage(null);
+      setSize(newSize); 
+      //If the size decrease to a lower value than endNode, endNode should
+      //decrease to that value
+      if(endNode > newSize){
+        setEndNode(newSize);
+      } 
+
+      if(startNode > newSize){
+        setStartNode(newSize);
+      } 
+
+    } 
   };
 
   // When cell renderer calls updateData, we'll use
   // the rowIndex, columnId and new value to update the
   // original data
   const updateData = (rowIndex, columnId, value) => {
-    setData((old) => old.map((row, index) => {
-      if (index === rowIndex) {
-        return {
-          ...old[rowIndex],
-          [columnId]: value,
-        };
-      }
-      return row;
-    }));
-  };
+    
+    // Check if the new value is the same as the old value
+    if (data[rowIndex] && data[rowIndex][columnId] === value) {
+      return; 
+    }
+    
+    // Make a deep copy of the data
+    const updatedData = JSON.parse(JSON.stringify(data));
+
+    // Update the cell (a, b)
+    if (updatedData[rowIndex]) {
+        updatedData[rowIndex][columnId] = value;
+    }
+
+    // Only do the following if the name is NOT "transitiveClosure"
+    if (name !== "transitiveClosure") {
+        // Get the reversed column id (i.e., swap rowIndex and columnId)
+        const reverseColumnId = `col${rowIndex}`;
+        const reverseRowIndex = parseInt(columnId.replace('col', ''), 10);
+
+        // Update the symmetric cell (b, a)
+        if (updatedData[reverseRowIndex]) {
+            updatedData[reverseRowIndex][reverseColumnId] = value;
+        }
+    } 
+
+
+  
+    // Update the state
+    setData(updatedData);  
+    
+    //handleSearch();
+  }; 
+
+  useEffect(() => {
+    handleSearch();
+  }, [data]);
 
   // Get and parse the matrix
   const getMatrix = () => {
@@ -115,7 +165,7 @@ function MatrixParam({
     });
 
     if (matrix.length !== size || matrix[0].length !== size) return [];
-    if (name === 'prim') {
+    if (name === 'primOld' || name === 'primNew') {
       if (matrixValidCheck(matrix) === false) {
         setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
         // eslint-disable-next-line consistent-return
@@ -127,7 +177,8 @@ function MatrixParam({
   };
 
   // Run the animation
-  const handleSearch = () => {
+  const handleSearch = () => { 
+
     closeInstructions(); // remove instruction
     setMessage(null);
     const matrix = getMatrix();
@@ -138,37 +189,132 @@ function MatrixParam({
         name,
         mode,
         size,
-        matrix,
+        matrix, 
+        endNode,  
+        startNode,
       });
     //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }
+  };  
+  
+  useEffect(() => {
+    handleSearch();
+  }, [startNode]);
+  useEffect(() => {
+    handleSearch();
+  }, [endNode]);  
+
+
+  const increaseStartNode = () => {
+    if (startNode < size) {
+        setStartNode(prevStartNode => prevStartNode + 1);
+    }
   };
 
+  const decreaseStartNode = () => {
+    if (startNode > 1) {
+        setStartNode(prevStartNode => prevStartNode - 1);
+    }
+  };
+
+  const increaseEndNode = () => {
+    if (endNode < size) {
+        setEndNode(prevEndNode => prevEndNode + 1);
+    }
+  };
+
+  const decreaseEndNode = () => {
+    if (endNode > 1) {
+        setEndNode(prevEndNode => prevEndNode - 1);
+    }
+  }; 
+
+
   return (
-    <div className="matrixContainer">
-      <div className="matrixButtonContainer">
-        <button className="matrixBtn" onClick={() => updateTableSize(size + 1)}>
-          Increase Graph Size
+    <div className="matrixContainer"> 
+      <div className="matrixButtonContainer"> 
+      {(name === "BFS" || name === "DFS" || name === "dijkstra"
+       || name === "aStar") && (
+          <div className="startNodeInputContainer">
+          <label htmlFor="startNodeCounter" className="startNodeLabel">Start Node: </label>
+          <button 
+              onClick={() => decreaseStartNode()}
+              disabled={startNode <= 1}
+              className={`arrowBtn pointerCursor ${startNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="startNodeCounter" className="startNodeValue"> {startNode} </span>
+          <button 
+              onClick={() => increaseStartNode()}
+              disabled={startNode >= size}
+              className={`arrowBtn pointerCursor ${startNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
+        )}
+        
+        
+        {(name === "BFS" || name === "DFS" || name === "aStar" || name === "dijkstra") && (
+          <div className="endNodeInputContainer">
+          <label htmlFor="endNodeCounter" className="endNodeLabel">End Node: </label>
+          <button 
+              onClick={() => decreaseEndNode()}
+              disabled={endNode <= 1}
+              className={`arrowBtn pointerCursor ${endNode <= 1 ? 'disabledBtn' : ''}`}
+          >
+              -
+          </button>
+          <span id="endNodeCounter" className="endNodeValue"> {endNode} </span>
+          <button 
+              onClick={() => increaseEndNode()}
+              disabled={endNode >= size}
+              className={`arrowBtn pointerCursor ${endNode >= size ? 'disabledBtn' : ''}`}
+          >
+              +
+          </button>
+      </div>
+        )}
+        <button 
+          className={`matrixBtn ${size == 10 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size + 1)}>
+            Increase Graph Size
         </button>
-        <button className="matrixBtn" onClick={() => updateTableSize(size - 1)}>
-          Decrease Graph Size
+        
+        <button 
+          className={`matrixBtn ${size == 1 ? 'disabledText' : ''}`} 
+          onClick={() => updateTableSize(size - 1)}>
+           Decrease Graph Size
         </button>
-        <ControlButton
-          icon={<RefreshIcon />}
-          className="greyRoundBtn"
-          id="refreshMatrix"
-          onClick={resetData}
-        />
+        <button className="matrixBtn" onClick={resetData}>
+          Revert
+        </button>
+        
+        
+        
+
         <button className="matrixBtn" onClick={handleSearch} id="startBtnGrp">
           {buttonMessage}
         </button>
-      </div>
+      </div> 
+
+      
 
       <Table columns={columns} data={data} updateData={updateData} algo={name} />
     </div>
   );
+  
 }
 
 export default MatrixParam;
+/*
+<ControlButton
+          icon={<RefreshIcon />}
+          className="greyRoundBtn"
+          id="refreshMatrix"
+          onClick={resetData}
+        /> */
+

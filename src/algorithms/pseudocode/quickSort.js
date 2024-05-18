@@ -8,7 +8,8 @@ median of three partitioning, etc), in AIA. Ideally the list of algorithms
 presented by AIA should just include a single occurrence of quicksort.
 Different versions could be selected via a menu in the quicksort animation
 (or perhaps a sub-menu at the top level).  This version should be the
-default/first listed.
+default/first listed. Currently this version plus M3 are supported and
+are listed separately at the top level.
 \\Note}
 
 \\Code{
@@ -39,28 +40,26 @@ Quicksort(A, left, right) \\B 1
                 There are various ways this can be coded, often with
                 some subtle points.
         \\Expl}
-        Quicksort FirstHalf    \\Ref QuicksortFirstHalf 
-        \\Expl{  Sort elements left of (smaller or equal to) the
-                pivot, which is in A[i].
+        Sort FirstPart   \\Ref QuicksortFirst
+        \\Expl{  Sort elements left of (smaller or equal to) the pivot, which is in A[i].
         \\Expl}
-        Quicksort SecondHalf    \\Ref QuicksortSecondHalf
-        \\Expl{  Sort elements right of (greater or equal to) the
-                pivot, which is in A[i].
+        Sort SecondPart  \\Ref QuicksortSecond
+        \\Expl{  Sort elements right of (greater or equal to) the pivot, which is in A[i].
         \\Expl}
-        
     \\In}
-    // Done \\B 50
+    // Done \\B 19
 \\Code}
 
 \\Code{
-QuicksortFirstHalf
+QuicksortFirst
+// *Recursively* sort first part: \\B 300
 Quicksort(A, left, i - 1) \\B 3
 \\Code}
 
 \\Code{
-QuicksortSecondHalf
+QuicksortSecond
+// *Recursively* sort second part: \\B 400
 Quicksort(A, i + 1, right) \\B 4
-// Done \\B 19
 \\Code}
 
 \\Code{
@@ -75,9 +74,10 @@ pivot <- A[right] \\B 5
 
 \\Code{
 Partition
-Set index i at left of the array segment and j at the right    \\Ref init_iAndj 
-\\Expl{  i scans from left to right stopping at large elements and
-        j scans from right to left stopping at small elements.
+Set index i at left the of array segment and j at the right    \\Ref init_iAndj 
+\\Expl{  i scans from left to right stopping at "large" elements
+(greater than or equal to the pivot) and j scans from right to left
+stopping at "small" (less than or equal to the pivot) elements.
 \\Expl}
 while i < j \\B 6
 \\Expl{  When the indices cross, all the large elements at the left of
@@ -99,7 +99,7 @@ while i < j \\B 6
             decrementing beyond the left of the array segment.
     \\Expl}
     if j > i \\B 9
-    \\Expl{  If the indices cross we exit the loop.
+    \\Expl{  If the indices cross, we exit the loop.
     \\Expl}
     \\In{
         swap(A[i], A[j]) \\B 10
@@ -108,27 +108,28 @@ while i < j \\B 6
         \\Expl}
     \\In}
 \\In}
-Put the pivot in its final place    \\Ref SwapP 
+// Put the pivot in its final place
+swap(A[i], A[right]) \\B 13
+\\Expl{  The pivot element, in A[right], is swapped with A[i]. All
+        elements to the left of A[i] must be less than or equal to
+        the pivot and A[i] plus all elements to its right must be
+        greater than or equal to the pivot, thus the pivot is now in its
+        final position and is not considered further.
+\\Expl}
 \\Code}
 
 \\Code{
 init_iAndj
 i <- left - 1 \\B 11
-\\Expl{  Because we will be doing a preincrement, the i pointer is set to left - 1.
+\\Expl{  The i pointer scans left to right with a preincrement, so
+it is set to left - 1 (this may be off the left end of the array but
+we never access that element).
 \\Expl}
 j <- right \\B 12
-\\Expl{  The j pointer is set to right, rather than right + 1, because the pivot
-        element is in A[right] and is not part of the partitioning.
+\\Expl{  The j pointer scans right to left with a predecrement and
+is set to right so the pivot element, in A[right], is skipped in the
+scanning (it is swapped into its correct position at the end).
 \\Expl}
 \\Code}
 
-\\Code{
-SwapP
-swap(A[i], A[right]) \\B 13
-\\Expl{  The pivot element, in A[right], is swapped with A[i]. All
-        elements to the left of A[i] must be less then or equal to
-        the pivot and A[i] plus all elements to its right must be
-        greater than or equal to the pivot.
-\\Expl}
-\\Code}
 `);

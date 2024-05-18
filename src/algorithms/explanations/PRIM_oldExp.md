@@ -34,3 +34,18 @@ collection of nodes with associated costs and the node with
 the minimum cost is important at each stage. When elements
 disappear from the Cost array it means the element has been
 removed from the priority queue (the value is not used again).
+
+Here we number all nodes for simplicity so we can use arrays for the graph
+representation, the parent pointers, etc. In this animation the layout of
+the graph nodes is important. All nodes are on a two-dimensional grid so
+each have (x,y) integer coordinates.  The weight of each edge can be are
+related to the "distance" between the two nodes.  Two measures of distance
+are provided: Euclidean, Manhattan and as input.  Eclidean distance is
+the straight line distance; here we round it up to the next integer.
+Manhattan distance is the difference in x coordinate values plus the
+difference in y coordinate values. Weights can also be input manually.
+You can choose which distance measure to use to explore behaviour
+of the algorithm.  You can also choose the start node and change the
+graph choice.
+
+

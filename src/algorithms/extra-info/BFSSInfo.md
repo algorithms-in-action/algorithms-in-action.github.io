@@ -1,3 +1,21 @@
-# Extra Info
 
-Geeks for Geeks Link: <a href="https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/" target="_blank"><span style="color:blue">**Brute Force String Search**</span></a>
+<style>
+a:link {
+    color: #1e28f0;
+}
+a:visited{
+    color: #3c1478;
+}
+a:hover{
+    color: #1e288c;
+}
+</style>
+
+## Extra Info
+
+-----
+
+Geeks for Geeks Link: [**Brute Force String Search**][G4GLink]
+
+
+[G4GLink]: https://www.geeksforgeeks.org/naive-algorithm-for-pattern-searching/

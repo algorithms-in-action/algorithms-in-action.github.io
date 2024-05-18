@@ -67,11 +67,12 @@ $yellowLine: #FFDE3C;
 	--mid-control-param-border: #D4D4D4;
 	--mid-control-param-btn-active: #6a6a6a;
 	--mid-control-param-btn-disabled: #b5b5b5;
-	--mid-control-param-btn-active-col: #027AFF;
+	--mid-control-param-btn-active-col: #027AFF; 
+	
 	--mid-control-param-btn-bg-hover: #f7f7f7;
 	--mid-control-param-btn-bg-active: #E3E2E4;
-	--mid-control-param-btn-bg-col-hover: #f5faff;
-	--mid-control-param-btn-bg-col-active: #e4f1ff;
+	--mid-control-param-btn-bg-col-hover: #d5eaff;
+	--mid-control-param-btn-bg-col-active: #c3dcf7;
 	--mid-control-param-grey-btn-col: #717071ba;
 	--mid-control-param-blue-btn-col: #027AFF;
 
@@ -131,7 +132,32 @@ $yellowLine: #FFDE3C;
 	--graph-node-id-fill-sorted: #FFFFFF;
 	--graph-node-circle-fill-visited: #ee0970;
 	--graph-node-circle-stroke-visited: #ee0970;
-	--graph-node-id-fill-visited: #FFFFFF;
+	--graph-node-id-fill-visited: #FFFFFF; 
+
+	// colors for easy graph functions:
+	--graph-node-circle-fill-visited1: #11cc77;
+	--graph-node-circle-stroke-visited1: #11cc77;
+	--graph-node-circle-fill-visited2: #f58b2f;
+	--graph-node-circle-stroke-visited2: #f58b2f; 
+	--graph-node-circle-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-node-circle-stroke-visited3: #FF0000;      /* YouTube Red */
+  --graph-node-circle-fill-visited4: #2289ff;        /* Twitter Blue */
+  --graph-node-circle-stroke-visited4: #2289ff; 
+
+	--graph-edge-line-stroke-visited1: #11cc77;
+	--graph-edge-line-stroke-visited2: #f58b2f;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;  
+	--graph-edge-weight-fill-visited1: #11cc77;
+	--graph-edge-weight-fill-visited2: #f58b2f;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff; 
+	--graph-arrow-fill-visited1: #11cc77;
+	--graph-arrow-fill-visited2: #f58b2f; 
+	--graph-arrow-fill-visited3: #FF0000;              /* YouTube Red */
+  --graph-arrow-fill-visited4: #2289ff;  
+
+	
 
 	--graph-text-fill: #1809ee;
 	--graph-text-stroke: #1809ee;
@@ -154,7 +180,10 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
-	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected3: #8fdbb9; 
+	--array-2d-row-col-bg-selected4:  #FF0000; 
+	--array-2d-row-col-bg-selected5:  #f58b2f; 
+
 	--array-2d-row-col-selected: #FFFFFF;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-patched: #FFFFFF;
@@ -163,9 +192,6 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-color-index: #505050;
 	--array-2d-row-bg-sorted: #aeaeae;
 	--array-2d-row-col-sorted: #FFFFFF;
-
-	--array-1d-future-stack-todo-section: rgba(0, 0, 0, 0.2);
-
 
 	--array-graph-row-col-bg: #ffffff;
 	--array-graph-row-col-border: #4f4f4f;
@@ -190,6 +216,10 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-arrow-fill: #505050;
 	--array-graph-edge-arrow-fill-selected: #2289ff;
 	--array-graph-edge-arrow-fill-visited: #2289ff;
+
+
+	// X, Y Axis
+	--axis: #585858;
 
 
 }
@@ -296,9 +326,9 @@ $yellowLine: #FFDE3C;
 	--right-code-line-num: #475164;
 	--right-code-line-explain-btn-active: #9b9b9b;
 	--right-code-line-explain-btn-inactive: #3f3f3f;
-	--right-code-expand-btn-bg: #1d1d1d;
+	--right-code-expand-btn-bg: #101010;
 	--right-code-expand-btn: #5b5b5b;
-	--right-code-expand-btn-bg-hover: #171717;
+	--right-code-expand-btn-bg-hover: #000000;
 
 	--right-code-line-explain-bg: #16171B;
 	--right-code-line-explain-title: #a2a2a2;
@@ -324,13 +354,24 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-fill-visited1: #11cc77;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
-	--graph-node-circle-stroke-visited2: #f58b2f;
+	--graph-node-circle-stroke-visited2: #f58b2f; 
+	--graph-node-circle-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-node-circle-stroke-visited3: #FF0000;      /* YouTube Red */
+  --graph-node-circle-fill-visited4: #2289ff;        /* Twitter Blue */
+  --graph-node-circle-stroke-visited4: #2289ff; 
+
 	--graph-edge-line-stroke-visited1: #11cc77;
 	--graph-edge-line-stroke-visited2: #f58b2f;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;  
 	--graph-edge-weight-fill-visited1: #11cc77;
 	--graph-edge-weight-fill-visited2: #f58b2f;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff; 
 	--graph-arrow-fill-visited1: #11cc77;
-	--graph-arrow-fill-visited2: #f58b2f;
+	--graph-arrow-fill-visited2: #f58b2f; 
+	--graph-arrow-fill-visited3: #FF0000;              /* YouTube Red */
+  --graph-arrow-fill-visited4: #2289ff;  
 
 	--graph-edge-line-stroke: #464646;
 	--graph-edge-line-weight-fill: #717171;
@@ -350,6 +391,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected4:  #FF0000;  
+	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-selected: #FFFFFF;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-patched: #FFFFFF;
@@ -361,9 +404,7 @@ $yellowLine: #FFDE3C;
 	--two-array-2d-row-col-bg-selected: #83d489;
 	--two-array-2d-row-col-selected: #FFFFFF;
 	--two-array-2d-row-col-bg-patched: #83d489;
-	--two-array-2d-row-col-patched: #FFFFFF;	
-
-	--array-1d-future-stack-todo-section: rgba(255, 255, 255, 0.4);
+	--two-array-2d-row-col-patched: #FFFFFF;
 
 	--array-graph-row-col-bg: #343434;
 	--array-graph-row-col-border: #212121;
@@ -401,21 +442,31 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
 	--graph-node-circle-stroke-visited2: #f58b2f;
+	--graph-node-circle-fill-visited3: #FF0000;
+	--graph-node-circle-stroke-visited3: #FF0000;
+	--graph-node-circle-fill-visited4: #2289ff;
+	--graph-node-circle-stroke-visited4: #2289ff;
 
 	--graph-edge-line-stroke-selected: #ee0970;
 	--graph-edge-weight-fill-selected: #ee0970;
 	--graph-edge-line-stroke-visited: #2289ff;
 	--graph-edge-line-stroke-visited1: #11cc77;
 	--graph-edge-line-stroke-visited2: #f58b2f;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;  
 	--graph-edge-weight-fill-visited: #2289ff;
 	--graph-edge-weight-fill-visited1: #11cc77;
 	--graph-edge-weight-fill-visited2: #f58b2f;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff; 
 
 
 	--graph-arrow-fill-selected: #ee0970;
 	--graph-arrow-fill-visited: #2289ff;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
+	--graph-arrow-fill-visited3: #FF0000;
+  --graph-arrow-fill-visited4: #2289ff;
 
 	--array-1d-row-col-bg-selected: #e85c49;
 	--array-1d-row-col-bg-patched: #83d489;
@@ -425,13 +476,15 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected4:  #FF0000; 
+	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #FFFFFF;
 
 	--two-array-2d-row-col-bg-selected: #83d489;
 	--two-array-2d-row-col-selected: #FFFFFF;
 	--two-array-2d-row-col-bg-patched: #83d489;
-	--two-array-2d-row-col-patched: #FFFFFF;	
+	--two-array-2d-row-col-patched: #FFFFFF;
 
 	--array-graph-row-col-bg-selected: #2289ff;
 	--array-graph-row-col-bg-patched: #ee0970;
@@ -448,6 +501,9 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-arrow-fill-selected: #2289ff;
 	--array-graph-edge-arrow-fill-visited: #ee0970;
 
+	--simple-fill-var-green: #83d489;
+	--simple-fill-var-orange: #f5d651;
+	--simple-fill-var-red: #e75c49;
 }
 
 
@@ -475,6 +531,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected4:  #FF0000; 
+	--array-2d-row-col-bg-selected5: #f58b2f; 
 	--array-2d-row-col-bg-patched: #258bff;
 	--array-2d-row-col-sorted: #ffffff;
 
@@ -497,6 +555,10 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-weight-fill-visited: #e42fd5;
 	--array-graph-edge-arrow-fill-selected: #059847;
 	--array-graph-edge-arrow-fill-visited: #e42fd5;
+
+	--simple-fill-var-green: #418f45;
+	--simple-fill-var-orange: #f2c988;
+	--simple-fill-var-red: #e50c70;
 }
 
 // Override Algorithm Theme Colors [Green]
@@ -523,6 +585,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected4:  #FF0000; 
+	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-bg-patched: #9f2fe4;
 	--array-2d-row-col-sorted: #ffffff;
 
@@ -545,6 +609,10 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-weight-fill-visited: #9f2fe4;
 	--array-graph-edge-arrow-fill-selected: #0d9eae;
 	--array-graph-edge-arrow-fill-visited: #9f2fe4;
+
+	--simple-fill-var-green: #469847;
+	--simple-fill-var-orange: #f1f513;
+	--simple-fill-var-red: #9f2ee4;
 }
 
 

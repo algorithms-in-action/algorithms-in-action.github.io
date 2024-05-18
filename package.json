@@ -4,12 +4,18 @@
   "private": true,
   "homepage": "https://algorithms-in-action.github.io",
   "scripts": {
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build": "run-script-os",
+    "build:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "build:win32": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
     "eject": "react-scripts eject",
-    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
-    "test": "react-scripts test"
+    "start": "run-script-os",
+    "start:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "start:win32": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "test": "react-scripts test",
+    "test-uf": "npm test -- ./src/algorithms/controllers/unionFind.test.js",
+    "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js"
   },
   "husky": {
     "hooks": {
@@ -54,9 +60,9 @@
     "@mui/lab": "latest",
     "@mui/material": "^5.14.4",
     "@mui/styles": "^5.14.4",
+    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^14.4.3",
-    "@testing-library/jest-dom": "^4.2.4",
     "denque": "^2.0.1",
     "framer-motion": "^4.0.0",
     "lodash": "^4.17.21",
@@ -72,6 +78,7 @@
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
+    "run-script-os": "^1.1.6",
     "sass": "^1.50.0"
   },
   "devDependencies": {
@@ -85,7 +92,8 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.1.3",
     "react": "^17.0.2",
-    "react-test-renderer": "^17.0.2"
+    "react-test-renderer": "^17.0.2",
+    "run-script-os": "^1.1.6"
   }
 }
 

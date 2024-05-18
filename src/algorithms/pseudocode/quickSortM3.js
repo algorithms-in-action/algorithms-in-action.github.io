@@ -32,28 +32,28 @@ Quicksort(A, left, right) \\B 1
                 There are various ways this can be coded, often with
                 some subtle points.
         \\Expl}
-         Quicksort FirstHalf    \\Ref QuicksortFirstHalf 
-        \\Expl{  Sort elements left of (smaller or equal to) the pivot,
-                which is in A[i].
+        Sort FirstPart   \\Ref QuicksortFirst
+        \\Expl{  Sort elements left of (smaller or equal to) the pivot, which is in A[i].
         \\Expl}
-        Quicksort SecondHalf    \\Ref QuicksortSecondHalf
-        \\Expl{  Sort elements right of (greater or equal to) the pivot,
-                which is in A[i].
+        Sort SecondPart  \\Ref QuicksortSecond
+        \\Expl{  Sort elements right of (greater or equal to) the pivot, which is in A[i].
         \\Expl}
     \\In}
+    // Done \\B 19
 \\Code}
-    
+
 \\Code{
-QuicksortFirstHalf
+QuicksortFirst
+// *Recursively* sort first part: \\B 300
 Quicksort(A, left, i - 1) \\B 3
 \\Code}
-    
+
 \\Code{
-QuicksortSecondHalf
+QuicksortSecond
+// *Recursively* sort second part: \\B 400
 Quicksort(A, i + 1, right) \\B 4
-// Done \\B 19
 \\Code}
-    
+
 \\Code{
 ChoosePivot
 Put the left, right and middle elements in increasing order    \\Ref SortLMR
@@ -93,8 +93,9 @@ if A[mid] > A[right] \\B 21
 \\Code{
 Partition
 Set index i at left the of array segment and j at the right    \\Ref init_iAndj 
-\\Expl{  i scans from left to right stopping at large elements and
-        j scans from right to left stopping at small elements.
+\\Expl{  i scans from left to right stopping at "large" elements
+(greater than or equal to the pivot) and j scans from right to left
+stopping at "small" (less than or equal to the pivot) elements.
 \\Expl}
 while i < j \\B 6
 \\Expl{  When the indices cross, all the large elements at the left of
@@ -120,33 +121,34 @@ while i < j \\B 6
     \\Expl}
     \\In{
         swap(A[i], A[j]) \\B 10
-        \\Expl{  Swap the larger element (A[i]) with the smaller 
+        \\Expl{  Swap the larger element (A[i]) with the smaller
                 element (A[j]).
         \\Expl}
     \\In}
 \\In}
-Put the pivot in its final place    \\Ref SwapP 
+// Put the pivot in its final place
+swap(A[i], A[right - 1]) \\B 13
+\\Expl{  The pivot element, in A[right-1], is swapped with A[i]. All
+        elements to the left of A[i] must be less then or equal to
+        the pivot and A[i] plus all elements to its right must be
+        greater than or equal to the pivotC thus the pivot is now in its
+        final position and is not considered further.
+\\Expl}
 \\Code}
     
 \\Code{
 init_iAndj
 i <- left \\B 11
-\\Expl{  i is incremented before use, so A[left+1] is the first
-        element in the left to right scan (A[left] <= pivot already).
+\\Expl{  The i pointer scans left to right with a preincrement and
+is set to left (A[left] is known to be less than or equal to the
+pivot).
 \\Expl}
 j <- right - 1 \\B 12
-\\Expl{  j is decremented before use, so A[right-2] is the first
-        element in the right to left scan (A[right-1] is the pivot).
+\\Expl{  The j pointer scans right to left with a predecrement and
+is set to right-1. A[right] is known to be greater than or equal to the
+pivot and the pivot, in A[right-1], is skipped in the
+scanning it is swapped into its correct position at the end).
 \\Expl}
 \\Code}
     
-\\Code{
-SwapP
-swap(A[i], A[right - 1]) \\B 13
-\\Expl{  The pivot element, in A[right-1], is swapped with A[i]. All
-        elements to the left of A[i] must be less then or equal to
-        the pivot and A[i] plus all elements to its right must be
-        greater than or equal to the pivot.
-\\Expl}
-\\Code}
 `);

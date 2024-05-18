@@ -10,17 +10,73 @@ import * as Instructions from './instructions';
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
- add new algorithms.
+ add new algorithms. There are two versions of this: allalgs
+ is all algorithms, whatever the quality etc, and algorithms is the
+ subset that are selected to be made visible and can be run. The idea is
+ that during development we can merge all algorithms into a single
+ branch of the repository but only deploy some of them to the users.
+ For developers etc we can change a single line of code below where
+ algorithms is defined to deploy all algorithms. For allalgs we use a
+ noDeploy flag for each entry; if it is missing the default is the
+ algorithm is deployed. Note that the DEFAULT_ALGORITHM from
+ src/context/actions.js had better be deployed!
+ XXX Design of noDeploy stuff was done with the aim of minimal code change
+ and could be re-thought when there are fewer merges going on.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
  */
 
 // Very Important: The key for the algorithms must be unique!
-const algorithms = {
+const allalgs = {
+
+  'heapSort': {
+    name: 'Heapsort',
+    category: 'Sort',
+    explanation: Explanation.HSExp,
+    param: <Param.HSParam />,
+    instructions: Instructions.HSInstruction,
+    extraInfo: ExtraInfo.HSInfo,
+    pseudocode: {
+      sort: Pseudocode.heapSort,
+    },
+    controller: {
+      sort: Controller.heapSort,
+    },
+  },
+  'quickSort': {
+    name: 'Quicksort',
+    category: 'Sort',
+    explanation: Explanation.QSExp,
+    param: <Param.QSParam />,
+    instructions: Instructions.QSInstruction,
+    extraInfo: ExtraInfo.QSInfo,
+    pseudocode: {
+      sort: Pseudocode.quickSort,
+    },
+    controller: {
+      sort: Controller.quickSort,
+    },
+  },
+  'quickSortM3': {
+    name: 'Quicksort (Median of 3)',
+    category: 'Sort',
+    explanation: Explanation.QSM3Exp,
+    param: <Param.QSM3Param />,
+    instructions: Instructions.QSInstruction,
+    extraInfo: ExtraInfo.QSM3Info,
+    pseudocode: {
+      sort: Pseudocode.quickSortM3,
+    },
+    controller: {
+      sort: Controller.quickSortM3,
+    },
+  },
+
   'binarySearchTree': {
+    noDeploy: false,
     name: 'Binary Search Tree',
-    category: 'Searching',
+    category: 'Insert/Search',
     param: <Param.BSTParam />,
     instructions: Instructions.BSTInstruction,
     explanation: Explanation.BSTExp,
@@ -34,53 +90,86 @@ const algorithms = {
       search: Controller.binaryTreeSearch,
     },
   },
-  'quickSort': {
-    name: 'Quicksort',
-    category: 'Sorting',
-    explanation: Explanation.QSExp,
-    param: <Param.QSParam />,
-    instructions: Instructions.QSInstruction,
-    extraInfo: ExtraInfo.QSInfo,
+  'TTFTree': {
+    name: '2-3-4 Tree',
+    category: 'Insert/Search',
+    param: <Param.TTFTreeParam/>,
+    instructions: Instructions.TTFInstruction,
+    explanation: Explanation.TTFExp,
+    extraInfo: ExtraInfo.TTFInfo,
     pseudocode: {
-      sort: Pseudocode.quickSort,
-      // medianSort: Pseudocode.quickSortM3,
+      insertion: Pseudocode.TTFTreeInsertion,
+      search: Pseudocode.TTFTreeSearch,
     },
     controller: {
-      sort: Controller.quickSort,
-      // medianSort: Controller.quickSortM3,
+      insertion: Controller.TTFTreeInsertion,
+      search: Controller.TTFTreeSearch,
     },
   },
-  'quickSortM3': {
-    name: 'Quicksort (Median of 3)',
-    category: 'Sorting',
-    explanation: Explanation.QSM3Exp,
-    param: <Param.QSM3Param />,
-    instructions: Instructions.QSInstruction,
-    extraInfo: ExtraInfo.QSM3Info,
+
+  'BFS': {
+    
+    name: 'Breadth First Search',
+    category: 'Graph',
+    param: <Param.BFSParam/>,
+    instructions: Instructions.BFSInstruction,
+    explanation: Explanation.BFSExp,
+    extraInfo: ExtraInfo.BFSInfo,
     pseudocode: {
-      sort: Pseudocode.quickSortM3,
+      find: Pseudocode.BFS,
     },
     controller: {
-      sort: Controller.quickSortM3,
+      find: Controller.BFS,
     },
   },
-  'heapSort': {
-    name: 'Heapsort',
-    category: 'Sorting',
-    explanation: Explanation.HSExp,
-    param: <Param.HSParam />,
-    instructions: Instructions.HSInstruction,
-    extraInfo: ExtraInfo.HSInfo,
+  'DFS': {
+    name: 'Depth First Search',
+    category: 'Graph',
+    param: <Param.DFSParam />,
+    instructions: Instructions.DFSInstruction,
+    explanation: Explanation.DFSExp,
+    extraInfo: ExtraInfo.DFSInfo,
     pseudocode: {
-      sort: Pseudocode.heapSort,
+      find: Pseudocode.DFS,
     },
     controller: {
-      sort: Controller.heapSort,
+      find: Controller.DFS,
     },
   },
+  'dijkstra': {
+    name: 'Dijkstra\'s (shortest path)',
+    category: 'Graph',
+    param: <Param.DIJKParam />,
+    instructions: Instructions.DIJKInstruction,
+    explanation: Explanation.DIJKExp,
+    extraInfo: ExtraInfo.DIJKInfo,
+    pseudocode: {
+      find: Pseudocode.dijkstra,
+    },
+    controller: {
+      find: Controller.dijkstra,
+
+    },
+  }, 
+   'aStar': {
+    name: 'A* (heuristic search)',
+    category: 'Graph',
+    param: <Param.ASTARParam />,
+    instructions: Instructions.ASTARInstruction,
+    explanation: Explanation.ASTARExp,
+    extraInfo: ExtraInfo.ASTARInfo,
+    pseudocode: {
+      find: Pseudocode.AStar,
+    },
+    controller: {
+      find: Controller.AStar,
+
+    },
+  }, 
   'prim': {
-    name: 'Prim\'s Algorithm',
-    category: 'Greedy',
+    noDeploy: false,
+    name: 'Prim\'s (min. spanning tree)',
+    category: 'Graph',
     explanation: Explanation.PrimsExp,
     param: <Param.PrimsParam />,
     instructions: Instructions.PrimsInstruction,
@@ -92,9 +181,24 @@ const algorithms = {
       find: Controller.prim,
     },
   },
+  'prim_old': {
+    noDeploy: false,
+    name: 'Prim\'s (older version)',
+    category: 'Graph',
+    explanation: Explanation.Prims_oldExp,
+    param: <Param.Prims_oldParam />,
+    instructions: Instructions.Prims_oldInstruction,
+    extraInfo: ExtraInfo.Prims_oldInfo,
+    pseudocode: {
+      find: Pseudocode.prim_old,
+    },
+    controller: {
+      find: Controller.prim_old,
+    },
+  },
   'transitiveClosure': {
-    name: 'Transitive Closure',
-    category: 'Dynamic Programming',
+    name: 'Warshall\'s (transitive closure)',
+    category: 'Graph',
     explanation: Explanation.TCExp,
     param: <Param.TCParam />,
     instructions: Instructions.TCInstruction,
@@ -106,8 +210,26 @@ const algorithms = {
       tc: Controller.transitiveClosure,
     },
   },
+
+  'unionFind': {
+    name: 'Union Find',
+    category: 'Set',
+    param: <Param.UFParam />,
+    instructions: Instructions.UFInstruction,
+    explanation: Explanation.UFExp,
+    extraInfo: ExtraInfo.UFInfo,
+    pseudocode: {
+      union: Pseudocode.unionFindUnion,
+      find: Pseudocode.unionFindFind,
+    },
+    controller: {
+      union: Controller.unionFindUnion,
+      find: Controller.unionFindFind,
+    },
+  },
+
   'bruteForceStringSearch': {
-    name: 'Brute Force String Search',
+    name: 'Brute Force',
     category: 'String Search',
     explanation: Explanation.BFSSExp,
     param: <Param.BFSSParam />,
@@ -121,7 +243,7 @@ const algorithms = {
     },
   },
   'horspoolStringSearch': {
-    name: 'Horspool String Search',
+    name: 'Horspool\'s',
     category: 'String Search',
     /*
     Todo:
@@ -139,7 +261,14 @@ const algorithms = {
       search: Controller.horspoolStringSearch,
     },
   },
+
 };
+
+const algorithms =
+  // Use next line for a version that includes all the algorithms
+  // allalgs;
+  // Use next line for the deployed version
+  Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy));
 
 /**
  * Get the first mode of an algorithm

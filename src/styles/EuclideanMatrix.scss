@@ -1,0 +1,198 @@
+@import './global.scss';
+
+.matrixContainer {
+  display: flex;
+  align-items: flex-start;
+
+  .matrixButtonContainer {
+    background-color: var(--mid-control-param-matrix-btn-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include border-radius(6px);
+    margin-right: 16px;
+    border: 1px solid var(--system-border);
+    width: 170px;
+    font-size: 12px;
+    
+    button {
+      margin-top: 2px;
+    }
+
+    .algorithmBtn {
+      text-transform: uppercase;
+      @include removeBtnStyling;
+      height: 35px;
+      margin-top: 1px;
+
+      @include border-radius(1px);
+      text-align: Left;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--mid-control-param-btn-active-col);
+
+    }
+
+    .algorithmBtn:hover {
+      transition: .4s;
+      background: var(--mid-control-param-btn-bg-col-hover);
+    }
+    .algorithmBtn:active {
+      transition: .2s;
+      background: var(--mid-control-param-btn-bg-col-active);
+    }
+
+  }
+
+  .sLineButtonContainer {
+    background-color: var(--mid-control-param-matrix-btn-bg);
+    display: flex;
+    flex-direction: row; /* Change to row to display buttons in a single line */
+    justify-content: flex-start; 
+    padding: 10px 0px;
+    @include border-radius(6px);
+    white-space: nowrap;
+    text-align: center;
+    height: 10px;
+    font-size: 12px;
+    margin-bottom: 20px;
+
+    .sizeBtn {
+      text-transform: uppercase;
+      display: inline-block;
+      @include removeBtnStyling;
+      padding: 6px 6px 12px;
+      margin-top: 1px;
+      width: 50px;
+      height: 35px;
+      font-size: 20px;
+      @include border-radius(1px);
+      text-align: Center;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--mid-control-param-btn-active-col);
+
+    }
+
+    .sizeBtn:hover {
+      transition: .4s;
+      background: var(--mid-control-param-btn-bg-col-hover);
+    }
+    .sizeBtn:active {
+      transition: .2s;
+      background: var(--mid-control-param-btn-bg-col-active);
+    }
+
+    .size {
+      text-transform: uppercase;
+      display: inline-block;
+      padding: 6px 6px 12px;
+      margin-top: 5.5px;
+      width: 95px;
+      color: var(--mid-control-param-btn-active-col);
+    }
+
+    .matrixBtn {
+      text-transform: uppercase;
+      @include removeBtnStyling;
+      width: 100px;
+      height: 35px;
+      @include border-radius(1px);
+      text-align: center;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--mid-control-param-btn-active-col);
+
+    }
+
+    .matrixBtn:hover {
+      transition: .4s;
+      background: var(--mid-control-param-btn-bg-col-hover);
+    }
+    .matrixBtn:active {
+      transition: .2s;
+      background: var(--mid-control-param-btn-bg-col-active);
+    }
+
+    .greyRoundBtn {
+      text-align: right;
+      margin-top: 3.5px;
+      width: 35px;
+      height: 35px;
+    }
+
+    
+    
+  }
+
+  .table {
+    overflow: auto;
+    
+    th {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      width: 32px;
+      height: 24px;
+      font-size: 1.1em;
+      font-weight: 500;
+      @include border-radius(2px);
+      cursor: default;
+    }
+    th,
+    td {
+      border: 1px solid var(--system-border);
+
+      input {
+        width: 32px;
+        height: 24px;
+        text-align: center;
+        color: var(--mid-control-param-matrix-cell-font);
+        background-color: var(--mid-control-param-matrix-cell-bg);
+        border: none;
+        -webkit-appearance: none;
+        outline: none;
+        @include border-radius(2px);
+
+
+      }
+    }
+
+    
+  }
+
+  .coord {
+    margin-left: 0px;
+
+    .titles {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      font-size: 1.1em;
+      font-weight: 500;
+      white-space: nowrap;
+      display: flex;
+      margin-left: 2px;
+      margin-right: 2px;
+      padding: 2px;
+
+    }
+  }
+
+  .edge {
+    margin-left: 50px;
+
+    .titles {
+      color: var(--mid-control-param-matrix-header-font);
+      background-color: var(--mid-control-param-matrix-header-bg);
+      font-size: 1.1em;
+      font-weight: 500;
+      white-space: nowrap;
+      display: flex;
+      margin-left: 2px;
+      margin-right: 2px;
+      padding: 2px;
+    }
+  }
+
+  
+
+}
