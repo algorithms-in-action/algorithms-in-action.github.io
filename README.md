@@ -4,7 +4,10 @@
 
 Welcome to Algorithms In Action!
 
-Here is the [link](https://algorithms-in-action.github.io/) to run the algorithm visualiser on your browser.
+Here is the [link](https://dev-aia.vercel.app/) to run the algorithm
+visualiser on your browser (hosted on Vercel; the github hosting is
+currently broken for some unknown reason).
+
 
 We recommend you read the [WIKI](https://github.com/algorithms-in-action/algorithms-in-action.github.io/wiki) for more project details.
 
@@ -95,3 +98,4 @@ You may need to check the WIKI for the [development manual](https://github.com/a
 ## License
 
 Algorithms-in-action/algorithms-in-action.github.io is licensed under the MIT License, a short and simple permissive license with conditions only requiring preservation of copyright and license notices.
+
