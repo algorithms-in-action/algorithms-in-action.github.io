@@ -7,7 +7,8 @@
 /coverage
 
 # production
-/build
+# problem with github deployment if we have this
+# /build
 
 # misc
 .DS_Store
