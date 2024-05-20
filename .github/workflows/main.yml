@@ -34,10 +34,13 @@ jobs:
           npm run build
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        # uses: JamesIves/github-pages-deploy-action@v4
+        # uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }} # for github-pages-deploy-action@v4
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Note: this branch gets smashed! Don't make it a branch thats
+          # important (maybe it should be something other than master)
           BRANCH: master # The branch the action should deploy.
           FOLDER: build # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
