@@ -196,6 +196,20 @@ const allalgs = {
       find: Controller.prim_old,
     },
   },
+  'DFSrec': {
+    name: 'DFS (recursive)',
+    category: 'Graph',
+    param: <Param.DFSrecParam />,
+    instructions: Instructions.DFSrecInstruction,
+    explanation: Explanation.DFSrecExp,
+    extraInfo: ExtraInfo.DFSrecInfo,
+    pseudocode: {
+      find: Pseudocode.DFSrec,
+    },
+    controller: {
+      find: Controller.DFSrec,
+    },
+  },
   'transitiveClosure': {
     name: 'Warshall\'s (transitive closure)',
     category: 'Graph',
@@ -229,6 +243,7 @@ const allalgs = {
   },
 
   'bruteForceStringSearch': {
+    noDeploy: false,
     name: 'Brute Force',
     category: 'String Search',
     explanation: Explanation.BFSSExp,
@@ -243,6 +258,7 @@ const allalgs = {
     },
   },
   'horspoolStringSearch': {
+    noDeploy: false,
     name: 'Horspool\'s',
     category: 'String Search',
     /*
@@ -265,9 +281,9 @@ const allalgs = {
 };
 
 const algorithms =
-  // Use next line for a version that includes all the algorithms
+  // Use next line for a version that includes all the algorithms:
   // allalgs;
-  // Use next line for the deployed version
+  // Use next line for the deployed version:
   Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy));
 
 /**

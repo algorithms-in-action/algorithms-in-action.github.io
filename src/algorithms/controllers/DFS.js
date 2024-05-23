@@ -380,6 +380,7 @@ displayedStack, explored, visited, n, parent]
                         //highlight the edge connecting the neighbor
                         vis.graph.removeEdgeColor(c_n,c_m);
                         vis.graph.colorEdge(c_n, c_m, 2);
+                        vis.graph.colorEdge(c_n, c_m, colors.N_M_E);
 
                         // add var m; need to color elements again
                         vis.array.assignVariable('m', 2, c_m + 1);

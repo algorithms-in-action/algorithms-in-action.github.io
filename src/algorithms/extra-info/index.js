@@ -10,6 +10,7 @@ export { default as HSSInfo } from './HSSInfo.md';
 export { default as UFInfo } from './UFInfo.md';
 export { default as TTFInfo } from './TTFInfo.md';
 export { default as DIJKInfo } from './DIJKInfo.md';
-export { default as ASTARInfo } from './ASTInfo.md'; //TODO
+export { default as ASTARInfo } from './ASTInfo.md';
 export { default as BFSInfo } from './BFSInfo.md';
 export { default as DFSInfo } from './DFSInfo.md';
+export { default as DFSrecInfo } from './DFSrecInfo.md';

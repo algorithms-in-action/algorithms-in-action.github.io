@@ -51,6 +51,8 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
+    // For DFSrec listOfNumbers is actually a list of pairs of numbers,
+    // or strings such as '(2,5)'
     const { data, algo, kth, listOfNumbers, motionOn, hideArrayAtIdx } =
       this.props.data;
     const isArray1D = true;
@@ -116,6 +118,7 @@ class Array2DRenderer extends Renderer {
             )}
             {algo !== 'BFS' &&
               algo !== 'DFS' &&
+              algo !== 'DFSrec' &&
               algo !== 'dijkstra' &&
               algo !== 'aStar' &&
               longestRow.map((_, i) => {
@@ -144,6 +147,7 @@ class Array2DRenderer extends Renderer {
               }
             }
             // XXX should use style sheets for formatting stack for DFS
+            // and DFSrec
             // - currently messing about attempting to make it look
             // better and more stack-like using float (deprecated)
             return (
@@ -224,6 +228,7 @@ class Array2DRenderer extends Renderer {
             algo === 'dijkstra' ||
             algo === 'aStar' ||
             algo === 'DFS' ||
+            algo === 'DFSrec' ||
             algo == 'BFS') &&
             data.map(
               (row, i) =>
@@ -265,6 +270,14 @@ class Array2DRenderer extends Renderer {
             kth-tag="dfs_caption"
           >
              <div style={{float:"right"}}>Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </div>
+          </caption>
+        )}
+        {algo === 'DFSrec' && (
+          <caption
+            className={algo === 'DFSrec' ? styles.captionDFSrec : ''}
+            kth-tag="dfsrec_caption"
+          >
+             <div style={{float:"right"}}>Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </div>
           </caption>
         )}
         {algo === 'BFS' && (

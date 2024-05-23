@@ -14,3 +14,4 @@ export { default as DIJKParam } from './DIJKParam';
 export { default as ASTARParam } from './ASTParam';
 export { default as BFSParam } from './BFSParam';
 export { default as DFSParam } from './DFSParam';
+export { default as DFSrecParam } from './DFSrecParam';

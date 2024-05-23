@@ -175,11 +175,19 @@
   caption-side: bottom;
 }  
 
+.captionDFSrec {
+  caption-side: bottom;
+}  
+
 .captionBFS {
   caption-side: bottom;
 } 
 
 .captionDFS {
+  color: var(--array-2d-row-col-value-color); 
+}
+
+.captionDFSrec {
   color: var(--array-2d-row-col-value-color); 
 }
 
