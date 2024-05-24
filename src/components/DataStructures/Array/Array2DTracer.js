@@ -140,6 +140,9 @@ class Array2DTracer extends Tracer {
     }
   }
 
+  // XXX for some reason, variables only seem to be displayed if
+  // row==2, and if you don't have enough rows in the table you are
+  // stuck unless you add an extra dummy row and hide it using hideArrayAtIndex
   assignVariable(v, row, idx) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     // eslint-disable-next-line consistent-return

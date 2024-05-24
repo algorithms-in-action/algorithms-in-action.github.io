@@ -25,16 +25,13 @@ made explicit
 
 
 \\Code{
-\\Note{
-XXX add Bookmarks etc eventually + delete dijkstra
-\\Note}
 Main
-DFS(G, s) // Given a graph G find a path from start node s to an \\B start
+DFS(G, n) // Given a graph G find a path from start node n to an \\B start
         // end node.  It is assumed the end node(s) are defined
         // separately; if there are no end nodes, paths to all connected
-        // nodes are found. Nodes are numbered 1..nmax. Returns the Parent
-        // array, which gives the previous node in the path from s to the
-        // node i. Parent[s] = 0 and parents of unvisited nodes are null.
+        // nodes are found. Nodes are numbered 1..nmax. Returns the Parent[i]
+        // array, which gives the previous node in the path from n to i.
+        // Parent[n] = 0 and parents of unvisited nodes are null.
 \\In{
     initialise all parents to null \\B init
     \\Expl{ We initialise to some special value so we can later check if a
@@ -45,7 +42,7 @@ DFS(G, s) // Given a graph G find a path from start node s to an \\B start
         We mention it just for comparison with the iterative version
         of DFS and related graph search algorithms.
     \\Expl}
-    result <- DFS1(G, s, 0) // recursive DFS with zero as parent node \\B top_call
+    result <- DFS1(G, n, 0) // recursive DFS with zero as parent node \\B top_call
     return result \\B finish
     \\Expl{ If there can be several end nodes we may want to
         return which one is found as well as the Parent array for
@@ -74,11 +71,12 @@ DFS1(G, n, p) // Search from node n using parent node p. This visits all \\B dfs
                 return which one is found as well as the Parent array.
             \\Expl}
         \\In}
-        // The neighbouring nodes are now part of the (implicit) frontier so \\B frontier
+        // The neighbouring nodes are now part of the (implicit) frontier \\B frontier
         \\Expl{ For recursive DFS it is not necessary to understand the frontier.
             We mention it just for comparison with the iterative version
             of DFS and related graph search algorithms. The neighbouring nodes
-            will be checked via a recursive call in the loop below.
+            will be checked via a recursive call in the loop below (finalised
+            nodes will be ignored).
         \\Expl}
         for each node m neighbouring n // G has edge from n to m \\B neighbours
         \\Note{ When this is first reached, all neighbouring nodes

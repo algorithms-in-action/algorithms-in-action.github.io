@@ -63,6 +63,7 @@ class Array2DRenderer extends Renderer {
       data_T = data[0].map((col, i) => data.map((row) => row[i]));
     }
     // const isArray1D = this instanceof Array1DRenderer;
+    // XXX sometimes caption (listOfNumbers) is longer than any row...
     let longestRow = data.reduce(
       (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
       []
@@ -117,6 +118,7 @@ class Array2DRenderer extends Renderer {
               <td />
             )}
             {algo !== 'BFS' &&
+              algo !== 'DFSrec' &&
               algo !== 'DFS' &&
               algo !== 'DFSrec' &&
               algo !== 'dijkstra' &&
