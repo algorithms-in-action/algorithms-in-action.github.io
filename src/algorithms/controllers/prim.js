@@ -317,7 +317,7 @@ export default {
         // sum all numbers in finalCosts array
         totalCost = finalCosts.reduce((acc, el) => 
             (isNumber(el)? acc + el: acc), 0);
-        console.log(['totalCost', totalCost]);
+        // console.log(['totalCost', totalCost]);
         chunker.add(
           3,
           (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {

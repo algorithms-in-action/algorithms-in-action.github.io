@@ -108,11 +108,11 @@ export default {
             if (c_nodes_etc[PAR][c_n] === unassigned ||
                 c_nodes_etc[PAR][c_n] === c_p ||
                 c_nodes_etc[PAR][c_p] === c_n) {
-              console.log(['finalised Edge', c_n, c_p]);
+              // console.log(['finalised Edge', c_n, c_p]);
               vis.graph.removeEdgeColor(c_p-1, c_n-1);
               vis.graph.colorEdge(c_p-1, c_n-1, colors.FINALISED_E);
             } else { // reset to frontier
-              console.log(['Still frontier edge', c_n, c_p]);
+              // console.log(['Still frontier edge', c_n, c_p]);
               vis.graph.removeEdgeColor(c_p-1, c_n-1);
               vis.graph.colorEdge(c_p-1, c_n-1, colors.FRONTIER_E);
             }
