@@ -260,6 +260,15 @@ export default {
           99,
           (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
             refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
+            // re-do finalised edges in success colour for extra highlight
+            for (let i = 0; i < numVertices; i++) {
+              for (let j = 0; j < numVertices; j++) {
+                if (v[PAR][i+1] === j+1) {
+                  vis.graph.removeEdgeColor(i, j);
+                  vis.graph.colorEdge(i, j, colors.SUCCESS_E);
+                }
+              }
+            }
           },
           [[nodes, parents, minCosts, finalCosts], null,
               null, null, totalCost]
@@ -314,6 +323,15 @@ export default {
           (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
             vis.graph.removeNodeColor(currentVertex);
             refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
+            // re-do finalised edges in success colour for extra highlight
+            for (let i = 0; i < numVertices; i++) {
+              for (let j = 0; j < numVertices; j++) {
+                if (v[PAR][i+1] === j+1) {
+                  vis.graph.removeEdgeColor(i, j);
+                  vis.graph.colorEdge(i, j, colors.SUCCESS_E);
+                }
+              }
+            }
           },
           [[nodes, parents, minCosts, finalCosts], miniIndex,
               currentVertex, null, totalCost]

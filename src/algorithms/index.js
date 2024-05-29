@@ -107,6 +107,34 @@ const allalgs = {
     },
   },
 
+  'DFSrec': {
+    name: 'Depth First Search',
+    category: 'Graph',
+    param: <Param.DFSrecParam />,
+    instructions: Instructions.DFSrecInstruction,
+    explanation: Explanation.DFSrecExp,
+    extraInfo: ExtraInfo.DFSrecInfo,
+    pseudocode: {
+      find: Pseudocode.DFSrec,
+    },
+    controller: {
+      find: Controller.DFSrec,
+    },
+  },
+  'DFS': {
+    name: 'DFS (iterative)',
+    category: 'Graph',
+    param: <Param.DFSParam />,
+    instructions: Instructions.DFSInstruction,
+    explanation: Explanation.DFSExp,
+    extraInfo: ExtraInfo.DFSInfo,
+    pseudocode: {
+      find: Pseudocode.DFS,
+    },
+    controller: {
+      find: Controller.DFS,
+    },
+  },
   'BFS': {
     
     name: 'Breadth First Search',
@@ -120,20 +148,6 @@ const allalgs = {
     },
     controller: {
       find: Controller.BFS,
-    },
-  },
-  'DFS': {
-    name: 'Depth First Search',
-    category: 'Graph',
-    param: <Param.DFSParam />,
-    instructions: Instructions.DFSInstruction,
-    explanation: Explanation.DFSExp,
-    extraInfo: ExtraInfo.DFSInfo,
-    pseudocode: {
-      find: Pseudocode.DFS,
-    },
-    controller: {
-      find: Controller.DFS,
     },
   },
   'dijkstra': {
@@ -194,20 +208,6 @@ const allalgs = {
     },
     controller: {
       find: Controller.prim_old,
-    },
-  },
-  'DFSrec': {
-    name: 'DFS (recursive)',
-    category: 'Graph',
-    param: <Param.DFSrecParam />,
-    instructions: Instructions.DFSrecInstruction,
-    explanation: Explanation.DFSrecExp,
-    extraInfo: ExtraInfo.DFSrecInfo,
-    pseudocode: {
-      find: Pseudocode.DFSrec,
-    },
-    controller: {
-      find: Controller.DFSrec,
     },
   },
   'transitiveClosure': {

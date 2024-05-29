@@ -104,7 +104,7 @@ export default {
           // if p !== 0 the n-p has been highlighted in the for loop
           if (c_p !== 0) {
             // set edge to finalised if parent unassigned or it was
-            // previously finalised, otherwise bqack to frontier
+            // previously finalised, otherwise back to frontier
             if (c_nodes_etc[PAR][c_n] === unassigned ||
                 c_nodes_etc[PAR][c_n] === c_p ||
                 c_nodes_etc[PAR][c_p] === c_n) {
@@ -256,6 +256,7 @@ export default {
       parents.push(unassigned); 
     }
 
+    seen[startNode] = true; // moved before init
     chunker.add(
       'init',
       (vis, c_nodes_etc, c_n, c_m, c_stack) => {
@@ -265,15 +266,17 @@ export default {
           startNode, null, stack], 0
     );
 
-    seen[startNode] = true;
-    chunker.add(
-      'frontier_s',
-      (vis, c_nodes_etc, c_n, c_m, c_stack) => {
-        refresh(vis, c_nodes_etc, c_n, null, c_stack);
-      },
-      [[nodes, parents, seen],
-          startNode, null, stack], 0
-    );
+//  Previously a separate line
+//  seen[startNode] = true; // moved before init
+//  chunker.add(
+//    'frontier_s',
+//    (vis, c_nodes_etc, c_n, c_m, c_stack) => {
+//      refresh(vis, c_nodes_etc, c_n, null, c_stack);
+//    },
+//    [[nodes, parents, seen],
+//        startNode, null, stack], 0
+//  );
+
     let result = dfs1(startNode, 0, 0);
     chunker.add(
       'top_call',

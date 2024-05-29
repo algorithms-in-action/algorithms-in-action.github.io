@@ -26,27 +26,25 @@ made explicit
 
 \\Code{
 Main
-DFS(G, n) // Given a graph G find a path from start node n to an \\B start
-        // end node.  It is assumed the end node(s) are defined
-        // separately; if there are no end nodes, paths to all connected
-        // nodes are found. Nodes are numbered 1..nmax. Returns the Parent[i]
-        // array, which gives the previous node in the path from n to i.
-        // Parent[n] = 0 and parents of unvisited nodes are null.
+DFS(G, n) // Given a graph G find a path from start node n to a \\B start
+        // separately defined end node; if there are no end nodes, paths
+        // to all connected nodes are found.
 \\In{
     initialise all parents to null \\B init
     \\Expl{ We initialise to some special value so we can later check if a
         parent has been assigned (we display null as an empty cell).
-    \\Expl}
-    // The start node is the implicit "frontier" initially \\B frontier_s
-    \\Expl{ For recursive DFS it is not necessary to understand the frontier.
-        We mention it just for comparison with the iterative version
-        of DFS and related graph search algorithms.
+        The start node is the implicit "frontier" for the top level DFS1
+        call. It is not
+        necessary to understand the frontier.  We mention it just for
+        comparison with the iterative version of DFS and related graph
+        search algorithms.
     \\Expl}
     result <- DFS1(G, n, 0) // recursive DFS with zero as parent node \\B top_call
     return result \\B finish
     \\Expl{ If there can be several end nodes we may want to
         return which one is found as well as the Parent array for
-        successful searches.  Here we highlight the path found in
+        successful searches (it defines a path from the end node back to
+        the start node).  Here we highlight the path found in
         the Parent array.
     \\Expl}
 \\In}
@@ -68,11 +66,12 @@ DFS1(G, n, p) // Search from node n using parent node p. This visits all \\B dfs
         \\In{
             return FOUND // Success! \\B found
             \\Expl{ If there can be several end nodes we may want to
-                return which one is found as well as the Parent array.
+                return which one is found as well as the Parent array,
+                which defined the path from the end node back to the start.
             \\Expl}
         \\In}
         // The neighbouring nodes are now part of the (implicit) frontier \\B frontier
-        \\Expl{ For recursive DFS it is not necessary to understand the frontier.
+        \\Expl{ It is not necessary to understand the frontier.
             We mention it just for comparison with the iterative version
             of DFS and related graph search algorithms. The neighbouring nodes
             will be checked via a recursive call in the loop below (finalised
