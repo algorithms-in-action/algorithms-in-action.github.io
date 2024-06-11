@@ -3,12 +3,14 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    DFS(G, s) // Given a graph G find a path from start node s to an  \\B 1
-            // end node.  It is assumed the end node(s) are defined
-            // separately; if there are no end nodes, paths to all connected
-            // nodes are found. Nodes are numbered 1..nmax. Returns the Parent
-            // array, which gives the previous node in the path from s to the
-            // node i (if one has been found; Parent[i] = 0 otherwise).
+    DFS(G, s) // Depth first search of graph G from start node s \\B 1
+    \\Expl{ Given a graph G, find a path from the start node s to an
+            end node.  It is assumed the end node(s) are defined
+            separately; if there are no end nodes, paths to all connected
+            nodes are found. Nodes are numbered 1..nmax. Returns the Parent
+            array, which gives the previous node in the path from s to the
+            node i (if one has been found; Parent[i] = 0 otherwise).
+    \\Expl}
     \\In{
         initialise, with fontier={s}, stored in Nodes \\Ref Init
         while Nodes is not empty \\B 2

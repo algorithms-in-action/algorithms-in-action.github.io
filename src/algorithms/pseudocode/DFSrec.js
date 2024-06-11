@@ -26,9 +26,15 @@ made explicit
 
 \\Code{
 Main
-DFS(G, n) // Given a graph G find a path from start node n to a \\B start
-        // separately defined end node; if there are no end nodes, paths
-        // to all connected nodes are found.
+DFS(G, n) // Depth first search of graph G from start node n \\B start
+    \\Expl{ Given a graph G, find a path from the start node n to an
+            end node.  It is assumed the end node(s) are defined
+            separately; if there are no end nodes, paths to all connected
+            nodes are found. Nodes are numbered 1..nmax. Returns the Parent
+            array, which gives the previous node in the path from s to the
+            node i (if one has been found; Parent[i] = 0 otherwise).
+    \\Expl}
+
 \\In{
     initialise all parents to null \\B init
     \\Expl{ We initialise to some special value so we can later check if a

@@ -87,8 +87,7 @@ to the page of the file-system.
     
 \\Code{
     Main
-    T234_Insert(t, k) // return either a node containing key k or \\B T234_Insert(t, k)
-                      // NotFound, if no such node is present
+    T234_Insert(t, k) // Insert key k into 234 tree t \\B T234_Insert(t, k)
     \\In{
         if t = Empty \\B if t = Empty
         \\In{

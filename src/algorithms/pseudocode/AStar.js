@@ -3,12 +3,17 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    Astar(G, s, e) // Given a graph G find a shortest path from start node s \\B 1
-            // to the end node e.  Nodes are numbered 1..nmax. Returns the
-            // Parent array, which gives the previous node in the path from s
-            // to the node i (if one has been found; Parent[i] = 0 otherwise).
-            // A heuristic function is used to guide the search (here it is based
-            // on a measure of the distance from each node to e).
+    Astar(G, s, e) // Heuristic search for node e from node s in graph G \\B 1
+    \\Expl{ Given a graph G, find a path from start node s
+            to the end node e.  Nodes are numbered 1..nmax. Returns the
+            Parent array, which gives the previous node in the path from s
+            to the node i (if one has been found; Parent[i] = 0 otherwise).
+            A heuristic function is used to guide the search (here it is
+            a measure of the distance from each node to e, based on
+            the Euclidiean coordinates of each node). If the
+            heuristic is "admissible", the shortest path will be found.
+    \\Expl}
+
      \\In{
           initialise, with fontier={s}, stored in Nodes \\Ref Init
             while Nodes is not empty \\B 2

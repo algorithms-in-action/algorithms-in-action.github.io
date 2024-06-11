@@ -3,12 +3,15 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
 Main
-Shortest(G, s) //Given a graph G find a shortest path from start node s \\B 1
-        // to an end node.  It is assumed the end node(s) are defined
-        // separately; with no end nodes, shortest paths to all connected
-        // nodes are found. Nodes are numbered 1..nmax. Returns the Parent
-        // array, which gives the previous node in the path from s to the
-        // node i (if one has been found; Parent[i] = 0 otherwise). 
+Shortest(G, s) // Find shortest path(s) from start node s in graph G \\B 1
+    \\Expl{ Given a graph G, find a shortest path from start node s
+        to an end node.  It is assumed the end node(s) are defined
+        separately; with no end nodes, shortest paths to all connected
+        nodes are found. Nodes are numbered 1..nmax. Returns the Parent
+        array, which gives the previous node in the path from s to the
+        node i (if one has been found; Parent[i] = 0 otherwise). 
+    \\Expl}
+
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
                 while Nodes is not empty \\B 2

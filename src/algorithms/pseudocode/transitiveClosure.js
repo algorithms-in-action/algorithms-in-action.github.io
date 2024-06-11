@@ -3,8 +3,8 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
   Main
-  Warshall(A, n)  \\B 1
-  \\Expl{  Compute the transitive closure of a directed graph G 
+  Warshall(A, n) // Compute the transitive closure of a graph \\B 1
+  \\Expl{  Compute the transitive closure of a directed graph
     with nodes 1..n, represented by n x n adjacency matrix A 
   \\Expl}
   \\In{
