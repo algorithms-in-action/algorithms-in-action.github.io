@@ -4,12 +4,14 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
 Main
-Prim(G, s) // Given a weighted graph G, return a minimum spanning tree \\B 1
-        // for the graph component that includes s (with a different termination
-        // condition a minimum spanning forest for all graph components could
-        // be found). Nodes are numbered 1..nmax. Prim returns the Parent
-        // array, which gives a path from each connected node back to
-        // the root s (which has 0 as the parent).
+Prim(G, s) // Find a minimum spanning tree for graph G starting at node s \\B 1
+    \\Expl{ Given a weighted graph G, return a minimum spanning tree
+        for the graph component that includes s (with a different termination
+        condition a minimum spanning forest for all graph components could
+        be found). Nodes are numbered 1..nmax. Prim returns the Parent
+        array, which gives a path from each connected node back to
+        the root s (which has 0 as the parent).
+    \\Expl}
         \\In{
                 initialise, with fontier={s}, stored in Nodes \\Ref Init
                 while Nodes is not empty \\B 2
