@@ -55,15 +55,9 @@ have their costs recomputed. Other algorithms use other data structures to keep 
 of the frontier nodes.
 
 
-
-Here we number all nodes for simplicity so we can use arrays for the
-graph representation, the parent pointers, etc.  For many important
-applications, particularly in artificial intelligence, the graphs can
-be huge and arrays are impractical for representing the graph so other
-data structures are needed.
-
-For consistency with other algorithm animations, the layout of the
-graph is on a two-dimensional grid where each node has (x,y) integer
-coordinates.  You can choose the start node and change the
-graph choice (see the instructions tab for more details).
+Here we number all nodes for simplicity so we can use arrays for the graph
+representation, the parent pointers, etc.  For consistency
+with other algorithm animations, the layout of the graph is on a
+two-dimensional grid where each node has (x,y) integer coordinates, which
+can determine the edge weight (see the instructions tab for more details).
 

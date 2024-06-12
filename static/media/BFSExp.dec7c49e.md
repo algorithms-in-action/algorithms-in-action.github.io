@@ -58,8 +58,8 @@ data structures are needed.
 For consistency with other algorithm animations, the layout of the
 graph is on a two-dimensional grid where each node has (x,y) integer
 coordinates.  You can choose the start and end nodes and change the
-graph choice (see the instructions tab for more details).  Weights of
-edges can be included in the text box input but BFS will ignore weights
+graph choice (see the instructions tab for more details).  While weights of
+edges can be included in the text box input, BFS will ignore weights
 and positions of nodes.  Only a single end node is supported; choosing
 0 results in finding paths to all connected nodes.
 

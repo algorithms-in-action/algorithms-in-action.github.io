@@ -17,4 +17,4 @@ a:hover{
 Geeks for Geeks Link: [**Depth First Search**][G4GLink]
 
 
-https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
+[G4GLink]: https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
