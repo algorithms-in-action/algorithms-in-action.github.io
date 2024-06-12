@@ -210,6 +210,21 @@ const allalgs = {
       find: Controller.prim_old,
     },
   },
+  'kruskal': {
+    noDeploy: true,
+    name: 'Kruskal\'s (min. spanning tree)',
+    category: 'Graph',
+    explanation: Explanation.KruskalExp,
+    param: <Param.KruskalParam />,
+    instructions: Instructions.KruskalInstruction,
+    extraInfo: ExtraInfo.KruskalInfo,
+    pseudocode: {
+      find: Pseudocode.kruskal,
+    },
+    controller: {
+      find: Controller.kruskal,
+    },
+  },
   'transitiveClosure': {
     name: 'Warshall\'s (transitive closure)',
     category: 'Graph',

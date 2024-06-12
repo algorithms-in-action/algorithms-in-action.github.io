@@ -39,3 +39,8 @@ dijkstra.js has been moved in the right direction wrt the points above
 and AStar.js is a copied and edited version (might have been better to
 generalise some code and use a file with common code).
 
+The new version of prim.js is based on dijkstra.js (same algorithm
+structure but computes MST instead of shortest paths) and kruskal is based
+on prim.js (different algorithm structure so they are quite different
+but both compute MST).
+

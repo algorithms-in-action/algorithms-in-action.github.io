@@ -67,7 +67,7 @@ const graphInstructions = [
     `Click on ${KEY_CODE} at the top of the right-hand panel`,
     `Either step through the algorithm (click on ${KEY_FORWARD}) or play continuously (click on ${KEY_PLAY}). Code and animation will follow in lockstep.`,
     `The graph can be chosen (see below; default Graph 1 is shown initially)`,
-    `Algorithm parameters (eg, Start node) can be chosen below the
+    `Athoer algorithm parameters can be chosen below the
 ${KEY_PROGRESS} bar; this will reset the animation to the start`,
     `Screen layout can be altered (depending on your browser/platform):
 the left panel can be rendered invisible by clicking
@@ -114,6 +114,7 @@ export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructionsTC;
 export const Prims_oldInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
+export const KruskalInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
