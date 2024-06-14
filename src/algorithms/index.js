@@ -211,7 +211,7 @@ const allalgs = {
     },
   },
   'kruskal': {
-    noDeploy: true,
+    noDeploy: false,
     name: 'Kruskal\'s (min. spanning tree)',
     category: 'Graph',
     explanation: Explanation.KruskalExp,

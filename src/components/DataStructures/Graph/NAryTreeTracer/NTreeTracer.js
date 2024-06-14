@@ -64,7 +64,7 @@ class NTreeTracer extends Tracer {
 
     // initially say tree is empty to avoid confusion with
     // blank screen
-    this.functionName = 'Tree is Empty'; // for fancy code style caption
+    this.functionName = ''; // for fancy code style caption
     this.text = null;
     this.swap = false;
 

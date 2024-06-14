@@ -121,6 +121,7 @@ class Array2DRenderer extends Renderer {
               algo !== 'DFSrec' &&
               algo !== 'DFS' &&
               algo !== 'DFSrec' &&
+              algo !== 'kruskal' &&
               algo !== 'dijkstra' &&
               algo !== 'aStar' &&
               longestRow.map((_, i) => {
@@ -227,6 +228,7 @@ class Array2DRenderer extends Renderer {
             </tr>
           )}
           {(algo === 'prim' ||
+            algo === 'kruskal' ||
             algo === 'dijkstra' ||
             algo === 'aStar' ||
             algo === 'DFS' ||

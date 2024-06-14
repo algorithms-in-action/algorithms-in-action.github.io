@@ -316,7 +316,12 @@ export default {
   },
 
   initTree(chunker, value, tree) {
-    chunker.add('T234_Insert(t, k)');
+    // initially say tree is empty to avoid confusion
+    chunker.add('T234_Insert(t, k)',
+      (vis) => {
+        vis.tree.setFunctionName('Tree is Empty');
+        vis.tree.setText(``);
+      });
     chunker.add('if t = Empty',
       (vis) => {
         vis.tree.setFunctionName('T234_Insert');

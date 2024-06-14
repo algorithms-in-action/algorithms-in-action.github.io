@@ -22,6 +22,8 @@ export default {
     // String Variables used in displaying algo
     const algNameStr = 'kruskal';
     const dashStr = '-';
+    const emptyStr = '';
+    const etcStr = '...';
     const minStr = 'Min'; 
     const nStr = 'n';
     const mStr = 'm';
@@ -36,6 +38,10 @@ export default {
     const minCosts = [];
     const parents = [];
     const nodes = [];  
+    const findD = [];  
+    const selectedD = [];  
+    const costD = [];  
+    const edgesD = [];  
     const finalCosts = []; 
     const start = startNode - 1; 
     const end = endNodes[0] - 1;
@@ -126,9 +132,61 @@ export default {
       if (c_Min != null)
         vis.array.select(MCOST, c_Min + 1, MCOST, c_Min + 1, colors.PQ_MIN_A);
     }
+//////////////////////////////////////////////////////////////////
+// START OF KRUSKAL CODE
+//////////////////////////////////////////////////////////////////
+  /**
+   * Finds the root of the current node.
+   * @param {Array} ufParent The parent array.
+   * @param n The element to find.
+   * @returns {number} The root of the current node.
+   */
+  const find = (ufParent, n) => {
+    while (ufParent[n] != n) {
+      ufParent[n] = ufParent[ufParent[n]]; // shorten path
+      n = ufParent[n];
+    }
+    return n;
+  }
+
+  /**
+   * Union two nodes together.
+   * @param {Array} ufParent the parent array.
+   * @param {Array} ufRank the rank array.
+   * @param {Number} n the first node to union.
+   * @param {Number} m the second node to union.
+   */
+  const union = (ufParent, ufRank, n, m) => {
+
+    // finding representative of first node
+    let root1 = find(ufParent, n);
+    // finding representative of second node
+    let root2 = find(ufParent, m);
+
+    // if in same set, return
+    if (root1 === root2) {
+      return;
+    }
+
+    if (ufRank[root1] > ufRank[root2]) {
+      // swap n and m so smaller subtree is joined to larger
+      const tempRoot1 = root1;
+      root1 = root2;
+      root2 = tempRoot1;
+    }
+    // joining the two nodes
+    ufParent[root1] = root2;
+    // updating rank
+    if (ufRank[root1] == ufRank[root2]) {
+      ufRank[root2] += 1;
+      ufRank[root1] = null;
+    } else {
+      ufRank[root1] = null;
+    }
+  }
 
     chunker.add(
-      1,
+      'Kruskal(G)',
       (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
@@ -137,342 +195,152 @@ export default {
       [E, coords]
     );
 
-    // initialise each element of array Parent to zero 
-    const prev = Array(numVertices).fill(null);  
+    // init edges + Union-find parent+rank arrays
+    let edges = [];    // sorted array of edges (*with weights also*)
+    let nodeSets = []; // parents for UF
+    let ufRank = [];   // ranks for UF
+    for (let i = 0; i < numVertices; i += 1) {
+      nodeSets.push(i);  // nodeSets[i] = i
+      ufRank.push(0);    // ufRank[i] = 0
+      for (let j = 0; j < numVertices; j += 1) {
+        if (E[i][j] > 0 && i < j) // avoid duplicated edges a-b & b-a
+          edges.push({weight: E[i][j], node1:i, node2:j})
+      }
+    }
+    edges.sort((a, b) => a.weight - b.weight);
+    // let tmp = edges.shift();
+    // console.log([tmp.weight, tmp.node1-1, tmp.node2-1]);
+    // console.log(edges);
+    console.log(nodeSets);
+    console.log(ufRank);
 
-    nodes.push('i'); // initialize the pq display
-    parents.push('Parent[i]');
-    minCosts.push('Cost[i] (PQ)'); 
-    finalCosts.push('Final Cost');
+    nodes.push('i'); // initialize the display
+    findD.push('find(i)');
+    selectedD.push('Selected');
+    costD.push('Cost');
+    edgesD.push('Edges');
      
     // Initialize the table
     for (let i = 0; i < numVertices; i += 1) {
       nodes[i + 1] = i + 1;
-      minCosts.push(dashStr);
-      parents.push(0); 
-      finalCosts.push(dashStr);
+      selectedD.push(emptyStr);
+      findD.push(emptyStr); 
+      costD.push(emptyStr);
+      // if there are fewer than numVertices edges, fill with emptyStr
+      if (i < edges.length)
+        edgesD.push((edges[i].node1+1)+'-'+(edges[i].node2+1));
+      else
+        edgesD.push(emptyStr);
     }
-
-    chunker.add(
-      5,
-      (vis, v) => {
-        vis.array.set(v, algNameStr);
-      },
-      [[nodes, parents, minCosts, finalCosts], 0]
-    );
-
-
-    for (let i = 0; i < numVertices; i += 1) {
-      minCosts[i + 1] = (Infinity);
+    // if there are more then numVertices edges, use etcStr at end
+    if (edgesD.length > numVertices) {
+      edgesD.pop();
+      edgesD.push(etcStr);
     }
-
-    chunker.add(
-      6,
-      (vis, v) => {
-        vis.array.set(v, algNameStr);
-      },
-      [[nodes, parents, minCosts, finalCosts],0]
-    );
     
-  
-    // Cost[s] <- 0
-    cost[start] = 0;
-    minCosts[start + 1] = 0; 
+
+    // XXX split init into more chunks
     chunker.add(
-      7,
-      (vis, v, w) => {
-        // re-render table with new cost
+      'initEdges',
+      (vis, v) => {
         vis.array.set(v, algNameStr);
-        // color start node in array + graph
-        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
-        vis.graph.colorNode(w, colors.FRONTIER_N);
       },
-      [[nodes, parents, minCosts, finalCosts], start]
+      [[nodes, findD, selectedD, costD, edgesD], 0]
     );
 
-    // Nodes <- PQ containing all nodes 
+
+    let gsize = numVertices;
+    // let selected = []; // set of selected edges (*with weights also*)
+    let nselected = 0; // selected.length
+
+    // XXX split init into more chunks?
+    // Fill table
+    for (let i = 1; i <= numVertices; i += 1) {
+      findD[i] = find(nodeSets, i-1)+1;
+    }
     chunker.add(
-      8,
-      (vis, v, w) => {
-        // add min to display
+      'initNodeSets',
+      (vis, v) => {
         vis.array.set(v, algNameStr);
-        vis.array.assignVariable(minStr, 2, w + 1);
-        vis.array.select(MCOST, w + 1, MCOST, w + 1, colors.PQ_MIN_A);
-        vis.array.select(NODE, w + 1, NODE, w + 1, colors.FRONTIER_A);
       },
-      [[nodes, parents, minCosts, finalCosts], start]
+      [[nodes, findD, selectedD, costD, edgesD], 0]
     );
 
-    let currentVertex = null;
-    // while Nodes not Empty 
-    // while (visited.size < numVertices)  
+
+    // while edges !== [] && nselected < gsize - 1
     // extra chunk before break to make loop termination clearer
     /* eslint-disable no-constant-condition */
     while (true) {
-      
-      findMinimum(); 
-      
-      chunker.add( 
-        2,
-        (vis, c_nodes_etc, c_miniIndex, c_last, c_prev, c_cV) => {
-          refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
-          
-          if (c_last[0] != null) {
-            vis.graph.removeEdgeColor(c_last[0], c_last[1]); 
-            
-            // restore the original color of the edge
-            if(c_prev[c_last[0]] != null && c_nodes_etc[FCOST][c_last[0]+1] == dashStr)
-            {
-              vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
-              vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FRONTIER_E);
-            }
-
-            if(c_prev[c_last[1]] != null && c_nodes_etc[FCOST][c_last[1]+1] == dashStr)
-            {
-              vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
-              vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
-            }
-
-            if(c_nodes_etc[FCOST][c_last[0]+1] != dashStr)
-            {
-              vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
-              vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
-            }
-
-            if(c_nodes_etc[FCOST][c_last[1]+1] != dashStr)
-            {
-              vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
-              vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);
-            }
-
-          }
-
-        },
-        [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex]
-      );
-      if (!(visited.size < numVertices)) {
-        // return at end of function
-
-        // sum of all numbers in finalCosts array
-        totalCost = finalCosts.reduce((acc, el) => 
-            (isNumber(el)? acc + el: acc), 0);
-        chunker.add(
-          99,
-          (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
-            refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
-            // re-do finalised edges in success colour for extra highlight
-            for (let i = 0; i < numVertices; i++) {
-              for (let j = 0; j < numVertices; j++) {
-                if (v[PAR][i+1] === j+1) {
-                  vis.graph.removeEdgeColor(i, j);
-                  vis.graph.colorEdge(i, j, colors.SUCCESS_E);
-                }
-              }
-            }
-          },
-          [[nodes, parents, minCosts, finalCosts], null,
-              null, null, totalCost]
-        );
-        break;
+      // recompute findD, edgesD
+      for (let i = 1; i <= numVertices; i += 1) {
+        findD[i] = (find(nodeSets, i-1)+1) + '';
+        // if there are fewer than numVertices edges, fill with emptyStr
+        if (i-1 < edges.length)
+          edgesD[i] = (edges[i-1].node1+1)+'-'+(edges[i-1].node2+1);
+        else
+          edgesD[i] = emptyStr;
       }
-
-      // Find the unvisited vertex with the smallest cost
-      
-      currentVertex = null; 
-      findMinimum();
-      currentVertex = miniIndex;
-      finalCosts[miniIndex + 1] = cost[miniIndex];
-      
-      // n <- RemoveMin(Nodes)  
-      minCosts[currentVertex + 1] = null; 
-      visited.add(currentVertex);
-      
-      // Update the miniIndex
-      findMinimum(); 
+      // if there are more then numVertices edges, use etcStr at end
+      if (edges.length > numVertices) {
+        edgesD[numVertices] = etcStr;
+      }
       chunker.add(
-        9,
-        (vis, c_nodes_etc, c_miniIndex, c_cV, c_prev_cV) => {
-          // reset previous highlight if any
-          if (c_prev_cV != null) {
-            vis.graph.removeEdgeColor(c_prev_cV, c_cV);
-            vis.graph.colorEdge(c_prev_cV, c_cV, colors.FINALISED_E);
-          }
-          refresh(vis, c_nodes_etc, c_miniIndex, c_cV, null);
+        'while',
+        (vis, v) => {
+          vis.array.set(v, algNameStr);
+          let nodes = v[0];
+          let findD = v[1];
+          let selectedD = v[2];
+          let costD = v[3];
+          let edgesD = v[4];
+console.log('In while chunk');
+console.log(nodes); console.log(findD); console.log(selectedD); console.log(costD); console.log(edgesD);
         },
-        [[nodes, parents, minCosts, finalCosts], miniIndex, 
-            currentVertex, prev[currentVertex]]
+        [[nodes, findD, selectedD, costD, edgesD]]
       );
-      
-      // If we can't find a reachable vertex, exit 
-      // if Cost[n] = infinity 
-      chunker.add(10);
-      if (currentVertex === null // || currentVertex === end
-        || cost[currentVertex] === Infinity) {
-        // return without exploring all components
 
-        // undo last "remove next element" operation
-        minCosts[currentVertex+1] = infinityStr;
-        finalCosts[currentVertex+1] = dashStr;
-        miniIndex = currentVertex;
-        // sum all numbers in finalCosts array
-        totalCost = finalCosts.reduce((acc, el) => 
-            (isNumber(el)? acc + el: acc), 0);
-        // console.log(['totalCost', totalCost]);
-        chunker.add(
-          3,
-          (vis, v, c_miniIndex, c_cV, c_m, c_totalCost) => {
-            vis.graph.removeNodeColor(currentVertex);
-            refresh(vis, v, c_miniIndex, c_cV, c_m, c_totalCost);
-            // re-do finalised edges in success colour for extra highlight
-            for (let i = 0; i < numVertices; i++) {
-              for (let j = 0; j < numVertices; j++) {
-                if (v[PAR][i+1] === j+1) {
-                  vis.graph.removeEdgeColor(i, j);
-                  vis.graph.colorEdge(i, j, colors.SUCCESS_E);
-                }
-              }
-            }
-          },
-          [[nodes, parents, minCosts, finalCosts], miniIndex,
-              currentVertex, null, totalCost]
-        );
-        // return
-        break; 
+      // test for while loop exit
+      if (!(edges.length !== 0 && nselected < gsize - 1)) break;
+
+      let e = edges.shift();
+      let n1 = e.node1;
+      let n2 = e.node2;
+
+      if (find(nodeSets, n1) != find(nodeSets, n2)) {
+        console.log(['selecting', e.weight, e.node1+1, e.node2+1]);
+        nselected++;
+        selectedD[nselected] = (e.node1+1)+'-'+(e.node2+1)
+        costD[nselected] = e.weight;
+        union(nodeSets, ufRank, n1, n2);
+
+
+// XXX put in function
+      // recompute findD, edgesD
+      for (let i = 1; i <= numVertices; i += 1) {
+        findD[i] = (find(nodeSets, i-1)+1) + '';
+        // if there are fewer than numVertices edges, fill with emptyStr
+        if (i-1 < edges.length)
+          edgesD[i] = (edges[i-1].node1+1)+'-'+(edges[i-1].node2+1);
+        else
+          edgesD[i] = emptyStr;
+      }
+      // if there are more then numVertices edges, use etcStr at end
+      if (edges.length > numVertices) {
+        edgesD[numVertices] = etcStr;
       }
 
-      // Mark the vertex as visited
-  
-      // Update the cost and prev arrays 
-      
-      // for each node m neighbouring n
-      for (let m = 0; m < numVertices; m++) {
-        if (edgeValueMatrix[currentVertex][m] !== 0) { //TODO: check
-            // && !visited.has(m))   // Skip if no edge exists
-          // findMinimum();
-          chunker.add(
-            4,
-            (vis, v, c_miniIndex, c_last, c_prev, c_cV, c_m) => {
-              if (c_last[0] != null) { 
-                vis.graph.removeEdgeColor(c_last[0], c_last[1]);
-                //vis.graph.leave1(c_last[0], c_last[1], 2); 
-                if(c_prev[c_last[0]] != null && v[FCOST][c_last[0]+1] == dashStr)
-                {
-                  vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
-                  vis.graph.colorEdge(c_prev[c_last[0]], c_last[0],
-colors.FRONTIER_E);
-                }
-
-                if(c_prev[c_last[1]] != null && v[FCOST][c_last[1]+1] == dashStr)
-                {
-                  vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
-                  vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FRONTIER_E);
-                }
-
-                if(v[FCOST][c_last[0]+1] != dashStr)
-                {
-                  vis.graph.removeEdgeColor(c_prev[c_last[0]], c_last[0]);
-                  vis.graph.colorEdge(c_prev[c_last[0]], c_last[0], colors.FINALISED_E);
-                }
-
-                if(v[FCOST][c_last[1]+1] != dashStr)
-                {
-                  vis.graph.removeEdgeColor(c_prev[c_last[1]], c_last[1]);
-                  vis.graph.colorEdge(c_prev[c_last[1]], c_last[1], colors.FINALISED_E);
-                }
-              } 
-
-              vis.graph.removeEdgeColor(c_cV, c_m);
-              vis.graph.colorEdge(c_cV, c_m, colors.N_M_E);
-
-              refresh(vis, v, c_miniIndex, c_cV, c_m);
-            },
-            [[nodes, parents, minCosts, finalCosts], miniIndex, last, prev, currentVertex,
-            m]
-          );
-          
-          const newCost = edgeValueMatrix[currentVertex][m];
-          
-          // if Cost[n]+weight(n,m)<Cost[m]
-          let tempString = minCosts[m + 1];
-          if (minCosts[m + 1] === Infinity) {
-            tempString = infinityStr;
-          }
-          if (!visited.has(m)) {
-            if (newCost < cost[m]) {
-              minCosts[m + 1] = (`${newCost} ${lessThanStr} ${tempString}`);
-            } else {
-              minCosts[m + 1] = (`${newCost} ${notLessThanStr} ${tempString}`);
-            }
-          }
-          
-          // findMinimum();
-          chunker.add(
-            11,
-            (vis, v, c_miniIndex, c_cV, c_m) => {
-              refresh(vis, v, c_miniIndex, c_cV, c_m);
-            },
-            [[nodes, parents, minCosts, finalCosts], miniIndex,
-                currentVertex, m]
-          ); 
-
-           if (!visited.has(m))
-            minCosts[m + 1] = cost[m];
-
-          last = [currentVertex, m];
-          
-          if (!visited.has(m) && newCost < cost[m]) {
-            // Cost[m] <- Cost[n] + weight(n,m)
-            cost[m] = newCost; 
-            minCosts[m + 1] = newCost;
-            // findMinimum();
-            chunker.add(
-              12,
-              (vis, c_nodes_etc, c_miniIndex, c_cV, c_m) => {
-                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex, currentVertex, m]
-            );
-
-            // UpdateCost(Nodes,m,Cost[m])
-            findMinimum();
-            chunker.add(
-              13,
-              (vis, c_nodes_etc, c_miniIndex, c_cV, c_m) => {
-                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex, currentVertex, m]
-            );
-
-            // Parent[m] <- n
-            parents[m + 1] = currentVertex + 1;
-            const lastParent = prev[m];
-            prev[m] = currentVertex;   
-          
-            // findMinimum();
-            chunker.add(
-              14,
-              (vis, c_nodes_etc, c_miniIndex, c_prev_m, c_m, c_lastP, c_cV) => {
-
-                vis.graph.removeEdgeColor(c_cV, c_m);
-                
-                vis.graph.removeNodeColor(c_prev_m);
-                vis.graph.colorEdge(c_prev_m, c_m, colors.FRONTIER_E);
-                vis.graph.colorNode(c_prev_m, 1);
-                
-                // disconnect from the previous parent
-                if (c_lastP != null) {
-                  vis.graph.removeEdgeColor(c_lastP, c_m);
-                }
-
-                refresh(vis, c_nodes_etc, c_miniIndex, c_cV, c_m);
-              },
-              [[nodes, parents, minCosts, finalCosts], miniIndex,
-                  prev[m], m, lastParent, currentVertex]
-            );
-          } 
-        }
+        chunker.add(
+          'addSelected',
+          (vis, v, c_n1, c_n2) => {
+            vis.array.set(v, algNameStr);
+            // vis.graph.removeEdgeColor(n1, n2);
+            vis.graph.colorEdge(n1, n2, colors.SUCCESS_E);
+          },
+          [[nodes, findD, selectedD, costD, edgesD], n1, n2]
+        );
       }
     }
+
   }, 
 
 };
