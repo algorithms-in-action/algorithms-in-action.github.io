@@ -12,7 +12,7 @@ const DEFAULT_END = null; // disable end nodes display/input
 // const DEFAULT_END = [10] // start with 10 as end node
 const DEFAULT_HEUR = null;  // disable heuristic display/input
 // const DEFAULT_HEUR = 0;  // 0 = Euclidean
-const PRIMS = 'New Prim\'s';
+const PRIMS = 'Prim\'s (simpler code)';
 // XXX fix up error messages some time and change from 'EXAMPLE'
 const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
 const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';

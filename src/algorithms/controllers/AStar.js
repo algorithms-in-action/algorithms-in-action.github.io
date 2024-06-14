@@ -140,7 +140,8 @@ export default {
 
     nodes.push('i'); // initialize the pq display
     parents.push('Parent[i]');
-    minCosts.push('Length[i] (so far)');
+    minCosts.push('Length[i]');
+    // minCosts.push('Length[i] (so far)');
     heuristics.push('heur(i)');
     finalCosts.push('Final Length');
      

@@ -5,8 +5,8 @@ import ListParam from './helpers/ListParam';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
 
-const DEFAULT_STRING = 'abcdefgh';
-const DEFAULT_PATTERN = 'efg';
+const DEFAULT_STRING = 'dcaccdddabddac';
+const DEFAULT_PATTERN = 'ddac';
 const BFSS_SEARCH = 'Brute force String Search';
 const BFSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 

@@ -197,7 +197,7 @@ const allalgs = {
   },
   'prim_old': {
     noDeploy: false,
-    name: 'Prim\'s (older version)',
+    name: 'Prim\'s (simpler code)',
     category: 'Graph',
     explanation: Explanation.Prims_oldExp,
     param: <Param.Prims_oldParam />,

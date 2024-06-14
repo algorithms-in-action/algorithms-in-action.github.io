@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
 
-const DEFAULT_STRING = 'cddaadddabdda';
-const DEFAULT_PATTERN = 'dddac';
+// const DEFAULT_STRING = 'cddaadddabdda';
+// const DEFAULT_PATTERN = 'dddac';
+const DEFAULT_STRING = 'dcaccdddabddac';
+const DEFAULT_PATTERN = 'ddac';
 const HSS_SEARCH = 'Horspool String Search';
 const HSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 

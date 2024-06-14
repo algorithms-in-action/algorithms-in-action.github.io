@@ -192,16 +192,33 @@ class Array2DRenderer extends Renderer {
                     </td>
                   );
                 })}
-                {(pointer && algo === 'tc' && (
-                  <th className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}> i </span>
-                  </th>
-                )) ||
-                  (algo === 'prim' && i === 2 && (
+                {
+                  (pointer && algo === 'tc' && (
+                    <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> i </span>
+                    </th>
+                  ))
+                ||
+                  (algo === 'aStar' && i === 1 && (
+                    <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> )Priority </span>
+                    </th>
+                  ))
+                ||
+                  (algo === 'aStar' && i === 2 && (
+                    <th className={classes(styles.col, styles.index)}>
+                      <span className={styles.value}> )Queue&ensp; </span>
+                    </th>
+                  ))
+                ||
+                  (((algo === 'prim' && i === 2) ||
+                    (algo === 'dijkstra' && i === 2) 
+                    ) && (
                     <th className={classes(styles.col, styles.index)}>
                       <span className={styles.value}> Priority Queue </span>
                     </th>
-                  )) || <td className={classes(styles.col, styles.index)} />}
+                  ))
+                 || <td className={classes(styles.col, styles.index)} />}
               </tr>
             );
           })}

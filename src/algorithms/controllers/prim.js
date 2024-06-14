@@ -142,7 +142,7 @@ export default {
 
     nodes.push('i'); // initialize the pq display
     parents.push('Parent[i]');
-    minCosts.push('Cost[i] (PQ)'); 
+    minCosts.push('Cost[i]'); 
     finalCosts.push('Final Cost');
      
     // Initialize the table
