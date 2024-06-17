@@ -13,41 +13,29 @@ Kruskal(G)  // Compute minimum spanning tree for graph G \\B Kruskal(G)
         each connected component of the graph).
     \\Expl}
 \\In{
-    \\Note{XXX have separate init, skip explicit gsize?
-    \\Note}
-    gsize <- number of nodes in G
-    Edges <- all edges in G // may involve sorting the edges \\B initEdges
-    \\Expl{ We display Edges as a list, sorted on weight. Other data
-        structures could be used but at each stage the edge with the
-        next lowest weight is removed and this should be efficient.
-    \\Expl}
-    Selected <- empty set of edges \\B SelectedEmpty
-    nselected <- 0
-    \\Note{XXX skip explicit nselected?
-    \\Note}
-    \\Expl{ Keeping track of the number of selected edges is not
-        necessary but it is very easy to do and allows us to exit
-        from the while loop significantly earlier in some cases.
-    \\Expl}
-    NodeSets <- set of singleton sets with each node in G \\B initNodeSets
-    \\Expl{ NodeSets is a set of sets of nodes that are connected by
-        selected edges (like a forest but without information about
-        which edges are used to connect the nodes of each tree)
-    \\Expl}
-    while Edges is not empty and nselected < gsize - 1 \\B while
-    \\Expl{ A tree with n nodes has n-1 edges, so if nselected = gsize-1,
-        all nodes are in the same tree. It's not necessary to perform
-        this check but it is easy and can save time for connected graphs
-        with many edges.
+    Initialise Edges, Selected (and Cost) and NodeSets \\Ref Init
+    while Edges is not empty and size(Selected) < size(G) - 1 \\B while
+    \\Expl{ size(G) is the number of nodes in G.
+        A tree with n nodes has n-1 edges, so if there are size(G)-1
+        selected edges, all nodes are in the same tree. It's not necessary
+        to perform this check but it can be made easy and can save time
+        for connected graphs with many edges.
     \\Expl}
     \\In{
         (n1, n2) <- RemoveMin(Edges) // remove edge n1-n2 with minimum weight \\B RemoveMin
+        \\Expl{ The graph display highlights node n1 and all nodes
+            connected to it by selected edges in one colour.
+            If n1 and n2 are not already connected by selected edges the
+            same is done with n2, with a different colour.
+        \\Expl}
         \\Note{highlight edge + trees for n1, n2?
         \\Note}
         if n1 and n2 are in different trees \\Ref DifferentTrees
         \\In{
             Add e to Selected \\B addSelected
-            nselected <- nselected + 1
+            \\Expl{ The counter used to keep track of size(Selected)
+                can be incremented here.
+            \\Expl}
             union(NodeSets, n1, n2) // update NodeSets, combining n1&n2 \\B union
             \\Expl{ This is a union-find operation that takes the union
                 of the sets containing n1 and n2, respectively, since
@@ -59,6 +47,32 @@ Kruskal(G)  // Compute minimum spanning tree for graph G \\B Kruskal(G)
     \\Note{display total cost
     \\Note}
 \\In}
+\\Code}
+
+\\Code{
+Init
+    Edges <- all edges in G // may involve sorting the edges \\B initEdges
+    \\Expl{ We display Edges as a list, sorted on weight. Other data
+        structures could be used but at each stage the edge with the
+        next lowest weight is removed and this should be efficient.
+        There may be (far) more edges than nodes; here we omit listing the
+        edges with higher weights if there are too many.
+    \\Expl}
+    Selected <- empty set of edges (Costs also shown) \\B SelectedEmpty
+    \\Expl{ The number of selected edges is always less than the number
+        of nodes so the display can list all of them. We also display
+        the cost (weight) of each selected edge.
+        Explicitly keeping track of the number of selected edges is
+        also beneficial, eg, with a simple counter initialised to zero
+        here. It is not necessary but allows us to exit
+        from the while loop significantly earlier in some cases.
+    \\Expl}
+    NodeSets <- set of singleton sets with each node in G \\B initNodeSets
+    \\Expl{ NodeSets is a set of sets of nodes that are connected by
+        selected edges (like a forest but without information about
+        which edges are used to connect the nodes of each tree).
+        Initially there are no selected edges so we have singleton sets.
+    \\Expl}
 \\Code}
 
 \\Code{
