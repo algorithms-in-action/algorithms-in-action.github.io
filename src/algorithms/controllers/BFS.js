@@ -92,7 +92,6 @@ export default {
       6,
       (vis, x) => { 
         vis.array.set(x, 'BFS');   
-
       },
       [[displayedNodes, displayedParent, displayedVisited]]
     );
@@ -142,6 +141,7 @@ export default {
           9,
           (vis, x, y, z, Nodes) => { 
             // Graph and array have been updated above
+
             vis.array.setList(y);  // updated Queue
           },
           [[displayedNodes, displayedParent, displayedVisited], displayedQueue, explored, Nodes]

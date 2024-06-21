@@ -52,6 +52,7 @@ export default {
     const closed = [];
     const pqCost = [];
     const prevNode = [];
+    // XXX add finalCost array + compute total cost at end?
 
     chunker.add(
       1,

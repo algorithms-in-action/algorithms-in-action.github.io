@@ -7,11 +7,8 @@ The binary search tree is built up by adding items one at a time. Since the aver
 
 The biggest problem with the binary search tree is that its behavior degenerates when there is order in the input data. In the worst case, sorted or reverse sorted data items yield a linear tree, or "stick", the complexity of building the tree is `O(n^2)`, and the complexity of a search for a single item is `O(n)`.
 
-## Time Complexity
+## Complexity
 
-Algorithm | Average | Worst Case
---- | --- | ---
-Space | O(n) | O(n) |
-Search | O(log n) | O(n)
-Insert | O(log n) | O(n)
-Delete | O(log n) | O(n)
+Space complexist for building a tree is O(n).  Time complexity for
+search, insert (and delete) is O(log n) on average and O(n) in the worst
+case.

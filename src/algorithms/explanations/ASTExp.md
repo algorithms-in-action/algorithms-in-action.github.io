@@ -1,4 +1,4 @@
-# A\* Algorithm
+# A\*
 
 ---
 
@@ -11,41 +11,59 @@ end node. If the heuristic never over-estimates the path length it is
 said to be "admissible" and A\* is then guaranteed to find a shortest
 path to the end node (assuming all edges have a positive weight).
 With an inadmissible heuristic a path will still be found (and it
-may even be found more quickly) but it may not be the shortest.  A\*
-is one of several algorithms that can be viewed as having a similar
-structure. Some of these can be used for both directed and undirected
-graphs; here we use undirected graphs for simplicity.  The way paths are
-represented is for each node to point to the previous node in the path
-(so paths are actually reversed in this representation and essentially we
-have a tree with "parent" pointers and the start node at the root). This
-allows multiple nodes to each have a single path represented.
+may even be found more quickly) but it may not be the shortest.
 
-As all these algorithms execute, we can classify nodes into three sets.
-They are the nodes for which the final parent node has been found (this
-is a region of the graph around the start node), "frontier" nodes that
-are not finalised but are connected to a finalised node by a single edge,
-and the rest of the nodes, which have not been seen yet. The frontier
-nodes are stored explicitly in some data structure and some algorithms
-also need some way to check if a node has been seen and/or finalised.  The
-frontier initially contains just the start node. The algorithms repeatedly
-pick a frontier node, finalises the node (its current parent becomes
-its final parent) and updates information about neighbours of the node.
+A\* is one of a related group of graph traversal
+algorithms that can be viewed as having a similar structure.
+Others of these algorithms work with weighted graphs
+where the aim is to find the least cost path(s), while BFS and DFS
+ignore edge weights and Prim's
+algorithm finds a minumum spanning tree of the graph (the least cost 
+set of edges that connects all nodes, if the graph is connected).  
 
-The A\* algorithm keeps track of the length of the shortest path found so
-far to each node (if any) and uses a priority queue (PQ) for the frontier
-nodes, ordered according to this length *plus* the heuristic value for
-the node.  At each stage the node with minimum path length plus heuristic
-value is removed from the priority queue and finalised; its neighbours
-in the frontier may now have a shorter path to them so their costs need
-to be updated (and other neighbours must be added to the frontier).
+These graph traversal algorithms can be used for both directed
+and undirected graphs; in AIA we use undirected graphs for simplicity.
+Paths are represented by having each node point to the previous
+"parent" node in the path, so 
+we have a tree with "parent" pointers and the start node at the
+root, that is a tree of reversed paths.
+
+As these algorithms execute, we can classify nodes into three sets.
+These are:
+
+ 
+- "Finalised" nodes, for which the shortest or least costly path back to the start node has already
+been finalised, that is the final parent node has been determined and is recorded;
+
+- "Frontier" nodes, that are not finalised but are connected to a finalised node by a single edge; and
+
+- The rest of the nodes, which have not been seen yet. 
+
+The frontier nodes are stored in a data structure.
+Some of the algorithms also need a way to check if a node has already been seen and/or finalised.
+
+The frontier initially contains just the start node. The algorithms repeatedly
+pick a frontier node, finalise the node (its current parent becomes
+its final parent) and update information about the neighbours of the node.
+A\* uses a priority queue for the frontier nodes,
+ordered on the shortest distance to the node found so far *plus* the
+heuristic value of the node.  At each
+stage the node with the minimum cost
+is removed for processing, and its neighbors have their information
+updated if a shorter path has now been found.
+Other algorithms use other data structures to keep track 
+of the frontier nodes.
 
 In the presentation here, we do not give details of how the priority
 queue is implemented, but just emphasise it is a collection of nodes
-with associated costs and the node with the minimum cost is selected
-each stage. When Length elements values disappear it means the element
-has been removed from the PQ (the length and heuristic values are not
-used again).  The pseudo-code is simpler if nodes that are yet to be
-seen are also put in the PQ, with infinite cost, which we do here.
+with associated path lengths plus heuristic values and the node with the
+minimum total is selected each
+stage. When elements disappear from the length and heuristic arrays
+it means the element
+has been removed from the priority queue (the value is not used again).
+The pseudo-code is simpler if nodes that are yet to be seen are also
+put in the PQ, with infinite cost, which we do here. The frontier is the
+set of nodes with a finite path length shown.
 
 Here we number all nodes for simplicity so we can use arrays for the
 graph representation, the parent pointers, etc.  For many important
@@ -54,20 +72,21 @@ be huge and arrays are impractical for representing the graph so other
 data structures are needed.
 
 In this animation the layout of the graph nodes is important. All nodes
-are on a two-dimensional grid so each have (x,y) integer coordinates.
-Both the weight of each edge and heuristic values for each node are
-related to the "distance" between the two nodes.  Two measures of
+are on a two-dimensional grid so each has (x,y) integer coordinates.
+Edge weights can be entered manually or computed automatically, based on
+the "distance" between the two nodes.  Two measures of
 distance are provided: Euclidean and Manhattan.  Eclidean distance is
 the straight line distance; here we round it up to the next integer.
 Manhattan distance is the difference in x coordinate values plus the
-difference in y coordinate values.  You can choose which distance measure
-to use for both weights and heuristic values to explore behaviour of the
-algorithm. You can also manually input weights. Note that if Euclidean
-distance is used for weights and Manhattan distance is used for the
-heuristic, it is not admissible so the shortest path may not be the one
-returned (you may like to experiment with the default supplied graph
-and change the weight and heuristic settings). For other combinations
-of Manhattan/Euclidean the heuristic is admissible.  You can also choose
-the start and end nodes and change the graph choice (see the instructions
+difference in y coordinate values.  You can choose the way weights are
+decided, toggle between Euclidean and Manhattan for the heuristic
+function, choose the
+start and end nodes and change the graph choice (see the instructions
 tab for more details).
+
+Note that if Euclidean
+distance is used for weights and Manhattan distance is used for the
+heuristic, it is not admissible, so the shortest path may not be the one
+returned. For other combinations
+of Manhattan/Euclidean the heuristic is admissible.
 

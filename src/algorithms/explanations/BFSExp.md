@@ -1,10 +1,10 @@
-# Breadth First Search Algorithm
+# Breadth First Search
 ---
 
 Breadth first search (BFS) for graphs can be used to find a path from
-a single start node to either a single end node; to one of several end
-nodes; or to all nodes that are connected to the start node, depending on the termination
-condition. BFS returns the path to this (these) node(s) 
+a single start node to either a single end node, to one of several end
+nodes, or to all nodes that are connected to the start node (depending on the termination
+condition). BFS returns the path to this (these) node(s) 
 that can be reached with the minimum number of edges traversed, regardless of 
 edge weights.
 
@@ -15,13 +15,13 @@ for all edges), where the aim is to find the least cost path(s), while Prim's
 algorithm finds a minumum spanning tree of the graph (the least cost 
 set of edges that connects all nodes, if the graph is connected).  
 
-These graph search algorithms can be used for both directed
+These graph traversal algorithms can be used for both directed
 and undirected graphs; in AIA we use undirected graphs for simplicity.
 Paths are represented by having each node point to the previous
 "parent" node in the path, so 
 we have a tree with "parent" pointers and the start node at the
 root, that is a tree of reversed paths. This allows these algorithms to return
-multiple end nodes that each have a single path from the start node. 
+multiple nodes that each have a single path from the start node. 
 BFS will find paths with
 the minimum number of edges. 
 
@@ -36,7 +36,7 @@ been finalised, that is the final parent node has been determined and is recorde
 
 - The rest of the nodes, which have not been seen yet. 
 
-The frontier nodes are stored explicitly in a data structure.
+The frontier nodes are stored in a data structure.
 Some of the algorithms also need a way to check if a node has already been seen and/or finalised.
 
 The frontier initially contains just the start node. The algorithms repeatedly
