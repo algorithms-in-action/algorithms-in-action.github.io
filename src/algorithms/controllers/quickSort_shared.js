@@ -569,29 +569,26 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
       }
       // array of size 1, already sorted
       // has a conditional to specify which line it jumps to depending on the expanding and collapsing
-      // XXX not sure this is a good idea - recursion clearer in
-      // animation if final "// Done" is stopped at
-      // for each recursive call - user can mentally prepare for what we
-      // jump back to?
+      // BUGS plus not a great idea
+      // Modified so we stop at "// Done" for all base cases (could add
+      // other cases also XXX); code could be simplified.
       else if (left < a.length) {
-        finished_stack_frames.push(real_stack.pop());
-        let size_one_bookmark = isRecursionExpanded()
-          ? QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1
-          : QS_BOOKMARKS.SHARED_skip_step;
+        // let size_one_bookmark = isRecursionExpanded()
+          // ? QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1
+          // : QS_BOOKMARKS.SHARED_skip_step;
 
         chunker.add(
-          size_one_bookmark,
+          // size_one_bookmark,
+          QS_BOOKMARKS.SHARED_done_qs,
           (vis, l) => {
             vis.array.sorted(l);
           },
           [left],
         depth);
-      } else {
         finished_stack_frames.push(real_stack.pop());
-        chunker.add(QS_BOOKMARKS.SHARED_done_qs, refresh_stack, [
-          real_stack,
-          finished_stack_frames,
-        ], depth);
+      } else {
+        chunker.add(QS_BOOKMARKS.SHARED_done_qs);
+        finished_stack_frames.push(real_stack.pop());
       }
 
       return a; // Facilitates testing
