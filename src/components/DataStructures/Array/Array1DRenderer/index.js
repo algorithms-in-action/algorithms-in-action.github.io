@@ -63,12 +63,20 @@ class Array1DRenderer extends Array2DRenderer {
       (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
       [],
     );
-    let largestColumnValue = data[0].reduce(
-      (acc, curr) => (acc < curr.value ? curr.value : acc),
-      0,
-    );
+    let largestColumnValue = 0;
+    // if largestValue not set explicitly, compute it
+    if (!this.props.data.largestValue) {
+      largestColumnValue = data[0].reduce(
+        (acc, curr) => (acc < curr.value ? curr.value : acc),
+        0,
+      );
+    } else {
+      largestColumnValue = this.props.data.largestValue;
+    }
+    // handle non-numbers by using minimum height
     let scaleY = ((largest, columnValue) =>
-      (columnValue / largest) * arrayMagnitudeScaleValue).bind(
+      (typeof columnValue !== "number"? 0 :
+       (columnValue / largest) * arrayMagnitudeScaleValue)).bind(
       null,
       largestColumnValue,
     );

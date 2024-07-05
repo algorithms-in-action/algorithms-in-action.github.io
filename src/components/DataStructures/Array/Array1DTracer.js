@@ -107,6 +107,7 @@ class Array1DTracer extends Array2DTracer {
         newEl.variables = val.variables;
         newEl.stack = val.stack;
         newEl.stackDepth = val.stackDepth;
+        newEl.largestValue = val.largestValue;
         return newEl;
       }
     }
@@ -132,6 +133,13 @@ class Array1DTracer extends Array2DTracer {
 
   setStackDepth(depth) {
     this.stackDepth = depth;
+  }
+
+  // default is to compute largestColumnValue but we can set it
+  // explicitly so we can make two arrays look the same when moving
+  // elements between them and avoid re-scaling
+  setLargestValue(val) {
+    this.largestValue = val;
   }
 
   stringTheContent() {

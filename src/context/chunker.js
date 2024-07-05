@@ -179,13 +179,14 @@ export default class {
     if (this.currentChunk >= this.chunks.length-1) {
       this.currentChunk = this.chunks.length-1;
     }
-    // console.log(["refresh", this.currentChunk]);
-    if (this.currentChunk > 0) {
+    // want to refresh even if we are at the start because init may
+    // depend on what is collapsed
+    // if (this.currentChunk > 0) {
       this.visualisers = this.init();
       for (let i = 0; i <= this.currentChunk; i += 1) {
         this.doChunk(i);
       }
       // this.currentChunk -= 1; // WTF ?????
-    }
+    // }
   }
 }

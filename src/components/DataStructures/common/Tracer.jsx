@@ -9,6 +9,7 @@ class Tracer {
     this.title = title;
     if (options !== undefined) {
       this.arrayItemMagnitudes = options.arrayItemMagnitudes;
+      this.largestValue = options.largestValue;
     }
     this.init();
     this.reset();

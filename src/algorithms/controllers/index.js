@@ -3,6 +3,7 @@ export { default as binaryTreeInsertion } from './binaryTreeInsertion';
 export { default as heapSort } from './heapSort';
 export { default as quickSort } from './quickSort';
 export { default as quickSortM3 } from './quickSortM3';
+export { default as msort_arr_td } from './msort_arr_td';
 export { default as transitiveClosure } from './transitiveClosure';
 export { default as bruteForceStringSearch } from './bruteForceStringSearch';
 export { default as horspoolStringSearch } from './horspoolStringSearch';

@@ -111,6 +111,7 @@ const unionFindInstructions = [{
 export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
+export const msort_arr_td = sortInstructions;
 export const TCInstruction = graphInstructionsTC;
 export const Prims_oldInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;

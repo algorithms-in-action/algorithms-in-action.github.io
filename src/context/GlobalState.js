@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { initGlobalAlgorithmGetterQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
+import { initGlobalAlgorithmGettermsort_arr_td } from '../algorithms/controllers/msort_arr_tdCollapseChunkPlugin';
 import { dispatcher, initialState } from './actions';
 
 /* What's going on here?
@@ -37,6 +38,10 @@ export const GlobalProvider = ({ children }) => {
     () => dispatch,
   );
   initGlobalAlgorithmGetterQS(
+    () => globalState.algorithm,
+     () => dispatch,
+     );
+  initGlobalAlgorithmGettermsort_arr_td(
     () => globalState.algorithm,
      () => dispatch,
      );

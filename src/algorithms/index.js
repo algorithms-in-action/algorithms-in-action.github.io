@@ -72,6 +72,20 @@ const allalgs = {
       sort: Controller.quickSortM3,
     },
   },
+  'msort_arr_td': {
+    name: 'Merge Sort',
+    category: 'Sort',
+    explanation: Explanation.msort_arr_td,
+    param: <Param.msort_arr_td />,
+    instructions: Instructions.msort_arr_td,
+    extraInfo: ExtraInfo.msort_arr_td,
+    pseudocode: {
+      sort: Pseudocode.msort_arr_td,
+    },
+    controller: {
+      sort: Controller.msort_arr_td,
+    },
+  },
 
   'binarySearchTree': {
     noDeploy: false,
