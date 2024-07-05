@@ -419,6 +419,7 @@ export function run_msort(is_qs_median_of_3) {
         // recursive call once it has returned plus we need a chunk at
         // this level when the recursive code is collapsed
         chunker.add('sortL', (vis, a, cur_left, cur_mid, cur_right) => {
+          vis.array.set(a, 'msort_arr_td');
           assignVarToA(vis, 'left', cur_left);
           assignVarToA(vis, 'mid', cur_mid);
           assignVarToA(vis, 'right', cur_right);
@@ -433,19 +434,20 @@ export function run_msort(is_qs_median_of_3) {
 
         // dummy chunk before recursive call, as above
         chunker.add('preSortR', (vis, a, cur_left, cur_mid, cur_right) => {
-          vis.array.set(a, 'msort_arr_td');
+          // vis.array.set(a, 'msort_arr_td');
+          for (let i = cur_left; i <= cur_mid; i++) {
+            unhighlight(vis, i, false);
+          }
           assignVarToA(vis, 'left', undefined);
           assignVarToA(vis, 'mid', undefined);
           assignVarToA(vis, 'right', undefined);
-          for (let i = cur_left; i <= cur_mid; i++) {
-            // unhighlight(vis, i, true);
-            // unhighlight(vis, i, false)
-          }
-          // for (let i = cur_mid+1; i <= cur_right; i++) {
+          for (let i = cur_mid+1; i <= cur_right; i++) {
             // highlight(vis, i, true)
-          // }
+          }
           }, [A, left, mid, right], depth);
+
         MergeSort(mid+1, right, depth + 1);
+
         // chunk after recursive call
         chunker.add('sortR', (vis, a, cur_left, cur_mid, cur_right) => {
           assignVarToA(vis, 'left', cur_left);
@@ -636,6 +638,11 @@ cur_max2, cur_bp) => {
             assignVarToA(vis, 'ap2', undefined);
             assignVarToA(vis, 'max2', undefined);
           }
+          // XXX best highlight cur_mid+1..right from previous
+          // recursion level?
+          // for (let i = cur_mid+1; i <= right; i++) {
+            // highlight(vis, i, true)
+          // }
           }, [A, B, left, mid, right], depth);
 
         // chunk after recursive call, as above, after adjusting

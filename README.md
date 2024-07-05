@@ -5,7 +5,8 @@
 Welcome to Algorithms In Action!
 
 Here is the [link](https://dev-aia.vercel.app/) to run the algorithm
-visualiser on your browser (hosted on Vercel; the github hosting is
+visualiser on your browser (hosted on Vercel on a hobby account so best
+install it elsewhere for anything more than casual use; the github hosting is
 currently broken for some unknown reason).
 
 
