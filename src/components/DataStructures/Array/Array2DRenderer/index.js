@@ -51,7 +51,7 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    // For DFSrec listOfNumbers is actually a list of pairs of numbers,
+    // For DFSrec+msort_arr_td listOfNumbers is actually a list of pairs of numbers,
     // or strings such as '(2,5)'
     const { data, algo, kth, listOfNumbers, motionOn, hideArrayAtIdx } =
       this.props.data;
@@ -150,7 +150,7 @@ class Array2DRenderer extends Renderer {
               }
             }
             // XXX should use style sheets for formatting stack for DFS
-            // and DFSrec
+            // and DFSrec etc
             // - currently messing about attempting to make it look
             // better and more stack-like using float (deprecated)
             return (
@@ -297,6 +297,14 @@ class Array2DRenderer extends Renderer {
           <caption
             className={algo === 'DFSrec' ? styles.captionDFSrec : ''}
             kth-tag="dfsrec_caption"
+          >
+             <div style={{float:"right"}}>Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </div>
+          </caption>
+        )}
+        {algo === 'msort_arr_td' && (
+          <caption
+            className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
+            kth-tag="msort_arr_td_caption"
           >
              <div style={{float:"right"}}>Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </div>
           </caption>

@@ -226,8 +226,13 @@ class Array2DTracer extends Tracer {
     this.kth = k;
   }
 
+  // caption for arrays (undefined means no caption, [] may result in a blank
+  // caption, depending on the algorithm - there may be extra text)
   setList(array) {
-    this.listOfNumbers = array.join(', ');
+    if (array)
+      this.listOfNumbers = array.join(', ');
+    else
+      this.listOfNumbers = undefined;
   }
 
   getKth() {

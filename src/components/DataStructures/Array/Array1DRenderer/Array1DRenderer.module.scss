@@ -3,6 +3,26 @@
 .array_1d {
     flex-shrink: 0;
 
+  .bottom_caption {
+    // added for msort_arr_td
+    caption-side: bottom;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: var(--array-2d-row-col-value-color);
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+  }
+
+.captionmsort_arr_td {
+  caption-side: bottom;
+  // caption-side: top;
+  text-align: right;
+  margin-top: 70px;
+  // margin-top: 0px;
+} 
+
+
+
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
         position: relative;

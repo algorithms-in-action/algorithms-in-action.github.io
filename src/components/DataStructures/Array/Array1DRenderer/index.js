@@ -54,8 +54,9 @@ class Array1DRenderer extends Array2DRenderer {
 
   renderData() {
 
+    // listOfNumbers used for stack caption in msort_arr_td
     // eslint-disable-next-line
-    const { data, algo, stack, stackDepth } = this.props.data;
+    const { data, algo, stack, stackDepth, listOfNumbers } = this.props.data;
 
     const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
 
@@ -83,7 +84,17 @@ class Array1DRenderer extends Array2DRenderer {
     if (!this.props.data.arrayItemMagnitudes) {
       scaleY = () => 0;
     }
+    // wrap output in table like 2D array so we can have a caption (for
+    // msort_arr_td) XXX fix indentation
     return (
+      <table
+        className={switchmode(mode())}
+        style={{
+          marginLeft: -this.centerX * 2,
+          marginTop: -this.centerY * 2,
+          transform: `scale(${this.zoom})`,
+        }}
+      >
       <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
         {/* Values */}
         {data.map((row, i) => (
@@ -201,7 +212,8 @@ class Array1DRenderer extends Array2DRenderer {
           )}
         </div>
         <div>
-          {stack && stack.length > 0 ? (
+          {// Quicksort stuff
+          stack && stack.length > 0 ? (
             this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
             stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
           ) : (
@@ -209,6 +221,15 @@ class Array1DRenderer extends Array2DRenderer {
           )}
         </div>
       </motion.div>
+          {algo === 'msort_arr_td' && listOfNumbers && (
+            <caption
+              className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
+              kth-tag="msort_arr_td_caption"
+            >
+               <div style={{float:"right"}}>Call stack (left,right):&emsp; {listOfNumbers}&emsp;&emsp; </div>
+            </caption>
+          )}
+</table>
     );
   }
 }

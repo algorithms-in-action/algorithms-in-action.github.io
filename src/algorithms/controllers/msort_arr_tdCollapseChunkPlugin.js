@@ -65,8 +65,8 @@ export function isRecursionExpanded() {
 
   // eslint-disable-next-line
   const { bookmark, pseudocode, collapse } = algorithm;
-  return collapse.msort_arr_td.sort.QuicksortFirst ||
-              collapse.msort_arr_td.sort.QuicksortSecond;
+  return collapse.msort_arr_td.sort.MergesortL ||
+              collapse.msort_arr_td.sort.MergesortR;
 }
 
 // Trigger refresh of display when code is expanded/collapsed.
