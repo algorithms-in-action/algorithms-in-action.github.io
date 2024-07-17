@@ -95,6 +95,7 @@ class Array1DRenderer extends Array2DRenderer {
           transform: `scale(${this.zoom})`,
         }}
       >
+      <tbody>
       <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
         {/* Values */}
         {data.map((row, i) => (
@@ -107,18 +108,6 @@ class Array1DRenderer extends Array2DRenderer {
               justifyContent: 'center',
             }}
           >
-            {/* 
-                Pivot Line Rendering:
-                - This JSX code renders the visual line over the pivot element in 1D arrays, e.g., QuickSort.
-                - The feature is currently disabled. To re-enable:
-                  1. Uncomment the following JSX.
-                  2. Uncomment the `.pivotLine` style in Array1DRenderer.module.scss.
-                */}
-
-            {/* 
-                {row.filter((col) => col.variables.includes('pivot')).map((col)=><div className={styles.pivotLine} style={{
-                  bottom: `max(var(--array-1d-minimum-height), ${this.toString(scaleY(col.value))}vh)`}}/>)}
-                */}
             {row.map((col) => (
               <motion.div
                 layout
@@ -153,7 +142,7 @@ class Array1DRenderer extends Array2DRenderer {
         ))}
 
         <div>
-          {/* Indexes */}
+          {/* Indexes  XXX maybe avoid for arrayB in Merge sort? */}
           <div
             className={styles.row}
             style={{ display: 'flex', justifyContent: 'space-between' }}
@@ -221,15 +210,16 @@ class Array1DRenderer extends Array2DRenderer {
           )}
         </div>
       </motion.div>
-          {algo === 'msort_arr_td' && listOfNumbers && (
-            <caption
-              className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
-              kth-tag="msort_arr_td_caption"
-            >
-               <div style={{float:"right"}}>Call stack (left,right):&emsp; {listOfNumbers}&emsp;&emsp; </div>
-            </caption>
-          )}
-</table>
+      </tbody>
+      {algo === 'msort_arr_td' && listOfNumbers && (
+        <caption
+          className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
+          kth-tag="msort_arr_td_caption"
+        >
+           <div style={{float:"right"}}>Call stack (left,right):&emsp; {listOfNumbers}&emsp;&emsp; </div>
+        </caption>
+      )}
+      </table>
     );
   }
 }

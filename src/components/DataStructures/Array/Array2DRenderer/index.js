@@ -290,7 +290,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'DFS' ? styles.captionDFS : ''}
             kth-tag="dfs_caption"
           >
-             <div style={{float:"right"}}>Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </div>
+             Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           </caption>
         )}
         {algo === 'DFSrec' && (
@@ -298,7 +298,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'DFSrec' ? styles.captionDFSrec : ''}
             kth-tag="dfsrec_caption"
           >
-             <div style={{float:"right"}}>Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </div>
+             Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
         {algo === 'msort_arr_td' && (
@@ -306,7 +306,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
             kth-tag="msort_arr_td_caption"
           >
-             <div style={{float:"right"}}>Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </div>
+             Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
         {algo === 'BFS' && (

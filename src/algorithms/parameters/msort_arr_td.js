@@ -1,3 +1,5 @@
+// Adapted from Quicksort - could rename a few things
+
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -41,9 +43,8 @@ function MergesortParam() {
 
     
 
-// XXX best case definitely not needed; best skip choice of cases
-// - not sure quite how currently
-  // function for choosing the type of pivot (median of three)
+// XXX best case definitely not needed; could skip choice of cases
+  // function for choosing the type of input
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
@@ -146,18 +147,6 @@ function MergesortParam() {
           />
         }
         label="Sorted (descending)"
-        className="checkbox"
-      />
-      {/* create a checkbox for Median of Three */}
-      <FormControlLabel
-        control={
-          <BlueRadio
-            checked={QSCase.bestCase}
-            onChange={handleChange}
-            name="bestCase"
-          />
-        }
-        label="Ideal"
         className="checkbox"
       />
       {/* render success/error message */}

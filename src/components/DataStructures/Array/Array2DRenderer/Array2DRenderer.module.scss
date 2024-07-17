@@ -171,34 +171,31 @@
     }
   }
 }
+
 .captionDFS {
   caption-side: bottom;
-}  
-
-.captionDFSrec {
-  caption-side: bottom;
-}  
-
-.captionmsort_arr_td {
-  caption-side: bottom;
-}  
-
-.captionmsort_arr_td {
+  text-align: right;
+  margin-top: -12px; // need to squeeze a bit
   color: var(--array-2d-row-col-value-color); 
-}
+}  
 
 .captionBFS {
   caption-side: bottom;
-} 
-
-.captionDFS {
+  text-align: center;
+  margin-top: -12px; // need to squeeze a bit
   color: var(--array-2d-row-col-value-color); 
 }
 
 .captionDFSrec {
+  caption-side: bottom;
+  margin-top: -12px; // doesn't hurt to squeeze a bit like above
+  text-align: right;
   color: var(--array-2d-row-col-value-color); 
 }
 
-.captionBFS {
+// redefined in 1D array
+.captionmsort_arr_td {
+  caption-side: bottom;
+  text-align: right;
   color: var(--array-2d-row-col-value-color); 
-}
+}  

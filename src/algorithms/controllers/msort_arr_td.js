@@ -1,7 +1,11 @@
 // Merge sort for arrays, top down
-// XXX Migrating code from Quicksort...
-// Lots of crud, including abandonned attempt at QS-style stack display 
-// Other stack display missing som refresh XXXXXXX
+// Adapted code from Quicksort...
+// XXX Could do with a good clean up!
+// Lots of crud, including abandonned attempt at QS-style stack display.
+// Uses simple stack display like DFSrec; stack vanishes inside
+// merge+copy because screen real-estate is limited and details of merge
+// are independent of stack details anyway (may cause some surprise
+// though)
 
 import { msort_arr_td } from '../explanations';
 
@@ -703,6 +707,9 @@ cur_right, c_stk) => {
         // chunk after recursive call, as above, after adjusting
         // stack frames/depth etc
       }
+        // XXX should we delete 'else' and always go to the 'Done' line
+        // even for non-trivial array segments? (might need to
+        // generalise (un)highlight code below
         else
       {
         chunker.add('Done', (vis, a, cur_left, cur_right) => {
