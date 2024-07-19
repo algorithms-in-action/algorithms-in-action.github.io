@@ -46,10 +46,12 @@ export default {
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
+  // XXX may not need isMergeExpanded? only needed if last chunk of
+  // merge still as extra vars displayed
   isMergeExpanded,
   isMergeCopyExpanded,
   isRecursionExpanded,
-} from './msort_arr_tdCollapseChunkPlugin';
+} from './collapseChunkPlugin';
 
 // MergeExpandedR true if Merge code is really/recursively expanded (ie,
 // visible in animation).  Its possible for Merge to be expanded but the

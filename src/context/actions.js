@@ -4,6 +4,9 @@
 import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
+// generic version of collapseChunkPlugin - could probably adapt code and
+// delete some others XXX
+import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { onCollapseStateChangeQS } from '../algorithms/controllers/quickSortCollapseChunkPlugin';
 import { onCollapseStateChangemsort_arr_td } from '../algorithms/controllers/msort_arr_tdCollapseChunkPlugin';

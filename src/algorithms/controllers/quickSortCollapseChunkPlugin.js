@@ -72,7 +72,4 @@ export function onCollapseStateChangeQS(chunker) {
   if (!isInQuickSort()) return false;
   const algorithm = getGlobalAlgorithm();
   chunker.refresh();
-  // XX re-runs algorithm from start - Not what we want
-  //triggerButtonClick();
-  //GlobalActions.RUN_ALGORITHM(algorithm.state, algorithm.id);
 }
