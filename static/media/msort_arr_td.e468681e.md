@@ -15,8 +15,8 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Quick Sort**][G4GLink]
+Geeks for Geeks Link: [**Merge Sort**][G4GLink]
 
 
-[G4GLink]: https://www.geeksforgeeks.org/quick-sort/
+[G4GLink]: https://www.geeksforgeeks.org/merge-sort/
 
