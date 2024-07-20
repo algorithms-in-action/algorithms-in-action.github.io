@@ -52,6 +52,8 @@ class Array1DRenderer extends Array2DRenderer {
     this.maxStackDepth = 0;
   }
 
+// XXX "Warning: Each child in a list should have a unique "key" prop.
+// Check the render method of `Array1DRenderer`" ???
   renderData() {
 
     // listOfNumbers used for stack caption in msort_arr_td
@@ -211,14 +213,16 @@ class Array1DRenderer extends Array2DRenderer {
         </div>
       </motion.div>
       </tbody>
-      {algo === 'msort_arr_td' && listOfNumbers && (
-        <caption
-          className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
-          kth-tag="msort_arr_td_caption"
-        >
-           <div style={{float:"right"}}>Call stack (left,right):&emsp; {listOfNumbers}&emsp;&emsp; </div>
-        </caption>
-      )}
+      { // XXX I've given up trying to avoid this warning:(
+        // "Whitespace text nodes cannot appear as a child of <table>. Make
+        // sure you don't have any extra whitespace between tags on each
+        // line of your source code."  Similariy div inside tbody.
+        algo === 'msort_arr_td' && listOfNumbers && (
+          <caption
+            className={styles.captionmsort_arr_td}
+            kth-tag="msort_arr_td_caption"
+          > Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+      }
       </table>
     );
   }

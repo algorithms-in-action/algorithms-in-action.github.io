@@ -13,6 +13,8 @@ const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td', 'transitiveClos
 // src/context/actions.js 
 import { GlobalActions } from '../../context/actions';
 
+// not sure if finding the running algorithm needs such complex code, but this
+// seems to work...
 let algorithmGetter = () => null;
 
 function getGlobalAlgorithm() {
@@ -32,37 +34,26 @@ export function initGlobalAlgorithmGetter(getter) {
 // of blocks in this interface will help remind programmers to include the
 // block we are interested in *plus enclosing blocks* (Main is always
 // expanded so that is not needed).
-export function areExpanded(Blocks) {
+export function areExpanded(blocks) {
   const algorithm = getGlobalAlgorithm();
   const alg_name = algorithm.id.name;
   const { bookmark, pseudocode, collapse } = algorithm;
-  return Blocks.reduce((acc, curr) =>
-     (acc && collapse[alg_name.sort][curr]), true);
+  return blocks.reduce((acc, curr) =>
+     (acc && collapse[alg_name].sort[curr]), true);
 }
 
 // Trigger refresh of display when code is expanded/collapsed.
 // Not so efficient - runs through all the chunks from the start. XXX
-// However, it seems to work fine and is pretty general. We could
-// possibly add a shortcut for algorithms that never change display
-// depending on what blocks are collapsed. XXX
+// However, it seems to work fine and is pretty general.
+// Added a shortcut for algorithms that never change display
+// depending on what blocks are collapsedi, which requires algorithms
+// that use this code to be explicitly listed at the start of this file
+// (could invert the selection and list tose that don't need it, to be
+// more robust).
 export function onCollapseChange(chunker) {
-  // const algorithm = getGlobalAlgorithm();
+  const algorithm = getGlobalAlgorithm();
+  const alg_name = algorithm.id.name;
+  if (!importsThis.includes(alg_name)) return;
   chunker.refresh();
 }
 
-
-/////////////////////////////////////////////////////
-
-export function isMergeCopyExpanded() {
-  return areExpanded(['MergeCopy']);
-}
-
-export function isMergeExpanded() {
-  return areExpanded(['MergeCopy', 'Merge']);
-}
-
-// checks if either recursive call is expanded (needed to determine if i
-// should be displayed)
-export function isRecursionExpanded() {
-  return areExpanded(['MergesortL']) || areExpanded(['MergesortR']);
-}

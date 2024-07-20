@@ -1,7 +1,7 @@
 // Merge sort for arrays, top down
 // Adapted code from Quicksort...
 // XXX Could do with a good clean up!
-// Lots of crud, including abandonned attempt at QS-style stack display.
+// Lots of crud, mostly abandonned attempt at QS-style stack display.
 // Uses simple stack display like DFSrec; stack vanishes inside
 // merge+copy because screen real-estate is limited and details of merge
 // are independent of stack details anyway (may cause some surprise
@@ -9,8 +9,7 @@
 
 import { msort_arr_td } from '../explanations';
 
-const is_qs_median_of_3 = false;
-const run = run_msort(is_qs_median_of_3);
+const run = run_msort();
 
 export default {
     explanation: msort_arr_td,
@@ -19,7 +18,7 @@ export default {
 };
 
 
-// Quicksort common code
+// XXX (was) Quicksort common code
 // Example of a recursive algorithm that could serve as a guide to
 // implementing others.  Some things to note:
 // 1) A depth parameter is added to the recursive code and also passed
@@ -46,30 +45,28 @@ export default {
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
-  // XXX may not need isMergeExpanded? only needed if last chunk of
-  // merge still as extra vars displayed
-  isMergeExpanded,
-  isMergeCopyExpanded,
-  isRecursionExpanded,
+  areExpanded,
 } from './collapseChunkPlugin';
 
-// MergeExpandedR true if Merge code is really/recursively expanded (ie,
-// visible in animation).  Its possible for Merge to be expanded but the
-// outer MergeCopy not expanded.
-function isMergeExpandedR() {
-  return isMergeCopyExpanded() && isMergeExpanded()
+/////////////////////////////////////////////////////
+
+// arrayB exists and is displayed only if MergeCopy is expanded
+function isMergeCopyExpanded() {
+  return areExpanded(['MergeCopy']);
 }
 
-// visualisation variable strings
-// For now we use a special case for i&j running off the left of the
-// array since we can't easily render them in the right place
-const VIS_VARIABLE_STRINGS = {
-  i_left_index: 'i',
-  j_right_index: 'j',
-  i_eq_0: 'i==0',
-  j_eq_0: 'j==0',
-  pivot: 'pivot',
-};
+// We don't strictly need isMergeExpanded: only needed if last chunk of
+// merge still had extra vars displayed.  Some code still needs
+// isMergeCopyExpanded because it uses arrayB
+function isMergeExpanded() {
+  return areExpanded(['MergeCopy', 'Merge']); // MergeCopy contains Merge
+}
+
+// checks if either recursive call is expanded (otherwise stack is not
+// displayed)
+function isRecursionExpanded() {
+  return areExpanded(['MergesortL']) || areExpanded(['MergesortR']);
+}
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
@@ -84,21 +81,6 @@ const STACK_FRAME_COLOR = {
 
 // for simple DFS-like stack display
 let simple_stack = [];
-
-/* 
-
-(loc is line of code)
-bookmarks are loc identifiers into a REAL file
-REAL files are the pseudocode files
-(search \\B and find quicksort)
-keep up to date with this file
-
-MEDIAN3_      if loc is only in median of 3 quicksort
-SHARED_       if shared loc between MEDIAN3 and RIGHT_PIVOT
-RIGHT_P_      if an loc is only in the right pivot quicksort
-
-*/
-
 
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -167,7 +149,7 @@ const unhighlightB = (vis, index, isPrimaryColor = true) => {
 // ----------------------------------------------------------------------------------------------------------------------------
 
 
-// Nice to hide array B entirely if things are collapsed
+// We hide array B entirely if things mergeCopy is collapsed
 export function initVisualisers() {
   if (isMergeCopyExpanded()) {
     return {
@@ -202,7 +184,7 @@ export function initVisualisers() {
  * @param {array} nodes array of numbers needs to be sorted
  */
 
-export function run_msort(is_qs_median_of_3) {
+export function run_msort() {
 
   return function run(chunker, { nodes }) {
     // can't rename from nodes
@@ -329,11 +311,6 @@ export function run_msort(is_qs_median_of_3) {
         derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
       );
 
-      // assignVarToA(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
-      // assignVarToA(vis, VIS_VARIABLE_STRINGS.i_eq_0, cur_i_too_low);
-      // assignVarToA(vis, VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
-      // assignVarToA(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
-      // assignVarToA(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
     };
 
 
@@ -356,7 +333,7 @@ export function run_msort(is_qs_median_of_3) {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) { 
-      if (isMergeExpandedR()) {
+      if (isMergeExpanded()) {
         vis.array.set(a, 'msort_arr_td');
         // set_simple_stack(vis.array, c_stk);
         assignVarToA(vis, 'ap1', cur_ap1);
@@ -519,32 +496,32 @@ c_stk) => {
           for (let i = cur_mid+1; i <= cur_right; i++) {
             unhighlight(vis, i, false)
           }
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
             assignVarToA(vis, 'ap1', cur_left);
             highlight(vis, cur_left, true);
           }
           }, [A, left, mid, right], depth);
         chunker.add('max1', (vis, a, cur_left, cur_mid, cur_right) => {
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToA(vis, 'mid', undefined);
             assignVarToA(vis, 'max1', cur_mid);
           }
           }, [A, left, mid, right], depth);
         chunker.add('ap2', (vis, a, cur_left, cur_mid, cur_right) => {
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToA(vis, 'ap2', cur_mid+1);
             highlight(vis, cur_mid+1, true);
           }
           }, [A, left, mid, right], depth);
         chunker.add('max2', (vis, a, cur_left, cur_mid, cur_right) => {
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToA(vis, 'right', undefined);
             assignVarToA(vis, 'max2', right);
           }
           }, [A, left, mid, right], depth);
         chunker.add('bp', (vis, a, cur_left, cur_mid, cur_right) => {
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToB(vis, 'bp', left);
           }
           }, [A, left, mid, right], depth);
@@ -573,7 +550,7 @@ cur_max1, cur_max2, cur_stk, cur_left);
 cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
 cur_max1, cur_max2, cur_stk, cur_left);
-               if (isMergeExpandedR()) {
+               if (isMergeExpanded()) {
                  highlightB(vis, cur_bp, false);
                }
                }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
@@ -582,7 +559,7 @@ cur_max1, cur_max2, cur_stk, cur_left);
 cur_max1, cur_max2, cur_stk, cur_left) => {
                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
 cur_max1, cur_max2, cur_stk, cur_left);
-               if (isMergeExpandedR()) {
+               if (isMergeExpanded()) {
                  highlightB(vis, cur_bp, false);
                }
                }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
@@ -599,7 +576,7 @@ cur_max1, cur_max2, cur_stk, cur_left);
 cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
 cur_max1, cur_max2, cur_stk, cur_left);
-               if (isMergeExpandedR()) {
+               if (isMergeExpanded()) {
                  highlightB(vis, cur_bp, false);
                }
                }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
@@ -608,7 +585,7 @@ cur_max1, cur_max2, cur_stk, cur_left);
 cur_max1, cur_max2, cur_stk, cur_left) => {
                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
 cur_max1, cur_max2, cur_stk, cur_left);
-               if (isMergeExpandedR()) {
+               if (isMergeExpanded()) {
                  highlightB(vis, cur_bp, false);
                }
                }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
@@ -629,7 +606,7 @@ cur_max1, cur_max2, cur_stk, cur_left);
 
          chunker.add('CopyRest1', (vis, a, b, cur_left, cur_ap1,
 cur_ap2, cur_max1, cur_max2, cur_bp, c_stk) => {
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             vis.array.set(a, 'msort_arr_td');
             // set_simple_stack(vis.array, c_stk);
             // unhighlight(vis, cur_ap1, true);
@@ -666,7 +643,7 @@ cur_max2, cur_b, c_stk) => {
               highlightB(vis, i, false);
             }
           }
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             if (cur_ap2 < a.length) {
               unhighlight(vis, cur_ap2, true);
               assignVarToA(vis, 'ap2', undefined);
@@ -693,7 +670,7 @@ cur_right, c_stk) => {
           for (let i = cur_left; i <= cur_right; i++) {
             highlight(vis, i, false);
           }
-          if (isMergeExpandedR()) {
+          if (isMergeExpanded()) {
             assignVarToA(vis, 'ap1', undefined);
             assignVarToA(vis, 'max1', undefined);
             assignVarToA(vis, 'ap2', undefined);

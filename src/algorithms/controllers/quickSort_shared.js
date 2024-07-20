@@ -25,9 +25,19 @@
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 import {
-  isPartitionExpanded,
-  isRecursionExpanded,
-} from './quickSortCollapseChunkPlugin';
+  areExpanded,
+} from './collapseChunkPlugin';
+
+export function isPartitionExpanded() {
+  return areExpanded(['Partition']);
+}
+
+// checks if either recursive call is expanded (needed to determine if i
+// should be displayed)
+export function isRecursionExpanded() {
+  return areExpanded(['QuicksortFirst']) || areExpanded(['QuicksortSecond']);
+}
+
 
 // visualisation variable strings
 // For now we use a special case for i&j running off the left of the
@@ -591,7 +601,7 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
         depth);
         finished_stack_frames.push(real_stack.pop());
       } else {
-        chunker.add(QS_BOOKMARKS.SHARED_done_qs);
+        chunker.add(QS_BOOKMARKS.SHARED_done_qs, (vis) => null, [], depth);
         finished_stack_frames.push(real_stack.pop());
       }
 
@@ -611,7 +621,7 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
       [entire_num_array],
     0);
 
-    const result = QuickSort(entire_num_array, 0, entire_num_array.length - 1, 0);
+    const result = QuickSort(entire_num_array, 0, entire_num_array.length - 1, 1);
 
     assert(real_stack.length === 0);
 
