@@ -1,6 +1,22 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+import {areExpanded} from './collapseChunkPlugin';
+
+// k displayed only if first BuildHeap is expanded
+function isBuildHeapExpanded() {
+  return areExpanded(['BuildHeap']);
+}
+
+// i, j (in build) displayed only if first DownHeap is expanded
+function isDownHeapkExpanded() {
+  return areExpanded(['BuildHeap', 'DownHeapk']);
+}
+
+// i, j (in sort) displayed only if second DownHeap is expanded
+function isDownHeap1Expanded() {
+  return areExpanded(['SortHeap', 'DownHeap1']);
+}
 
 export default {
   initVisualisers() {
@@ -15,6 +31,7 @@ export default {
       },
     };
   },
+
 
   /**
    *
@@ -126,6 +143,16 @@ export default {
           heap = true;
           chunker.add(15, (vis, index) => {
             unhighlight(vis, index, false);
+            // possible last chunk in BuildHeap/DownHeapk
+            // remove i, j if !isDownHeapkExpanded
+            if (!isDownHeapkExpanded()) {
+              vis.array.assignVariable('i', undefined);
+              vis.array.assignVariable('j', undefined);
+            }
+            // remove k if !isBuildHeapExpanded
+            if (!isBuildHeapExpanded()) {
+              vis.array.assignVariable('k', undefined);
+            }
           }, [j]);
         } else {
           swap = A[i];
@@ -135,6 +162,15 @@ export default {
           chunker.add(18, (vis, p, c) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
+            // remove i, j if !isDownHeapkExpanded
+            if (!isDownHeapkExpanded()) {
+              vis.array.assignVariable('i', undefined);
+              vis.array.assignVariable('j', undefined);
+            }
+            // remove k if !isDownHeapkExpanded
+            if (!isBuildHeapExpanded()) {
+              vis.array.assignVariable('k', undefined);
+            }
           }, [i, j]);
           i = j;
         }
@@ -214,6 +250,12 @@ export default {
           heap = true;
           chunker.add(33, (vis, index) => {
             unhighlight(vis, index, false);
+            // possible last chunk in SortHeap/DownHeap1
+            // remove i, j if !isDownHeap1Expanded
+            if (!isDownHeap1Expanded()) {
+              vis.array.assignVariable('i', undefined);
+              vis.array.assignVariable('j', undefined);
+            }
           }, [j]);
         } else {
           swap = A[i];
@@ -223,6 +265,12 @@ export default {
           chunker.add(36, (vis, p, c) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
+            // possible last chunk in SortHeap/DownHeap1
+            // remove i, j if !isDownHeap1Expanded
+            if (!isDownHeap1Expanded()) {
+              vis.array.assignVariable('i', undefined);
+              vis.array.assignVariable('j', undefined);
+            }
           }, [i, j]);
           i = j;
         }
