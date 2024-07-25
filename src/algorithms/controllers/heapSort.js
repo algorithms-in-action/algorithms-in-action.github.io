@@ -93,26 +93,40 @@ export default {
      * parent = k , left child = 2*k, right child = 2*k + 1
      */
 
+    let lastiHighlight = null;
+
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
-      chunker.add(4, (vis, index) => {
-        vis.array.assignVariable('k', index);
-      }, [k]);
+      // chunker.add(4, (vis, index) => {
+        // vis.array.assignVariable('k', index);
+      // }, [k]);
 
       let j;
       const tmp = i;
       i = k;
 
-      chunker.add(6, (vis, index1, index2) => {
-        if (tmp != null) {
+      chunker.add(4, (vis, index1, index2) => {
+        vis.array.assignVariable('k', index1);
+        // if (tmp != null) {  // XXX looks dodgy using tmp here?
+        if (index2 != null) {
           unhighlight(vis, index2);
           vis.array.removeVariable('j');
         }
         highlight(vis, index1);
+      }, [i, tmp]);
+
+      chunker.add(6, (vis, index1, index2) => {
+        // if (tmp != null) {  // XXX looks dodgy using tmp here?
+        // if (index2 != null) {
+          // unhighlight(vis, index2);
+          // vis.array.removeVariable('j');
+        // }
+        // highlight(vis, index1);
         vis.array.assignVariable('i', index1);
       }, [i, tmp]);
 
+      lastiHighlight = k;
       heap = false;
       chunker.add(7);
 
@@ -141,7 +155,7 @@ export default {
         // parent is greater than largest child, so it is already a valid heap
         if (A[i] >= A[j]) {
           heap = true;
-          chunker.add(15, (vis, index) => {
+          chunker.add(15, (vis, index, lastH) => {
             unhighlight(vis, index, false);
             // possible last chunk in BuildHeap/DownHeapk
             // remove i, j if !isDownHeapkExpanded
@@ -149,17 +163,21 @@ export default {
               vis.array.assignVariable('i', undefined);
               vis.array.assignVariable('j', undefined);
             }
-            // remove k if !isBuildHeapExpanded
+            // remove k+highlighting if !isBuildHeapExpanded
             if (!isBuildHeapExpanded()) {
               vis.array.assignVariable('k', undefined);
+              if (lastiHighlight !== null) {
+                unhighlight(vis, lastH);
+              }
             }
-          }, [j]);
+          }, [j, lastiHighlight]);
         } else {
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
           swapAction(17, i, j);
-          chunker.add(18, (vis, p, c) => {
+          lastiHighlight = j;
+          chunker.add(18, (vis, p, c, lastH) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
             // remove i, j if !isDownHeapkExpanded
@@ -167,11 +185,14 @@ export default {
               vis.array.assignVariable('i', undefined);
               vis.array.assignVariable('j', undefined);
             }
-            // remove k if !isDownHeapkExpanded
+            // remove k+highlighting if !isDownHeapkExpanded
             if (!isBuildHeapExpanded()) {
               vis.array.assignVariable('k', undefined);
+              if (lastiHighlight !== null) {
+                unhighlight(vis, lastH);
+              }
             }
-          }, [i, j]);
+          }, [i, j, lastiHighlight]);
           i = j;
         }
       }
@@ -185,7 +206,10 @@ export default {
         if (nVal === nodes.length) {
           vis.array.clearVariables();
           vis.array.assignVariable('n', nVal - 1);
-        } else vis.array.removeVariable('j');
+        } else {
+          vis.array.removeVariable('i');
+          vis.array.removeVariable('j');
+        }
 
         // else only clear 'j'
 
@@ -198,14 +222,14 @@ export default {
       A[0] = swap;
 
       chunker.add(21, (vis, index) => {
-        highlight(vis, 0);
-        highlight(vis, index, false);
+        highlight(vis, index);
+        highlight(vis, 0, false);
       }, [n - 1]);
       swapAction(21, 0, n - 1);
 
       chunker.add(22, (vis, index) => {
-        unhighlight(vis, index);
-        unhighlight(vis, 0, false);
+        // unhighlight(vis, index);
+        unhighlight(vis, index, false);
         vis.array.sorted(index);
         vis.heap.sorted(index + 1);
 
@@ -216,7 +240,7 @@ export default {
       i = 0;
       chunker.add(24, (vis, index1, nVal) => {
         if (nVal > 0) {
-          highlight(vis, index1);
+          // highlight(vis, index1);
         }
         vis.array.assignVariable('i', index1);
       }, [i, n]);
