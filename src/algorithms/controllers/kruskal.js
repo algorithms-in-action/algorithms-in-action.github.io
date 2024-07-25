@@ -132,11 +132,6 @@ export default {
       }
     }
     edges.sort((a, b) => a.weight - b.weight);
-    // let tmp = edges.shift();
-    // console.log([tmp.weight, tmp.node1-1, tmp.node2-1]);
-    // console.log(edges);
-    console.log(nodeSets);
-    console.log(ufRank);
 
     nodes.push('i'); // initialize the display
     findD.push('find(i)');
@@ -300,7 +295,6 @@ export default {
      
 
       if (find(nodeSets, n1) != find(nodeSets, n2)) {
-        console.log(['selecting', e.weight, e.node1+1, e.node2+1]);
         nselected++;
         selectedD[nselected] = (e.node1+1)+'-'+(e.node2+1)
         costD[nselected] = e.weight;

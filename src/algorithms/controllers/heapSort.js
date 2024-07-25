@@ -1,21 +1,43 @@
+// Heapsort animation
+// 
+// It's worth looking at this code if you are planning to write any new
+// modules.
+// 
+// This was the first animation done and the code is reasonably simple -
+// the abstractions supported match what we need for this algorithm.
+// For various other algorithms, the code seems much more messy - maybe
+// the abstractions for the data structures/rendering are not quite what
+// is needed or the coding is done with a sledgehammer, so to speak.
+// 
+// The original version of this code was not quite right in the way it
+// adapted (or didn't adapt) to expansion/collapse of code blocks.  This
+// was added later in a reasonably simple way (again, other algorithms
+// may use the sledgehammer style).
+// 
+// One thing that could make the code here more readable is to use
+// meaningful strings for bookmarks rather than numbers.
+
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {areExpanded} from './collapseChunkPlugin';
 
 // k displayed only if first BuildHeap is expanded
+// Note: This is only needed in the last chunk of BuildHeap. The code
+// looks like it displays k throughout BuildHeap but when BuildHeap is
+// collapsed, only the last chunk is rendered so the other chunks don't
+// matter and we can avoid testing what is expanded there.  Another
+// approach would be to use a wrapper function for assigning to k, which
+// checks isBuildHeapExpanded() (it doesn't generalise well for i and j
+// though).
 function isBuildHeapExpanded() {
   return areExpanded(['BuildHeap']);
 }
 
 // i, j (in build) displayed only if first DownHeap is expanded
+// See Note in isBuildHeapExpanded()
 function isDownHeapkExpanded() {
   return areExpanded(['BuildHeap', 'DownHeapk']);
-}
-
-// i, j (in sort) displayed only if second DownHeap is expanded
-function isDownHeap1Expanded() {
-  return areExpanded(['SortHeap', 'DownHeap1']);
 }
 
 export default {
@@ -85,7 +107,7 @@ export default {
       }, [n1, n2]);
     };
 
-    /** NOTE: In Linda's code, array index starts from 1
+    /** NOTE: In Lee's code, array index starts from 1
      * however, in JS, array index naturally starts from 0
      * index start from 0:
      * parent = k , left child = 2*k + 1, right child = 2*k + 2
@@ -93,14 +115,13 @@ export default {
      * parent = k , left child = 2*k, right child = 2*k + 1
      */
 
-    let lastiHighlight = null;
+    // keep track of last node highlighted due to i (or k) so we can
+    // unhighlight it of buildHeap is collapsed
+    let lastiHighlight;
 
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
     for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
-      // chunker.add(4, (vis, index) => {
-        // vis.array.assignVariable('k', index);
-      // }, [k]);
 
       let j;
       const tmp = i;
@@ -117,12 +138,6 @@ export default {
       }, [i, tmp]);
 
       chunker.add(6, (vis, index1, index2) => {
-        // if (tmp != null) {  // XXX looks dodgy using tmp here?
-        // if (index2 != null) {
-          // unhighlight(vis, index2);
-          // vis.array.removeVariable('j');
-        // }
-        // highlight(vis, index1);
         vis.array.assignVariable('i', index1);
       }, [i, tmp]);
 
@@ -160,15 +175,13 @@ export default {
             // possible last chunk in BuildHeap/DownHeapk
             // remove i, j if !isDownHeapkExpanded
             if (!isDownHeapkExpanded()) {
-              vis.array.assignVariable('i', undefined);
-              vis.array.assignVariable('j', undefined);
+              vis.array.removeVariable('i');
+              vis.array.removeVariable('j');
             }
             // remove k+highlighting if !isBuildHeapExpanded
             if (!isBuildHeapExpanded()) {
-              vis.array.assignVariable('k', undefined);
-              if (lastiHighlight !== null) {
-                unhighlight(vis, lastH);
-              }
+              vis.array.removeVariable('k');
+              unhighlight(vis, lastH);
             }
           }, [j, lastiHighlight]);
         } else {
@@ -182,15 +195,13 @@ export default {
             vis.array.assignVariable('i', c);
             // remove i, j if !isDownHeapkExpanded
             if (!isDownHeapkExpanded()) {
-              vis.array.assignVariable('i', undefined);
-              vis.array.assignVariable('j', undefined);
+              vis.array.removeVariable('i');
+              vis.array.removeVariable('j');
             }
             // remove k+highlighting if !isDownHeapkExpanded
             if (!isBuildHeapExpanded()) {
-              vis.array.assignVariable('k', undefined);
-              if (lastiHighlight !== null) {
-                unhighlight(vis, lastH);
-              }
+              vis.array.removeVariable('k');
+              unhighlight(vis, lastH);
             }
           }, [i, j, lastiHighlight]);
           i = j;
@@ -202,18 +213,10 @@ export default {
 
     while (n > 1) {
       chunker.add(20, (vis, nVal, index) => {
-        // if first iteration of while loop - clear variables & show 'n'
-        if (nVal === nodes.length) {
-          vis.array.clearVariables();
-          vis.array.assignVariable('n', nVal - 1);
-        } else {
-          vis.array.removeVariable('i');
-          vis.array.removeVariable('j');
-        }
-
-        // else only clear 'j'
-
-        unhighlight(vis, index);
+        // clear variables & show 'n'
+        vis.array.clearVariables();
+        vis.array.assignVariable('n', nVal - 1);
+        unhighlight(vis, index); // XXX skip for first loop iteration?
       }, [n, i]);
 
       let j;
@@ -228,7 +231,6 @@ export default {
       swapAction(21, 0, n - 1);
 
       chunker.add(22, (vis, index) => {
-        // unhighlight(vis, index);
         unhighlight(vis, index, false);
         vis.array.sorted(index);
         vis.heap.sorted(index + 1);
@@ -239,9 +241,6 @@ export default {
 
       i = 0;
       chunker.add(24, (vis, index1, nVal) => {
-        if (nVal > 0) {
-          // highlight(vis, index1);
-        }
         vis.array.assignVariable('i', index1);
       }, [i, n]);
 
@@ -249,7 +248,7 @@ export default {
       heap = false;
 
       chunker.add(26, (vis, nVal) => {
-        if (nVal === 0) vis.array.clearVariables();
+        // if (nVal === 0) vis.array.clearVariables();
       }, [n]);
       // need to maintain the heap after swap
       while (!(2 * i + 1 >= n || heap)) {
@@ -274,12 +273,6 @@ export default {
           heap = true;
           chunker.add(33, (vis, index) => {
             unhighlight(vis, index, false);
-            // possible last chunk in SortHeap/DownHeap1
-            // remove i, j if !isDownHeap1Expanded
-            if (!isDownHeap1Expanded()) {
-              vis.array.assignVariable('i', undefined);
-              vis.array.assignVariable('j', undefined);
-            }
           }, [j]);
         } else {
           swap = A[i];
@@ -289,12 +282,6 @@ export default {
           chunker.add(36, (vis, p, c) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
-            // possible last chunk in SortHeap/DownHeap1
-            // remove i, j if !isDownHeap1Expanded
-            if (!isDownHeap1Expanded()) {
-              vis.array.assignVariable('i', undefined);
-              vis.array.assignVariable('j', undefined);
-            }
           }, [i, j]);
           i = j;
         }
