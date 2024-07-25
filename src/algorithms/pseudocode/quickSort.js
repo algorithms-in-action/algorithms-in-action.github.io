@@ -77,7 +77,7 @@ Partition
 Set index i at left the of array segment and j at the right    \\Ref init_iAndj 
 \\Expl{  i scans from left to right stopping at "large" elements
 (greater than or equal to the pivot) and j scans from right to left
-stopping at "small" (less than or equal to the pivot) elements.
+stopping at "small" elements (less than or equal to the pivot).
 \\Expl}
 while i < j \\B 6
 \\Expl{  When the indices cross, all the large elements at the left of
