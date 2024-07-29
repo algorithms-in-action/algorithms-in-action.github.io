@@ -1,0 +1,487 @@
+\Note{  REAL specification for hashing - linear probing
+Currently includes double hashing pseudocode as well - will split into
+two versions at some point.
+\Note}
+
+
+\Overview{
+
+XXX not complete
+
+Hashing is a method for storing and looking up records that can be very
+effiient.  It is based on the arithmetic transformation of the record
+key into a table address.
+
+Hashing provides a good quick search, providing that certain conditions
+are observed.
+
+In particular, the hashed keys should spread out over the table as evenly
+as possible.  To achieve this, the hash function should use as much
+of the key as possible, and the hashed key and the table size should
+be be relatively prime.  This last can be achieved by making the table
+size prime.
+XXX Here we use 97.
+
+Additionally, even in sparse tables, sometimes two keys will hash to the
+same value. Provision must be taken to resolve collisions, as there is
+always the chance resolve these collisions. Three commonly used methods
+for collision resolution common and are shown in this XXX module: linear
+probing, double hashing, and chaining.
+
+While the average case for search is quite fast for hash, performance
+degrades quite dramatically as the table starts to get full, particularly
+for unsuccessful searches, which must effecively search the whole
+table XXX.  It is necessary to keep track of the number of records in
+the table, and to make sure this is well below the size of the table.
+One tactic used is to increase the table size every time the number of
+records gets above the capacity; previously inserted records need to
+have their keys rehashed and relocated in the larger table.
+
+
+
+
+The hash table size and the
+
+
+
+
+blah blah  O(1), catastrophic failure, chaining advantages and complexity
+see Sedgewick p592 for heuristic O() for double and linear.
+
+
+
+This module uses open addressing methods for collision resolution -
+linear probing and double hashing.
+
+XXX
+Deletion from hash tables is a bit subtle - we cannot just remove an
+element and make the slot empty as the slot may have been skipped over
+to resolve a collision in a previous insertion. The simplest solution is
+to just mark slots as deleted. Here our pseudocode assumes table slots
+can be occupied by a key or have one of two special values: Empty or
+Deleted. Insertion can fill Empty and Deleted slots but searching must
+continue if a Deleted slot is encountered. Deleted slots can slow down
+searching, so if the number of Deleted slots reaches some threshold is
+may be worth reconstructing the whole table to eliminate them.
+
+module.  XXX not too hard if you just mark things as deleted - could
+include it perhaps?
+
+Put this somewhere:
+The performance of open addressing hash methods degrades 
+as the table gets full.  Setting a maximum capacity prevents 
+this degradation. Often the strategy will be to double the
+table size when the capacity is met.     
+
+Load factor stuff separate from Real but we should have a quick way for
+students to set various load factors to see what happens, maybe 0, 50%,
+80%, 95%?
+
+Should say array index starts at zero
+
+\Overview}
+
+
+
+\Note{
+This module is open addressing only, and will have to be split into
+two modules -- linear probing and double hashing, see Code block hash2
+(duplicated here).
+\Note}
+
+
+
+\Note{
+Lee: Not sure we need separate init function. Could just say somewhere that
+unused table entries are Null/Empty? Animation would have empty box so
+maybe Empty is better?
+\Code{
+HashInit
+HashInit(T)    // TableSize is prime
+    \In{    
+    Initialize Hash Table Slots to Empty   \Ref NullTable    
+    Insertions <- 0    // Keep track of how full table is
+    \In}
+\Code}
+\Note}
+
+\Note{
+Lee: Not sure we need to spell this out - probably delete
+\Code{
+NullTable
+    i <- 0            
+    while i<TableSize  
+    {\In
+        T[i] <- Empty     // Table must start with all slots empty
+        i <- i+1
+    \In}
+\Code}
+\Note}
+
+\Code{
+Insert
+HashInsert(T, k)  // Insert key k into table T
+    \In{
+    Check how full the table is
+    \Expl{ If the table gets too full (over 80%, say), performance degrades
+        a lot. Ideally, we should prevent this by allocating a larger table
+        (eg, the size being a prime number around twice the size of T),
+        inserting each element into the new table and continuing with T
+        being the larger table. It is essential the table has at least one
+        slot Empty, otherwise the Search code may loop; we just return
+        with failure here rather than fill the last slot or expand the table.
+    \Expl}
+    \Note{ The animation could stop with a "Table too full" message here.
+        Above should be shortened and maybe refer to overview - I wrote
+        it before looking at the overview.
+    \Note}
+    Insertions <- Insertions + 1
+    \Expl{ To check how full the table is we can maintain a simple
+        counter.
+    \Expl}
+    \Note{
+    \Note}
+    i <- hash(k) \Ref Hash1
+    Choose Increment value in case of collisions \Ref SetIncrement
+    while T[i] is occupied by another element // search for unoccupied slot
+    \Expl{ If T[i] = k then k already exists in the table. Ideally,
+        duplicates should be avoided as they decrease performance and
+        search just returns the first one.
+    \Expl}
+    \Note{ We could have a lookup operation = search + insert if not found.
+        Or maybe move this explanation to the overview.
+    \Note}
+        \In{
+        i <- (i + Increment) mod TableSize
+        \Expl{ T[i] is occupied so we jump ahead Increment steps.
+            We use modulo TableSize to "wrap around" if we reach the end.
+        \Expl}
+        \In}
+    T[i] <- k // unoccupied slot found so we put k in it
+    \In}
+\Code}
+
+\Code{
+HashSearch(T, k)  // Search for key k in table T
+\In{
+    i <- hash(k) \Ref Hash1
+    Choose Increment value for stepping through T \Ref SetIncrement
+    while not (T[i] = k or T[i] = Empty) // search for T or Empty
+        \In{
+        i <- (i + Increment) mod TableSize
+        \Expl{ T[i] is not k or Empty so we jump ahead Increment
+            steps and "wrapping around" if we reach the end, mirroring
+            the insertion code.
+        \Expl}
+        \Note{ Probes <- Probes + 1
+            Having the animation display the number of probes in some
+            way is a good idea (we could highlight the slots probed)
+            but dont need code here? Needs Probes <- 0 above.
+        \Note}
+        \In}
+    if T[i] = key
+        \In{
+        return i // return the table index where the key has been found
+        \In}
+    else
+        \In{
+        return NOTFOUND
+        \In}
+\In}
+\Code}
+
+\Code{
+HashDelete(T, i)    // mark T[i] as Deleted
+                    // To delete a key we need to search for it first
+    T[i] <- Deleted
+    \Expl{ T[i] is no longer considered occupied, so a key may be
+            inserted here, but searching does not stop at Deleted slots,
+            only Empty ones (or if we find the key).
+    \Expl}
+    Check how many Deleted slots there are in the table
+    \Expl{ Deleted slots slow down searching and limit table capacity as
+            there must be at least one Empty slot for searching. If
+            some threshold is reached a new table can be allocated with
+            all slots Empty then all keys in the old table can be
+            inserted into the new table and the old table discarded.
+    \Expl}
+\Code}
+
+\Note{ This is used for both Insert and Search - the implementation may
+need to copy it for animation purposes
+\Note}
+\Code{
+Hash1    
+    i <- (k * BIGPRIME) mod TableSize
+    \Expl{ XXX blah blah Want BIGPRIME much bigger than TableSize
+        Here we use BIGPRIME = 3457
+    \Expl}
+\Code}
+
+\Note{ Linear probing version
+Pick this OR the double hashing version below
+Need to separate these into two files at some point most likely - the
+overview will be a bit different also
+Alternatively, have a single version with radio buttons to select, like
+union-find path compression (doesn't fit so well if we have other
+hashing methods such as chaining, quadratic residue), though we could
+have "hashing (open addressing)" and "hashing (chaining)"
+\Note}
+\Note{ This is used for both Insert and Search - the implementation may
+need to copy it for animation purposes
+\Note}
+\Code{
+SetIncrement
+    Increment <- 1
+    \Expl{ For linear probing, if we have a collision we just look at the
+        next table entry. This tends to form "clusters" of full table
+        entries, reducing performance.  Offset linear probing adds some
+        fixed number n to the table index for collisions. It's harder to
+        see the clusters in the table but effectively they are still there
+        and performance is not improved.
+    \Expl}
+    \Note{ A bit long? Move offset linear probing to overview or ignore it?
+        Increment and table size must be relatively prime.
+    \Note}
+\Code}
+
+\Note{ Double hashing version - see above
+\Note}
+\Note{ This is used for both Insert and Search - the implementation may
+need to copy it for animation purposes
+\Note}
+\Code{
+SetIncrement
+    Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1
+    \Expl{ For double hashing, the increment we use for the table index
+        to resolve collisions depends on the key k. We apply a secondary
+        hash function to k but must also ensure the increment is non-zero.
+        This reduces clustering in the table. Here we use
+        BIGPRIME2=1429, SMALLISHPRIME=23
+    \Expl}
+\Code}
+
+\Note{
+// Hashing implementation, based on BST code - might be a bit of
+// leftover rubbish from that
+
+// support different versions with -DALGM=XXX
+#define LINEARPROBE 1
+#define DOUBLEHASH 2
+
+#ifndef ALGM
+    #define ALGM LINEARPROBE // default is LINEARPROBE
+#endif
+
+#if !(ALGM == LINEARPROBE || ALGM == DOUBLEHASH)
+ALG flag should be 1..2 // compile error
+#endif
+
+#include<stdio.h>
+#include<stdlib.h>
+
+#define NEW(type) (type *) malloc(sizeof(type))
+#define demand(fact, remark)\
+    {   if (!(fact))\
+        {   fprintf(stderr, "%s\n", remark); exit(1);   }\
+    }
+
+#define BIGPRIME 3457 // for hash function
+#define MEDIUMPRIME 97 // for table size
+#define BIGPRIME2 1429 // for secondary hash function
+#define SMALLISHPRIME 23 // for secondary hash function
+
+#define TableSize MEDIUMPRIME // fixed size
+
+// hash table T, status flag for to tell if slot is Empty
+// (see #defines below) and number of Insertions
+int T[TableSize], status[TableSize], Insertions;
+
+#define Empty 0
+#define Full 1
+#define Deleted 2 // currently unsed but useful for future
+
+int printprobes=0; // debugging output for search
+
+int
+HashInsert(int T[], int k) {
+    int i, Increment;
+
+    if (Insertions > TableSize-2)
+        return 0;
+    Insertions++;
+    // XXX k better be positive! C % is not 'modulo'
+    i = (k * BIGPRIME) % TableSize;
+#if ALGM == LINEARPROBE
+    Increment = 1;
+#else
+    Increment = (k * BIGPRIME2) % SMALLISHPRIME + 1;
+#endif
+    while (status[i] != Empty) {
+        i = (i + Increment) % TableSize;
+    }
+    T[i] = k;
+    status[i] = Full;
+    return 1;
+}
+
+#define NOTFOUND -1 // indicates not found; otherwise index returned
+int
+HashSearch(int T[], int k) {
+    int i, Increment;
+
+    i = (k * BIGPRIME) % TableSize;
+#if ALGM == LINEARPROBE
+    Increment = 1;
+#else
+    Increment = (k * BIGPRIME2) % SMALLISHPRIME + 1;
+#endif
+    if (printprobes) printf("Increment %2d; hash(%d) = %d... ", Increment, k, i);
+    while (!(status[i] == Empty || T[i] == k)) {
+        i = (i + Increment) % TableSize;
+        if (printprobes) printf("%d ", i);
+    }
+    if (printprobes) printf("\n");
+    if (T[i] == k)
+        return i;
+    else
+        return NOTFOUND;
+}
+void
+HashPrint() {
+    int i;
+    for (i = 0; i < TableSize; i++) {
+        if (i % 20 == 0) // newline before each 20 elements
+            printf("\n %3d", i);
+        printf("%4d", T[i]);
+    }
+    printf("\n");
+}
+
+
+int main() {
+    int i, n, x;
+
+    // init empty table
+    Insertions = 0;
+    for (i = 0; i < TableSize; i++) {
+        status[i] = Empty;
+        T[i] = 0;  // not really needed but we cheat with printing T
+    }
+
+    // we read the initial load factor and fill the table with
+    // random positive numbers less than 1000 - makes printing easier
+    // and zero means slot is empty.
+    // XXX Could call srandom if SEED is defined
+    scanf("%d", &n);
+    demand(n>0 && n < 100, "Initial load factor must be 0-99");
+    n = n * TableSize / 100;
+    for (i = 0; i < n; ) {
+        x = random() % 999 + 1;
+        if (HashSearch(T, x) == NOTFOUND) { // avoid duplicates
+                HashInsert(T, x);
+                i++;
+        }
+    }
+    // HashPrint(); // print hash table
+
+    // insert elements from user
+    scanf("%d", &n);
+    demand(n>=0, "Number of elements to insert must be >=0");
+    for (i=0; i<n; i++) {
+        scanf("%d", &x);
+        demand(x>=0, "Number to insert must be >=0");
+        if (!HashInsert(T, x))
+            printf("Insert failed!\n");
+    }
+    HashPrint(); // print hash table
+    
+    printprobes = 1; // turn on debug output
+    // repeatedly search for numbers until we read 0
+    scanf("%d", &x);
+    while (x > 0) {
+        if ( (n = HashSearch(T, x)) != NOTFOUND)
+            printf("Found  %d\n", n);
+        else
+            printf("Not found\n");
+        scanf("%d", &x);
+    } 
+
+    return 0;
+}
+ 
+/* Example of test input
+80
+
+9
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+12
+13
+14
+15
+0
+
+Above is initial load factor, number of extra items to insert, the
+items to insert and items to search for, ending with 0
+
+
+
+This yields the following output (for LP):
+
+   0 546 194   0   0   0 665 992 410 252   0   0   8   0 565   0   0 479 418   0   5
+  20   0   0 501   0  88 864 573   2   0   0   0   0   0   0 254 193   0   0   0   0
+  40 179 894 154 869   0   0   7   0   0 115 406 381 708   0 683 586   4   0   0 766
+  60 414   0 486 389   1 497   0 763  23   0   0   0 264 591   9 566   0   0   0 904
+  80 843 807   6   0 308 538   0 998 416 585 973 269 815   3   0 510 352
+Increment  1; hash(1) = 62... 63 64 
+Found  64
+Increment  1; hash(2) = 27... 
+Found  27
+Increment  1; hash(3) = 89... 90 91 92 93 
+Found  93
+Increment  1; hash(4) = 54... 55 56 
+Found  56
+Increment  1; hash(5) = 19... 
+Found  19
+Increment  1; hash(6) = 81... 82 
+Found  82
+Increment  1; hash(7) = 46... 
+Found  46
+Increment  1; hash(8) = 11... 
+Found  11
+Increment  1; hash(9) = 73... 74 
+Found  74
+Increment  1; hash(10) = 38... 
+Not found
+Increment  1; hash(12) = 65... 66 
+Not found
+Increment  1; hash(13) = 30... 
+Not found
+Increment  1; hash(14) = 92... 93 94 
+Not found
+Increment  1; hash(15) = 57... 
+Not found
+
+
+*/
+\Note}
