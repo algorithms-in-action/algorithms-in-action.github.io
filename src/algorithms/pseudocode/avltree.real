@@ -30,6 +30,65 @@ left(t).height, etc ???
         contains no node with key greater than k, and the right subtree,
         t.right, contains no node with key smaller than k.
 XXX AVL trees balanced, shorten above
+Need to have these rotation explanations here as we can't format
+explanations properly it seems:
+
+## The left-left case
+
+If the new key was added to the left child of the left child (the
+left-left case) and the resulting tree is too unbalanced, the balance can be
+restored with a "Right rotation" operation, as explained in the diagram
+below. The 6 and 4 nodes and the edge between them rotate clockwise, and
+the 5 node changes parents from 4 to 6. This reduces the distance from
+the root to the 1 (where the new node was added), restoring the balance
+(the distance to the node rooted at 7 is increased but this does not
+cause the AVL tree balance condition to be violated).  Right rotation is
+done by calling rightRotate(t6), where t6 is the tree rooted at 6.
+
+```
+      6                           2
+     / \     Right Rotation      / \
+    2   7    - - - - - - - >    1   6
+   / \       < - - - - - - -       / \
+  1   4       Left Rotation       4   7
+```
+
+## The right-right case
+
+The right-right case is the exact opposite. If the tree on the right in
+the diagram above is too unbalanced due to insertion into the subtree
+rooted at 7, we can call rightRotate(t2) to lift that subtree and lower
+the 1 subtree.
+
+## The left-right case (double rotation)
+
+If the new key was added to the right child of the left child (the
+left-right case) and the resulting tree is too unbalanced, the balance can be
+restored with a left rotation at node 2 followed by a right rotation at
+node 6.
+```
+      6      Rotate           6       Rotate           4
+     / \    left at 2        / \     right at 6      /   \
+    2   7   - - - - - >     4   7    - - - - - >    2     6
+   / \                     / \                     / \   / \
+  1   4                   2   5                   1   3 5   7
+     / \                 / \
+    3   5               1   3
+```
+Nodes in the subtree rooted at 4 (where the extra element was added,
+making the tree unbalanced) are moved closer to the root.
+Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
+the root of 3, 5 and 7 are changed by one, affecting the overall balance.
+
+## right-left case (double rotation):
+
+If the new key was added to the left child of the right child (the
+right-left case) and the resulting tree is too unbalanced, it is a mirror
+image of the left-right case:
+
+XXX edit diagram above (tree on left won't be consistent with previous
+examples but thats OK I think)
+
 \Overview}
 
 \Note{ For both insertion and search, the animation should be as
@@ -130,78 +189,62 @@ AVLT_Insert(t, k) // Insert key k in AVL tree t
     \Expl{ Rotations are local tree operations that increase the
       height/depth of one subtree but decrease that of another, used to
       make the tree more balanced.
+      See Background (click at the top of the right panel)
+      for diagrams etc explaining rotations.
     \Expl}
     return t
 \In}
 
 \\============================================================================
+\Note{ Might be best to expand these inline rather than having extra
+functions. Functions are always visible, which is distracting when things
+are collapsed and they are relatively short.  However, we would end up
+with two copies of each, and rather long code if we expand everyting.
+The variable names here are linked to the diagrams, which may be easier for
+functions but may also be confusing.
+\Note}
 rightRotate(t6)
 \Expl{
-Rotate right, as in the following example:
-```
-      6                           4
-     / \     Right Rotation      / \
-    4   7    - - - - - - - >    2   6 
-   / \       < - - - - - - -       / \
-  2   5       Left Rotation       5   7
-```
-Trees rooted at 2, 5, and 7 are not affected, except the distances from
-the root of 2 and 7 are changed by one, affecting the overall balance.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
 \Expl}
 \In{
-  t4 <- left(t6)
-  t5 <- right(t4)
-  t4.right <- t6
-  t6.left <- t5
+  t2 <- left(t6)
+  t4 <- right(t2)
+  t2.right <- t6
+  t6.left <- t4
   \Note{ Animation here should be as smooth an intuitive as possible.
-    Ideally node 5 shold get detached from 4 but remain in place then
-    get re-attached to 6. We could possibly move 7 down to the level of 5
-    at the first step and delay moving 2 up until the end. Best highlight
-    the edge between 6 and 4. If extra steps are required for animation
+    Ideally node 4 should get detached from 2 but remain in place then
+    get re-attached to 6. We could possibly move 7 down to the level of 4
+    at the first step and delay moving 1 up until the end. Best highlight
+    the edge between 6 and 2. If extra steps are required for animation
     we can stay on the same line of code for more than one step if
     needed. Similarly for left rotation.
   \Note}
-  recompute heights of t6 and t4
-  \Expl{ t6.height <- max(t5.height, t7.height) + 1;
-    t4.height <- max(t6.height, t2.height) + 1;
+  recompute heights of t6 and t2
+  \Expl{ t6.height <- max(t4.height, t7.height) + 1;
+    t2.height <- max(t6.height, t1.height) + 1;
   \Expl}
   \Note{ Best not expand this? Should be clear enough and we are a bit
     fast and loose with nodes versus pointers here
   \Note}
-  return (pointer to) t4 // new root
+  return (pointer to) t2 // new root
 \In} 
 
 \\============================================================================
-leftRotate(t4)
+leftRotate(t2)
 \Expl{
-Rotate left, as in the following example (the opposite of right
-rotation):
-```
-      6                           4
-     / \     Right Rotation      / \
-    4   7    - - - - - - - >    2   6 
-   / \       < - - - - - - -       / \
-  2   5       Left Rotation       5   7
-```
-Trees rooted at 2, 5, and 7 are not affected, except the distances from
-the root of 2 and 7 are changed by one, affecting the overall balance.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
 \Expl}
 \In{
-  t6 <- right(t4)
-  t5 <- left(t6)
-  t6.left <- t4
-  t4.right <- t5
-  \Note{ Animation here should be as smooth an intuitive as possible.
-    Ideally node 5 shold get detached from 4 but remain in place then
-    get re-attached to 6. We could possibly move 7 down to the level of 5
-    at the first step and delay moving 2 up until the end. Best highlight
-    the edge between 6 and 4. If extra steps are required for animation
-    we can stay on the same line of code for more than one step if
-    needed. Similarly for left rotation.
-  \Note}
-  recompute heights of t4 and t6
-  \Expl{ t4.height <- max(t2.height, t5.height) + 1;
-    t6.height <- max(t4.height, t7.height) + 1;
+  t6 <- right(t2)
+  t4 <- left(t6)
+  t6.left <- t2
+  t2.right <- t4
+  recompute heights of t2 and t6
+  \Expl{ t2.height <- max(t1.height, t4.height) + 1;
+    t6.height <- max(t2.height, t7.height) + 1;
   \Expl}
   return (pointer to) t6 // new root
 \In} 
@@ -280,12 +323,14 @@ if balance > 1 && k < left(t).key // left-left case
 \Expl}
 \In{
   // Perform "right rotation" to re-balance t
-  \Expl{ See explanation in rightRotate()
+  \Expl{
+    See Background (click at the top of the right panel)
+    for diagrams etc explaining rotations.
   \Expl}
   \Note{
     Animation should stop at the comment above then jump to the
     rightRotate code then stop at return *after* rightRotate then go
-    back to the insert call
+    back to the insert call???; May be better to inline it
   \Note} 
   return rightRotate(t)
 \In}
@@ -297,7 +342,9 @@ if balance < -1 && k > right(t).key // right-right case
 \Expl}
 \In{
   // Perform "left rotation" to re-balance t
-  \Expl{ See explanation in leftRotate()
+  \Expl{
+    See Background (click at the top of the right panel)
+    for diagrams etc explaining rotations.
   \Expl}
   \Note{
     See notes in left-left case
@@ -306,65 +353,33 @@ if balance < -1 && k > right(t).key // right-right case
 \In}
 if balance > 1 && k > left(t).key // left-right case (double rotation)
 \Expl{
-  Key k was inserted into the left-right subtree and made t unbalanced.
-  We re-balance the tree using *two* rotations: first a left rotate of
-  the left subtree, then a right rotate of the tree itself, as in the
-  following example (best fully understand single rotations first):
-```
-      6      Rotate           6       Rotate           4
-     / \    left at 2        / \     right at 6      /   \
-    2   7   - - - - - >     4   7    - - - - - >    2     6
-   / \                     / \                     / \   / \
-  1   4                   2   5                   1   3 5   7
-     / \                 / \
-    3   5               1   3
-```
-Nodes in the subtree rooted at 4 (where the extra element was added,
-making the tree unbalanced) are moved closer to the root.
-Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
-the root of 3, 5 and 7 are changed by one, affecting the overall balance.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
 \Expl}
 \In{
   // Perform "left rotation" on the left subtree
   \Note{
     Animation should stop at the comment above then jump to the
-    leftRotate code;
+    leftRotate code???; May be better to inline it
     XXX should we play fast and loose with node vs pointer here and use
     t.left <- leftRotate(t.left) or have left(t) <- ... ???
   \Note} 
   perform leftRotate(left(t));
   \Expl{
-    The result returned is the new t.left.  See explanation of the "if"
-    above.
+    The result returned is the new t.left.
   \Expl}
-  // Perform "right rotation" on t
+  // Return "right rotation" on t
   \Note{
     Animation should stop at the comment above then jump to the
     rightRotate code then stop at return *after* rightRotate then go
-    back to the insert call
+    back to the insert call???; May be better to inline it
   \Note} 
   return rightRotate(t)
 \In}
 if balance < -1 && k < right(t).key // right-left case (double rotation)
 \Expl{
-  Key k was inserted into the right-left subtree and made t unbalanced.
-  We re-balance the tree using *two* rotations: first a right rotate of
-  the right subtree, then a left rotate of the tree itself, as in the
-  following example (best fully understand single rotations first):
-XXX FIX THIS - ITS THE left-right case
-```
-      6      Rotate           6       Rotate           4
-     / \    left at 2        / \     right at 6      /   \
-    2   7   - - - - - >     4   7    - - - - - >    2     6
-   / \                     / \                     / \   / \
-  1   4                   2   5                   1   3 5   7
-     / \                 / \
-    3   5               1   3
-```
-XXX Nodes in the subtree rooted at 4 (where the extra element was added,
-making the tree unbalanced) are moved closer to the root.
-Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
-the root of 3, 5 and 7 are changed by one, affecting the overall balance.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
 \Expl}
 \In{
   // Perform "right rotation" on the right subtree
@@ -373,10 +388,9 @@ the root of 3, 5 and 7 are changed by one, affecting the overall balance.
   \Note} 
   perform rightRotate(right(t));
   \Expl{
-    The result returned is the new t.right.  See explanation of the "if"
-    above.
+    The result returned is the new t.right.
   \Expl}
-  // Perform "left rotation" on t
+  // Return "left rotation" on t
   return leftRotate(t)
 \In}
 
