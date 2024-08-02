@@ -74,6 +74,7 @@ const allalgs = {
   },
   'msort_arr_td': {
     name: 'Merge Sort',
+    noDeploy: false,
     category: 'Sort',
     explanation: Explanation.msort_arr_td,
     param: <Param.msort_arr_td />,
@@ -84,6 +85,20 @@ const allalgs = {
     },
     controller: {
       sort: Controller.msort_arr_td,
+    },
+  },
+  'msort_lista_td': {
+    name: 'Merge Sort (lists)',
+    category: 'Sort',
+    explanation: Explanation.msort_lista_td,
+    param: <Param.msort_lista_td />,
+    instructions: Instructions.msort_lista_td,
+    extraInfo: ExtraInfo.msort_lista_td,
+    pseudocode: {
+      sort: Pseudocode.msort_lista_td,
+    },
+    controller: {
+      sort: Controller.msort_lista_td,
     },
   },
 

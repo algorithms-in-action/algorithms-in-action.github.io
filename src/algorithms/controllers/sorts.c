@@ -323,7 +323,7 @@ mergesort_td(int A[], int left, int right) {
 List
 mergesort_td_la(int L, int len) {
         int i, mid;
-        List Lmid, R, M, Mlast;
+        List Lmid, R, M, E;
 
         if (len > 1) {
                 // determine Lmid, the mid point of L
@@ -362,23 +362,23 @@ mergesort_td_la(int L, int len) {
                     R = tail(R);
                 }
                 // scan through adding elements to the end of M
-                Mlast = M;
+                E = M;
                 while (L != Null && R != Null) {
                     if (head(L) <= head(R)) {
-                        tail(Mlast) = L;
-                        Mlast = L;
+                        tail(E) = L;
+                        E = L;
                         L = tail(L);
                     } else {
-                        tail(Mlast) = R;
-                        Mlast = R;
+                        tail(E) = R;
+                        E = R;
                         R = tail(R);
                     }
                 }
                 // add any elements not scanned to the end of M
                 if (L == Null)
-                    tail(Mlast) = R;
+                    tail(E) = R;
                 else
-                    tail(Mlast) = L;
+                    tail(E) = L;
             printf("Merged: ");
             for (Lmid = M; Lmid != Null; Lmid = tail(Lmid))
                 printf(" %d", head(Lmid));
