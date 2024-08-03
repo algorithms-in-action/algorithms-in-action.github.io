@@ -1,9 +1,23 @@
-// Merge sort for lists (represented using array), top down
-// Prototype for pointer version. Adapted code from array version.
-// XXX Could do with a good clean up!
-// Lots of crud - may include some quicksort remnants also; probably
-// should have cleaned up mergesort array code before copying it...
-// Uses simple stack display like DFSrec
+// This comment is entirely for the
+// amusement of the person who wrote
+// it and should be ignored by anyone
+// else. However, THE COMMENTS BELOW
+// SHOULD BE READ BY ANYONE LOOKING
+// AT THE CODE, PARTICULARLY IF IT IS
+// TO BE MODIFIED!
+
+// Animation of merge sort for lists (represented using array), top down.
+// XXX PROTOTYPE for pointer version. Adapted from code for mergesort for
+// arrays (may include some quicksort remnants also).
+// XXX Needs major clean up of code to remove junk, refactor, etc before
+// being used for anything else
+// XXX Not all  steps are animated
+// XXX should be more consistent with mergesort for arrays with colours
+// etc
+// XXX Colours are very limited - colour support is a mystery to me and
+// there are major inconsistencies between colours specification for
+// graph nodes/edges, 1D arrays and 2D arrays (there is a student group
+// that will hopefully look into this and improve things)
 
 import { msort_lista_td } from '../explanations';
 
@@ -155,7 +169,8 @@ const unhighlightB = (vis, index, isPrimaryColor = true) => {
 export function initVisualisers() {
     return {
       array: {
-        instance: new Array2DTracer('array', null, 'Array representation of lists'),
+        instance: new Array2DTracer('array', null,
+         'Array representation of lists (PROTOTYPE FOR POINTER REPRESENTATION)'),
         order: 0,
       },
     }
@@ -183,6 +198,14 @@ export function run_msort() {
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
+
+    function assignMaybeNullVar(vis, variable_name, index) {
+      if (index === 'Null') {
+        vis.array.assignVariable(variable_name, 2, undefined);
+        vis.array.assignVariable(variable_name+'=Null', 2, 0);
+      } else
+        vis.array.assignVariable(variable_name, 2, index);
+    }
 
     function assignVarToA(vis, variable_name, index) {
       if (index === undefined)
@@ -247,7 +270,13 @@ export function run_msort() {
 
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
-            vis.array.assignVariable('L', 2, cur_L);
+        vis.array.assignVariable('L', 2, cur_L);
+        // colour all of R list
+        let Tails = Lists[2];
+        for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+          vis.array.select(1, i, 1, i, '0');
+          vis.array.select(2, i, 2, i, '0');
+        }
         // if (cur_depth === 0) {
            // }
         // for (let i = cur_left; i <= cur_right; i++) {
@@ -289,17 +318,22 @@ cur_R, c_stk) => {
           vis.array.assignVariable('L', 2, cur_L);
           vis.array.assignVariable('Mid', 2, cur_Mid);
           vis.array.assignVariable('R', 2, cur_R);
+          vis.array.select(1, cur_L, 1, cur_L, '0');
+          vis.array.select(2, cur_L, 2, cur_L, '0');
+          vis.array.select(1, cur_R, 1, cur_R, '0');
+          vis.array.select(2, cur_R, 2, cur_R, '0');
           }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
         // dummy chunk for before recursive call - we need this so there
         // is a chunk at this recursion level as the first chunk in the
         // collapsed code for the recursive call
-        chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R) => {
-          // vis.array.set(Lists, 'msort_lista_td');
-          // set_simple_stack(vis.array, c_stk);
-          vis.array.assignVariable('Mid', 2, undefined);
-          vis.array.assignVariable('R', 2, undefined);
-          }, [[Indices, Heads, Tails], L, Mid, R], depth);
+        chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
+          vis.array.set(Lists, 'msort_lista_td');
+          set_simple_stack(vis.array, c_stk);
+          vis.array.assignVariable('L', 2, cur_L);
+          vis.array.select(1, cur_L, 1, cur_L, '0');
+          vis.array.select(2, cur_L, 2, cur_L, '0');
+          }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
 
         L = MergeSort(L, midNum, depth + 1);
@@ -312,6 +346,14 @@ cur_R, c_stk) => {
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, cur_L);
           vis.array.assignVariable('R', 2, cur_R);
+          // colour all of L list
+          let Tails = Lists[2];
+          for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, '1');
+            vis.array.select(2, i, 2, i, '1');
+          }
+          vis.array.select(1, cur_R, 1, cur_R, '0');
+          vis.array.select(2, cur_R, 2, cur_R, '0');
           // for (let i = cur_left; i <= cur_mid; i++) {
             // unhighlight(vis, i, true);
             // highlight(vis, i, false)
@@ -322,14 +364,20 @@ cur_R, c_stk) => {
           }, [[Indices, Heads, Tails], L, R, Mid, simple_stack], depth);
 
         // dummy chunk before recursive call, as above
-        chunker.add('preSortR', (vis, a, cur_L, cur_Mid, cur_R) => {
-          // vis.array.set(a, 'msort_lista_td');
-          // for (let i = cur_left; i <= cur_mid; i++) {
-            // unhighlight(vis, i, false);
-          // }
-          vis.array.assignVariable('L', 2, undefined);
+        chunker.add('preSortR', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
+          vis.array.set(Lists, 'msort_lista_td');
+          set_simple_stack(vis.array, c_stk);
+          // vis.array.assignVariable('L', 2, undefined);
           vis.array.assignVariable('R', 2, cur_R);
-          }, [[Indices, Heads, Tails], L, Mid, R], depth);
+          vis.array.select(1, cur_R, 1, cur_R, '0');
+          vis.array.select(2, cur_R, 2, cur_R, '0');
+          // colour all of R list
+          // let Tails = Lists[2];
+          // for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+            // vis.array.select(1, i, 1, i, '1');
+            // vis.array.select(2, i, 2, i, '1');
+          // }
+          }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
         R = MergeSort(R, len - midNum, depth + 1);
 
@@ -341,6 +389,15 @@ c_stk) => {
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, cur_L);
           vis.array.assignVariable('R', 2, cur_R);
+          vis.array.select(1, cur_L, 1, cur_L, '0');
+          vis.array.select(2, cur_L, 2, cur_L, '0');
+          // colour all of R list
+          let Tails = Lists[2];
+          for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, '1');
+            vis.array.select(2, i, 2, i, '1');
+          }
+
           // for (let i = cur_mid+1; i <= cur_right; i++) {
             // unhighlight(vis, i, true);
             // unhighlight(vis, i, false)
@@ -358,28 +415,160 @@ c_stk) => {
           }
           // scan through adding elements to the end of M
           let E = M;
+          chunker.add('E', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+            vis.array.set(Lists, 'msort_lista_td');
+            set_simple_stack(vis.array, c_stk);
+            assignMaybeNullVar(vis, 'L', cur_L);
+            assignMaybeNullVar(vis, 'R', cur_R);
+            vis.array.assignVariable('M', 2, cur_M);
+            vis.array.assignVariable('E', 2, cur_E);
+            if (cur_L !== 'Null') {
+              vis.array.select(1, cur_L, 1, cur_L, '0');
+              vis.array.select(2, cur_L, 2, cur_L, '0');
+            }
+            if (cur_R !== 'Null') {
+              vis.array.select(1, cur_R, 1, cur_R, '0');
+              vis.array.select(2, cur_R, 2, cur_R, '0');
+            }
+            vis.array.select(1, cur_M, 1, cur_M, '1');
+            vis.array.select(2, cur_M, 2, cur_M, '1');
+            }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
           while (L !== 'Null' && R !== 'Null') {
-              if (Heads[L] <= Heads[R]) {
-                  Tails[E] = L;
-                  E = L;
-                  L = Tails[L];
-              } else {
-                  Tails[E] = R;
-                  E = R;
-                  R = Tails[R];
+            chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+              vis.array.set(Lists, 'msort_lista_td');
+              set_simple_stack(vis.array, c_stk);
+              assignMaybeNullVar(vis, 'L', cur_L);
+              assignMaybeNullVar(vis, 'R', cur_R);
+              vis.array.assignVariable('M', 2, cur_M);
+              assignMaybeNullVar(vis, 'E', cur_E);
+              if (cur_L !== 'Null') {
+                vis.array.select(1, cur_L, 1, cur_L, '0');
+                vis.array.select(2, cur_L, 2, cur_L, '0');
               }
+              if (cur_R !== 'Null') {
+                vis.array.select(1, cur_R, 1, cur_R, '0');
+                vis.array.select(2, cur_R, 2, cur_R, '0');
+              }
+              // colour all of M list, up to + including cur_E
+              // (we don't color up to Null because the tail of E hasn't
+              // been smashed)
+              let Tails = Lists[2];
+              for (let i = cur_M; i !== cur_E; i = Tails[i]) {
+                vis.array.select(1, i, 1, i, '1');
+                vis.array.select(2, i, 2, i, '1');
+              }
+              if (cur_E !== 'Null') {
+                vis.array.select(1, cur_E, 1, cur_E, '1');
+                vis.array.select(2, cur_E, 2, cur_E, '1');
+              }
+            }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+            if (Heads[L] <= Heads[R]) {
+              Tails[E] = L;
+              E = L;
+              L = Tails[L];
+              chunker.add('popL', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+                vis.array.set(Lists, 'msort_lista_td');
+                set_simple_stack(vis.array, c_stk);
+                assignMaybeNullVar(vis, 'L', cur_L);
+                assignMaybeNullVar(vis, 'R', cur_R);
+                vis.array.assignVariable('M', 2, cur_M);
+                assignMaybeNullVar(vis, 'E', cur_E);
+                if (cur_L !== 'Null') {
+                  vis.array.select(1, cur_L, 1, cur_L, '0');
+                  vis.array.select(2, cur_L, 2, cur_L, '0');
+                }
+                if (cur_R !== 'Null') {
+                  vis.array.select(1, cur_R, 1, cur_R, '0');
+                  vis.array.select(2, cur_R, 2, cur_R, '0');
+                }
+                // colour all of M list, up to + including cur_E
+                // (we don't color up to Null because the tail of E hasn't
+                // been smashed)
+                let Tails = Lists[2];
+                for (let i = cur_M; i !== cur_E; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, '1');
+                  vis.array.select(2, i, 2, i, '1');
+                }
+                if (cur_E !== 'Null') {
+                  vis.array.select(1, cur_E, 1, cur_E, '1');
+                  vis.array.select(2, cur_E, 2, cur_E, '1');
+                }
+              }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+            } else {
+              Tails[E] = R;
+              E = R;
+              R = Tails[R];
+              chunker.add('popR', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+                vis.array.set(Lists, 'msort_lista_td');
+                set_simple_stack(vis.array, c_stk);
+                assignMaybeNullVar(vis, 'L', cur_L);
+                assignMaybeNullVar(vis, 'R', cur_R);
+                vis.array.assignVariable('M', 2, cur_M);
+                assignMaybeNullVar(vis, 'E', cur_E);
+                if (cur_L !== 'Null') {
+                  vis.array.select(1, cur_L, 1, cur_L, '0');
+                  vis.array.select(2, cur_L, 2, cur_L, '0');
+                }
+                if (cur_R !== 'Null') {
+                  vis.array.select(1, cur_R, 1, cur_R, '0');
+                  vis.array.select(2, cur_R, 2, cur_R, '0');
+                }
+                // colour all of M list, up to + including cur_E
+                // (we don't color up to Null because the tail of E hasn't
+                // been smashed)
+                let Tails = Lists[2];
+                for (let i = cur_M; i !== cur_E; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, '1');
+                  vis.array.select(2, i, 2, i, '1');
+                }
+                if (cur_E !== 'Null') {
+                  vis.array.select(1, cur_E, 1, cur_E, '1');
+                  vis.array.select(2, cur_E, 2, cur_E, '1');
+                }
+              }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+            }
           }
           // add any elements not scanned to the end of M
-          if (L === 'Null')
-              Tails[E] = R;
-          else
-              Tails[E] = L;
+          if (L === 'Null') {
+            Tails[E] = R;
+            chunker.add('appendR', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+              vis.array.set(Lists, 'msort_lista_td');
+              set_simple_stack(vis.array, c_stk);
+              vis.array.assignVariable('M', 2, cur_M);
+              // colour all of M list
+              let Tails = Lists[2];
+              for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
+                vis.array.select(1, i, 1, i, '1');
+                vis.array.select(2, i, 2, i, '1');
+              }
+            }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+          } else {
+            Tails[E] = L;
+            chunker.add('appendL', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
+              vis.array.set(Lists, 'msort_lista_td');
+              set_simple_stack(vis.array, c_stk);
+              vis.array.assignVariable('M', 2, cur_M);
+              // colour all of M list
+              let Tails = Lists[2];
+              for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
+                vis.array.select(1, i, 1, i, '1');
+                vis.array.select(2, i, 2, i, '1');
+              }
+            }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+          }
           chunker.add('returnM', (vis, Lists, cur_L, cur_M, c_stk) => {
             vis.array.set(Lists, 'msort_lista_td');
             set_simple_stack(vis.array, c_stk);
             vis.array.assignVariable('L', 2, undefined);
             vis.array.assignVariable('R', 2, undefined);
+            vis.array.assignVariable('E', 2, undefined);
             vis.array.assignVariable('M', 2, cur_M);
+            // colour all of M list
+            let Tails = Lists[2];
+            for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
+              vis.array.select(1, i, 1, i, '1');
+              vis.array.select(2, i, 2, i, '1');
+            }
             }, [[Indices, Heads, Tails], L, M, simple_stack], depth);
 
 
@@ -597,6 +786,8 @@ cur_right, c_stk) => {
         else
       {
         chunker.add('returnL', (vis, a, cur_L) => {
+          vis.array.select(1, cur_L, 1, cur_L, '1');
+          vis.array.select(2, cur_L, 2, cur_L, '1');
           // if (cur_left === cur_right) {
             // unhighlight(vis, cur_left, true);
             // highlight(vis, cur_left, false)

@@ -308,7 +308,7 @@ class Array2DRenderer extends Renderer {
              Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
-        {algo === 'msort_lista_td' && (
+        {algo === 'msort_lista_td' && listOfNumbers && (
           <caption
             className={algo === 'msort_lista_td' ?  styles.captionmsort_lista_td : ''}
             kth-tag="msort_lista_td_caption"

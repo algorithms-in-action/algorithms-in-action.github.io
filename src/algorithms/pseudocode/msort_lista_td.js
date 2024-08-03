@@ -2,7 +2,7 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Note{ top down merge sort for lists.  Should be able to use identical
-psuedocode independently of list implementation.
+psuedocode independently of list implementation.  Needs more bookmarks.
 \\Note}
 \\Code{
 Main
@@ -126,13 +126,13 @@ CopySmaller
     \\In{
         tail(E) <- L // append L element to M
         E <- L       // E <- end element of M
-        L <- tail(L)     // skip element in L that has been appended
+        L <- tail(L)     // skip element in L that has been appended \\B popL
     \\In}
     else
     \\In{
         tail(E) <- R // append R element to M
         E <- R       // E <- end element of M
-        R <- tail(R)     // skip element in R that has been appended
+        R <- tail(R)     // skip element in R that has been appended \\B popR
     \\In}
 \\Code}
 

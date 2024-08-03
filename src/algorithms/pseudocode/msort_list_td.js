@@ -2,7 +2,7 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Note{ top down merge sort for lists.  Should be able to use identical
-psuedocode independently of list implementation.
+psuedocode independently of list implementation.  Needs more bookmarks.
 \\Note}
 \\Code{
 Main
@@ -37,19 +37,19 @@ Mergesort(L, len) \\B Main
 
 \\Code{
 split
-    Lmid <- mid point of L \\Ref scan
-    R <- tail(Lmid)    // R starts after Lmid
-    tail(Lmid) <- Null // truncate L after Lmid
+    Mid <- mid point of L \\Ref scan
+    R <- tail(Mid)    // R starts after Mid
+    tail(Mid) <- Null // truncate L after Mid \\B tail(Mid)<-Null
 \\Code}
 
 \\Code{
 scan
-    Lmid <- L \\B Lmid
+    Mid <- L \\B Mid
     \\Expl{ Start at first element of L
     \\Expl}
     for i = 1 to len/2 - 1 // while not at middle
     \\In{
-        Lmid <- tail(Lmid) \\B LmidNext
+        Mid <- tail(Mid) \\B MidNext
         \\Expl{ Skip to next element
         \\Expl}
     \\In}
@@ -83,10 +83,10 @@ Merge
     \\Expl{ Set M to the input list with the smallest first element and
       skip over (delete) that element for that input list.
     \\Expl}
-    Mlast <- M // last element in M \\B Mlast
+    E <- M // E is the end element of M \\B E
     while L != Null && R != Null  \\B whileNotNull
-    \\Expl{ Scan through L and R, appending elements to M.  Mlast is always the
-        last element of M, and L and R are the remaining inputs that have
+    \\Expl{ Scan through L and R, appending elements to M.  E is always the
+        end element of M, and L and R are the remaining inputs that have
         not yet been appended.
     \\Expl}
     \\In{
@@ -124,15 +124,15 @@ initM
 CopySmaller
     if head(L) <= head(R) \\B findSmaller
     \\In{
-        tail(Mlast) <- L // append L element to M
-        Mlast <- L       // Mlast <- last element of M
-        L <- tail(L)     // skip element in L that has been appended
+        tail(E) <- L // append L element to M
+        E <- L       // E <- end element of M
+        L <- tail(L)     // skip element in L that has been appended \\B popL
     \\In}
     else
     \\In{
-        tail(Mlast) <- R // append R element to M
-        Mlast <- R       // Mlast <- last element of M
-        R <- tail(R)     // skip element in R that has been appended
+        tail(E) <- R // append R element to M
+        E <- R       // E <- end element of M
+        R <- tail(R)     // skip element in R that has been appended \\B popR
     \\In}
 \\Code}
 
@@ -140,11 +140,11 @@ CopySmaller
 CopyRest
     if L == Null
     \\In{
-        tail(Mlast) <- R // append extra R elements to M
+        tail(E) <- R // append extra R elements to M \\B appendR
     \\In}
     else
     \\In{
-        tail(Mlast) <- L // append extra L elements to M
+        tail(E) <- L // append extra L elements to M \\B appendL
     \\In}
 \\Code}
 
