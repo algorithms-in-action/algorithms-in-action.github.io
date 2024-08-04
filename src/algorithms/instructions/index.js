@@ -62,27 +62,31 @@ const sortInstructions = [{
 }];
 
 const graphInstructions = [
-  { title: 'To Run Animation',
-  content: [
-    `Click on ${KEY_CODE} at the top of the right-hand panel`,
-    `Either step through the algorithm (click on ${KEY_FORWARD}) or play continuously (click on ${KEY_PLAY}). Code and animation will follow in lockstep.`,
-    `The graph can be chosen (see below; default Graph 1 is shown initially)`,
-    `Athoer algorithm parameters can be chosen below the
+  {
+    title: 'To Run Animation',
+    content: [
+      `Click on ${KEY_CODE} at the top of the right-hand panel`,
+      `Either step through the algorithm (click on ${KEY_FORWARD}) or play continuously (click on ${KEY_PLAY}). Code and animation will follow in lockstep.`,
+      `The graph can be chosen (see below; default Graph 1 is shown initially)`,
+      `Athoer algorithm parameters can be chosen below the
 ${KEY_PROGRESS} bar; this will reset the animation to the start`,
-    `Screen layout can be altered (depending on your browser/platform):
+      `Screen layout can be altered (depending on your browser/platform):
 the left panel can be rendered invisible by clicking
 on the arrow in its middle, the right and bottom panels can be enlarged or shrunk by dragging the ellipsis ("..."), and you can zoom in/out and drag elements in the animation panel`,
-  ]},
-  { title: 'To Choose Graph',
-  content: [
-    `The graph input panel is at the bottom and may need to be revealed
+    ]
+  },
+  {
+    title: 'To Choose Graph',
+    content: [
+      `The graph input panel is at the bottom and may need to be revealed
 by dragging the "..." up temporarily`,
-    `Under the ${KEY_PLAY} button, toggle between sample graphs (eg Graph 1) and random graphs, or`,
-    'edit text for X-Y node coordinates (this can change the graph size) and edges/weights (weights are ignored for unweighted graph algorithms), or',
-    'enter X-Y node coordinates and edges/weights in tables.',
-    `The graph size can also be explicitly increased/decreased - this generates a new random graph.`,
-    `Edge weights (for weighted graph algorithms) can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
-  ]},
+      `Under the ${KEY_PLAY} button, toggle between sample graphs (eg Graph 1) and random graphs, or`,
+      'edit text for X-Y node coordinates (this can change the graph size) and edges/weights (weights are ignored for unweighted graph algorithms), or',
+      'enter X-Y node coordinates and edges/weights in tables.',
+      `The graph size can also be explicitly increased/decreased - this generates a new random graph.`,
+      `Edge weights (for weighted graph algorithms) can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
+    ]
+  },
 ];
 
 const graphInstructionsTC = [{
@@ -120,6 +124,7 @@ export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
 export const TTFInstruction = bstInstructions;
+export const AVLInstruction = bstInstructions;
 export const DIJKInstruction = graphInstructions;
 export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
