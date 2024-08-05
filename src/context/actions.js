@@ -253,6 +253,13 @@ export const GlobalActions = {
     } = data;
     const procedurePseudocode = pseudocode[params.mode];
 
+    // Previously if we switched modes from insert to search, the search
+    // code had no in-line explanations built.
+    // XXX It seems a bit of overkill to redo the explanations whenever
+    // the algorithm is re-run (changing mode probable should LOAD the
+    // algorithm then separately RUN it) but this works for now...
+    addLineExplanation(procedurePseudocode);
+
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
     const chunker = new Chunker(() =>

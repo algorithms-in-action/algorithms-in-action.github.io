@@ -27,7 +27,21 @@ import * as Instructions from './instructions';
  { pseudocode: String, explanation: String, run: Function }
  */
 
-// Very Important: The key for the algorithms must be unique!
+// Very Important: The key for each algorithm MUST be unique!
+// Also: the key for the algorithm MUST be the same as the "name"
+// of the top level Param block returned by the parameter function.
+// Eg, parameters/msort_arr_td.js has
+// 
+// function MergesortParam() {
+// ...
+// return (
+//     // <>
+//       <div className="form">
+//         <ListParam
+//           name="msort_arr_td"  <---- ****SAME AS KEY****
+// ...
+// export default MergesortParam
+
 const allalgs = {
 
   'heapSort': {
