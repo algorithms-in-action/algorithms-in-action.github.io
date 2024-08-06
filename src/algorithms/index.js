@@ -120,7 +120,7 @@ const allalgs = {
       search: Controller.TTFTreeSearch,
     },
   },
-  'AVL Tree': {
+  'AVLTree': {
     name: 'AVL Tree',
     category: 'Insert/Search',
     param: <Param.AVLTreeParam />,
