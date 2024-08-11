@@ -12,7 +12,7 @@ export default parse(`
         \\In}
         else \\B else: AVL_Insert(t, k)
         \\In{
-            Traverse down to the leaf node p, where k will be inserted after \\Ref Traverse 
+            p <- Traverse down to the leaf node, where k will be inserted after \\Ref Traverse 
             \\Expl{  
                 The process of “Traverse down to the leaf node p, where k will be inserted after” 
                 involves navigating through the AVL tree from the root down to the appropriate 
@@ -35,7 +35,7 @@ export default parse(`
         \\In{
             p.left <- a new node containing k and height 1 \\B p.left <- a new node containing k and height 1
         \\In}
-    else
+    else \\B else: k > p.key
         \\In{
             p.right <- a new node containing k and height 1 \\B p.right <- a new node containing k and height 1
         \\In}
@@ -76,10 +76,11 @@ export default parse(`
             Duplicate keys are not allowed in an AVL tree.
         \\Expl}
         \\In{
-            return t   // Exit the function without inserting the duplicate
+            return t   \\B Exit the function without inserting the duplicate
         \\In}
     \\In}
     until c is Empty (and p is a leaf node) \\B until c is Empty (and p is a leaf node)
+    return p \\B return p
 \\Code}
 
 \\Code{
@@ -89,11 +90,11 @@ export default parse(`
         We traverse back up from the leaf node where the new key was inserted
         to the root node, updating the height and balancing the tree along the way.
     \\Expl}
-    c <- p
+    c <- p \\B c <- p back up
     repeat \\B repeat_2
     \\In{
         // Update the height of the current node
-        c.height <- max(Height(c.left), Height(c.right))
+        c.height <- max(Height(c.left), Height(c.right)) + 1 \\B c.height <- max(Height(c.left), Height(c.right)) + 1
 
         // Calculate the balance factor to check if the node is unbalanced
         balance <- Height(c.left) - Height(c.right) \\B balance <- Height(c.left) - Height(c.right)
@@ -121,26 +122,26 @@ export default parse(`
     \\Expl}
     if balance > 1 // Left-heavy case \\B if balance > 1
         \\In{
-            if k < c.left.key  // Left Left Case
+            if k < c.left.key  // Left Left Case \\B Left Left Case
                 \\In{
-                    c <- Right_Rotate(c)  // Perform right rotation
+                    c <- Right_Rotate(c)  // Perform right rotation \\B Left Left right rotation
                 \\In}
             else // Left Right Case
                 \\In{
-                    c.left <- Left_Rotate(c.left)  // Perform left rotation
-                    c <- Right_Rotate(c)  // Perform right rotation
+                    c.left <- Left_Rotate(c.left)  // Perform left rotation \\B Left Right left rotation
+                    c <- Right_Rotate(c)  // Perform right rotation \\B Left Right right rotation
                 \\In}
         \\In}
     else if balance < -1 // Right-heavy case \\B else if balance < -1
         \\In{
-            if k > c.right.key  // Right Right Case
+            if k > c.right.key  // Right Right Case \\B Right Right Case
                 \\In{
-                    c <- Left_Rotate(c)  // Perform left rotation
+                    c <- Left_Rotate(c)  // Perform left rotation \\B Right Right left rotation
                 \\In}
             else // Right Left Case
                 \\In{
-                    c.right <- Right_Rotate(c.right)  // Perform right rotation
-                    c <- Left_Rotate(c)  // Perform left rotation
+                    c.right <- Right_Rotate(c.right)  // Perform right rotation \\B Right Left right rotation
+                    c <- Left_Rotate(c)  // Perform left rotation \\B Right Left left rotation
                 \\In}
         \\In}
 \\Code}

@@ -1,370 +1,246 @@
-import { TTFExp } from '../explanations';
-import NTreeTracer from '../../components/DataStructures/Graph/NAryTreeTracer/NTreeTracer';
-import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
-import { COLOUR_CODES } from './unionFindUnion';
-import TTFTreeSearch from './TTFTreeSearch';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
+import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 
 export default {
-    explanation: TTFExp,
-
     initVisualisers() {
         return {
-            tree: {
-                instance: new NTreeTracer('n-tree', null, 'Tree View'),
+            array: {
+                instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
                 order: 0,
+            },
+            graph: {
+                instance: new GraphTracer('avl', null, 'AVL tree'),
+                order: 1,
             },
         };
     },
 
-    // highlights the current value
-    highlightValue(tree, value, colour) {
-        this.unhighlightValue(tree, value);
-        tree.fill(value, colour);
-    },
-
-    // unhighlights the current value
-    unhighlightValue(tree, value) {
-        tree.unfill(value);
-    },
-
-    // highlight an entire variable node
-    highlightNode(tree, node, colour) {
-        this.unhighlightNode(tree, node);
-        for (let i = 0; i < node.relatedNodeIDs.length; i++) {
-            let value = node.relatedNodeIDs[i];
-            tree.fill(value, colour);
-        }
-    },
-
-    // unhighlight an entire variable node
-    unhighlightNode(tree, node) {
-        for (let i = 0; i < node.relatedNodeIDs.length; i++) {
-            let value = node.relatedNodeIDs[i];
-            tree.unfill(value);
-        }
-    },
-
     /**
-     * Returns the tree and node id of inserted value, expanding 4-nodes on the way.
-     * @param {*} chunker 
-     * @param {*} value the value to be inserted into the tree.
-     * @param {*} tree the tree.
-     * @param {*} newID 'global' counter for variable node id. 
-     * @returns the tree and updated variable node id. 
-     */
-    traverseAndInsert(chunker, value, tree, newID) {
-        chunker.add('if t = Empty');
-        chunker.add('else: T234_Insert(t, k)');
+   *
+   * @param {object} chunker
+   * @param {array} nodes array of numbers needs to be inserted
+   */
+    run(chunker, { nodes }) {
+        if (nodes.length === 0) return;
+        let parent;
+        let prev = null;
+        let visitedList = [null];
+        const tree = {};
+        const root = nodes[0];
+        tree[root] = { height: 1 };
 
-        chunker.add('p <- Empty');
-        let parent = null;
-        let child = tree;
+        // Helper functions for AVL tree
+        const height = (node) => (node ? tree[node].height : 0);
+        const updateHeight = (node) => {
+            if (node) {
+                chunker.add("c.height <- max(Height(c.left), Height(c.right)) + 1");
+                tree[node].height = 1 + Math.max(height(tree[node].left), height(tree[node].right));
+            }
+        };
+        const balanceFactor = (node) => {
+            chunker.add("balance <- Height(c.left) - Height(c.right)");
+            return node ? height(tree[node].left) - height(tree[node].right) : 0;
+        };
 
-        chunker.add('c <- t',
-            (vis, child) => {
-                this.highlightNode(vis.tree, child, COLOUR_CODES.ORANGE);
-            },
-            [child]);
+        const rotateRight = (y) => {
+            const x = tree[y].left;
+            const T2 = tree[x].right;
 
-        while (child != null) {
-            chunker.add('repeat');
-            let oldChild = child;
-            // if we encounter a four node
-            chunker.add('if c is a four-node');
-            if (child.getNodeLength() === 3) {
-                let child1, child2;
-                ({ node: child1, id: newID } = this.createNodeAndIncrement(newID));
-                ({ node: child2, id: newID } = this.createNodeAndIncrement(newID));
+            tree[x].right = y;
+            tree[y].left = T2;
 
-                if (child.children.length === 4) {
-                    child1.children.push(child.children[0]);
-                    child1.children.push(child.children[1]);
-                    child2.children.push(child.children[2]);
-                    child2.children.push(child.children[3]);
-                }
+            updateHeight(y);
+            updateHeight(x);
 
-                chunker.add('c1 <- new two-node with c.child1, c.key1 and c.child2');
-                chunker.add('c2 <- new two-node with c.child3, c.key3 and c.child4');
-                child1.addRelatedNodeID(child.getIDs()[0]);
-                child2.addRelatedNodeID(child.getIDs()[2]);
+            return x;
+        };
 
-                // splitting complete, forming new parent:
-                chunker.add('if p = Empty');
-                if (parent === null) {
-                    // form new root
-                    ({ node: tree, id: newID } = this.createNodeAndIncrement(newID));
+        const rotateLeft = (x) => {
+            const y = tree[x].right;
+            const T2 = tree[y].left;
 
-                    tree.children.push(child1);
-                    tree.children.push(child2);
-                    tree.addRelatedNodeID(child.getIDs()[1]);
-                    chunker.add('t <- new two-node with c1, c.key2 and c2', this.handleChunkerAdd, [
-                        tree.id,
-                        tree.getIDs()[0],
-                        child.id,
-                        [child1.id, child1.getIDs()[0], child1.children],
-                        [child2.id, child2.getIDs()[0], child2.children],
-                        true,
-                    ]);
-                    child = tree;
-                } else if (parent.getNodeLength() === 1) {
-                    chunker.add('else if p is a two-node');
-                    let parentChildren = parent.children;
-                    let idx = this.formParentThreeNode(parent, child, child1, child2);
+            tree[y].left = x;
+            tree[x].right = T2;
 
-                    chunker.add('Change p to a three-node, with c1, c.key2 and c2 replacing c', this.handleChunkerAdd, [
-                        parent.id,
-                        child.getIDs()[1],
-                        child.id,
-                        [child1.id, child1.getIDs()[0], child1.children],
-                        [child2.id, child2.getIDs()[0], child2.children],
-                        false,
-                        idx,
-                        parentChildren
-                    ]);
+            updateHeight(x);
+            updateHeight(y);
+
+            return y;
+        };
+
+        const balance = (node) => {
+            updateHeight(node);
+            const balance = balanceFactor(node);
+
+            if (balance > 1) {
+                chunker.add("if balance > 1");
+                if (balanceFactor(tree[node].left) < 0) {
+                    chunker.add("Left Right Case");
+                    chunker.add("left rotation");
+                    chunker.add("Left Right left rotation");
+                    tree[node].left = rotateLeft(tree[node].left);
+                    chunker.add("Left Right right rotation");
+                    return rotateRight(node);
                 } else {
-                    chunker.add('else: InsertParent');
-                    let parentChildren = parent.children;
-                    let idx = this.formParentFourNode(parent, child, child1, child2);
-
-                    chunker.add('Change p to a four-node, with c1, c.key2 and c2 replacing c', this.handleChunkerAdd, [
-                        parent.id,
-                        child.getIDs()[1],
-                        child.id,
-                        [child1.id, child1.getIDs()[0], child1.children],
-                        [child2.id, child2.getIDs()[0], child2.children],
-                        false,
-                        idx,
-                        parentChildren
-                    ]);
+                    chunker.add("Left Left Case");
+                    chunker.add("Left Left right rotation");
+                    return rotateRight(node);
                 }
-
-                chunker.add('if k < c.key2: Split',
-                    (vis, child1, child2) => {
-                        this.unhighlightNode(vis.tree, child1);
-                        this.unhighlightNode(vis.tree, child2);
-                    },
-                    [child1, child2]);
-                if (value < oldChild.getIDs()[1]) {
-                    chunker.add('c <- c1',
-                        (vis, newParentValue, child1) => {
-                            this.unhighlightValue(vis.tree, newParentValue);
-                            this.highlightNode(vis.tree, child1, COLOUR_CODES.ORANGE);
-                        },
-                        [oldChild.getIDs()[1], child1]);
-                    child = child1;
+            }
+            if (balance < -1) {
+                chunker.add("else if balance < -1");
+                if (balanceFactor(tree[node].right) > 0) {
+                    chunker.add("Right Left Case");
+                    chunker.add("right rotation");
+                    chunker.add("Right Left right rotation");
+                    tree[node].right = rotateRight(tree[node].right);
+                    chunker.add("Right Left left rotation");
+                    return rotateLeft(node);
                 } else {
-                    chunker.add('else: Split');
-                    chunker.add('c <- c2',
-                        (vis, newParentValue, child2) => {
-                            this.unhighlightValue(vis.tree, newParentValue);
-                            this.highlightNode(vis.tree, child2, COLOUR_CODES.ORANGE);
-                        },
-                        [oldChild.getIDs()[1], child2]);
-                    child = child2;
+                    chunker.add("Right Right Case");
+                    chunker.add("Right Right left rotation");
+                    return rotateLeft(node);
                 }
             }
+            return node;
+        };
 
-            chunker.add('p <- c');
-            parent = child;
-            child = TTFTreeSearch.findChild(chunker, child, value);
-            if (child === null) {
-                chunker.add('until c is Empty (and p is a leaf node)'); // try here
-            }
-        }
-
-        // insertion
-        parent.addRelatedNodeID(value);
-        chunker.add('if p is a two-node');
-        if (parent.getNodeLength() === 2) {
-            chunker.add(
-                'Change p to a three-node, containing the old p.key1 and k',
-                (vis, parent, value) => {
-                    vis.tree.addVariableNode(parent.id, value);
-                    this.unhighlightNode(vis.tree, parent);
-                    this.highlightValue(vis.tree, value, COLOUR_CODES.GREEN);
-                    vis.tree.layout();
-                },
-                [parent, value]
-            );
-        }
-        else {
-            chunker.add('else: Insert');
-            chunker.add(
-                'Change p to a four-node, containing the old p.key1 and p.key2 and k',
-                (vis, parent, value) => {
-                    vis.tree.addVariableNode(parent.id, value);
-                    this.unhighlightNode(vis.tree, parent);
-                    this.highlightValue(vis.tree, value, COLOUR_CODES.GREEN);
-                    vis.tree.layout();
-                },
-                [parent, value]
-            );
-        }
-        return { nTree: tree, id: newID };
-    },
-
-    // helper function for node splitting
-    formParentThreeNode(parent, child, child1, child2) {
-        let parentnodeIDs = parent.getIDs();
-        parent.clearRelatedNodeIDs();
-
-        let childIdx = parent.children.indexOf(child);
-        parent.children.splice(childIdx, 1, child1, child2);
-
-        parent.addRelatedNodeID(child.getIDs()[1]);
-        parent.addRelatedNodeID(parentnodeIDs[0]);
-        return childIdx;
-    },
-
-    // helper function for node splitting
-    formParentFourNode(parent, child, child1, child2) {
-        let parentnodeIDs = parent.getIDs();
-        parent.clearRelatedNodeIDs();
-
-        let childIdx = parent.children.indexOf(child);
-        parent.children.splice(childIdx, 1, child1, child2);
-
-        parent.addRelatedNodeID(child.getIDs()[1]);
-        parent.addRelatedNodeID(parentnodeIDs[0]);
-        parent.addRelatedNodeID(parentnodeIDs[1]);
-        return childIdx;
-    },
-
-    /**
-     * Creates a new variable node and increments the id.
-     * @param {*} id the current 'global' id counter. 
-     * @returns the new node and the updated id.
-     */
-    createNodeAndIncrement(id) {
-        // easiest way to keep variable node ids unique is to increment some counter
-        if (id === null) id = 1;
-        const node = new VariableTreeNode(id);
-        id++;
-        return { node, id };
-    },
-
-    // helper function to visualise node splitting
-    handleChunkerAdd(
-        vis,
-        ParentID,
-        newParentValue,
-        oldChildID,
-        child1Info,
-        child2Info,
-        newRoot = false,
-        childIdx = null,
-        parentChildren = null,
-    ) {
-        if (newRoot) {
-            vis.tree.addVariableNode(ParentID, newParentValue);
-            vis.tree.addEdge(0, ParentID);
-        }
-        // remove old child
-        vis.tree.removeFullNode(oldChildID);
-
-        // add child1 and child2 which are new now to the tree
-        vis.tree.addVariableNode(child1Info[0], child1Info[1]);
-        vis.tree.addVariableNode(child2Info[0], child2Info[1]);
-
-        // add to parent as well
-        vis.tree.addVariableNode(ParentID, newParentValue);
-        if (!newRoot) {
-            for (let i = 0; i < parentChildren.length; i++) {
-                if (i != childIdx) {
-                    vis.tree.removeEdge(ParentID, parentChildren[i].id);
-                }
-            }
-        }
-
-        // now connect them properly to new parent and also the original children
-
-        if (!newRoot) {
-            for (let i = 0; i < parentChildren.length; i++) {
-                if (i != childIdx) {
-                    vis.tree.addEdge(ParentID, parentChildren[i].id);
-                }
-                else {
-                    vis.tree.addEdge(ParentID, child1Info[0]);
-                    vis.tree.addEdge(ParentID, child2Info[0]);
-                }
-            }
-        }
-
-        else {
-            vis.tree.addEdge(ParentID, child1Info[0]);
-            vis.tree.addEdge(ParentID, child2Info[0]);
-        }
-
-        for (let i = 0; i < child2Info[2].length; i++) {
-            vis.tree.addEdge(child2Info[0], child2Info[2][i].id);
-        }
-        for (let i = 0; i < child1Info[2].length; i++) {
-            vis.tree.addEdge(child1Info[0], child1Info[2][i].id);
-        }
-        vis.tree.layout();
-    },
-
-    // insertion of a node into tree. assumes the tree is not empty
-    insert(chunker, value, tree, newID) {
-        chunker.add('T234_Insert(t, k)',
-            (vis) => {
-                vis.tree.unfillAll();
-                vis.tree.setText(`(t, ${value})`);
-            });
-        let newInfo = this.traverseAndInsert(chunker, value, tree, newID);
-        return newInfo;
-    },
-
-    initTree(chunker, value, tree) {
-        // initially say tree is empty to avoid confusion
-        chunker.add('T234_Insert(t, k)',
-            (vis) => {
-                vis.tree.setFunctionName('Tree is Empty');
-                vis.tree.setText(``);
-            });
-        chunker.add('if t = Empty',
-            (vis) => {
-                vis.tree.setFunctionName('T234_Insert');
-                vis.tree.setText(`(t, ${value})`);
-            });
-        tree.addRelatedNodeID(value);
-
+        // Populate the ArrayTracer using nodes
         chunker.add(
-            't <- a new two-node containing k and empty subtrees',
-            (vis, tree, nodeID, value) => {
-                vis.tree.variableNodes = true;
-                vis.tree.isDirected = false;
-                vis.tree.addVariableNode(0, '0');
-                vis.tree.addVariableNode(nodeID, value);
-                vis.tree.addEdge(0, nodeID);
-                this.highlightNode(vis.tree, tree, COLOUR_CODES.GREEN);
-                vis.tree.layout();
+            'if t = Empty',
+            (vis, elements) => {
+                vis.array.set(elements);
             },
-            [tree, tree.id, tree.getIDs()[0]]
+            [nodes],
+        );
+        chunker.add("if t = Empty", (vis) => {
+            vis.array.select(0);
+        });
+        // new node containing k and height 1
+        chunker.add(
+            "t <- a new node containing k and height 1",
+            (vis, r) => {
+                vis.graph.addNode(r);
+                vis.graph.layoutBST(r, true);
+                vis.graph.select(r, null);
+            },
+            [root],
+        );
+
+        for (let i = 1; i < nodes.length; i++) {
+
+            chunker.add("else: AVL_Insert(t, k)");
+            // get into Traverse part
+            chunker.add("p <- Empty");
+            chunker.add(
+                "c <- t",
+                (vis, index, visited) => {
+                    vis.array.deselect(index - 1);
+                    vis.array.select(index);
+                    for (let j = 1; j < visited.length; j++) {
+                        vis.graph.leave(visited[j], visited[j - 1]);
+                    }
+                    if (nodes[index - 1] !== visited[visited.length - 1]) {
+                        vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+                    }
+                },
+                [i, visitedList],
+            );
+            visitedList = [null];
+            const element = nodes[i];
+            chunker.add("repeat_1");
+            let ptr = tree;
+            parent = root;
+            while (ptr) {
+                visitedList.push(parent);
+                if (element < parent) {
+                    chunker.add("if k < c.key");
+                    chunker.add("p <- c if k < c.key");
+                    chunker.add("c <- c.left if k < c.key");
+                    // Traverse down to the appropriate leaf node
+                    if (tree[parent].left !== undefined) {
+                        chunker.add("p <- c if k < c.key");
+                        prev = parent;
+                        chunker.add("c <- c.left if k < c.key");
+                        parent = tree[parent].left;
+                        ptr = tree[parent];
+                    }
+                } else if (element > parent) {
+                    chunker.add("else if k > c.key");
+                    chunker.add("p <- c if k > c.key");
+                    chunker.add("c <- c.right if k > c.key");
+                    // Traverse down to the appropriate leaf node
+                    if (tree[parent].right !== undefined) {
+                        chunker.add("p <- c if k > c.key");
+                        prev = parent;
+                        chunker.add("c <- c.right if k > c.key");
+                        parent = tree[parent].right;
+                        ptr = tree[parent];
+                    }
+                } else {
+                    // Duplicate keys NOT ALLOWED!
+                    chunker.add("Exit the function without inserting the duplicate");
+                    break;
+                }
+            }
+            // loop ends
+            chunker.add("until c is Empty (and p is a leaf node)");
+
+            // insert n as p's child, p = parent
+            if (element < parent) {
+                // insert n as p's left child
+                chunker.add("if k < p.key");
+                tree[parent].left = element;
+                tree[element] = { height: 1 };
+                chunker.add(
+                    "p.left <- a new node containing k and height 1",
+                    (vis, e, p) => {
+                        vis.graph.addNode(e);
+                        vis.graph.addEdge(p, e);
+                        vis.graph.select(e, p);
+                    },
+                    [element, parent],
+                );
+            } else {
+                // insert n as p's right child
+                chunker.add("else: k > p.key");
+                tree[parent].right = element;
+                tree[element] = { height: 1 };
+                chunker.add(
+                    "p.right <- a new node containing k and height 1",
+                    (vis, e, p) => {
+                        vis.graph.addNode(e);
+                        vis.graph.addEdge(p, e);
+                        vis.graph.select(e, p);
+                    },
+                    [element, parent],
+                );
+            }
+            // Balance the tree
+            let current = parent;
+            chunker.add("c <- p back up");
+            chunker.add("repeat_2");
+            while (current !== null) {
+                current = balance(current);
+                current = tree[current].parent;
+            }
+        }
+
+        // Deselect the last element in the array
+        chunker.add(
+            2,
+            (vis, index, visited) => {
+                vis.array.deselect(index);
+                for (let j = 1; j < visited.length; j++) {
+                    vis.graph.leave(visited[j], visited[j - 1]);
+                }
+                if (nodes[index] !== visited[visited.length - 1]) {
+                    vis.graph.deselect(nodes[index], visited[visited.length - 1]);
+                }
+            },
+            [nodes.length - 1, visitedList],
         );
 
         return tree;
-    },
-
-    run(chunker, { nodes }) {
-        if (nodes === null || nodes.length === 0) return;
-        let { node: tree, id: newID } = this.createNodeAndIncrement(null);
-
-        // initialising tree
-        let treeStruct = this.initTree(chunker, nodes[0], tree);
-
-        if (nodes.length === 1) return;
-
-        treeStruct = this.insert(chunker, nodes[1], tree, newID);
-
-        // remaining insertions
-        for (let i = 2; i < nodes.length; i++) {
-            treeStruct = this.insert(
-                chunker,
-                nodes[i],
-                treeStruct['nTree'],
-                treeStruct['id']
-            );
-        }
-    },
+    }
 };
