@@ -22,83 +22,174 @@ export default {
    */
     run(chunker, { nodes }) {
         if (nodes.length === 0) return;
-        let visitedList = [null];
-        // num -> { height: num, left: num, right: num, parent: num }
-        const tree = {};
-        const root = nodes[0];
-        tree[root] = {
-            height: 1,
-            left: null,
-            right: null,
-            parent: null,
-        };
 
-        // Helper functions for AVL tree
-        const height = (node) => (node ? tree[node].height : 0);
-        const updateHeight = (node) => {
-            if (node) {
+        class AVLNode {
+            constructor(key) {
+                this.key = key;
+                this.left = null;
+                this.right = null;
+                this.par = null;
+                this.height = 1;
+            }
+        }
+
+        // Function to update the height of a node based on its children's heights
+        function updateHeight(root) {
+            if (root !== null) {
+                const leftHeight = (root.left !== null) ? root.left.height : 0;
+                const rightHeight = (root.right !== null) ? root.right.height : 0;
+                root.height = Math.max(leftHeight, rightHeight) + 1;
+            }
+        }
+
+        // Left-Left Rotation (LLR) to balance the AVL tree
+        function LLR(root) {
+            const tmpnode = root.left;
+            root.left = tmpnode.right;
+            if (tmpnode.right !== null) {
+                tmpnode.right.par = root;
+            }
+            tmpnode.right = root;
+            tmpnode.par = root.par;
+            root.par = tmpnode;
+            if (tmpnode.par !== null) {
+                if (root.key < tmpnode.par.key) {
+                    tmpnode.par.left = tmpnode;
+                } else {
+                    tmpnode.par.right = tmpnode;
+                }
+            }
+            updateHeight(root);
+            updateHeight(tmpnode);
+            return tmpnode;
+        }
+
+        // Right-Right Rotation (RRR) to balance the AVL tree
+        function RRR(root) {
+            const tmpnode = root.right;
+            root.right = tmpnode.left;
+            if (tmpnode.left !== null) {
+                tmpnode.left.par = root;
+            }
+            tmpnode.left = root;
+            tmpnode.par = root.par;
+            root.par = tmpnode;
+            if (tmpnode.par !== null) {
+                if (root.key < tmpnode.par.key) {
+                    tmpnode.par.left = tmpnode;
+                } else {
+                    tmpnode.par.right = tmpnode;
+                }
+            }
+            updateHeight(root);
+            updateHeight(tmpnode);
+            return tmpnode;
+        }
+
+        // Left-Right Rotation (LRR) to balance the AVL tree
+        function LRR(root) {
+            root.left = RRR(root.left);
+            return LLR(root);
+        }
+
+        // Right-Left Rotation (RLR) to balance the AVL tree
+        function RLR(root) {
+            root.right = LLR(root.right);
+            return RRR(root);
+        }
+
+        // Function to insert a key into the AVL tree and balance the tree if needed
+        function insert(root, key) {
+            chunker.add('p <- Empty');
+            let parentNode = null;
+            chunker.add('c <- t');
+            let currentNode = root;
+            let newNode = new AVLNode(key);
+
+            chunker.add('repeat_1');
+            while (currentNode) {
+                parentNode = currentNode;
+
+                if (key < currentNode.key) {
+                    chunker.add('if k < c.key');
+                    chunker.add('p <- c if k < c.key');
+                    chunker.add('c <- c.left if k < c.key');
+                    currentNode = currentNode.left;
+                } else if (key > currentNode.key) {
+                    chunker.add('else if k > c.key');
+                    chunker.add('p <- c if k > c.key');
+                    chunker.add('c <- c.right if k > c.key');
+                    currentNode = currentNode.right;
+                } else {
+                    // Key already exists in the tree
+                    chunker.add('else k == c.key');
+                    chunker.add('Exit the function without inserting the duplicate');
+                    return root;
+                }
+            }
+
+            chunker.add('until c is Empty (and p is a leaf node)');
+
+            if (key < parentNode.key) {
+                chunker.add('if k < p.key');
+                chunker.add('p.left <- a new node containing k and height 1');
+                parentNode.left = newNode;
+            } else {
+                chunker.add('else: k > p.key');
+                chunker.add('p.right <- a new node containing k and height 1');
+                parentNode.right = newNode;
+            }
+
+            newNode.par = parentNode;
+            chunker.add('c <- p back up');
+            chunker.add('repeat_2');
+            // Update heights and balance the tree if needed
+            while (parentNode !== null) {
                 chunker.add('c.height <- max(Height(c.left), Height(c.right)) + 1');
-                tree[node].height = 1 + Math.max(height(tree[node].left), height(tree[node].right));
-            }
-        };
-        const balanceFactor = (node) => {
-            chunker.add('balance <- Height(c.left) - Height(c.right)');
-            return node ? height(tree[node].left) - height(tree[node].right) : 0;
-        };
+                updateHeight(parentNode);
 
-        const rotateRight = (y) => {
-            const x = tree[y].left;
-            const T2 = tree[x].right;
+                const leftHeight = (parentNode.left !== null) ? parentNode.left.height : 0;
+                const rightHeight = (parentNode.right !== null) ? parentNode.right.height : 0;
 
-            tree[x].right = y;
-            tree[y].left = T2;
+                chunker.add('balance <- Height(c.left) - Height(c.right)');
 
-            updateHeight(y);
-            updateHeight(x);
-
-            return x;
-        };
-
-        const rotateLeft = (x) => {
-            const y = tree[x].right;
-            const T2 = tree[y].left;
-
-            tree[y].left = x;
-            tree[x].right = T2;
-
-            updateHeight(x);
-            updateHeight(y);
-
-            return y;
-        };
-
-        const balance = (node) => {
-            updateHeight(node);
-            const balance = balanceFactor(node);
-            if (balance > 1) {
-                chunker.add('if balance > 1');
-                if (balanceFactor(tree[node].left) < 0) {
-                    chunker.add('Left Right Case');
-                    tree[node].left = rotateLeft(tree[node].left);
-                    return rotateRight(node);
-                } else {
-                    chunker.add('Left Left Case');
-                    return rotateRight(node);
+                if (Math.abs(leftHeight - rightHeight) === 2) {
+                    if (key < parentNode.key) {
+                        chunker.add('if balance > 1');
+                        if (key < parentNode.left.key) {
+                            chunker.add('Left Left Case');
+                            parentNode = LLR(parentNode);
+                        } else {
+                            chunker.add('Left Right Case');
+                            parentNode = LRR(parentNode);
+                        }
+                    } else {
+                        chunker.add('else if balance < -1');
+                        if (key < parentNode.right.key) {
+                            chunker.add('Right Left Case');
+                            parentNode = RLR(parentNode);
+                        } else {
+                            chunker.add('Right Right Case');
+                            parentNode = RRR(parentNode);
+                        }
+                    }
                 }
-            }
-            if (balance < -1) {
-                chunker.add('else if balance < -1');
-                if (balanceFactor(tree[node].right) > 0) {
-                    chunker.add('Right Left Case');
-                    tree[node].right = rotateRight(tree[node].right);
-                    return rotateLeft(node);
-                } else {
-                    chunker.add('Right Right Case');
-                    return rotateLeft(node);
+
+                if (currentNode === root) {
+                    chunker.add('if c = t');
+                    chunker.add('return t');
+                    return parentNode;
                 }
+
+                chunker.add('c <- Parent of c');
+                newNode = parentNode;
+                parentNode = parentNode.par;
             }
-            return node;
-        };
+
+            chunker.add('until c is Empty');
+
+            return newNode;
+        }
 
         // Populate the ArrayTracer using nodes
         chunker.add(
@@ -111,6 +202,10 @@ export default {
         chunker.add('if t = Empty', (vis) => {
             vis.array.select(0);
         });
+
+        // Initialize the AVL tree with the first key
+        let root = new AVLNode(nodes[0]);
+
         // new node containing k and height 1
         chunker.add(
             't <- a new node containing k and height 1',
@@ -119,106 +214,15 @@ export default {
                 vis.graph.layoutBST(r, true);
                 vis.graph.select(r, null);
             },
-            [root],
+            [root.key],
         );
 
         for (let i = 1; i < nodes.length; i++) {
-
             chunker.add('else: AVL_Insert(t, k)');
-            // get into Traverse part
-            chunker.add('p <- Empty');
-            // chunker.add(
-            //     'c <- t',
-            //     (vis, index, visited) => {
-            //         vis.array.deselect(index - 1);
-            //         vis.array.select(index);
-            //         for (let j = 1; j < visited.length; j++) {
-            //             vis.graph.leave(visited[j], visited[j - 1]);
-            //         }
-            //         if (nodes[index - 1] !== visited[visited.length - 1]) {
-            //             vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
-            //         }
-            //     },
-            //     [i, visitedList],
-            // );
-            visitedList = [null];
-            const element = nodes[i];
-            chunker.add('repeat_1');
-            let parent = null;
-            let current = root;
-            while (current) {
-                visitedList.push(parent);
-                if (element < current) {
-                    chunker.add('if k < c.key');
-                    chunker.add('p <- c if k < c.key');
-                    parent = current;
-                    chunker.add('c <- c.left if k < c.key');
-                    current = tree[current].left;
-                } else if (element > parent) {
-                    chunker.add('else if k > c.key');
-                    chunker.add('p <- c if k > c.key');
-                    parent = current;
-                    chunker.add('c <- c.right if k > c.key');
-                    current = tree[current].right;
-                } else {
-                    // Duplicate keys NOT ALLOWED!
-                    chunker.add('Exit the function without inserting the duplicate');
-                    break;
-                }
-            }
-            // loop ends
-            chunker.add('until c is Empty (and p is a leaf node)');
-
-            // insert n as p's child, p = parent
-            if (element < parent) {
-                // insert n as p's left child
-                chunker.add('if k < p.key');
-                tree[parent].left = element;
-                tree[element] = {
-                    height: 1,
-                    left: null,
-                    right: null,
-                    parent: parent,
-                };
-                // chunker.add(
-                //     'p.left <- a new node containing k and height 1',
-                //     (vis, e, p) => {
-                //         vis.graph.addNode(e);
-                //         vis.graph.addEdge(p, e);
-                //         vis.graph.select(e, p);
-                //     },
-                //     [element, parent],
-                // );
-            } else {
-                // insert n as p's right child
-                chunker.add('else: k > p.key');
-                tree[parent].right = element;
-                tree[element] = {
-                    height: 1,
-                    left: null,
-                    right: null,
-                    parent: parent,
-                };
-                // chunker.add(
-                //     'p.right <- a new node containing k and height 1',
-                //     (vis, e, p) => {
-                //         vis.graph.addNode(e);
-                //         vis.graph.addEdge(p, e);
-                //         vis.graph.select(e, p);
-                //     },
-                //     [element, parent],
-                // );
-            }
-            // Balance the tree
-            current = parent;
-            chunker.add('c <- p back up');
-            chunker.add('repeat_2');
-            while (current !== null) {
-                current = balance(current);
-                current = tree[current].parent;
-            }
+            root = insert(root, nodes[i]);
         }
-        console.log(tree);
-        return tree;
+
+        console.log(root);
+        return root;
     }
 };
