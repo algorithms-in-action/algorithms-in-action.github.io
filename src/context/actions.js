@@ -253,6 +253,13 @@ export const GlobalActions = {
     } = data;
     const procedurePseudocode = pseudocode[params.mode];
 
+    // Previously if we switched modes from insert to search, the search
+    // code had no in-line explanations built.
+    // XXX It seems a bit of overkill to redo the explanations whenever
+    // the algorithm is re-run (changing mode probable should LOAD the
+    // algorithm then separately RUN it) but this works for now...
+    addLineExplanation(procedurePseudocode);
+
     // here we pass a function reference to Chunker() because we may want to initialise
     // a visualiser using a previous one
     const chunker = new Chunker(() =>
@@ -413,6 +420,26 @@ export function dispatcher(state, setState) {
 }
 
 export function initialState() {
+  // experimenting with specifying algorithm etc using URL
+  // eg, from https://dev-aia.vercel.app/?alg=heapSort;mode=sort
+  // we extract the 'search' part, convert to
+  // [["alg", "heapSort"], ["mode", "sort"]], extract the alg+mode
+  // and (if they exist) use them for the default.
+  const currentUrl = new URL(window.location.href);
+  let search = currentUrl.search.substring(1);
+  const param_vals = search.split(';').map(s => s.split('='));
+  const alg_spec = param_vals.find(a => a[0] === "alg");
+  const alg = (alg_spec? alg_spec[1]: undefined);
+  const mode_spec = param_vals.find(a => a[0] === "mode");
+  const mode = (mode_spec? mode_spec[1]: undefined);
+  // XXX could import+use allalgs instead of algorithms throughout this
+  // file so we can access algorithms with the noDeploy flag set, even
+  // though they are not in the menu
+  if (alg && mode && alg in algorithms && mode in algorithms[alg].pseudocode)
+    return GlobalActions.LOAD_ALGORITHM(undefined, {
+      name: alg,
+      mode: mode,
+    });
   return GlobalActions.LOAD_ALGORITHM(undefined, {
     name: DEFAULT_ALGORITHM,
     mode: DEFAULT_MODE,

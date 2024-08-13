@@ -51,8 +51,8 @@ class Array2DRenderer extends Renderer {
   }
 
   renderData() {
-    // For DFSrec+msort_arr_td listOfNumbers is actually a list of pairs of numbers,
-    // or strings such as '(2,5)'
+    // For DFSrec+msort_arr_td,... listOfNumbers is actually a list of
+    // pairs of numbers, or strings such as '(2,5)'
     const { data, algo, kth, listOfNumbers, motionOn, hideArrayAtIdx } =
       this.props.data;
     const isArray1D = true;
@@ -117,13 +117,15 @@ class Array2DRenderer extends Renderer {
             {algo === 'tc' && ( // Leave a blank cell at the header row
               <td />
             )}
-            {algo !== 'BFS' &&
+            { /* XXX really should have a displayIndex flag for this */
+              algo !== 'BFS' &&
               algo !== 'DFSrec' &&
               algo !== 'DFS' &&
-              algo !== 'DFSrec' &&
               algo !== 'kruskal' &&
               algo !== 'dijkstra' &&
               algo !== 'aStar' &&
+              algo !== 'aStar' &&
+              algo !== 'msort_lista_td' &&
               longestRow.map((_, i) => {
                 if (algo === 'tc') {
                   i += 1;
@@ -149,10 +151,6 @@ class Array2DRenderer extends Renderer {
                 pointer = true;
               }
             }
-            // XXX should use style sheets for formatting stack for DFS
-            // and DFSrec etc
-            // - currently messing about attempting to make it look
-            // better and more stack-like using float (deprecated)
             return (
               <tr className={styles.row} key={i}>
                 {algo === 'tc' && ( // generate vertical index, which starts from 1
@@ -250,7 +248,8 @@ class Array2DRenderer extends Renderer {
             algo === 'aStar' ||
             algo === 'DFS' ||
             algo === 'DFSrec' ||
-            algo == 'BFS') &&
+            algo === 'msort_lista_td' ||
+            algo === 'BFS') &&
             data.map(
               (row, i) =>
                 i === 2 && (
@@ -307,6 +306,14 @@ class Array2DRenderer extends Renderer {
             kth-tag="msort_arr_td_caption"
           >
              Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
+          </caption>
+        )}
+        {algo === 'msort_lista_td' && listOfNumbers && (
+          <caption
+            className={algo === 'msort_lista_td' ?  styles.captionmsort_lista_td : ''}
+            kth-tag="msort_lista_td_caption"
+          >
+             Call stack (L, len):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
         {algo === 'BFS' && (
