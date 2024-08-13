@@ -161,8 +161,8 @@ const allalgs = {
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
-      insertion: Pseudocode.TTFTreeInsertion,
-      search: Pseudocode.TTFTreeSearch,
+      insertion: Pseudocode.hashInsert,
+      search: Pseudocode.hashSearch,
     },
     controller: {
       insertion: Controller.TTFTreeInsertion,
