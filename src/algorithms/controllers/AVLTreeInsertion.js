@@ -75,12 +75,10 @@ export default {
         const balance = (node) => {
             updateHeight(node);
             const balance = balanceFactor(node);
-            console.log(balance);
             if (balance > 1) {
                 chunker.add('if balance > 1');
                 if (balanceFactor(tree[node].left) < 0) {
                     chunker.add('Left Right Case');
-                    chunker.add('left rotation');
                     chunker.add('Left Right left rotation');
                     tree[node].left = rotateLeft(tree[node].left);
                     chunker.add('Left Right right rotation');
@@ -95,7 +93,6 @@ export default {
                 chunker.add('else if balance < -1');
                 if (balanceFactor(tree[node].right) > 0) {
                     chunker.add('Right Left Case');
-                    chunker.add('right rotation');
                     chunker.add('Right Left right rotation');
                     tree[node].right = rotateRight(tree[node].right);
                     chunker.add('Right Left left rotation');
@@ -227,7 +224,7 @@ export default {
                 current = tree[current].parent;
             }
         }
-
+        console.log(tree);
         return tree;
     }
 };

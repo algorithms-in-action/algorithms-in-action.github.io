@@ -126,7 +126,7 @@ export default parse(`
                 \\In{
                     c <- Right_Rotate(c)  // Perform right rotation \\B Left Left right rotation
                 \\In}
-            else // Left Right Case
+            else // Left Right Case \\B Left Right Case
                 \\In{
                     c.left <- Left_Rotate(c.left)  // Perform left rotation \\B Left Right left rotation
                     c <- Right_Rotate(c)  // Perform right rotation \\B Left Right right rotation
@@ -138,7 +138,7 @@ export default parse(`
                 \\In{
                     c <- Left_Rotate(c)  // Perform left rotation \\B Right Right left rotation
                 \\In}
-            else // Right Left Case
+            else // Right Left Case \\B Right Left Case
                 \\In{
                     c.right <- Right_Rotate(c.right)  // Perform right rotation \\B Right Left right rotation
                     c <- Left_Rotate(c)  // Perform left rotation \\B Right Left left rotation
