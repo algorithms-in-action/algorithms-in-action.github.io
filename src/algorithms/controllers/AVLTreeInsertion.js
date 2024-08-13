@@ -79,13 +79,10 @@ export default {
                 chunker.add('if balance > 1');
                 if (balanceFactor(tree[node].left) < 0) {
                     chunker.add('Left Right Case');
-                    chunker.add('Left Right left rotation');
                     tree[node].left = rotateLeft(tree[node].left);
-                    chunker.add('Left Right right rotation');
                     return rotateRight(node);
                 } else {
                     chunker.add('Left Left Case');
-                    chunker.add('Left Left right rotation');
                     return rotateRight(node);
                 }
             }
@@ -93,13 +90,10 @@ export default {
                 chunker.add('else if balance < -1');
                 if (balanceFactor(tree[node].right) > 0) {
                     chunker.add('Right Left Case');
-                    chunker.add('Right Left right rotation');
                     tree[node].right = rotateRight(tree[node].right);
-                    chunker.add('Right Left left rotation');
                     return rotateLeft(node);
                 } else {
                     chunker.add('Right Right Case');
-                    chunker.add('Right Right left rotation');
                     return rotateLeft(node);
                 }
             }
