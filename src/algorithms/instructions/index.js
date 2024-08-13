@@ -13,6 +13,7 @@ const KEY_UF_UNION = 'UNION';
 const KEY_UF_FIND = 'FIND';
 const KEY_UF_PC_ON = 'ON';
 const KEY_UF_PC_OFF = 'OFF';
+const PROTOTYPE = 'PROTOTYPE';
 
 export const KEY_WORDS = [
   KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
@@ -109,6 +110,8 @@ const unionFindInstructions = [{
 }];
 
 export const BSTInstruction = bstInstructions;
+
+export const PROTOTYPEINSTRUCTION = bstInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const msort_arr_td = sortInstructions;

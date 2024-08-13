@@ -6,6 +6,7 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
+import {PROTOTYPE_PARAM} from "./parameters";
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -304,6 +305,22 @@ const allalgs = {
     },
     controller: {
       search: Controller.horspoolStringSearch,
+    },
+  },
+
+  'PROTOTYPE': {
+    noDeploy: false,
+    name: 'LINKED_LIST_PROTOTYPE',
+    category: 'Insert/Search',
+    explanation: Explanation.PROTOTYPE,
+    param: <Param.PROTOTYPE_PARAM/>,
+    instructions: Instructions.PROTOTYPEINSTRUCTION,
+    extraInfo: ExtraInfo.PROTOTYPE,
+    pseudocode: {
+      Search: Pseudocode.PROTOTYPE,
+    },
+    controller: {
+      Search: Controller.PROTOTYPE,
     },
   },
 
