@@ -20,3 +20,4 @@ export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
+export { default as hash_lp } from './hash_lp';
