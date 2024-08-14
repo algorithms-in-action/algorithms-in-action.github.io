@@ -90,7 +90,7 @@ const allalgs = {
     },
   },
   'msort_arr_td': {
-    name: 'Merge Sort',
+    name: 'Merge Sort (top down)',
     noDeploy: false,
     category: 'Sort',
     explanation: Explanation.msort_arr_td,
@@ -104,6 +104,23 @@ const allalgs = {
       sort: Controller.msort_arr_td,
     },
   },
+
+  'msort_arr_bu': {
+    name: 'Merge Sort (bottom up)',             // for bottom up
+    noDeploy: false,
+    category: 'Sort',                           // for bottom up
+    explanation: Explanation.msort_arr_bup,     // for bottom up,  working yet
+    param: <Param.msort_arr_td />,              // same as top down
+    instructions: Instructions.msort_arr_bup,    // for bottom up same as top down
+    extraInfo: ExtraInfo.msort_arr_td,          // same as top down
+    pseudocode: {
+      sort: Pseudocode.msort_arr_bup, // same as top down
+    },
+    controller: {
+      sort: Controller.msort_arr_td,// same as top down
+    },
+  },
+
   'msort_lista_td': {
     name: 'Merge Sort (lists)',
     category: 'Sort',
@@ -139,7 +156,7 @@ const allalgs = {
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam/>,
+    param: <Param.TTFTreeParam />,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
     extraInfo: ExtraInfo.TTFInfo,
@@ -182,10 +199,10 @@ const allalgs = {
     },
   },
   'BFS': {
-    
+
     name: 'Breadth First Search',
     category: 'Graph',
-    param: <Param.BFSParam/>,
+    param: <Param.BFSParam />,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,
@@ -210,8 +227,8 @@ const allalgs = {
       find: Controller.dijkstra,
 
     },
-  }, 
-   'aStar': {
+  },
+  'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
     param: <Param.ASTARParam />,
@@ -225,7 +242,7 @@ const allalgs = {
       find: Controller.AStar,
 
     },
-  }, 
+  },
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',
