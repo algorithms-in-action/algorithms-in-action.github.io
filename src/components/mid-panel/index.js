@@ -11,10 +11,13 @@ import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import ControlButton from '../common/ControlButton';
+import Button from '@mui/material/Button';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm } = useContext(GlobalContext);
   const fontID = 'algorithmTitle';
+  const prevButtonID = 'prevPageButton';
+  const nextButtonID = 'nextPageButton';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
   const [explanation, setExplanation] = useState('');
@@ -22,6 +25,12 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     setFontSize(fontID, fontSize);
     increaseFontSize(fontID, fontSizeIncrement);
+
+    setFontSize(prevButtonID, fontSize);
+    increaseFontSize(prevButtonID, fontSizeIncrement);
+    
+    setFontSize(nextButtonID, fontSize);
+    increaseFontSize(nextButtonID, fontSizeIncrement);
   }, [fontSize, fontSizeIncrement]);
 
   useEffect(() => {
@@ -55,7 +64,25 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           </Popup>
         </div>
 
+        <div className="prevPageButton" id={prevButtonID} >
+          <Button
+            //onClick={() => prev()}
+            style={{ width: '120px', height: '50px', fontSize: '16px' }}
+          >
+            Previous
+          </Button>
+        </div>
+
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
+
+        <div className="nextPageButton" id={nextButtonID} >
+          <Button
+            //onClick={() => next()}
+            style={{ width: '120px', height: '50px', fontSize: '16px' }}
+          >
+            Next
+          </Button>
+        </div>
 
       </div>
       <div className="midPanelBody">

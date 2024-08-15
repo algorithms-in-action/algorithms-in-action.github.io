@@ -1,20 +1,26 @@
 @import './global.scss';
 
-$midOffset: 16px;
+$midOffset: 160px;
 $midHeaderHeight: 40px;
 $midTitleFontSize: 0.89em;
+$midPrevButtonFontSize: 40px;
+$midNextButtonFontSize: 40px;
 
 .midPanelContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
-
   
   .midPanelHeader {
     height: $midHeaderHeight;
     background-color: var(--mid-header-bg);
     display: flex;
     align-items: center;
+    justify-content: space-between;
+
+    .prevPageButton {
+      margin-left: auto;
+    }
     
     .algorithmTitle {
       font-size: $midTitleFontSize;
@@ -23,6 +29,10 @@ $midTitleFontSize: 0.89em;
       font-weight: 300;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .nextPageButton {
+      margin-right: auto;
     }
 
   }
