@@ -1,5 +1,6 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
+import { node } from 'prop-types';
 
 export default {
     initVisualisers() {
@@ -23,40 +24,42 @@ export default {
     run(chunker, { nodes }) {
         if (nodes.length === 0) return;
 
-        class AVLNode {
-            constructor(key) {
-                this.key = key;
-                this.left = null;
-                this.right = null;
-                this.par = null;
-                this.height = 1;
-            }
-        }
+        // class AVLNode {
+        //     constructor(key) {
+        //         this.key = key;
+        //         this.left = null;
+        //         this.right = null;
+        //         this.par = null;
+        //         this.height = 1;
+        //     }
+        // }
+
+        const tree = {};
 
         // Function to update the height of a node based on its children's heights
         function updateHeight(root) {
             if (root !== null) {
-                const leftHeight = (root.left !== null) ? root.left.height : 0;
-                const rightHeight = (root.right !== null) ? root.right.height : 0;
-                root.height = Math.max(leftHeight, rightHeight) + 1;
+                const leftHeight = (tree[root].left !== null) ? tree[tree[root].left].height : 0;
+                const rightHeight = (tree[root].right !== null) ? tree[tree[root].right].height : 0;
+                tree[root].height = Math.max(leftHeight, rightHeight) + 1;
             }
         }
 
         // Left-Left Rotation (LLR) to balance the AVL tree
         function LLR(root) {
-            const tmpnode = root.left;
-            root.left = tmpnode.right;
-            if (tmpnode.right !== null) {
-                tmpnode.right.par = root;
+            const tmpnode = tree[root].left;
+            tree[root].left = tree[tmpnode].right;
+            if (tree[tmpnode].right !== null) {
+                tree[tree[tmpnode].right].par = root;
             }
-            tmpnode.right = root;
-            tmpnode.par = root.par;
-            root.par = tmpnode;
-            if (tmpnode.par !== null) {
-                if (root.key < tmpnode.par.key) {
-                    tmpnode.par.left = tmpnode;
+            tree[tmpnode].right = root;
+            tree[tmpnode].par = tree[root].par;
+            tree[root].par = tmpnode;
+            if (tree[tmpnode].par !== null) {
+                if (root < tree[tmpnode].par) {
+                    tree[tree[tmpnode].par].left = tmpnode;
                 } else {
-                    tmpnode.par.right = tmpnode;
+                    tree[tree[tmpnode].par].right = tmpnode;
                 }
             }
             updateHeight(root);
@@ -66,19 +69,19 @@ export default {
 
         // Right-Right Rotation (RRR) to balance the AVL tree
         function RRR(root) {
-            const tmpnode = root.right;
-            root.right = tmpnode.left;
-            if (tmpnode.left !== null) {
-                tmpnode.left.par = root;
+            const tmpnode = tree[root].right;
+            tree[root].right = tree[tmpnode].left;
+            if (tree[tmpnode].left !== null) {
+                tree[tree[tmpnode].left].par = root;
             }
-            tmpnode.left = root;
-            tmpnode.par = root.par;
-            root.par = tmpnode;
-            if (tmpnode.par !== null) {
-                if (root.key < tmpnode.par.key) {
-                    tmpnode.par.left = tmpnode;
+            tree[tmpnode].left = root;
+            tree[tmpnode].par = tree[root].par;
+            tree[root].par = tmpnode;
+            if (tree[tmpnode].par !== null) {
+                if (root < tree[tmpnode].par) {
+                    tree[tree[tmpnode].par].left = tmpnode;
                 } else {
-                    tmpnode.par.right = tmpnode;
+                    tree[tree[tmpnode].par].right = tmpnode;
                 }
             }
             updateHeight(root);
@@ -88,38 +91,40 @@ export default {
 
         // Left-Right Rotation (LRR) to balance the AVL tree
         function LRR(root) {
-            root.left = RRR(root.left);
+            tree[root].left = RRR(tree[root].left);
             return LLR(root);
         }
 
         // Right-Left Rotation (RLR) to balance the AVL tree
         function RLR(root) {
-            root.right = LLR(root.right);
+            tree[root].right = LLR(tree[root].right);
             return RRR(root);
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
         function insert(root, key) {
+            // console.log(tree);
             chunker.add('p <- Empty');
             let parentNode = null;
             chunker.add('c <- t');
             let currentNode = root;
-            let newNode = new AVLNode(key);
+            // let newNode = new AVLNode(key);
+            tree[key] = { left: null, right: null, par: null, height: 1 };
 
             chunker.add('repeat_1');
             while (currentNode) {
                 parentNode = currentNode;
 
-                if (key < currentNode.key) {
+                if (key < currentNode) {
                     chunker.add('if k < c.key');
                     chunker.add('p <- c if k < c.key');
                     chunker.add('c <- c.left if k < c.key');
-                    currentNode = currentNode.left;
-                } else if (key > currentNode.key) {
+                    currentNode = tree[currentNode].left;
+                } else if (key > currentNode) {
                     chunker.add('else if k > c.key');
                     chunker.add('p <- c if k > c.key');
                     chunker.add('c <- c.right if k > c.key');
-                    currentNode = currentNode.right;
+                    currentNode = tree[currentNode].right;
                 } else {
                     // Key already exists in the tree
                     chunker.add('else k == c.key');
@@ -130,46 +135,52 @@ export default {
 
             chunker.add('until c is Empty (and p is a leaf node)');
 
-            if (key < parentNode.key) {
+            if (key < parentNode) {
                 chunker.add('if k < p.key');
                 chunker.add('p.left <- a new node containing k and height 1');
-                parentNode.left = newNode;
+                tree[parentNode].left = key;
             } else {
                 chunker.add('else: k > p.key');
                 chunker.add('p.right <- a new node containing k and height 1');
-                parentNode.right = newNode;
+                tree[parentNode].right = key;
             }
 
-            newNode.par = parentNode;
+            tree[key].par = parentNode;
             chunker.add('c <- p back up');
             chunker.add('repeat_2');
             // Update heights and balance the tree if needed
+            // console.log("Before balance");
+            // console.log(tree);
             while (parentNode !== null) {
                 chunker.add('c.height <- max(Height(c.left), Height(c.right)) + 1');
                 updateHeight(parentNode);
 
-                const leftHeight = (parentNode.left !== null) ? parentNode.left.height : 0;
-                const rightHeight = (parentNode.right !== null) ? parentNode.right.height : 0;
+                const leftHeight = (tree[parentNode].left !== null) ? tree[tree[parentNode].left].height : 0;
+                const rightHeight = (tree[parentNode].right !== null) ? tree[tree[parentNode].right].height : 0;
 
                 chunker.add('balance <- Height(c.left) - Height(c.right)');
-
+                // console.log(key, parentNode, tree[parentNode].left);
                 if (Math.abs(leftHeight - rightHeight) === 2) {
-                    if (key < parentNode.key) {
+                    if (key < parentNode) {
                         chunker.add('if balance > 1');
-                        if (key < parentNode.left.key) {
+                        if (key < tree[parentNode].left) {
                             chunker.add('Left Left Case');
+                            // console.log("LLR");
                             parentNode = LLR(parentNode);
                         } else {
                             chunker.add('Left Right Case');
+                            // console.log("LRR");
                             parentNode = LRR(parentNode);
                         }
                     } else {
                         chunker.add('else if balance < -1');
-                        if (key < parentNode.right.key) {
+                        if (key < tree[parentNode].right) {
                             chunker.add('Right Left Case');
+                            // console.log("RLR");
                             parentNode = RLR(parentNode);
                         } else {
                             chunker.add('Right Right Case');
+                            // console.log("RRR");
                             parentNode = RRR(parentNode);
                         }
                     }
@@ -182,13 +193,13 @@ export default {
                 }
 
                 chunker.add('c <- Parent of c');
-                newNode = parentNode;
-                parentNode = parentNode.par;
+                currentNode = parentNode;
+                parentNode = tree[parentNode].par;
             }
 
             chunker.add('until c is Empty');
 
-            return newNode;
+            return currentNode;
         }
 
         // Populate the ArrayTracer using nodes
@@ -204,7 +215,9 @@ export default {
         });
 
         // Initialize the AVL tree with the first key
-        let root = new AVLNode(nodes[0]);
+        // let root = new AVLNode(nodes[0]);
+        let root = nodes[0];
+        tree[root] = { left: null, right: null, par: null, height: 1 };
 
         // new node containing k and height 1
         chunker.add(
@@ -214,7 +227,7 @@ export default {
                 vis.graph.layoutBST(r, true);
                 vis.graph.select(r, null);
             },
-            [root.key],
+            [root],
         );
 
         for (let i = 1; i < nodes.length; i++) {
@@ -222,7 +235,6 @@ export default {
             root = insert(root, nodes[i]);
         }
 
-        console.log(root);
         return root;
     }
 };
