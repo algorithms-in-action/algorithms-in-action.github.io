@@ -1,6 +1,7 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { node } from 'prop-types';
+import { chunk } from 'lodash';
 
 export default {
     initVisualisers() {
@@ -47,6 +48,34 @@ export default {
 
         // Left-Left Rotation (LLR) to balance the AVL tree
         function LLR(root) {
+
+            console.log('LLR');
+            console.log("the root of LLR is "+root);
+
+            let R = root;
+            let A = tree[root].left;
+            let D = tree[A].right;
+            let P = tree[root].par;
+
+            console.log("delete edge between "+R+" and "+A);
+            console.log("add edge between "+A+" and "+R);
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p) => {
+                    if(p !== null){
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                    }
+
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                    }
+                    vis.graph.removeEdge(r, a);
+                    vis.graph.addEdge(a, r);
+                },
+                [R, A, D, P]
+            );
+
             const tmpnode = tree[root].left;
             tree[root].left = tree[tmpnode].right;
             if (tree[tmpnode].right !== null) {
@@ -69,6 +98,30 @@ export default {
 
         // Right-Right Rotation (RRR) to balance the AVL tree
         function RRR(root) {
+            console.log('RRR');
+            console.log("the root of RRR is "+root);
+
+            let R = root;
+            let A = tree[root].right;
+            let D = tree[A].left;
+            let P = tree[root].par;
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p) => {
+                    if(p !== null){
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                    }
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                    }
+                    vis.graph.removeEdge(r, a);
+                    vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(r, true);
+                },
+                [R, A, D, P]
+            );
+
             const tmpnode = tree[root].right;
             tree[root].right = tree[tmpnode].left;
             if (tree[tmpnode].left !== null) {
