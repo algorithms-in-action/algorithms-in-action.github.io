@@ -118,12 +118,26 @@ export default {
                 if (key < currentNode) {
                     chunker.add('if k < c.key');
                     chunker.add('p <- c if k < c.key');
-                    chunker.add('c <- c.left if k < c.key');
+                    chunker.add(
+                        'c <- c.left if k < c.key',
+                        (vis, r) => {
+                            vis.graph.select(r, null);
+                        },
+                        [currentNode],
+                    );
+                    // chunker.add('c <- c.left if k < c.key');
                     currentNode = tree[currentNode].left;
                 } else if (key > currentNode) {
                     chunker.add('else if k > c.key');
                     chunker.add('p <- c if k > c.key');
-                    chunker.add('c <- c.right if k > c.key');
+                    chunker.add(
+                        'c <- c.right if k > c.key',
+                        (vis, r) => {
+                            vis.graph.select(r, null);
+                        },
+                        [currentNode],
+                    );
+                    // chunker.add('c <- c.right if k > c.key');
                     currentNode = tree[currentNode].right;
                 } else {
                     // Key already exists in the tree
@@ -137,11 +151,29 @@ export default {
 
             if (key < parentNode) {
                 chunker.add('if k < p.key');
-                chunker.add('p.left <- a new node containing k and height 1');
+                // chunker.add('p.left <- a new node containing k and height 1');
+                chunker.add(
+                    'p.left <- a new node containing k and height 1',
+                    (vis, e, p) => {
+                        vis.graph.addNode(e);
+                        vis.graph.addEdge(p, e);
+                        // vis.graph.select(e, p);
+                    },
+                    [key, parentNode],
+                );
                 tree[parentNode].left = key;
             } else {
                 chunker.add('else: k > p.key');
-                chunker.add('p.right <- a new node containing k and height 1');
+                // chunker.add('p.right <- a new node containing k and height 1');
+                chunker.add(
+                    'p.right <- a new node containing k and height 1',
+                    (vis, e, p) => {
+                        vis.graph.addNode(e);
+                        vis.graph.addEdge(p, e);
+                        // vis.graph.select(e, p);
+                    },
+                    [key, parentNode],
+                );
                 tree[parentNode].right = key;
             }
 
@@ -235,6 +267,6 @@ export default {
             root = insert(root, nodes[i]);
         }
 
-        return root;
+        return tree;
     }
 };
