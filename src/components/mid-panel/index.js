@@ -11,7 +11,6 @@ import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import ControlButton from '../common/ControlButton';
-import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
@@ -19,6 +18,8 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const [share, setShare] = useState(false);
+  const closeShare = () => setShare(false);
   const [explanation, setExplanation] = useState('');
 
   useEffect(() => {
@@ -57,9 +58,17 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           </Popup>
         </div>
 
-        <IconButton >
-          <ShareIcon/>
-        </IconButton>
+        <div>
+          <ControlButton icon={< ShareIcon />} onClick={() => setShare((o) => !o)} />
+          <Popup open={share} closeOnDocumentClick onClose={closeShare}>
+            <div className="shareArea">
+              <a className="close" onClick={closeShare}>
+                &times;
+              </a>
+              {/* add text for pop-up under here */}
+            </div>
+          </Popup>
+        </div>
 
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
 
