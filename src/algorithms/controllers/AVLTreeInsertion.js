@@ -47,21 +47,28 @@ export default {
         }
 
         // Left-Left Rotation (LLR) to balance the AVL tree
-        function LLR(root) {
+        function LLR(root, globalRoot) {
 
             console.log('LLR');
-            console.log("the root of LLR is "+root);
+            console.log("the root of LLR is " + root);
 
             let R = root;
             let A = tree[root].left;
             let D = tree[A].right;
             let P = tree[root].par;
 
-            console.log("delete edge between "+R+" and "+A);
-            console.log("add edge between "+A+" and "+R);
+            let G = null;
+            if(tree[root].par !== null){
+                G = globalRoot
+            }else{
+                G = A;
+            }
+
+            console.log("delete edge between " + R + " and " + A);
+            console.log("add edge between " + A + " and " + R);
             chunker.add('p <- Empty',
-                (vis, r, a, d, p) => {
-                    if(p !== null){
+                (vis, r, a, d, p, g) => {
+                    if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
                     }
@@ -72,8 +79,9 @@ export default {
                     }
                     vis.graph.removeEdge(r, a);
                     vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(g, true);
                 },
-                [R, A, D, P]
+                [R, A, D, P, G]
             );
 
             const tmpnode = tree[root].left;
@@ -97,17 +105,23 @@ export default {
         }
 
         // Right-Right Rotation (RRR) to balance the AVL tree
-        function RRR(root) {
+        function RRR(root, globalRoot) {
             console.log('RRR');
-            console.log("the root of RRR is "+root);
+            console.log("the root of RRR is " + root);
 
             let R = root;
             let A = tree[root].right;
             let D = tree[A].left;
             let P = tree[root].par;
+            let G = null;
+            if(tree[root].par !== null){
+                G = globalRoot
+            }else{
+                G = A;
+            }
             chunker.add('p <- Empty',
-                (vis, r, a, d, p) => {
-                    if(p !== null){
+                (vis, r, a, d, p, g) => {
+                    if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
                     }
@@ -117,9 +131,9 @@ export default {
                     }
                     vis.graph.removeEdge(r, a);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutBST(r, true);
+                    vis.graph.layoutBST(g, true);
                 },
-                [R, A, D, P]
+                [R, A, D, P, G]
             );
 
             const tmpnode = tree[root].right;
@@ -143,15 +157,15 @@ export default {
         }
 
         // Left-Right Rotation (LRR) to balance the AVL tree
-        function LRR(root) {
-            tree[root].left = RRR(tree[root].left);
-            return LLR(root);
+        function LRR(root, globalRoot) {
+            tree[root].left = RRR(tree[root].left, globalRoot);
+            return LLR(root, globalRoot);
         }
 
         // Right-Left Rotation (RLR) to balance the AVL tree
-        function RLR(root) {
-            tree[root].right = LLR(tree[root].right);
-            return RRR(root);
+        function RLR(root, globalRoot) {
+            tree[root].right = LLR(tree[root].right, globalRoot);
+            return RRR(root, globalRoot);
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
@@ -251,22 +265,22 @@ export default {
                         if (key < tree[parentNode].left) {
                             chunker.add('Left Left Case');
                             // console.log("LLR");
-                            parentNode = LLR(parentNode);
+                            parentNode = LLR(parentNode, root);
                         } else {
                             chunker.add('Left Right Case');
                             // console.log("LRR");
-                            parentNode = LRR(parentNode);
+                            parentNode = LRR(parentNode, root);
                         }
                     } else {
                         chunker.add('else if balance < -1');
                         if (key < tree[parentNode].right) {
                             chunker.add('Right Left Case');
                             // console.log("RLR");
-                            parentNode = RLR(parentNode);
+                            parentNode = RLR(parentNode, root);
                         } else {
                             chunker.add('Right Right Case');
                             // console.log("RRR");
-                            parentNode = RRR(parentNode);
+                            parentNode = RRR(parentNode, root);
                         }
                     }
                 }
