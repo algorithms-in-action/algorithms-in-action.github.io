@@ -126,3 +126,4 @@ export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
 export const DFSInstruction = graphInstructions;
 export const DFSrecInstruction = graphInstructions;
+export const HashingInstruction = graphInstructions;

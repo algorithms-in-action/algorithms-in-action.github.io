@@ -34,7 +34,7 @@ import * as Instructions from './instructions';
 // Also: the key for the algorithm MUST be the same as the "name"
 // of the top level Param block returned by the parameter function.
 // Eg, parameters/msort_arr_td.js has
-// 
+//
 // function MergesortParam() {
 // ...
 // return (
@@ -156,17 +156,17 @@ const allalgs = {
   'Hashing': {
     name: 'Hashing',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam/>,
-    instructions: Instructions.TTFInstruction,
+    param: <Param.HashingParam/>,
+    instructions: Instructions.HashingInstruction,
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
-      insertion: Pseudocode.hashInsert,
-      search: Pseudocode.hashSearch,
+      insertion: Pseudocode.HashingInsert,
+      search: Pseudocode.HashingSearch,
     },
     controller: {
-      insertion: Controller.TTFTreeInsertion,
-      search: Controller.TTFTreeSearch,
+      insertion: Controller.HashingInsert,
+      search: Controller.HashingSearch,
     },
   },
 
@@ -199,7 +199,7 @@ const allalgs = {
     },
   },
   'BFS': {
-    
+
     name: 'Breadth First Search',
     category: 'Graph',
     param: <Param.BFSParam/>,
@@ -227,7 +227,7 @@ const allalgs = {
       find: Controller.dijkstra,
 
     },
-  }, 
+  },
    'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
@@ -242,7 +242,7 @@ const allalgs = {
       find: Controller.AStar,
 
     },
-  }, 
+  },
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',

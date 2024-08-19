@@ -20,5 +20,5 @@ export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
-export { default as hashInsert } from './hashInsert';
-export { default as hashSearch } from './hashSearch';
+export { default as HashingInsert } from './HashingInsert';
+export { default as HashingSearch } from './HashingSearch';
