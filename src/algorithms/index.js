@@ -311,7 +311,7 @@ const allalgs = {
   'LINKED_LIST_PROTOTYPE': {
     noDeploy: false,
     name: 'Linked List prototype',
-    category: 'Insert/Search',
+    category: 'Insert/Sort',
     explanation: Explanation.PROTOTYPE,
     param: <Param.PROTOTYPE_PARAM/>,
     instructions: Instructions.PROTOTYPEINSTRUCTION,
@@ -323,7 +323,6 @@ const allalgs = {
       Sort: Controller.PROTOTYPE,
     },
   },
-
 };
 
 const algorithms =
