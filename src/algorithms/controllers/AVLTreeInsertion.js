@@ -176,7 +176,7 @@ export default {
             chunker.add('c <- t');
             let currentNode = root;
             // let newNode = new AVLNode(key);
-            tree[key] = { left: null, right: null, par: null, height: 1 };
+            let newNode = { left: null, right: null, par: null, height: 1 };
 
             chunker.add('repeat_1');
             while (currentNode) {
@@ -213,6 +213,7 @@ export default {
                     return root;
                 }
             }
+            tree[key] = newNode;
 
             chunker.add('until c is Empty (and p is a leaf node)');
 
