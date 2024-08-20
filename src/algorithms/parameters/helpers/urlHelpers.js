@@ -2,8 +2,8 @@ import DEFAULT_NODES from '../../../algorithms/parameters/HSParam.js';
 import { useState, useEffect, useMemo } from 'react';
 
 const DEFAULT_ALGORITHM = 'heapSort';
-const DEFAULT_MODE ='sort';
-const DEFAULT_PARAM = 'list=1,5,3,4,5';
+const DEFAULT_MODE = 'sort';
+const DEFAULT_PARAM = 'list=1,5,3,4,5&value=2&xyCoords=3-4,7-1&edgeWeights=1-2-3,1-1-1&start=1&end=2&string=abcde&pattern=abc&union=1-2,3-4';
 
 
 // all the parameter types:
@@ -11,12 +11,14 @@ const DEFAULT_PARAM = 'list=1,5,3,4,5';
 // value: 2
 // xy-coords: 3-4,x-y  // node 1 has coord (3,4)
 // edge-weights: 1-2-3,1-4-2  // node 1 to node 2 has edge weight 3
+// start: 1
+// end: 2
 // string: abcde
 // pattern: abcde
 // union: 1-2,3-4
 export function useUrlParams() {
     const [search, setSearch] = useState(window.location.search);
-    
+
     useEffect(() => {
         const handleUrlChange = () => {
             setSearch(window.location.search);
@@ -49,8 +51,8 @@ export function parseParam(paramString) {
         value: '',
         xyCoords: '',
         edgeWeights: '',
-        start:'',
-        end:'',
+        start: '',
+        end: '',
         string: '',
         pattern: '',
         union: ''
@@ -61,7 +63,7 @@ export function parseParam(paramString) {
         value: extractValue(paramString, 'value'),
         xyCoords: extractValue(paramString, 'coords'),
         edgeWeights: extractValue(paramString, 'edges'),
-        start: extractValue(paramString,'start'),
+        start: extractValue(paramString, 'start'),
         end: extractList(paramString, 'end'),
         string: extractValue(paramString, 'string'),
         pattern: extractValue(paramString, 'pattern'),
