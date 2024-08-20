@@ -308,22 +308,21 @@ const allalgs = {
     },
   },
 
-  'PROTOTYPE': {
+  'LINKED_LIST_PROTOTYPE': {
     noDeploy: false,
-    name: 'LINKED_LIST_PROTOTYPE',
-    category: 'Insert/Search',
+    name: 'Linked List prototype',
+    category: 'Insert/Sort',
     explanation: Explanation.PROTOTYPE,
     param: <Param.PROTOTYPE_PARAM/>,
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      Search: Pseudocode.PROTOTYPE,
+      Sort: Pseudocode.PROTOTYPE,
     },
     controller: {
-      Search: Controller.PROTOTYPE,
+      Sort: Controller.PROTOTYPE,
     },
   },
-
 };
 
 const algorithms =

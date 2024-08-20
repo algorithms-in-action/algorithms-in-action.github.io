@@ -20,7 +20,6 @@
 /* eslint-disable object-curly-newline */
 
 import React from 'react';
-// import Array1DRenderer from '../Array1DRenderer/index';
 import { motion, AnimateSharedLayout } from 'framer-motion';
 import ListRenderer from '../ListRenderer/index';
 import styles from './ListRenderer.module.scss';
