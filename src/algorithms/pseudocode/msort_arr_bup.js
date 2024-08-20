@@ -11,9 +11,9 @@ runlength could be displayed where the top down stack is displayed.
 \\Code{
 Main
 // Sort array A[1]..A[size] in ascending order
-Mergesort(A, size) 
-    runlength <- 1 // each element is a (sorted) run of length 1
-    while runlength < size
+Mergesort(A, size) \\B Main
+    runlength <- 1 // each element is a (sorted) run of length 1 \\B runlength
+    while runlength < size \\B MainWhile
     \\Expl{ We stop when the whole array is a single run.
     \\Expl}
     \\In{
@@ -24,15 +24,15 @@ Mergesort(A, size)
 
 \\Code{
 MergeAll
-    left <- 1
-    while left + runlength < size
+    left <- 1 \\B left
+    while left + runlength < size \\B MergeAllWhile
     \\Expl{ Unless size is a power of two there can be times when the
         number of runs is odd and we have a "leftover" run at the end
         (with length <= runlength), that will be merged in a later iteration.
     \\Expl}
     \\In{
-        mid <- left + runlength - 1 // first run is A[left..mid]
-        right <- minimum(mid+runlength, size) // next is A[mid+1..right]
+        mid <- left + runlength - 1 // first run is A[left..mid] \\B mid
+        right <- minimum(mid+runlength, size) // next is A[mid+1..right] \\B right
         \\Expl{ The rightmost run in A may be shorter than runlength
         \\Expl}
         merge A[left..mid] and A[mid+1..right], with the result in A \\Ref MergeCopy

@@ -5,6 +5,7 @@ export { default as quickSort } from './quickSort';
 export { default as quickSortM3 } from './quickSortM3';
 export { default as msort_arr_td } from './msort_arr_td';
 export { default as msort_lista_td } from './msort_lista_td';
+export { default as msort_arr_bup } from './msort_arr_bup';
 export { default as transitiveClosure } from './transitiveClosure';
 export { default as bruteForceStringSearch } from './bruteForceStringSearch';
 export { default as horspoolStringSearch } from './horspoolStringSearch';

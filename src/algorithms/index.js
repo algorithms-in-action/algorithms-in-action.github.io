@@ -105,22 +105,6 @@ const allalgs = {
     },
   },
 
-  'msort_arr_bu': {
-    name: 'Merge Sort (bottom up)',             // for bottom up
-    noDeploy: false,
-    category: 'Sort',                           // for bottom up
-    explanation: Explanation.msort_arr_bup,     // for bottom up,  working yet
-    param: <Param.msort_arr_td />,              // same as top down
-    instructions: Instructions.msort_arr_bup,    // for bottom up same as top down
-    extraInfo: ExtraInfo.msort_arr_td,          // same as top down
-    pseudocode: {
-      sort: Pseudocode.msort_arr_bup, // same as top down
-    },
-    controller: {
-      sort: Controller.msort_arr_td,// same as top down
-    },
-  },
-
   'msort_lista_td': {
     name: 'Merge Sort (lists)',
     category: 'Sort',
@@ -133,6 +117,22 @@ const allalgs = {
     },
     controller: {
       sort: Controller.msort_lista_td,
+    },
+  },
+
+  'msort_arr_bup': {
+    name: 'Merge Sort (bottom up)',             // for bottom up
+    noDeploy: false,
+    category: 'Sort',                           // for bottom up
+    explanation: Explanation.msort_arr_bup,     // for bottom up,  working yet
+    param: <Param.msort_arr_bup />,              // same as top down
+    instructions: Instructions.msort_arr_bup,    // for bottom up same as top down
+    extraInfo: ExtraInfo.msort_arr_bup,          // same as top down
+    pseudocode: {
+      sort: Pseudocode.msort_arr_bup, // same as top down
+    },
+    controller: {
+      sort: Controller.msort_arr_bup,// same as top down
     },
   },
 
