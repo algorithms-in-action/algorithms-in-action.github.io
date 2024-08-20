@@ -169,7 +169,7 @@ export default {
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
-        function insert(root, key) {
+        function insert(root, key, currIndex) {
             // console.log(tree);
             chunker.add('p <- Empty');
             let parentNode = null;
@@ -222,12 +222,24 @@ export default {
                 // chunker.add('p.left <- a new node containing k and height 1');
                 chunker.add(
                     'p.left <- a new node containing k and height 1',
-                    (vis, e, p) => {
+                    (vis, e, p, index) => {
+                        // Upper array visulization
+                        vis.array.deselect(index - 1);
+                        vis.array.select(index);
+
+                        // // Lower graph visualization
+                        // for (let j = 1; j < visited.length; j++) {
+                        //     vis.graph.leave(visited[j], visited[j - 1]);
+                        // }
+                        // if (nodes[index - 1] !== visited[visited.length - 1]) {
+                        // vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
+                        // }
+
                         vis.graph.addNode(e);
                         vis.graph.addEdge(p, e);
                         // vis.graph.select(e, p);
                     },
-                    [key, parentNode],
+                    [key, parentNode, currIndex],
                 );
                 tree[parentNode].left = key;
             } else {
@@ -235,12 +247,16 @@ export default {
                 // chunker.add('p.right <- a new node containing k and height 1');
                 chunker.add(
                     'p.right <- a new node containing k and height 1',
-                    (vis, e, p) => {
+                    (vis, e, p, index) => {
+                        // Upper array visulization
+                        vis.array.deselect(index - 1);
+                        vis.array.select(index);
+
                         vis.graph.addNode(e);
                         vis.graph.addEdge(p, e);
                         // vis.graph.select(e, p);
                     },
-                    [key, parentNode],
+                    [key, parentNode, currIndex],
                 );
                 tree[parentNode].right = key;
             }
@@ -332,7 +348,7 @@ export default {
 
         for (let i = 1; i < nodes.length; i++) {
             chunker.add('else: AVL_Insert(t, k)');
-            root = insert(root, nodes[i]);
+            root = insert(root, nodes[i], i);
         }
 
         return tree;
