@@ -2,12 +2,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import ListParam from './helpers/ListParam.js';
-import { parseNodes, useUrlParams } from './helpers/urlHelpers'; // Assume these functions are exported from a helper file
+import { parseParam , useUrlParams } from './helpers/urlHelpers'; // Assume these functions are exported from a helper file
 import algorithms from '../../algorithms';
 function HeapsortParam() {
     const { alg, mode, param } = useUrlParams();
-    const initialNodes = parseNodes(param);
-    const [nodes, setNodes] = useState(initialNodes);
+    const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
+    const [nodes, setNodes] = useState(list);
     const [message, setMessage] = useState(null);
 
     console.log("Component State:", { alg, mode, nodes });  // Final check before rendering
