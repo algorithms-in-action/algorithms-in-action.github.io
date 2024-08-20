@@ -6,6 +6,8 @@ import { withStyles } from '@mui/styles';
 import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
+import { parseParam , useUrlParams } from './helpers/urlHelpers'; // Assume these functions are exported from a helper file
+import algorithms from '../../algorithms';
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
@@ -30,8 +32,10 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />)
 
 function QuicksortParam() {
+  const { alg, mode, param } = useUrlParams();
+  const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(DEFAULT_ARR)
+  const [array, setArray] = useState(list)
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
@@ -39,7 +43,10 @@ function QuicksortParam() {
     sortedDesc: false
   });
 
-    
+  console.log("Component State:", { alg, mode, list });  // Final check before rendering
+  if (!alg || !mode || !(alg in algorithms && mode in algorithms[alg].pseudocode)) {
+      return <div>Invalid algorithm or mode specified</div>;
+  }
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
