@@ -22,6 +22,30 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {areExpanded} from './collapseChunkPlugin';
 
+const LL_BOOKMARKS = {
+    LL_default: 1,
+    LL_if_left_less_right: 2,
+    LL_left_to_mid: 3,
+    LL_mid_to_end: 4,
+    LL_sort_left: 5,
+    LL_sort_right: 6,
+    LL_result: 7,
+    LL_done: 8,
+    LL_middle: 9,
+    LL_pre_left: 300,
+    LL_pre_right: 400,
+};
+
+
+
+
+
+
+
+
+
+
+
 // k displayed only if first BuildHeap is expanded
 // Note: This is only needed in the last chunk of BuildHeap. The code
 // looks like it displays k throughout BuildHeap but when BuildHeap is
