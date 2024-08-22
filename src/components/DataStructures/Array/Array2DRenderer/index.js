@@ -196,27 +196,27 @@ class Array2DRenderer extends Renderer {
                       <span className={styles.value}> i </span>
                     </th>
                   ))
-                ||
+                  ||
                   (algo === 'aStar' && i === 1 && (
                     <th className={classes(styles.col, styles.index)}>
                       <span className={styles.value}> )Priority </span>
                     </th>
                   ))
-                ||
+                  ||
                   (algo === 'aStar' && i === 2 && (
                     <th className={classes(styles.col, styles.index)}>
                       <span className={styles.value}> )Queue&ensp; </span>
                     </th>
                   ))
-                ||
+                  ||
                   (((algo === 'prim' && i === 2) ||
-                    (algo === 'dijkstra' && i === 2) 
-                    ) && (
-                    <th className={classes(styles.col, styles.index)}>
-                      <span className={styles.value}> Priority Queue </span>
-                    </th>
-                  ))
-                 || <td className={classes(styles.col, styles.index)} />}
+                    (algo === 'dijkstra' && i === 2)
+                  ) && (
+                      <th className={classes(styles.col, styles.index)}>
+                        <span className={styles.value}> Priority Queue </span>
+                      </th>
+                    ))
+                  || <td className={classes(styles.col, styles.index)} />}
               </tr>
             );
           })}
@@ -289,7 +289,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'DFS' ? styles.captionDFS : ''}
             kth-tag="dfs_caption"
           >
-             Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            Nodes (stack):&emsp; {listOfNumbers}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           </caption>
         )}
         {algo === 'DFSrec' && (
@@ -297,7 +297,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'DFSrec' ? styles.captionDFSrec : ''}
             kth-tag="dfsrec_caption"
           >
-             Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
+            Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
         {algo === 'msort_arr_td' && (
@@ -305,16 +305,25 @@ class Array2DRenderer extends Renderer {
             className={algo === 'msort_arr_td' ? styles.captionmsort_arr_td : ''}
             kth-tag="msort_arr_td_caption"
           >
-             Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
+            Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
         )}
         {algo === 'msort_lista_td' && listOfNumbers && (
           <caption
-            className={algo === 'msort_lista_td' ?  styles.captionmsort_lista_td : ''}
+            className={algo === 'msort_lista_td' ? styles.captionmsort_lista_td : ''}
             kth-tag="msort_lista_td_caption"
           >
-             Call stack (L, len):&emsp; {listOfNumbers}&emsp;&emsp;
+            Call stack (L, len):&emsp; {listOfNumbers}&emsp;&emsp;
           </caption>
+        )}
+        {algo === 'msort_lista_bup' && listOfNumbers && (
+          <caption
+            className={algo === 'msort_lista_bup' ? styles.captionmsort_lista_bup : ''}
+            kth-tag="msort_lista_bup_caption"
+          >
+            Run Length (Len):&emsp; {listOfNumbers}&emsp;&emsp;
+          </caption>
+
         )}
         {algo === 'BFS' && (
           <caption

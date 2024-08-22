@@ -65,9 +65,9 @@ function isMergeExpanded() {
 
 // checks if either recursive call is expanded (otherwise stack is not
 // displayed)
-/*function isRecursionExpanded() {
+function isRecursionExpanded() {
   return areExpanded(['MergesortL']) || areExpanded(['MergesortR']);
-}*/
+}
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
@@ -196,7 +196,7 @@ export function run_msort() {
     let B = [...entire_num_array].fill(undefined);
     let max_depth_index = -1; // indexes into 2D array, starts at zero
     let runlength = 1; // length of run to merge
-    let size = nodes.length; // size of array
+    let size = nodes.length - 1; // size of array
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack = []; // [ [left, right,  depth], ...]
     let pivot;
@@ -352,41 +352,46 @@ export function run_msort() {
     // no recursive calls in this version
     //function MergeSort(left, right, depth, size) {
 
-
+    const set_simple_stack = (vis_array, c_stk) => {
+      if (isRecursionExpanded())
+        vis_array.setList(c_stk);
+    }
     //// start mergesort -------------------------------------------------------- 
     // XXXXX
 
     // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
 
-    chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length, cur_real_stack, cur_finished_stack_frames, c_stk) => {
+    chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length,
+      cur_real_stack, cur_finished_stack_frames, c_stk) => {
       vis.array.set(a, 'msort_arr_bup');
-      //if (cur_length === 1) {
-      vis.array.setLargestValue(maxValue);
-      vis.array.setStack([]); // used for a custom stack visualisation
+      if (cur_length === 1) {
+        vis.array.setLargestValue(maxValue);
+        vis.array.setStack([]); // used for a custom stack visualisation
+      }
       if (isMergeCopyExpanded()) {
         vis.arrayB.set(b, 'msort_arr_bup');
         vis.arrayB.setLargestValue(maxValue);
       }
-      //}
-      /*for (let i = 0; i < size; i++) {
-        highlight(vis, i, true)
-      }*/
-    }, [A, B]);
 
-    while (runlength < size) {
+      //set_simple_stack(vis.array, c_stk);
+
+    }, [A, B, size, real_stack, finished_stack_frames, simple_stack]);
+
+
+    while (runlength < size + 1) {
       let left = 0;
 
       /*chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length,
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
         vis.array.set(a, 'msort_arr_bup');
-        if (cur_length === 1) {
-          vis.array.setLargestValue(maxValue);
-          vis.array.setStack([]); // used for a custom stack visualisation
-          if (isMergeCopyExpanded()) {
-            vis.arrayB.set(b, 'msort_arr_bup');
-            vis.arrayB.setLargestValue(maxValue);
-          }
+        //if (cur_length === 1) {
+        vis.array.setLargestValue(maxValue);
+        vis.array.setStack([]); // used for a custom stack visualisation
+        if (isMergeCopyExpanded()) {
+          vis.arrayB.set(b, 'msort_arr_bup');
+          vis.arrayB.setLargestValue(maxValue);
         }
+        //}
         //assignVarToA(vis, 'left', cur_left);
         //assignVarToA(vis, 'right', cur_right);
         for (let i = cur_left; i <= cur_right; i++) {
@@ -395,15 +400,15 @@ export function run_msort() {
         // XXX give up on QS-like stack for now
         // refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_left, cur_right, 2, cur_depth);
         //set_simple_stack(vis.array, c_stk);
-      }, [A, B, left, left + runlength, real_stack, finished_stack_frames,
-        simple_stack]);*/
+      }, [A, B]);*/
 
       chunker.add('runlength', (vis, a, cur_left, cur_right, cur_length,
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
+        // show runlength
         //assignVarToA(vis, 'left', cur_left);
       }, [A, left, length]);
 
-      while ((left + runlength) < size) {
+      while ((left + runlength) < size + 1) {
 
         let mid = left + runlength - 1;
         let right = Math.min(mid + runlength, size);
@@ -450,7 +455,7 @@ export function run_msort() {
           //set_simple_stack(vis.array, undefined);
 
           for (let i = cur_mid + 1; i <= cur_right; i++) {
-            unhighlight(vis, i, false)
+            unhighlight(vis, i, false);
           }
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
@@ -478,7 +483,7 @@ export function run_msort() {
         }, [A, left, mid, right]);
         chunker.add('bp', (vis, a, cur_left, cur_mid, cur_right) => {
           if (isMergeExpanded()) {
-            assignVarToB(vis, 'bp', left);
+            assignVarToB(vis, 'bp', cur_left);
           }
         }, [A, left, mid, right]);
 
@@ -641,7 +646,11 @@ export function run_msort() {
         // chunk after recursive call, as above, after adjusting
         // stack frames/depth etc
       }
+
       runlength = 2 * runlength;
+      chunker.add('runlength2', (vis, a, b, cur_left, cur_right, cur_length, cur_real_stack, cur_finished_stack_frames, c_stk) => {
+
+      }, [A, B, left, length, real_stack, finished_stack_frames, simple_stack]);
     }
     // dummy chunk for before recursive call - we need this so there
     // is a chunk at this recursion level as the first chunk in the
