@@ -57,32 +57,15 @@ export default {
             let D = tree[A].right;
             let P = tree[root].par;
 
+            console.log("the height of R is " + tree[R].height);
+            console.log("the height of A is " + tree[A].height);
+
             let G = null;
-            if(tree[root].par !== null){
+            if (tree[root].par !== null) {
                 G = globalRoot
-            }else{
+            } else {
                 G = A;
             }
-
-            console.log("delete edge between " + R + " and " + A);
-            console.log("add edge between " + A + " and " + R);
-            chunker.add('p <- Empty',
-                (vis, r, a, d, p, g) => {
-                    if (p !== null) {
-                        vis.graph.removeEdge(p, r);
-                        vis.graph.addEdge(p, a);
-                    }
-
-                    if (d !== null) {
-                        vis.graph.removeEdge(a, d);
-                        vis.graph.addEdge(r, d);
-                    }
-                    vis.graph.removeEdge(r, a);
-                    vis.graph.addEdge(a, r);
-                    vis.graph.layoutBST(g, true);
-                },
-                [R, A, D, P, G]
-            );
 
             const tmpnode = tree[root].left;
             tree[root].left = tree[tmpnode].right;
@@ -99,8 +82,37 @@ export default {
                     tree[tree[tmpnode].par].right = tmpnode;
                 }
             }
+
             updateHeight(root);
             updateHeight(tmpnode);
+
+            // console.log("delete edge between " + R + " and " + A);
+            // console.log("add edge between " + A + " and " + R);
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p, g) => {
+                    if (p !== null) {
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                        vis.graph.updateHeight(p, tree[p].height);
+                    }
+
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                        vis.graph.updateHeight(d, tree[d].height);
+                    }
+                    vis.graph.removeEdge(r, a);
+                    vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(g, true);
+
+                    vis.graph.updateHeight(a, tree[a].height);
+                    vis.graph.updateHeight(r, tree[r].height);
+                    vis.graph.updateHeight(g, tree[g].height);
+                },
+                [R, A, D, P, G]
+            );
+
+
             return tmpnode;
         }
 
@@ -114,9 +126,9 @@ export default {
             let D = tree[A].left;
             let P = tree[root].par;
             let G = null;
-            if(tree[root].par !== null){
+            if (tree[root].par !== null) {
                 G = globalRoot
-            }else{
+            } else {
                 G = A;
             }
             chunker.add('p <- Empty',
@@ -214,6 +226,7 @@ export default {
                 }
             }
             tree[key] = newNode;
+            console.log("test for get root height ", newNode.height);
 
             chunker.add('until c is Empty (and p is a leaf node)');
 
@@ -235,7 +248,8 @@ export default {
                         // vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
                         // }
 
-                        vis.graph.addNode(e);
+                        // vis.graph.addNode(e);
+                        vis.graph.addNode(e, e, newNode.height);
                         vis.graph.addEdge(p, e);
                         // vis.graph.select(e, p);
                     },
@@ -252,7 +266,8 @@ export default {
                         vis.array.deselect(index - 1);
                         vis.array.select(index);
 
-                        vis.graph.addNode(e);
+                        // vis.graph.addNode(e);
+                        vis.graph.addNode(e, e, newNode.height);
                         vis.graph.addEdge(p, e);
                         // vis.graph.select(e, p);
                     },
@@ -339,7 +354,9 @@ export default {
         chunker.add(
             't <- a new node containing k and height 1',
             (vis, r) => {
-                vis.graph.addNode(r);
+                // vis.graph.addNode(r);
+                vis.graph.isWeighted = true;
+                vis.graph.addNode(r, r, 1);
                 vis.graph.layoutBST(r, true);
                 vis.graph.select(r, null);
             },
