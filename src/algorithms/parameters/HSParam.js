@@ -2,9 +2,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import ListParam from './helpers/ListParam.js';
-import PropTypes from 'prop-types'; // Import PropTypes
-import { withAlgorithmParams } from './helpers/urlHelpers'
-function HeapsortParam({ alg, mode, list }) {
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+function HeapsortParam({ alg, mode, list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
     // const { alg, mode, param } = useUrlParams();
     // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
     // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
@@ -31,14 +31,14 @@ function HeapsortParam({ alg, mode, list }) {
     );
 }
 
-// Define the prop types
+// Define the prop types for URL Params
 HeapsortParam.propTypes = {
     alg: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     list: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(HeapsortParam);
+export default withAlgorithmParams(HeapsortParam); // Export with the wrapper for URL Params
 
 
 // function HeapsortParam() {
