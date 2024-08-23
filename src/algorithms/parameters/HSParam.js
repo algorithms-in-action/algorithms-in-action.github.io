@@ -2,18 +2,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import ListParam from './helpers/ListParam.js';
-import { parseParam , useUrlParams } from './helpers/urlHelpers'; // Assume these functions are exported from a helper file
-import algorithms from '../../algorithms';
-function HeapsortParam() {
-    const { alg, mode, param } = useUrlParams();
-    const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
+import PropTypes from 'prop-types'; // Import PropTypes
+import { withAlgorithmParams } from './helpers/urlHelpers'
+function HeapsortParam({ alg, mode, list }) {
+    // const { alg, mode, param } = useUrlParams();
+    // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
+    // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
     const [nodes, setNodes] = useState(list);
     const [message, setMessage] = useState(null);
-
-    console.log("Component State:", { alg, mode, nodes });  // Final check before rendering
-    if (!alg || !mode || !(alg in algorithms && mode in algorithms[alg].pseudocode)) {
-        return <div>Invalid algorithm or mode specified</div>;
-    }
 
     return (
         <>
@@ -35,7 +31,14 @@ function HeapsortParam() {
     );
 }
 
-export default HeapsortParam;
+// Define the prop types
+HeapsortParam.propTypes = {
+    alg: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    list: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(HeapsortParam);
 
 
 // function HeapsortParam() {

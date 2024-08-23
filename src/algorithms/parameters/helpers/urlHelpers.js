@@ -1,12 +1,13 @@
 import DEFAULT_NODES from '../../../algorithms/parameters/HSParam.js';
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import algorithms from '../../../algorithms';
 
 const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
 const DEFAULT_PARAM = 'list=1,5,3,4,5&value=2&xyCoords=3-4,7-1&edgeWeights=1-2-3,1-1-1&start=1&end=2&string=abcde&pattern=abc&union=1-2,3-4';
 
 
-// all the parameter types:
+// all the parameter types and their examples:
 // list: 1,2,3,4
 // value: 2
 // xy-coords: 3-4,x-y  // node 1 has coord (3,4)
@@ -64,7 +65,7 @@ export function parseParam(paramString) {
         xyCoords: extractValue(paramString, 'coords'),
         edgeWeights: extractValue(paramString, 'edges'),
         start: extractValue(paramString, 'start'),
-        end: extractList(paramString, 'end'),
+        end: extractValue(paramString, 'end'),
         string: extractValue(paramString, 'string'),
         pattern: extractValue(paramString, 'pattern'),
         union: extractValue(paramString, 'union')
@@ -74,11 +75,11 @@ export function parseParam(paramString) {
     return params;
 }
 
-function extractList(paramString, key) {
-    const regex = new RegExp(`${key}=([^&]*)`);
-    const match = paramString.match(regex);
-    return match ? match[1].split(',').map(Number) : [];
-}
+// function extractList(paramString, key) {
+//     const regex = new RegExp(`${key}=([^&]*)`);
+//     const match = paramString.match(regex);
+//     return match ? match[1].split(',').map(Number) : [];
+// }
 
 function extractValue(paramString, key) {
     const regex = new RegExp(`${key}=([^&]*)`);
@@ -86,6 +87,27 @@ function extractValue(paramString, key) {
     return match ? match[1] : null;
 }
 
+export const withAlgorithmParams = (WrappedComponent) => {
+    const WithAlgorithmParams = (props) => {
+        const { alg, mode, param } = useUrlParams();
+        const parsedParams = parseParam(param);
+
+        if (!alg || !mode || !(alg in algorithms && mode in algorithms[alg].pseudocode)) {
+            return <div>Invalid algorithm or mode specified</div>;
+        }
+
+        return <WrappedComponent alg={alg} mode={mode} {...parsedParams} {...props} />;
+    };
+
+    // Set display name for easier debugging
+    WithAlgorithmParams.displayName = `WithAlgorithmParams(${getDisplayName(WrappedComponent)})`;
+    return WithAlgorithmParams;
+};
+
+// Helper function to get the display name of a component
+function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
 // export function parseNodes(initialNodes) {
 //     console.log("Input to parseNodes:", initialNodes);
 //     if (!initialNodes) return DEFAULT_NODES;
