@@ -21,6 +21,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   const [share, setShare] = useState(false);
   const closeShare = () => setShare(false);
   const [explanation, setExplanation] = useState('');
+  const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
     setFontSize(fontID, fontSize);
@@ -41,15 +42,25 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
     setExplanation(text);
   }, [algorithm.instructions]);
 
+  useEffect(() => {
+    if (share) {
+      setCurrentUrl(window.location.href);
+    }
+  }, [share]);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(currentUrl);
+  };
+
   return (
     <div className="midPanelContainer">
       <div className="midPanelHeader">
         <div>
           <ControlButton icon={<HelpIcon />} onClick={() => setOpen((o) => !o)} />
           <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-            <div className="textArea">
+            <div className="helpArea">
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-              <a className="close" onClick={closeModal}>
+              <a className="closeHelp" onClick={closeModal}>
                 &times;
               </a>
               {/* eslint-disable-next-line max-len */}
@@ -62,10 +73,15 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           <ControlButton icon={< ShareIcon />} onClick={() => setShare((o) => !o)} />
           <Popup open={share} closeOnDocumentClick onClose={closeShare}>
             <div className="shareArea">
-              <a className="close" onClick={closeShare}>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+              <a className="closeShare" onClick={closeShare}>
                 &times;
               </a>
-              {/* add text for pop-up under here */}
+              {/* eslint-disable-next-line max-len */}
+              <ReactMarkDown source={currentUrl} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+              <button onClick={copyToClipboard} style={{ padding: '5px 10px', cursor: 'pointer' }}>
+                Copy URL to Clipboard
+              </button>
             </div>
           </Popup>
         </div>
