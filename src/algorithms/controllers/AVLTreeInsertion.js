@@ -72,15 +72,15 @@ export default {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
                     }
-                    if(rotate) vis.graph.select(a, p);
+                    if (rotate) vis.graph.visit(a, p);
 
                     if (d !== null) {
                         vis.graph.removeEdge(a, d);
                         vis.graph.addEdge(r, d);
                     }
-                    
+
                     vis.graph.removeEdge(r, a);
-                    if(rotate) vis.graph.resetSelect(r, null);
+                    if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
                     vis.graph.layoutBST(g, true);
                 },
@@ -128,7 +128,7 @@ export default {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
                     }
-                    if(rotate) vis.graph.select(a, p);
+                    if (rotate) vis.graph.visit(a, p);
 
                     if (d !== null) {
                         vis.graph.removeEdge(a, d);
@@ -136,7 +136,7 @@ export default {
                     }
 
                     vis.graph.removeEdge(r, a);
-                    if(rotate) vis.graph.resetSelect(r, null);
+                    if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
                     vis.graph.layoutBST(g, true);
                 },
@@ -195,7 +195,7 @@ export default {
                     chunker.add(
                         'c <- c.left if k < c.key',
                         (vis, r, p) => {
-                            vis.graph.select(r, p);
+                            vis.graph.visit(r, p);
                         },
                         [currentNode, tree[currentNode].par],
                     );
@@ -207,7 +207,7 @@ export default {
                     chunker.add(
                         'c <- c.right if k > c.key',
                         (vis, r, p) => {
-                            vis.graph.select(r, p);
+                            vis.graph.visit(r, p);
                         },
                         [currentNode, tree[currentNode].par],
                     );
@@ -271,7 +271,7 @@ export default {
             tree[key].par = parentNode;
             chunker.add('c <- p back up',
                 (vis, e, p) => {
-                    vis.graph.resetSelect(e, p);
+                    vis.graph.resetVisitAndSelect(e, p);
                 },
                 [key, tree[key].par],
             );
@@ -322,7 +322,7 @@ export default {
 
                 chunker.add('c <- Parent of c',
                     (vis, e, p) => {
-                        vis.graph.resetSelect(e, p);
+                        vis.graph.resetVisitAndSelect(e, p);
                     },
                     [parentNode, tree[parentNode].par]
                 );
@@ -358,7 +358,7 @@ export default {
             (vis, r) => {
                 vis.graph.addNode(r);
                 vis.graph.layoutBST(r, true);
-                vis.graph.select(r, null);
+                vis.graph.visit(r, null);
             },
             [root],
         );
@@ -366,7 +366,7 @@ export default {
         chunker.add(
             't <- a new node containing k and height 1',
             (vis, r) => {
-                vis.graph.resetSelect(r, null);
+                vis.graph.resetVisitAndSelect(r, null);
             },
             [root],
         );
