@@ -199,6 +199,7 @@ export function run_msort() {
     let size = nodes.length - 1; // size of array
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack = []; // [ [left, right,  depth], ...]
+    const length_stack = []; // [ [left, right, length], ...]
     let pivot;
 
     // ----------------------------------------------------------------------------------------------------------------------------
@@ -322,7 +323,7 @@ export function run_msort() {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) {
+    function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk, length) {
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_arr_bup');
         assignVarToA(vis, 'ap1', cur_ap1);
@@ -343,6 +344,8 @@ export function run_msort() {
       }
     }
 
+
+
     // calls vis.array.setList(c_stk) to display simple stack but only
     // if recursion is expanded (otherwise stack is never displayed)
     // XXX is this confusing if we run the algorithm a bit with
@@ -352,17 +355,19 @@ export function run_msort() {
     // no recursive calls in this version
     //function MergeSort(left, right, depth, size) {
 
-    const set_simple_stack = (vis_array, c_stk) => {
-      if (isRecursionExpanded())
-        vis_array.setList(c_stk);
+    const set_simple_stack = (vis_array, cur_length) => {
+      //if (isRecursionExpanded())
+      vis_array.setList(cur_length);
     }
     //// start mergesort -------------------------------------------------------- 
     // XXXXX
-
+    //real_stack.push([left, right, depth]);
+    length_stack.push([length]);
+    simple_stack.unshift('(' + (runlength) + ')');
     // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
 
     chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length,
-      cur_real_stack, cur_finished_stack_frames, c_stk) => {
+      cur_real_stack, cur_finished_stack_frames, cur_length_stack, c_stk) => {
       vis.array.set(a, 'msort_arr_bup');
       if (cur_length === 1) {
         vis.array.setLargestValue(maxValue);
@@ -372,13 +377,17 @@ export function run_msort() {
         vis.arrayB.set(b, 'msort_arr_bup');
         vis.arrayB.setLargestValue(maxValue);
       }
+      set_simple_stack(vis.array, c_stk);
+      vis.array.setList(c_stk);
 
-      //set_simple_stack(vis.array, c_stk);
 
-    }, [A, B, size, real_stack, finished_stack_frames, simple_stack]);
-
+    }, [A, B, size, real_stack, finished_stack_frames, length_stack, simple_stack], length);
+    //let pre_left = 0;
+    //let pre_right = 0;
+    //let left = 0;
 
     while (runlength < size + 1) {
+      //let pre_left = left;
       let left = 0;
 
       /*chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length,
@@ -402,11 +411,14 @@ export function run_msort() {
         //set_simple_stack(vis.array, c_stk);
       }, [A, B]);*/
 
-      chunker.add('runlength', (vis, a, cur_left, cur_right, cur_length,
+      chunker.add('runlength', (vis, a, b, cur_left, cur_right, cur_length,
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
+        //set_simple_stack(vis.array, cur_length);
         // show runlength
         //assignVarToA(vis, 'left', cur_left);
-      }, [A, left, length]);
+
+
+      }, [A, B, left, length, simple_stack]);
 
       while ((left + runlength) < size + 1) {
 
@@ -416,12 +428,15 @@ export function run_msort() {
         chunker.add('MainWhile', (vis, a, b, cur_left, cur_right, cur_length,
           cur_real_stack, cur_finished_stack_frames, c_stk) => {
 
+
           //vis.array.set(a, 'msort_arr_bup');
         }, [A, B, left, mid, right, length]);
 
         chunker.add('left', (vis, a, cur_left, cur_mid, cur_right) => {
           assignVarToA(vis, 'left', cur_left);
-          highlight(vis, cur_left, true);
+          for (let i = cur_left; i <= cur_mid; i++) {
+            highlight(vis, i, true);
+          }
         }, [A, left, mid, right]);
 
         chunker.add('MergeAllWhile', (vis, a, cur_left, cur_right, cur_length,
@@ -438,7 +453,10 @@ export function run_msort() {
 
         chunker.add('right', (vis, a, cur_left, cur_mid, cur_right) => {
           assignVarToA(vis, 'right', cur_right);
-          highlight(vis, cur_right, true);
+          //highlight(vis, cur_right, true);
+          for (let i = cur_mid + 1; i <= cur_right; i++) {
+            highlight(vis, i, false);
+          }
         }, [A, left, mid, right]);
 
         let ap1 = left;
@@ -454,13 +472,13 @@ export function run_msort() {
           // vis.array.set(a, 'msort_arr_bup');
           //set_simple_stack(vis.array, undefined);
 
-          for (let i = cur_mid + 1; i <= cur_right; i++) {
+          /*for (let i = cur_mid + 1; i <= cur_right; i++) {
             unhighlight(vis, i, false);
-          }
+          }*/
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
             assignVarToA(vis, 'ap1', cur_left);
-            highlight(vis, cur_left, true);
+            //highlight(vis, cur_left, true);
           }
         }, [A, left, mid, right]);
         chunker.add('max1', (vis, a, cur_left, cur_mid, cur_right) => {
@@ -472,7 +490,7 @@ export function run_msort() {
         chunker.add('ap2', (vis, a, cur_left, cur_mid, cur_right) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap2', cur_mid + 1);
-            highlight(vis, cur_mid + 1, true);
+            //123highlight(vis, cur_mid + 1, true);
           }
         }, [A, left, mid, right]);
         chunker.add('max2', (vis, a, cur_left, cur_mid, cur_right) => {
@@ -492,8 +510,8 @@ export function run_msort() {
         while (true) {
           chunker.add('MergeWhile', (vis, a, b, cur_ap1, cur_ap2,
             cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-            renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
-              cur_max2, cur_stk, cur_left);
+            /*renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+              cur_max2, cur_stk, cur_left);*/
           }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
 
           if (!(ap1 <= max1 && ap2 <= max2)) break;
@@ -512,7 +530,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                //123highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             ap1 = ap1 + 1;
@@ -521,7 +539,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                //123highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             bp = bp + 1;
@@ -538,7 +556,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                //123highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             ap2 = ap2 + 1;
@@ -547,7 +565,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                //123highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             bp = bp + 1;
@@ -578,7 +596,7 @@ export function run_msort() {
             assignVarToA(vis, 'max2', cur_max2);
             vis.arrayB.set(b, 'msort_arr_bup');
             for (let i = cur_left; i <= cur_bp - 1; i++) {
-              highlightB(vis, i, false);
+              highlightB(vis, i, true);
             }
             if (cur_bp < a.length) {
               assignVarToB(vis, 'bp', cur_bp);
@@ -605,7 +623,7 @@ export function run_msort() {
           }
           if (isMergeExpanded()) {
             if (cur_ap2 < a.length) {
-              unhighlight(vis, cur_ap2, true);
+              //123unhighlight(vis, cur_ap2, true);
               assignVarToA(vis, 'ap2', undefined);
             }
             assignVarToA(vis, 'max2', undefined);
@@ -628,7 +646,7 @@ export function run_msort() {
           vis.array.set(a, 'msort_arr_bup');
           //set_simple_stack(vis.array, c_stk);
           for (let i = cur_left; i <= cur_right; i++) {
-            highlight(vis, i, false);
+            highlight(vis, i, true);
           }
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap1', undefined);
@@ -642,10 +660,25 @@ export function run_msort() {
           // highlight(vis, i, true)
           // }
         }, [A, B, left, mid, right, simple_stack]);
+
+        let pre_left = left;
+        let pre_right = right;
+
         left = right + 1;
+
+        chunker.add('left2', (vis, a, cur_left, cur_right, cur_length) => {
+          for (let i = pre_left; i <= pre_right; i++) {
+            unhighlight(vis, i, true);
+          }
+          if (left + length <= size) {
+            assignVarToA(vis, 'left', cur_left);
+          }
+        }, [A, left, length]);
+
         // chunk after recursive call, as above, after adjusting
         // stack frames/depth etc
       }
+
 
       runlength = 2 * runlength;
       chunker.add('runlength2', (vis, a, b, cur_left, cur_right, cur_length, cur_real_stack, cur_finished_stack_frames, c_stk) => {
