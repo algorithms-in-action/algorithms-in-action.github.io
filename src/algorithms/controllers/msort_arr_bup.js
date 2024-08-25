@@ -382,41 +382,13 @@ export function run_msort() {
 
 
     }, [A, B, size, real_stack, finished_stack_frames, length_stack, simple_stack], length);
-    //let pre_left = 0;
-    //let pre_right = 0;
-    //let left = 0;
 
     while (runlength < size + 1) {
-      //let pre_left = left;
       let left = 0;
-
-      /*chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_length,
-        cur_real_stack, cur_finished_stack_frames, c_stk) => {
-        vis.array.set(a, 'msort_arr_bup');
-        //if (cur_length === 1) {
-        vis.array.setLargestValue(maxValue);
-        vis.array.setStack([]); // used for a custom stack visualisation
-        if (isMergeCopyExpanded()) {
-          vis.arrayB.set(b, 'msort_arr_bup');
-          vis.arrayB.setLargestValue(maxValue);
-        }
-        //}
-        //assignVarToA(vis, 'left', cur_left);
-        //assignVarToA(vis, 'right', cur_right);
-        for (let i = cur_left; i <= cur_right; i++) {
-          highlight(vis, i, true)
-        }
-        // XXX give up on QS-like stack for now
-        // refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_left, cur_right, 2, cur_depth);
-        //set_simple_stack(vis.array, c_stk);
-      }, [A, B]);*/
 
       chunker.add('runlength', (vis, a, b, cur_left, cur_right, cur_length,
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
         //set_simple_stack(vis.array, cur_length);
-        // show runlength
-        //assignVarToA(vis, 'left', cur_left);
-
 
       }, [A, B, left, length, simple_stack]);
 
@@ -427,7 +399,6 @@ export function run_msort() {
 
         chunker.add('MainWhile', (vis, a, b, cur_left, cur_right, cur_length,
           cur_real_stack, cur_finished_stack_frames, c_stk) => {
-
 
           //vis.array.set(a, 'msort_arr_bup');
         }, [A, B, left, mid, right, length]);
@@ -445,9 +416,6 @@ export function run_msort() {
         }, [A, B, left, mid, right, length]);
 
         chunker.add('mid', (vis, a, cur_left, cur_mid, cur_right) => {
-          /*for (let i = cur_mid + 1; i <= cur_right; i++) {
-            unhighlight(vis, i, true)
-          }*/
           assignVarToA(vis, 'mid', cur_mid);
         }, [A, left, mid, right]);
 
@@ -472,9 +440,6 @@ export function run_msort() {
           // vis.array.set(a, 'msort_arr_bup');
           //set_simple_stack(vis.array, undefined);
 
-          /*for (let i = cur_mid + 1; i <= cur_right; i++) {
-            unhighlight(vis, i, false);
-          }*/
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
             assignVarToA(vis, 'ap1', cur_left);
