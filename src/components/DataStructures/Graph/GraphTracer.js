@@ -297,10 +297,8 @@ class GraphTracer extends Tracer {
     Object.assign(node, update);
   }
 
-  updateHeight(treeCount) {
-    for (let [id, height] of treeCount) {
-      this.findNode(id).height = height;
-    }
+  updateHeight(id, height) {
+    this.findNode(id).height = height;
   }
 
   removeNode(id) {
@@ -656,7 +654,7 @@ class GraphTracer extends Tracer {
     }
   }
 
-  resetVisitAndSelect(target, source){
+  resetVisitAndSelect(target, source) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
     if (edge) {
