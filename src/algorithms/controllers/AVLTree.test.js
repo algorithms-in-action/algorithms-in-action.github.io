@@ -1,177 +1,133 @@
-/* eslint-disable no-undef */
-import TTFTreeInsertion from './TTFTreeInsertion';
-import TTFTreeSearch from './TTFTreeSearch';
-import VariableTreeNode from '../../components/DataStructures/Graph/NAryTreeTracer/NAryTreeVariable';
+/* The purpose of the test here is to detect whether the correct result is generated
+   under the legal input, not to test its robustness, because this is not considered
+   in the implementation process of the algorithm.
+*/
 
-// simple stub for the chunker
+/* eslint-disable no-undef */
+
+import AVLTreeInsertion from './AVLTreeInsertion';
+
+// Simple stub for the chunker
 const chunker = {
   add: () => { },
 };
 
-describe('2-3-4 Tree', () => {
-  describe('findChild', () => {
-    it('should return null when child is null', () => {
-      const child = null;
-      const value = 5;
-      const result = TTFTreeSearch.findChild(chunker, child, value);
-      expect(result).toBeNull();
-    });
-    it('should return first child for simple example', () => {
-      const child = new VariableTreeNode(0);
-      const child1ofChild = new VariableTreeNode(1);
-      const child2ofChild = new VariableTreeNode(2);
-      child.addRelatedNodeID(3);
-      child1ofChild.addRelatedNodeID(2);
-      child2ofChild.addRelatedNodeID(4);
-      const value = 1;
-      child.addChild(child1ofChild);
-      child.addChild(child2ofChild);
-      const result = TTFTreeSearch.findChild(chunker, child, value);
-      expect(result.id).toStrictEqual(1);
-    });
-    it('should return third child in more complex example', () => {
-      const child = new VariableTreeNode(0);
-      const child1ofChild = new VariableTreeNode(1);
-      const child2ofChild = new VariableTreeNode(2);
-      const child3ofChild = new VariableTreeNode(3);
-
-      child.addRelatedNodeID(55);
-      child.addRelatedNodeID(65);
-
-      child1ofChild.addRelatedNodeID(35);
-      child1ofChild.addRelatedNodeID(45);
-      child1ofChild.addRelatedNodeID(24);
-
-      child2ofChild.addRelatedNodeID(57);
-      child2ofChild.addRelatedNodeID(60);
-      child2ofChild.addRelatedNodeID(63);
-
-      child3ofChild.addRelatedNodeID(72);
-      child3ofChild.addRelatedNodeID(82);
-      child3ofChild.addRelatedNodeID(87);
-
-      const value = 84;
-      child.addChild(child1ofChild);
-      child.addChild(child2ofChild);
-      child.addChild(child3ofChild);
-      const result = TTFTreeSearch.findChild(chunker, child, value);
-      expect(result.id).toStrictEqual(3);
-    });
+describe('AVLTreeInsertion', () => {
+  // Simple rotation: only envolves one rotate
+  it('[Simple] No rotation', () => {
+    const E = [10, 5, 15];
+    const result = {
+      10: { "height": 2, "left": 5, "right": 15, "par": null },
+      5: { "height": 1, "left": null, "par": 10, "right": null },
+      15: { "height": 1, "left": null, "par": 10, "right": null }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
-  describe('formParentThreeNode', () => {
-    it('should return -1 as child doesnt exist in parent', () => {
-      const child = new VariableTreeNode(1);
-      const parent = new VariableTreeNode(2);
-      parent.addRelatedNodeID(6);
-      parent.addRelatedNodeID(10);
-      child.addRelatedNodeID(2);
-      child.addRelatedNodeID(3);
-      child.addRelatedNodeID(4);
-
-      const result = TTFTreeInsertion.formParentThreeNode(
-        parent,
-        child,
-        null,
-        null
-      );
-      expect(result).toStrictEqual(-1);
-    });
-    it('should return 2 as child is second child in parent', () => {
-      const child = new VariableTreeNode(1);
-      const child1 = new VariableTreeNode(3);
-      const child2 = new VariableTreeNode(4);
-      const parent = new VariableTreeNode(2);
-
-      parent.addRelatedNodeID(6);
-      parent.addRelatedNodeID(10);
-      child.addRelatedNodeID(2);
-      child.addRelatedNodeID(3);
-      child.addRelatedNodeID(4);
-      child1.addRelatedNodeID(8);
-      child2.addRelatedNodeID(12);
-      parent.addChild(child);
-      parent.addChild(child1);
-      parent.addChild(child2);
-      const result = TTFTreeInsertion.formParentThreeNode(
-        parent,
-        child1,
-        null,
-        null
-      );
-      expect(result).toStrictEqual(1);
-    });
+  it('[Simple] Single left rotate', () => {
+    const E = [1, 2, 3];
+    const result = {
+      1: { "height": 1, "left": null, "right": null, "par": 2 },
+      2: { "height": 2, "left": 1, "right": 3, "par": null },
+      3: { "height": 1, "left": null, "right": null, "par": 2 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
-  describe('formParentFourNode', () => {
-    it('should return -1 as child doesnt exist in parent', () => {
-      const child = new VariableTreeNode(1);
-      const parent = new VariableTreeNode(2);
-      parent.addRelatedNodeID(6);
-      parent.addRelatedNodeID(10);
-      child.addRelatedNodeID(2);
-      child.addRelatedNodeID(3);
-      child.addRelatedNodeID(4);
-
-      const result = TTFTreeInsertion.formParentFourNode(
-        parent,
-        child,
-        null,
-        null
-      );
-      expect(result).toStrictEqual(-1);
-    });
-    it('should return 1 as child is second child in parent', () => {
-      const child = new VariableTreeNode(1);
-      const child1 = new VariableTreeNode(3);
-      const child2 = new VariableTreeNode(4);
-      const parent = new VariableTreeNode(2);
-
-      parent.addRelatedNodeID(6);
-      parent.addRelatedNodeID(10);
-      child.addRelatedNodeID(2);
-      child.addRelatedNodeID(3);
-      child.addRelatedNodeID(4);
-      child1.addRelatedNodeID(8);
-      child2.addRelatedNodeID(12);
-      parent.addChild(child);
-      parent.addChild(child1);
-      parent.addChild(child2);
-      const result = TTFTreeInsertion.formParentFourNode(
-        parent,
-        child1,
-        null,
-        null
-      );
-      expect(result).toStrictEqual(1);
-    });
-
-    it('should return 3 as child is fourth child in parent', () => {
-      const child = new VariableTreeNode(1);
-      const child1 = new VariableTreeNode(3);
-      const child2 = new VariableTreeNode(4);
-      const child3 = new VariableTreeNode(5);
-      const parent = new VariableTreeNode(2);
-
-      parent.addRelatedNodeID(6);
-      parent.addRelatedNodeID(10);
-      parent.addRelatedNodeID(15);
-      child.addRelatedNodeID(2);
-      child.addRelatedNodeID(3);
-      child.addRelatedNodeID(4);
-      child1.addRelatedNodeID(8);
-      child2.addRelatedNodeID(9);
-      child3.addRelatedNodeID(11);
-      child3.addRelatedNodeID(12);
-      parent.addChild(child);
-      parent.addChild(child1);
-      parent.addChild(child2);
-      parent.addChild(child3);
-      const result = TTFTreeInsertion.formParentFourNode(
-        parent,
-        child3,
-        null,
-        null
-      );
-      expect(result).toStrictEqual(3);
-    });
+  it('[Simple] Single right rotate', () => {
+    const E = [3, 2, 1];
+    const result = {
+      1: { "height": 1, "left": null, "right": null, "par": 2 },
+      2: { "height": 2, "left": 1, "right": 3, "par": null },
+      3: { "height": 1, "left": null, "right": null, "par": 2 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Simple] Single LR rotate', () => {
+    const E = [3, 1, 2];
+    const result = {
+      1: { "height": 1, "left": null, "right": null, "par": 2 },
+      2: { "height": 2, "left": 1, "right": 3, "par": null },
+      3: { "height": 1, "left": null, "right": null, "par": 2 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Simple] Single RL rotate', () => {
+    const E = [1, 3, 2];
+    const result = {
+      1: { "height": 1, "left": null, "right": null, "par": 2 },
+      2: { "height": 2, "left": 1, "right": 3, "par": null },
+      3: { "height": 1, "left": null, "right": null, "par": 2 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Complex] Complex rotates 1', () => {
+    const E = [40, 20, 60, 10, 30, 50, 70, 25, 5, 35, 15, 55, 65];
+    const result = {
+      40: { "height": 4, "left": 20, "right": 60, "par": null },
+      20: { "height": 3, "left": 10, "right": 30, "par": 40 },
+      60: { "height": 3, "left": 50, "right": 70, "par": 40 },
+      10: { "height": 2, "left": 5, "right": 15, "par": 20 },
+      30: { "height": 2, "left": 25, "right": 35, "par": 20 },
+      50: { "height": 2, "left": null, "right": 55, "par": 60 },
+      70: { "height": 2, "left": 65, "right": null, "par": 60 },
+      5: { "height": 1, "left": null, "right": null, "par": 10 },
+      15: { "height": 1, "left": null, "right": null, "par": 10 },
+      25: { "height": 1, "left": null, "right": null, "par": 30 },
+      35: { "height": 1, "left": null, "right": null, "par": 30 },
+      55: { "height": 1, "left": null, "right": null, "par": 50 },
+      65: { "height": 1, "left": null, "right": null, "par": 70 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Complex] Complex rotates 2', () => {
+    const E = [50, 30, 70, 20, 40, 60, 80, 35, 10, 45, 25, 65, 75, 58];
+    const result = {
+      50: { "height": 4, "left": 30, "right": 70, "par": null },
+      30: { "height": 3, "left": 20, "right": 40, "par": 50 },
+      70: { "height": 3, "left": 60, "right": 80, "par": 50 },
+      20: { "height": 2, "left": 10, "right": 25, "par": 30 },
+      40: { "height": 2, "left": 35, "right": 45, "par": 30 },
+      60: { "height": 2, "left": 58, "right": 65, "par": 70 },
+      80: { "height": 2, "left": 75, "right": null, "par": 70 },
+      10: { "height": 1, "left": null, "right": null, "par": 20 },
+      25: { "height": 1, "left": null, "right": null, "par": 20 },
+      35: { "height": 1, "left": null, "right": null, "par": 40 },
+      45: { "height": 1, "left": null, "right": null, "par": 40 },
+      58: { "height": 1, "left": null, "right": null, "par": 60 },
+      65: { "height": 1, "left": null, "right": null, "par": 60 },
+      75: { "height": 1, "left": null, "right": null, "par": 80 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Complex] Complex rotates 3', () => {
+    const E = [135, 54, 121, 29, 71, 12, 199, 64, 102, 36, 85, 144, 168, 211, 175, 307, 2, 73, 56, 27];
+    const result = {
+      71: { "height": 5, "left": 29, "right": 168, "par": null },
+      54: { "height": 3, "left": 36, "right": 64, "par": 29 },
+      168: { "height": 4, "left": 121, "right": 199, "par": 71 },
+      29: { "height": 4, "left": 12, "right": 54, "par": 71 },
+      121: { "height": 3, "left": 85, "right": 144, "par": 168 },
+      199: { "height": 3, "left": 175, "right": 211, "par": 168 },
+      12: { "height": 2, "left": 2, "right": 27, "par": 29 },
+      36: { "height": 1, "left": null, "right": null, "par": 54 },
+      64: { "height": 2, "left": 56, "right": null, "par": 54 },
+      85: { "height": 2, "left": 73, "right": 102, "par": 121 },
+      144: { "height": 2, "left": 135, "right": null, "par": 121 },
+      175: { "height": 1, "left": null, "right": null, "par": 199 },
+      211: { "height": 2, "left": null, "right": 307, "par": 199 },
+      2: { "height": 1, "left": null, "right": null, "par": 12 },
+      27: { "height": 1, "left": null, "right": null, "par": 12 },
+      56: { "height": 1, "left": null, "right": null, "par": 64 },
+      73: { "height": 1, "left": null, "right": null, "par": 85 },
+      102: { "height": 1, "left": null, "right": null, "par": 85 },
+      135: { "height": 1, "left": null, "right": null, "par": 144 },
+      307: { "height": 1, "left": null, "right": null, "par": 211 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Confusion] Test', () => {
+    const E = [];
+    const result = {
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
 });
