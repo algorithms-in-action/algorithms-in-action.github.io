@@ -168,7 +168,6 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
 // Define the prop types for URL Params
 QuicksortParam.propTypes = {
   alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
   list: PropTypes.string.isRequired
 };
 
