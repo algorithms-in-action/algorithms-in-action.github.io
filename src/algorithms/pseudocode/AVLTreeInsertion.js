@@ -27,6 +27,11 @@ export default parse(`
             \\Expl}
         \\In}
     \\In}
+
+    // Rotate the tree to balance it after insertion
+    LeftRotate \\Ref LeftRotate
+    RightRotate \\Ref RightRotate
+    UpdateHeight \\Ref UpdateHeight
 \\Code}
     
 \\Code{
@@ -124,115 +129,63 @@ export default parse(`
         \\In{
             if k < c.left.key  // Left Left Case \\B Left Left Case
                 \\In{
-                    1. Perform right rotation \\Ref Right_Rotate_1
+                    1. Perform right rotation \\B if k < c.left.key 1. Perform right rotation
                 \\In}
             else // Left Right Case \\B Left Right Case
                 \\In{
-                    1. Perform left rotation \\Ref Left_Rotate_1
-                    2. Perform right rotation \\Ref Right_Rotate_2
+                    1. Perform left rotation \\B if k > c.left.key 1. Perform left rotation
+                    2. Perform right rotation \\B if k > c.left.key 2. Perform right rotation
                 \\In}
         \\In}
     else if balance < -1 // Right-heavy case \\B else if balance < -1
         \\In{
             if k > c.right.key  // Right Right Case \\B Right Right Case
                 \\In{
-                    1. Perform left rotation \\Ref Left_Rotate_2
+                    1. Perform left rotation \\B if k > c.right.key 1. Perform left rotation
                 \\In}
             else // Right Left Case \\B Right Left Case
                 \\In{
-                    1. Perform right rotation \\Ref Right_Rotate_3
-                    2. Perform left rotation \\Ref Left_Rotate_3
+                    1. Perform right rotation \\B if k < c.right.key 1. Perform right rotation
+                    2. Perform left rotation \\B if k < c.right.key 2. Perform left rotation
                 \\In}
         \\In}
 \\Code}
 
 \\Code{
-    Left_Rotate_1
+    LeftRotate
     \\In{
-        y <- x.right \\B y <- x.right_1
-        T2 <- y.left \\B T2 <- y.left_1
-        y.left <- x \\B y.left_1 <- x_1
-        x.right <- T2 \\B x.right_1 <- T2_1
+        y <- x.right \\B y <- x.right
+        T2 <- y.left \\B T2 <- y.left
+        y.left <- x \\B y.left_1 <- x
+        x.right <- T2 \\B x.right_1 <- T2
         
         // Update heights
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_lx_1
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ly_1
-        return y // Return the new root \\B return y_l1
+        update x's height \\B UpdateHeight_lx
+        update y's height \\B UpdateHeight_ly
+        return y // Return the new root \\B return y_l
+    \\In}
+\\Code}
+
+
+\\Code{
+    RightRotate
+    \\In{
+        x <- y.left \\B x <- y.left
+        T2 <- x.right \\B T2 <- x.right
+        x.right <- y \\B x.right <- y
+        y.left <- T2 \\B y.left <- T2
+        
+        // Update heights
+        update y's height \\B UpdateHeight_ry
+        update x's height \\B UpdateHeight_rx
+        return y // Return the new root \\B return y_r
     \\In}
 \\Code}
 
 \\Code{
-    Left_Rotate_2
+    UpdateHeight
     \\In{
-        y <- x.right \\B y <- x.right_2
-        T2 <- y.left \\B T2 <- y.left_2
-        y.left <- x \\B y.left <- x_2
-        x.right <- T2 \\B x.right <- T2_2
-        
-        // Update heights
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_lx_2
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ly_2
-        return y // Return the new root \\B return y_l2
-    \\In}
-\\Code}
-
-\\Code{
-    Left_Rotate_3
-    \\In{
-        y <- x.right \\B y <- x.right_3
-        T2 <- y.left \\B T2 <- y.left_3
-        y.left <- x \\B y.left <- x_3
-        x.right <- T2 \\B x.right <- T2_3
-        
-        // Update heights
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_lx_3
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ly_3
-        return y // Return the new root \\B return y_l3
-    \\In}
-\\Code}
-
-\\Code{
-    Right_Rotate_1
-    \\In{
-        x <- y.left \\B x <- y.left_1
-        T2 <- x.right \\B T2 <- x.right_1
-        x.right <- y \\B x.right <- y_1
-        y.left <- T2 \\B y.left <- T2_1
-        
-        // Update heights
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ry_1
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_rx_1
-        return y // Return the new root \\B return y_r1
-    \\In}
-\\Code}
-
-\\Code{
-    Right_Rotate_2
-    \\In{
-        x <- y.left \\B x <- y.left_2
-        T2 <- x.right \\B T2 <- x.right_2
-        x.right <- y \\B x.right <- y_2
-        y.left <- T2 \\B y.left <- T2_2
-        
-        // Update heights
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ry_2
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_rx_2
-        return y // Return the new root \\B return y_r2
-    \\In}
-\\Code}
-
-\\Code{
-    Right_Rotate_3
-    \\In{
-        x <- y.left \\B x <- y.left_3
-        T2 <- x.right \\B T2 <- x.right_3
-        x.right <- y \\B x.right <- y_3
-        y.left <- T2 \\B y.left <- T2_3
-        
-        // Update heights
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ry_3
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_rx_3
-        return y // Return the new root \\B return y_r3
+        c.height <- max(Height(c.left), Height(c.right)) + 1 \\B c.height <- max(Height(c.left), Height(c.right)) + 1
     \\In}
 \\Code}
 

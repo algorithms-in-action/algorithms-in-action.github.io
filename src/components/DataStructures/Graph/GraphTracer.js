@@ -656,6 +656,19 @@ class GraphTracer extends Tracer {
     }
   }
 
+  resetVisitAndSelect(target, source){
+    const edge = this.findEdge(source, target);
+    const node = this.findNode(target);
+    if (edge) {
+      edge.visitedCount = 0;
+      edge.selectedCount = 0;
+    }
+    if (node) {
+      node.visitedCount = 0;
+      node.selectedCount = 0;
+    }
+  }
+
   select(target, source) {
     this.selectOrDeselect(true, target, source);
   }

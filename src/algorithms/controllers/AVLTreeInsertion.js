@@ -61,7 +61,7 @@ export default {
 
 
         // Left-Left Rotation (LLR) to balance the AVL tree
-        function LLR(root, globalRoot) {
+        function LLR(root, globalRoot, rotateVis = true) {
 
             console.log('LLR');
             console.log("the root of LLR is " + root);
@@ -80,6 +80,29 @@ export default {
             } else {
                 G = A;
             }
+
+            console.log("delete edge between " + R + " and " + A);
+            console.log("add edge between " + A + " and " + R);
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p, g, rotate) => {
+                    if (p !== null) {
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                    }
+                    if (rotate) vis.graph.visit(a, p);
+
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                    }
+
+                    vis.graph.removeEdge(r, a);
+                    if (rotate) vis.graph.resetVisitAndSelect(r, null);
+                    vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(g, true);
+                },
+                [R, A, D, P, G, rotateVis]
+            );
 
             const tmpnode = tree[root].left;
             tree[root].left = tree[tmpnode].right;
@@ -141,7 +164,7 @@ export default {
         }
 
         // Right-Right Rotation (RRR) to balance the AVL tree
-        function RRR(root, globalRoot) {
+        function RRR(root, globalRoot, rotateVis = true) {
             console.log('RRR');
             console.log("the root of RRR is " + root);
 
@@ -155,6 +178,26 @@ export default {
             } else {
                 G = A;
             }
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p, g, rotate) => {
+                    if (p !== null) {
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                    }
+                    if (rotate) vis.graph.visit(a, p);
+
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                    }
+
+                    vis.graph.removeEdge(r, a);
+                    if (rotate) vis.graph.resetVisitAndSelect(r, null);
+                    vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(g, true);
+                },
+                [R, A, D, P, G, rotateVis]
+            );
 
             const tmpnode = tree[root].right;
             tree[root].right = tree[tmpnode].left;
@@ -237,13 +280,13 @@ export default {
 
         // Left-Right Rotation (LRR) to balance the AVL tree
         function LRR(root, globalRoot) {
-            tree[root].left = RRR(tree[root].left, globalRoot);
+            tree[root].left = RRR(tree[root].left, globalRoot, false);
             return LLR(root, globalRoot);
         }
 
         // Right-Left Rotation (RLR) to balance the AVL tree
         function RLR(root, globalRoot) {
-            tree[root].right = LLR(tree[root].right, globalRoot);
+            tree[root].right = LLR(tree[root].right, globalRoot, false);
             return RRR(root, globalRoot);
         }
 
@@ -266,10 +309,10 @@ export default {
                     chunker.add('p <- c if k < c.key');
                     chunker.add(
                         'c <- c.left if k < c.key',
-                        (vis, r) => {
-                            vis.graph.select(r, null);
+                        (vis, r, p) => {
+                            vis.graph.visit(r, p);
                         },
-                        [currentNode],
+                        [currentNode, tree[currentNode].par],
                     );
                     // chunker.add('c <- c.left if k < c.key');
                     currentNode = tree[currentNode].left;
@@ -278,10 +321,10 @@ export default {
                     chunker.add('p <- c if k > c.key');
                     chunker.add(
                         'c <- c.right if k > c.key',
-                        (vis, r) => {
-                            vis.graph.select(r, null);
+                        (vis, r, p) => {
+                            vis.graph.visit(r, p);
                         },
-                        [currentNode],
+                        [currentNode, tree[currentNode].par],
                     );
                     // chunker.add('c <- c.right if k > c.key');
                     currentNode = tree[currentNode].right;
@@ -339,7 +382,7 @@ export default {
 
                         vis.graph.updateHeight(count);
 
-                        // vis.graph.select(e, p);
+                        vis.graph.select(e, p);
                     },
                     [key, parentNode, currIndex, treeCount],
                 );
@@ -361,7 +404,7 @@ export default {
                         vis.graph.addEdge(p, e);
                         vis.graph.updateHeight(count);
 
-                        // vis.graph.select(e, p);
+                        vis.graph.select(e, p);
                     },
                     [key, parentNode, currIndex, treeCount],
                 );
@@ -370,7 +413,12 @@ export default {
             }
 
             tree[key].par = parentNode;
-            chunker.add('c <- p back up');
+            chunker.add('c <- p back up',
+                (vis, e, p) => {
+                    vis.graph.resetVisitAndSelect(e, p);
+                },
+                [key, tree[key].par],
+            );
             chunker.add('repeat_2');
             // Update heights and balance the tree if needed
             // console.log("Before balance");
@@ -416,7 +464,12 @@ export default {
                     return parentNode;
                 }
 
-                chunker.add('c <- Parent of c');
+                chunker.add('c <- Parent of c',
+                    (vis, e, p) => {
+                        vis.graph.resetVisitAndSelect(e, p);
+                    },
+                    [parentNode, tree[parentNode].par]
+                );
                 currentNode = parentNode;
                 parentNode = tree[parentNode].par;
             }
@@ -451,12 +504,21 @@ export default {
                 vis.graph.isWeighted = true;
                 vis.graph.addNode(r, r, 1);
                 vis.graph.layoutBST(r, true);
-                vis.graph.select(r, null);
+                vis.graph.visit(r, null);
+            },
+            [root],
+        );
+
+        chunker.add(
+            't <- a new node containing k and height 1',
+            (vis, r) => {
+                vis.graph.resetVisitAndSelect(r, null);
             },
             [root],
         );
 
         for (let i = 1; i < nodes.length; i++) {
+            chunker.add('AVL_Insert(t, k)');
             chunker.add('else: AVL_Insert(t, k)');
             root = insert(root, nodes[i], i);
         }
