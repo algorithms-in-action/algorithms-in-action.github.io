@@ -11,7 +11,11 @@ const HEAP_SORT = 'Heap Sort';
 const HEAP_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
 function HeapsortParam({ list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
-    const [nodes, setNodes] = useState(list);
+    // const { alg, mode, param } = useUrlParams();
+    // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
+    // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
+    const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
+    const [nodes, setNodes] = useState(list || DEFAULT_NODES);
     const [message, setMessage] = useState(null);
 
     return (
@@ -20,7 +24,7 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
                 <ListParam
                     name="heapSort"
                     buttonName="Sort"
-                    mode="sort"
+                    mode={mode || "sort"}
                     formClassName="formLeft"
                     DEFAULT_VAL={nodes}
                     SET_VAL={setNodes}
@@ -36,9 +40,8 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
 
 // Define the prop types for URL Params
 HeapsortParam.propTypes = {
-    alg: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    list: PropTypes.string.isRequired
+    mode: PropTypes.string,
+    list: PropTypes.string
 };
 
 export default withAlgorithmParams(HeapsortParam); // Export with the wrapper for URL Params

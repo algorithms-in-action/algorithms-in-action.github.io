@@ -18,6 +18,7 @@ const DEFAULT_HEURISTIC = 'Euclidean'
 const DEFAULT_MIN = '1'
 const DEFAULT_MAX = '10'
 
+
 export function useUrlParams() {
     const [search, setSearch] = useState(window.location.search);
 
@@ -56,6 +57,14 @@ export function useUrlParams() {
     console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max });
 
     return { alg, mode, list, value, xyCoords, edgeWeights, start, end, string, pattern, union };
+
+}
+
+
+function extractValue(paramString, key) {
+    const regex = new RegExp(`${key}=([^;]*)`);
+    const match = paramString.match(regex);
+    return match ? match[1] : null;
 }
 
 export const withAlgorithmParams = (WrappedComponent) => {
@@ -88,13 +97,16 @@ export const withAlgorithmParams = (WrappedComponent) => {
 
     };
 
+    // Set display name for debugging purposes
     WithAlgorithmParams.displayName = `WithAlgorithmParams(${getDisplayName(WrappedComponent)})`;
     return WithAlgorithmParams;
 };
+
 
 // Helper function to get the display name of a component
 function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
+
 // // https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // // http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
