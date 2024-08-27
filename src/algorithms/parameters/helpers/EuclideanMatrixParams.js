@@ -184,6 +184,9 @@ function EuclideanMatrixParams({
   defaultSize,
   defaultStart,
   defaultEnd,
+  // XXX should have defaultWeight = 0 (=Euclidean) defined in the
+  // graph traversal parameters; included explicitly in Warshall's
+  defaultWeight = 0, // in case defaultWeight not defined
   defaultHeur,
   graphEgs,
   min,
@@ -220,7 +223,7 @@ function EuclideanMatrixParams({
   const W_MANHATTAN = 1;
   const W_INPUT = 2; // as defined by input
   const weightCalcName = ['Euclidean', 'Manhattan', 'As input'];
-  const [weightCalc, setCalcMethod] = useState(W_EUCLIDEAN);
+  const [weightCalc, setCalcMethod] = useState(defaultWeight);
 
   // Button toggles Euclidean/Manhattan for heuristic
   const HEURCALCMAX = 2; // number of heuristic calculation options
@@ -730,6 +733,20 @@ function EuclideanMatrixParams({
             +
           </button>
         </div>);
+
+  let startButton = '';
+  if (defaultStart !== null)
+    startButton =
+        (<div className="sLineButtonContainer">
+          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
+            −
+          </button>
+          <span className='size'>Start: {startNode}</span>
+          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
+            +
+          </button>
+          
+        </div>);
  
   let weightButton = '';
   if (!unweighted)
@@ -764,16 +781,7 @@ function EuclideanMatrixParams({
         </div>
         {weightButton}
         {heurButton}
-        <div className="sLineButtonContainer">
-          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
-            −
-          </button>
-          <span className='size'>Start: {startNode}</span>
-          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
-            +
-          </button>
-          
-        </div>
+        {startButton}
         {endButton}
   </div>
   {endNodeDiv}
