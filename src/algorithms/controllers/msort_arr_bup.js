@@ -8,6 +8,8 @@
 // though)
 
 import { msort_arr_bup } from '../explanations';
+import { colors } from './graphSearchColours';
+
 
 const run = run_msort();
 
@@ -357,7 +359,7 @@ export function run_msort() {
 
     const set_simple_stack = (vis_array, cur_length) => {
       //if (isRecursionExpanded())
-      vis_array.setList(cur_length);
+      vis_array.setList([cur_length]);
     }
     //// start mergesort -------------------------------------------------------- 
     // XXXXX
@@ -377,10 +379,8 @@ export function run_msort() {
         vis.arrayB.set(b, 'msort_arr_bup');
         vis.arrayB.setLargestValue(maxValue);
       }
-      set_simple_stack(vis.array, c_stk);
-      vis.array.setList(c_stk);
-
-
+      set_simple_stack(vis.array, runlength);
+      //vis.array.showKth(runlength);
     }, [A, B, size, real_stack, finished_stack_frames, length_stack, simple_stack], length);
 
     while (runlength < size + 1) {
@@ -389,6 +389,7 @@ export function run_msort() {
       chunker.add('runlength', (vis, a, b, cur_left, cur_right, cur_length,
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
         //set_simple_stack(vis.array, cur_length);
+        set_simple_stack(vis.array, c_stk);
 
       }, [A, B, left, length, simple_stack]);
 
@@ -411,7 +412,7 @@ export function run_msort() {
         }, [A, left, mid, right]);
 
         chunker.add('MergeAllWhile', (vis, a, cur_left, cur_right, cur_length,
-          /*cur_real_stack, cur_finished_stack_frames, c_stk*/) => {
+          cur_real_stack, cur_finished_stack_frames, c_stk) => {
 
         }, [A, B, left, mid, right, length]);
 
@@ -495,7 +496,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                //123highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             ap1 = ap1 + 1;
@@ -504,7 +505,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                //123highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             bp = bp + 1;
@@ -521,7 +522,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                //123highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             ap2 = ap2 + 1;
@@ -529,8 +530,9 @@ export function run_msort() {
               cur_max1, cur_max2, cur_stk, cur_left) => {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
+              //123unhighlight(vis, cur_ap2, true);
               if (isMergeExpanded()) {
-                //123highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, false);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left]);
             bp = bp + 1;

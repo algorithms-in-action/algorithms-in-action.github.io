@@ -321,7 +321,7 @@ class Array2DRenderer extends Renderer {
             className={algo === 'msort_arr_bup' ? styles.captionmsort_arr_bup : ''}
             kth-tag="msort_arr_bup_caption"
           >
-            Run Length (n):&emsp; {listOfNumbers}&emsp;&emsp;
+            Run Length (n): {listOfNumbers}
           </caption>
 
         )}
