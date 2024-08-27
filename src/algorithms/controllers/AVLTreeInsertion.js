@@ -1,7 +1,7 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { node } from 'prop-types';
-import { chunk } from 'lodash';
+import { chunk, map } from 'lodash';
 
 export default {
     initVisualisers() {
@@ -46,6 +46,20 @@ export default {
             }
         }
 
+        function traverseTree(node, treeCount) {
+            if (node === null || treeCount.get(node) != null) {
+                return treeCount;
+            }
+            updateHeight(node);
+            treeCount.set(node, tree[node].height);
+
+            treeCount = traverseTree(tree[node].par, treeCount);
+            treeCount = traverseTree(tree[node].left, treeCount);
+            treeCount = traverseTree(tree[node].right, treeCount);
+            return treeCount;
+        }
+
+
         // Left-Left Rotation (LLR) to balance the AVL tree
         function LLR(root, globalRoot) {
 
@@ -86,32 +100,42 @@ export default {
             updateHeight(root);
             updateHeight(tmpnode);
 
+            let treeCount = new Map();
+            treeCount = traverseTree(R, treeCount);
+
+            //update the transform Node Height
+            // updateHeight(R);
+            // updateHeight(A);
+            // updateHeight(D);
+            // updateHeight(P);
+            // updateHeight(G);
+
             // console.log("delete edge between " + R + " and " + A);
             // console.log("add edge between " + A + " and " + R);
             chunker.add('p <- Empty',
-                (vis, r, a, d, p, g) => {
+                (vis, r, a, d, p, g, count) => {
                     if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
-                        vis.graph.updateHeight(p, tree[p].height);
+                        //vis.graph.updateHeight(p, tree[p].height);
                     }
 
                     if (d !== null) {
                         vis.graph.removeEdge(a, d);
                         vis.graph.addEdge(r, d);
-                        vis.graph.updateHeight(d, tree[d].height);
+                        //vis.graph.updateHeight(d, tree[d].height);
                     }
                     vis.graph.removeEdge(r, a);
                     vis.graph.addEdge(a, r);
                     vis.graph.layoutBST(g, true);
+                    vis.graph.updateHeight(count);
 
-                    vis.graph.updateHeight(a, tree[a].height);
-                    vis.graph.updateHeight(r, tree[r].height);
-                    vis.graph.updateHeight(g, tree[g].height);
+                    //vis.graph.updateHeight(a, tree[a].height);
+                    //vis.graph.updateHeight(r, tree[r].height);
+                    //vis.graph.updateHeight(g, tree[g].height);
                 },
-                [R, A, D, P, G]
+                [R, A, D, P, G, treeCount]
             );
-
 
             return tmpnode;
         }
@@ -131,22 +155,6 @@ export default {
             } else {
                 G = A;
             }
-            chunker.add('p <- Empty',
-                (vis, r, a, d, p, g) => {
-                    if (p !== null) {
-                        vis.graph.removeEdge(p, r);
-                        vis.graph.addEdge(p, a);
-                    }
-                    if (d !== null) {
-                        vis.graph.removeEdge(a, d);
-                        vis.graph.addEdge(r, d);
-                    }
-                    vis.graph.removeEdge(r, a);
-                    vis.graph.addEdge(a, r);
-                    vis.graph.layoutBST(g, true);
-                },
-                [R, A, D, P, G]
-            );
 
             const tmpnode = tree[root].right;
             tree[root].right = tree[tmpnode].left;
@@ -165,6 +173,65 @@ export default {
             }
             updateHeight(root);
             updateHeight(tmpnode);
+
+            console.log("the height of " + R + " is " + tree[R].height);
+            console.log("the height of " + A + " is " + tree[A].height);
+
+            let treeCount = new Map();
+            treeCount = traverseTree(R, treeCount);
+
+            //update the transform Node Height
+            /*
+            updateHeight(R);
+            updateHeight(A);
+            updateHeight(G);
+
+            const Rh = tree[R].height;
+            const Ra = tree[A].height;
+            const Rg = tree[G].height;
+            let Rp = null;
+            let Rd = null;
+
+            if (P !== null) {
+                updateHeight(P);
+                Rp = tree[P].height;
+            }
+            if (D !== null) {
+                updateHeight(D);
+                Rd = tree[D].height;
+            }*/
+
+            chunker.add('p <- Empty',
+                (vis, r, a, d, p, g, count /*, rh, ra, rg, rp, rd*/) => {
+                    /*
+                    console.log("here!the height of " + R + " is " + rh);
+                    console.log("the height of " + A + " is " + ra + "and" + tree[A].height);
+                    console.log("the height of " + G + " is " + rg + "and" + tree[G].height);
+                    */
+                    if (p !== null) {
+                        vis.graph.removeEdge(p, r);
+                        vis.graph.addEdge(p, a);
+                        //console.log("the height of " + P + " is " + rp);
+                    }
+                    if (d !== null) {
+                        vis.graph.removeEdge(a, d);
+                        vis.graph.addEdge(r, d);
+                        //console.log("the height of " + D + " is " + rd);
+                    }
+                    vis.graph.removeEdge(r, a);
+                    vis.graph.addEdge(a, r);
+                    vis.graph.layoutBST(g, true);
+                    vis.graph.updateHeight(count);
+                    /*
+                    //height.update
+                    vis.graph.updateHeight(a, ra);
+                    vis.graph.updateHeight(r, rh);
+                    vis.graph.updateHeight(g, rg);*/
+
+                },
+                [R, A, D, P, G, treeCount/*,Rh, Ra, Rg, Rp, Rd*/]
+            );
+
             return tmpnode;
         }
 
@@ -230,12 +297,30 @@ export default {
 
             chunker.add('until c is Empty (and p is a leaf node)');
 
+            //height of the tree
+            let treeCount = new Map();
+            let keypar = parentNode;
+            let heightIndex = 1;
+            if (tree[keypar].left !== null || tree[keypar].right !== null) {
+                heightIndex = 0;
+            }
+            while (keypar != null) {
+                updateHeight(keypar);
+                treeCount.set(keypar, tree[keypar].height + heightIndex);
+                // console.log("tttttttttttttttthe height of " + keypar + " is " + tree[keypar].height);
+                keypar = tree[keypar]?.par;
+            }
+
+
             if (key < parentNode) {
                 chunker.add('if k < p.key');
                 // chunker.add('p.left <- a new node containing k and height 1');
+
+                tree[parentNode].left = key;
+                treeCount = traverseTree(tree[parentNode].left, treeCount);
                 chunker.add(
                     'p.left <- a new node containing k and height 1',
-                    (vis, e, p, index) => {
+                    (vis, e, p, index, count) => {
                         // Upper array visulization
                         vis.array.deselect(index - 1);
                         vis.array.select(index);
@@ -249,30 +334,38 @@ export default {
                         // }
 
                         // vis.graph.addNode(e);
-                        vis.graph.addNode(e, e, newNode.height);
+                        vis.graph.addNode(e, e, 1);
                         vis.graph.addEdge(p, e);
+
+                        vis.graph.updateHeight(count);
+
                         // vis.graph.select(e, p);
                     },
-                    [key, parentNode, currIndex],
+                    [key, parentNode, currIndex, treeCount],
                 );
-                tree[parentNode].left = key;
+
             } else {
                 chunker.add('else: k > p.key');
                 // chunker.add('p.right <- a new node containing k and height 1');
                 chunker.add(
                     'p.right <- a new node containing k and height 1',
-                    (vis, e, p, index) => {
+                    (vis, e, p, index, count) => {
                         // Upper array visulization
                         vis.array.deselect(index - 1);
                         vis.array.select(index);
 
                         // vis.graph.addNode(e);
-                        vis.graph.addNode(e, e, newNode.height);
+                        vis.graph.addNode(e, e, 1);
+
+                        //vis.graph.updateHeight(e);//tree[p].height);
                         vis.graph.addEdge(p, e);
+                        vis.graph.updateHeight(count);
+
                         // vis.graph.select(e, p);
                     },
-                    [key, parentNode, currIndex],
+                    [key, parentNode, currIndex, treeCount],
                 );
+
                 tree[parentNode].right = key;
             }
 

@@ -3,6 +3,28 @@
 
 // --graph-node-fill: orange;
 
+@keyframes colorChange {
+  0% {
+    fill: var(--graph-node-circle-fill-rgb1);
+  }
+
+  25% {
+    fill: var(--graph-node-circle-fill-rgb2);
+  }
+
+  50% {
+    fill: var(--graph-node-circle-fill-rgb3);
+  }
+
+  75% {
+    fill: var(--graph-node-circle-fill-rgb4);
+  }
+
+  100% {
+    fill: var(--graph-node-circle-fill-rgb5);
+  }
+}
+
 .graph {
   flex: 1;
   align-self: stretch;
@@ -10,6 +32,9 @@
   .node {
     .circle {
       fill: var(--graph-node-circle-fill);
+
+      //animation: colorChange 3s infinite; // anmation
+
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
     }

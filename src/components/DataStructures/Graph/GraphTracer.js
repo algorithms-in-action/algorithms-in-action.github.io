@@ -13,6 +13,7 @@
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
 /* eslint-disable import/no-unresolved */
+import AVLTreeInsertion from '../../../algorithms/controllers/AVLTreeInsertion';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -289,16 +290,17 @@ class GraphTracer extends Tracer {
 
   updateNode(id, value, height, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { value, height: 100, weight, x, y, visitedCount, selectedCount };
+    const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(node, update);
   }
 
-  updateHeight(id, height) {
-    const node = this.findNode(id);
-    node.height = height;
+  updateHeight(treeCount) {
+    for (let [id, height] of treeCount) {
+      this.findNode(id).height = height;
+    }
   }
 
   removeNode(id) {
