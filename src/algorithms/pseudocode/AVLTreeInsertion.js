@@ -31,6 +31,7 @@ export default parse(`
     // Rotate the tree to balance it after insertion
     LeftRotate \\Ref LeftRotate
     RightRotate \\Ref RightRotate
+    UpdateHeight \\Ref UpdateHeight
 \\Code}
     
 \\Code{
@@ -159,8 +160,8 @@ export default parse(`
         x.right <- T2 \\B x.right_1 <- T2
         
         // Update heights
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_lx_1
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ly_1
+        update x's height \\B UpdateHeight_lx
+        update y's height \\B UpdateHeight_ly
         return y // Return the new root \\B return y_l
     \\In}
 \\Code}
@@ -175,9 +176,16 @@ export default parse(`
         y.left <- T2 \\B y.left <- T2
         
         // Update heights
-        y.height <- max(Height(y.left), Height(y.right)) + 1 \\B UpdateHeight_ry
-        x.height <- max(Height(x.left), Height(x.right)) + 1 \\B UpdateHeight_rx
+        update y's height \\B UpdateHeight_ry
+        update x's height \\B UpdateHeight_rx
         return y // Return the new root \\B return y_r
+    \\In}
+\\Code}
+
+\\Code{
+    UpdateHeight
+    \\In{
+        c.height <- max(Height(c.left), Height(c.right)) + 1 \\B c.height <- max(Height(c.left), Height(c.right)) + 1
     \\In}
 \\Code}
 

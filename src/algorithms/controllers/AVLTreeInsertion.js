@@ -180,7 +180,12 @@ export default {
             // console.log(tree);
             chunker.add('p <- Empty');
             let parentNode = null;
-            chunker.add('c <- t');
+            chunker.add('c <- t',
+                (vis, r) => {
+                    vis.graph.visit(r, null);
+                },
+                [root]
+            );
             let currentNode = root;
             // let newNode = new AVLNode(key);
             let newNode = { left: null, right: null, par: null, height: 1 };
@@ -372,6 +377,7 @@ export default {
         );
 
         for (let i = 1; i < nodes.length; i++) {
+            chunker.add('AVL_Insert(t, k)');
             chunker.add('else: AVL_Insert(t, k)');
             root = insert(root, nodes[i], i);
         }
