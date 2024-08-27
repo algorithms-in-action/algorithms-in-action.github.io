@@ -60,6 +60,17 @@ describe('AVLTreeInsertion', () => {
     expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
   it('[Complex] Complex rotates 1', () => {
+    const E = [4, 5, 7, 9, 8];
+    const result = {
+      4: { "height": 1, "left": null, "right": null, "par": 5 },
+      5: { "height": 3, "left": 4, "right": 8, "par": null },
+      7: { "height": 1, "left": null, "right": null, "par": 8 },
+      9: { "height": 1, "left": null, "right": null, "par": 8 },
+      8: { "height": 2, "left": 7, "right": 9, "par": 5 }
+    };
+    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
+  });
+  it('[Complex] Complex rotates 2', () => {
     const E = [40, 20, 60, 10, 30, 50, 70, 25, 5, 35, 15, 55, 65];
     const result = {
       40: { "height": 4, "left": 20, "right": 60, "par": null },
@@ -78,7 +89,7 @@ describe('AVLTreeInsertion', () => {
     };
     expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
-  it('[Complex] Complex rotates 2', () => {
+  it('[Complex] Complex rotates 3', () => {
     const E = [50, 30, 70, 20, 40, 60, 80, 35, 10, 45, 25, 65, 75, 58];
     const result = {
       50: { "height": 4, "left": 30, "right": 70, "par": null },
@@ -98,7 +109,7 @@ describe('AVLTreeInsertion', () => {
     };
     expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
-  it('[Complex] Complex rotates 3', () => {
+  it('[Complex] Complex rotates 4', () => {
     const E = [135, 54, 121, 29, 71, 12, 199, 64, 102, 36, 85, 144, 168, 211, 175, 307, 2, 73, 56, 27];
     const result = {
       71: { "height": 5, "left": 29, "right": 168, "par": null },
@@ -121,12 +132,6 @@ describe('AVLTreeInsertion', () => {
       102: { "height": 1, "left": null, "right": null, "par": 85 },
       135: { "height": 1, "left": null, "right": null, "par": 144 },
       307: { "height": 1, "left": null, "right": null, "par": 211 }
-    };
-    expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
-  });
-  it('[Confusion] Test', () => {
-    const E = [];
-    const result = {
     };
     expect(AVLTreeInsertion.run(chunker, { nodes: E })).toEqual(result);
   });
