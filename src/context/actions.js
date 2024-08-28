@@ -242,6 +242,7 @@ export const GlobalActions = {
   // run an algorithm by executing the algorithm
   RUN_ALGORITHM: (state, params) => {
     const data = algorithms[params.name];
+
     const {
       param,
       controller,

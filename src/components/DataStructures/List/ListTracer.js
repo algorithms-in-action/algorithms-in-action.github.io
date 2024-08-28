@@ -1,5 +1,4 @@
 /* eslint-disable import/no-unresolved */
-
 import Tracer from '../common/Tracer';
 
 class ListTracer extends Tracer {

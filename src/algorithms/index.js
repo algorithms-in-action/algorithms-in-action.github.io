@@ -308,19 +308,20 @@ const allalgs = {
     },
   },
 
-  'LINKED_LIST_PROTOTYPE': {
+  // When changing name, make sure this name matches with prototype name.
+  'Linked List Prototype': {
     noDeploy: false,
-    name: 'Linked List prototype',
+    name: 'prototype (doesn\'t need to match/',
     category: 'Insert/Sort',
     explanation: Explanation.PROTOTYPE,
-    param: <Param.PROTOTYPE_PARAM/>,
+    param: <Param.PROTOTYPE_PARAM />,
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      Sort: Pseudocode.PROTOTYPE,
+      sort: Pseudocode.PROTOTYPE,
     },
     controller: {
-      Sort: Controller.PROTOTYPE,
+      sort: Controller.PROTOTYPE,
     },
   },
 };

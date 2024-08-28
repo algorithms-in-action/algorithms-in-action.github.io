@@ -15,8 +15,8 @@ function PrototypeParam() {
     return (
         <>
             <div className="form">
-                <ListParam
-                    name="Linked List Prototype"
+                    <ListParam
+                    name='Linked List Prototype'
                     buttonName="Sort"
                     mode="sort"
                     formClassName="formLeft"
@@ -27,6 +27,9 @@ function PrototypeParam() {
                     setMessage={setMessage}
                 />
             </div>
+
+            {/* render success/error message */}
+            {message}
         </>
     );
 }
