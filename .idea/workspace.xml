@@ -4,19 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Empty Prototype Set up">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Linked List Data Structure and List Data Structure Added">
+      <change afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/JEFF'S DIAGRAM.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/JEFF'S DIAGRAM.drawio" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/PrototypeParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/PrototypeParam.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -32,14 +40,12 @@
     &quot;assignee&quot;: &quot;jiafeilin1&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="d036ae6e-463a-46c4-b630-71721b110fc8" />
-        <option name="url" value="https://github.com/jiafeilin1/ITprojectTeam2.git" />
-      </UrlAndAccount>
-    </option>
-  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jiafeilin1/ITprojectTeam2.git&quot;,
+    &quot;accountId&quot;: &quot;8a70aea5-6357-4415-acc6-72d4b0bbefa5&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -51,28 +57,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.BFS.js.executor": "Run",
-    "Node.js.Prototype.js.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Team2Main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.nodejs",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.BFS.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Prototype.js.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Team2Main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/carli/Downloads/index (2).js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\carli\WebstormProjects\ITprojectTeam2\src\components\DataStructures\LinkedList" />
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List" />
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List\ListTracer" />
     </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-WS-242.20224.342" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -88,6 +104,7 @@
       <workItem from="1723957466768" duration="758000" />
       <workItem from="1723977229097" duration="4517000" />
       <workItem from="1724037366078" duration="9880000" />
+      <workItem from="1724577427107" duration="11050000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -116,6 +133,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Empty Prototype Set up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Empty Prototype Set up" />
+    <MESSAGE value="Pseudocode finished with bookmarks added to controller" />
+    <MESSAGE value="Linked List Data Structure and List Data Structure Added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Linked List Data Structure and List Data Structure Added" />
   </component>
 </project>

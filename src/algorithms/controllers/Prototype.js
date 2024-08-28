@@ -63,6 +63,7 @@ function isBuildHeapExpanded() {
 function isDownHeapkExpanded() {
     return areExpanded(['BuildHeap', 'DownHeapk']);
 }
+
 import ListTracer from '../../components/DataStructures/List/ListTracer.js';
 
 export default {
@@ -73,16 +74,17 @@ export default {
                 order: 0,
             }
         };
-    },
 
+    },
     run(chunker, {values}) {
 
         chunker.add(
-            0,
+            1,
             (vis, list) => {
                 vis.list.set(list, "Prototype");
             },
             [values]
         );
     }
+
 };

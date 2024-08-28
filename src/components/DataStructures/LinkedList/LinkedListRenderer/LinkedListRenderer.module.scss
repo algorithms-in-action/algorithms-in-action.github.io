@@ -1,0 +1,114 @@
+@import "../../common/stylesheet/index";
+
+.linked_list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  flex-wrap: wrap;
+
+  .node {
+    display: flex;
+    align-items: center;
+    background-color: var(--linked-list-node-bg);
+    border: 2px solid var(--linked-list-node-border);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 10px;
+    min-width: 60px;
+    text-align: center;
+
+    .value {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--linked-list-node-value-color);
+    }
+
+    &.head {
+      background-color: var(--linked-list-head-bg);
+      border-color: var(--linked-list-head-border);
+
+      .value {
+        color: var(--linked-list-head-value-color);
+      }
+    }
+
+    &.tail {
+      background-color: var(--linked-list-tail-bg);
+      border-color: var(--linked-list-tail-border);
+
+      .value {
+        color: var(--linked-list-tail-value-color);
+      }
+    }
+
+    &.selected {
+      background-color: var(--linked-list-selected-bg);
+      border-color: var(--linked-list-selected-border);
+
+      .value {
+        color: var(--linked-list-selected-value-color);
+      }
+    }
+
+    &.highlighted {
+      background-color: var(--linked-list-highlighted-bg);
+      border-color: var(--linked-list-highlighted-border);
+
+      .value {
+        color: var(--linked-list-highlighted-value-color);
+      }
+    }
+  }
+
+  .arrow {
+    width: 40px;
+    height: 2px;
+    background-color: var(--linked-list-arrow-color);
+    position: relative;
+    margin: 0 5px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      border: 6px solid transparent;
+      border-left-color: var(--linked-list-arrow-color);
+    }
+  }
+
+  .caption {
+    text-align: center;
+    font-size: 14px;
+    color: var(--linked-list-caption-color);
+    margin-top: 10px;
+  }
+}
+
+// Sample color variable definitions (to be included in your variables file or inline)
+:root {
+  --linked-list-node-bg: #ffffff;
+  --linked-list-node-border: #cccccc;
+  --linked-list-node-value-color: #333333;
+
+  --linked-list-head-bg: #d1e7dd;
+  --linked-list-head-border: #0f5132;
+  --linked-list-head-value-color: #0f5132;
+
+  --linked-list-tail-bg: #f8d7da;
+  --linked-list-tail-border: #842029;
+  --linked-list-tail-value-color: #842029;
+
+  --linked-list-selected-bg: #cfe2ff;
+  --linked-list-selected-border: #084298;
+  --linked-list-selected-value-color: #084298;
+
+  --linked-list-highlighted-bg: #fff3cd;
+  --linked-list-highlighted-border: #856404;
+  --linked-list-highlighted-value-color: #856404;
+
+  --linked-list-arrow-color: #6c757d;
+
+  --linked-list-caption-color: #6c757d;
+}
