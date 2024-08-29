@@ -18,7 +18,7 @@ export default {
     };
   },
 
-  run(chunker, { edgeValueMatrix, coordsMatrix, endNodes, startNode}) {
+  run(chunker, { edgeValueMatrix, coordsMatrix, endNodes, startNode, moveNode}) {
 
     //Defining queue
     function Queue() {
@@ -70,6 +70,7 @@ export default {
       (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(false);
+        vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
 
       },
