@@ -39,7 +39,7 @@ const BlueRadio = withStyles({
 //const ERROR_TOO_LARGE = `Please enter only ${HASHING_FUNCTION} digits in the table`;
 
 
-function HashingParam() {
+function HashingDHParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [array, setArray] = useState(DEFAULT_ARRAY);
@@ -50,15 +50,15 @@ function HashingParam() {
   });
 
   const handleChange = (e) => {
-    setSize({ ...UNCHECKED, [e.target.name]: true })
+    // setSize({ ...UNCHECKED, [e.target.name]: true })
     e.preventDefault();
     const inputValue = e.target[0].value;
 
-    const visualiser = algorithm.chunker.visualisers;
+    // const visualiser = algorithm.chunker.visualisers;
     dispatch(GlobalActions.RUN_ALGORITHM, {
-      name: 'Hashing',
-      mode: 'insert',
-      visualiser,
+      name: 'HashingDH',
+      mode: 'hash',
+      // visualiser,
     });
   }
 
@@ -125,4 +125,4 @@ function HashingParam() {
   );
 }
 
-export default HashingParam;
+export default HashingDHParam;

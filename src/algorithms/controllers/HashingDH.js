@@ -5,17 +5,21 @@ export default {
     return {
       array: {
         instance: new Array2DTracer('array', null, 'Hash Table'),
-        order: 1,
+        order: 0,
       },
     };
   },
 
-  run(chunker, params) {
+  run(chunker) {
     chunker.add(
-      'Insert',
+      'HashSearch(T, k)',
       (vis, array) => {
-        vis.array.set(array, 'Hashing');
+        vis.array.set(array, 'HashingDH');
+        vis.array.hideArrayAtIndex(2);
       },
+      [[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]
     );
+
+    return "Success";
   },
 };

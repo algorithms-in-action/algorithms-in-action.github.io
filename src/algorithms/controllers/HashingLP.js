@@ -12,13 +12,16 @@ export default {
     };
   },
 
-  run(chunker, params) {
+  run(chunker) {
     chunker.add(
       'HashInit(T)',
       (vis, array) => {
-        vis.array.set(array, 'Hashing');
+        vis.array.set(array, 'HashingLP');
+        vis.array.hideArrayAtIndex(2);
       },
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      [[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]
     );
+
+    return "Success";
   },
 };
