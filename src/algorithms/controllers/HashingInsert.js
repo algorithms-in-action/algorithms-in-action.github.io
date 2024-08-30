@@ -7,14 +7,14 @@ export default {
     return {
       array: {
         instance: new Array2DTracer('array', null, 'Hash Table'),
-        order: 1,
+        order: 0,
       },
     };
   },
 
   run(chunker, params) {
     chunker.add(
-      'Insert',
+      'HashInit(T)',
       (vis, array) => {
         vis.array.set(array, 'Hashing');
       },
