@@ -1,113 +1,128 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import { withStyles } from '@mui/styles';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  singleNumberValidCheck,
-  genUniqueRandNumList,
-  successParamMsg,
-  errorParamMsg,
-} from './helpers/ParamHelper';
+import {genUniqueRandNumList} from './helpers/ParamHelper';
 
 // import useParam from '../../context/useParam';
 
 const ALGORITHM_NAME = 'Hashing';
-const INSERTION = 'Insertion';
-const SEARCH = 'Search';
+const HASHING_INSERT = 'Hashing Insertion';
+const HASHING_SEARCH = 'Hashing Search';
+const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
 
-// DEFAULT input - enough for a tree with a few levels
-// Should be the same as in REFRESH_FUNCTION
-const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
-const DEFAULT_TARGET = '2';
+const DEFAULT_ARRAY = genUniqueRandNumList(10, 1, 50);
+const DEFAULT_SEARCH = '...'
+const UNCHECKED = {
+    smallTable: false,
+    largeTable: false
+};
 
-const INSERTION_EXAMPLE = 'Please follow the example provided: 1,2,3,4. Values should also be unique.';
-const SEARCH_EXAMPLE = 'Please follow the example provided: 16.';
-const NO_TREE_ERROR = 'Please build a tree before running search.';
+const BlueRadio = withStyles({
+  root: {
+    color: '#2289ff',
+    '&$checked': {
+      color: '#027aff',
+    },
+  },
+  checked: {},
+  // eslint-disable-next-line react/jsx-props-no-spreading
+})((props) => <Radio {...props} />)
 
-function TTFTreeParam() {
-  // const { algorithm, dispatch } = useContext(GlobalContext);
-  // const [message, setMessage] = useState(null);
-  // const [nodes, setNodes] = useState(DEFAULT_NODES);
-  //
-  //
-  // const handleInsertion = (e) => {
-  //   e.preventDefault();
-  //   const list = e.target[0].value;
-  //
-  //   if (validateListInput(list)) {
-  //     let nodes = list.split(',').map(Number);
-  //     // run search animation
-  //     dispatch(GlobalActions.RUN_ALGORITHM, {
-  //       name: 'TTFTree',
-  //       mode: 'insertion',
-  //       nodes,
-  //     });
-  //     setMessage(successParamMsg(ALGORITHM_NAME));
-  //   } else {
-  //     setMessage(errorParamMsg(ALGORITHM_NAME, INSERTION_EXAMPLE));
-  //   }
-  // };
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   const inputValue = e.target[0].value;
-  //
-  //   if (singleNumberValidCheck(inputValue)) {
-  //     const target = parseInt(inputValue, 10);
-  //
-  //     if (
-  //       Object.prototype.hasOwnProperty.call(algorithm, 'visualisers')
-  //       && !algorithm.visualisers.tree.instance.isEmpty()
-  //     ) {
-  //       const visualiser = algorithm.chunker.visualisers;
-  //       dispatch(GlobalActions.RUN_ALGORITHM, {
-  //         name: 'TTFTree',
-  //         mode: 'search',
-  //         visualiser,
-  //         target,
-  //       });
-  //       setMessage(successParamMsg(ALGORITHM_NAME));
-  //     } else {
-  //       setMessage(errorParamMsg(ALGORITHM_NAME, NO_TREE_ERROR));
-  //     }
-  //   }
-  //   else {
-  //     setMessage(errorParamMsg(ALGORITHM_NAME, SEARCH_EXAMPLE));
-  //   }
-  // };
+
+//const ERROR_INPUT = 'Please enter only positive integers';
+//const ERROR_TOO_LARGE = `Please enter only ${HASHING_FUNCTION} digits in the table`;
+
+
+function HashingParam() {
+  const [message, setMessage] = useState(null);
+  const { algorithm, dispatch } = useContext(GlobalContext);
+  const [array, setArray] = useState(DEFAULT_ARRAY);
+  const [search, setSearch] = useState(DEFAULT_SEARCH);
+  const [size, setSize] = useState({
+    smallTable: true,
+    largeTable: false,
+  });
+
+  const handleChange = (e) => {
+    setSize({ ...UNCHECKED, [e.target.name]: true })
+    e.preventDefault();
+    const inputValue = e.target[0].value;
+
+    const visualiser = algorithm.chunker.visualisers;
+    dispatch(GlobalActions.RUN_ALGORITHM, {
+      name: 'Hashing',
+      mode: 'insert',
+      visualiser,
+    });
+  }
+
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [size],
+  );
+
 
   return (
     <>
       <div className="form">
-        {/* Insert input */}
         <ListParam
-          name="TTFTree"
-          buttonName="Insert"
+          name="Hashing"
+          buttonName="INSERT"
           mode="insertion"
           formClassName="formLeft"
+          DEFAULT_VAL = {array}
+          SET_VAL = {setArray}
+          ALGORITHM_NAME = {HASHING_INSERT}
+          EXAMPLE={HASHING_EXAMPLE}
+          handleSubmit={handleChange}
+          setMessage={setMessage}
         />
 
-        {/* Search input */}
+
         {<SingleValueParam
-          name="TTFTree"
-          buttonName="Search"
+          name="Hashing"
+          buttonName="SEARCH"
           mode="search"
           formClassName="formRight"
-        />}
+          DEFAULT_VAL = {DEFAULT_SEARCH}
+          SET_VAL = {setSearch}
+          ALGORITHM_NAME = {HASHING_SEARCH}
+          setMessage={setMessage}
+         />}
       </div>
-      {/* render success/error message */}
+
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={size.smallTable}
+            onChange={handleChange}
+            name="smallTable"
+          />
+        }
+        label="Small Table"
+        className="checkbox"
+      />
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={size.largeTable}
+            onChange={handleChange}
+            name="largeTable"
+          />
+        }
+        label="Large Table"
+        className="checkbox"
+      />
     </>
   );
 }
 
-export default TTFTreeParam;
-
-function validateListInput(input) {
-  const inputArr = input.split(',');
-  const inputSet = new Set(inputArr);
-  return (
-    inputArr.length === inputSet.size
-    && inputArr.every((num) => singleNumberValidCheck(num))
-  );
-}
+export default HashingParam;

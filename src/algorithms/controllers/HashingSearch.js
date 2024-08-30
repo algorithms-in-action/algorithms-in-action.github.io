@@ -9,4 +9,13 @@ export default {
       },
     };
   },
+
+  run(chunker, params) {
+    chunker.add(
+      'Insert',
+      (vis, array) => {
+        vis.array.set(array, 'Hashing');
+      },
+    );
+  },
 };
