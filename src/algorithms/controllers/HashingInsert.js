@@ -11,11 +11,11 @@ export default {
             return table;
         }
 
-        const hash1 = (k) => {
+        function hash1(k) {
             return k % 11;
         }
 
-        const hashInsert = (table, key) => { // add mode parameter with case for
+        function hashInsert(table, key) { // add mode parameter with case for
 
             // get initial hash index
             let i = hash1(key);
@@ -30,7 +30,7 @@ export default {
             table[i] = key;
         }
 
-        const hashDelete = (table, key) => {
+        function hashDelete(table, key) {
             let i = hash1(key);
 
             while (table[i] != key) {

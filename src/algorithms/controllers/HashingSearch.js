@@ -4,11 +4,11 @@ export default {
 
     run(chunker, params) {
     // small hash, table size 11
-        const hash1 = (key) => {
+        function hash1(key) {
             return key % 11;
         }
 
-        const hashSearch = (table, k) => {
+        function hashSearch(table, k) {
             // index
             let i = hash1(k);
 
