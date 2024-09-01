@@ -182,7 +182,6 @@ const allalgs = {
     },
   },
   'BFS': {
-    
     name: 'Breadth First Search',
     category: 'Graph',
     param: <Param.BFSParam/>,
@@ -351,7 +350,7 @@ const algorithms =
  * Get the first mode of an algorithm
  * @param {string} key algorithm's name
  */
-const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {
