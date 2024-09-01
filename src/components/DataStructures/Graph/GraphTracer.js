@@ -115,7 +115,6 @@ class GraphTracer extends Tracer {
     this.scaledCoords = coordinates;
     this.setNodeRadius(coordinates);
 
-    console.log(['coordinates', coordinates]);
     // Set layout to null if nodes are to be displayed by coordinates.
     if(coordinates.length > 0)
     {

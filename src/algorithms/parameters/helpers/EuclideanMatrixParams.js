@@ -198,7 +198,8 @@ function EuclideanMatrixParams({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
-  unweighted
+  unweighted,
+  circular
 }) {
 
   // XXX these get re-evaluated when anything much changes - could
@@ -321,8 +322,8 @@ function EuclideanMatrixParams({
       setEndNodes(newEndNodes);
     }
     if (graphChoice === GRAPHCHOICERAND) {
-      const edges = makeWeights(newSize, 1, 10, symmetric, unweighted);
-      const coords = makeXYCoords(newSize, min, max);
+      const edges = makeWeights(newSize, 1, 10, symmetric, unweighted, circular);
+      const coords = makeXYCoords(newSize, min, max, circular);
       setData1(coords);
       setCoordsTxt(getCoordinateList(coords));
       setData2(edges);
@@ -349,7 +350,7 @@ function EuclideanMatrixParams({
   // to generate new random graphs of any size (thats still a bit
   // cumbersome with the current setup)
   // XXX maybe we should have a text box for the size instead of + and -
-  const updateTableSize = (newSize) => {
+  const updateTableSize = (newSize, circular=false) => {
     if (newSize < 1) return;
     if (newSize < startNode)
         setStartNode(newSize);
@@ -425,7 +426,6 @@ function EuclideanMatrixParams({
   // components/DataStructures/Graph/GraphRenderer/index.js) so
   // coordinates here can be updated
   const moveNode = (nodeID, x, y) => {
-    console.log(['moveNode', nodeID, x, y]);
     const newData1 = data1.map((row, index) => {
       if (index === nodeID) {
         return {

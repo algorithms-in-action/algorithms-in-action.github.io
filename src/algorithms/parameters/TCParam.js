@@ -49,6 +49,7 @@ function TransitiveClosureParam() {
         EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
         setMessage={setMessage}
         symmetric={false}
+        circular={true}
         unweighted
       />
 
