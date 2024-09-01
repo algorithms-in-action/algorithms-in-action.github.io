@@ -184,6 +184,9 @@ function EuclideanMatrixParams({
   defaultSize,
   defaultStart,
   defaultEnd,
+  // XXX should have defaultWeight = 0 (=Euclidean) defined in the
+  // graph traversal parameters; included explicitly in Warshall's
+  defaultWeight = 0, // in case defaultWeight not defined
   defaultHeur,
   graphEgs,
   min,
@@ -195,7 +198,8 @@ function EuclideanMatrixParams({
   ALGORITHM_NAME,
   EXAMPLE,
   EXAMPLE2,
-  unweighted
+  unweighted,
+  circular
 }) {
 
   // XXX these get re-evaluated when anything much changes - could
@@ -220,7 +224,7 @@ function EuclideanMatrixParams({
   const W_MANHATTAN = 1;
   const W_INPUT = 2; // as defined by input
   const weightCalcName = ['Euclidean', 'Manhattan', 'As input'];
-  const [weightCalc, setCalcMethod] = useState(W_EUCLIDEAN);
+  const [weightCalc, setCalcMethod] = useState(defaultWeight);
 
   // Button toggles Euclidean/Manhattan for heuristic
   const HEURCALCMAX = 2; // number of heuristic calculation options
@@ -318,8 +322,8 @@ function EuclideanMatrixParams({
       setEndNodes(newEndNodes);
     }
     if (graphChoice === GRAPHCHOICERAND) {
-      const edges = makeWeights(newSize, 1, 10, symmetric, unweighted);
-      const coords = makeXYCoords(newSize, min, max);
+      const edges = makeWeights(newSize, 1, 10, symmetric, unweighted, circular);
+      const coords = makeXYCoords(newSize, min, max, circular);
       setData1(coords);
       setCoordsTxt(getCoordinateList(coords));
       setData2(edges);
@@ -346,7 +350,7 @@ function EuclideanMatrixParams({
   // to generate new random graphs of any size (thats still a bit
   // cumbersome with the current setup)
   // XXX maybe we should have a text box for the size instead of + and -
-  const updateTableSize = (newSize) => {
+  const updateTableSize = (newSize, circular=false) => {
     if (newSize < 1) return;
     if (newSize < startNode)
         setStartNode(newSize);
@@ -422,7 +426,6 @@ function EuclideanMatrixParams({
   // components/DataStructures/Graph/GraphRenderer/index.js) so
   // coordinates here can be updated
   const moveNode = (nodeID, x, y) => {
-    console.log(['moveNode', nodeID, x, y]);
     const newData1 = data1.map((row, index) => {
       if (index === nodeID) {
         return {
@@ -730,6 +733,20 @@ function EuclideanMatrixParams({
             +
           </button>
         </div>);
+
+  let startButton = '';
+  if (defaultStart !== null)
+    startButton =
+        (<div className="sLineButtonContainer">
+          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
+            −
+          </button>
+          <span className='size'>Start: {startNode}</span>
+          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
+            +
+          </button>
+          
+        </div>);
  
   let weightButton = '';
   if (!unweighted)
@@ -764,16 +781,7 @@ function EuclideanMatrixParams({
         </div>
         {weightButton}
         {heurButton}
-        <div className="sLineButtonContainer">
-          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
-            −
-          </button>
-          <span className='size'>Start: {startNode}</span>
-          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
-            +
-          </button>
-          
-        </div>
+        {startButton}
         {endButton}
   </div>
   {endNodeDiv}
