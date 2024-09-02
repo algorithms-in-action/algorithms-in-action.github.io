@@ -339,7 +339,12 @@ export default {
                 } else {
                     // Key already exists in the tree
                     chunker.add('else k == c.key');
-                    chunker.add('Exit the function without inserting the duplicate');
+                    // reset the visualization
+                    chunker.add('Exit the function without inserting the duplicate',
+                        (vis) => {
+                            vis.graph.clear();
+                        }
+                    );
                     return root;
                 }
             }
