@@ -51,9 +51,9 @@ done by calling rightRotate(t6), where t6 is the tree rooted at 6.
 
 '''
       6                           2
-     / \\     Right Rotation      / \\
+     / \\    Right Rotation      / \\
     2   7    - - - - - - - >    1   6
-   / \\       < - - - - - - -       / \\
+   / \\      < - - - - - - -       / \\
   1   4       Left Rotation       4   7
 '''
 
@@ -72,11 +72,11 @@ restored with a left rotation at node 2 followed by a right rotation at
 node 6.
 '''
       6      Rotate           6       Rotate           4
-     / \\    left at 2        / \\     right at 6      /   \\
+     / \\    left at 2       / \\     right at 6     /   \\
     2   7   - - - - - >     4   7    - - - - - >    2     6
-   / \\                     / \\                     / \\   / \\
+   / \\                    / \\                    / \\  / \\
   1   4                   2   5                   1   3 5   7
-     / \\                 / \\
+     / \\                / \\
     3   5               1   3
 '''
 Nodes in the subtree rooted at 4 (where the extra element was added,
@@ -102,101 +102,14 @@ as possible with BST
 
 \\Code{
 Main
-AVLT_Search(t, k)  // return subtree whose root has key k; or NotFound
-\\Expl{ This is identical to simple binary search tree search.
-\\Expl}
-\\In{
-    while t not Empty
-    \\In{
-        n = root(t)
-        \\Note{ Avoids confounding pointers and nodes
-        \\Note}
-        if n.key = k 
-        \\In{
-            return t
-            \\Expl{  We have found a node with the desired key k.
-            \\Expl}
-        \\In}
-        if n.key > k 
-        \\Expl{  The BST condition is that nodes with keys less than the 
-                current node's key are to be found in the left subtree, and
-                nodes whose keys are greater are to be in the right subtree.
-        \\Expl}
-        \\In{
-            t <- n.left
-        \\In}
-        else
-        \\In{
-            t <- n.right
-        \\In}
-    return NotFound
-    \\In}
-\\In}
-\\Code}
-
-\\Note{
-This will be split into two files, for build and search, like BSTs
-\\Note} 
-\\Code{
-Main
 AVLT_Build(keys)  // return the AVL tree that results from inserting
                   // all 'keys' into an initially empty tree
 \\In{
-    t <- Empty
-    for each k in keys
+    t <- Empty \\B t = Empty
+    for each k in keys \\B for each k in keys
     \\In{
-        t <- AVLT_Insert(t, k)
+        t <- AVLT_Insert(t, k) \\Ref AVLT_Insert(t, k)
     \\In}
-\\In}
-\\============================================================================
-\\Note{
-  This is recursive, with most of the work done as we return back up from
-  recursive calls. This should be visualised in some way. Perhaps
-  colouring nodes on the way down and removing the colour on the way
-  back up is sufficient - there is only one path back up to the root.
-  The "current" node should certainly be highlighted in some way also.
-\\Note}
-AVLT_Insert(t, k) // Insert key k in AVL tree t
-\\In{
-    if t = Empty
-    \\In{
-        create new node n containing k \\Ref  NewNode
-        return (pointer to) n // return a single-node tree
-        \\Expl{  The returned tree has just
-                one node, with key k, empty sub-trees and height 1.
-                This is the base case of the recursion.
-        \\Expl}
-    \\In}
-    if k < root(t).key
-    \\Expl{ The key in the root determines if we insert into the left or
-           right subtree.
-    \\Expl}
-    \\In{
-        insert k into the left subtree of t \\Ref insertLeft
-    \\In}
-    else
-      \\Note{ XXX allow duplicate keys or not???
-        Should be possible, but have to carefully review code to make sure its
-        correct. What does BST code do?
-      \\Note} 
-    \\In{
-        insert k into the right subtree of t \\Ref insertRight
-    \\In}
-    Update the height of t \\Ref updateHeight
-    \\Expl{ The height of t may have increased by one
-    \\Expl}
-    Determine the balance of t \\Ref getBalance
-    \\Expl{ For AVL trees, we must ensure the height of the two subtrees
-      varies by at most one.
-    \\Expl}
-    Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
-    \\Expl{ Rotations are local tree operations that increase the
-      height/depth of one subtree but decrease that of another, used to
-      make the tree more balanced.
-      See Background (click at the top of the right panel)
-      for diagrams etc explaining rotations.
-    \\Expl}
-    return t
 \\In}
 
 \\============================================================================
@@ -213,10 +126,10 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  t2 <- left(t6)
-  t4 <- right(t2)
-  t2.right <- t6
-  t6.left <- t4
+  t2 <- left(t6) \\B t2 = left(t6)
+  t4 <- right(t2) \\B t4 = right(t2)
+  t2.right <- t6 \\B t2.right = t6
+  t6.left <- t4 \\B t6.left = t4
   \\Note{ Animation here should be as smooth an intuitive as possible.
     Ideally node 4 should get detached from 2 but remain in place then
     get re-attached to 6. We could possibly move 7 down to the level of 4
@@ -225,14 +138,14 @@ for diagrams etc explaining rotations.
     we can stay on the same line of code for more than one step if
     needed. Similarly for left rotation.
   \\Note}
-  recompute heights of t6 and t2
+  recompute heights of t6 and t2 \\B recompute heights of t6 and t2
   \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
     t2.height <- max(t6.height, t1.height) + 1;
   \\Expl}
   \\Note{ Best not expand this? Should be clear enough and we are a bit
     fast and loose with nodes versus pointers here
   \\Note}
-  return (pointer to) t2 // new root
+  return (pointer to) t2 // new root \\B return t2
 \\In} 
 
 \\============================================================================
@@ -242,25 +155,85 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  t6 <- right(t2)
-  t4 <- left(t6)
-  t6.left <- t2
-  t2.right <- t4
-  recompute heights of t2 and t6
+  t6 <- right(t2) \\B t6 = right(t2)
+  t4 <- left(t6) \\B t4 = left(t6)
+  t6.left <- t2 \\B t6.left = t2
+  t2.right <- t4 \\B t2.right = t4
+  recompute heights of t2 and t6 \\B recompute heights of t2 and t6
   \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
     t6.height <- max(t2.height, t7.height) + 1;
   \\Expl}
-  return (pointer to) t6 // new root
+  return (pointer to) t6 // new root \\B return t6
 \\In} 
+\\Code}
+
+\\============================================================================
+\\Note{
+  This is recursive, with most of the work done as we return back up from
+  recursive calls. This should be visualised in some way. Perhaps
+  colouring nodes on the way down and removing the colour on the way
+  back up is sufficient - there is only one path back up to the root.
+  The "current" node should certainly be highlighted in some way also.
+\\Note}
+\\Code{
+  AVLT_Insert(t, k)
+  // Insert key k in AVL tree t
+  \\In{
+      if t = Empty \\B if t = Empty
+      \\In{
+          create new node n containing k \\Ref NewNode
+          return (pointer to) n // return a single-node tree \\B return n
+          \\Expl{  The returned tree has just
+                  one node, with key k, empty sub-trees and height 1.
+                  This is the base case of the recursion.
+          \\Expl}
+      \\In}
+      if k < root(t).key \\B if k < root(t).key
+      \\Expl{ The key in the root determines if we insert into the left or
+            right subtree.
+      \\Expl}
+      \\In{
+          insert k into the left subtree of t \\Ref insertLeft
+      \\In}
+      else if k > root(t).key \\B else if k > root(t).key
+        \\Note{ XXX allow duplicate keys or not???
+          Should be possible, but have to carefully review code to make sure its
+          correct. What does BST code do?
+        \\Note}
+      \\In{
+          insert k into the right subtree of t \\Ref insertRight
+      \\In}
+      else \\B else k = root(t).key
+      \\In{
+          return t // key k is already in the tree \\B return t, no change
+          \\Expl{  The key is already in the tree, so no change is needed.
+          \\Expl}
+      \\In}
+      Update the height of t \\Ref updateHeight
+      \\Expl{ The height of t may have increased by one
+      \\Expl}
+      Determine the balance of t \\Ref getBalance
+      \\Expl{ For AVL trees, we must ensure the height of the two subtrees
+        varies by at most one.
+      \\Expl}
+      Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
+      \\Expl{ Rotations are local tree operations that increase the
+        height/depth of one subtree but decrease that of another, used to
+        make the tree more balanced.
+        See Background (click at the top of the right panel)
+        for diagrams etc explaining rotations.
+      \\Expl}
+      return t \\B return t
+    \\In}
 \\Code}
 
 \\Code{
 NewNode
-    n <- new Node     // create a new node to hold key k
-    n.key <- k
-    n.left <- Empty   // It will be a leaf, that is,
-    n.right <- Empty  //  it has empty subtrees.
-    n.height <- 1     // It has height 1
+    n <- new Node     // create a new node to hold key k \\B n = new Node
+    n.key <- k \\B n.key = k
+    n.left <- Empty   // It will be a leaf, that is, \\B n.left = Empty
+    n.right <- Empty  //  it has empty subtrees. \\B n.right = Empty
+    n.height <- 1     // It has height 1 \\B n.height = 1
 \\Code}
 
 \\Code{
@@ -271,7 +244,7 @@ recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the left subtree
-AVLT_Insert(left(t), k)
+AVLT_Insert(left(t), k) \\B left(t) <- AVLT_Insert(left(t), k)
 \\Expl{
 The left subtree is replaced by the result of this recursive call
 \\Expl}
@@ -289,7 +262,7 @@ recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the right subtree
-AVLT_Insert(right(t), k)
+AVLT_Insert(right(t), k) \\B right(t) <- AVLT_Insert(right(t), k)
 \\Expl{
 The right subtree is replaced by the result of this recursive call
 \\Expl}
@@ -297,7 +270,7 @@ The right subtree is replaced by the result of this recursive call
 
 \\Code{
 updateHeight
-root(t).height <- 1 + max(left(t).height, right(t).height)
+root(t).height <- 1 + max(left(t).height, right(t).height) \\B root(t).height = 1 + max(left(t).height, right(t).height)
 \\Note{
 t.height <- ...?? (fast and loose with nodes vs pointers)
 \\Note}
@@ -308,7 +281,7 @@ The tree height is one more than the maximum height of its children.
 
 \\Code{
 getBalance
-balance = left(t).height - right(t).height
+balance = left(t).height - right(t).height \\B balance = left(t).height - right(t).height
 \\Expl{
 The balance is just the different between the height of the children.
 A positive balance means the left child is higher; negative means the
@@ -319,7 +292,7 @@ adjust the tree to make it more balanced.
 
 \\Code{
 rotateIfNeeded
-if balance > 1 && k < left(t).key // left-left case
+if balance > 1 && k < left(t).key // left-left case \\B if balance > 1 && k < left(t).key
 \\Expl{
   Key k was inserted into the left-left subtree and made t unbalanced.
   We must re-balance the tree with a "right rotation" that lifts up this
@@ -336,9 +309,9 @@ if balance > 1 && k < left(t).key // left-left case
     rightRotate code then stop at return *after* rightRotate then go
     back to the insert call???; May be better to inline it
   \\Note} 
-  return rightRotate(t)
+  return rightRotate(t) \\B return rightRotate(t)
 \\In}
-if balance < -1 && k > right(t).key // right-right case
+if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k > right(t).key
 \\Expl{
   Key k was inserted into the right-right subtree and made t unbalanced.
   We must re-balance the tree with a "left rotation" that lifts up this
@@ -353,9 +326,9 @@ if balance < -1 && k > right(t).key // right-right case
   \\Note{
     See notes in left-left case
   \\Note} 
-  return leftRotate(t)
+  return leftRotate(t) \\B return leftRotate(t)
 \\In}
-if balance > 1 && k > left(t).key // left-right case (double rotation)
+if balance > 1 && k > left(t).key // left-right case (double rotation) \\B if balance > 1 && k > left(t).key
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
@@ -368,7 +341,7 @@ for diagrams etc explaining rotations.
     XXX should we play fast and loose with node vs pointer here and use
     t.left <- leftRotate(t.left) or have left(t) <- ... ???
   \\Note} 
-  perform leftRotate(left(t));
+  perform leftRotate(left(t)); \\B left(t) <- leftRotate(left(t));
   \\Expl{
     The result returned is the new t.left.
   \\Expl}
@@ -378,9 +351,9 @@ for diagrams etc explaining rotations.
     rightRotate code then stop at return *after* rightRotate then go
     back to the insert call???; May be better to inline it
   \\Note} 
-  return rightRotate(t)
+  return rightRotate(t) \\B return rightRotate(t) after leftRotate
 \\In}
-if balance < -1 && k < right(t).key // right-left case (double rotation)
+if balance < -1 && k < right(t).key // right-left case (double rotation) \\B if balance < -1 && k < right(t).key
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
@@ -390,12 +363,12 @@ for diagrams etc explaining rotations.
   \\Note{
     See notes for left-right case
   \\Note} 
-  perform rightRotate(right(t));
+  perform rightRotate(right(t)); \\B right(t) <- rightRotate(right(t));
   \\Expl{
     The result returned is the new t.right.
   \\Expl}
   // Return "left rotation" on t
-  return leftRotate(t)
+  return leftRotate(t) \\B return leftRotate(t) after rightRotate
 \\In}
 
 return t
@@ -579,9 +552,9 @@ root = insert(root, 25);
 
 /* The constructed AVL Tree would be 
 			30 
-		/ \\ 
+		/ \\
 		20 40 
-		/ \\	 \\ 
+		/ \\	\\ 
 	10 25 50 
 */
 
