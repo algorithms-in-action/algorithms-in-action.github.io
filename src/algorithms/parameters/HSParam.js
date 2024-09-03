@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import ListParam from './helpers/ListParam.js';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
-function HeapsortParam({ alg, mode, list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
+
+function HeapsortParam({ mode, list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
     // const { alg, mode, param } = useUrlParams();
     // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
     // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
