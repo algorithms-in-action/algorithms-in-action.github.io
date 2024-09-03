@@ -383,7 +383,7 @@ export function run_msort() {
 
       }
       //vis.arrayC.set(c, 'msort_arr_bup');
-      vis.array.setList(runlength);
+      //vis.array.setList(runlength);
 
       //set_simple_stack(vis.arrayB, runlength);
       //vis.array.showKth(runlength);
@@ -657,7 +657,7 @@ export function run_msort() {
           /*for (let i = pre_left; i <= pre_right; i++) {
             unhighlight(vis, i, false);
           }*/
-          if (left < size) {
+          if (cur_left < size) {
             assignVarToA(vis, 'left', cur_left);
           }
           /*for (let i = left; i <= left + runlength - 1; i++) {
