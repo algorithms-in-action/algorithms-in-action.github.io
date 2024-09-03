@@ -3,7 +3,7 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    HashSearch(T, k)  // Search for key k in table T
+    HashSearch(T, k)  // Search for key k in table T \\B HashSearch(T, k)
     \\In{
         i <- hash(k) \\Ref Hash1
         Choose Increment value for stepping through T \\Ref SetIncrementLinearProbing

@@ -153,39 +153,35 @@ const allalgs = {
     },
   },
 
-  'Hashing (LP)': {
+  'HashingLP': {
     name: 'Hashing (linear probing)',
     category: 'Insert/Search',
-    param: <Param.HashingParam/>,
+    param: <Param.HashingLPParam/>,
     instructions: Instructions.HashingInstruction,
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
-      insertion: Pseudocode.HashingInsert,
-      search: Pseudocode.HashingSearch,
+      hash: Pseudocode.HashingLP,
     },
     controller: {
-      insertion: Controller.HashingInsert,
-      search: Controller.HashingSearch,
+      hash: Controller.HashingLP,
     },
   },
 
-  'Hashing (DH)': {
-      name: 'Hashing (double hashing)',
-      category: 'Insert/Search',
-      param: <Param.HashingParam/>,
-      instructions: Instructions.HashingInstruction,
-      explanation: Explanation.HashingExp,
-      extraInfo: ExtraInfo.HashingInfo,
-      pseudocode: {
-        insertion: Pseudocode.HashingInsert,
-        search: Pseudocode.HashingSearch,
-      },
-      controller: {
-        insertion: Controller.HashingInsert,
-        search: Controller.HashingSearch,
-      },
+  'HashingDH': {
+    name: 'Hashing (double hashing)',
+    category: 'Insert/Search',
+    param: <Param.HashingDHParam/>,
+    instructions: Instructions.HashingInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      hash: Pseudocode.HashingDH,
     },
+    controller: {
+      hash: Controller.HashingDH,
+    },
+  },
 
   'DFSrec': {
     name: 'Depth First Search',

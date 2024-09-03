@@ -4,7 +4,7 @@ export default parse(`
 
 \\Code{
     Main
-    HashInit(T)    // TableSize is prime
+    HashInit(T)    // TableSize is prime \\B HashInit(T)
         \\In{
             Initialize Hash Table Slots to Empty   \\Ref NullTable
             Insertions <- 0    // Keep track of how full table is \\Ref Insert
