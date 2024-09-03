@@ -136,13 +136,6 @@ export function run_msort() {
     // -----------------------------------------------------------------
 
     const entire_num_array = nodes;
-    let A = nodes;
-    let B = [...entire_num_array].fill(undefined);
-    let runlength = 1; // length of run to merge
-    let size = nodes.length - 1; // size of array
-
-    console.log("runlength = " + runlength);
-
 
     // ----------------------------------------------------------------
     // Define helper functions
@@ -163,14 +156,20 @@ export function run_msort() {
         vis.arrayB.assignVariable(variable_name, index);
     }
 
-    function displayRunlength(vis, runlength) {
+    function displayRunlength(vis, runlength, size) {
+
       console.log("runlength = " + runlength);
 
       let str = 'runlength = ';
       let text = str + runlength;
       let index = runlength - 1;
+      if (runlength > size) {
+        assignVarToA(vis, text, size);
+      }
+      else {
+        assignVarToA(vis, text, index);
+      }
 
-      assignVarToA(vis, text, index);
     }
 
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2) {
@@ -194,7 +193,14 @@ export function run_msort() {
       }
     }
 
-    //// start mergesort -------------------------------------------------------- 
+    //// start mergesort --------------------------------------------------------
+
+    let A = nodes;
+    let B = [...entire_num_array].fill(undefined);
+    let runlength = 1; // length of run to merge
+    let size = nodes.length - 1; // size of array
+
+    console.log("runlength = " + runlength);
 
     let runlengthString = 'runlength = ' + runlength;
 
@@ -209,26 +215,21 @@ export function run_msort() {
       }
     }, [A, B, size], length);
 
-    //let runlength_numb = runlength - 1;
-    //let runlength_str = "runlength = ";
-    //let runlength_text = runlength_str + runlength;
-
     chunker.add('runlength', (vis, runlength) => {
-      //console.log("runlength = " + runlength);
-      /*let str = 'runlength = ';
-      let text = str + runlength;
-      let index = runlength - 1;
 
-      assignVarToA(vis, text, index);*/
-      displayRunlength(vis, runlength);
-    }, [runlength]);
+      displayRunlength(vis, runlength, size);
+
+    }, [runlength, size]);
 
     while (runlength < size + 1) {
       let left = 0;
 
-      chunker.add('MainWhile', (vis, runlength) => {
-        displayRunlength(vis, runlength);
-      }, [runlength]);
+      chunker.add('MainWhile', (vis, runlength, size) => {
+        let size_txt = "size = " + (size + 1);
+        console.log("size = " + size);
+        assignVarToA(vis, size_txt, size);
+        displayRunlength(vis, runlength, size);
+      }, [runlength, size]);
 
       chunker.add('left', (vis, a, cur_left, cur_mid, cur_right) => {
         /*for (let i = cur_left; i <= cur_right; i++) {
@@ -475,9 +476,9 @@ export function run_msort() {
 
 
       runlength = 2 * runlength;
-      chunker.add('runlength2', (vis) => {
-
-      }, [A, B, left, length]);
+      chunker.add('runlength2', (vis, runlength) => {
+        displayRunlength(vis, runlength, size);
+      }, [runlength]);
     }
 
     // We compute and fix the max value in each array so they don't get re-scaled as we
