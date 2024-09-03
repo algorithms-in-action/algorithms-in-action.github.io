@@ -139,7 +139,20 @@ import algorithms from '../../../algorithms';
 
 const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
-//const DEFAULT_PARAM = 'list=1,5,3,4,5&value=2&xyCoords=3-4,7-1&edgeWeights=1-2-3,1-1-1&start=1&end=2&string=abcde&pattern=abc&union=1-2,3-4';
+
+const DEFAULT_LIST = '1,5,3,4,5,10,2,4,7,3';
+const DEFAULT_VALUE = '2';
+const DEFAULT_XY_COORDS = '2-1,1-1';
+const DEFAULT_EDGE_WEIGHTS = '1-2-3,1-1-1';
+const DEFAULT_SIZE = '2'
+const DEFAULT_START = '1';
+const DEFAULT_END = '2';
+const DEFAULT_STRING = 'abcde';
+const DEFAULT_PATTERN = 'abc';
+const DEFAULT_UNION = '1-2,3-4';
+const DEFAULT_HEURISTIC = 'Euclidean'
+const DEFAULT_MIN = '1'
+const DEFAULT_MAX = '10'
 
 export function useUrlParams() {
     const [search, setSearch] = useState(window.location.search);
@@ -160,15 +173,19 @@ export function useUrlParams() {
     const mode = urlParams.get('mode') || DEFAULT_MODE;    // Default mode
 
     // Parse individual parameters directly from URL
-    const list = urlParams.get('list') || '';
-    const value = urlParams.get('value') || '';
-    const xyCoords = urlParams.get('xyCoords') || '';
-    const edgeWeights = urlParams.get('edgeWeights') || '';
-    const start = urlParams.get('start') || '';
-    const end = urlParams.get('end') || '';
-    const string = urlParams.get('string') || '';
-    const pattern = urlParams.get('pattern') || '';
-    const union = urlParams.get('union') || '';
+    const list = urlParams.get('list') || DEFAULT_LIST;
+    const value = urlParams.get('value') || DEFAULT_VALUE;
+    const xyCoords = urlParams.get('xyCoords') || DEFAULT_XY_COORDS;
+    const edgeWeights = urlParams.get('edgeWeights') || DEFAULT_EDGE_WEIGHTS;
+    const size = urlParams.get('size') || DEFAULT_SIZE;
+    const start = urlParams.get('start') || DEFAULT_START;
+    const end = urlParams.get('end') || DEFAULT_END;
+    const string = urlParams.get('string') || DEFAULT_STRING;
+    const pattern = urlParams.get('pattern') || DEFAULT_PATTERN;
+    const union = urlParams.get('union') || DEFAULT_UNION;
+    const heuristic = urlParams.get('heuristic') || DEFAULT_HEURISTIC;
+    const min = urlParams.get('min') || DEFAULT_MIN;
+    const max = urlParams.get('max') || DEFAULT_MAX;
 
     console.log("Raw URL alg:", urlParams.get('alg'));
     console.log("Raw URL mode:", urlParams.get('mode'));
@@ -185,20 +202,20 @@ export const withAlgorithmParams = (WrappedComponent) => {
             return <div>Invalid algorithm or mode specified</div>;
         }
 
-        return <WrappedComponent 
-                    alg={alg} 
-                    mode={mode} 
-                    list={list} 
-                    value={value} 
-                    xyCoords={xyCoords} 
-                    edgeWeights={edgeWeights} 
-                    start={start} 
-                    end={end} 
-                    string={string} 
-                    pattern={pattern} 
-                    union={union} 
-                    {...props} 
-                />;
+        return <WrappedComponent
+            alg={alg}
+            mode={mode}
+            list={list}
+            value={value}
+            xyCoords={xyCoords}
+            edgeWeights={edgeWeights}
+            start={start}
+            end={end}
+            string={string}
+            pattern={pattern}
+            union={union}
+            {...props}
+        />;
     };
 
     // Set display name for easier debugging
