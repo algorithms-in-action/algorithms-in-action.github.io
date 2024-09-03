@@ -701,8 +701,9 @@ class GraphRenderer extends Renderer {
         <text
           style={{ fill: '#ff0000' }}
           textAnchor="middle"
-          x={rootX}
-          y={rootY - 20}
+          fontSize={50} // font size
+          x={this.centerX - 80}
+          y={this.centerY - 350}
         >
           {text}
         </text>

@@ -777,9 +777,11 @@ class GraphTracer extends Tracer {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
-  setText(text) {
+  setText(text, id) {
+    // this.findNode(id).height = 100;
+    // this.findNode(id).text = text;
     this.text = text;
-    this.text.push({ text });
+    // this.text.push({ text });
   }
 
   setIstc() {
