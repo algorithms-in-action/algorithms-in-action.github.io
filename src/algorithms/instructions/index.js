@@ -82,7 +82,8 @@ on the arrow in its middle, the right and bottom panels can be enlarged or shrun
 by dragging the "..." up temporarily`,
       `Under the ${KEY_PLAY} button, toggle between sample graphs (eg Graph 1) and random graphs, or`,
       'edit text for X-Y node coordinates (this can change the graph size) and edges/weights (weights are ignored for unweighted graph algorithms), or',
-      'enter X-Y node coordinates and edges/weights in tables.',
+      'enter X-Y node coordinates and edges/weights in tables below, or',
+      'change X-Y node coordinates by selecting a node with the mouse and dragging it.',
       `The graph size can also be explicitly increased/decreased - this generates a new random graph.`,
       `Edge weights (for weighted graph algorithms) can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
     ]
