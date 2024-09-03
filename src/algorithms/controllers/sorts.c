@@ -7,8 +7,9 @@
 // #define QUICKSORT // some version of quicksort
 // #define MERGE_TD // top-down merge sort
 // #define MERGE_BUP // bottom-up merge sort
+#define MERGE_NAT // natural merge sort
 // #define MSD_RADIX // radix exchange sort
-#define MERGE_TD_LA // top-down merge sort for lists imp as arrays
+// #define MERGE_TD_LA // top-down merge sort for lists imp as arrays
 // XXX should do top-down merge sort for lists imp with pointers - main code
 // should be identical - just need to write init code for list and change
 // some macro definitions
@@ -59,6 +60,10 @@ List mergesort_td_la(int L, int len);
 void mergesort_bup(int A[], int size);
 #endif // MERGE_BUP
 
+#ifdef MERGE_NAT
+void mergesort_nat(int A[], int size);
+#endif // MERGE_NAT
+
 #ifdef MSD_RADIX
 int radix_partition(int *A, int left, int right, int mask);
 void msd_radix_sort(int A[], int left, int right, int mask);
@@ -102,6 +107,9 @@ main() {
 #ifdef MERGE_BUP
         mergesort_bup(A, Size-1);
 #endif // MERGE_BUP
+#ifdef MERGE_NAT
+        mergesort_nat(A, Size-1);
+#endif // MERGE_NAT
         for (i=1; i < Size; i++) printf("%d ", A[i]); printf("\n");
 }
 
@@ -323,7 +331,7 @@ mergesort_td(int A[], int left, int right) {
 List
 mergesort_td_la(int L, int len) {
         int i, mid;
-        List Lmid, R, M, E;
+        List Lmid, R, M, Mlast;
 
         if (len > 1) {
                 // determine Lmid, the mid point of L
@@ -362,23 +370,23 @@ mergesort_td_la(int L, int len) {
                     R = tail(R);
                 }
                 // scan through adding elements to the end of M
-                E = M;
+                Mlast = M;
                 while (L != Null && R != Null) {
                     if (head(L) <= head(R)) {
-                        tail(E) = L;
-                        E = L;
+                        tail(Mlast) = L;
+                        Mlast = L;
                         L = tail(L);
                     } else {
-                        tail(E) = R;
-                        E = R;
+                        tail(Mlast) = R;
+                        Mlast = R;
                         R = tail(R);
                     }
                 }
                 // add any elements not scanned to the end of M
                 if (L == Null)
-                    tail(E) = R;
+                    tail(Mlast) = R;
                 else
-                    tail(E) = L;
+                    tail(Mlast) = L;
             printf("Merged: ");
             for (Lmid = M; Lmid != Null; Lmid = tail(Lmid))
                 printf(" %d", head(Lmid));
@@ -397,7 +405,7 @@ mergesort_td_la(int L, int len) {
 #endif // MERGE_TD_LA
 
 #ifdef MERGE_BUP
-// XXX could reduce duplication with MERGE_TD
+// XXX could reduce duplication with MERGE_TD and MERGE_NAT
 int B[Size];
 
 int
@@ -460,3 +468,77 @@ printf("Merging %d %d %d - %d\n", left, mid, right, runlength);
 }
 
 #endif // MERGE_BUP
+
+#ifdef MERGE_NAT
+// XXX could reduce duplication with MERGE_TD and MERGE_BUP
+int B[Size];
+
+int
+minimum(int i, int j) {
+        if (i <= j)
+                return i;
+        else
+                return j;
+}
+
+// Sort array A[1]..A[size] in ascending order
+void
+mergesort_nat(int A[], int size) {
+        int runcount, left, mid, right;
+        int ap1, ap1max, ap2, ap2max, bp;
+
+        do {
+                runcount = 0;
+                left = 1;
+                do {
+                        // find the first run, A[left..mid]
+                        mid = left;
+                        while (mid < size && A[mid] <= A[mid+1])
+                            mid++;
+                        // find the second run, A[mid+1..right]
+                        right = mid+1;
+                        while (right < size && A[right] <= A[right+1])
+                            right++;
+                        if (mid < size) {
+                        // merge A[left..mid] and A[mid+1..right], with the result in A
+printf("Merging %d %d %d \n", left, mid, right);
+                                ap1 = left;
+                                ap1max = mid;
+                                ap2 = mid+1;
+                                ap2max = right;
+                                bp = left;
+                                while (ap1 <= ap1max && ap2 <= ap2max)
+                                        if (A[ap1] < A[ap2]) {
+                                                B[bp] = A[ap1];
+                                                ap1 = ap1+1;
+                                                bp = bp+1;
+                                        } else {
+                                                B[bp] = A[ap2];
+                                                ap2 = ap2+1;
+                                                bp = bp+1;
+                                        }
+                                while (ap1 <= ap1max) {
+                                        B[bp] = A[ap1];
+                                        ap1 = ap1+1;
+                                        bp = bp+1;
+                                }
+                                while (ap2 <= ap2max) {
+                                        B[bp] = A[ap2];
+                                        ap2 = ap2+1;
+                                        bp = bp+1;
+                                }
+                                for (bp = left; bp <= right; bp++)
+                                        A[bp] = B[bp];
+                        }
+                        runcount++;
+                        left = right + 1;
+                } while (left < size);
+        } while (runcount > 1);
+// if (left < right-1) { // for testing/debugging
+// int i1;
+// printf("Ret from ms(%d, %d): ", left, right);
+// for (i1=1; i1 < Size; i1++) printf("%d ", A[i1]); printf("\n");
+// }
+}
+
+#endif // MERGE_NAT

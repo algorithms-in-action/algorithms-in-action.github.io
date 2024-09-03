@@ -21,7 +21,7 @@ export default {
     };
   },
 
-  run(chunker, {edgeValueMatrix, coordsMatrix, startNode, endNodes, heuristicFn}) {
+  run(chunker, {edgeValueMatrix, coordsMatrix, startNode, endNodes, heuristicFn, moveNode}) {
     // String Variables used in displaying algo
     const algNameStr = 'aStar';
     const dashStr = '-';
@@ -130,6 +130,7 @@ export default {
       (vis, edgeArray, coordsArray) => {
         vis.graph.directed(false);
         vis.graph.weighted(true);
+        vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
       },
       [E, coords]

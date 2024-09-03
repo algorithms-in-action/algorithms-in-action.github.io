@@ -245,12 +245,18 @@ export const makeWeightsOld = (len, min, max, symmetric, unweighted) => {
 // for a large number - could make some adjustments.  Could be nice for
 // this to have the X-Y coordinates passed in; currently they are done
 // independently, which limits things somewhat.
-export const makeWeights = (len, min, max, symmetric, unweighted) => {
+export const makeWeights = (len, min, max, symmetric, unweighted, circular=false) => {
   const rows = [];
 
   // get pseudo-random len*len edge matrix
   // Try to get average degree around 3, edges being more likely between
-  // nodes with similar numbers
+  // nodes with similar numbers; lower degree for circular graphs
+  let diffMult = 4; // magic number for random edge generation
+  let sub = 6; // magic number for random edge generation
+  if (circular) {
+    diffMult = 3 ; // larger means fewer edges between close nodes
+    sub = 0; // smaller means fewer edges in total
+  }
   for (let i = 0; i < len; i += 1) {
     let row = [];
     let edgeCount = 0;
@@ -269,20 +275,19 @@ export const makeWeights = (len, min, max, symmetric, unweighted) => {
           // code did...
           val = (symmetric? 0 : 1);
           // always have an edge between i and i+1 to make sure graph is
-          // connected (may not always want this but you can edit graphs
-          // if desired)
-        } else if (j == i+1) {
+          // connected, unless its circular
+        } else if (j == i+1 && !circular) {
           val = (unweighted? 1: getRandomInt(min, max));
           // else determine if we want an edge between i and j
           // - if i&j differ more we reduce likelihood
-        } else if (Math.random() < 0.75**(Math.abs(i-j)*3 - 6)) {
+        } else if (Math.random() < 0.75**(Math.abs(i-j)*diffMult - sub)) {
           val = (unweighted? 1: getRandomInt(min, max));
         }
         if (val > 0) edgeCount++;
         row.push(val);
       }
       // console.log('try ' + tries + 'edgeCount = ' + edgeCount);
-    } while (tries < 40 && (edgeCount === 0 || edgeCount > 4) && len > 1)
+    } while (tries < 40 && (edgeCount === 0 && !circular || edgeCount > 4) && len > 1)
     // console.log('row' + i + ': ' + row);
     rows.push(row);
   }
@@ -300,7 +305,10 @@ export const makeWeights = (len, min, max, symmetric, unweighted) => {
 
 // Create len random-ish XY coordinates in range min to max for
 // Euclidean graphs
-export const makeXYCoords = (len, min, max) => {
+export const makeXYCoords = (len, min, max, circular=false) => {
+  // added circular layout for Warshall's
+  if (circular)
+    return makeXYCoordsCircular(len, min, max);
   const rows = [];
   let arr = [];
   let prevX = 0;  // keep track of previous 2 X,Y values to reduce close nodes
@@ -343,6 +351,25 @@ export const makeXYCoords = (len, min, max) => {
     prevY1 = prevY;
     prevX = x;
     prevY = y;
+    arr.push(data);
+  }
+  return arr;
+}
+
+// Create len circular-ish XY coordinates for graph in range min to max for
+// Warshall's
+export const makeXYCoordsCircular = (len, min, max) => {
+  const unitAngle = (2 * Math.PI) / len;
+  const radius = (max-min)/6; // height on screen is limited
+  const midX = (max-min)/2;
+  const midY = 1 + (max-min)/6; // avoid X axis
+  let arr = [];
+  for (let i = 0; i < len; i += 1) {
+    let data = {};
+    let x = Math.round(midX + (Math.cos(Math.PI+unitAngle*i) * radius));
+    let y = Math.round(midY + (Math.sin(Math.PI+unitAngle*i) * radius));
+    data[`col0`] = `${x}`;
+    data[`col1`] = `${y}`;
     arr.push(data);
   }
   return arr;
