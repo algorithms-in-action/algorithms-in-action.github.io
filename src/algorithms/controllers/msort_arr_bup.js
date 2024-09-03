@@ -61,18 +61,17 @@ function isMergeExpanded() {
   return areExpanded(['MergeCopy', 'Merge']); // MergeCopy contains Merge
 }
 
-// ----------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
 
 // Define helper functions
 // without javascript Closure arguements (IE 'global variables')
-// ----------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
 
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message || 'Assertion failed');
   }
 }
-
 
 const highlight = (vis, index, isPrimaryColor = true) => {
   if (isPrimaryColor) {
@@ -90,42 +89,10 @@ const highlightB = (vis, index, isPrimaryColor = true) => {
   }
 };
 
-const unhighlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.deselect(index);
-  } else {
-    vis.array.depatch(index);
-  }
-};
-
-const unhighlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.deselect(index);
-  } else {
-    vis.arrayB.depatch(index);
-  }
-};
-
-// ----------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 // We hide array B entirely if things mergeCopy is collapsed
 export function initVisualisers() {
-
-  /*return {
-    array: {
-      instance: new ArrayTracer('array', null, 'Array A', {
-        arrayItemMagnitudes: true,
-      }),
-      order: 0,
-    },
-    arrayB: {
-      instance: new ArrayTracer('arrayB', null, 'Array B', {
-        arrayItemMagnitudes: true,
-      }),
-      order: 0,
-    }
-  }*/
-
   if (isMergeCopyExpanded()) {
     return {
       array: {
@@ -164,9 +131,9 @@ export function run_msort() {
   return function run(chunker, { nodes }) {
     // can't rename from nodes
 
-    // ----------------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------
     // Define 'global' variables
-    // ----------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------
 
     const entire_num_array = nodes;
     let A = nodes;
@@ -177,9 +144,9 @@ export function run_msort() {
     console.log("runlength = " + runlength);
 
 
-    // ----------------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------
     // Define helper functions
-    // ----------------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------
 
 
     function assignVarToA(vis, variable_name, index) {
@@ -196,15 +163,15 @@ export function run_msort() {
         vis.arrayB.assignVariable(variable_name, index);
     }
 
-    /*function displayRunlength(vis, runlength) {
+    function displayRunlength(vis, runlength) {
       console.log("runlength = " + runlength);
 
-      let str = 'runlength = '
+      let str = 'runlength = ';
       let text = str + runlength;
       let index = runlength - 1;
 
       assignVarToA(vis, text, index);
-    }*/
+    }
 
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2) {
       if (isMergeExpanded()) {
@@ -246,17 +213,22 @@ export function run_msort() {
     //let runlength_str = "runlength = ";
     //let runlength_text = runlength_str + runlength;
 
-    chunker.add('runlength', (vis) => {
+    chunker.add('runlength', (vis, runlength) => {
       //console.log("runlength = " + runlength);
-      //displayRunlength(vis, runlength);
-    });
+      /*let str = 'runlength = ';
+      let text = str + runlength;
+      let index = runlength - 1;
+
+      assignVarToA(vis, text, index);*/
+      displayRunlength(vis, runlength);
+    }, [runlength]);
 
     while (runlength < size + 1) {
       let left = 0;
 
       chunker.add('MainWhile', (vis, runlength) => {
-        //displayRunlength(vis, runlength);
-      }, [A, B, left, length]);
+        displayRunlength(vis, runlength);
+      }, [runlength]);
 
       chunker.add('left', (vis, a, cur_left, cur_mid, cur_right) => {
         /*for (let i = cur_left; i <= cur_right; i++) {
@@ -282,10 +254,6 @@ export function run_msort() {
 
         }, [A, B, left, mid, right, length]);
 
-
-
-
-
         chunker.add('mid', (vis, a, cur_left, cur_mid, cur_right) => {
           assignVarToA(vis, 'mid', cur_mid);
         }, [A, left, mid, right]);
@@ -304,7 +272,7 @@ export function run_msort() {
         let max2 = right;
         let bp = left;
 
-        chunker.add('ap1', (vis, a, cur_left, cur_mid, cur_right) => {
+        chunker.add('ap1', (vis, cur_left) => {
 
           // vis.array.set(a, 'msort_arr_bup');
           // vis.arrayB.setList(runlength);
@@ -315,7 +283,7 @@ export function run_msort() {
             //highlight(vis, cur_left, true);
           }
         }, [A, left, mid, right]);
-        chunker.add('max1', (vis, a, cur_left, cur_mid, cur_right) => {
+        chunker.add('max1', (vis, cur_mid) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'mid', undefined);
             assignVarToA(vis, 'max1', cur_mid);
