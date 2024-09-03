@@ -4,21 +4,24 @@ export default {
     },
 
     run(chunker, params) {
-
-        function hashInit(tableSize) {
+        const SMALL= 11;
+        const BIG = 97;
+        let mode = 0;
+        function hashInit() {
+            let tableSize = mode == 0 ? SMALL : BIG;
             let table = new Array(tableSize);
 
             return table;
         }
 
-        function hash1(k) {
-            return k % 11;
+        function hash(k) {
+                return mode == 0 ? k % SMALL : k % BIG;
         }
 
         function hashInsert(table, key) { // add mode parameter with case for
 
             // get initial hash index
-            let i = hash1(key);
+            let i = hash(key);
 
             // linear probing collision handling
             while (typeof table[i] !== 'undefined' && table[i] !== null) {
@@ -31,7 +34,7 @@ export default {
         }
 
         function hashDelete(table, key) {
-            let i = hash1(key);
+            let i = hash(key);
 
             while (table[i] != key) {
                 i = i + 1;

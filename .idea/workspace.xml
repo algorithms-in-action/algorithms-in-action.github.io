@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Updating functions">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Generalised code so that it works for big and small hashes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsert.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsert.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +50,15 @@
       <option name="presentableId" value="Default" />
       <updated>1724133863283</updated>
     </task>
+    <task id="LOCAL-00001" summary="Updating functions">
+      <option name="closed" value="true" />
+      <created>1725345097691</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1725345097691</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -70,6 +80,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Updating functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating functions" />
+    <MESSAGE value="Generalised code so that it works for big and small hashes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Generalised code so that it works for big and small hashes" />
   </component>
 </project>

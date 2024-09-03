@@ -4,13 +4,17 @@ export default {
 
     run(chunker, params) {
     // small hash, table size 11
-        function hash1(key) {
-            return key % 11;
+        const SMALL= 11;
+        const BIG = 97;
+        let mode = 0
+
+        function hash(k) {
+                        return mode == 0 ? k % SMALL : k % BIG;
         }
 
         function hashSearch(table, k) {
             // index
-            let i = hash1(k);
+            let i = hash(k);
 
             while (table[i] != k) {
                 i = i+1;
