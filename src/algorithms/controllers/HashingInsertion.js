@@ -1,6 +1,12 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import { HashingExp } from '../explanations';
+
+
+const arr1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const arr2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 export default {
+  explanation: HashingExp,
   initVisualisers() {
     return {
       array: {
@@ -12,12 +18,12 @@ export default {
 
   run(chunker) {
     chunker.add(
-      'HashSearch(T, k)',
+      'HashInit(T)',
       (vis, array) => {
-        vis.array.set(array, 'HashingDH');
-        vis.array.hideArrayAtIndex(2);
+        vis.array.set(array, 'HashingLP');
+        vis.array.hideArrayAtIndex(null);
       },
-      [[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]
+      [[arr1, arr2]]
     );
 
     return "Success";

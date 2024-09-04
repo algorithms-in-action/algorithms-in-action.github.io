@@ -50,15 +50,28 @@ function HashingLPParam() {
   });
 
   const handleChange = (e) => {
-    // setSize({ ...UNCHECKED, [e.target.name]: true })
+    setSize({ ...UNCHECKED, [e.target.name]: true })
+  }
+
+  const handleInsert = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
 
-    // const visualiser = algorithm.chunker.visualisers;
     dispatch(GlobalActions.RUN_ALGORITHM, {
       name: 'HashingLP',
-      mode: 'hash',
-      // visualiser,
+      mode: 'insertion',
+    });
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const inputValue = e.target[0].value;
+
+    const visualiser = algorithm.chunker.visualisers;
+    dispatch(GlobalActions.RUN_ALGORITHM, {
+      name: 'HashingLP',
+      mode: 'search',
+      visualiser,
     });
   }
 
@@ -82,7 +95,7 @@ function HashingLPParam() {
           SET_VAL = {setArray}
           ALGORITHM_NAME = {HASHING_INSERT}
           EXAMPLE={HASHING_EXAMPLE}
-          handleSubmit={handleChange}
+          handleSubmit={handleInsert}
           setMessage={setMessage}
         />
 
@@ -95,6 +108,7 @@ function HashingLPParam() {
           DEFAULT_VAL = {DEFAULT_SEARCH}
           SET_VAL = {setSearch}
           ALGORITHM_NAME = {HASHING_SEARCH}
+          handleSubmit={handleSearch}
           setMessage={setMessage}
          />}
       </div>

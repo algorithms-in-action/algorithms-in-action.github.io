@@ -126,6 +126,8 @@ class Array2DRenderer extends Renderer {
               algo !== 'aStar' &&
               algo !== 'aStar' &&
               algo !== 'msort_lista_td' &&
+              algo !== 'HashingLP' &&
+              algo !== 'HashingDH' &&
               longestRow.map((_, i) => {
                 if (algo === 'tc') {
                   i += 1;
@@ -210,7 +212,7 @@ class Array2DRenderer extends Renderer {
                   ))
                 ||
                   (((algo === 'prim' && i === 2) ||
-                    (algo === 'dijkstra' && i === 2) 
+                    (algo === 'dijkstra' && i === 2)
                     ) && (
                     <th className={classes(styles.col, styles.index)}>
                       <span className={styles.value}> Priority Queue </span>
