@@ -1,191 +1,300 @@
 @import "../../common/stylesheet/index";
 
-.array_1d {
-  flex-shrink: 0;
+.list {
+  flex: 1;
+  align-self: stretch;
 
-  .bottom_caption {
-    // added for msort_arr_td
-    caption-side: bottom;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 13px;
-    color: var(--array-2d-row-col-value-color);
-    font-family: Menlo, "Liberation Mono", Courier, monospace;
-  }
-
-  .captionmsort_arr_td {
-    caption-side: bottom;
-    // caption-side: top;
-    text-align: right;
-    margin-top: 70px;
-    // margin-top: 0px;
-  }
-
-
-
-  .row {
-    margin-bottom: m#{i}n(8px, 1vh);
-    position: relative;
-    --array-1d-minimum-height: 1em;
-
-    /*
-    Pivot Line Styling:
-    - This style defines the visual representation of the pivot element in 1D arrays, particularly in algorithms like QuickSort.
-    - Currently disabled for design reasons, but can be re-enabled if required in the future.
-    - To reactivate, uncomment this style and the corresponding JSX code in index.js.
-    */
-
-    // .pivotLine {
-    //     position: absolute;
-    //     width: 100%;
-    //     height: 3px;
-    //     background-color: var(--array-1d-row-col-bg-selected);
-    //     opacity: 0.4;
-    //     margin-right: 4px;
-    //     z-index: 1;
-    // }
-
-    .col {
-      justify-content: center;
-      align-items: center;
-
-      text-align: center;
-      min-width: 8px;
-      width: 28px;
-      min-height: var(--array-1d-minimum-height);
-      background-color: var(--array-2d-row-col-bg);
-      border: 1px solid var(--array-2d-row-col-border);
-      padding: 0 4px;
-      margin-right: 4px;
-
-      .value {
-        font-size: 12px;
-        color: var(--array-2d-row-col-value-color);
-
-      }
-
-      .variable {
-        font-size: 18px;
-        color: var(--array-1d-row-col-variable);
-      }
-
-      &.selected {
-        background-color: var(--array-1d-row-col-bg-selected);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected1 {
-        background-color: var(--array-2d-row-col-bg-selected1);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected2 {
-        background-color: var(--array-2d-row-col-bg-selected2);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected3 {
-        background-color: var(--array-2d-row-col-bg-selected3);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected4 {
-        background-color: var(--array-2d-row-col-bg-selected4);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected5 {
-        background-color: var(--array-2d-row-col-bg-selected5);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.patched {
-        background-color: var(--array-1d-row-col-bg-patched);
-
-        span {
-          color: var(--array-2d-row-col-patched);
-        }
-
-      }
-
-      &.sorted {
-        background-color: var(--array-2d-row-bg-sorted);
-
-        span {
-          color: var(--array-2d-row-col-sorted);
-        }
-      }
-
-
-
-      &.index {
-        background: var(--array-2d-row-col-bg-index);
-        border: var(--array-2d-row-col-border-index);
-        color: var(--array-2d-row-col-color-index);
-        padding: 0 4px;
-        margin-right: 5px;
-
-      }
-
-      &.variables {
-        background: var(--array-2d-row-col-bg-index);
-        border: var(--array-2d-row-col-border-index);
-        color: var(--array-2d-row-col-color-index);
-        vertical-align: text-top;
-        min-height: 60px;
-
-      }
-
-      &.faded {
-        opacity: 0.5;
-      }
-
-
+  .node {
+    .circle {
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--graph-node-circle-stroke);
+      stroke-width: 1;
     }
-  }
 
-  .stack {
-    .stackElement {
-      display: grid;
-      grid-auto-flow: row;
-      height: 0.6em;
-      transition-duration: 0.1s;
-      margin-bottom: m#{i}n(1vh, 1em);
+    .rect {
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--graph-node-circle-stroke);
+      stroke-width: 1;
+    }
 
-      --not-started-section: rgba(0, 0, 0, 0); // transparent
-      --in-progress-section: rgb(169, 169, 169);
-      --current-section: var(--array-1d-row-col-bg-selected);
-      --finished-section: rgb(0, 0, 0);
+    .id {
+      fill: var(--graph-node-id-fill);
+      dominant-baseline: central;
+      text-anchor: middle;
+      font-size: 35px; // font size for labels inside nodes
+    }
 
-      .stackSubElement {
-        transition-duration: 0.1s;
-        --j-section: rgb(58, 177, 167);
-        --i-section: rgb(28, 185, 41);
-        --p-section: rgb(176, 25, 187);  // pink pivot
+    .weight {
+      fill: var(--graph-node-weight-fill);
+      font-weight: bold;
+      font-size: 15px;
+      alignment-baseline: central;
+      text-anchor: left;
+    }
+
+    &.selected {
+      .circle {
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
+      }
+
+      .rect {
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-selected);
       }
     }
 
-    p {
-      color: rgb(133, 133, 133);
-      font-size: 0.8em;
+    &.visited0 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited0);
+        stroke: var(--graph-node-circle-stroke-visited0);
+      }
+
+      .rect {
+        fill: var(--graph-node-circle-fill-visited0);
+        stroke: var(--graph-node-circle-stroke-visited0);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
     }
+
+    &.visited {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
+      }
+
+      .rect {
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.sorted {
+      .circle {
+        fill: var(--graph-node-circle-fill-sorted);
+
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-sorted);
+      }
+    }
+
+    &.visited1 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited1);
+        stroke: var(--graph-node-circle-stroke-visited1);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.visited2 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited2);
+        stroke: var(--graph-node-circle-stroke-visited2);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.visited3 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited3);
+        stroke: var(--graph-node-circle-stroke-visited3);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+
+    &.visited4 {
+      .circle {
+        fill: var(--graph-node-circle-fill-visited4);
+        stroke: var(--graph-node-circle-stroke-visited4);
+      }
+
+      .id {
+        fill: var(--graph-node-id-fill-visited);
+      }
+    }
+  }
+
+  .edge {
+    .line {
+      stroke: var(--graph-edge-line-stroke);
+      // For various trees we don't care much about edges so having them
+      // thin is fine but for some graph algorithms in particular we
+      // want to highlight edges and change their color to we want
+      // reasonable thick edges; this is a compromise (maybe we could
+      // add an interface to adjust it for different algorithms XXX)
+      stroke-width: 7; // width of edges in graphs
+      fill: none;
+
+      &.directed {
+        marker-end: url(#markerArrow);
+      }
+    }
+
+    .weight {
+      fill: var(--graph-edge-line-weight-fill);
+      alignment-baseline: baseline;
+      text-anchor: middle;
+      // font size for labels in nodes - should be linked to node radius
+      // XXX but currently isn't.  Another difficulty was node sizes
+      // were adjusted depending on coordinate list - now deleted.
+      // font-size: 15px;
+      font-size: 35px;
+    }
+
+    &.selected {
+      .line {
+        stroke: var(--graph-edge-line-stroke-selected);
+
+        &.directed {
+          marker-end: url(#markerArrowSelected);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-selected);
+      }
+    }
+
+    &.sorted {
+      .line {
+        stroke-width: 0;
+      }
+    }
+
+    &.visited {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited);
+      }
+    }
+
+    &.visited1 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited1);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited1);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited1);
+      }
+    }
+
+    &.visited2 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited2);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited2);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited2);
+      }
+    }
+
+    &.visited3 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited3);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited3);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited3);
+      }
+    }
+
+    &.visited4 {
+      .line {
+        stroke: var(--graph-edge-line-stroke-visited4);
+
+        &.directed {
+          marker-end: url(#markerArrowVisited4);
+        }
+      }
+
+      .weight {
+        fill: var(--graph-edge-weight-fill-visited4);
+      }
+    }
+
+  }
+
+  .arrow {
+    fill: var(--graph-arrow-fill);
+
+    &.selected {
+      fill: var(--graph-arrow-fill-selected);
+    }
+
+    &.visited {
+      fill: var(--graph-arrow-fill-visited);
+    }
+
+    &.visited1 {
+      fill: var(--graph-arrow-fill-visited1);
+    }
+
+    &.visited2 {
+      fill: var(--graph-arrow-fill-visited2);
+    }
+
+    &.visited3 {
+      fill: var(--graph-arrow-fill-visited3);
+    }
+
+    &.visited4 {
+      fill: var(--graph-arrow-fill-visited4);
+    }
+  }
+
+
+  // X, Y axis
+  .axis {
+    stroke: var(--axis);
+    stroke-width: 1;
+    fill: none;
+
+  }
+
+  .axisLabel {
+    // font-size: 15px;
+    font-size: 35px;
+    font-weight: 1;
   }
 }

@@ -18,9 +18,8 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-
 import React from 'react';
-import { motion, AnimateSharedLayout } from 'framer-motion';
+import {AnimateSharedLayout, motion} from 'framer-motion';
 import Renderer from '../../common/Renderer/index';
 import styles from './ListRenderer.module.scss';
 import { classes } from '../../common/util';
@@ -48,30 +47,17 @@ class ListRenderer extends Renderer {
         this.togglePan(true);
         this.toggleZoom(true);
 
-        this.maxStackDepth = 0;
     }
-
     renderData() {
-        const { data, algo, stack, stackDepth } = this.props.data;
-        const listMagnitudeScaleValue = 20;
+        // eslint-disable-next-line
+        const { data, algo, stack, stackDepth, listOfNumbers } = this.props.data;
 
-        let largestValue = data.reduce(
-            (acc, curr) => (acc < curr.value ? curr.value : acc),
-            0,
-        );
+        let scaleY = () => 0
 
-        let scaleY = ((largest, value) =>
-            (typeof value !== "number" ? 0 :
-                (value / largest) * listMagnitudeScaleValue)).bind(
-            null,
-            largestValue,
-        );
-        if (!this.props.data.listItemMagnitudes) {
-            scaleY = () => 0;
-        }
+        const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
 
         return (
-            <div
+            <table
                 className={switchmode(mode())}
                 style={{
                     marginLeft: -this.centerX * 2,
@@ -79,122 +65,96 @@ class ListRenderer extends Renderer {
                     transform: `scale(${this.zoom})`,
                 }}
             >
+                <tbody>
                 <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
                     {/* Values */}
-                    {data.map((item, i) => (
-                        <motion.div
-                            layout
-                            transition={{ duration: 0.6 }}
-                            style={{
-                                height: `${this.toString(scaleY(item.value))}vh`,
-                                display: 'flex',
-                            }}
-                            className={classes(
-                                styles.item,
-                                item.faded && styles.faded,
-                                item.selected && styles.selected,
-                                item.patched && styles.patched,
-                                item.sorted && styles.sorted,
-                                item.style && item.style.backgroundStyle,
-                            )}
-                            key={item.key}
-                        >
-                            <motion.span
-                                layout="position"
-                                className={classes(
-                                    styles.value,
-                                    item.style && item.style.textStyle,
-                                )}
-                            >
-                                {this.toString(item.value)}
-                            </motion.span>
-                        </motion.div>
-                    ))}
-
-                    <div>
-                        {/* Stack */}
-                        {stack && stack.length > 0 ? (
-                            this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
-                                stackRenderer(stack, data.length, stackDepth, this.maxStackDepth)
-                        ) : (
-                            <div />
-                        )}
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
-}
-
-/**
- * Renders a stack specific to the list structure.
- * @param {} stack
- * @param {*} nodeCount
- * @param {*} stackDepth
- * @returns
- */
-function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
-    if (!stack) {
-        return <div />;
-    }
-    let stackItems = [];
-    for (let i = 0; i < stack.length; i += 1) {
-        stackItems.push(
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {stack[i].map(({ base, extra }, index) =>
-                    (
+                    {data.map((row, i) => (
                         <div
-                            className={styles.stackElement}
+                            className={styles.row}
+                            key={i}
                             style={{
-                                width: `calc(100%/${nodeCount})`,
-                                textAlign: 'center',
-                                color: 'gray',
-                                backgroundColor: stackFrameColour(base),
+                                display: 'flex',
+                                alignItems: 'flex-end',
+                                justifyContent: 'center',
                             }}
                         >
-                            {extra.map((extraColor) => (
-                                <div
-                                    className={styles.stackSubElement}
+                            {row.map((col) => (
+                                <motion.div
+                                    layout
+                                    transition={{ duration: 0.6 }}
                                     style={{
-                                        width: '100%',
-                                        textAlign: 'center',
-                                        backgroundColor: stackFrameColour(extraColor),
+                                        height: `${this.toString(scaleY(col.value))}vh`,
+                                        display: 'flex',
                                     }}
-                                />
+                                    /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
+                                    className={classes(
+                                        styles.col,
+                                        col.faded && styles.faded,
+                                        col.selected && styles.selected,
+                                        col.patched && styles.patched,
+                                        col.sorted && styles.sorted,
+                                        col.style && col.style.backgroundStyle,
+                                    )}
+                                    key={col.key}
+                                >
+                                    <motion.span
+                                        layout="position"
+                                        className={classes(
+                                            styles.value,
+                                            col.style && col.style.textStyle,
+                                        )}
+                                    >
+                                        {this.toString(col.value)}
+                                    </motion.span>
+                                </motion.div>
                             ))}
                         </div>
-                    )
-                )}
-            </div>,
+                    ))}
+
+                        {/* Variable pointers */}
+                        {data.map(
+                            (
+                                row,
+                                i, // variable pointer only working for 1D arrays
+                            ) => (
+                                <AnimateSharedLayout>
+                                    <div
+                                        layout
+                                        className={styles.row}
+                                        key={i}
+                                        style={{
+                                            minHeight: '50px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'start',
+                                        }}
+                                    >
+                                        {row.map((col) => (
+                                            <div
+                                                className={classes(styles.col, styles.variables)}
+                                                key={`vars-${col.key}`}
+                                            >
+                                                {col.variables.map((v) => (
+                                                    <motion.div
+                                                        layoutId={v}
+                                                        key={v}
+                                                        className={styles.variable}
+                                                        style={{ fontSize: v.length > 2 ? '12px' : null }}
+                                                    >
+                                                        {v}
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </AnimateSharedLayout>
+                            ),
+                        )}
+                    </motion.div>
+                </tbody>
+            </table>
         );
     }
-
-    return (
-        <div className={styles.stack}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <p>
-                    {stack.length > 0 && stackDepth !== undefined ? `Current stack depth: ${stackDepth}` : ''}
-                </p>
-            </div>
-            {stackItems}
-        </div>
-    );
-}
-
-/**
- * @param {*} color_index - an integer representing the state of a stack element
- * @returns string
- */
-function stackFrameColour(color_index) {
-    return [
-        'var(--not-started-section)', // 0
-        'var(--in-progress-section)', // 1
-        'var(--current-section)',     // 2
-        'var(--finished-section)',    // 3
-        'var(--i-section)',           // 4
-        'var(--j-section)',           // 5
-        'var(--p-section)',           // 6
-    ][color_index];
 }
 
 export default ListRenderer;

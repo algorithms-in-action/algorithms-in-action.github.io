@@ -1,7 +1,11 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
+/*
 import {areExpanded} from './collapseChunkPlugin';
 import ListTracer from "../../components/DataStructures/List/ListTracer";
 import linkedListTracer from "../../components/DataStructures/LinkedList/LinkedListTracer";
+import graphTracer from "../../components/DataStructures/Graph/GraphTracer";
+ */
+import listTracer from "../../components/DataStructures/List/ListTracer";
 
 /*
 const LL_BOOKMARKS = {
@@ -23,7 +27,7 @@ export default {
     initVisualisers() {
         return {
             list: {
-                instance: new ListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }), // Label the input array as array view
+                instance: new listTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
                 order: 0,
             }
         };
@@ -32,9 +36,9 @@ export default {
     run(chunker, {values}) {
 
         chunker.add(
-            0,
+            1,
             (vis, list) => {
-                vis.list.set(list, "Prototype");
+                vis.list.set(list);
             },
             [values]
         );

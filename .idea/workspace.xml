@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Linked List Data Structure and List Data Structure Added">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Resolved error with parameter files. Blocker currently at data structure.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/JEFF'S DIAGRAM.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/JEFF'S DIAGRAM.drawio" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/PrototypeParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/PrototypeParam.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/context/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,40 +60,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.App.js.executor": "Run",
-    "Node.js.BFS.js.executor": "Run",
-    "Node.js.Prototype.js.executor": "Run",
-    "Node.js.heapSort.js.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Team2Main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/carli/Downloads/index (2).js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.App.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.BFS.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Prototype.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.heapSort.js.executor&quot;: &quot;Debug&quot;,
+    &quot;Node.js.quickSort_shared.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Team2Main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/carli/Downloads/index (2).js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\carli\WebstormProjects\ITprojectTeam2\src\components\DataStructures\LinkedList" />
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List" />
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List\ListTracer" />
     </key>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-WS-242.20224.342" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -110,6 +104,7 @@
       <workItem from="1723977229097" duration="4517000" />
       <workItem from="1724037366078" duration="9880000" />
       <workItem from="1724577427107" duration="11050000" />
+      <workItem from="1725063617753" duration="5788000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -119,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723982052560</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Resolved error with parameter files. Blocker currently at data structure.">
+      <option name="closed" value="true" />
+      <created>1724819539706</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1724819539706</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +143,7 @@
     <MESSAGE value="Empty Prototype Set up" />
     <MESSAGE value="Pseudocode finished with bookmarks added to controller" />
     <MESSAGE value="Linked List Data Structure and List Data Structure Added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Linked List Data Structure and List Data Structure Added" />
+    <MESSAGE value="Resolved error with parameter files. Blocker currently at data structure." />
+    <option name="LAST_COMMIT_MESSAGE" value="Resolved error with parameter files. Blocker currently at data structure." />
   </component>
 </project>
