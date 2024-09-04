@@ -6,21 +6,25 @@ export default {
     // small hash, table size 11
         const SMALL= 11;
         const BIG = 97;
-        let mode = 0
+        const BIGPRIME = 3457;
+        let mode = 0;
+        let incrementType = 0;
 
         function hash(k) {
                         return mode == 0 ? k % SMALL : k % BIG;
         }
 
-        function hashSearch(table, k) {
-            // index
-            let i = hash(k);
+        function setIncrement(k) {
+            let smallishprime = mode == 0 ? 3 : 23;
+            return incrementType == 0 ? 1 : (k*BIGPRIME) % smallishprime;
+        }
 
-            while (table[i] != k) {
-                i = i+1;
-                if (i > 10) {
-                   i = 0;
-                }
+        function hashSearch(table, key) {
+            // index
+            let i = hash(key);
+            let increment = setIncrement(key);
+            while (table[i] != key) {
+                i = (i + increment) % table.length;
             }
             return i;
         }
