@@ -204,13 +204,17 @@ export default {
 
         // Left-Right Rotation (LRR) to balance the AVL tree
         function LRR(root, parentNode) {
+            chunker.add('left(t) <- leftRotate(left(t));');
             root.left = RRR(root.left, root, false);
+            chunker.add('return rightRotate(t) after leftRotate');
             return LLR(root, parentNode);
         }
 
         // Right-Left Rotation (RLR) to balance the AVL tree
         function RLR(root, parentNode) {
+            chunker.add('right(t) <- rightRotate(right(t));');
             root.right = LLR(root.right, root, false);
+            chunker.add('return leftRotate(t) after rightRotate');
             return RRR(root, parentNode);
         }
 
@@ -299,15 +303,11 @@ export default {
                 root = RRR(root, parentNode);
             } else if (balance > 1 && key > root.left.key) {
                 chunker.add('if balance > 1 && k > left(t).key');
-                chunker.add('left(t) <- leftRotate(left(t));');
                 // console.log("LRR");
-                chunker.add('return rightRotate(t) after leftRotate');
                 root = LRR(root, parentNode);
             } else if (balance < -1 && key < root.right.key) {
                 chunker.add('if balance < -1 && k < right(t).key');
-                chunker.add('right(t) <- rightRotate(right(t));');
                 // console.log("RLR");
-                chunker.add('return leftRotate(t) after rightRotate');
                 root = RLR(root, parentNode);
             }
 
@@ -336,6 +336,7 @@ export default {
 
         for (let i = 0; i < nodes.length; i++) {
             globalRoot = insert(globalRoot, nodes[i], i);
+            chunker.add('for each k in keys');
         }
 
         return globalRoot;
