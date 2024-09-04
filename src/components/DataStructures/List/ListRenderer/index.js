@@ -24,6 +24,7 @@ import Renderer from '../../common/Renderer/index';
 import styles from './ListRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
+import {calculateControlCord} from "../../Graph/GraphRenderer";
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -48,113 +49,117 @@ class ListRenderer extends Renderer {
         this.toggleZoom(true);
 
     }
+
     renderData() {
-        // eslint-disable-next-line
-        const { data, algo, stack, stackDepth, listOfNumbers } = this.props.data;
+        const { values, dimensions,} =
+            this.props.data;
+        const {
+            baseWidth,
+            baseHeight,
+        } = dimensions;
 
-        let scaleY = () => 0
-
-        const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
+        const viewBox = [
+            (this.centerX - baseWidth / 2) / this.zoom,
+            (this.centerY - baseHeight / 2) / this.zoom,
+            baseWidth / this.zoom,
+            baseHeight / this.zoom,
+        ];
 
         return (
-            <table
-                className={switchmode(mode())}
-                style={{
-                    marginLeft: -this.centerX * 2,
-                    marginTop: -this.centerY * 2,
-                    transform: `scale(${this.zoom})`,
-                }}
-            >
-                <tbody>
-                <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
-                    {/* Values */}
-                    {data.map((row, i) => (
-                        <div
-                            className={styles.row}
-                            key={i}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'flex-end',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {row.map((col) => (
-                                <motion.div
-                                    layout
-                                    transition={{ duration: 0.6 }}
-                                    style={{
-                                        height: `${this.toString(scaleY(col.value))}vh`,
-                                        display: 'flex',
-                                    }}
-                                    /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
-                                    className={classes(
-                                        styles.col,
-                                        col.faded && styles.faded,
-                                        col.selected && styles.selected,
-                                        col.patched && styles.patched,
-                                        col.sorted && styles.sorted,
-                                        col.style && col.style.backgroundStyle,
-                                    )}
-                                    key={col.key}
-                                >
-                                    <motion.span
-                                        layout="position"
-                                        className={classes(
-                                            styles.value,
-                                            col.style && col.style.textStyle,
-                                        )}
-                                    >
-                                        {this.toString(col.value)}
-                                    </motion.span>
-                                </motion.div>
-                            ))}
-                        </div>
-                    ))}
+          <svg
+              className={switchmode(mode())}
+              viewBox={viewBox}
+              ref={this.elementRef}
+          >
+              <defs>
+                  <marker
+                      id="circleMarker"
+                      markerWidth="10"
+                      markerHeight="10"
+                      refX="5"
+                      refY="5"
+                      orient="auto"
+                  >
+                      <circle cx="5" cy="5" r="5" className={styles.circle}/>
+                  </marker>
+                  <marker
+                      id="circleMarkerSelected"
+                      markerWidth="10"
+                      markerHeight="10"
+                      refX="5"
+                      refY="5"
+                      orient="auto"
+                  >
+                      <circle
+                          cx="5"
+                          cy="5"
+                          r="5"
+                          className={classes(styles.circle, styles.selected)}
+                      />
+                  </marker>
+                  <marker
+                      id="circleMarkerVisited"
+                      markerWidth="10"
+                      markerHeight="10"
+                      refX="5"
+                      refY="5"
+                      orient="auto"
+                  >
+                      <circle
+                          cx="5"
+                          cy="5"
+                          r="5"
+                          className={classes(styles.circle, styles.visited)}
+                      />
+                  </marker>
+              </defs>
 
-                        {/* Variable pointers */}
-                        {data.map(
-                            (
-                                row,
-                                i, // variable pointer only working for 1D arrays
-                            ) => (
-                                <AnimateSharedLayout>
-                                    <div
-                                        layout
-                                        className={styles.row}
-                                        key={i}
-                                        style={{
-                                            minHeight: '50px',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'start',
-                                        }}
-                                    >
-                                        {row.map((col) => (
-                                            <div
-                                                className={classes(styles.col, styles.variables)}
-                                                key={`vars-${col.key}`}
-                                            >
-                                                {col.variables.map((v) => (
-                                                    <motion.div
-                                                        layoutId={v}
-                                                        key={v}
-                                                        className={styles.variable}
-                                                        style={{ fontSize: v.length > 2 ? '12px' : null }}
-                                                    >
-                                                        {v}
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </AnimateSharedLayout>
-                            ),
-                        )}
-                    </motion.div>
-                </tbody>
-            </table>
+              {/*rendering items*/}
+              {values.map((item, index) => {
+                  /*
+                  console.log(item);
+                  const { label, isSelected, isVisited } = item;
+                  const markerId = isSelected
+                      ? 'circleMarkerSelected'
+                      : isVisited
+                          ? 'circleMarkerVisited'
+                          : 'circleMarker';
+                   */
+                  return (
+                      <g
+                          className={styles.circle
+                      }
+                          key={index}
+                          transform={`translate(20, ${40 + index * 40})`}
+                          >
+                          <use href={`#${index}`} />
+                          <text x="30" y="5" className={styles.label}>
+                              {item}
+                          </text>
+                      </g>
+
+                      /*
+                      <g
+                          className={classes(
+                              styles.listItem,
+                              isSelected && styles.selected,
+                              isVisited && styles.visited
+                          )}
+                          key={index}
+                          transform={`translate(20, ${40 + index * 40})`}
+                      >
+                          <use href={`#${markerId}`} />
+                          <text x="30" y="5" className={styles.label}>
+                              {label}
+                          </text>
+                       */
+                  );
+              })}
+          </svg>
         );
     }
+
+
 }
 
 export default ListRenderer;

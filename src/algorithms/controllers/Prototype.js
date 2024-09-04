@@ -7,7 +7,7 @@ import graphTracer from "../../components/DataStructures/Graph/GraphTracer";
  */
 import listTracer from "../../components/DataStructures/List/ListTracer";
 
-/*
+
 const LL_BOOKMARKS = {
     LL_default: 1,
     LL_if_left_less_right: 2,
@@ -21,7 +21,7 @@ const LL_BOOKMARKS = {
     LL_pre_left: 300,
     LL_pre_right: 400,
 };
-*/
+
 export default {
 
     initVisualisers() {
@@ -33,14 +33,13 @@ export default {
         };
     },
 
-    run(chunker, {values}) {
-
+    run(chunker, {nodes}) {
         chunker.add(
             1,
             (vis, list) => {
                 vis.list.set(list);
             },
-            [values]
+            [nodes]
         );
     }
 };

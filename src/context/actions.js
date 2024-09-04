@@ -259,6 +259,7 @@ export const GlobalActions = {
     const chunker = new Chunker(() =>
       controller[params.mode].initVisualisers(params)
     );
+    console.log(params);
     controller[params.mode].run(chunker, params);
     const bookmarkInfo = chunker.next();
     //const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
