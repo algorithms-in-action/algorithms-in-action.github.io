@@ -20,6 +20,9 @@ import {
   shuffleArray,
 } from './helpers/ParamHelper';
 
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
 // import useParam from '../../context/useParam';
 
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
@@ -45,10 +48,10 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function BSTParam() {
+function BSTParam({ list }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(DEFAULT_NODES);
+  const [nodes, setNodes] = useState(list);
   const [bstCase, setBSTCase] = useState({
     random: true,
     sorted: false,
@@ -195,4 +198,11 @@ function BSTParam() {
   );
 }
 
-export default BSTParam;
+// Define the prop types for URL Params
+BSTParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(BSTParam); // Export with the wrapper for URL Params

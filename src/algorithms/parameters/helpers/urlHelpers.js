@@ -189,14 +189,14 @@ export function useUrlParams() {
 
     console.log("Raw URL alg:", urlParams.get('alg'));
     console.log("Raw URL mode:", urlParams.get('mode'));
-    console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, start, end, string, pattern, union });
+    console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max });
 
     return { alg, mode, list, value, xyCoords, edgeWeights, start, end, string, pattern, union };
 }
 
 export const withAlgorithmParams = (WrappedComponent) => {
     const WithAlgorithmParams = (props) => {
-        const { alg, mode, list, value, xyCoords, edgeWeights, start, end, string, pattern, union } = useUrlParams();
+        const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max } = useUrlParams();
 
         if (!alg || !mode || !(alg in algorithms && mode in algorithms[alg].pseudocode)) {
             return <div>Invalid algorithm or mode specified</div>;
@@ -209,11 +209,15 @@ export const withAlgorithmParams = (WrappedComponent) => {
             value={value}
             xyCoords={xyCoords}
             edgeWeights={edgeWeights}
+            size={size}
             start={start}
             end={end}
             string={string}
             pattern={pattern}
             union={union}
+            heuristic={heuristic}
+            min={min}
+            max={max}
             {...props}
         />;
     };
