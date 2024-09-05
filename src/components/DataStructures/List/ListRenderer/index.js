@@ -41,6 +41,7 @@ function switchmode(modetype = mode()) {
     return modename;
 }
 
+
 class ListRenderer extends Renderer {
     constructor(props) {
         super(props);
@@ -59,8 +60,8 @@ class ListRenderer extends Renderer {
         } = dimensions;
 
         const viewBox = [
-            (this.centerX - baseWidth / 2) / this.zoom,
-            (this.centerY - baseHeight / 2) / this.zoom,
+            (this.centerX) / this.zoom,
+            (this.centerY) / this.zoom,
             baseWidth / this.zoom,
             baseHeight / this.zoom,
         ];
@@ -80,7 +81,7 @@ class ListRenderer extends Renderer {
                       refY="5"
                       orient="auto"
                   >
-                      <circle cx="5" cy="5" r="5" className={styles.circle}/>
+                      <circle cx="5" cy="5" r="5" className={classes(styles.circle)}/>
                   </marker>
                   <marker
                       id="circleMarkerSelected"
@@ -116,7 +117,8 @@ class ListRenderer extends Renderer {
 
               {/*rendering items*/}
               {values.map((item, index) => {
-                  /*
+
+                  /* Code for figuring out isvisited / isselected
                   console.log(item);
                   const { label, isSelected, isVisited } = item;
                   const markerId = isSelected
@@ -124,20 +126,27 @@ class ListRenderer extends Renderer {
                       : isVisited
                           ? 'circleMarkerVisited'
                           : 'circleMarker';
+
+                                                    <use href={`#${index}`} />
+
                    */
                   return (
                       <g
-                          className={styles.circle
-                      }
+                          className={classes(styles.node)}
                           key={index}
-                          transform={`translate(20, ${40 + index * 40})`}
+                          transform={`translate(${index * 40}, 20)`}
                           >
-                          <use href={`#${index}`} />
+                          <rect className = {styles.rect}
+                                  x={'30'} y={'5'}
+                                width={'20'} height={'20'}/>
                           <text x="30" y="5" className={styles.label}>
                               {item}
                           </text>
                       </g>
 
+                      // example code which adds in conditions for is selected and visited.
+                      // will need to figure out first how to embed data into the elements such as the boolean for
+                      // isvisited.
                       /*
                       <g
                           className={classes(

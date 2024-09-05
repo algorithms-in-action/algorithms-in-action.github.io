@@ -11,7 +11,6 @@ class ListTracer extends Tracer {
 
 
     init() {
-        console.log("init Tracers");
 
         super.init();
         this.dimensions = {

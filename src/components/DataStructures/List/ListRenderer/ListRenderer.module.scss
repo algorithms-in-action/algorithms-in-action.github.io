@@ -16,13 +16,12 @@
     color: var(--linked-list-node-value-color);
   }
   .node {
-    .circle {
+    .rect {
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
-    }
 
-    /* Circle Marker Styles */
+    }
     .circle {
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
