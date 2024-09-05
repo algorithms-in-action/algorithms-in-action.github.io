@@ -2,32 +2,36 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Code{
-    Main
-    AVL_Search(t, k)  // return subtree whose root has key k \\B AVL_Search(t, k)
-                      // or NotFound, if no such node is present
+Main
+AVLT_Search(t, k)  // return subtree whose root has key k; or NotFound  \\B AVL_Search(t, k)
+\\Expl{ This is identical to simple binary search tree search.
+\\Expl}
+\\In{
+    while t not Empty   \\B while t not Empty
     \\In{
-        while t not Empty \\B while t not Empty
+        n = root(t)  \\B n = root(t)
+        \\Note{ Avoids confounding pointers and nodes
+        \\Note}
+        if n.key = k    \\B if n.key = k
         \\In{
-            if t.key = k  \\B if t.key = k
-            \\In{
-                return t // found the target node  \\B return t
-                \\Expl{  We have found a node with the desired key k.
-                \\Expl}
-            \\In}
-            if t.key > k    \\B if t.key > k  
-            \\Expl{  The AVL condition is that nodes with keys less than the 
-                    current node's key are to be found in the left subtree, and
-                    nodes whose keys are greater are to be in the right subtree.
+            return t    \\B return t
+            \\Expl{  We have found a node with the desired key k.
             \\Expl}
-            \\In{
-                t <- t.left \\B t <- t.left
-            \\In}
-            else
-            \\In{
-                t <- t.right \\B t <- t.right
-            \\In}
-        return NotFound \\B return NotFound
         \\In}
+        if n.key > k    \\B if n.key > k
+        \\Expl{  The BST condition is that nodes with keys less than the 
+                current node's key are to be found in the left subtree, and
+                nodes whose keys are greater are to be in the right subtree.
+        \\Expl}
+        \\In{
+            t <- n.left   \\B t <- n.left
+        \\In}
+        else
+        \\In{
+            t <- n.right    \\B t <- n.right
+        \\In}
+    return NotFound   \\B return NotFound
     \\In}
-    \\Code}
+\\In}
+\\Code}
 `);
