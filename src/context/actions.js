@@ -427,23 +427,8 @@ export function initialState() {
   const currentUrl = new URL(window.location.href);
   const alg = currentUrl.searchParams.get('alg');
   const mode = currentUrl.searchParams.get('mode');
-  const param = currentUrl.searchParams.get('param');
 
   let initialNodes = DEFAULT_NODES; // Fallback to default nodes if parsing fails or param is not valid
-  if (param) {
-    try {
-      // Remove square brackets and parse as array of numbers
-      const strippedParam = param.replace(/^\[|\]$/g, '');
-      const parsedNodes = strippedParam.split(',').map(Number);
-      if (parsedNodes.every(Number.isFinite)) {
-        initialNodes = parsedNodes;
-      } else {
-        console.error("Invalid node values in param:", param);
-      }
-    } catch (error) {
-      console.error("Failed to parse URL parameter 'param':", param, error);
-    }
-  }
 
   // Validate the algorithm and mode before proceeding
   if (alg && mode && alg in algorithms && mode in algorithms[alg].pseudocode) {
