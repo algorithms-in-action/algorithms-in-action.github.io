@@ -119,7 +119,7 @@ CopySmaller
         \\Note{ Clearer to duplicate this in then and else branches(?)
         \\Note}
     \\In}
-    else
+    else \\B findSmallerB
     \\In{
         B[bp] <- A[ap2] \\B copyap2
         \\Expl{ The animation shows the value being deleted from A[ap2] since it
