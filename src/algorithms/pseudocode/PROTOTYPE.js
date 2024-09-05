@@ -8,7 +8,7 @@ It is adapted to linked lists.
 \\Code{
 Main
 // Sort list(head) in ascending order
-Mergesort(head) 
+Mergesort(head) \\B 1
 \\Expl{  Linked lists only support sequential access of data so we need the head 
 to linearly iterate through the list.
 \\Expl}
@@ -33,24 +33,22 @@ to linearly iterate through the list.
     //Done \\B 8
 \\Code}
 
-\\Code {
+\\Code{
 SplitList
 // Split the linked list into two halves 
-SplitList(head)
+SplitList(head) \\B placeholder
     if (head == NULL || head.next == NULL) \\B 2
-        left <- head
-        right <- NULL
-    else 
-        slow <- head
-        fast <- head
-        while (fast.next != NULL && fast.next.next != NULL) {
-            slow = slow.next
-            fast = fast.next.next
-        }
-        left <- head
+        left <- head \\B placeholder
+        right <- NULL \\B placeholder
+    else  \\B placeholder
+        slow <- head \\B placeholder
+        fast <- head \\B placeholder
+        while (fast.next != NULL && fast.next.next != NULL) \\B placeholder
+            slow = slow.next \\B placeholder
+            fast = fast.next.next \\B placeholder
+        left <- head \\B placeholder
         right <- slow.next \\B 9
-        slow.next <- NULL
-}
+        slow.next <- NULL \\B placeholder
 \\Code}
 
 \\Code{
@@ -68,19 +66,19 @@ Mergesort(right) \\B 4
 \\Code{
 MergeLeftRight
 // Merge two lists
-MergeLeftRight(left, right)
+MergeLeftRight(left, right) \\B placeholder
     left_pointer <- left \\B 5
     right_pointer <- right \\B 6
     
-    if (left == NULL)
+    if (left == NULL) \\B placeholder
         result <- right \\B 7
-    else if (right == NULL)
+    else if (right == NULL) \\B placeholder
         result <- left \\B 7
-    else if (left.data <= right.data)
+    else if (left.data <= right.data) \\B placeholder
         result <- left \\B 7
-        result.next = MergeLeftRight(result.next, right)
-    else 
+        result.next = MergeLeftRight(result.next, right) \\B placeholder
+    else  \\B placeholder
         result <- right \\B 7
-        result.next = MergeLeftRight(left, result.next)
+        result.next = MergeLeftRight(left, result.next) \\B placeholder
 \\Code}
 `);
