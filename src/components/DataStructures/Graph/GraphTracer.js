@@ -44,7 +44,7 @@ class GraphTracer extends Tracer {
       nodeWeightGap: 4,
       edgeWeightGap: 4,
     };
-    this.isDirected = true;
+    this.isDirected  = true;
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;

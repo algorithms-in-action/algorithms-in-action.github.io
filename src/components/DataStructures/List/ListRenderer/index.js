@@ -52,7 +52,8 @@ class ListRenderer extends Renderer {
     }
 
     renderData() {
-        const { values, dimensions,} =
+
+        const { objects, dimensions,} =
             this.props.data;
         const {
             baseWidth,
@@ -116,7 +117,7 @@ class ListRenderer extends Renderer {
               </defs>
 
               {/*rendering items*/}
-              {values.map((item, index) => {
+              {objects.map(({value, id}) => {
 
                   /* Code for figuring out isvisited / isselected
                   console.log(item);
@@ -133,14 +134,14 @@ class ListRenderer extends Renderer {
                   return (
                       <g
                           className={classes(styles.node)}
-                          key={index}
-                          transform={`translate(${index * 40}, 20)`}
+                          key={id}
+                          transform={`translate(${id * 40}, 20)`}
                           >
                           <rect className = {styles.rect}
                                   x={'30'} y={'5'}
                                 width={'20'} height={'20'}/>
                           <text x="30" y="5" className={styles.label}>
-                              {item}
+                              {value}
                           </text>
                       </g>
 
