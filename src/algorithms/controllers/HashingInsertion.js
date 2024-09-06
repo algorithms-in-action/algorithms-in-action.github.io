@@ -22,8 +22,9 @@ export default {
   run(chunker, params) {
     let inputs = params.values;
     let hashValue = params.hashSize;
-    let hashTable = ['Hash Index', ...Array.from({ length: hashValue - 1 }, (_, i) => i + 1)];
-    let nullArr = ['', ...Array(hashValue - 1).fill('')];
+    let indexArr = ['Index', ...Array.from({ length: hashValue - 1 }, (_, i) => i + 1)];
+    let valueArr = ['Value', ...Array(hashValue - 1).fill('-')];
+    let nullArr = Array(hashValue).fill('');
 
     const SMALL= 11;
     const BIG = 97;
@@ -37,7 +38,7 @@ export default {
       (vis, array) => {
         vis.array.set(array, 'HashingLP');
       },
-      [[hashTable]]
+      [[indexArr]]
     );
 
     function hashInit() {
@@ -53,7 +54,7 @@ export default {
           vis.graph.weighted(true);
           vis.graph.set([[0, 'Hash'], [0, 0]], [1, 2], [[-5, 0], [5, 0]]);
         },
-        [[hashTable, nullArr, nullArr]]
+        [[indexArr, valueArr, nullArr]]
       );
 
       return table;
