@@ -3,15 +3,6 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 
 \\Code{
-    Main
-    HashInit(T)    // TableSize is prime \\B HashInit(T)
-        \\In{
-            Initialize Hash Table Slots to Empty   \\Ref NullTable
-            Insertions <- 0    // Keep track of how full table is \\Ref Insert
-        \\In}
-\\Code}
-
-\\Code{
     NullTable
         i <- 0
         while i<TableSize
@@ -22,7 +13,15 @@ export default parse(`
 \\Code}
 
 \\Code{
-    Insert
+    Main
+    HashInit(T)    // TableSize is prime \\B HashInit(T)
+        \\In{
+            Initialize Hash Table Slots to Empty   \\Ref NullTable
+            Insertions <- 0    // Keep track of how full table is
+        \\In}
+
+    //=======================================================
+
     HashInsert(T, k)  // Insert key k into table T
         \\In{
             Check how full the table is

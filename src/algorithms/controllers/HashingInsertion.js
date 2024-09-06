@@ -1,9 +1,10 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
 
 
 const arr1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-const arr2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const arr2 = ['', '', '', '', '', '', '', '', '', '', ''];
 
 export default {
   explanation: HashingExp,
@@ -17,11 +18,11 @@ export default {
   },
 
   run(chunker) {
+    chunker.add('HashInit(T)');
     chunker.add(
       'HashInit(T)',
       (vis, array) => {
         vis.array.set(array, 'HashingLP');
-        vis.array.hideArrayAtIndex(null);
       },
       [[arr1, arr2]]
     );
