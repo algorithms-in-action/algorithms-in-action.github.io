@@ -3,8 +3,6 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
 
 
-const arr1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-const arr2 = ['', '', '', '', '', '', '', '', '', '', ''];
 
 export default {
   explanation: HashingExp,
@@ -14,18 +12,18 @@ export default {
         instance: new Array2DTracer('array', null, 'Hash Table'),
         order: 0,
       },
+      graph: {
+        instance: new GraphTracer('graph', null, 'Hash'),
+        order: 1,
+      },
     };
   },
 
-  run(chunker) {
-    chunker.add('HashInit(T)');
-    chunker.add(
-      'HashInit(T)',
-      (vis, array) => {
-        vis.array.set(array, 'HashingLP');
-      },
-      [[arr1, arr2]]
-    );
+  run(chunker, params) {
+    let inputs = params.values;
+    let hashValue = params.hashSize;
+    let hashTable = ['Hash Index', ...Array.from({ length: hashValue - 1 }, (_, i) => i + 1)];
+    let nullArr = ['', ...Array(hashValue - 1).fill('')];
 
     const SMALL= 11;
     const BIG = 97;
@@ -33,12 +31,35 @@ export default {
     let mode = 0;
     let incrementType = 0;
     let insertions = 0;
+
+    chunker.add(
+      'HashInit(T)',
+      (vis, array) => {
+        vis.array.set(array, 'HashingLP');
+      },
+      [[hashTable]]
+    );
+
     function hashInit() {
       let tableSize = mode == 0 ? SMALL : BIG;
       let table = new Array(tableSize);
 
+      chunker.add(
+        'Initialize to Empty',
+        (vis, array) => {
+          vis.array.set(array, 'HashingLP');
+          vis.array.hideArrayAtIndex(2);
+
+          vis.graph.weighted(true);
+          vis.graph.set([[0, 'Hash'], [0, 0]], [1, 2], [[-5, 0], [5, 0]]);
+        },
+        [[hashTable, nullArr, nullArr]]
+      );
+
       return table;
     }
+
+    hashInit();
 
     function hash(k) {
       if (mode == 0) {

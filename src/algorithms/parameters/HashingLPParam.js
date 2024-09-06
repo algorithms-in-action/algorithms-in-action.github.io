@@ -50,13 +50,13 @@ function HashingLPParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [array, setArray] = useState(DEFAULT_ARRAY);
   const [search, setSearch] = useState(DEFAULT_SEARCH);
-  const [size, setSize] = useState({
+  const [HASHSize, setHashSize] = useState({
     smallTable: true,
     largeTable: false,
   });
 
   const handleChange = (e) => {
-    setSize({ ...UNCHECKED, [e.target.name]: true })
+    setHashSize({ ...UNCHECKED, [e.target.name]: true })
   }
 
   const handleInsertion = (e) => {
@@ -65,12 +65,13 @@ function HashingLPParam() {
 
     if (commaSeparatedNumberListValidCheck(inputs)) {
       let values = inputs.split(',').map(Number);
-      let hashSize = size.smallTable ? SMALL_TABLE : LARGE_TABLE;
+      let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
 
       if (values.length < hashSize) {
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingLP',
           mode: 'insertion',
+          hashSize: hashSize,
           values
         });
         setMessage(successParamMsg(ALGORITHM_NAME));
@@ -106,7 +107,7 @@ function HashingLPParam() {
     () => {
       document.getElementById('startBtnGrp').click();
     },
-    [size],
+    [HASHSize],
   );
 
 
@@ -120,6 +121,16 @@ function HashingLPParam() {
           formClassName="formLeft"
           DEFAULT_VAL = {array}
           SET_VAL = {setArray}
+          REFRESH_FUNCTION={
+            (() => {
+              if (HASHSize.smallTable) {
+                return () => genUniqueRandNumList(SMALL_TABLE-1, 1, 50);
+              }
+              else if(HASHSize.largeTable) {
+                return () => genUniqueRandNumList(LARGE_TABLE-1, 1, 100);
+              }
+            })()
+          }
           ALGORITHM_NAME = {HASHING_INSERT}
           EXAMPLE={HASHING_EXAMPLE}
           handleSubmit={handleInsertion}
@@ -143,7 +154,7 @@ function HashingLPParam() {
       <FormControlLabel
         control={
           <BlueRadio
-            checked={size.smallTable}
+            checked={HASHSize.smallTable}
             onChange={handleChange}
             name="smallTable"
           />
@@ -154,7 +165,7 @@ function HashingLPParam() {
       <FormControlLabel
         control={
           <BlueRadio
-            checked={size.largeTable}
+            checked={HASHSize.largeTable}
             onChange={handleChange}
             name="largeTable"
           />

@@ -5,7 +5,7 @@ export default parse(`
 \\Code{
     NullTable
         i <- 0
-        while i<TableSize
+        while i<TableSize \\B Initialize to Empty
         \\In{
             T[i] <- Empty     // Table must start with all slots empty
             i <- i+1
