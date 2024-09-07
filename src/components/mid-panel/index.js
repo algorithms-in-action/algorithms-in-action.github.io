@@ -14,7 +14,7 @@ import ControlButton from '../common/ControlButton';
 import ShareIcon from '@mui/icons-material/Share';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
-  const { algorithm, algorithmKey, mode } = useContext(GlobalContext);
+  const { algorithm, algorithmKey, mode, nodes } = useContext(GlobalContext);
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -44,7 +44,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
 
   useEffect(() => {
     if (share) {
-      const url = `${window.location.origin}/?alg=${algorithmKey};mode=${mode}`;
+      const url = `${window.location.origin}/?alg=${algorithmKey};mode=${mode}:${nodes}`;
       setCurrentUrl(url);
     }
   }, [share, algorithmKey, mode]);
@@ -82,7 +82,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
               <p> 
                 {currentUrl}
               </p>
-              <button onClick={copyToClipboard} style={{ padding: '5px 10px', cursor: 'pointer' }}>
+              <button onClick={copyToClipboard} style={{ cursor: 'pointer' }}>
                 Copy URL
               </button>
             </div>

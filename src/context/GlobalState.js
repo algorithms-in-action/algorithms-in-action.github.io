@@ -26,6 +26,7 @@ const init = initialState();
 // eslint-disable-next-line react/prop-types
 export const GlobalProvider = ({ children }) => {
   const [state, setState] = useState(init);
+  const [nodes, setNodes] = useState([]);
   // Think of this as partial function application to get state & setState in scope
   // for later calls from elsewhere in the app.
   const dispatch = dispatcher(state, setState);
@@ -34,6 +35,8 @@ export const GlobalProvider = ({ children }) => {
     algorithm: state,
     algorithmKey: Object.keys(algorithms).find(key => algorithms[key].name === state.name),
     mode: getDefaultMode(Object.keys(algorithms).find(key => algorithms[key].name === state.name)),
+    nodes,
+    setNodes,
     dispatch,
   };
 
