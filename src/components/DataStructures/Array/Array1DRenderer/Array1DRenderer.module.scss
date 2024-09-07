@@ -1,7 +1,5 @@
 @import "../../common/stylesheet/index";
 
-// change in Array2DTracer or in inndex.js
-
 .array_1d {
     flex-shrink: 0;
 
@@ -55,7 +53,7 @@
             min-width: 8px;
             width: 28px;
             min-height: var(--array-1d-minimum-height);
-            background-color: var(--array-2d-row-col-bg); // pretty sure overrides --not-started-section
+            background-color: var(--array-2d-row-col-bg);
             border: 1px solid var(--array-2d-row-col-border);
             padding: 0 4px;
             margin-right: 4px;
@@ -128,7 +126,7 @@
 
             }
 
-            &.sorted { // columns at end are switched to this
+            &.sorted {
                 background-color: var(--array-2d-row-bg-sorted);
 
                 span {

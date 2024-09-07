@@ -23,9 +23,9 @@ describe('my beverage', () => {
 
 // describe('NEXT_LINE action', () => {
 //   it('moves to next line', () => {
-//     const  = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
-//     const newState = GlobalActions.NEXT_LINE();
-//     expect(newState.bookmark).not.toBe(.bookmark);
+//     const initialState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
+//     const newState = GlobalActions.NEXT_LINE(initialState);
+//     expect(newState.bookmark).not.toBe(initialState.bookmark);
 //   });
 // });
 
@@ -43,16 +43,16 @@ describe('my beverage', () => {
 
 // describe('NEXT_LINE action', () => {
 //   it('moves to next line', () => {
-//     const  = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
-//     const newState = GlobalActions.NEXT_LINE();
-//     expect(newState.bookmark).not.toBe(.bookmark);
+//     const initialState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
+//     const newState = GlobalActions.NEXT_LINE(initialState);
+//     expect(newState.bookmark).not.toBe(initialState.bookmark);
 //   });
 // });
 
 // describe('PREV_LINE action', () => {
 //   it('moves to the previous line', () => {
-//     const  = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
-//     const newState = GlobalActions.PREV_LINE(GlobalActions.NEXT_LINE());
-//     expect(newState.bookmark).toBe(.bookmark);
+//     const initialState = GlobalActions.LOAD_ALGORITHM(undefined, { name: 'binaryTreeSearch' });
+//     const newState = GlobalActions.PREV_LINE(GlobalActions.NEXT_LINE(initialState));
+//     expect(newState.bookmark).toBe(initialState.bookmark);
 //   });
 // });
