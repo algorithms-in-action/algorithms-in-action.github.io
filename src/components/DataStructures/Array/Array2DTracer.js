@@ -42,16 +42,37 @@ class Array2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], algo, kth = 1) {
-    this.data = array2d.map((array1d) =>
-      [...array1d].map((value, i) => new Element(value, i))
-    );
+  set(array2d = [], algo, kth = 1, splitTables = null) {
+    if (splitTables == null || splitTables.rowLength == null) {
+      this.data = array2d.map((array1d) =>
+        [...array1d].map((value, i) => new Element(value, i))
+      );
+    } else {
+      let split = [];
+
+      let step = 0;
+      while (step < array2d[0].length) {
+        let arr2d = [];
+        for (let i = 0; i < array2d.length; i++ ) {
+          arr2d.push([splitTables.rowHeader[i], ...array2d[i].slice(step, step + splitTables.rowLength)]);
+        }
+
+        step += splitTables.rowLength;
+        split.push(arr2d);
+      }
+
+      for (const item of split) {
+        this.data.push(item.map((array1d) =>
+          [...array1d].map((value, i) => new Element(value, i))
+        ));
+      }
+    }
     this.algo = algo;
     this.kth = kth;
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
-    this.splitTables = null;
+    this.splitTables = splitTables;
     super.set();
   }
 

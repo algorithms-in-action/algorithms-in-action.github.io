@@ -53,8 +53,16 @@ class Array2DRenderer extends Renderer {
   renderData() {
     // For DFSrec+msort_arr_td,... listOfNumbers is actually a list of
     // pairs of numbers, or strings such as '(2,5)'
-    const { data, algo, kth, listOfNumbers, motionOn, hideArrayAtIdx, splitTables = { rowLength: null, rowHeader: [] }} =
-      this.props.data;
+    const {
+      data,
+      algo,
+      kth,
+      listOfNumbers,
+      motionOn,
+      hideArrayAtIdx,
+      splitTables = { rowLength: null, rowHeader: [] }
+    } = this.props.data;
+
     const isArray1D = true;
     let items = [];
     // eslint-disable-next-line camelcase
@@ -65,15 +73,27 @@ class Array2DRenderer extends Renderer {
     }
     // const isArray1D = this instanceof Array1DRenderer;
 
-    // if (splitTables == null || splitTables.rowLength == null) {
-    // }
-    // XXX sometimes caption (listOfNumbers) is longer than any row...
-    let longestRow = data.reduce(
-      (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
-      []
-    );
+    if (splitTables == null || splitTables.rowLength == null) {
+      let longestRow = data.reduce(
+        (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
+        []
+      );
 
-    function createRender(centerX, centerY, zoom, toString) {
+      createRender(data, this.centerX, this.centerY, this.zoom, this.toString, longestRow);
+
+    } else {
+      for (const arr of data) {
+        let longestRow = arr.reduce(
+          (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
+          []
+        );
+
+        createRender(arr, this.centerX, this.centerY, this.zoom, this.toString, longestRow);
+      }
+    }
+    // XXX sometimes caption (listOfNumbers) is longer than any row...
+
+    function createRender(data, centerX, centerY, zoom, toString, longestRow) {
       items.push(
         <table
           className={switchmode(mode())}
@@ -151,7 +171,10 @@ class Array2DRenderer extends Renderer {
             {data.map((row, i) => {
               let pointer = false;
 
-              if (i === hideArrayAtIdx) return null;
+              if (
+                (Array.isArray(hideArrayAtIdx) && hideArrayAtIdx.includes(i))
+                || (i === hideArrayAtIdx)
+              ) return null;
 
               // eslint-disable-next-line no-plusplus
               for (let j = 0; j < row.length; j++) {
@@ -337,7 +360,6 @@ class Array2DRenderer extends Renderer {
         </table>
       );
     }
-    createRender(this.centerX, this.centerY, this.zoom, this.toString);
 
     return items;
   }

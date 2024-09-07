@@ -22,8 +22,8 @@ export default {
   run(chunker, params) {
     let inputs = params.values;
     let hashValue = params.hashSize;
-    let indexArr = ['Index', ...Array.from({ length: hashValue - 1 }, (_, i) => i + 1)];
-    let valueArr = ['Value', ...Array(hashValue - 1).fill('-')];
+    let indexArr = Array.from({ length: hashValue }, (_, i) => i + 1);
+    let valueArr = Array(hashValue).fill('-');
     let nullArr = Array(hashValue).fill('');
 
     const SMALL= 11;
@@ -36,9 +36,10 @@ export default {
     chunker.add(
       'HashInit(T)',
       (vis, array) => {
-        vis.array.set(array, 'HashingLP');
+        vis.array.set(array, 'HashingLP', '', { rowLength: 10, rowHeader: ['Index', 'Value', ''] } );
+        vis.array.hideArrayAtIndex([1, 2]);
       },
-      [[indexArr]]
+      [[indexArr, valueArr, nullArr]]
     );
 
     function hashInit() {
@@ -47,14 +48,11 @@ export default {
 
       chunker.add(
         'Initialize to Empty',
-        (vis, array) => {
-          vis.array.set(array, 'HashingLP');
+        (vis, key, index) => {
           vis.array.hideArrayAtIndex(2);
-
           vis.graph.weighted(true);
           vis.graph.set([[0, 'Hash'], [0, 0]], [1, 2], [[-5, 0], [5, 0]]);
         },
-        [[indexArr, valueArr, nullArr]]
       );
 
       return table;
