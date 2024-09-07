@@ -51,6 +51,7 @@ class Array2DTracer extends Tracer {
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
+    this.splitTables = null;
     super.set();
   }
 
