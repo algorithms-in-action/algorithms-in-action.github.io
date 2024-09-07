@@ -41,7 +41,16 @@ export default {
             },
             [nodes]
         );
+        const swapAction = (b, n1, n2) => {
+            chunker.add(b, (vis, _n1, _n2) => {
+                vis.list.swapElements(_n1, _n2);
+            }, [n1, n2]);
+        };
+
+        swapAction(2,1,3);
     }
+
+
 };
 
 

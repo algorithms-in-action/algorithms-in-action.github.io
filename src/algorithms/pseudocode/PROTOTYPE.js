@@ -1,10 +1,6 @@
 import parse from '../../pseudocode/parse';
 
 export default parse(`
-\\Note{ This is a copied+modified version of the mergecode and quicksort pseudocode. 
-It is adapted to linked lists.
-\\Note}
-
 \\Code{
 Main
 // Sort list(head) in ascending order

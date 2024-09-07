@@ -3,15 +3,6 @@ import Tracer from '../common/Tracer';
 import ListRenderer from './ListRenderer/index';
 
 
-export class Element {
-    constructor(value, key) {
-        this.value = value;
-        this.patched = 0;
-        this.selected = 0;
-        this.sorted = false;
-        this.key = key;
-    }
-}
 
 class ListTracer extends Tracer {
 
@@ -50,6 +41,19 @@ class ListTracer extends Tracer {
         const key = id;
         // eslint-disable-next-line max-len
         this.objects.push({ id, value, visitedCount, selectedCount, key});
+    }
+
+    swapElements(i, j) {
+        const temp1 = this.objects[i];
+        const temp2 = this.objects[j];
+        const tempKey1 = this.objects[i].key;
+        const tempKey2 = this.objects[j].key;
+
+        // Swapping the index of two elements.
+        this.objects[i] = temp2;
+        this.objects[j] = temp1;
+        this.objects[j].key = tempKey2;
+        this.objects[i].key = tempKey1;
     }
 }
 export default ListTracer
