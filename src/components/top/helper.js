@@ -73,7 +73,7 @@ export const ALGO_THEME_1 = 'default';
 const ALGO_THEME_2 = 'green';
 const ALGO_THEME_3 = 'red';
 
-// Color Scheme
+// Color Scheme, only affects what it looks like in settings button
 export const allColBtn = [
   {
     id: ALGO_THEME_1,

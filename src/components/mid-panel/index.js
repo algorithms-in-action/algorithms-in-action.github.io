@@ -44,7 +44,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
 
   useEffect(() => {
     if (share) {
-      const url = `${window.location.origin}/?alg=${algorithmKey};mode=${mode}:${nodes}`;
+      const url = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}&list=${nodes}`;
       setCurrentUrl(url);
     }
   }, [share, algorithmKey, mode]);

@@ -432,6 +432,8 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
+	//--graph-node-circle-fill: #00ffff; // was defaulting to .root!
+
 	--graph-node-circle-fill-selected: #83d489;
 	--graph-node-circle-stroke-selected: #83d489;
 	--graph-node-circle-fill-visited: #e85c49;

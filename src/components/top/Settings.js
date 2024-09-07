@@ -25,10 +25,10 @@ function Settings({
       <div className="setContainer">
         <div className="label">Font Size</div>
         <div className="fontSize">
-          <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-1); }}>
+          <button type="button" className="fontBtn small" onClick={() => { onFontIncrease(-4); }}>
             <Font />
           </button>
-          <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(1); }}>
+          <button type="button" className="fontBtn big" onClick={() => { onFontIncrease(4); }}>
             <Font />
           </button>
         </div>

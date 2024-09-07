@@ -8,7 +8,7 @@
   align-self: stretch;
 
   .node {
-    .circle {
+    .circle { // changes the graph with the nodes
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
@@ -35,7 +35,7 @@
       text-anchor: left;
     }
 
-    &.selected {
+    &.selected { // finished section??
       .circle {
         fill: var(--graph-node-circle-fill-selected);
         stroke: var(--graph-node-circle-stroke-selected);
