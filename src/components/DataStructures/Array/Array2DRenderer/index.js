@@ -60,7 +60,7 @@ class Array2DRenderer extends Renderer {
       listOfNumbers,
       motionOn,
       hideArrayAtIdx,
-      splitTables = { rowLength: null, rowHeader: [] }
+      splitArray = { rowLength: null, rowHeader: [] }
     } = this.props.data;
 
     const isArray1D = true;
@@ -73,7 +73,7 @@ class Array2DRenderer extends Renderer {
     }
     // const isArray1D = this instanceof Array1DRenderer;
 
-    if (splitTables == null || splitTables.rowLength == null) {
+    if (splitArray == null || splitArray.rowLength == null) {
       let longestRow = data.reduce(
         (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
         []

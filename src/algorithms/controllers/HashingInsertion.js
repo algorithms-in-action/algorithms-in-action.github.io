@@ -3,7 +3,6 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
 
 
-
 export default {
   explanation: HashingExp,
   initVisualisers() {
@@ -36,7 +35,7 @@ export default {
     chunker.add(
       'HashInit(T)',
       (vis, array) => {
-        vis.array.set(array, 'HashingLP', '', { rowLength: 10, rowHeader: ['Index', 'Value', ''] } );
+        vis.array.set(array, 'HashingLP', '', { rowLength: 20, rowHeader: ['Index', 'Value', ''] } );
         vis.array.hideArrayAtIndex([1, 2]);
       },
       [[indexArr, valueArr, nullArr]]

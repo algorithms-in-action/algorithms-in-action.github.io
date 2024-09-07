@@ -1,24 +1,23 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 
 export default {
-  initVisualisers() {
+  initVisualisers({ visualisers }) {
     return {
       array: {
-        instance: new Array2DTracer('array', null, 'Hash Table'),
+        instance: visualisers.array.instance,
         order: 0,
+      },
+      graph: {
+        instance: visualisers.graph.instance,
+        order: 1,
       },
     };
   },
 
   run(chunker) {
-    chunker.add(
-      'HashSearch(T, k)',
-      (vis, array) => {
-        vis.array.set(array, 'HashingDH');
-        // vis.array.hideArrayAtIndex(2);
-      },
-      [[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]]
-    );
+    chunker.add('HashSearch(T, k)');
+    chunker.add('HashSearch(T, k)');
 
     // small hash, table size 11
     const SMALL= 11;

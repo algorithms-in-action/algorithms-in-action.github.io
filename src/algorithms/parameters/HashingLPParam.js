@@ -87,14 +87,14 @@ function HashingLPParam() {
     e.preventDefault();
     const inputValue = e.target[0].value;
 
-    const visualiser = algorithm.chunker.visualisers;
+    const visualisers = algorithm.chunker.visualisers;
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue);
 
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'HashingLP',
         mode: 'search',
-        visualiser,
+        visualisers,
         target
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
