@@ -33,7 +33,19 @@ export default {
         };
     },
 
+
     run(chunker, {nodes}) {
+
+        const A = [...nodes];
+        let n = nodes.length;
+        let slow;
+        const swapAction = (bookmark, n1, n2) => {
+            chunker.add(bookmark, (vis, _n1, _n2) => {
+                vis.list.swapElements(_n1, _n2);
+            }, [n1, n2]);
+        };
+
+        // Initialise
         chunker.add(
             1,
             (vis, list) => {
@@ -41,13 +53,46 @@ export default {
             },
             [nodes]
         );
-        const swapAction = (b, n1, n2) => {
-            chunker.add(b, (vis, _n1, _n2) => {
-                vis.list.swapElements(_n1, _n2);
-            }, [n1, n2]);
-        };
 
-        swapAction(2,1,3);
+        // Split List into two sections
+        chunker.add(
+            2,
+            (vis) => {
+                vis.list.select(0);
+            },
+        );
+
+        chunker.add(
+            201,
+            (vis) => {
+                vis.list.addLabel(0,"Slow");
+                vis.list.addLabel(0,"Fast");
+            },
+        );
+
+        chunker.add(202);
+
+        for (let i=1; i< n/2; i++) {
+            let fast = i * 2;
+            slow = i;
+            chunker.add(
+                203,
+                (vis) => {
+                    vis.list.setLabel('Slow', i);
+                    vis.list.setLabel('Fast', fast);
+                },
+            );
+            chunker.add(202);
+        }
+
+        chunker.add(
+            204,
+            (vis) => {
+                vis.list.clearLabels();
+                vis.list.addLabel(0,"Left");
+                vis.list.addLabel(slow + 1,"Right");
+                vis.list.select(slow + 1);
+            })
     }
 
 

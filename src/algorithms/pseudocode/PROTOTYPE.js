@@ -36,15 +36,15 @@ SplitList(head) \\B placeholder
     if (head == NULL || head.next == NULL) \\B 2
         left <- head \\B placeholder
         right <- NULL \\B placeholder
-    else  \\B placeholder
-        slow <- head \\B placeholder
-        fast <- head \\B placeholder
-        while (fast.next != NULL && fast.next.next != NULL) \\B placeholder
-            slow = slow.next \\B placeholder
-            fast = fast.next.next \\B placeholder
-        left <- head \\B placeholder
-        right <- slow.next \\B 9
-        slow.next <- NULL \\B placeholder
+    else  \\B 201
+        slow <- head \\B 201
+        fast <- head \\B 201
+        while (fast.next != NULL && fast.next.next != NULL) \\B 202
+            slow = slow.next \\B 203
+            fast = fast.next.next \\B 203
+        left <- head \\B 204
+        right <- slow.next \\B 204
+        slow.next <- NULL \\B 204
 \\Code}
 
 \\Code{

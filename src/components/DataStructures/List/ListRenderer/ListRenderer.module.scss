@@ -4,14 +4,17 @@
   flex: 1;
   align-self: stretch;
 
+  .label {
 
-  .listItem {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--linked-list-node-value-color);
+    .text{
+      font-size: 16px;
+      fill: $color-patched;
+    }
+
   }
+
   .node {
-    .label {
+    .text {
       font-size: 16px;
       fill: $color-font;
     }
@@ -21,20 +24,16 @@
       stroke: $color-font;
       stroke-width: 1;
 
-      &.selected {
+      &.visited {
         fill: $color-active;
         stroke: $color-font;
         stroke-width: 2;
       }
-      &.visited {
+      &.selected {
         fill: $color-patched;
         stroke: $color-font;
         stroke-width: 1;
       }
     }
   }
-
-
-
-
 }
