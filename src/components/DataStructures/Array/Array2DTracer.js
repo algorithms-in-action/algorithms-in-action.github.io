@@ -64,13 +64,9 @@ class Array2DTracer extends Tracer {
         split.push(arr2d);
       }
 
-      for (let arrNum = 0; arrNum < split.length; arrNum++) {
-        this.data.push(split[arrNum].map(
-          (array1d) => [...array1d].map(
-            (value, i) => new Element(
-              value, i + (arrNum * (splitArray.rowLength + 1))
-            )
-          )
+      for (const item of split) {
+        this.data.push(item.map((array1d) =>
+          [...array1d].map((value, i) => new Element(value, i))
         ));
       }
     }
