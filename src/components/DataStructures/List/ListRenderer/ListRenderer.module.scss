@@ -4,11 +4,6 @@
   flex: 1;
   align-self: stretch;
 
-  .label {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--linked-list-node-value-color);
-  }
 
   .listItem {
     font-size: 16px;
@@ -16,29 +11,30 @@
     color: var(--linked-list-node-value-color);
   }
   .node {
-    .circle {
-      fill: var(--graph-node-circle-fill);
-      stroke: var(--graph-node-circle-stroke);
-      stroke-width: 1;
+    .label {
+      font-size: 16px;
+      fill: $color-font;
     }
 
-    /* Circle Marker Styles */
-    .circle {
+    .rect {
       fill: var(--graph-node-circle-fill);
-      stroke: var(--graph-node-circle-stroke);
+      stroke: $color-font;
       stroke-width: 1;
-    }
 
-    .circle.selected {
-      fill: var(--graph-node-circle-fill);
-      stroke: var(--graph-node-circle-stroke);
-      stroke-width: 1;
-    }
-
-    .circle.visited {
-      fill: var(--graph-node-circle-fill);
-      stroke: var(--graph-node-circle-stroke);
-      stroke-width: 1;
+      &.selected {
+        fill: $color-active;
+        stroke: $color-font;
+        stroke-width: 2;
+      }
+      &.visited {
+        fill: $color-patched;
+        stroke: $color-font;
+        stroke-width: 1;
+      }
     }
   }
+
+
+
+
 }

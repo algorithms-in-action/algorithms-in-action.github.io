@@ -18,7 +18,7 @@
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {AnimateSharedLayout, motion} from 'framer-motion';
 import Renderer from '../../common/Renderer/index';
 import styles from './ListRenderer.module.scss';
@@ -41,6 +41,7 @@ function switchmode(modetype = mode()) {
     return modename;
 }
 
+
 class ListRenderer extends Renderer {
     constructor(props) {
         super(props);
@@ -51,115 +52,106 @@ class ListRenderer extends Renderer {
     }
 
     renderData() {
-        const { values, dimensions,} =
-            this.props.data;
-        const {
-            baseWidth,
-            baseHeight,
-        } = dimensions;
-
+        const { objects, dimensions } = this.props.data;
+        const { baseWidth, baseHeight } = dimensions;
         const viewBox = [
-            (this.centerX - baseWidth / 2) / this.zoom,
-            (this.centerY - baseHeight / 2) / this.zoom,
+            (this.centerX) / this.zoom,
+            (this.centerY) / this.zoom,
             baseWidth / this.zoom,
             baseHeight / this.zoom,
         ];
 
         return (
-          <svg
-              className={switchmode(mode())}
-              viewBox={viewBox}
-              ref={this.elementRef}
-          >
-              <defs>
-                  <marker
-                      id="circleMarker"
-                      markerWidth="10"
-                      markerHeight="10"
-                      refX="5"
-                      refY="5"
-                      orient="auto"
-                  >
-                      <circle cx="5" cy="5" r="5" className={styles.circle}/>
-                  </marker>
-                  <marker
-                      id="circleMarkerSelected"
-                      markerWidth="10"
-                      markerHeight="10"
-                      refX="5"
-                      refY="5"
-                      orient="auto"
-                  >
-                      <circle
-                          cx="5"
-                          cy="5"
-                          r="5"
-                          className={classes(styles.circle, styles.selected)}
-                      />
-                  </marker>
-                  <marker
-                      id="circleMarkerVisited"
-                      markerWidth="10"
-                      markerHeight="10"
-                      refX="5"
-                      refY="5"
-                      orient="auto"
-                  >
-                      <circle
-                          cx="5"
-                          cy="5"
-                          r="5"
-                          className={classes(styles.circle, styles.visited)}
-                      />
-                  </marker>
-              </defs>
+            <svg
+                className={switchmode(mode())}
+                viewBox={viewBox}
+                ref={this.elementRef}
+            >
+                <defs>
+                    <symbol id="null-marker" viewBox="0 0 100 100">
+                        <line x1="0" y1="0" x2="100" y2="100" stroke="black" strokeWidth="20"/>
+                        <line x1="100" y1="0" x2="0" y2="100" stroke="black" strokeWidth="20"/>
+                    </symbol>
 
-              {/*rendering items*/}
-              {values.map((item, index) => {
-                  /*
-                  console.log(item);
-                  const { label, isSelected, isVisited } = item;
-                  const markerId = isSelected
-                      ? 'circleMarkerSelected'
-                      : isVisited
-                          ? 'circleMarkerVisited'
-                          : 'circleMarker';
-                   */
-                  return (
-                      <g
-                          className={styles.circle
-                      }
-                          key={index}
-                          transform={`translate(20, ${40 + index * 40})`}
-                          >
-                          <use href={`#${index}`} />
-                          <text x="30" y="5" className={styles.label}>
-                              {item}
-                          </text>
-                      </g>
+                    <symbol id={"arrow-symbol"} viewBox="0 0 100 100">
+                        <line x1="30" y1="50" x2="70" y2="50" stroke="black" strokeWidth="2"/>
+                        <polyline points="60,40 70,50 60,60"
+                                  stroke="black" strokeWidth="2" fill="none"/>
+                    </symbol>
 
-                      /*
-                      <g
-                          className={classes(
-                              styles.listItem,
-                              isSelected && styles.selected,
-                              isVisited && styles.visited
-                          )}
-                          key={index}
-                          transform={`translate(20, ${40 + index * 40})`}
-                      >
-                          <use href={`#${markerId}`} />
-                          <text x="30" y="5" className={styles.label}>
-                              {label}
-                          </text>
-                       */
-                  );
-              })}
-          </svg>
+                    <rect
+                        id={"rectMarker"} width={30} height={30}
+                        x={'0'} y={'0'}/>
+                </defs>
+
+                {/*rendering items*/}
+                {objects.map(({value, key}) => {
+
+                    /* Code for figuring out isvisited / isselected
+                    console.log(item);
+                    const { label, isSelected, isVisited } = item;
+                    const markerId = isSelected
+                        ? 'circleMarkerSelected'
+                        : isVisited
+                            ? 'circleMarkerVisited'
+                            : 'circleMarker';
+
+                                                      <use href={`#${index}`} />
+
+                     */
+                    return (
+                        <g
+                            className={classes(styles.node)}
+                            key={key}
+                            transform={`translate(${key * 60}, 20)`}
+                        >
+                            <use href={"#rectMarker"} x={'0'} y={'0'} width={'30'} height={'30'}
+                                 className={classes(styles.rect)}/>
+
+                            <use href={"#rectMarker"} x={'0'} y={'90'} width={'30'} height={'30'}
+                                 className={classes(styles.rect, styles.visited)}/>
+
+                            <use href={"#rectMarker"} x={'0'} y={'140'} width={'30'} height={'30'}
+                                 className={classes(styles.rect, styles.selected)}/>
+
+
+                            <use href={'#arrow-symbol'} x={'20'} y={'-10'} width={'50'} height={'50'}/>
+                            <use href={'#null-marker'} x={'5'} y={'50'} width={'20'} height={'20'}
+                                 textAnchor={"middle"}/>
+
+                            <text x={'15'} y={'20'} width={'30'} height={'30'} textAnchor={'middle'}
+                                  className={styles.label}>
+                                {value}
+                            </text>
+                        </g>
+
+                        // example code which adds in conditions for is selected and visited.
+                        // will need to figure out first how to embed data into the elements such as the boolean for
+                        // isvisited.
+                        /*
+                        <g
+                            className={classes(
+                                styles.listItem,
+                                isSelected && styles.selected,
+                                isVisited && styles.visited
+                            )}
+                            key={index}
+                            transform={`translate(20, ${40 + index * 40})`}
+                        >
+                            <use href={`#${markerId}`} />
+                            <text x="30" y="5" className={styles.label}>
+                                {label}
+                            </text>
+                         */
+                    );
+                })}
+            </svg>
         );
     }
 
-
+    render() {
+        return this.renderData();
+    }
 }
 
 export default ListRenderer;

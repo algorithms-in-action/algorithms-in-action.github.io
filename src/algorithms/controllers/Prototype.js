@@ -1,11 +1,11 @@
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 /*
 import {areExpanded} from './collapseChunkPlugin';
-import ListTracer from "../../components/DataStructures/List/ListTracer";
-import linkedListTracer from "../../components/DataStructures/LinkedList/LinkedListTracer";
-import graphTracer from "../../components/DataStructures/Graph/GraphTracer";
  */
-import listTracer from "../../components/DataStructures/List/ListTracer";
+import ListTracer from "../../components/DataStructures/List/ListTracer";
+
+
+
 
 
 const LL_BOOKMARKS = {
@@ -27,7 +27,7 @@ export default {
     initVisualisers() {
         return {
             list: {
-                instance: new listTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
+                instance: new ListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
                 order: 0,
             }
         };
@@ -41,7 +41,16 @@ export default {
             },
             [nodes]
         );
+        const swapAction = (b, n1, n2) => {
+            chunker.add(b, (vis, _n1, _n2) => {
+                vis.list.swapElements(_n1, _n2);
+            }, [n1, n2]);
+        };
+
+        swapAction(2,1,3);
     }
+
+
 };
 
 
