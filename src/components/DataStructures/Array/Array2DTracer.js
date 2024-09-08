@@ -43,7 +43,7 @@ class Array2DTracer extends Tracer {
    * @param {string} algo used to mark if it is a specific algorithm
    */
   set(array2d = [], algo, kth = 1, splitArray = null) {
-    if (splitArray == null || splitArray.rowLength == null) {
+    if (splitArray === null || splitArray.rowLength < 1) {
       this.data = array2d.map((array1d) =>
         [...array1d].map((value, i) => new Element(value, i))
       );
@@ -54,16 +54,23 @@ class Array2DTracer extends Tracer {
       while (step < array2d[0].length) {
         let arr2d = [];
         for (let i = 0; i < array2d.length; i++ ) {
-          arr2d.push([splitArray.rowHeader[i], ...array2d[i].slice(step, step + splitArray.rowLength)]);
+          arr2d.push([
+            splitArray.rowHeader[i],
+            ...array2d[i].slice(step, step + splitArray.rowLength)
+          ]);
         }
 
         step += splitArray.rowLength;
         split.push(arr2d);
       }
 
-      for (const item of split) {
-        this.data.push(item.map((array1d) =>
-          [...array1d].map((value, i) => new Element(value, i))
+      for (let arrNum = 0; arrNum < split.length; arrNum++) {
+        this.data.push(split[arrNum].map(
+          (array1d) => [...array1d].map(
+            (value, i) => new Element(
+              value, i + (arrNum * (splitArray.rowLength + 1))
+            )
+          )
         ));
       }
     }
@@ -178,21 +185,50 @@ class Array2DTracer extends Tracer {
         return newEl;
       }
     }
-    const newData = cloneDeepWith(this.data, customizer);
+    if (this.splitArray === null || this.splitArray.rowLength < 1) {
+      const newData = cloneDeepWith(this.data, customizer);
 
-    // remove all current occurences of the variable
-    for (let y = 0; y < newData[row].length; y++) {
-      newData[row][y].variables = newData[row][y].variables.filter(
-        (val) => val !== v
-      );
+      // remove all current occurences of the variable
+      for (let y = 0; y < newData[row].length; y++) {
+        newData[row][y].variables = newData[row][y].variables.filter(
+          (val) => val !== v
+        );
+      }
+
+      // add variable to item if not undefined or null
+      if (idx !== null && idx !== undefined)
+         newData[row][idx].variables.push(v);
+
+      // update this.data
+      this.data = newData;
+
+    } else {
+      let newData = [];
+      for (let _data of this.data) {
+        let _newData = cloneDeepWith(_data, customizer);
+
+        // remove all current occurences of the variable
+        for (let y = 0; y < _newData[row].length; y++) {
+          _newData[row][y].variables = _newData[row][y].variables.filter(
+            (val) => val !== v
+          );
+        }
+
+        // add variable to item if not undefined or null
+        if (idx !== null && idx !== undefined) {
+          // check if idx is in subarray
+          let relativeIdx =
+            idx - (this.data.indexOf(_data) * this.splitArray.rowLength) + 1;
+          if (relativeIdx > 0 && relativeIdx < this.splitArray.rowLength)
+            _newData[row][relativeIdx].variables.push(v);
+        }
+
+        newData.push(_newData);
+      }
+
+      // update this.data
+      this.data = newData;
     }
-
-    // add variable to item if not undefined or null
-    if (idx !== null && idx !== undefined)
-       newData[row][idx].variables.push(v);
-
-    // update this.data
-    this.data = newData;
   }
 
   /**

@@ -73,7 +73,7 @@ class Array2DRenderer extends Renderer {
     }
     // const isArray1D = this instanceof Array1DRenderer;
 
-    if (splitArray == null || splitArray.rowLength == null) {
+    if (splitArray === null || splitArray.rowLength < 1) {
       let longestRow = data.reduce(
         (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
         []

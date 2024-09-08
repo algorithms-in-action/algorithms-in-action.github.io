@@ -21,7 +21,7 @@ export default {
   run(chunker, params) {
     let inputs = params.values;
     let hashValue = params.hashSize;
-    let indexArr = Array.from({ length: hashValue }, (_, i) => i + 1);
+    let indexArr = Array.from({ length: hashValue }, (_, i) => i);
     let valueArr = Array(hashValue).fill('-');
     let nullArr = Array(hashValue).fill('');
 
@@ -49,6 +49,7 @@ export default {
         'Initialize to Empty',
         (vis, key, index) => {
           vis.array.hideArrayAtIndex(2);
+          vis.array.assignVariable('i', 2, 21);
           vis.graph.weighted(true);
           vis.graph.set([[0, 'Hash'], [0, 0]], [1, 2], [[-5, 0], [5, 0]]);
         },
