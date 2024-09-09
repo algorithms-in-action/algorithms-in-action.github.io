@@ -214,7 +214,7 @@ class Array2DTracer extends Tracer {
         if (idx !== null && idx !== undefined) {
           // check if idx is in subarray
           // add i to account for header offset
-          let relativeIdx = idx + i + 1;
+          let relativeIdx = idx + 1;
           if (relativeIdx > 0 && relativeIdx < this.splitArray.rowLength)
             _newData[row][relativeIdx].variables.push(v);
         }
@@ -316,14 +316,16 @@ class Array2DTracer extends Tracer {
       this.data[row][idx].value = newValue;
     } else {
       for (let i = 0; i < this.data.length; i++) {
-        if (idx === null || idx === undefined) continue;
-        // check if idx is in subarray
-        // add i + 1 to account for header offset
-        let relativeIdx = idx + i + 1;
-        if (relativeIdx < 0 || relativeIdx > this.splitArray.rowLength) continue;
-        if (!this.data[i][row] || !this.data[i][row][idx]) break;
-        this.data[i][row][idx].value = newValue;
-        idx -= this.splitArray.rowLength;
+        if (idx !== null || idx !== undefined || idx >= 0) {
+          // check if idx is in subarray
+          // add 1 to account for header offset
+          let relativeIdx = idx + 1;
+          if (relativeIdx > 0 && relativeIdx < this.splitArray.rowLength) {
+            if (!this.data[i][row] || !this.data[i][row][relativeIdx]) continue;
+            this.data[i][row][relativeIdx].value = newValue;
+          }
+          idx -= this.splitArray.rowLength;
+        }
       }
     }
   }

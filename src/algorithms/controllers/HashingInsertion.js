@@ -69,7 +69,7 @@ export default {
         (vis, idx, val) => {
           vis.array.updateValueAt(1, idx, val);
         },
-        [i + 1, key]
+        [i, key]
       )
     }
 
