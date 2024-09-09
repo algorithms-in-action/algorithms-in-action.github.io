@@ -1,6 +1,7 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
+import { hash1, setIncrement, IBookmarks } from './HashingCommon';
 
 
 export default {
@@ -25,84 +26,79 @@ export default {
     let valueArr = Array(hashValue).fill('-');
     let nullArr = Array(hashValue).fill('');
 
-    const SMALL= 11;
-    const BIG = 97;
-    const BIGPRIME = 3457;
-    let mode = 0;
-    let incrementType = 0;
     let insertions = 0;
 
+    function hashInsert(table, key) {
+      insertions = insertions + 1;
+      chunker.add(
+        IBookmarks.IncrementInsertions,
+        (vis, insertions) => {
+          vis.array.showKth(insertions);
+        },
+        [insertions]
+      );
+      // get initial hash index
+      let i = hash1(chunker, key, hashValue);
+      let increment = setIncrement(chunker, key, hashValue, params.name);
+
+      chunker.add(
+        IBookmarks.Probing,
+        (vis, index) => {
+          vis.array.assignVariable('i', 2, index);
+        },
+        [i]
+      )
+      while (typeof table[i] !== 'undefined' && table[i] !== null) {
+        i = (i + increment) % table.length;
+        chunker.add(
+          IBookmarks.HandlingCollision,
+        )
+
+        chunker.add(
+          IBookmarks.Probing,
+          (vis, index) => {
+            vis.array.assignVariable('i', 2, index);
+          },
+          [i]
+        )
+      }
+
+      table[i] = key;
+      chunker.add(
+        IBookmarks.PutIn,
+        (vis, idx, val) => {
+          vis.array.updateValueAt(1, idx, val);
+        },
+        [i + 1, key]
+      )
+    }
+
+    // Init hash table
+    // Hide third row to show assigned variables
+    let table = new Array(hashValue);
     chunker.add(
-      'HashInit(T)',
+      IBookmarks.Init,
       (vis, array) => {
-        vis.array.set(array, 'HashingLP', '', { rowLength: 20, rowHeader: ['Index', 'Value', ''] } );
+        vis.array.set(array, 'HashingLP', '', { rowLength: 20, rowHeader: ['Index', 'Value', ''] });
         vis.array.hideArrayAtIndex([1, 2]);
       },
       [[indexArr, valueArr, nullArr]]
     );
 
-    function hashInit() {
-      let tableSize = mode == 0 ? SMALL : BIG;
-      let table = new Array(tableSize);
+    chunker.add(
+      IBookmarks.EmptyArray,
+      (vis) => {
+        // Show the value row
+        vis.array.hideArrayAtIndex(2);
 
-      chunker.add(
-        'Initialize to Empty',
-        (vis, key, index) => {
-          vis.array.hideArrayAtIndex(2);
-          vis.array.assignVariable('i', 2, 21);
-          vis.graph.weighted(true);
-          vis.graph.set([[0, 'Hash'], [0, 0]], [1, 2], [[-5, 0], [5, 0]]);
-        },
-      );
+        // Init hashing animation
+        vis.graph.weighted(true);
+        vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, -7], [5, -7]]);
+      },
+    );
 
-      return table;
-    }
-
-    hashInit();
-
-    function hash(k) {
-      if (mode == 0) {
-        return k*BIGPRIME % SMALL;
-      }
-      return (k*BIGPRIME) % BIG;
-    }
-
-    function setIncrement(k) {
-      let smallishprime = mode == 0 ? 3 : 23;
-      return incrementType == 0 ? 1 : (k*BIGPRIME) % smallishprime;
-    }
-
-    function changeMode() {
-      mode = mode == 0 ? 1 : 0;
-    }
-
-    function changeIncrementType() {
-      incrementType = incrementType == 0 ? 1 : 0;
-    }
-
-    function hashInsert(table, key) { // add mode parameter with case for
-      insertions = insertions + 1;
-      // get initial hash index
-      let i = hash(key);
-
-      let increment = setIncrement(key);
-      // linear probing collision handling
-      while (typeof table[i] !== 'undefined' && table[i] !== null) {
-        i = (i + increment) % table.length;
-
-      }
-      table[i] = key;
-
-    }
-
-    function hashDelete(table, key) {
-      insertions = insertions - 1;
-      let i = hash(key);
-      let increment = setIncrement(key);
-      while (table[i] != key) {
-        i = (i + increment) % table.length;
-      }
-      table[i] = null;
+    for (const item of inputs) {
+      hashInsert(table, item);
     }
   },
 };

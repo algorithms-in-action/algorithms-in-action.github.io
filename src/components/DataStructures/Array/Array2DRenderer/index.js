@@ -362,6 +362,13 @@ class Array2DRenderer extends Renderer {
             Nodes (queue): {listOfNumbers}
           </caption>
         )}
+        {algo == 'HashingLP' && kth !== '' && (
+          <caption kth-tag="unionFind" className={styles.bottom_caption}>
+            Insertions: {Array.isArray(kth) ? kth[0] : kth}
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            Increment: {Array.isArray(kth) ? kth[1] : ''}
+          </caption>
+        )}
       </table>
     );
   }

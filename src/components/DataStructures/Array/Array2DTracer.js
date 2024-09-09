@@ -200,8 +200,8 @@ class Array2DTracer extends Tracer {
 
     } else {
       let newData = [];
-      for (let _data of this.data) {
-        let _newData = cloneDeepWith(_data, customizer);
+      for (let i = 0; i < this.data.length; i++) {
+        let _newData = cloneDeepWith(this.data[i], customizer);
 
         // remove all current occurences of the variable
         for (let y = 0; y < _newData[row].length; y++) {
@@ -213,13 +213,14 @@ class Array2DTracer extends Tracer {
         // add variable to item if not undefined or null
         if (idx !== null && idx !== undefined) {
           // check if idx is in subarray
-          let relativeIdx =
-            idx - (this.data.indexOf(_data) * this.splitArray.rowLength) + 1;
+          // add i to account for header offset
+          let relativeIdx = idx + i + 1;
           if (relativeIdx > 0 && relativeIdx < this.splitArray.rowLength)
             _newData[row][relativeIdx].variables.push(v);
         }
 
         newData.push(_newData);
+        idx -= this.splitArray.rowLength;
       }
 
       // update this.data
@@ -307,11 +308,24 @@ class Array2DTracer extends Tracer {
    * @param {*} y the column index.
    * @param {*} newValue the new value.
    */
-  updateValueAt(x, y, newValue) {
-    if (!this.data[x] || !this.data[x][y]) {
-      return;
+  updateValueAt(row, idx, newValue) {
+    if (this.splitArray === null || this.splitArray.rowLength < 1) {
+      if (!this.data[row] || !this.data[row][idx]) {
+        return;
+      }
+      this.data[row][idx].value = newValue;
+    } else {
+      for (let i = 0; i < this.data.length; i++) {
+        if (idx === null || idx === undefined) continue;
+        // check if idx is in subarray
+        // add i + 1 to account for header offset
+        let relativeIdx = idx + i + 1;
+        if (relativeIdx < 0 || relativeIdx > this.splitArray.rowLength) continue;
+        if (!this.data[i][row] || !this.data[i][row][idx]) break;
+        this.data[i][row][idx].value = newValue;
+        idx -= this.splitArray.rowLength;
+      }
     }
-    this.data[x][y].value = newValue;
   }
 }
 
