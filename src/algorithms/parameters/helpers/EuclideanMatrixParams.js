@@ -905,8 +905,11 @@ const graphEgsNames = (graphEgs) => {
     if (nums === null) return '';
     let txt = ``;
     if (!Array.isArray(nums)) {
-      console.error('Expected an array but received:', nums);
-      return ''; // or handle this case appropriately
+      console.log('Expected an array but received:', nums);
+      if (typeof nums === 'number') {
+        txt = nums.toString();
+      }
+      return txt; // or handle this case appropriately
     }
     nums.forEach((n) => {
       txt += n + `,`;
