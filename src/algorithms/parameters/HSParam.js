@@ -10,10 +10,7 @@ const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const HEAP_SORT = 'Heap Sort';
 const HEAP_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
-function HeapsortParam({ mode, list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
-    // const { alg, mode, param } = useUrlParams();
-    // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
-    // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
+function HeapsortParam({ list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
     const [nodes, setNodes] = useState(list);
     const [message, setMessage] = useState(null);
 
@@ -45,32 +42,3 @@ HeapsortParam.propTypes = {
 };
 
 export default withAlgorithmParams(HeapsortParam); // Export with the wrapper for URL Params
-
-
-// function HeapsortParam() {
-//   const [message, setMessage] = useState(null);
-//   const [nodes, setNodes] = useState(DEFAULT_NODES);
-
-//   return (
-//     <>
-//       <div className="form">
-//         <ListParam
-//           name="heapSort"
-//           buttonName="Sort"
-//           mode="sort"
-//           formClassName="formLeft"
-//           DEFAULT_VAL={nodes}
-//           SET_VAL={setNodes}
-//           ALGORITHM_NAME={HEAP_SORT}
-//           EXAMPLE={HEAP_SORT_EXAMPLE}
-//           setMessage={setMessage}
-//         />
-//       </div>
-
-//       {/* render success/error message */}
-//       {message}
-//     </>
-//   );
-// }
-
-// export default HeapsortParam;
