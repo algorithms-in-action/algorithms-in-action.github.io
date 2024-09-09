@@ -201,10 +201,19 @@ export function run_msort() {
     while (runlength < size + 1) {
       let left = 0;
 
-      chunker.add('MainWhile', (vis, cur_size) => {
+      chunker.add('MainWhile', (vis, cur_size, cur_rlength) => {
         let size_txt = "size = " + (cur_size + 1);
         assignVarToA(vis, size_txt, cur_size);
-      }, [size]);
+
+        for (let i = 0; i < cur_rlength; i++) {
+          highlight(vis, i, true);
+        }
+        for (let j = cur_rlength; j < Math.min(cur_rlength * 2, cur_size + 1); j++) {
+          highlight(vis, j, false);
+        }
+
+      }, [size, runlength]);
+
 
       chunker.add('left', (vis, cur_left) => {
         assignVarToA(vis, 'left', cur_left);
@@ -449,7 +458,6 @@ export function run_msort() {
           assignVarToA(vis, 'left', cur_left);
 
         }, [left2, left, right]);
-
 
       }
 

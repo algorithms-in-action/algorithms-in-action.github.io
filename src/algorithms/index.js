@@ -105,21 +105,6 @@ const allalgs = {
     },
   },
 
-  'msort_lista_td': {
-    name: 'Merge Sort (lists)',
-    category: 'Sort',
-    explanation: Explanation.msort_lista_td,
-    param: <Param.msort_lista_td />,
-    instructions: Instructions.msort_lista_td,
-    extraInfo: ExtraInfo.msort_lista_td,
-    pseudocode: {
-      sort: Pseudocode.msort_lista_td,
-    },
-    controller: {
-      sort: Controller.msort_lista_td,
-    },
-  },
-
   'msort_arr_bup': {
     name: 'Merge Sort (bottom up)',             // for bottom up
     noDeploy: false,
@@ -135,6 +120,23 @@ const allalgs = {
       sort: Controller.msort_arr_bup,// same as top down
     },
   },
+
+  'msort_lista_td': {
+    name: 'Merge Sort (lists)',
+    category: 'Sort',
+    explanation: Explanation.msort_lista_td,
+    param: <Param.msort_lista_td />,
+    instructions: Instructions.msort_lista_td,
+    extraInfo: ExtraInfo.msort_lista_td,
+    pseudocode: {
+      sort: Pseudocode.msort_lista_td,
+    },
+    controller: {
+      sort: Controller.msort_lista_td,
+    },
+  },
+
+
 
   'binarySearchTree': {
     noDeploy: false,
