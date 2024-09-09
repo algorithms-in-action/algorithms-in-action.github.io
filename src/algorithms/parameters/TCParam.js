@@ -17,7 +17,7 @@ function TransitiveClosureParam({ mode, size, min, max}) {
       {/* Matrix input */}
       <MatrixParam
         name="transitiveClosure"
-        mode= { mode || "tc"}
+        mode="tc"
         defaultSize={size || DEFAULT_SIZE}
         min={min || 0}
         max={max || 1}

@@ -45,7 +45,7 @@ function DFSParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, mi
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="DFS"
-        mode= { mode || "find" }
+        mode= "find"
         defaultSize={ size || DEFAULT_SIZE }
         defaultStart={start || DEFAULT_START }
         defaultHeur = {heuristic || DEFAULT_HEUR }

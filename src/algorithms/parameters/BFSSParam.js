@@ -14,15 +14,15 @@ const BFSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
 function BFSSParam( { mode, string, pattern } ) {
   const [message, setMessage] = useState(null);
-  const [string_, setString] = useState(string || DEFAULT_STRING);
-  const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
+  const [string_, setString] = useState( string || DEFAULT_STRING );
+  const [pattern_, setPattern] = useState( pattern || DEFAULT_PATTERN );
   return (
     <>
       <div className="form">
         <StringParam
           name="bruteForceStringSearch"
           buttonName="SEARCH"
-          mode={ mode || "search" }
+          mode="search"
           formClassName="formLeft"
           DEFAULT_STRING={string_}
           DEFAULT_PATTERN={pattern_}

@@ -47,7 +47,7 @@ function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, m
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="aStar"
-        mode={ mode || "find" }
+        mode="find"
         defaultSize={ size || DEFAULT_SIZE }
         defaultStart={ start || DEFAULT_START }
         defaultEnd={ end || DEFAULT_END }

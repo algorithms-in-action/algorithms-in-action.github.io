@@ -45,7 +45,7 @@ function BFSParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, mi
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="BFS"
-        mode={ mode || "find" }
+        mode="find"
         defaultSize={ size || DEFAULT_SIZE }
         defaultStart={ start || DEFAULT_START }
         defaultEnd={ end || DEFAULT_END }
