@@ -60,10 +60,11 @@ export function useUrlParams() {
 
 export const withAlgorithmParams = (WrappedComponent) => {
     const WithAlgorithmParams = (props) => {
+
         const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max } = useUrlParams();
 
-        if (!alg || !mode || !(alg in algorithms && mode in algorithms[alg].pseudocode)) {
-            return <div>Invalid algorithm or mode specified</div>;
+        if (!alg || !(alg in algorithms)) {
+            return <div>Invalid algorithm specified</div>;
         }
 
         return <WrappedComponent
@@ -84,9 +85,9 @@ export const withAlgorithmParams = (WrappedComponent) => {
             max={max}
             {...props}
         />;
+
     };
 
-    // Set display name for easier debugging
     WithAlgorithmParams.displayName = `WithAlgorithmParams(${getDisplayName(WrappedComponent)})`;
     return WithAlgorithmParams;
 };
@@ -95,6 +96,5 @@ export const withAlgorithmParams = (WrappedComponent) => {
 function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
-
 // // https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // // http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
