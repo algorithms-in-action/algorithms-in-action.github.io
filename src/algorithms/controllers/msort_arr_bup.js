@@ -61,6 +61,8 @@ function isMergeExpanded() {
 // Define helper functions
 // -------------------------------------------------------------------------------
 
+// Highlights Array A either red or green
+// Can add more colours in future
 function highlight(vis, index, color) {
   if (color == 'red') {
     vis.array.select(index);
@@ -69,7 +71,7 @@ function highlight(vis, index, color) {
     vis.array.patch(index);
   }
 }
-
+// Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
 function highlightB(vis, index, color) {
   if (isMergeExpanded()) {
     if (color == 'red') {
@@ -81,6 +83,7 @@ function highlightB(vis, index, color) {
   }
 }
 
+// unhighlights arrayA
 function unhighlight(vis, index, color) {
   if (color == 'red') {
     vis.array.deselect(index);
@@ -90,13 +93,27 @@ function unhighlight(vis, index, color) {
   }
 }
 
-function assignVarToA(vis, variable_name, index) {
+// Assigns label to array A at index, checks if index is greater than size of array
+// if index is greater than size, assign label to last element in array
+function assignVarToA(vis, variable_name, index, size) {
   if (index === undefined)
     vis.array.removeVariable(variable_name);
-  else if (index > 11)
-    vis.array.assignVariable(variable_name, 11)
+  else if (index >= size)
+    vis.array.assignVariable(variable_name, size - 1)
   else
     vis.array.assignVariable(variable_name, index);
+}
+
+// Same as above function bet also checks if array B is displayed
+function assignVarToB(vis, variable_name, index, size) {
+  if (isMergeExpanded()) {
+    if (index === undefined)
+      vis.arrayB.removeVariable(variable_name);
+    else if (index >= size)
+      vis.arrayB.assignVariable(variable_name, size - 1);
+    else
+      vis.arrayB.assignVariable(variable_name, index);
+  }
 }
 
 function displayRunlength(vis, runlength, size) {
@@ -111,28 +128,14 @@ function displayRunlength(vis, runlength, size) {
   }
 }
 
-function assignVarToB(vis, variable_name, index) {
-  if (isMergeExpanded()) {
-    if (index === undefined)
-      vis.arrayB.removeVariable(variable_name);
-    else if (index > 11)
-      vis.arrayB.assignVariable(variable_name, 11);
-    else
-      vis.arrayB.assignVariable(variable_name, index);
-  }
 
-}
 
 function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
-  assignVarToA(vis, 'ap1', ap1);
-  assignVarToA(vis, 'max1', max1);
-  if (ap2 < size) {
-    assignVarToA(vis, 'ap2', ap2);
-  } else {
-    assignVarToA(vis, 'ap2', size);
-  }
-  assignVarToA(vis, 'max2', max2);
-  if (isMergeExpanded()) assignVarToB(vis, 'bp', bp);
+  assignVarToA(vis, 'ap1', ap1, size);
+  assignVarToA(vis, 'max1', max1, size);
+  assignVarToA(vis, 'ap2', ap2, size);
+  assignVarToA(vis, 'max2', max2, size);
+  if (isMergeExpanded()) assignVarToB(vis, 'bp', bp, size);
 }
 
 
@@ -182,7 +185,7 @@ export function run_msort() {
 
       chunker.add('MainWhile', (vis, cur_size, cur_rlength) => {
         let size_txt = "size = " + (cur_size);
-        assignVarToA(vis, size_txt, cur_size);
+        assignVarToA(vis, size_txt, cur_size, size);
 
         for (let i = 0; i < cur_rlength; i++) {
           highlight(vis, i, 'red');
@@ -195,7 +198,7 @@ export function run_msort() {
 
 
       chunker.add('left', (vis, cur_left) => {
-        assignVarToA(vis, 'left', cur_left);
+        assignVarToA(vis, 'left', cur_left, size);
       }, [left]);
 
 
@@ -226,46 +229,46 @@ export function run_msort() {
         chunker.add('mid', (vis, cur_mid, cur_rlength, cur_size) => {
           // remove runlength and size labels
 
-          assignVarToA(vis, ('runlength = ' + cur_rlength), undefined);
-          assignVarToA(vis, ('size = ' + (cur_size)), undefined);
+          assignVarToA(vis, ('runlength = ' + cur_rlength), undefined, size);
+          assignVarToA(vis, ('size = ' + (cur_size)), undefined, size);
 
-          assignVarToA(vis, 'mid', cur_mid);
+          assignVarToA(vis, 'mid', cur_mid, size);
         }, [mid, runlength, size]);
 
         chunker.add('right', (vis, cur_right) => {
-          assignVarToA(vis, 'right', cur_right);
+          assignVarToA(vis, 'right', cur_right, size);
         }, [right]);
 
         chunker.add('ap1', (vis, cur_ap1) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'left', undefined); // ap1 replaces left
-            assignVarToA(vis, 'ap1', cur_ap1);
+            assignVarToA(vis, 'left', undefined, size); // ap1 replaces left
+            assignVarToA(vis, 'ap1', cur_ap1, size);
           }
         }, [ap1]);
 
         chunker.add('max1', (vis, cur_max1) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'mid', undefined); // max1 replaces mid
-            assignVarToA(vis, 'max1', cur_max1);
+            assignVarToA(vis, 'mid', undefined, size); // max1 replaces mid
+            assignVarToA(vis, 'max1', cur_max1, size);
           }
         }, [max1]);
 
         chunker.add('ap2', (vis, cur_ap2) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'ap2', cur_ap2);
+            assignVarToA(vis, 'ap2', cur_ap2, size);
           }
         }, [ap2]);
 
         chunker.add('max2', (vis, cur_max2) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'right', undefined); // max2 replaces right
-            assignVarToA(vis, 'max2', cur_max2);
+            assignVarToA(vis, 'right', undefined, size); // max2 replaces right
+            assignVarToA(vis, 'max2', cur_max2, size);
           }
         }, [max2]);
 
         chunker.add('bp', (vis, cur_bp) => {
           if (isMergeExpanded()) {
-            assignVarToB(vis, 'bp', cur_bp);
+            assignVarToB(vis, 'bp', cur_bp, size);
           }
         }, [bp]);
 
@@ -314,12 +317,12 @@ export function run_msort() {
 
             ap1 = ap1 + 1;
             chunker.add('ap1++', (vis, cur_ap1) => {
-              assignVarToA(vis, 'ap1', cur_ap1);
+              assignVarToA(vis, 'ap1', cur_ap1, size);
             }, [ap1]);
 
             bp = bp + 1;
             chunker.add('bp++', (vis, cur_bp) => {
-              if (isMergeExpanded()) assignVarToB(vis, 'bp', cur_bp);
+              if (isMergeExpanded()) assignVarToB(vis, 'bp', cur_bp, size);
             }, [bp]);
           }
 
@@ -347,12 +350,12 @@ export function run_msort() {
 
             ap2 = ap2 + 1;
             chunker.add('ap2++', (vis, cur_ap2) => {
-              assignVarToA(vis, "ap2", cur_ap2);
+              assignVarToA(vis, "ap2", cur_ap2, size);
             }, [ap2]);
 
             bp = bp + 1;
             chunker.add('bp++_2', (vis, cur_bp) => {
-              if (isMergeExpanded()) assignVarToB(vis, 'bp', cur_bp)
+              if (isMergeExpanded()) assignVarToB(vis, 'bp', cur_bp, size)
             }, [bp]);
           }
         }
@@ -367,9 +370,9 @@ export function run_msort() {
 
           vis.array.set(a, 'msort_arr_bup');
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
-          assignVarToA(vis, 'ap1', cur_ap1);
-          assignVarToA(vis, 'max1', cur_max1);
-          assignVarToB(vis, 'bp', cur_bp);
+          assignVarToA(vis, 'ap1', cur_ap1, size);
+          assignVarToA(vis, 'max1', cur_max1, size);
+          assignVarToB(vis, 'bp', cur_bp, size);
 
           // to highlight the solrted elements of B array green
           for (let i = cur_left; i < cur_bp; i++) {
@@ -390,8 +393,8 @@ export function run_msort() {
         chunker.add('CopyRest2', (vis, a, b, cur_ap2, cur_max2, cur_left, cur_right) => {
           vis.array.set(a, 'msort_arr_bup');
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
-          assignVarToA(vis, 'ap2', cur_ap2);
-          assignVarToA(vis, 'max2', cur_max2);
+          assignVarToA(vis, 'ap2', cur_ap2, size);
+          assignVarToA(vis, 'max2', cur_max2, size);
 
           for (let i = cur_left; i <= cur_right; i++) {
             highlightB(vis, i, 'green');
@@ -428,7 +431,7 @@ export function run_msort() {
             unhighlight(vis, i, 'green');
           }
 
-          assignVarToA(vis, 'left', cur_left);
+          assignVarToA(vis, 'left', cur_left, size);
 
         }, [left2, left, right]);
 
@@ -437,9 +440,9 @@ export function run_msort() {
 
       runlength = 2 * runlength;
       chunker.add('runlength2', (vis, runlength) => {
-        assignVarToA(vis, 'left', undefined);
+        assignVarToA(vis, 'left', undefined, size);
         if (runlength > size) {
-          assignVarToA(vis, 'done', size);
+          assignVarToA(vis, 'done', size, size);
         }
         else {
           displayRunlength(vis, runlength, size);
