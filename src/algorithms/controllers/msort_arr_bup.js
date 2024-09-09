@@ -145,6 +145,12 @@ function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
   if (isMergeExpanded()) assignVarToB(vis, 'bp', bp, size);
 }
 
+function set_simple_stack(vis_array, c_stk) {
+  console.log("set_simple_stack" + c_stk);
+  console.log(c_stk);
+  vis_array.setList(c_stk);
+}
+
 /**
  *
  * @param {object} chunker
@@ -162,6 +168,7 @@ export function run_msort() {
 
     const entire_num_array = nodes;
     const size = nodes.length; // size of the array
+    let simple_stack = [];
 
     //// start mergesort --------------------------------------------------------
 
@@ -177,16 +184,17 @@ export function run_msort() {
         vis.arrayB.set(b, 'msort_arr_bup');
         vis.arrayB.setLargestValue(maxValue);
       }
+
     }, [A, B, size], length);
 
     chunker.add('runlength', (vis, c_rlength) => {
       displayRunlength(vis, c_rlength, size);
-    }, [runlength]);
+      set_simple_stack(vis.array, [c_rlength]);
+    }, [runlength, simple_stack]);
 
     while (runlength < size) {
       let left = 0;
 
-      // while runlength < size
       chunker.add('MainWhile', (vis, c_rlength, c_left) => {
         // display size label
         assignVarToA(vis, ("size = " + size), size, size);
@@ -267,12 +275,13 @@ export function run_msort() {
         while (true) {
           if (!(ap1 <= max1 && ap2 <= max2)) break;
 
-          chunker.add('MergeWhile', (vis, a, c_left, c_right, c_mid, c_ap1, c_max1, c_ap2, c_max2, c_bp) => {
+          chunker.add('MergeWhile', (vis, a, c_left, c_right, c_mid, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_rlength) => {
             vis.array.set(a, 'msort_arr_bup');
             displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
             // future color: should be colorA & colorB
             highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
-          }, [A, left, right, mid, ap1, max1, ap2, max2, bp]);
+            set_simple_stack(vis.array, [c_rlength]);
+          }, [A, left, right, mid, ap1, max1, ap2, max2, bp, runlength]);
 
           chunker.add('findSmaller', () => {
             // no animation 
@@ -283,7 +292,7 @@ export function run_msort() {
             B[bp] = A[ap1];
             A[ap1] = undefined;
 
-            chunker.add('copyap1', (vis, a, b, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_left, c_right, c_mid) => {
+            chunker.add('copyap1', (vis, a, b, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_left, c_right, c_mid, c_rlength) => {
 
               if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
               vis.array.set(a, 'msort_arr_bup');
@@ -293,7 +302,8 @@ export function run_msort() {
               highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
               // highlight sorted elements green (colorC)
               for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, colorC);
-            }, [A, B, ap1, max1, ap2, max2, bp, left, right, mid]);
+              set_simple_stack(vis.array, [c_rlength]);
+            }, [A, B, ap1, max1, ap2, max2, bp, left, right, mid, runlength]);
 
             ap1 = ap1 + 1;
             chunker.add('ap1++', (vis, c_ap1) => {
@@ -314,7 +324,7 @@ export function run_msort() {
             B[bp] = A[ap2];
             A[ap2] = undefined;
 
-            chunker.add('copyap2', (vis, a, b, c_ap1, c_ap2, c_bp, c_max1, c_max2, c_left, c_right, c_mid) => {
+            chunker.add('copyap2', (vis, a, b, c_ap1, c_ap2, c_bp, c_max1, c_max2, c_left, c_right, c_mid, c_rlength) => {
               if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
               vis.array.set(a, 'msort_arr_bup');
               displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
@@ -323,8 +333,8 @@ export function run_msort() {
               highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
               // highlight sorted elements green / colorB
               for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, 'green')
-
-            }, [A, B, ap1, ap2, bp, max1, max2, left, right, mid]);
+              set_simple_stack(vis.array, [c_rlength]);
+            }, [A, B, ap1, ap2, bp, max1, max2, left, right, mid, runlength]);
 
             ap2 = ap2 + 1;
             chunker.add('ap2++', (vis, c_ap2) => {
@@ -344,7 +354,7 @@ export function run_msort() {
           bp = bp + 1;
         }
 
-        chunker.add('CopyRest1', (vis, a, b, c_ap1, c_max1, c_left, c_right, c_mid, c_bp) => {
+        chunker.add('CopyRest1', (vis, a, b, c_ap1, c_max1, c_left, c_right, c_mid, c_bp, c_rlength) => {
 
           vis.array.set(a, 'msort_arr_bup');
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
@@ -359,7 +369,8 @@ export function run_msort() {
 
           // future color: should be colorA & colorB
           highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
-        }, [A, B, ap1, max1, left, right, mid, bp]);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, ap1, max1, left, right, mid, bp, runlength]);
 
         for (let i = ap2; i <= max2; i++) {
           B[bp] = A[i];
@@ -367,7 +378,7 @@ export function run_msort() {
           bp = bp + 1;
         }
 
-        chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid) => {
+        chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup');
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
           assignVarToA(vis, 'ap2', c_ap2, size);
@@ -378,8 +389,8 @@ export function run_msort() {
 
           // future color: should be colorA & colorB
           highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
-
-        }, [A, B, ap2, max2, left, right, mid]);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, ap2, max2, left, right, mid, runlength]);
 
         // copy merged elements from B to A
         for (let i = left; i <= right; i++) {
@@ -387,13 +398,14 @@ export function run_msort() {
           B[i] = undefined;
         }
 
-        chunker.add('copyBA', (vis, a, b, c_left, c_right) => {
+        chunker.add('copyBA', (vis, a, b, c_left, c_right, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup');
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
 
           // highlight all sorted elements green
           for (let i = c_left; i <= c_right; i++) highlight(vis, i, colorC);
-        }, [A, B, left, right]);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, left, right, runlength]);
 
         let left2 = left; // this is the old left before it was updated
 
@@ -412,15 +424,15 @@ export function run_msort() {
 
 
       runlength = 2 * runlength;
-      chunker.add('runlength2', (vis, runlength) => {
+      chunker.add('runlength2', (vis, c_rlength) => {
         assignVarToA(vis, 'left', undefined, size);
-        if (runlength > size) {
+        if (c_rlength > size) {
           assignVarToA(vis, 'done', size, size);
         }
         else {
-          displayRunlength(vis, runlength, size);
+          displayRunlength(vis, c_rlength, size);
         }
-
+        set_simple_stack(vis.array, [c_rlength]);
       }, [runlength]);
     }
 
