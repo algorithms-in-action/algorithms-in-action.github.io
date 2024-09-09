@@ -265,7 +265,7 @@ function EuclideanMatrixParams({
   const [startNode, setStartNode] = useState(defaultStart);
   // XXX not sure if endNodesTxt needs to be in State
   const [endNodesTxt, setEndNodesTxt] = useState(nums2Txt(defaultEnd));
-  const [endNodes, setEndNodes] = useState((defaultEnd===null?[]:defaultEnd));
+  const [endNodes, setEndNodes] = useState(defaultEnd);
   // const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
   const [graphChoice, setgraphChoice] = useState(1);
 
@@ -904,6 +904,10 @@ const graphEgsNames = (graphEgs) => {
   const nums2Txt = (nums) => {
     if (nums === null) return '';
     let txt = ``;
+    if (!Array.isArray(nums)) {
+      console.error('Expected an array but received:', nums);
+      return ''; // or handle this case appropriately
+    }
     nums.forEach((n) => {
       txt += n + `,`;
     });

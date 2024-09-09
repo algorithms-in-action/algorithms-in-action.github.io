@@ -24,7 +24,7 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
                 <ListParam
                     name="heapSort"
                     buttonName="Sort"
-                    mode={mode || "sort"}
+                    mode={"sort"}
                     formClassName="formLeft"
                     DEFAULT_VAL={nodes}
                     SET_VAL={setNodes}

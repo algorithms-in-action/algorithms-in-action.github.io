@@ -56,7 +56,7 @@ export function useUrlParams() {
     console.log("Raw URL mode:", urlParams.get('mode'));
     console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max });
 
-    return { alg, mode, list, value, xyCoords, edgeWeights, start, end, string, pattern, union };
+    return { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max };
 
 }
 
@@ -110,3 +110,4 @@ function getDisplayName(WrappedComponent) {
 
 // // https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // // http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
+// http://localhost:3000/?alg=aStar&mode=find&size=4&start=1&end=4&min=1&max=30&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-3-2,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
