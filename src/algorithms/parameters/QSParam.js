@@ -31,7 +31,8 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-function QuicksortParam({ list }) {
+
+function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mode, list
   const [message, setMessage] = useState(null)
   const [array, setArray] = useState(list)
   const [QSCase, setQSCase] = useState({
@@ -167,7 +168,6 @@ function QuicksortParam({ list }) {
 // Define the prop types for URL Params
 QuicksortParam.propTypes = {
   alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
   list: PropTypes.string.isRequired
 };
 
