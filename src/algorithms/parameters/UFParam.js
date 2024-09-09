@@ -12,6 +12,8 @@ import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
 
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
@@ -38,10 +40,10 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function UFParam() {
+function UFParam({ mode, union, value }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
-  const [unions, setUnions] = useState(DEFAULT_UNION);
+  const [unions, setUnions] = useState(union || DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
 
   // toggling path compression (i.e., a boolean value)
@@ -126,7 +128,7 @@ function UFParam() {
           buttonName="Find"
           mode="find"
           formClassName="formRight"
-          DEFAULT_VAL={DEFAULT_FIND}
+          DEFAULT_VAL={value || DEFAULT_FIND}
           ALGORITHM_NAME={FIND}
           EXAMPLE={FIND_EXAMPLE}
           handleSubmit={handleFind}
@@ -163,7 +165,16 @@ function UFParam() {
   );
 }
 
-export default UFParam;
+// Define the prop types for URL Params
+UFParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  union: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(UFParam); // Export with the wrapper for URL Params
+
 
 /**
  * Validate the text input within the DualValueParam component.
