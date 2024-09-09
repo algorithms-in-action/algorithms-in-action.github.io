@@ -61,25 +61,34 @@ function isMergeExpanded() {
 // Define helper functions
 // -------------------------------------------------------------------------------
 
-const highlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
+function highlight(vis, index, color) {
+  if (color == 'red') {
     vis.array.select(index);
-  } else {
+  }
+  if (color == 'green') {
     vis.array.patch(index);
   }
-};
+}
 
-const highlightB = (vis, index, isPrimaryColor = true) => {
+function highlightB(vis, index, color) {
   if (isMergeExpanded()) {
-    if (isPrimaryColor) {
+    if (color == 'red') {
       vis.arrayB.select(index);
-    } else {
+    }
+    if (color == 'green') {
       vis.arrayB.patch(index);
     }
   }
-};
+}
 
-
+function unhighlight(vis, index, color) {
+  if (color == 'red') {
+    vis.array.deselect(index);
+  }
+  if (color == 'green') {
+    vis.array.depatch(index);
+  }
+}
 
 function assignVarToA(vis, variable_name, index) {
   if (index === undefined)
@@ -126,13 +135,7 @@ function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
   if (isMergeExpanded()) assignVarToB(vis, 'bp', bp);
 }
 
-const unhighlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.deselect(index);
-  } else {
-    vis.array.depatch(index);
-  }
-};
+
 
 /**
  *
@@ -146,42 +149,18 @@ export function run_msort() {
     // can't rename from nodes
 
     // ----------------------------------------------------------------
-    // Define 'global' variables
-    // -----------------------------------------------------------------
+    // Define define global variables
+    // ----------------------------------------------------------------
 
     const entire_num_array = nodes;
-
-    // ----------------------------------------------------------------
-    // Define helper functions
-    // ----------------------------------------------------------------
-
-    function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2) {
-      if (isMergeExpanded()) {
-        vis.array.set(a, 'msort_arr_bup');
-        assignVarToA(vis, 'ap1', cur_ap1);
-        assignVarToA(vis, 'max1', cur_max1);
-        highlight(vis, cur_ap1, true);
-        if (cur_ap2 < a.length) { // XXX 
-          assignVarToA(vis, 'ap2', cur_ap2);
-          highlight(vis, cur_ap2, true);
-        } else {
-          assignVarToA(vis, 'ap2', undefined);
-        }
-        assignVarToA(vis, 'max2', cur_max2);
-        vis.arrayB.set(b, 'msort_arr_bup');
-        assignVarToB(vis, 'bp', cur_bp);
-        for (let i = cur_left; i < cur_bp; i++) {
-          highlightB(vis, i, false);
-        }
-      }
-    }
+    const size = nodes.length; // size of array
 
     //// start mergesort --------------------------------------------------------
 
     let A = nodes;
     let B = [...entire_num_array].fill(undefined);
     let runlength = 1; // length of run to merge
-    const size = nodes.length - 1; // size of array
+
 
     chunker.add('Main', (vis, a, b, cur_length) => {
       vis.array.set(a, 'msort_arr_bup');
@@ -198,18 +177,18 @@ export function run_msort() {
       displayRunlength(vis, cur_rlength, cur_size);
     }, [runlength, size]);
 
-    while (runlength < size + 1) {
+    while (runlength < size) {
       let left = 0;
 
       chunker.add('MainWhile', (vis, cur_size, cur_rlength) => {
-        let size_txt = "size = " + (cur_size + 1);
+        let size_txt = "size = " + (cur_size);
         assignVarToA(vis, size_txt, cur_size);
 
         for (let i = 0; i < cur_rlength; i++) {
-          highlight(vis, i, true);
+          highlight(vis, i, 'red');
         }
-        for (let j = cur_rlength; j < Math.min(cur_rlength * 2, cur_size + 1); j++) {
-          highlight(vis, j, false);
+        for (let j = cur_rlength; j < Math.min(cur_rlength * 2, cur_size); j++) {
+          highlight(vis, j, 'green');
         }
 
       }, [size, runlength]);
@@ -220,10 +199,10 @@ export function run_msort() {
       }, [left]);
 
 
-      while ((left + runlength) < size + 1) {
+      while ((left + runlength) <= size) {
 
         let mid = left + runlength - 1;
-        let right = Math.min(mid + runlength, size);
+        let right = Math.min(mid + runlength, (size - 1));
         let ap1 = left;
 
         let max1 = mid;
@@ -236,10 +215,10 @@ export function run_msort() {
           // displayRunlength(vis, cur_rlength, cur_size);
 
           for (let i = cur_left; i <= cur_mid; i++) {
-            highlight(vis, i, true);
+            highlight(vis, i, 'red');
           }
           for (let j = cur_mid + 1; j <= cur_right; j++) {
-            highlight(vis, j, false);
+            highlight(vis, j, 'green');
           }
 
         }, [left, mid, right]);
@@ -248,7 +227,7 @@ export function run_msort() {
           // remove runlength and size labels
 
           assignVarToA(vis, ('runlength = ' + cur_rlength), undefined);
-          assignVarToA(vis, ('size = ' + (cur_size + 1)), undefined);
+          assignVarToA(vis, ('size = ' + (cur_size)), undefined);
 
           assignVarToA(vis, 'mid', cur_mid);
         }, [mid, runlength, size]);
@@ -295,8 +274,6 @@ export function run_msort() {
         while (true) {
           if (!(ap1 <= max1 && ap2 <= max2)) break;
 
-          let is_red = 1; // this is to help with the 'mergewhile' highlighting
-
           chunker.add('MergeWhile', (vis, a, cur_left, cur_right, cur_ap1, cur_max1, cur_ap2, cur_max2, cur_bp,) => {
             vis.array.set(a, 'msort_arr_bup');
             displayMergeLabels(vis, cur_ap1, cur_max1, cur_ap2, cur_max2, cur_bp, size);
@@ -305,11 +282,9 @@ export function run_msort() {
             // turn all the elements from ap1 to max2 red
 
             for (let i = cur_left; i <= cur_right; i++) {
-              highlight(vis, i, true);
+              highlight(vis, i, 'red');
             }
 
-            //unhighlight(vis, cur_ap2, false);
-            //highlight(vis, cur_ap2, true);
           }, [A, left, right, ap1, max1, ap2, max2, bp]);
 
           chunker.add('findSmaller', () => {
@@ -329,10 +304,10 @@ export function run_msort() {
               displayMergeLabels(vis, cur_ap1, cur_max1, cur_ap2, cur_max2, cur_bp, size);
 
               for (let i = cur_left; i <= cur_right; i++) {
-                highlight(vis, i, true);
+                highlight(vis, i, 'red');
               }
               for (let i = cur_left; i <= cur_bp; i++) {
-                highlightB(vis, i, false);
+                highlightB(vis, i, 'green');
               }
 
             }, [A, B, ap1, max1, ap2, max2, bp, left, right]);
@@ -362,10 +337,10 @@ export function run_msort() {
               displayMergeLabels(vis, cur_ap1, cur_max1, cur_ap2, cur_max2, cur_bp, size);
 
               for (let i = cur_left; i <= cur_right; i++) {
-                highlight(vis, i, true);
+                highlight(vis, i, 'red');
               }
               for (let i = cur_left; i <= cur_bp; i++) {
-                highlightB(vis, i, false);
+                highlightB(vis, i, 'green');
               }
 
             }, [A, B, ap1, ap2, bp, max1, max2, left, right]);
@@ -398,12 +373,10 @@ export function run_msort() {
 
           // to highlight the solrted elements of B array green
           for (let i = cur_left; i < cur_bp; i++) {
-            highlightB(vis, i, false);
-            // highlight(vis, i, true);
+            highlightB(vis, i, 'green');
           }
           for (let i = cur_left; i <= cur_right; i++) {
-            //highlightB(vis, i, false);
-            highlight(vis, i, true);
+            highlight(vis, i, 'red');
           }
 
         }, [A, B, ap1, max1, left, right, bp]);
@@ -421,11 +394,11 @@ export function run_msort() {
           assignVarToA(vis, 'max2', cur_max2);
 
           for (let i = cur_left; i <= cur_right; i++) {
-            highlightB(vis, i, false);
+            highlightB(vis, i, 'green');
           }
           for (let i = cur_left; i <= cur_right; i++) {
             //highlightB(vis, i, false);
-            highlight(vis, i, true);
+            highlight(vis, i, 'red');
           }
 
         }, [A, B, ap2, max2, left, right]);
@@ -440,7 +413,7 @@ export function run_msort() {
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
 
           for (let i = cur_left; i <= cur_right; i++) {
-            highlight(vis, i, false);
+            highlight(vis, i, 'green');
           }
 
         }, [A, B, left, right]);
@@ -452,7 +425,7 @@ export function run_msort() {
         chunker.add('left2', (vis, old_left, cur_left, cur_right) => {
           // unhighlight all elements in A
           for (let i = old_left; i <= cur_right; i++) {
-            unhighlight(vis, i, false);
+            unhighlight(vis, i, 'green');
           }
 
           assignVarToA(vis, 'left', cur_left);
@@ -465,7 +438,7 @@ export function run_msort() {
       runlength = 2 * runlength;
       chunker.add('runlength2', (vis, runlength) => {
         assignVarToA(vis, 'left', undefined);
-        if (runlength >= size) {
+        if (runlength > size) {
           assignVarToA(vis, 'done', size);
         }
         else {
