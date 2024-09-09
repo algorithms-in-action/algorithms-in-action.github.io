@@ -114,3 +114,4 @@ function getDisplayName(WrappedComponent) {
 // http://localhost:3000/?alg=aStar&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
 // http://localhost:3000/?alg=BFS&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
 //  http://localhost:3000/?alg=bruteForceStringSearch&mode=search&string=abcdef&pattern=def
+// http://localhost:3000/?alg=binarySearchTree&mode=search&list=1,5,2,6,6&value=5

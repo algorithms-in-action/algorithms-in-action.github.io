@@ -48,10 +48,10 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function BSTParam({ list }) {
+function BSTParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(list);
+  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
   const [bstCase, setBSTCase] = useState({
     random: true,
     sorted: false,
@@ -151,7 +151,7 @@ function BSTParam({ list }) {
           buttonName="Search"
           mode="search"
           formClassName="formRight"
-          DEFAULT_VAL={DEFAULT_TARGET}
+          DEFAULT_VAL={value ||DEFAULT_TARGET}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           handleSubmit={handleSearch}
@@ -202,7 +202,8 @@ function BSTParam({ list }) {
 BSTParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired
+  list: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default withAlgorithmParams(BSTParam); // Export with the wrapper for URL Params
