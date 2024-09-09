@@ -47,15 +47,15 @@ function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, m
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="aStar"
-        mode={mode || "find"}
-        defaultSize={size || DEFAULT_SIZE}
-        defaultStart={start || DEFAULT_START}
-        defaultEnd={end || DEFAULT_END}
-        heuristic = {heuristic || DEFAULT_HEUR}
-        min={min || 1}
-        max={max || 49}
+        mode={ mode || "find" }
+        defaultSize={ size || DEFAULT_SIZE }
+        defaultStart={ start || DEFAULT_START }
+        defaultEnd={ end || DEFAULT_END }
+        heuristic = { heuristic || DEFAULT_HEUR }
+        min={ min || 1 }
+        max={ max || 49 }
         symmetric
-        graphEgs={graph_egs || GRAPH_EGS}
+        graphEgs={ graph_egs || GRAPH_EGS }
         ALGORITHM_NAME={ASTAR}
         EXAMPLE={ASTAR_EXAMPLE}
         EXAMPLE2={ASTAR_EXAMPLE2}
