@@ -20,6 +20,7 @@ Mergesort(A, size) \\B Main
         merge all consecutive pairs of runs of length runlength \\Ref MergeAll
         runlength <- runlength * 2 // merging runs doubles the run length \\B runlength2
     \\In}
+    // Done \\B Done
 \\Code}
 
 \\Code{
