@@ -35,9 +35,9 @@ function PRIMParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, m
   const [message, setMessage] = useState(null);
   const graph_egs = [
     { name: 'URL Input Graph',
-      size: size,
-      coords: xyCoords,
-      edges: edgeWeights
+      size: size || GRAPH_EGS[0].size,
+      coords: xyCoords || GRAPH_EGS[0].coords,
+      edges: edgeWeights || GRAPH_EGS[0].edges
     }
     ]
   return (

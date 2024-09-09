@@ -2,21 +2,37 @@ import DEFAULT_NODES from '../../../algorithms/parameters/HSParam.js';
 import React, { useState, useEffect, useMemo } from 'react';
 import algorithms from '../../../algorithms';
 
+// const DEFAULT_ALGORITHM = 'heapSort';
+// const DEFAULT_MODE = 'sort';
+// const DEFAULT_LIST = '1,5,3,4,5,10,2,4,7,3';
+// const DEFAULT_VALUE = '2';
+// const DEFAULT_XY_COORDS = '2-1,1-1';
+// const DEFAULT_EDGE_WEIGHTS = '1-2-3,1-1-1';
+// const DEFAULT_SIZE = '2'
+// const DEFAULT_START = '1';
+// const DEFAULT_END = '2';
+// const DEFAULT_STRING = 'abcde';
+// const DEFAULT_PATTERN = 'abc';
+// const DEFAULT_UNION = '1-2,3-4';
+// const DEFAULT_HEURISTIC = 'Euclidean'
+// const DEFAULT_MIN = '1'
+// const DEFAULT_MAX = '10'
+
 const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
-const DEFAULT_LIST = '1,5,3,4,5,10,2,4,7,3';
-const DEFAULT_VALUE = '2';
-const DEFAULT_XY_COORDS = '2-1,1-1';
-const DEFAULT_EDGE_WEIGHTS = '1-2-3,1-1-1';
-const DEFAULT_SIZE = '2'
-const DEFAULT_START = '1';
-const DEFAULT_END = '2';
-const DEFAULT_STRING = 'abcde';
-const DEFAULT_PATTERN = 'abc';
-const DEFAULT_UNION = '1-2,3-4';
-const DEFAULT_HEURISTIC = 'Euclidean'
-const DEFAULT_MIN = '1'
-const DEFAULT_MAX = '10'
+const DEFAULT_LIST = '';
+const DEFAULT_VALUE = '';
+const DEFAULT_XY_COORDS = '';
+const DEFAULT_EDGE_WEIGHTS = '';
+const DEFAULT_SIZE = '';
+const DEFAULT_START = '';
+const DEFAULT_END = '';
+const DEFAULT_STRING = '';
+const DEFAULT_PATTERN = '';
+const DEFAULT_UNION = '';
+const DEFAULT_HEURISTIC = '';
+const DEFAULT_MIN = '';
+const DEFAULT_MAX = '';
 
 
 export function useUrlParams() {
