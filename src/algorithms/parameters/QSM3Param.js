@@ -1,13 +1,17 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
 import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
+
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
+import { GlobalContext } from '../../context/GlobalState';
+
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
@@ -33,13 +37,21 @@ const BlueRadio = withStyles({
 
 function QuicksortParam({ list }) {
   const [message, setMessage] = useState(null)
+
   const [array, setArray] = useState(list || DEFAULT_ARR)
+  const { nodes, setNodes } = useContext(GlobalContext)
+
   const [QSM3Case, setQSM3Case] = useState({
     random: true,
     sortedAsc: false,
     bestCase: false,
     sortedDesc: false
   });
+
+  useEffect(() => {
+    setNodes(array); // sync with global state
+  }, [array, setNodes]);
+
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
