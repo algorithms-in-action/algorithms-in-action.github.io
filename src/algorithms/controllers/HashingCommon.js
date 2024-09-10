@@ -3,7 +3,7 @@ const BIG = 97;
 const BIGPRIME = 3457;
 const BIGPRIME2 = 1429;
 const SMALLPRIME1 = 3;
-const SMALLPRIME2 = 23
+const SMALLPRIME2 = 23;
 
 export const HASH_TABLE = {
   Key: 0,
