@@ -426,15 +426,22 @@ export function run_msort() {
       runlength = 2 * runlength;
       chunker.add('runlength2', (vis, c_rlength) => {
         assignVarToA(vis, 'left', undefined, size);
-        if (c_rlength > size) {
-          assignVarToA(vis, 'done', size, size);
-        }
-        else {
+        set_simple_stack(vis.array, [c_rlength]);
+
+        if (c_rlength < size) {
           displayRunlength(vis, c_rlength, size);
         }
-        set_simple_stack(vis.array, [c_rlength]);
+
       }, [runlength]);
     }
+
+    chunker.add('Done', (vis) => {
+      for (let i = 0; i < size; i++) {
+        highlight(vis, i, colorC);
+      }
+      assignVarToA(vis, 'done', size, size);
+    }, []);
+
 
     // We compute and fix the max value in each array so they don't get re-scaled as we
     // shuffle elements between arrays
