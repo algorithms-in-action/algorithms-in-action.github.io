@@ -44,20 +44,25 @@ class ListTracer extends Tracer {
     }
 
     insertNode(position, value = undefined, isVisited = false, isSelected = false) {
-        // Inserts a node at the specified position
-        const id = this.objects.length;
-        this.objects.splice(position, 0, { id, value, isVisited, isSelected, key: id });
+        // Assign a unique ID based on the current max ID + 1
+        const id = this.objects.length > 0 ? Math.max(...this.objects.map(obj => obj.id)) + 1 : 0;
+
+        if (position >= 0 && position <= this.objects.length) {
+            this.objects.splice(position, 0, { id, value, isVisited, isSelected, key: position });
+        }
     }
 
     removeNode(position) {
-        // Removes a node from the specified position
+        // Ensure the position is within bounds
         if (position >= 0 && position < this.objects.length) {
             this.objects.splice(position, 1);
+
+            // Optionally update keys after removal
+            this.objects.forEach((obj, index) => obj.key = index); // Adjust keys after removing an element
         }
     }
 
     updateNode(id, newValue) {
-        // Updates the value of a node by its ID
         const node = this.objects.find(obj => obj.id === id);
         if (node) {
             node.value = newValue;
@@ -105,12 +110,16 @@ class ListTracer extends Tracer {
 
     }
 
-    select(key, label) {
-        this.objects[key].isSelected = true;
+    select(id) {
+        const node = this.objects.find(obj => obj.id === id);
+        if (node) {
+            node.isSelected = true;
+        }
     }
 
     clearLabels() {
         this.labels = [];
     }
 }
+
 export default ListTracer
