@@ -168,7 +168,7 @@ class Array2DTracer extends Tracer {
   // XXX for some reason, variables only seem to be displayed if
   // row==2, and if you don't have enough rows in the table you are
   // stuck unless you add an extra dummy row and hide it using hideArrayAtIndex
-  assignVariable(v, row, idx) {
+  assignVariable(v, row, idx, changeFrom = null) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     // eslint-disable-next-line consistent-return
     function customizer(val) {
@@ -206,7 +206,7 @@ class Array2DTracer extends Tracer {
         // remove all current occurences of the variable
         for (let y = 0; y < _newData[row].length; y++) {
           _newData[row][y].variables = _newData[row][y].variables.filter(
-            (val) => val !== v
+            (val) => val !== ((changeFrom !== null) ? changeFrom : v)
           );
         }
 

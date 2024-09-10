@@ -51,6 +51,7 @@ export default parse(`
                     \\Expl}
                 \\In}
             T[i] <- k // unoccupied slot found so we put k in it \\B 8
+            // Done \\B 9
         \\In}
 \\Code}
 

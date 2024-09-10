@@ -86,6 +86,7 @@ function HashingLPParam() {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
 
     const visualisers = algorithm.chunker.visualisers;
     if (singleNumberValidCheck(inputValue)) {
@@ -95,6 +96,7 @@ function HashingLPParam() {
         name: 'HashingLP',
         mode: 'search',
         visualisers,
+        hashSize: hashSize,
         target
       });
       setMessage(successParamMsg(ALGORITHM_NAME));

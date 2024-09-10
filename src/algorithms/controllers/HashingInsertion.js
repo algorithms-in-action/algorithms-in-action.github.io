@@ -1,7 +1,7 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
-import { hash1, setIncrement } from './HashingCommon';
+import { hash1, setIncrement, HASH_TABLE } from './HashingCommon';
 
 
 const IBookmarks = {
@@ -13,6 +13,7 @@ const IBookmarks = {
   Probing: 6,
   HandlingCollision: 7,
   PutIn: 8,
+  Done: 9,
 }
 
 export default {
@@ -39,14 +40,21 @@ export default {
 
     let insertions = 0;
 
-    function hashInsert(table, key) {
+    function hashInsert(table, key, prevKey, prevIdx) {
       insertions = insertions + 1;
       chunker.add(
         IBookmarks.IncrementInsertions,
-        (vis, insertions) => {
+        (vis, key, insertions, prevKey, prevIdx) => {
           vis.array.showKth(insertions);
+
+          // change variable value
+          vis.array.assignVariable(key, 2, prevIdx, prevKey);
+
+          // update key value
+          vis.graph.updateNode(HASH_TABLE.Key, key);
+          vis.graph.updateNode(HASH_TABLE.Value, ' ');
         },
-        [insertions]
+        [key, insertions, prevKey, prevIdx]
       );
       // get initial hash index
       let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
@@ -56,10 +64,10 @@ export default {
 
       chunker.add(
         IBookmarks.Probing,
-        (vis, index) => {
-          vis.array.assignVariable('i', 2, index);
+        (vis, key, idx) => {
+          vis.array.assignVariable(key, 2, idx);
         },
-        [i]
+        [key, i]
       )
       while (typeof table[i] !== 'undefined' && table[i] !== null) {
         i = (i + increment) % table.length;
@@ -69,21 +77,23 @@ export default {
 
         chunker.add(
           IBookmarks.Probing,
-          (vis, index) => {
-            vis.array.assignVariable('i', 2, index);
+          (vis, key, idx) => {
+            vis.array.assignVariable(key, 2, idx);
           },
-          [i]
+          [key, i]
         )
       }
 
       table[i] = key;
       chunker.add(
         IBookmarks.PutIn,
-        (vis, idx, val) => {
+        (vis, val, idx) => {
           vis.array.updateValueAt(1, idx, val);
         },
-        [i, key]
+        [key, i]
       )
+
+      return [key, i];
     }
 
     // Init hash table
@@ -110,8 +120,21 @@ export default {
       },
     );
 
-    for (const item of inputs) {
-      hashInsert(table, item);
+    let prevKey = null;
+    let prevIdx = null;
+    for (const key of inputs) {
+      [prevKey, prevIdx] = hashInsert(table, key, prevKey, prevIdx);
     }
+
+    chunker.add(
+      IBookmarks.Done,
+      (vis, key) => {
+        vis.array.assignVariable(key, 2, undefined);
+
+       vis.graph.updateNode(HASH_TABLE.Key, ' ');
+       vis.graph.updateNode(HASH_TABLE.Value, ' ');
+      },
+      [prevKey]
+    )
   },
 };

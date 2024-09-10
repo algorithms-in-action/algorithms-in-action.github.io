@@ -3,19 +3,20 @@ const BIG = 97;
 const BIGPRIME = 3457;
 const BIGPRIME2 = 1429;
 
-const HASH_KEY = 0;
-const HASH_VALUE = 1;
 
+export const HASH_TABLE = {
+  Key: 0,
+  Value: 1,
+}
 
 export function hash1(chunker, bookmark, key, hashValue) {
   let hashed = (key * BIGPRIME) % hashValue;
   chunker.add(
     bookmark,
-    (vis, key, val) => {
-      vis.graph.updateNode(HASH_KEY, key);
-      vis.graph.updateNode(HASH_VALUE, val);
+    (vis, val) => {
+      vis.graph.updateNode(HASH_TABLE.Value, val);
     },
-    [key, hashed]
+    [hashed]
   )
   return hashed;
 }

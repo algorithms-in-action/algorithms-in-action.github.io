@@ -104,8 +104,8 @@ class Array2DRenderer extends Renderer {
                   <div
                     style={{
                       position: 'absolute',
-                        height: '15px',
-                        width: '37px',
+                      height: '15px',
+                      width: '37px',
                     }}
                   >
                   {col.variables.map((v) => (
