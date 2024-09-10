@@ -1,8 +1,19 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
-import { hash1, setIncrement, IBookmarks } from './HashingCommon';
+import { hash1, setIncrement } from './HashingCommon';
 
+
+const IBookmarks = {
+  Init: 1,
+  EmptyArray: 2,
+  IncrementInsertions: 3,
+  Hash1: 4,
+  ChooseIncrement: 5,
+  Probing: 6,
+  HandlingCollision: 7,
+  PutIn: 8,
+}
 
 export default {
   explanation: HashingExp,
@@ -38,8 +49,10 @@ export default {
         [insertions]
       );
       // get initial hash index
-      let i = hash1(chunker, key, hashValue);
-      let increment = setIncrement(chunker, key, hashValue, params.name);
+      let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
+      let increment = setIncrement(
+        chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name
+      );
 
       chunker.add(
         IBookmarks.Probing,

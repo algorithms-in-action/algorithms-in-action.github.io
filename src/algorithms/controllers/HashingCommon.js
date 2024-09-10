@@ -6,21 +6,11 @@ const BIGPRIME2 = 1429;
 const HASH_KEY = 0;
 const HASH_VALUE = 1;
 
-export const IBookmarks = {
-  Init: 1,
-  EmptyArray: 2,
-  IncrementInsertions: 3,
-  Hash1: 4,
-  ChooseIncrement: 5,
-  Probing: 6,
-  HandlingCollision: 7,
-  PutIn: 8,
-}
 
-export function hash1(chunker, key, hashValue) {
+export function hash1(chunker, bookmark, key, hashValue) {
   let hashed = (key * BIGPRIME) % hashValue;
   chunker.add(
-    IBookmarks.Hash1,
+    bookmark,
     (vis, key, val) => {
       vis.graph.updateNode(HASH_KEY, key);
       vis.graph.updateNode(HASH_VALUE, val);
@@ -34,7 +24,9 @@ export function hash2(chunker, key, hashValue) {
   return (key * BIGPRIME2) % hashValue;
 }
 
-export function setIncrement(chunker, key, hashValue, collisionHandling) {
+export function setIncrement(
+  chunker, bookmark, key, hashValue, collisionHandling
+) {
   let smallishprime = hashValue == SMALL ? 3 : 23;
   let increment;
   switch (collisionHandling) {
@@ -46,7 +38,7 @@ export function setIncrement(chunker, key, hashValue, collisionHandling) {
       break;
   }
   chunker.add(
-    IBookmarks.ChooseIncrement,
+    bookmark,
     (vis, increment) => {
       let insertions = vis.array.getKth();
       vis.array.showKth([insertions, increment]);

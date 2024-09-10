@@ -98,44 +98,44 @@ class Array2DRenderer extends Renderer {
         <tbody>
         {algo === 'unionFind' && ( // adding the array indicies for union find
           <AnimateSharedLayout>
-          <tr>
-          {data[0].map((col, idx) => (
-            <td key={idx}>
-            <div
-            style={{
-              position: 'absolute',
-                height: '15px',
-                width: '37px',
-            }}
-            >
-            {col.variables.map((v) => (
-              <motion.div
-              layoutId={v}
-              key={v}
-              className={classes(
-                styles.variable,
-                styles.top_variable
-              )}
-              transition={
-                motionOn ? { type: 'tween' } : { duration: 0 }
-              }
-              >
-              {v}
-              </motion.div>
-            ))}
-            </div>
-            </td>
-          ))}
-          </tr>
+            <tr>
+              {data[0].map((col, idx) => (
+                <td key={idx}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                        height: '15px',
+                        width: '37px',
+                    }}
+                  >
+                  {col.variables.map((v) => (
+                    <motion.div
+                      layoutId={v}
+                      key={v}
+                      className={classes(
+                        styles.variable,
+                        styles.top_variable
+                    )}
+                    transition={
+                      motionOn ? { type: 'tween' } : { duration: 0 }
+                    }
+                    >
+                      {v}
+                    </motion.div>
+                  ))}
+                  </div>
+                </td>
+              ))}
+            </tr>
           </AnimateSharedLayout>
         )}
 
         <tr className={styles.row}>
-        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
-        {algo === 'tc' && ( // Leave a blank cell at the header row
-          <td />
-        )}
-        { /* XXX really should have a displayIndex flag for */
+          {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+          {algo === 'tc' && ( // Leave a blank cell at the header row
+            <td />
+          )}
+          { /* XXX really should have a displayIndex flag for */
             algo !== 'BFS' &&
             algo !== 'DFSrec' &&
             algo !== 'DFS' &&
@@ -155,10 +155,11 @@ class Array2DRenderer extends Renderer {
               }
               return (
                 <th className={classes(styles.col, styles.index)} key={i}>
-                <span className={styles.value}>{i}</span>
+                  <span className={styles.value}>{i}</span>
                 </th>
               );
-            })}
+            })
+          }
         </tr>
         {data.map((row, i) => {
           let pointer = false;
@@ -176,70 +177,71 @@ class Array2DRenderer extends Renderer {
           }
           return (
             <tr className={styles.row} key={i}>
-            {algo === 'tc' && ( // generate vertical index, which starts from 1
-              <th className={classes(styles.col, styles.index)} key={i}>
-              <span className={styles.value}>{i + 1}</span>
-              </th>
-            )}
-            {!isArray1D && algo !== 'tc' && (
-              <td className={classes(styles.col, styles.index)}>
-              <span className={styles.value}>{i}</span>
-              </td>
-            )}
-            {row.map((col, j) => {
-              const varGreen = col.fill === 1; // for simple fill
-              const varOrange = col.fill === 2;
-              const varRed = col.fill === 3;
-
-              return (
-                <td
-                className={classes(
-                  styles.col,
-                  col.selected && styles.selected,
-                  col.patched && styles.patched,
-                  col.sorted && styles.sorted,
-                  col.selected1 && styles.selected1,
-                  col.selected2 && styles.selected2,
-                  col.selected3 && styles.selected3,
-                  varGreen && styles.variableGreen,
-                  varOrange && styles.variableOrange,
-                  varRed && styles.variableRed
-                )}
-                key={j}
-                >
-                <span className={styles.value}>
-                {toString(col.value)}
-                </span>
+              {algo === 'tc' && ( // generate vertical index, which starts from 1
+                <th className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{i + 1}</span>
+                </th>
+              )}
+              {!isArray1D && algo !== 'tc' && (
+                <td className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}>{i}</span>
                 </td>
-              );
-            })}
+              )}
+              {row.map((col, j) => {
+                const varGreen = col.fill === 1; // for simple fill
+                const varOrange = col.fill === 2;
+                const varRed = col.fill === 3;
+
+                return (
+                  <td
+                    className={classes(
+                      styles.col,
+                      col.selected && styles.selected,
+                      col.patched && styles.patched,
+                      col.sorted && styles.sorted,
+                      col.selected1 && styles.selected1,
+                      col.selected2 && styles.selected2,
+                      col.selected3 && styles.selected3,
+                      varGreen && styles.variableGreen,
+                      varOrange && styles.variableOrange,
+                      varRed && styles.variableRed
+                    )}
+                    key={j}
+                  >
+                    <span className={styles.value}>
+                      {toString(col.value)}
+                    </span>
+                  </td>
+                );
+              })
+            }
             {
               (pointer && algo === 'tc' && (
                 <th className={classes(styles.col, styles.index)}>
-                <span className={styles.value}> i </span>
+                  <span className={styles.value}> i </span>
                 </th>
               ))
-                ||
-                (algo === 'aStar' && i === 1 && (
-                  <th className={classes(styles.col, styles.index)}>
+              ||
+              (algo === 'aStar' && i === 1 && (
+                <th className={classes(styles.col, styles.index)}>
                   <span className={styles.value}> )Priority </span>
-                  </th>
-                ))
-            ||
-            (algo === 'aStar' && i === 2 && (
-              <th className={classes(styles.col, styles.index)}>
-              <span className={styles.value}> )Queue&ensp; </span>
-              </th>
-            ))
-          ||
-          (((algo === 'prim' && i === 2) ||
-            (algo === 'dijkstra' && i === 2)
-          ) && (
-            <th className={classes(styles.col, styles.index)}>
-            <span className={styles.value}> Priority Queue </span>
-            </th>
-          ))
-          || <td className={classes(styles.col, styles.index)} />}
+                </th>
+              ))
+              ||
+              (algo === 'aStar' && i === 2 && (
+                <th className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}> )Queue&ensp; </span>
+                </th>
+              ))
+              ||
+              (((algo === 'prim' && i === 2) ||
+                (algo === 'dijkstra' && i === 2)
+              ) && (
+                <th className={classes(styles.col, styles.index)}>
+                  <span className={styles.value}> Priority Queue </span>
+                </th>
+              ))
+              || <td className={classes(styles.col, styles.index)} />}
             </tr>
           );
         })}
@@ -247,22 +249,22 @@ class Array2DRenderer extends Renderer {
           // Don't remove "j-tag='transitive_closure'"
           <tr j-tag="transitive_closure" className={styles.row}>
           <td />
-          {data_T.map((row) => {
-            let pointer = false;
-            // eslint-disable-next-line no-plusplus
-            for (let j = 0; j < row.length; j++) {
-              if (row[j].selected1) {
-                pointer = true;
+            {data_T.map((row) => {
+              let pointer = false;
+              // eslint-disable-next-line no-plusplus
+              for (let j = 0; j < row.length; j++) {
+                if (row[j].selected1) {
+                  pointer = true;
+                }
               }
-            }
-            return (
-              (pointer && (
-                <th className={classes(styles.col, styles.index)}>
-                <span className={styles.value}> j </span>
-                </th>
-              )) || <td className={classes(styles.col, styles.index)} />
-            );
-          })}
+              return (
+                (pointer && (
+                  <th className={classes(styles.col, styles.index)}>
+                    <span className={styles.value}> j </span>
+                  </th>
+                )) || <td className={classes(styles.col, styles.index)} />
+              );
+            })}
           </tr>
         )}
         {(algo === 'prim' ||
@@ -275,44 +277,44 @@ class Array2DRenderer extends Renderer {
           algo === 'BFS' ||
           algo === 'HashingLP' ||
           algo === 'HashingDH') &&
-            data.map(
-              (row, i) =>
-              i === 2 && (
-                <AnimateSharedLayout>
+          data.map(
+            (row, i) =>
+            i === 2 && (
+              <AnimateSharedLayout>
                 <tr layout className={styles.row} key={i}>
-                {row.map((col, j) => (
-                  <td
-                  className={classes(styles.col, styles.variables)}
-                  key={j}
-                  >
-                  {col.variables.map((v) => (
-                    <motion.p
-                    layoutId={v}
-                    key={v}
-                    className={styles.variable}
+                  {row.map((col, j) => (
+                    <td
+                      className={classes(styles.col, styles.variables)}
+                      key={j}
                     >
-                    {v}
-                    </motion.p>
+                      {col.variables.map((v) => (
+                        <motion.p
+                          layoutId={v}
+                          key={v}
+                          className={styles.variable}
+                        >
+                        {v}
+                        </motion.p>
+                      ))}
+                    </td>
                   ))}
-                  </td>
-                ))}
                 </tr>
-                </AnimateSharedLayout>
-              )
-            )}
+              </AnimateSharedLayout>
+            )
+          )}
         </tbody>
       )
     }
 
     return (
       <table
-      className={switchmode(mode())}
-      style={{
-        marginLeft: -this.centerX * 2,
-          marginTop: -this.centerY * 2,
-          transform: `scale(${this.zoom})`,
-      }}
-        >
+        className={switchmode(mode())}
+        style={{
+          marginLeft: -this.centerX * 2,
+            marginTop: -this.centerY * 2,
+            transform: `scale(${this.zoom})`,
+        }}
+      >
         {render}
         {algo === 'tc' && (
           <caption kth-tag="transitive_closure">k = {kth}</caption>
