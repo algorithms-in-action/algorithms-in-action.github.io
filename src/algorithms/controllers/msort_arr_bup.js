@@ -430,7 +430,6 @@ export function run_msort() {
 
         if (c_rlength < size) {
           displayRunlength(vis, c_rlength, size);
-          assignVarToA(vis, 'done', size, size);
         }
 
       }, [runlength]);
