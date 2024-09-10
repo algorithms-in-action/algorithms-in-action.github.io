@@ -2,12 +2,14 @@ const SMALL= 11;
 const BIG = 97;
 const BIGPRIME = 3457;
 const BIGPRIME2 = 1429;
-
+const SMALLPRIME1 = 3;
+const SMALLPRIME2 = 23
 
 export const HASH_TABLE = {
   Key: 0,
   Value: 1,
 }
+
 
 export function hash1(chunker, bookmark, key, hashValue) {
   let hashed = (key * BIGPRIME) % hashValue;
@@ -28,7 +30,7 @@ export function hash2(chunker, key, hashValue) {
 export function setIncrement(
   chunker, bookmark, key, hashValue, collisionHandling
 ) {
-  let smallishprime = hashValue == SMALL ? 3 : 23;
+  let smallishprime = hashValue == SMALL ? SMALLPRIME1 : SMALLPRIME2;
   let increment;
   switch (collisionHandling) {
     case 'HashingLP':
