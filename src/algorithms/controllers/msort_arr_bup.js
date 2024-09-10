@@ -133,6 +133,7 @@ function assignVarToB(vis, variable_name, index, size) {
 function displayRunlength(vis, runlength, size) {
   let text = 'runlength = ' + runlength;
   let index = runlength - 1;
+
   assignVarToA(vis, text, index, size);
 }
 
@@ -416,7 +417,9 @@ export function run_msort() {
           for (let i = old_left; i <= c_right; i++) {
             unhighlight(vis, i, colorC);
           }
-          assignVarToA(vis, 'left', c_left, size);
+          if (c_left < size) {
+            assignVarToA(vis, 'left', c_left, size);
+          }
 
         }, [left2, left, right]);
 
