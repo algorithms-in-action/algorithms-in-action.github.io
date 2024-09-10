@@ -99,18 +99,18 @@ export default {
                     vis.graph.layoutBST(g, true);
 
                     // remove edge after layout to perform the middle step
-                    // if (d !== null) vis.graph.removeEdge(r, d);
+                    if (d !== null) vis.graph.removeEdge(r, d);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, G.key, rotateVis]
             );
 
-            // chunker.add('t6.left = t4',
-            //     // reconnect the edge between t6 and t4
-            //     (vis, r, d) => {
-            //         if (d !== null) vis.graph.addEdge(r, d);
-            //     },
-            //     [t6.key, t4 ? t4.key : null]
-            // )
+            chunker.add('t6.left = t4',
+                // reconnect the edge between t6 and t4
+                (vis, r, d) => {
+                    if (d !== null) vis.graph.addEdge(r, d);
+                },
+                [R.key, D ? D.key : null]
+            )
 
             const temp = root.left;
             root.left = temp.right;
@@ -167,18 +167,18 @@ export default {
                     vis.graph.layoutBST(g, true);
 
                     // remove edge after layout to perform the middle step
-                    // if (d !== null) vis.graph.removeEdge(r, d);
+                    if (d !== null) vis.graph.removeEdge(r, d);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, G.key, rotateVis]
             );
 
-            // chunker.add('t2.right = t4',
-            //     // reconnect the edge between t2 and t4
-            //     (vis, r, d) => {
-            //         if (d !== null) vis.graph.addEdge(r, d);
-            //     },
-            //     [t2.key, t4 ? t4.key : null]
-            // )
+            chunker.add('t2.right = t4',
+                // reconnect the edge between t2 and t4
+                (vis, r, d) => {
+                    if (d !== null) vis.graph.addEdge(r, d);
+                },
+                [R.key, D ? D.key : null]
+            )
 
             const temp = root.right;
             root.right = temp.left;
