@@ -33,7 +33,7 @@ const BlueRadio = withStyles({
 
 function QuicksortParam({ list }) {
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(list)
+  const [array, setArray] = useState(list || DEFAULT_ARR)
   const [QSM3Case, setQSM3Case] = useState({
     random: true,
     sortedAsc: false,

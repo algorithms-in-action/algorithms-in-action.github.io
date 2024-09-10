@@ -36,7 +36,7 @@ const BlueRadio = withStyles({
 
 function MergesortParam({ list }) {
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(list)
+  const [array, setArray] = useState(list || DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
