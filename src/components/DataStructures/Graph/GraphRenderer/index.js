@@ -632,6 +632,7 @@ class GraphRenderer extends Renderer {
             y,
             weight,
             height,
+            AVL_TID,
             visitedCount0,
             visitedCount,
             visitedCount1,
@@ -689,6 +690,9 @@ class GraphRenderer extends Renderer {
               )}
               <text className={styles.height}>
                 {this.toString(height)}
+              </text>
+              <text className={styles.AVL_TID}>
+                {this.toString(AVL_TID)}
               </text>
               {isPointer && (
                 <text className={styles.weight} x={nodeRadius + nodeWeightGap}>

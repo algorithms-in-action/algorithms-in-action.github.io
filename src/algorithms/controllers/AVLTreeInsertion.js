@@ -153,17 +153,22 @@ export default {
                     if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
+                        vis.graph.updateTID(p, 'PP');
                     }
                     if (rotate) vis.graph.visit(a, p);
 
                     if (d !== null) {
                         vis.graph.removeEdge(a, d);
                         vis.graph.addEdge(r, d);
+                        vis.graph.updateTID(d, 'DD');
                     }
 
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
+                    vis.graph.updateTID(a, 'AA');
+                    vis.graph.updateTID(r, 'RR');
+                    vis.graph.updateTID(g, 'GG');
                     vis.graph.layoutBST(g, true);
 
                     // remove edge after layout to perform the middle step

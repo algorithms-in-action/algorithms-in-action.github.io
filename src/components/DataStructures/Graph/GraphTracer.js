@@ -265,14 +265,14 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, height = undefined, shape = 'circle', color = 'blue', weight = null,
+  addNode(id, value = undefined, height = undefined, AVL_TID = undefined, shape = 'circle', color = 'blue', weight = null,
     x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, height, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    this.nodes.push({ id, value, height, AVL_TID, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
     this.layout();
   }
 
@@ -299,6 +299,16 @@ class GraphTracer extends Tracer {
 
   updateHeight(id, height) {
     this.findNode(id).height = height;
+  }
+
+  updateTID(id, AVL_TID) {
+    this.findNode(id).AVL_TID = AVL_TID;
+  }
+
+  clearTID() {
+    this.nodes.forEach(node => {
+      node.AVL_TID = undefined;
+    });
   }
 
   removeNode(id) {
