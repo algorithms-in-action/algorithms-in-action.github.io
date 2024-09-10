@@ -34,13 +34,34 @@ class ListTracer extends Tracer {
         }
     }
 
-    layout() {}
+    layout() { }
 
     addNode(id, value = undefined,
-            isVisited = false, isSelected = false) {
+        isVisited = false, isSelected = false) {
         // if (this.findNode(id)) return;
         // eslint-disable-next-line max-len
-        this.objects.push({ id, value, isVisited, isSelected, key: id});
+        this.objects.push({ id, value, isVisited, isSelected, key: id });
+    }
+
+    insertNode(position, value = undefined, isVisited = false, isSelected = false) {
+        // Inserts a node at the specified position
+        const id = this.objects.length;
+        this.objects.splice(position, 0, { id, value, isVisited, isSelected, key: id });
+    }
+
+    removeNode(position) {
+        // Removes a node from the specified position
+        if (position >= 0 && position < this.objects.length) {
+            this.objects.splice(position, 1);
+        }
+    }
+
+    updateNode(id, newValue) {
+        // Updates the value of a node by its ID
+        const node = this.objects.find(obj => obj.id === id);
+        if (node) {
+            node.value = newValue;
+        }
     }
 
     swapElements(i, j) {
@@ -56,9 +77,20 @@ class ListTracer extends Tracer {
         this.objects[i].key = tempKey1;
     }
 
+    reverse() {
+        // Reverses the list of objects
+        this.objects.reverse();
+    }
+
+    clear() {
+        // Clears all nodes and labels
+        this.objects = [];
+        this.labels = [];
+    }
+
     addLabel(index, label) {
         console.log(this.labels);
-        this.labels.push({index, label});
+        this.labels.push({ index, label });
     }
 
     setLabel(label, newIndex = null, newLabel = null) {
