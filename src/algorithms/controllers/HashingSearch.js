@@ -1,6 +1,6 @@
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import { hash1, setIncrement, HASH_TABLE } from './HashingCommon';
+import { hash1, setIncrement, HASH_TABLE, hashSearch } from './HashingCommon';
 
 export default {
   initVisualisers({ visualisers }) {
@@ -23,18 +23,6 @@ export default {
 
     chunker.add('HashSearch(T, k)');
     chunker.add('HashSearch(T, k)');
-
-    function hashSearch(table, key) {
-      // index
-      let i = hash1(chunker, 'HashSearch(T, k)', key, hashValue);
-      let increment = setIncrement(
-        chunker, 'HashSearch(T, k)', key, hashValue, params.name
-      );
-
-      while (table[i] != key) {
-        i = (i + increment) % table.length;
-      }
-      return i;
-    }
+    //hashSearch(chunker, target, ); incomplete implementation
   },
 };

@@ -41,59 +41,64 @@ export default {
     let insertions = 0;
 
     function hashInsert(table, key, prevKey, prevIdx) {
-      insertions = insertions + 1;
-      chunker.add(
-        IBookmarks.IncrementInsertions,
-        (vis, key, insertions, prevKey, prevIdx) => {
-          vis.array.showKth(insertions);
-
-          // change variable value
-          vis.array.assignVariable(key, 2, prevIdx, prevKey);
-
-          // update key value
-          vis.graph.updateNode(HASH_TABLE.Key, key);
-          vis.graph.updateNode(HASH_TABLE.Value, ' ');
-        },
-        [key, insertions, prevKey, prevIdx]
-      );
-      // get initial hash index
-      let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
-      let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name
-      );
-
-      chunker.add(
-        IBookmarks.Probing,
-        (vis, key, idx) => {
-          vis.array.assignVariable(key, 2, idx);
-        },
-        [key, i]
-      )
-      while (typeof table[i] !== 'undefined' && table[i] !== null) {
-        i = (i + increment) % table.length;
-        chunker.add(
-          IBookmarks.HandlingCollision,
-        )
-
-        chunker.add(
-          IBookmarks.Probing,
-          (vis, key, idx) => {
-            vis.array.assignVariable(key, 2, idx);
-          },
-          [key, i]
-        )
+      if (insertions == table.length -1) {
+        console.log("Table is full"); // fix so it displays on site
       }
+      else {
+          insertions = insertions + 1;
+          chunker.add(
+            IBookmarks.IncrementInsertions,
+            (vis, key, insertions, prevKey, prevIdx) => {
+              vis.array.showKth(insertions);
 
-      table[i] = key;
-      chunker.add(
-        IBookmarks.PutIn,
-        (vis, val, idx) => {
-          vis.array.updateValueAt(1, idx, val);
-        },
-        [key, i]
-      )
+              // change variable value
+              vis.array.assignVariable(key, 2, prevIdx, prevKey);
 
-      return [key, i];
+              // update key value
+              vis.graph.updateNode(HASH_TABLE.Key, key);
+              vis.graph.updateNode(HASH_TABLE.Value, ' ');
+            },
+            [key, insertions, prevKey, prevIdx]
+          );
+          // get initial hash index
+          let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
+          let increment = setIncrement(
+            chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name
+          );
+
+          chunker.add(
+            IBookmarks.Probing,
+            (vis, key, idx) => {
+              vis.array.assignVariable(key, 2, idx);
+            },
+            [key, i]
+          )
+          while (typeof table[i] !== 'undefined' && table[i] !== null && table[i] !== key) {
+            i = (i + increment) % table.length;
+            chunker.add(
+              IBookmarks.HandlingCollision,
+            )
+
+            chunker.add(
+              IBookmarks.Probing,
+              (vis, key, idx) => {
+                vis.array.assignVariable(key, 2, idx);
+              },
+              [key, i]
+            )
+          }
+
+          table[i] = key;
+          chunker.add(
+            IBookmarks.PutIn,
+            (vis, val, idx) => {
+              vis.array.updateValueAt(1, idx, val);
+            },
+            [key, i]
+          )
+
+          return [key, i];
+      }
     }
 
     // Init hash table

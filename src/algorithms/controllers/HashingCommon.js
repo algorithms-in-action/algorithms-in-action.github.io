@@ -49,17 +49,23 @@ export function setIncrement(
   return increment;
 }
 
+export function hashSearch(
+    chunker, table, key, hashValue, collisionHandling
+) {
+    let i = hash1(key);
+    let increment = setIncrement(chunker, key, hashValue, collisionHandling);
+    while (table[i] != key) {
+        i = (i + increment) % table.length;
+    }
+    return i;
+}
+
 export function hashDelete(
     chunker, table, key, hashValue, collisionHandling, insertions
 ) {
 
   insertions = insertions - 1;
-  let i = hash1(key);
-  let increment = setIncrement(chunker, key, hashValue, collisionHandling);
-  while (table[i] != key) {
-    i = (i + increment) % table.length;
-  }
+  let i = hashSearch(chunker, table, key, hashValue, collisionHandling);
   table[i] = null;
-
   return insertions;
 }
