@@ -10,6 +10,8 @@ import {
   successParamMsg,
   errorParamMsg,
 } from './helpers/ParamHelper';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 // import useParam from '../../context/useParam';
 
@@ -26,10 +28,10 @@ const INSERTION_EXAMPLE = 'Please follow the example provided: 1,2,3,4. Values s
 const SEARCH_EXAMPLE = 'Please follow the example provided: 16.';
 const NO_TREE_ERROR = 'Please build a tree before running search.';
 
-function TTFTreeParam() {
+function TTFTreeParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(DEFAULT_NODES);
+  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
 
 
   const handleInsertion = (e) => {
@@ -102,7 +104,7 @@ function TTFTreeParam() {
           mode="search"
           formClassName="formRight"
           handleSubmit={handleSearch}
-          DEFAULT_VAL={DEFAULT_TARGET}
+          DEFAULT_VAL={value || DEFAULT_TARGET}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           setMessage={setMessage}
@@ -114,7 +116,15 @@ function TTFTreeParam() {
   );
 }
 
-export default TTFTreeParam;
+// Define the prop types for URL Params
+TTFTreeParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(TTFTreeParam); // Export with the wrapper for URL Params
 
 function validateListInput(input) {
   const inputArr = input.split(',');

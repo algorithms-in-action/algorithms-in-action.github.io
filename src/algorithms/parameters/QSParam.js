@@ -6,6 +6,8 @@ import { withStyles } from '@mui/styles';
 import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
@@ -29,9 +31,10 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-function QuicksortParam() {
+
+function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mode, list
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(DEFAULT_ARR)
+  const [array, setArray] = useState(list || DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
@@ -39,26 +42,24 @@ function QuicksortParam() {
     sortedDesc: false
   });
 
-    
-
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
-        setArray([...array].sort(function(a,b) {
-         return (+a) - (+b)
+        setArray([...array].sort(function (a, b) {
+          return (+a) - (+b)
         }));
         break;
       case 'sortedDesc':
-        setArray([...array].sort(function(a,b) {
+        setArray([...array].sort(function (a, b) {
           return (+b) - (+a)
-         }));
-         break;
+        }));
+        break;
       case 'random':
         setArray(DEFAULT_ARRAY_GENERATOR());
         break;
       case 'bestCase':
-        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25))));
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
         break;
       default:
         break;
@@ -89,20 +90,20 @@ function QuicksortParam() {
             (() => {
               if (QSCase.sortedAsc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+a) - (+b)
-                 }));
+                  }));
                 }
               }
               else if (QSCase.sortedDesc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+b) - (+a)
-                 }));
+                  }));
                 }
               }
-              else if(QSCase.bestCase) {
-                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
+              else if (QSCase.bestCase) {
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
               }
             })()
           }
@@ -164,4 +165,10 @@ function QuicksortParam() {
   )
 }
 
-export default QuicksortParam
+// Define the prop types for URL Params
+QuicksortParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(QuicksortParam); // Export with the wrapper for URL Params

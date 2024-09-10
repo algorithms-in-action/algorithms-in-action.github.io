@@ -8,6 +8,9 @@ import { withStyles } from '@mui/styles';
 import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
@@ -31,9 +34,9 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-function MergesortParam() {
+function MergesortParam({ list }) {
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(DEFAULT_ARR)
+  const [array, setArray] = useState(list || DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
@@ -155,4 +158,11 @@ function MergesortParam() {
   )
 }
 
-export default MergesortParam
+// Define the prop types for URL Params
+MergesortParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params

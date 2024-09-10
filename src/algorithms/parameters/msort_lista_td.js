@@ -8,6 +8,9 @@ import { withStyles } from '@mui/styles';
 import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
@@ -31,9 +34,9 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-function MergesortParam() {
+function MergesortParam({ list }) {
   const [message, setMessage] = useState(null)
-  const [array, setArray] = useState(DEFAULT_ARR)
+  const [array, setArray] = useState(list || DEFAULT_ARR)
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
@@ -41,27 +44,27 @@ function MergesortParam() {
     sortedDesc: false
   });
 
-    
 
-// XXX best case definitely not needed; could skip choice of cases
+
+  // XXX best case definitely not needed; could skip choice of cases
   // function for choosing the type of input
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
-        setArray([...array].sort(function(a,b) {
-         return (+a) - (+b)
+        setArray([...array].sort(function (a, b) {
+          return (+a) - (+b)
         }));
         break;
       case 'sortedDesc':
-        setArray([...array].sort(function(a,b) {
+        setArray([...array].sort(function (a, b) {
           return (+b) - (+a)
-         }));
-         break;
+        }));
+        break;
       case 'random':
         setArray(DEFAULT_ARRAY_GENERATOR());
         break;
       case 'bestCase':
-        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25))));
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
         break;
       default:
         break;
@@ -93,20 +96,20 @@ function MergesortParam() {
             (() => {
               if (QSCase.sortedAsc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+a) - (+b)
-                 }));
+                  }));
                 }
               }
               else if (QSCase.sortedDesc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+b) - (+a)
-                 }));
+                  }));
                 }
               }
-              else if(QSCase.bestCase) {
-                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
+              else if (QSCase.bestCase) {
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
               }
             })()
           }
@@ -156,4 +159,11 @@ function MergesortParam() {
   )
 }
 
-export default MergesortParam
+// Define the prop types for URL Params
+MergesortParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(MergesortParam)
