@@ -22,9 +22,6 @@ import * as Instructions from './instructions';
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
- XXX we could export and use allalgs in key places in the system,
- eg src/context/actions.js so we can still access them via the URL, but
- not have them appear in the index.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -182,7 +179,6 @@ const allalgs = {
     },
   },
   'BFS': {
-    
     name: 'Breadth First Search',
     category: 'Graph',
     param: <Param.BFSParam/>,
@@ -351,7 +347,7 @@ const algorithms =
  * Get the first mode of an algorithm
  * @param {string} key algorithm's name
  */
-const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {
