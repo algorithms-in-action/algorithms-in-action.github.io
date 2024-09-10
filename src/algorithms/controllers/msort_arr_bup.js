@@ -1,95 +1,25 @@
-// Merge sort for arrays, top down
-// Adapted code from Quicksort...
-// XXX Could do with a good clean up!
-// Lots of crud, mostly abandonned attempt at QS-style stack display.
-// Uses simple stack display like DFSrec; stack vanishes inside
-// merge+copy because screen real-estate is limited and details of merge
-// are independent of stack details anyway (may cause some surprise
-// though)
+// Merge sort for arrays, bottom up
+// Adapted code from merge sort, top down
 
 import { msort_arr_bup } from '../explanations';
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+import {
+  areExpanded,
+} from './collapseChunkPlugin';
+
 
 const run = run_msort();
+
+// for changing colors in future, UI team?
+const colorA = 'red';
+const colorB = 'green';
+const colorC = 'green';
 
 export default {
   explanation: msort_arr_bup,
   initVisualisers,
   run
 };
-
-
-// XXX (was) Quicksort common code
-// Example of a recursive algorithm that could serve as a guide to
-// implementing others.  Some things to note:
-// 1) A depth parameter is added to the recursive code and also passed
-// to chunker.add()
-// 2) Recursive calls are in code blocks that can be collapsed, so the
-// whole recursive call can be done in a single step. To do this we must
-// have chunks at the recursion level of the call at the start and end
-// of the collapsed computation. Here the start chunk is a comment line.
-// It does nothing but notes that the call on the next line is recursive.
-// At the next step control goes back to the start of the function so
-// an extra comment is not a bad thing to do for clarity in any case.
-// The chunk after the recursive computation is at the line of code with
-// the call, so the call is highlighted when it returns, as we would
-// want.
-// 4) There is chunk at the end of the whole computation that cleans up
-// the final display a bit.
-
-// There may be remnants of code from a previous version that didn't
-// encapsulate the recursive calls properly
-
-// import 1D tracer to generate array in a separate component of the middle panel
-import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
-
-import {
-  areExpanded,
-} from './collapseChunkPlugin';
-import { node } from 'prop-types';
-
-/////////////////////////////////////////////////////
-
-// arrayB exists and is displayed only if MergeCopy is expanded
-function isMergeCopyExpanded() {
-  return areExpanded(['MergeCopy']);
-}
-
-// We don't strictly need isMergeExpanded: only needed if last chunk of
-// merge still had extra vars displayed.  Some code still needs
-// isMergeCopyExpanded because it uses arrayB
-function isMergeExpanded() {
-  return areExpanded(['MergeCopy', 'Merge']); // MergeCopy contains Merge
-}
-
-// -------------------------------------------------------------------------------
-
-// Define helper functions
-// without javascript Closure arguements (IE 'global variables')
-// -----------------------------------------------------------------------------------
-
-function assert(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'Assertion failed');
-  }
-}
-
-const highlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.select(index);
-  } else {
-    vis.array.patch(index);
-  }
-};
-
-const highlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.select(index);
-  } else {
-    vis.arrayB.patch(index);
-  }
-};
-
-// ----------------------------------------------------------------------
 
 // We hide array B entirely if things mergeCopy is collapsed
 export function initVisualisers() {
@@ -120,6 +50,107 @@ export function initVisualisers() {
   }
 }
 
+// arrayB exists and is displayed only if MergeCopy is expanded
+function isMergeCopyExpanded() {
+  return areExpanded(['MergeCopy']);
+}
+
+// We don't strictly need isMergeExpanded: only needed if last chunk of
+// merge still had extra vars displayed.  Some code still needs
+// isMergeCopyExpanded because it uses arrayB
+function isMergeExpanded() {
+  return areExpanded(['MergeCopy', 'Merge']); // MergeCopy contains Merge
+}
+
+// -------------------------------------------------------------------------------
+// Define helper functions
+// -------------------------------------------------------------------------------
+
+// Highlights Array A either red or green
+// Can add more colours in future
+function highlight(vis, index, color) {
+  if (color == 'red') {
+    vis.array.select(index);
+  }
+  if (color == 'green') {
+    vis.array.patch(index);
+  }
+}
+// Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
+function highlightB(vis, index, color) {
+  if (isMergeExpanded()) {
+    if (color == 'red') {
+      vis.arrayB.select(index);
+    }
+    if (color == 'green') {
+      vis.arrayB.patch(index);
+    }
+  }
+}
+
+// Highlights two runlengths two different colours
+function highlight2Runlength(vis, left, mid, right, colorA, colorB) {
+  // highlight first runlength color A
+  for (let i = left; i <= mid; i++) highlight(vis, i, colorA);
+  // highlight second runlength color B
+  for (let j = mid + 1; j <= right; j++) highlight(vis, j, colorB);
+}
+
+// unhighlights arrayA
+function unhighlight(vis, index, color) {
+  if (color == 'red') {
+    vis.array.deselect(index);
+  }
+  if (color == 'green') {
+    vis.array.depatch(index);
+  }
+}
+
+// Assigns label to array A at index, checks if index is greater than size of array
+// if index is greater than size, assign label to last element in array
+function assignVarToA(vis, variable_name, index, size) {
+  if (index === undefined)
+    vis.array.removeVariable(variable_name);
+  else if (index >= size)
+    vis.array.assignVariable(variable_name, size - 1)
+  else
+    vis.array.assignVariable(variable_name, index);
+}
+
+// Same as above function bet also checks if array B is displayed
+function assignVarToB(vis, variable_name, index, size) {
+  if (isMergeExpanded()) {
+    if (index === undefined)
+      vis.arrayB.removeVariable(variable_name);
+    else if (index >= size)
+      vis.arrayB.assignVariable(variable_name, size - 1);
+    else
+      vis.arrayB.assignVariable(variable_name, index);
+  }
+}
+
+// Display the runlength of the array at the runlength'th element
+function displayRunlength(vis, runlength, size) {
+  let text = 'runlength = ' + runlength;
+  let index = runlength - 1;
+  assignVarToA(vis, text, index, size);
+}
+
+// Display all the labels needed for Merge()
+function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
+  assignVarToA(vis, 'ap1', ap1, size);
+  assignVarToA(vis, 'max1', max1, size);
+  assignVarToA(vis, 'ap2', ap2, size);
+  assignVarToA(vis, 'max2', max2, size);
+  if (isMergeExpanded()) assignVarToB(vis, 'bp', bp, size);
+}
+
+function set_simple_stack(vis_array, c_stk) {
+  console.log("set_simple_stack" + c_stk);
+  console.log(c_stk);
+  vis_array.setList(c_stk);
+}
+
 /**
  *
  * @param {object} chunker
@@ -132,251 +163,188 @@ export function run_msort() {
     // can't rename from nodes
 
     // ----------------------------------------------------------------
-    // Define 'global' variables
-    // -----------------------------------------------------------------
+    // Define define global variables
+    // ----------------------------------------------------------------
 
     const entire_num_array = nodes;
-
-    // ----------------------------------------------------------------
-    // Define helper functions
-    // ----------------------------------------------------------------
-
-
-    function assignVarToA(vis, variable_name, index) {
-      if (index === undefined)
-        vis.array.removeVariable(variable_name);
-      else
-        vis.array.assignVariable(variable_name, index);
-    }
-
-    function assignVarToB(vis, variable_name, index) {
-      if (index === undefined)
-        vis.arrayB.removeVariable(variable_name);
-      else
-        vis.arrayB.assignVariable(variable_name, index);
-    }
-
-    function displayRunlength(vis, runlength, size) {
-
-      console.log("runlength = " + runlength);
-
-      let str = 'runlength = ';
-      let text = str + runlength;
-      let index = runlength - 1;
-      if (runlength > size) {
-        assignVarToA(vis, text, size);
-      }
-      else {
-        assignVarToA(vis, text, index);
-      }
-
-    }
-
-    function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2) {
-      if (isMergeExpanded()) {
-        vis.array.set(a, 'msort_arr_bup');
-        assignVarToA(vis, 'ap1', cur_ap1);
-        assignVarToA(vis, 'max1', cur_max1);
-        highlight(vis, cur_ap1, true);
-        if (cur_ap2 < a.length) { // XXX 
-          assignVarToA(vis, 'ap2', cur_ap2);
-          highlight(vis, cur_ap2, true);
-        } else {
-          assignVarToA(vis, 'ap2', undefined);
-        }
-        assignVarToA(vis, 'max2', cur_max2);
-        vis.arrayB.set(b, 'msort_arr_bup');
-        assignVarToB(vis, 'bp', cur_bp);
-        for (let i = cur_left; i < cur_bp; i++) {
-          highlightB(vis, i, false);
-        }
-      }
-    }
+    const size = nodes.length; // size of the array
+    let simple_stack = [];
 
     //// start mergesort --------------------------------------------------------
 
     let A = nodes;
     let B = [...entire_num_array].fill(undefined);
     let runlength = 1; // length of run to merge
-    let size = nodes.length - 1; // size of array
 
-    console.log("runlength = " + runlength);
-
-    let runlengthString = 'runlength = ' + runlength;
-
-    chunker.add('Main', (vis, a, b, cur_length) => {
+    chunker.add('Main', (vis, a, b, c_length) => {
       vis.array.set(a, 'msort_arr_bup');
-      if (cur_length === 1) {
+      if (c_length === 1) {
         vis.array.setLargestValue(maxValue);
-      }
-      if (isMergeCopyExpanded()) {
+      } if (isMergeCopyExpanded()) {
         vis.arrayB.set(b, 'msort_arr_bup');
         vis.arrayB.setLargestValue(maxValue);
       }
+
     }, [A, B, size], length);
 
-    chunker.add('runlength', (vis, runlength) => {
+    chunker.add('runlength', (vis, c_rlength) => {
+      displayRunlength(vis, c_rlength, size);
+      set_simple_stack(vis.array, [c_rlength]);
+    }, [runlength, simple_stack]);
 
-      displayRunlength(vis, runlength, size);
-
-    }, [runlength, size]);
-
-    while (runlength < size + 1) {
+    while (runlength < size) {
       let left = 0;
 
-      chunker.add('MainWhile', (vis, runlength, size) => {
-        let size_txt = "size = " + (size + 1);
-        console.log("size = " + size);
-        assignVarToA(vis, size_txt, size);
-        displayRunlength(vis, runlength, size);
-      }, [runlength, size]);
+      chunker.add('MainWhile', (vis, c_rlength, c_left) => {
+        // display size label
+        assignVarToA(vis, ("size = " + size), size, size);
 
-      chunker.add('left', (vis, a, cur_left, cur_mid, cur_right) => {
-        /*for (let i = cur_left; i <= cur_right; i++) {
-          unhighlight(vis, i, true);
-        }*/
-        assignVarToA(vis, 'left', cur_left);
+        let left_2 = c_left;
+        let mid_2 = (c_rlength + c_left - 1);
+        let right_2 = (Math.min(c_rlength * 2, size) - 1);
 
-      }, [A, left]);
+        highlight2Runlength(vis, left_2, mid_2, right_2, colorA, colorB);
 
+      }, [runlength, left]);
 
-      while ((left + runlength) < size + 1) {
+      chunker.add('left', (vis, c_left) => {
+        assignVarToA(vis, 'left', c_left, size);
+      }, [left]);
+
+      while ((left + runlength) <= size) {
 
         let mid = left + runlength - 1;
-        let right = Math.min(mid + runlength, size);
-        chunker.add('MergeAllWhile', (vis, cur_left, cur_mid) => {
-          for (let i = cur_left; i <= right; i++) {
-            highlight(vis, i, true)
-          }
-
-          for (let i = cur_left; i <= cur_mid; i++) {
-            highlight(vis, i, true);
-          }
-
-        }, [A, B, left, mid, right, length]);
-
-        chunker.add('mid', (vis, a, cur_left, cur_mid, cur_right) => {
-          assignVarToA(vis, 'mid', cur_mid);
-        }, [A, left, mid, right]);
-
-        chunker.add('right', (vis, a, cur_left, cur_mid, cur_right) => {
-          assignVarToA(vis, 'right', cur_right);
-          //highlight(vis, cur_right, true);
-          for (let i = cur_mid + 1; i <= cur_right; i++) {
-            highlight(vis, i, false);
-          }
-        }, [A, left, mid, right]);
-
+        let right = Math.min(mid + runlength, (size - 1));
         let ap1 = left;
         let max1 = mid;
         let ap2 = mid + 1;
         let max2 = right;
         let bp = left;
 
-        chunker.add('ap1', (vis, cur_left) => {
+        chunker.add('MergeAllWhile', (vis, c_left, c_mid, c_right) => {
+          highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorB);
+        }, [left, mid, right]);
 
-          // vis.array.set(a, 'msort_arr_bup');
-          // vis.arrayB.setList(runlength);
+        chunker.add('mid', (vis, c_mid, c_rlength) => {
+          // remove runlength and size labels
+          assignVarToA(vis, ('runlength = ' + c_rlength), undefined, size);
+          assignVarToA(vis, ('size = ' + (size)), undefined, size);
 
+          assignVarToA(vis, 'mid', c_mid, size);
+        }, [mid, runlength]);
+
+        chunker.add('right', (vis, c_right) => {
+          assignVarToA(vis, 'right', c_right, size);
+        }, [right]);
+
+        chunker.add('ap1', (vis, c_ap1) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'left', undefined);
-            assignVarToA(vis, 'ap1', cur_left);
-            //highlight(vis, cur_left, true);
+            assignVarToA(vis, 'left', undefined, size); // ap1 replaces left
+            assignVarToA(vis, 'ap1', c_ap1, size);
           }
-        }, [A, left, mid, right]);
-        chunker.add('max1', (vis, cur_mid) => {
+        }, [ap1]);
+
+        chunker.add('max1', (vis, c_max1) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'mid', undefined);
-            assignVarToA(vis, 'max1', cur_mid);
+            assignVarToA(vis, 'mid', undefined, size); // max1 replaces mid
+            assignVarToA(vis, 'max1', c_max1, size);
           }
-        }, [A, left, mid, right]);
-        chunker.add('ap2', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [max1]);
+
+        chunker.add('ap2', (vis, c_ap2) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'ap2', cur_mid + 1);
-            //123highlight(vis, cur_mid + 1, true);
+            assignVarToA(vis, 'ap2', c_ap2, size);
           }
-        }, [A, left, mid, right]);
-        chunker.add('max2', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [ap2]);
+
+        chunker.add('max2', (vis, c_max2) => {
           if (isMergeExpanded()) {
-            assignVarToA(vis, 'right', undefined);
-            assignVarToA(vis, 'max2', right);
+            assignVarToA(vis, 'right', undefined, size); // max2 replaces right
+            assignVarToA(vis, 'max2', c_max2, size);
           }
-        }, [A, left, mid, right]);
-        chunker.add('bp', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [max2]);
+
+        chunker.add('bp', (vis, c_bp) => {
           if (isMergeExpanded()) {
-            assignVarToB(vis, 'bp', cur_left);
+            assignVarToB(vis, 'bp', c_bp, size);
           }
-        }, [A, left, mid, right]);
+        }, [bp]);
 
         // while (ap1 <= max1 && ap2 <= max2) 
         /* eslint-disable no-constant-condition */
         while (true) {
-          chunker.add('MergeWhile', (vis, a, b, cur_ap1, cur_ap2,
-            cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-            /*renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
-              cur_max2, cur_stk, cur_left);*/
-          }, [A, B, ap1, ap2, bp, max1, max2, left]);
-
           if (!(ap1 <= max1 && ap2 <= max2)) break;
 
-          chunker.add('findSmaller', (vis, a, b, cur_ap1, cur_ap2,
-            cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-            renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left);
-          }, [A, B, ap1, ap2, bp, max1, max2, left]);
+          chunker.add('MergeWhile', (vis, a, c_left, c_right, c_mid, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_rlength) => {
+            vis.array.set(a, 'msort_arr_bup');
+            displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
+            // future color: should be colorA & colorB
+            highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
+            set_simple_stack(vis.array, [c_rlength]);
+          }, [A, left, right, mid, ap1, max1, ap2, max2, bp, runlength]);
+
+          chunker.add('findSmaller', () => {
+            // no animation 
+          }, []);
 
           if (A[ap1] < A[ap2]) {
+
             B[bp] = A[ap1];
             A[ap1] = undefined;
-            chunker.add('copyap1', (vis, a, b, cur_ap1, cur_ap2,
-              cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-              if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
-              }
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
+
+            chunker.add('copyap1', (vis, a, b, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_left, c_right, c_mid, c_rlength) => {
+
+              if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+              vis.array.set(a, 'msort_arr_bup');
+
+              displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
+              // future color: should be colorA & colorB
+              highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
+              // highlight sorted elements green (colorC)
+              for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, colorC);
+              set_simple_stack(vis.array, [c_rlength]);
+            }, [A, B, ap1, max1, ap2, max2, bp, left, right, mid, runlength]);
+
             ap1 = ap1 + 1;
-            chunker.add('ap1++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-              if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
-              }
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
+            chunker.add('ap1++', (vis, c_ap1) => {
+              assignVarToA(vis, 'ap1', c_ap1, size);
+            }, [ap1]);
+
             bp = bp + 1;
-            chunker.add('bp++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
-          } else {
+            chunker.add('bp++', (vis, c_bp) => {
+              assignVarToB(vis, 'bp', c_bp, size);
+            }, [bp]);
+          }
+
+          else {
+            chunker.add('findSmallerB', () => {
+              // no animation
+            }, []);
+
             B[bp] = A[ap2];
             A[ap2] = undefined;
-            chunker.add('copyap2', (vis, a, b, cur_ap1, cur_ap2,
-              cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-              if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
-              }
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
+
+            chunker.add('copyap2', (vis, a, b, c_ap1, c_ap2, c_bp, c_max1, c_max2, c_left, c_right, c_mid, c_rlength) => {
+              if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+              vis.array.set(a, 'msort_arr_bup');
+              displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
+
+              // future color: should be colorA & colorB
+              highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
+              // highlight sorted elements green / colorB
+              for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, 'green')
+              set_simple_stack(vis.array, [c_rlength]);
+            }, [A, B, ap1, ap2, bp, max1, max2, left, right, mid, runlength]);
+
             ap2 = ap2 + 1;
-            chunker.add('ap2++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-              if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
-              }
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
+            chunker.add('ap2++', (vis, c_ap2) => {
+              assignVarToA(vis, "ap2", c_ap2, size);
+            }, [ap2]);
+
             bp = bp + 1;
-            chunker.add('bp++_2', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-            }, [A, B, ap1, ap2, bp, max1, max2, left]);
+            chunker.add('bp++_2', (vis, c_bp) => {
+              assignVarToB(vis, 'bp', c_bp, size)
+            }, [bp]);
           }
         }
 
@@ -386,27 +354,23 @@ export function run_msort() {
           bp = bp + 1;
         }
 
-        chunker.add('CopyRest1', (vis, a, b, cur_left, cur_ap2, cur_max2, cur_bp) => {
-          if (isMergeExpanded()) {
-            vis.array.set(a, 'msort_arr_bup');
+        chunker.add('CopyRest1', (vis, a, b, c_ap1, c_max1, c_left, c_right, c_mid, c_bp, c_rlength) => {
 
-            // unhighlight(vis, cur_ap1, true);
-            // assignVarToA(vis, 'ap1', undefined);
-            // assignVarToA(vis, 'max1', undefined);
-            if (cur_ap2 < a.length)
-              assignVarToA(vis, 'ap2', cur_ap2);
-            assignVarToA(vis, 'max2', cur_max2);
-            vis.arrayB.set(b, 'msort_arr_bup');
-            for (let i = cur_left; i <= cur_bp - 1; i++) {
-              highlightB(vis, i, true);
-            }
-            if (cur_bp < a.length) {
-              assignVarToB(vis, 'bp', cur_bp);
-            } else {
-              assignVarToB(vis, 'bp', undefined);  // XXX anination unclear?
-            }
-          }
-        }, [A, B, left, ap1, ap2, max1, max2, bp]);
+          vis.array.set(a, 'msort_arr_bup');
+          if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+
+          // copying A[ap1..max1]
+          assignVarToA(vis, 'ap1', c_ap1, size);
+          assignVarToA(vis, 'max1', c_max1, size);
+          assignVarToB(vis, 'bp', c_bp, size);
+
+          // to highlight the solrted elements of B array green / colorC
+          for (let i = c_left; i < c_bp; i++) highlightB(vis, i, colorC);
+
+          // future color: should be colorA & colorB
+          highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, ap1, max1, left, right, mid, bp, runlength]);
 
         for (let i = ap2; i <= max2; i++) {
           B[bp] = A[i];
@@ -414,70 +378,61 @@ export function run_msort() {
           bp = bp + 1;
         }
 
-        chunker.add('CopyRest2', (vis, a, b, cur_left, cur_right, cur_ap2) => {
-          if (isMergeCopyExpanded()) {
-            vis.array.set(a, 'msort_arr_bup');
-            vis.arrayB.set(b, 'msort_arr_bup');
-            for (let i = cur_left; i <= cur_right; i++) {
-              highlightB(vis, i, false);
-            }
-          }
-          if (isMergeExpanded()) {
-            if (cur_ap2 < a.length) {
-              //123unhighlight(vis, cur_ap2, true);
-              assignVarToA(vis, 'ap2', undefined);
-            }
-            assignVarToA(vis, 'max2', undefined);
-            assignVarToB(vis, 'bp', undefined);
-          }
-        }, [A, B, left, right, ap2, max2, bp]);
+        chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rlength) => {
+          vis.array.set(a, 'msort_arr_bup');
+          if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+          assignVarToA(vis, 'ap2', c_ap2, size);
+          assignVarToA(vis, 'max2', c_max2, size);
 
+          // highlight sorted elements green
+          for (let i = c_left; i <= c_right; i++) highlightB(vis, i, colorC);
+
+          // future color: should be colorA & colorB
+          highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, ap2, max2, left, right, mid, runlength]);
+
+        // copy merged elements from B to A
         for (let i = left; i <= right; i++) {
           A[i] = B[i];
           B[i] = undefined;
         }
-        chunker.add('copyBA', (vis, a, b, cur_left, cur_right) => {
-          if (isMergeCopyExpanded()) {
-            for (let i = cur_left; i <= cur_right; i++) {
-              // unhighlightB(vis, i, false);
-            }
-            vis.arrayB.set(b, 'msort_arr_bup');
-          }
+
+        chunker.add('copyBA', (vis, a, b, c_left, c_right, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup');
+          if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
 
-          for (let i = cur_left; i <= cur_right; i++) {
-            highlight(vis, i, false);
-          }
-          if (isMergeExpanded()) {
-            assignVarToA(vis, 'ap1', undefined);
-            assignVarToA(vis, 'max1', undefined);
-            assignVarToA(vis, 'ap2', undefined);
-            assignVarToA(vis, 'max2', undefined);
-          }
+          // highlight all sorted elements green
+          for (let i = c_left; i <= c_right; i++) highlight(vis, i, colorC);
+          set_simple_stack(vis.array, [c_rlength]);
+        }, [A, B, left, right, runlength]);
 
-        }, [A, B, left, mid, right]);
+        let left2 = left; // this is the old left before it was updated
 
         left = right + 1;
 
-        chunker.add('left2', (vis, cur_left) => {
-          /*for (let i = pre_left; i <= pre_right; i++) {
-            unhighlight(vis, i, false);
-          }*/
-          if (cur_left < size) {
-            assignVarToA(vis, 'left', cur_left);
+        chunker.add('left2', (vis, old_left, c_left, c_right) => {
+          // unhighlight all elements in A
+          for (let i = old_left; i <= c_right; i++) {
+            unhighlight(vis, i, colorC);
           }
-          /*for (let i = left; i <= left + runlength - 1; i++) {
-            highlight(vis, i, true);
-          }*/
-        }, [A, left, length]);
+          assignVarToA(vis, 'left', c_left, size);
 
+        }, [left2, left, right]);
 
       }
 
 
       runlength = 2 * runlength;
-      chunker.add('runlength2', (vis, runlength) => {
-        displayRunlength(vis, runlength, size);
+      chunker.add('runlength2', (vis, c_rlength) => {
+        assignVarToA(vis, 'left', undefined, size);
+        if (c_rlength > size) {
+          assignVarToA(vis, 'done', size, size);
+        }
+        else {
+          displayRunlength(vis, c_rlength, size);
+        }
+        set_simple_stack(vis.array, [c_rlength]);
       }, [runlength]);
     }
 
