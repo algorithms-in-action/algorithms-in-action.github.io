@@ -352,8 +352,6 @@ export default {
                 let root = new AVLNode(key, depth);
                 chunker.add('n = new Node',
                     (vis, r, p, index) => {
-                        if (index > 0) vis.array.deselect(index - 1);
-                        vis.array.select(index);
                         vis.graph.addNode(r, r, 1);
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
@@ -404,7 +402,7 @@ export default {
                     (vis) => {
                         vis.graph.clear();
                     },
-                    undefined,
+                    [],
                     depth
                 );
                 chunker.add('return t, no change', (vis) => null, [], depth);
@@ -456,7 +454,6 @@ export default {
             't = Empty',
             (vis, elements) => {
                 vis.array.set(elements);
-                vis.array.select(0);
                 vis.graph.isWeighted = true;
             },
             [nodes],
@@ -467,7 +464,15 @@ export default {
         let globalRoot = null;
 
         for (let i = 0; i < nodes.length; i++) {
-            chunker.add('t = AVLT_Insert(t, k)', (vis) => null, [], 0);
+            chunker.add(
+                't = AVLT_Insert(t, k)',
+                (vis, index) => {
+                    if (index > 0) vis.array.deselect(index - 1);
+                    vis.array.select(index);
+                },
+                [i],
+                0
+            );
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
             chunker.add('for each k in keys', (vis) => null, [], 0);
         }
