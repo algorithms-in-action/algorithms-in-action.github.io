@@ -40,7 +40,7 @@ export default {
         }
 
         // Function to update the height of a node based on its children's heights
-        function updateHeight(root) {
+        function updateHeight(root, depth = 1) {
             if (root !== null) {
                 const leftHeight = root.left ? root.left.height : 0;
                 const rightHeight = root.right ? root.right.height : 0;
@@ -52,6 +52,7 @@ export default {
                         vis.graph.updateHeight(r, h);
                     },
                     [root.key, root.height],
+                    depth
                 );
             }
         }
@@ -141,9 +142,9 @@ export default {
             const temp = root.left;
             root.left = temp.right;
             temp.right = root;
-            chunker.add('recompute heights of t6 and t2');
-            updateHeight(root);
-            updateHeight(temp);
+            chunker.add('recompute heights of t6 and t2', (vis) => null, [], depth);
+            updateHeight(root, depth);
+            updateHeight(temp, depth);
 
             if (parentNode !== null) {
                 if (temp.key < parentNode.key) {
@@ -243,9 +244,9 @@ export default {
             const temp = root.right;
             root.right = temp.left;
             temp.left = root;
-            chunker.add('recompute heights of t2 and t6');
-            updateHeight(root);
-            updateHeight(temp);
+            chunker.add('recompute heights of t2 and t6', (vis) => null, [], depth);
+            updateHeight(root, depth);
+            updateHeight(temp, depth);
 
             if (parentNode !== null) {
                 if (temp.key < parentNode.key) {
@@ -341,7 +342,7 @@ export default {
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
-        function insert(root, key, currIndex, parentNode = null, depth = 0) {
+        function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
             chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
 
@@ -410,7 +411,7 @@ export default {
                 return root;
             }
 
-            updateHeight(root);
+            updateHeight(root, depth);
 
             // get balance factor of the root
             const leftHeight = root.left ? root.left.height : 0;
@@ -422,22 +423,22 @@ export default {
             // console.log(key, parentNode, tree[parentNode].left);
             chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], depth);
             if (balance > 1 && key < root.left.key) {
-                chunker.add('return rightRotate(t)', (vis) => null, [], depth);
+                chunker.add('return rightRotate(t)', (vis) => null, [], depth + 1);
                 // console.log("LLR");
-                root = LLR(root, parentNode, depth);
+                root = LLR(root, parentNode, depth + 1);
             } else if (balance < -1 && key > root.right.key) {
-                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
-                chunker.add('return leftRotate(t)', (vis) => null, [], depth);
+                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth + 1);
+                chunker.add('return leftRotate(t)', (vis) => null, [], depth + 1);
                 // console.log("RRR");
-                root = RRR(root, parentNode, depth);
+                root = RRR(root, parentNode, depth + 1);
             } else if (balance > 1 && key > root.left.key) {
-                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
+                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth + 1);
                 // console.log("LRR");
-                root = LRR(root, parentNode, depth);
+                root = LRR(root, parentNode, depth + 1);
             } else if (balance < -1 && key < root.right.key) {
-                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
+                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth + 1);
                 // console.log("RLR");
-                root = RLR(root, parentNode, depth);
+                root = RLR(root, parentNode, depth + 1);
             }
 
             chunker.add('return t',
@@ -467,7 +468,7 @@ export default {
 
         for (let i = 0; i < nodes.length; i++) {
             chunker.add('t = AVLT_Insert(t, k)', (vis) => null, [], 0);
-            globalRoot = insert(globalRoot, nodes[i], i);
+            globalRoot = insert(globalRoot, nodes[i], i, null, 1);
             chunker.add('for each k in keys', (vis) => null, [], 0);
         }
 

@@ -108,7 +108,7 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
     t <- Empty \\B t = Empty
     for each k in keys \\B for each k in keys
     \\In{
-        t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
+        t <- AVLT_Insert(t, k) \\Ref GlobalInsert
     \\In}
 \\In}
 
@@ -250,6 +250,11 @@ The left subtree is replaced by the result of this recursive call
 XXX should this be left(t) <- AVLT_Insert(left(t), k) or is the
 explanation enough? (same for right)
 \\Note}
+\\Code}
+
+\\Code{
+GlobalInsert
+  t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
 \\Code}
 
 \\Code{
