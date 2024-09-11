@@ -7,21 +7,27 @@ import { withStyles } from '@mui/styles';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {genUniqueRandNumList} from './helpers/ParamHelper';
+import {
+  genUniqueRandNumList,
+  commaSeparatedNumberListValidCheck,
+  singleNumberValidCheck,
+  successParamMsg,
+  errorParamMsg,
+} from './helpers/ParamHelper';
 
-// import useParam from '../../context/useParam';
-
-const ALGORITHM_NAME = 'Hashing';
+const ALGORITHM_NAME = 'Hashing (linear probing)';
 const HASHING_INSERT = 'Hashing Insertion';
 const HASHING_SEARCH = 'Hashing Search';
 const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
 
 const DEFAULT_ARRAY = genUniqueRandNumList(10, 1, 50);
-const DEFAULT_SEARCH = '...'
+const DEFAULT_SEARCH = 2
 const UNCHECKED = {
     smallTable: false,
     largeTable: false
 };
+const SMALL_TABLE = 11;
+const LARGE_TABLE = 97;
 
 const BlueRadio = withStyles({
   root: {
@@ -35,8 +41,8 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />)
 
 
-//const ERROR_INPUT = 'Please enter only positive integers';
-//const ERROR_TOO_LARGE = `Please enter only ${HASHING_FUNCTION} digits in the table`;
+const ERROR_INPUT = 'Please enter only positive integers';
+const ERROR_TOO_LARGE = `Please enter the right number of digits`;
 
 
 function HashingLPParam() {
@@ -44,29 +50,66 @@ function HashingLPParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [array, setArray] = useState(DEFAULT_ARRAY);
   const [search, setSearch] = useState(DEFAULT_SEARCH);
-  const [size, setSize] = useState({
+  const [HASHSize, setHashSize] = useState({
     smallTable: true,
     largeTable: false,
   });
 
   const handleChange = (e) => {
-    // setSize({ ...UNCHECKED, [e.target.name]: true })
+    setHashSize({ ...UNCHECKED, [e.target.name]: true })
+  }
+
+  const handleInsertion = (e) => {
+    e.preventDefault();
+    const inputs = e.target[0].value;
+
+    if (commaSeparatedNumberListValidCheck(inputs)) {
+      let values = inputs.split(',').map(Number);
+      let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
+
+      if (values.length < hashSize) {
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'HashingLP',
+          mode: 'insertion',
+          hashSize: hashSize,
+          values
+        });
+        setMessage(successParamMsg(ALGORITHM_NAME));
+      } else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
+      }
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INPUT));
+    }
+  }
+
+  const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
 
-    // const visualiser = algorithm.chunker.visualisers;
-    dispatch(GlobalActions.RUN_ALGORITHM, {
-      name: 'HashingLP',
-      mode: 'hash',
-      // visualiser,
-    });
+    const visualisers = algorithm.chunker.visualisers;
+    if (singleNumberValidCheck(inputValue)) {
+      const target = parseInt(inputValue);
+
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'HashingLP',
+        mode: 'search',
+        hashSize: hashSize,
+        visualisers,
+        target
+      });
+      setMessage(successParamMsg(ALGORITHM_NAME));
+    } else {
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INPUT));
+    }
   }
 
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
     },
-    [size],
+    [HASHSize],
   );
 
 
@@ -80,9 +123,19 @@ function HashingLPParam() {
           formClassName="formLeft"
           DEFAULT_VAL = {array}
           SET_VAL = {setArray}
+          REFRESH_FUNCTION={
+            (() => {
+              if (HASHSize.smallTable) {
+                return () => genUniqueRandNumList(SMALL_TABLE-1, 1, 50);
+              }
+              else if(HASHSize.largeTable) {
+                return () => genUniqueRandNumList(LARGE_TABLE-1, 1, 100);
+              }
+            })()
+          }
           ALGORITHM_NAME = {HASHING_INSERT}
           EXAMPLE={HASHING_EXAMPLE}
-          handleSubmit={handleChange}
+          handleSubmit={handleInsertion}
           setMessage={setMessage}
         />
 
@@ -95,6 +148,7 @@ function HashingLPParam() {
           DEFAULT_VAL = {DEFAULT_SEARCH}
           SET_VAL = {setSearch}
           ALGORITHM_NAME = {HASHING_SEARCH}
+          handleSubmit={handleSearch}
           setMessage={setMessage}
          />}
       </div>
@@ -102,7 +156,7 @@ function HashingLPParam() {
       <FormControlLabel
         control={
           <BlueRadio
-            checked={size.smallTable}
+            checked={HASHSize.smallTable}
             onChange={handleChange}
             name="smallTable"
           />
@@ -113,7 +167,7 @@ function HashingLPParam() {
       <FormControlLabel
         control={
           <BlueRadio
-            checked={size.largeTable}
+            checked={HASHSize.largeTable}
             onChange={handleChange}
             name="largeTable"
           />
@@ -121,6 +175,9 @@ function HashingLPParam() {
         label="Large Table"
         className="checkbox"
       />
+
+      {/* render success/error message */}
+      {message}
     </>
   );
 }

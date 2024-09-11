@@ -84,7 +84,7 @@
         span {
           color: var(--array-2d-row-col-selected);
         }
-      } 
+      }
 
       &.variableGreen {
         background-color: var(--simple-fill-var-green);
@@ -118,7 +118,7 @@
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }  
+      }
 
       &.selected5 {
         background-color: var(--array-2d-row-col-bg-selected5);
@@ -126,7 +126,7 @@
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }  
+      }
 
 
 
@@ -167,42 +167,65 @@
       &.faded {
         opacity: 0.2
       }
-      
+
     }
   }
+}
+
+.array2d_container {
+  flex: 1 1 100%;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  overflow-x: clip;
+  overflow-y: scroll;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  overflow: auto;
+}
+
+.captionHashing {
+  text-align: center;
+  margin-top: -12px; // need to squeeze a bit
+  color: var(--array-2d-row-col-value-color);
 }
 
 .captionDFS {
   caption-side: bottom;
   text-align: right;
   margin-top: -12px; // need to squeeze a bit
-  color: var(--array-2d-row-col-value-color); 
-}  
+  color: var(--array-2d-row-col-value-color);
+}
 
 .captionBFS {
   caption-side: bottom;
   text-align: center;
   margin-top: -12px; // need to squeeze a bit
-  color: var(--array-2d-row-col-value-color); 
+  color: var(--array-2d-row-col-value-color);
 }
 
 .captionDFSrec {
   caption-side: bottom;
   margin-top: -12px; // doesn't hurt to squeeze a bit like above
   text-align: right;
-  color: var(--array-2d-row-col-value-color); 
+  color: var(--array-2d-row-col-value-color);
 }
 
 .captionmsort_lista_td {
   caption-side: bottom;
   font-size: 14px; // squeeze a bit
   text-align: right;
-  color: var(--array-2d-row-col-value-color); 
+  color: var(--array-2d-row-col-value-color);
 }
 
 // redefined in 1D array
 .captionmsort_arr_td {
   caption-side: bottom;
   text-align: right;
-  color: var(--array-2d-row-col-value-color); 
-}  
+  color: var(--array-2d-row-col-value-color);
+}

@@ -42,15 +42,40 @@ class Array2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], algo, kth = 1) {
-    this.data = array2d.map((array1d) =>
-      [...array1d].map((value, i) => new Element(value, i))
-    );
+  set(array2d = [], algo, kth = 1, splitArray) {
+    if (splitArray === undefined || splitArray.rowLength < 1) {
+      this.data = array2d.map((array1d) =>
+        [...array1d].map((value, i) => new Element(value, i))
+      );
+    } else {
+      let split = [];
+
+      let step = 0;
+      while (step < array2d[0].length) {
+        let arr2d = [];
+        for (let i = 0; i < array2d.length; i++ ) {
+          arr2d.push([
+            splitArray.rowHeader[i],
+            ...array2d[i].slice(step, step + splitArray.rowLength)
+          ]);
+        }
+
+        step += splitArray.rowLength;
+        split.push(arr2d);
+      }
+
+      for (const item of split) {
+        this.data.push(item.map((array1d) =>
+          [...array1d].map((value, i) => new Element(value, i))
+        ));
+      }
+    }
     this.algo = algo;
     this.kth = kth;
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
+    this.splitArray = splitArray;
     super.set();
   }
 
@@ -143,7 +168,7 @@ class Array2DTracer extends Tracer {
   // XXX for some reason, variables only seem to be displayed if
   // row==2, and if you don't have enough rows in the table you are
   // stuck unless you add an extra dummy row and hide it using hideArrayAtIndex
-  assignVariable(v, row, idx) {
+  assignVariable(v, row, idx, changeFrom) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     // eslint-disable-next-line consistent-return
     function customizer(val) {
@@ -156,21 +181,51 @@ class Array2DTracer extends Tracer {
         return newEl;
       }
     }
-    const newData = cloneDeepWith(this.data, customizer);
+    if (this.splitArray === undefined || this.splitArray.rowLength < 1) {
+      const newData = cloneDeepWith(this.data, customizer);
 
-    // remove all current occurences of the variable
-    for (let y = 0; y < newData[row].length; y++) {
-      newData[row][y].variables = newData[row][y].variables.filter(
-        (val) => val !== v
-      );
+      // remove all current occurences of the variable
+      for (let y = 0; y < newData[row].length; y++) {
+        newData[row][y].variables = newData[row][y].variables.filter(
+          (val) => val !== v
+        );
+      }
+
+      // add variable to item if not undefined or null
+      if (idx !== null && idx !== undefined)
+         newData[row][idx].variables.push(v);
+
+      // update this.data
+      this.data = newData;
+
+    } else {
+      let newData = [];
+      for (let i = 0; i < this.data.length; i++) {
+        let _newData = cloneDeepWith(this.data[i], customizer);
+
+        // remove all current occurences of the variable
+        for (let y = 0; y < _newData[row].length; y++) {
+          _newData[row][y].variables = _newData[row][y].variables.filter(
+            (val) => val !== ((changeFrom !== undefined) ? changeFrom : v)
+          );
+        }
+
+        // add variable to item if not undefined or null
+        if (idx !== null && idx !== undefined) {
+          // check if idx is in subarray
+          // add i to account for header offset
+          let relativeIdx = idx + 1;
+          if (relativeIdx > 0 && relativeIdx <= this.splitArray.rowLength)
+            _newData[row][relativeIdx].variables.push(v);
+        }
+
+        newData.push(_newData);
+        idx -= this.splitArray.rowLength;
+      }
+
+      // update this.data
+      this.data = newData;
     }
-
-    // add variable to item if not undefined or null
-    if (idx !== null && idx !== undefined)
-       newData[row][idx].variables.push(v);
-
-    // update this.data
-    this.data = newData;
   }
 
   /**
@@ -253,11 +308,26 @@ class Array2DTracer extends Tracer {
    * @param {*} y the column index.
    * @param {*} newValue the new value.
    */
-  updateValueAt(x, y, newValue) {
-    if (!this.data[x] || !this.data[x][y]) {
-      return;
+  updateValueAt(row, idx, newValue) {
+    if (this.splitArray === undefined || this.splitArray.rowLength < 1) {
+      if (!this.data[row] || !this.data[row][idx]) {
+        return;
+      }
+      this.data[row][idx].value = newValue;
+    } else {
+      for (let i = 0; i < this.data.length; i++) {
+        if (idx !== null || idx !== undefined || idx >= 0) {
+          // check if idx is in subarray
+          // add 1 to account for header offset
+          let relativeIdx = idx + 1;
+          if (relativeIdx > 0 && relativeIdx <= this.splitArray.rowLength) {
+            if (!this.data[i][row] || !this.data[i][row][relativeIdx]) continue;
+            this.data[i][row][relativeIdx].value = newValue;
+          }
+          idx -= this.splitArray.rowLength;
+        }
+      }
     }
-    this.data[x][y].value = newValue;
   }
 }
 
