@@ -43,7 +43,7 @@ export function setIncrement(
       increment = 1;
       break;
     case 'HashingDH':
-      increment = hash2(chunker, key, smallishprime);
+      increment = hash2(chunker, bookmark, key, smallishprime);
       break;
   }
   chunker.add(
