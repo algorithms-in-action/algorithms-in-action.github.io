@@ -108,7 +108,7 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
     t <- Empty \\B t = Empty
     for each k in keys \\B for each k in keys
     \\In{
-        t <- AVLT_Insert(t, k)
+        t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
     \\In}
 \\In}
 
@@ -120,7 +120,7 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
   back up is sufficient - there is only one path back up to the root.
   The "current" node should certainly be highlighted in some way also.
 \\Note}
-AVLT_Insert(t, k)
+AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
 // Insert key k in AVL tree t
 \\In{
   if t = Empty \\B if t = Empty
@@ -178,7 +178,7 @@ with two copies of each, and rather long code if we expand everyting.
 The variable names here are linked to the diagrams, which may be easier for
 functions but may also be confusing.
 \\Note}
-rightRotate(t6)
+rightRotate(t6) \\B rightRotate(t6)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
@@ -207,7 +207,7 @@ for diagrams etc explaining rotations.
 \\In} 
 
 //============================================================================
-leftRotate(t2)
+leftRotate(t2) \\B leftRotate(t2)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
