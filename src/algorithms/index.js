@@ -349,6 +349,12 @@ const algorithms =
  */
 export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
 
+/**
+ * Get the category of an algorithm
+ * @param {string} key algorithm's name
+ */
+export const getCategory = (key) => algorithms[key].category;
+
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {
   const alCatList = [];
