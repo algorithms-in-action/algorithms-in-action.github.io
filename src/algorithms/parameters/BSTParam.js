@@ -51,23 +51,29 @@ const BlueRadio = withStyles({
 function BSTParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
+  const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
   const [bstCase, setBSTCase] = useState({
     random: true,
     sorted: false,
     balanced: false,
   });
 
+  useEffect(() => {
+    setNodes(localNodes); // sync with global state
+    setSearchValue(DEFAULT_TARGET);
+  }, [localNodes, setNodes, setSearchValue]);
+
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'random':
-        setNodes(shuffleArray(nodes));
+        setlocalNodes(shuffleArray(localNodes));
         break;
       case 'sorted':
-        setNodes([...nodes].sort((a, b) => a - b));
+        setlocalNodes([...localNodes].sort((a, b) => a - b));
         break;
       case 'balanced':
-        setNodes(balanceBSTArray([...nodes].sort((a, b) => a - b)));
+        setlocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
         break;
       default:
     }
@@ -133,13 +139,13 @@ function BSTParam({ mode, list, value }) {
           formClassName="formLeft"
           DEFAULT_VAL={(() => {
             if (bstCase.balanced) {
-              return balanceBSTArray([...nodes].sort((a, b) => a - b));
+              return balanceBSTArray([...localNodes].sort((a, b) => a - b));
             } if (bstCase.sorted) {
-              return [...nodes].sort((a, b) => a - b);
+              return [...localNodes].sort((a, b) => a - b);
             }
-            return nodes;
+            return localNodes;
           })()}
-          SET_VAL={setNodes}
+          SET_VAL={setlocalNodes}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
           setMessage={setMessage}

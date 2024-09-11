@@ -31,20 +31,25 @@ const NO_TREE_ERROR = 'Please build a tree before running search.';
 function TTFTreeParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
+  const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
 
+  useEffect(() => {
+    setNodes(localNodes); // sync with global state
+    setSearchValue(DEFAULT_TARGET);
+  }, [localNodes, setNodes, setSearchValue]);
 
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
 
     if (validateListInput(list)) {
-      let nodes = list.split(',').map(Number);
+      let localNodes = list.split(',').map(Number);
       // run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
         mode: 'insertion',
-        nodes,
+        localNodes,
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
@@ -88,9 +93,9 @@ function TTFTreeParam({ mode, list, value }) {
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={nodes}
+          DEFAULT_VAL={localNodes}
           handleSubmit={handleInsertion}
-          SET_VAL={setNodes}
+          SET_VAL={setlocalNodes}
           REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
