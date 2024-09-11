@@ -418,25 +418,27 @@ export default {
             chunker.add('balance = left(t).height - right(t).height', (vis) => null, [], depth);
 
             const balance = leftHeight - rightHeight;
+
+            let rotateDepth = depth + 1;
             // console.log(key, parentNode, tree[parentNode].left);
-            chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], depth);
+            chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], rotateDepth);
             if (balance > 1 && key < root.left.key) {
-                chunker.add('return rightRotate(t)', (vis) => null, [], depth);
+                chunker.add('return rightRotate(t)', (vis) => null, [], rotateDepth);
                 // console.log("LLR");
-                root = LLR(root, parentNode, depth + 1);
+                root = LLR(root, parentNode, rotateDepth);
             } else if (balance < -1 && key > root.right.key) {
-                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
-                chunker.add('return leftRotate(t)', (vis) => null, [], depth);
+                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], rotateDepth);
+                chunker.add('return leftRotate(t)', (vis) => null, [], rotateDepth);
                 // console.log("RRR");
-                root = RRR(root, parentNode, depth + 1);
+                root = RRR(root, parentNode, rotateDepth);
             } else if (balance > 1 && key > root.left.key) {
-                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
+                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], rotateDepth);
                 // console.log("LRR");
-                root = LRR(root, parentNode, depth + 1);
+                root = LRR(root, parentNode, rotateDepth);
             } else if (balance < -1 && key < root.right.key) {
-                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
+                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], rotateDepth);
                 // console.log("RLR");
-                root = RLR(root, parentNode, depth + 1);
+                root = RLR(root, parentNode, rotateDepth);
             }
 
             chunker.add('return t',
