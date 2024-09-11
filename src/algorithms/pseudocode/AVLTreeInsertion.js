@@ -168,6 +168,10 @@ AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
     for diagrams etc explaining rotations.
   \\Expl}
   return t \\B return t
+  \\Expl{
+    Tree t must be sufficiently balanced (-1 <= balance <= 1) so no
+    rotations are needed:)
+  \\Expl}
 \\In}
 
 //============================================================================
@@ -373,12 +377,6 @@ for diagrams etc explaining rotations.
   // Return "left rotation" on t
   return leftRotate(t) \\B return leftRotate(t) after rightRotate
 \\In}
-
-return t
-\\Expl{
-  Tree t must be sufficiently balanced (-1 <= balance <= 1) so no
-  rotations are needed:)
-\\Expl}
 \\Code}
 
 \\Note{  This is an implementation in C (from geeksforgeeks, with very
