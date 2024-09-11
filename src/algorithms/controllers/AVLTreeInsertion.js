@@ -57,16 +57,35 @@ export default {
         }
 
         // Left-Left Case (LLR) to balance the AVL tree
-        function LLR(root, parentNode, rotateVis = true) {
+        function LLR(root, parentNode, rotateVis = true, tidVis = true) {
 
             console.log('LLR');
             console.log("the root of LLR is " + root.key);
 
             let R = root;
             let A = root.left;
-            chunker.add('t2 = left(t6)');
+            chunker.add('t2 = left(t6)',
+                (vis, a, r, b, rr, tid) => {
+                    if (tid) {
+                        vis.graph.updateTID(r, 't6');
+                        vis.graph.updateTID(a, 't2');
+                        if (b !== null) vis.graph.updateTID(b, 't1');
+                        if (rr !== null) vis.graph.updateTID(rr, 't7');
+                    }
+                },
+                [A.key, R.key, A.left ? A.left.key : null, R.right ? R.right.key : null, tidVis]
+            );
             let D = A.right;
-            chunker.add('t4 = right(t2)');
+            if (D) {
+                chunker.add('t4 = right(t2)',
+                    (vis, d, tid) => {
+                        if (tid) {
+                            vis.graph.updateTID(d, 't4');
+                        }
+                    },
+                    [D.key, tidVis]
+                );
+            }
 
             console.log("the height of R is " + R.height);
             console.log("the height of A is " + A.height);
@@ -99,18 +118,20 @@ export default {
                     vis.graph.layoutBST(g, true);
 
                     // remove edge after layout to perform the middle step
-                    // if (d !== null) vis.graph.removeEdge(r, d);
+                    if (d !== null) vis.graph.removeEdge(r, d);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, G.key, rotateVis]
             );
 
-            // chunker.add('t6.left = t4',
-            //     // reconnect the edge between t6 and t4
-            //     (vis, r, d) => {
-            //         if (d !== null) vis.graph.addEdge(r, d);
-            //     },
-            //     [t6.key, t4 ? t4.key : null]
-            // )
+            if (D) {
+                chunker.add('t6.left = t4',
+                    // reconnect the edge between t6 and t4
+                    (vis, r, d) => {
+                        if (d !== null) vis.graph.addEdge(r, d);
+                    },
+                    [R.key, D.key]
+                )
+            }
 
             const temp = root.left;
             root.left = temp.right;
@@ -128,20 +149,46 @@ export default {
                 }
             }
 
-            chunker.add('return t2');
+            chunker.add('return t2',
+                (vis, tid) => {
+                    if (tid) {
+                        vis.graph.clearTID();
+                    }
+                },
+                [tidVis]
+            );
             return temp;
         }
 
         // Right-Right Rotation (RRR) to balance the AVL tree
-        function RRR(root, parentNode, rotateVis = true) {
+        function RRR(root, parentNode, rotateVis = true, tidVis = true) {
             console.log('RRR');
             console.log("the root of RRR is " + root.key);
 
             let R = root;
             let A = root.right;
-            chunker.add('t6 = right(t2)');
+            chunker.add('t6 = right(t2)',
+                (vis, a, r, b, rl, tid) => {
+                    if (tid) {
+                        vis.graph.updateTID(r, 't2');
+                        vis.graph.updateTID(a, 't6');
+                        if (b !== null) vis.graph.updateTID(b, 't7');
+                        if (rl !== null) vis.graph.updateTID(rl, 't1');
+                    }
+                },
+                [A.key, R.key, A.right ? A.right.key : null, R.left ? R.left.key : null, tidVis]
+            );
             let D = A.left;
-            chunker.add('t4 = left(t6)');
+            if (D) {
+                chunker.add('t4 = left(t6)',
+                    (vis, d, tid) => {
+                        if (tid) {
+                            vis.graph.updateTID(d, 't4');
+                        }
+                    },
+                    [D.key, tidVis]
+                );
+            }
             let G = null;
             if (parentNode !== null) {
                 G = globalRoot;
@@ -167,18 +214,20 @@ export default {
                     vis.graph.layoutBST(g, true);
 
                     // remove edge after layout to perform the middle step
-                    // if (d !== null) vis.graph.removeEdge(r, d);
+                    if (d !== null) vis.graph.removeEdge(r, d);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, G.key, rotateVis]
             );
 
-            // chunker.add('t2.right = t4',
-            //     // reconnect the edge between t2 and t4
-            //     (vis, r, d) => {
-            //         if (d !== null) vis.graph.addEdge(r, d);
-            //     },
-            //     [t2.key, t4 ? t4.key : null]
-            // )
+            if (D) {
+                chunker.add('t2.right = t4',
+                    // reconnect the edge between t2 and t4
+                    (vis, r, d) => {
+                        if (d !== null) vis.graph.addEdge(r, d);
+                    },
+                    [R.key, D.key]
+                )
+            }
 
             const temp = root.right;
             root.right = temp.left;
@@ -198,24 +247,79 @@ export default {
 
             console.log("the height of " + root.key + " is " + root.height);
             console.log("the height of " + temp.key + " is " + temp.height);
-            chunker.add('return t6');
+            chunker.add('return t6',
+                (vis, tid) => {
+                    if (tid) {
+                        vis.graph.clearTID();
+                    }
+                },
+                [tidVis]
+            );
             return temp;
         }
 
         // Left-Right Rotation (LRR) to balance the AVL tree
         function LRR(root, parentNode) {
-            chunker.add('left(t) <- leftRotate(left(t));');
-            root.left = RRR(root.left, root, false);
-            chunker.add('return rightRotate(t) after leftRotate');
-            return LLR(root, parentNode);
+            let t6 = root;
+            let t2 = root.left;
+            let t7 = root.right;
+            let t1 = t2 ? t2.left : null;
+            let t4 = t2 ? t2.right : null;
+            let t3 = t4 ? t4.left : null;
+            let t5 = t4 ? t4.right : null;
+            chunker.add('left(t) <- leftRotate(left(t));',
+                (vis, t1, t2, t3, t4, t5, t6, t7) => {
+                    if (t6 != null) vis.graph.updateTID(t6, 't6');
+                    if (t2 != null) vis.graph.updateTID(t2, 't2');
+                    if (t4 != null) vis.graph.updateTID(t4, 't4');
+                    if (t1 != null) vis.graph.updateTID(t1, 't1');
+                    if (t3 != null) vis.graph.updateTID(t3, 't3');
+                    if (t5 != null) vis.graph.updateTID(t5, 't5');
+                    if (t7 != null) vis.graph.updateTID(t7, 't7');
+                },
+                [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
+                t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null]
+            );
+            root.left = RRR(root.left, root, false, false);
+            let finalRoot = LLR(root, parentNode, true, false);
+            chunker.add('return rightRotate(t) after leftRotate',
+                vis => {
+                    vis.graph.clearTID();
+                }
+            );
+            return finalRoot;
         }
 
         // Right-Left Rotation (RLR) to balance the AVL tree
         function RLR(root, parentNode) {
-            chunker.add('right(t) <- rightRotate(right(t));');
-            root.right = LLR(root.right, root, false);
-            chunker.add('return leftRotate(t) after rightRotate');
-            return RRR(root, parentNode);
+            let t2 = root;
+            let t6 = root.right;
+            let t1 = root.left;
+            let t4 = t6 ? t6.left : null;
+            let t7 = t6 ? t6.right : null;
+            let t3 = t4 ? t4.left : null;
+            let t5 = t4 ? t4.right : null;
+            chunker.add('right(t) <- rightRotate(right(t));',
+                (vis, t1, t2, t3, t4, t5, t6, t7) => {
+                    if (t6 != null) vis.graph.updateTID(t6, 't6');
+                    if (t2 != null) vis.graph.updateTID(t2, 't2');
+                    if (t4 != null) vis.graph.updateTID(t4, 't4');
+                    if (t1 != null) vis.graph.updateTID(t1, 't1');
+                    if (t3 != null) vis.graph.updateTID(t3, 't3');
+                    if (t5 != null) vis.graph.updateTID(t5, 't5');
+                    if (t7 != null) vis.graph.updateTID(t7, 't7');
+                },
+                [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
+                t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null]
+            );
+            root.right = LLR(root.right, root, false, false);
+            let finalRoot = RRR(root, parentNode, true, false);
+            chunker.add('return leftRotate(t) after rightRotate',
+                vis => {
+                    vis.graph.clearTID();
+                }
+            );
+            return finalRoot;
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed

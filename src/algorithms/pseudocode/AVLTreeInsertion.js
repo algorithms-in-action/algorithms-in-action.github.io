@@ -108,11 +108,69 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
     t <- Empty \\B t = Empty
     for each k in keys \\B for each k in keys
     \\In{
-        t <- AVLT_Insert(t, k) \\Ref AVLT_Insert(t, k)
+        t <- AVLT_Insert(t, k)
     \\In}
 \\In}
 
-\\============================================================================
+//============================================================================
+\\Note{
+  This is recursive, with most of the work done as we return back up from
+  recursive calls. This should be visualised in some way. Perhaps
+  colouring nodes on the way down and removing the colour on the way
+  back up is sufficient - there is only one path back up to the root.
+  The "current" node should certainly be highlighted in some way also.
+\\Note}
+AVLT_Insert(t, k)
+// Insert key k in AVL tree t
+\\In{
+  if t = Empty \\B if t = Empty
+  \\In{
+    create new node n containing k \\Ref NewNode
+    return (pointer to) n // return a single-node tree \\B return n
+    \\Expl{  The returned tree has just
+            one node, with key k, empty sub-trees and height 1.
+            This is the base case of the recursion.
+    \\Expl}
+  \\In}
+  if k < root(t).key \\B if k < root(t).key
+  \\Expl{ The key in the root determines if we insert into the left or
+        right subtree.
+  \\Expl}
+  \\In{
+      insert k into the left subtree of t \\Ref insertLeft
+  \\In}
+  else if k > root(t).key \\B else if k > root(t).key
+    \\Note{ XXX allow duplicate keys or not???
+      Should be possible, but have to carefully review code to make sure its
+      correct. What does BST code do?
+    \\Note}
+  \\In{
+      insert k into the right subtree of t \\Ref insertRight
+  \\In}
+  else \\B else k = root(t).key
+  \\In{
+      return t // key k is already in the tree \\B return t, no change
+      \\Expl{  The key is already in the tree, so no change is needed.
+      \\Expl}
+  \\In}
+  Update the height of t \\Ref updateHeight
+  \\Expl{ The height of t may have increased by one
+  \\Expl}
+  Determine the balance of t \\Ref getBalance
+  \\Expl{ For AVL trees, we must ensure the height of the two subtrees
+    varies by at most one.
+  \\Expl}
+  Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
+  \\Expl{ Rotations are local tree operations that increase the
+    height/depth of one subtree but decrease that of another, used to
+    make the tree more balanced.
+    See Background (click at the top of the right panel)
+    for diagrams etc explaining rotations.
+  \\Expl}
+  return t \\B return t
+\\In}
+
+//============================================================================
 \\Note{ Might be best to expand these inline rather than having extra
 functions. Functions are always visible, which is distracting when things
 are collapsed and they are relatively short.  However, we would end up
@@ -148,7 +206,7 @@ for diagrams etc explaining rotations.
   return (pointer to) t2 // new root \\B return t2
 \\In} 
 
-\\============================================================================
+//============================================================================
 leftRotate(t2)
 \\Expl{
 See Background (click at the top of the right panel)
@@ -165,66 +223,6 @@ for diagrams etc explaining rotations.
   \\Expl}
   return (pointer to) t6 // new root \\B return t6
 \\In} 
-\\Code}
-
-\\============================================================================
-\\Note{
-  This is recursive, with most of the work done as we return back up from
-  recursive calls. This should be visualised in some way. Perhaps
-  colouring nodes on the way down and removing the colour on the way
-  back up is sufficient - there is only one path back up to the root.
-  The "current" node should certainly be highlighted in some way also.
-\\Note}
-\\Code{
-  AVLT_Insert(t, k)
-  // Insert key k in AVL tree t
-  \\In{
-      if t = Empty \\B if t = Empty
-      \\In{
-          create new node n containing k \\Ref NewNode
-          return (pointer to) n // return a single-node tree \\B return n
-          \\Expl{  The returned tree has just
-                  one node, with key k, empty sub-trees and height 1.
-                  This is the base case of the recursion.
-          \\Expl}
-      \\In}
-      if k < root(t).key \\B if k < root(t).key
-      \\Expl{ The key in the root determines if we insert into the left or
-            right subtree.
-      \\Expl}
-      \\In{
-          insert k into the left subtree of t \\Ref insertLeft
-      \\In}
-      else if k > root(t).key \\B else if k > root(t).key
-        \\Note{ XXX allow duplicate keys or not???
-          Should be possible, but have to carefully review code to make sure its
-          correct. What does BST code do?
-        \\Note}
-      \\In{
-          insert k into the right subtree of t \\Ref insertRight
-      \\In}
-      else \\B else k = root(t).key
-      \\In{
-          return t // key k is already in the tree \\B return t, no change
-          \\Expl{  The key is already in the tree, so no change is needed.
-          \\Expl}
-      \\In}
-      Update the height of t \\Ref updateHeight
-      \\Expl{ The height of t may have increased by one
-      \\Expl}
-      Determine the balance of t \\Ref getBalance
-      \\Expl{ For AVL trees, we must ensure the height of the two subtrees
-        varies by at most one.
-      \\Expl}
-      Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
-      \\Expl{ Rotations are local tree operations that increase the
-        height/depth of one subtree but decrease that of another, used to
-        make the tree more balanced.
-        See Background (click at the top of the right panel)
-        for diagrams etc explaining rotations.
-      \\Expl}
-      return t \\B return t
-    \\In}
 \\Code}
 
 \\Code{

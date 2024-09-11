@@ -24,78 +24,69 @@ export default {
     run(chunker, { visualiser, target }) {
         // get whole tree
         const tree = visualiser.graph.instance.getTree();
-        // const tree = {
-        //     8: {},
-        //     30: { left: 8, right: 53 },
-        //     53: {},
-        //     59: { left: 30, right: 72 },
-        //     62: {},
-        //     72: { left: 62, right: 73 },
-        //     73: { right: 97 },
-        //     85: {},
-        //     97: { left: 85 },
-        // };
+        let root = visualiser.graph.instance.getRoot();
 
-        // get the first
-        const root = visualiser.graph.instance.getRoot();
-        // const root = 59;
-        // get the target
-        const item = target;
-
-        console.log('test of visualiser', visualiser.graph);
-        console.log('tree', tree);
-        console.log('root', root);
-        console.log('item', item);
+        console.log('tree:', Object.keys(tree));
 
         let current = root;
         let parent = null;
 
-        // chunker.add('AVL_Search(t, k)');
-        chunker.add('while t not Empty', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+        chunker.add('AVL_Search(t, k)');
+        // chunker.add('while t not Empty', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         chunker.add('while t not Empty');
+
         let ptr = tree;
         parent = current;
 
         while (ptr) {
-            console.log('current', current);
-            chunker.add('if t.key = k');
-            if (current === item) {
-                chunker.add('if t.key = k', (vis, c, p) => vis.graph.leave(c, p), [current, parent]);
-                chunker.add('return t', (vis, c, p) => vis.graph.select(c, p), [current, parent]);
-                // chunker.add('if t.key = k');
-                // chunker.add('return t');
+            // chunker.add('n = root(t)');
+            chunker.add('n = root(t)', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+            let node = current;
+            chunker.add('if n.key = k');
+            if (node === target) {
+                chunker.add('if n.key = k', (vis, c, p) => vis.graph.leave(c, p), [node, parent]);
+                chunker.add('return t', (vis, c, p) => vis.graph.select(c, p), [node, parent]);
                 // for test
                 console.log('success! found the target!');
                 return 'success';
             }
 
-            chunker.add('if t.key > k');
-            if (item < current) {
-                if (tree[current].left !== undefined) {
+            chunker.add('if n.key > k');
+            if (target < node) {
+                if (tree[node].left !== undefined) {
                     // if current node has left child
-                    parent = current;
-                    current = tree[current].left;
-                    ptr = tree[current];
-                    chunker.add('t <- t.left', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
-                    // chunker.add('t <- t.left');
+                    parent = node;
+                    current = tree[node].left;
+                    ptr = tree[node];
+                    // chunker.add('t <- n.left', (vis, c, p) => vis.graph.visit(c, p), [node, parent]);
+                    chunker.add('t <- n.left');
                 } else {
                     break;
                 }
-            } else if (tree[current].right !== undefined) {
+            } else if (tree[node].right !== undefined) {
                 // if current node has right child
-                parent = current;
-                current = tree[current].right;
-                ptr = tree[current];
-                chunker.add('t <- t.right', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
-                // chunker.add('t <- t.right');
+                parent = node;
+                current = tree[node].right;
+                ptr = tree[node];
+                // chunker.add('t <- n.right', (vis, c, p) => vis.graph.visit(c, p), [node, parent]);
+                chunker.add('t <- n.right');
             } else {
                 break;
             }
         }
-        chunker.add('return NotFound');
-        // for test
-        chunker.add('return NotFound', (vis) => vis.graph.setText('RESULT NOT FOUND'));
         // chunker.add('return NotFound');
+        // for test
+        // chunker.add('return NotFound', (vis, final) => {
+        //     console.log('chunker.add called');
+        //     const ResultStr = 'NotFound';
+        //     console.log('ResultStr:', ResultStr);
+        //     console.log('vis:', vis);
+        //     console.log('final:', final);
+        //     vis.graph.addResult(ResultStr, final);
+        //     console.log('vis.graph.addResult called');
+        // }, [final]);
+        console.log('root:', root);
+        chunker.add('return NotFound', (vis) => vis.graph.setText('RESULT NOT FOUND'));
         console.log('fail! target not found!');
         return 'fail';
     },
