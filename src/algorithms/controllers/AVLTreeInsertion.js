@@ -219,10 +219,10 @@ export default {
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
-        function insert(root, key, currIndex, parentNode = null) {
+        function insert(root, key, currIndex, parentNode = null, depth = 0) {
 
             if (root === null) {
-                chunker.add('if t = Empty');
+                chunker.add('if t = Empty', (vis) => null, [], depth);
                 // Initialize the AVL tree with the first key
                 let root = new AVLNode(key);
                 chunker.add('n = new Node',
@@ -237,12 +237,14 @@ export default {
                         if (index === 0) vis.graph.layoutBST(r, true);
                     },
                     [key, parentNode ? parentNode.key : null, currIndex],
+                    depth
                 );
                 chunker.add('return n',
                     (vis, r, p) => {
                         vis.graph.resetVisitAndSelect(r, p);
                     },
                     [key, parentNode ? parentNode.key : null],
+                    depth
                 );
                 if (parentNode !== null) {
                     if (key < parentNode.key) {
@@ -259,25 +261,28 @@ export default {
                     vis.graph.visit(r, p);
                 },
                 [root.key, parentNode ? parentNode.key : null],
+                depth
             );
 
             if (key < root.key) {
                 // Ref insertLeft
-                chunker.add('left(t) <- AVLT_Insert(left(t), k)');
-                insert(root.left, key, currIndex, root);
+                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
+                insert(root.left, key, currIndex, root, depth + 1);
             } else if (key > root.key) {
-                chunker.add('else if k > root(t).key');
+                chunker.add('else if k > root(t).key', (vis) => null, [], depth);
                 // Ref insertRight
-                chunker.add('right(t) <- AVLT_Insert(right(t), k)');
-                insert(root.right, key, currIndex, root);
+                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
+                insert(root.right, key, currIndex, root, depth + 1);
             } else {
                 // Key already exists in the tree
                 chunker.add('else k = root(t).key',
                     (vis) => {
                         vis.graph.clear();
-                    }
+                    },
+                    undefined,
+                    depth
                 );
-                chunker.add('return t, no change');
+                chunker.add('return t, no change', (vis) => null, [], depth);
                 return root;
             }
 
@@ -287,26 +292,26 @@ export default {
             const leftHeight = root.left ? root.left.height : 0;
             const rightHeight = root.right ? root.right.height : 0;
 
-            chunker.add('balance = left(t).height - right(t).height');
+            chunker.add('balance = left(t).height - right(t).height', (vis) => null, [], depth);
 
             const balance = leftHeight - rightHeight;
             // console.log(key, parentNode, tree[parentNode].left);
-            chunker.add('if balance > 1 && k < left(t).key');
+            chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], depth);
             if (balance > 1 && key < root.left.key) {
-                chunker.add('return rightRotate(t)');
+                chunker.add('return rightRotate(t)', (vis) => null, [], depth);
                 // console.log("LLR");
                 root = LLR(root, parentNode);
             } else if (balance < -1 && key > root.right.key) {
-                chunker.add('if balance < -1 && k > right(t).key');
-                chunker.add('return leftRotate(t)');
+                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
+                chunker.add('return leftRotate(t)', (vis) => null, [], depth);
                 // console.log("RRR");
                 root = RRR(root, parentNode);
             } else if (balance > 1 && key > root.left.key) {
-                chunker.add('if balance > 1 && k > left(t).key');
+                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 // console.log("LRR");
                 root = LRR(root, parentNode);
             } else if (balance < -1 && key < root.right.key) {
-                chunker.add('if balance < -1 && k < right(t).key');
+                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 root = RLR(root, parentNode);
             }
@@ -316,6 +321,7 @@ export default {
                     vis.graph.resetVisitAndSelect(r, p);
                 },
                 [root.key, parentNode ? parentNode.key : null],
+                depth
             );
             return root;
         }
@@ -329,14 +335,15 @@ export default {
                 vis.graph.isWeighted = true;
             },
             [nodes],
+            0
         );
 
-        chunker.add('for each k in keys');
+        chunker.add('for each k in keys', (vis) => null, [], 0);
         let globalRoot = null;
 
         for (let i = 0; i < nodes.length; i++) {
             globalRoot = insert(globalRoot, nodes[i], i);
-            chunker.add('for each k in keys');
+            chunker.add('for each k in keys', (vis) => null, [], 0);
         }
 
         return globalRoot;
