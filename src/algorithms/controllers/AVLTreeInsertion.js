@@ -27,15 +27,15 @@ export default {
         if (nodes.length === 0) return;
 
         class AVLNode {
-            constructor(key) {
+            constructor(key, depth) {
                 this.key = key;
-                chunker.add('n.key = k');
+                chunker.add('n.key = k', (vis, k) => { }, [], depth);
                 this.left = null;
-                chunker.add('n.left = Empty');
+                chunker.add('n.left = Empty', (vis, k) => { }, [], depth);
                 this.right = null;
-                chunker.add('n.right = Empty');
+                chunker.add('n.right = Empty', (vis, k) => { }, [], depth);
                 this.height = 1;
-                chunker.add('n.height = 1');
+                chunker.add('n.height = 1', (vis, k) => { }, [], depth);
             }
         }
 
@@ -349,7 +349,7 @@ export default {
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
                 // Initialize the AVL tree with the first key
-                let root = new AVLNode(key);
+                let root = new AVLNode(key, depth);
                 chunker.add('n = new Node',
                     (vis, r, p, index) => {
                         if (index > 0) vis.array.deselect(index - 1);
@@ -423,20 +423,20 @@ export default {
             // console.log(key, parentNode, tree[parentNode].left);
             chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], depth);
             if (balance > 1 && key < root.left.key) {
-                chunker.add('return rightRotate(t)', (vis) => null, [], depth + 1);
+                chunker.add('return rightRotate(t)', (vis) => null, [], depth);
                 // console.log("LLR");
                 root = LLR(root, parentNode, depth + 1);
             } else if (balance < -1 && key > root.right.key) {
-                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth + 1);
-                chunker.add('return leftRotate(t)', (vis) => null, [], depth + 1);
+                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
+                chunker.add('return leftRotate(t)', (vis) => null, [], depth);
                 // console.log("RRR");
                 root = RRR(root, parentNode, depth + 1);
             } else if (balance > 1 && key > root.left.key) {
-                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth + 1);
+                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 // console.log("LRR");
                 root = LRR(root, parentNode, depth + 1);
             } else if (balance < -1 && key < root.right.key) {
-                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth + 1);
+                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 root = RLR(root, parentNode, depth + 1);
             }
