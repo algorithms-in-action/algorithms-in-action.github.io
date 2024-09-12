@@ -245,7 +245,7 @@ Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
-// *recursively* call insert with the left subtree
+// *recursively* call insert with the left subtree \\B prepare for the left recursive call
 AVLT_Insert(left(t), k) \\B left(t) <- AVLT_Insert(left(t), k)
 \\Expl{
 The left subtree is replaced by the result of this recursive call
@@ -268,7 +268,7 @@ Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
-// *recursively* call insert with the right subtree
+// *recursively* call insert with the right subtree \\B prepare for the right recursive call
 AVLT_Insert(right(t), k) \\B right(t) <- AVLT_Insert(right(t), k)
 \\Expl{
 The right subtree is replaced by the result of this recursive call
