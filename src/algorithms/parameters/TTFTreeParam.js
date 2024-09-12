@@ -45,6 +45,9 @@ function TTFTreeParam({ mode, list, value }) {
 
     if (validateListInput(list)) {
       let localNodes = list.split(',').map(Number);
+
+      console.log("Local Nodes initialized as:", localNodes, "Length:", localNodes.length); // debugging
+
       // run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
@@ -68,6 +71,10 @@ function TTFTreeParam({ mode, list, value }) {
         && !algorithm.visualisers.tree.instance.isEmpty()
       ) {
         const visualiser = algorithm.chunker.visualisers;
+
+        // Log the visualiser and target for debugging
+        console.log("Running search with visualiser:", visualiser, "and target:", target);
+
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'TTFTree',
           mode: 'search',
