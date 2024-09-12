@@ -347,8 +347,7 @@ export default {
   },
 
   run(chunker, { nodes }) {
-    console.log("Insertion nodes:", nodes); // debugging
-      
+
     if (nodes === null || nodes.length === 0) return;
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 
