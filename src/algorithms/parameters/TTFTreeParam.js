@@ -31,9 +31,15 @@ const NO_TREE_ERROR = 'Please build a tree before running search.';
 function TTFTreeParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
+  const [nodes, setLocalNodes] = useState(list || DEFAULT_NODES);
+  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
 
-
+  useEffect(() => {
+    setNodes(nodes); // sync with global state
+    setSearchValue(localValue);
+  }, [nodes, localValue, setNodes, setSearchValue])
+  
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
@@ -54,6 +60,7 @@ function TTFTreeParam({ mode, list, value }) {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
@@ -90,7 +97,7 @@ function TTFTreeParam({ mode, list, value }) {
           formClassName="formLeft"
           DEFAULT_VAL={nodes}
           handleSubmit={handleInsertion}
-          SET_VAL={setNodes}
+          SET_VAL={setLocalNodes}
           REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
@@ -104,7 +111,7 @@ function TTFTreeParam({ mode, list, value }) {
           mode="search"
           formClassName="formRight"
           handleSubmit={handleSearch}
-          DEFAULT_VAL={value || DEFAULT_TARGET}
+          DEFAULT_VAL={value || localValue}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           setMessage={setMessage}

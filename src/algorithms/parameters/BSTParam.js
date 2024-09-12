@@ -51,23 +51,30 @@ const BlueRadio = withStyles({
 function BSTParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setNodes] = useState(list || DEFAULT_NODES);
+  const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
   const [bstCase, setBSTCase] = useState({
     random: true,
     sorted: false,
     balanced: false,
   });
+  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
+
+  useEffect(() => {
+    setNodes(localNodes); // sync with global state
+    setSearchValue(localValue);
+  }, [localNodes, localValue, setNodes, setSearchValue]);
 
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'random':
-        setNodes(shuffleArray(nodes));
+        setlocalNodes(shuffleArray(localNodes));
         break;
       case 'sorted':
-        setNodes([...nodes].sort((a, b) => a - b));
+        setlocalNodes([...localNodes].sort((a, b) => a - b));
         break;
       case 'balanced':
-        setNodes(balanceBSTArray([...nodes].sort((a, b) => a - b)));
+        setlocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
         break;
       default:
     }
@@ -82,6 +89,7 @@ function BSTParam({ mode, list, value }) {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
@@ -133,13 +141,13 @@ function BSTParam({ mode, list, value }) {
           formClassName="formLeft"
           DEFAULT_VAL={(() => {
             if (bstCase.balanced) {
-              return balanceBSTArray([...nodes].sort((a, b) => a - b));
+              return balanceBSTArray([...localNodes].sort((a, b) => a - b));
             } if (bstCase.sorted) {
-              return [...nodes].sort((a, b) => a - b);
+              return [...localNodes].sort((a, b) => a - b);
             }
-            return nodes;
+            return localNodes;
           })()}
-          SET_VAL={setNodes}
+          SET_VAL={setlocalNodes}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
           setMessage={setMessage}
@@ -151,7 +159,7 @@ function BSTParam({ mode, list, value }) {
           buttonName="Search"
           mode="search"
           formClassName="formRight"
-          DEFAULT_VAL={value ||DEFAULT_TARGET}
+          DEFAULT_VAL={value || localValue}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           handleSubmit={handleSearch}
