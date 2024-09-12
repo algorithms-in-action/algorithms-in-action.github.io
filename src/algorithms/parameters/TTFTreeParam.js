@@ -31,28 +31,25 @@ const NO_TREE_ERROR = 'Please build a tree before running search.';
 function TTFTreeParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
+  const [nodes, setLocalNodes] = useState(list || DEFAULT_NODES);
   const { setNodes, setSearchValue } = useContext(GlobalContext);
 
   useEffect(() => {
-    setNodes(localNodes); // sync with global state
+    setNodes(nodes); // sync with global state
     setSearchValue(DEFAULT_TARGET);
-  }, [localNodes, setNodes, setSearchValue]);
-
+  }, [nodes, setNodes, setSearchValue])
+  
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
 
     if (validateListInput(list)) {
-      let localNodes = list.split(',').map(Number);
-
-      console.log("Local Nodes initialized as:", localNodes, "Length:", localNodes.length); // debugging
-
+      let nodes = list.split(',').map(Number);
       // run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
         mode: 'insertion',
-        localNodes,
+        nodes,
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
@@ -71,10 +68,6 @@ function TTFTreeParam({ mode, list, value }) {
         && !algorithm.visualisers.tree.instance.isEmpty()
       ) {
         const visualiser = algorithm.chunker.visualisers;
-
-        // Log the visualiser and target for debugging
-        console.log("Running search with visualiser:", visualiser, "and target:", target);
-
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'TTFTree',
           mode: 'search',
@@ -100,9 +93,9 @@ function TTFTreeParam({ mode, list, value }) {
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={localNodes}
+          DEFAULT_VAL={nodes}
           handleSubmit={handleInsertion}
-          SET_VAL={setlocalNodes}
+          SET_VAL={setLocalNodes}
           REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
