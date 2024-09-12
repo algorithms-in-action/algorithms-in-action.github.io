@@ -121,6 +121,23 @@ const allalgs = {
     },
   },
 
+  'msort_arr_nat': {
+    name: 'Merge Sort (natural)',
+    noDeploy: false,
+    category: 'Sort',
+    explanation: Explanation.msort_arr_nat,
+    param: <Param.msort_arr_nat />,
+    instructions: Instructions.msort_arr_nat,
+    extraInfo: ExtraInfo.msort_arr_nat,
+    pseudocode: {
+      sort: Pseudocode.msort_arr_nat,
+    },
+    controller: {
+      sort: Controller.msort_arr_nat,
+    },
+  },
+
+
   'msort_lista_td': {
     name: 'Merge Sort (lists)',
     category: 'Sort',

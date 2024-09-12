@@ -4,6 +4,7 @@ export { default as QSInfo } from './QSInfo.md';
 export { default as msort_arr_td } from './msort_arr_td.md';
 export { default as msort_arr_bup } from './msort_arr_bup.md';
 export { default as msort_lista_td } from './msort_lista_td.md';
+export { default as msort_arr_nat } from './msort_arr_nat.md';
 export { default as Prims_oldInfo } from './PRIM_oldInfo.md';
 export { default as PrimsInfo } from './PRIMInfo.md';
 export { default as KruskalInfo } from './KRUSKALInfo.md';
