@@ -32,12 +32,13 @@ function TTFTreeParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
   const [nodes, setLocalNodes] = useState(list || DEFAULT_NODES);
+  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
   const { setNodes, setSearchValue } = useContext(GlobalContext);
 
   useEffect(() => {
     setNodes(nodes); // sync with global state
-    setSearchValue(DEFAULT_TARGET);
-  }, [nodes, setNodes, setSearchValue])
+    setSearchValue(localValue);
+  }, [nodes, localValue, setNodes, setSearchValue])
   
   const handleInsertion = (e) => {
     e.preventDefault();
@@ -59,6 +60,7 @@ function TTFTreeParam({ mode, list, value }) {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
@@ -109,7 +111,7 @@ function TTFTreeParam({ mode, list, value }) {
           mode="search"
           formClassName="formRight"
           handleSubmit={handleSearch}
-          DEFAULT_VAL={value || DEFAULT_TARGET}
+          DEFAULT_VAL={value || localValue}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           setMessage={setMessage}

@@ -58,11 +58,12 @@ function BSTParam({ mode, list, value }) {
     sorted: false,
     balanced: false,
   });
+  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
     setNodes(localNodes); // sync with global state
-    setSearchValue(DEFAULT_TARGET);
-  }, [localNodes, setNodes, setSearchValue]);
+    setSearchValue(localValue);
+  }, [localNodes, localValue, setNodes, setSearchValue]);
 
   const handleChange = (e) => {
     switch (e.target.name) {
@@ -88,6 +89,7 @@ function BSTParam({ mode, list, value }) {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
@@ -157,7 +159,7 @@ function BSTParam({ mode, list, value }) {
           buttonName="Search"
           mode="search"
           formClassName="formRight"
-          DEFAULT_VAL={value ||DEFAULT_TARGET}
+          DEFAULT_VAL={value || localValue}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           handleSubmit={handleSearch}
