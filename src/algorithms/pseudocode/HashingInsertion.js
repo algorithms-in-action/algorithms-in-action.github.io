@@ -37,7 +37,7 @@ export default parse(`
             \\Expl{ To check how full the table is we can maintain a simple
                 counter.
             \\Expl}
-            i <- hash(k) \\B 4
+            i <- hash(k) \\Ref Hash1
             Choose Increment value in case of collisions \\Ref SetIncrementLinearProbing
             while T[i] is occupied by another element // search for unoccupied slot \\B 6
             \\Expl{ If T[i] = k then k already exists in the table. Ideally,
