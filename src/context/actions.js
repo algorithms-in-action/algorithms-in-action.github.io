@@ -42,7 +42,7 @@ function ancestorBlocks(blockName, pseudocode) {
       if (
         // is such a complex mess required? If so, it reeks of poor design:(
         Object.prototype.hasOwnProperty.call(pseudocode[name][i], 'ref') !==
-          undefined &&
+        undefined &&
         pseudocode[name][i].ref === blockName
       ) {
         return ancestorBlocks(name, pseudocode).concat([blockName]);
@@ -58,7 +58,7 @@ function ancestorBlocks(blockName, pseudocode) {
 // Coded added for recursive algorithms not tested - need to re-code
 // quicksort
 function findNext(chunks, chunkNum, pseudocode, collapse) {
-  if (chunkNum >= chunks.length-1) { // if at end, don't move
+  if (chunkNum >= chunks.length - 1) { // if at end, don't move
     return chunkNum;
   }
   chunkNum += 1; // go to next chunk
@@ -85,7 +85,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   // of Main has a call to BuildHeap
   let ancestors = ancestorBlocks(block, pseudocode);
   let index = ancestors.findIndex(
-          (currentValue, index, arr) => !collapse[currentValue]);
+    (currentValue, index, arr) => !collapse[currentValue]);
   // This is the block we need to skip to the end of
   let blockToSkip = ancestors[index];
   // console.log(ancestors.concat([blockToSkip]));
@@ -96,18 +96,21 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   // ancestor and return the block immediately before that - the last step
   // of BuildHeap.  We also keep going if the recursion level is
   // greater than callRecLevel
+  console.log("start while from ", bookmark);
   do {
-    if (chunkNum >= chunks.length-1) { // check we don't run off the end
-      return chunks.length-1;
+    if (chunkNum >= chunks.length - 1) { // check we don't run off the end
+      return chunks.length - 1;
     }
     chunkNum += 1;
     bookmark = chunks[chunkNum].bookmark;
+    console.log("\tbookmark", bookmark);
     block = bookmarkBlock(bookmark, pseudocode);
     ancestors = ancestorBlocks(block, pseudocode);
     // console.log(ancestors.concat([chunkNum, bookmark, block, callRecLevel, chunks[chunkNum].recursionLevel]));
   } while (chunks[chunkNum].recursionLevel > callRecLevel
-            || ancestors.includes(blockToSkip));
-  return chunkNum-1;
+    || ancestors.includes(blockToSkip));
+  console.log("end while with ", bookmark);
+  return chunkNum - 1;
 }
 
 // Find the chunk number to step back to, dependent on what is collapsed etc
@@ -119,7 +122,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
   }
   // chunkNum gets out of range at the end - have to check for that
   if (chunkNum >= chunks.length) {
-   chunkNum = chunks.length - 1;
+    chunkNum = chunks.length - 1;
   }
   // We need to add a chunk at the end of tail-recursive functions, eg
   // "// Done" in order to keep track of recursion level in the chunks,
@@ -132,7 +135,8 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
   let block = bookmarkBlock(bookmark, pseudocode);
   // console.log(["findPrev", chunkNum, bookmark, block]);
   if (collapse[block]) { // code line is fully expanded -> back 1 step
-    return chunkNum-1;
+    console.log("collapse[block] is true");
+    return chunkNum - 1;
   }
   // find the outermost ancestor of 'block' where collapse===false
   // - this will block of the pseudocode line that is displayed
@@ -140,7 +144,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
   // Main has a call to SortHeap
   let ancestors = ancestorBlocks(block, pseudocode);
   let index = ancestors.findIndex(
-          (currentValue, index, arr) => !collapse[currentValue]);
+    (currentValue, index, arr) => !collapse[currentValue]);
   // This is the block we need skip over (SortHeap in the example above)
   let blockToSkip = ancestors[index];
   // console.log(ancestors.concat([blockToSkip]));
@@ -160,7 +164,7 @@ function findPrev(chunks, chunkNum, pseudocode, collapse) {
     ancestors = ancestorBlocks(block, pseudocode);
     // console.log(ancestors.concat([chunkNum, bookmark, block]));
   } while (chunks[chunkNum].recursionLevel > callRecLevel
-           || ancestors.includes(blockToSkip));
+    || ancestors.includes(blockToSkip));
   return chunkNum;
 }
 
@@ -327,7 +331,7 @@ export const GlobalActions = {
     // we are in the same state as if we had done "play" to the end, and
     // we haven't missed doing anything.  Not sure how everything worked
     // in the past... XXX
-    if (state.chunker.currentChunk === state.chunker.chunks.length-1) {
+    if (state.chunker.currentChunk === state.chunker.chunks.length - 1) {
       state.chunker.currentChunk += 1;
       result.finished = true;
       // console.log('fake next');
@@ -353,11 +357,11 @@ export const GlobalActions = {
     // of range (perhaps should change this XXX); we need check for
     // that here
     // console.log(['PREV_LINE', state.chunker.currentChunk, state.chunker.chunks.length]);
-    if (state.chunker.currentChunk > state.chunker.chunks.length ) {
+    if (state.chunker.currentChunk > state.chunker.chunks.length) {
       state.chunker.currentChunk = state.chunker.chunks.length - 1;
     }
     let stopAt = findPrev(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode])
-    let result1 = {bookmark:"", chunk: state.chunker.currentChunk};
+    let result1 = { bookmark: "", chunk: state.chunker.currentChunk };
     const result = state.chunker.goBackTo(stopAt); // changes state
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
@@ -377,7 +381,7 @@ export const GlobalActions = {
 
   COLLAPSE: (state, { codeblockname, expandOrCollapase }) => {
     // for (const k of Object.keys(state.pseudocode)) {
-      // console.log(["COLLAPSE", k, state.collapse[state.id.name][state.id.mode][k]]);
+    // console.log(["COLLAPSE", k, state.collapse[state.id.name][state.id.mode][k]]);
     // }
     const result = state.collapse;
 
