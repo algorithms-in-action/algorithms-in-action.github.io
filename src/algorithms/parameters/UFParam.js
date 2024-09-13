@@ -45,6 +45,13 @@ function UFParam({ mode, union, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(union || DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
+  const [localValue, setLocalValue] = useState(DEFAULT_FIND);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
+
+  useEffect(() => {
+    setNodes(unions); // sync with global state
+    setSearchValue(localValue);
+  }, [unions, localValue]);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
@@ -55,6 +62,7 @@ function UFParam({ mode, union, value }) {
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     // eslint-disable-next-line no-restricted-globals
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
