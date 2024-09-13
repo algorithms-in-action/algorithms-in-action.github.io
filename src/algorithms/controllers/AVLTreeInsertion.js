@@ -59,7 +59,7 @@ export default {
 
         // Left-Left Case (LLR) to balance the AVL tree
         function LLR(root, parentNode, depth, rotateVis = true, tidVis = true) {
-            chunker.add('rightRotate(t6)', (vis) => null, [], depth);
+            // chunker.add('rightRotate(t6)', (vis) => null, [], depth);
 
             console.log('LLR');
             console.log("the root of LLR is " + root.key);
@@ -169,7 +169,7 @@ export default {
 
         // Right-Right Rotation (RRR) to balance the AVL tree
         function RRR(root, parentNode, depth, rotateVis = true, tidVis = true) {
-            chunker.add('leftRotate(t2)', (vis) => null, [], depth);
+            // chunker.add('leftRotate(t2)', (vis) => null, [], depth);
             console.log('RRR');
             console.log("the root of RRR is " + root.key);
 
@@ -468,7 +468,6 @@ export default {
         let globalRoot = null;
 
         for (let i = 0; i < nodes.length; i++) {
-            chunker.add('Insert key k in AVL tree t', (vis) => null, [], 1);
             chunker.add(
                 't = AVLT_Insert(t, k)',
                 (vis, index) => {
@@ -476,7 +475,7 @@ export default {
                     vis.array.select(index);
                 },
                 [i],
-                1
+                0
             );
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
             chunker.add('for each k in keys', (vis) => null, [], 0);

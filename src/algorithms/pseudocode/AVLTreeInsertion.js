@@ -108,7 +108,7 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
     t <- Empty \\B t = Empty
     for each k in keys \\B for each k in keys
     \\In{
-        t <- AVLT_Insert(t, k) \\Ref GlobalInsert
+        t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
     \\In}
 \\In}
 
@@ -130,51 +130,17 @@ with two copies of each, and rather long code if we expand everyting.
 The variable names here are linked to the diagrams, which may be easier for
 functions but may also be confusing.
 \\Note}
-rightRotate(t6) \\B rightRotate(t6)
+rightRotate(t6) \\Ref ActualRightRotate
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
-\\In{
-  t2 <- left(t6) \\B t2 = left(t6)
-  t4 <- right(t2) \\B t4 = right(t2)
-  t2.right <- t6 \\B t2.right = t6
-  t6.left <- t4 \\B t6.left = t4
-  \\Note{ Animation here should be as smooth an intuitive as possible.
-    Ideally node 4 should get detached from 2 but remain in place then
-    get re-attached to 6. We could possibly move 7 down to the level of 4
-    at the first step and delay moving 1 up until the end. Best highlight
-    the edge between 6 and 2. If extra steps are required for animation
-    we can stay on the same line of code for more than one step if
-    needed. Similarly for left rotation.
-  \\Note}
-  recompute heights of t6 and t2 \\B recompute heights of t6 and t2
-  \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
-    t2.height <- max(t6.height, t1.height) + 1;
-  \\Expl}
-  \\Note{ Best not expand this? Should be clear enough and we are a bit
-    fast and loose with nodes versus pointers here
-  \\Note}
-  return (pointer to) t2 // new root \\B return t2
-\\In} 
-
 //============================================================================
-leftRotate(t2) \\B leftRotate(t2)
+leftRotate(t2) \\Ref ActualLeftRotate
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
-\\In{
-  t6 <- right(t2) \\B t6 = right(t2)
-  t4 <- left(t6) \\B t4 = left(t6)
-  t6.left <- t2 \\B t6.left = t2
-  t2.right <- t4 \\B t2.right = t4
-  recompute heights of t2 and t6 \\B recompute heights of t2 and t6
-  \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
-    t6.height <- max(t2.height, t7.height) + 1;
-  \\Expl}
-  return (pointer to) t6 // new root \\B return t6
-\\In} 
 \\Code}
 
 \\Code{
@@ -263,6 +229,47 @@ ActualInsert
     rotations are needed:)
   \\Expl}
 \\In}
+\\Code}
+
+\\Code{
+ActualRightRotate
+\\In{
+  t2 <- left(t6) \\B t2 = left(t6)
+  t4 <- right(t2) \\B t4 = right(t2)
+  t2.right <- t6 \\B t2.right = t6
+  t6.left <- t4 \\B t6.left = t4
+  \\Note{ Animation here should be as smooth an intuitive as possible.
+    Ideally node 4 should get detached from 2 but remain in place then
+    get re-attached to 6. We could possibly move 7 down to the level of 4
+    at the first step and delay moving 1 up until the end. Best highlight
+    the edge between 6 and 2. If extra steps are required for animation
+    we can stay on the same line of code for more than one step if
+    needed. Similarly for left rotation.
+  \\Note}
+  recompute heights of t6 and t2 \\B recompute heights of t6 and t2
+  \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
+    t2.height <- max(t6.height, t1.height) + 1;
+  \\Expl}
+  \\Note{ Best not expand this? Should be clear enough and we are a bit
+    fast and loose with nodes versus pointers here
+  \\Note}
+  return (pointer to) t2 // new root \\B return t2
+\\In} 
+\\Code}
+
+\\Code{
+ActualLeftRotate
+\\In{
+  t6 <- right(t2) \\B t6 = right(t2)
+  t4 <- left(t6) \\B t4 = left(t6)
+  t6.left <- t2 \\B t6.left = t2
+  t2.right <- t4 \\B t2.right = t4
+  recompute heights of t2 and t6 \\B recompute heights of t2 and t6
+  \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
+    t6.height <- max(t2.height, t7.height) + 1;
+  \\Expl}
+  return (pointer to) t6 // new root \\B return t6
+\\In} 
 \\Code}
 
 \\Code{
