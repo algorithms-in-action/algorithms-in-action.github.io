@@ -6,8 +6,11 @@ export default parse(`
     HashSearch(T, k)  // Search for key k in table T \\B HashSearch(T, k)
     \\In{
         i <- hash(k) \\B 4
-        Choose Increment value for stepping through T \\B 5
+        Choose Increment value for stepping through T \\Ref SetIncrementLinearProbing
         while not (T[i] = k or T[i] = Empty) // search for T or Empty
+        \\Expl{
+            We do not allow duplicates to be inserted into the table.
+        \\Expl}
         \\In{
             i <- (i + Increment) mod TableSize \\B 7
             \\Expl{ T[i] is not k or Empty so we jump ahead Increment
@@ -29,31 +32,29 @@ export default parse(`
 \\Code{
     Hash1
         i <- (k * BIGPRIME) mod TableSize \\B 4
-        \\Expl{ XXX blah blah Want BIGPRIME much bigger than TableSize
-            Here we use BIGPRIME = 3457
+        \\Expl{
+            BIGPRIME much bigger than TableSize (which is also prime).
+            The object is to spread the values across the hash table as widely as possible.
+            Here we use BIGPRIME = 3457.
         \\Expl}
 \\Code}
 
 \\Code{
     SetIncrementLinearProbing
-        Increment <- 1 \\B 5
-        \\Expl{ For linear probing, if we have a collision we just look at the
-            next table entry. This tends to form "clusters" of full table
-            entries, reducing performance.  Offset linear probing adds some
-            fixed number n to the table index for collisions. It's harder to
-            see the clusters in the table but effectively they are still there
-            and performance is not improved.
-        \\Expl}
+    Increment <- 1 \\B 5
+    \\Expl{ For linear probing, if we have a collision we successively look at the
+            next table entry.
+    \\Expl}
 \\Code}
+
 
 \\Code{
     SetIncrementDoubleHashing
         Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1 \\B 10
-        \\Expl{ For double hashing, the increment we use for the table index
-            to resolve collisions depends on the key k. We apply a secondary
-            hash function to k but must also ensure the increment is non-zero.
-            This reduces clustering in the table. Here we use
-            BIGPRIME2=1429, SMALLISHPRIME=23
+        \\Expl{Double hashing resolves collisions by hashing the key k a second time to set the increment
+            to find the next empty slot in the table R. The value given by the function must be non-zero
+            and must also be relatively prime to the table size.
+            Here BIGPRIME2 is 1429 and SMALLISHPRIME is 3 or 23, depending on the table size selected.
         \\Expl}
 \\Code}
 `);
