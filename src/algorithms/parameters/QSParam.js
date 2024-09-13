@@ -40,7 +40,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
   const [message, setMessage] = useState(null)
 
   const [array, setArray] = useState(list || DEFAULT_ARR)
-  const { nodes, setNodes } = useContext(GlobalContext)
+  const { setNodes } = useContext(GlobalContext)
   
   const [QSCase, setQSCase] = useState({
     random: true,
@@ -51,7 +51,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
 
   useEffect(() => {
     setNodes(array); // sync with global state
-  }, [array, setNodes]);
+  }, [array]);
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {

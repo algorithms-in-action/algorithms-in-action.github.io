@@ -23,7 +23,7 @@ function HSSParam({mode, string, pattern}) {
   useEffect(() => {
     setNodes(string_); // sync with global state
     setSearchValue(pattern_)
-  }, [string_, setNodes, pattern_, setSearchValue]);
+  }, [string_, pattern_]);
 
   return (
     <>
