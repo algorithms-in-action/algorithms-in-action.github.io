@@ -76,16 +76,31 @@ export default parse(`
 \\Code{
     Hash1
         i <- (k * BIGPRIME) mod TableSize \\B 4
-        \\Expl{ XXX blah blah Want BIGPRIME much bigger than TableSize
+        \\Expl{ BIGPRIME much bigger than TableSize (which is also prime).
+        The object is to spread the values across the hash table as widely as possible.
             Here we use BIGPRIME = 3457
         \\Expl}
 \\Code}
 
 \\Code{
     SetIncrementLinearProbing
-        Increment <- 1 \\B 5
+        if (collisionHandling == linearProbing) { \\B 5
+        \\In{
+            Increment <- 1
+        \\In}
+        }
         \\Expl{ For linear probing, if we have a collision we successively look at the
                 next table entry.
+        \\Expl}
+        else { \\B 10
+        \\In{
+            Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1 \\B 10
+        \\In}
+        }
+        \\Expl{ Double hashing resolves collisions by hashing the key k a second time to set the increment
+            to find the next empty slot in the table R. The value given by the function must be non-zero
+            and must also be relatively prime to the table size.
+            Here BIGPRIME2 is 1429 and SMALLISHPRIME is 3 or 23, depending on the table size selected.
         \\Expl}
 \\Code}
 
