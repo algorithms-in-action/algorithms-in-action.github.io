@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="At">
+    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/HashingInsertion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/HashingInsertion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726200578947</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Turned Pseudocode output to variables so that it shows a different collision handling pseudocode for linear probing and double hashing">
+      <option name="closed" value="true" />
+      <created>1726204847504</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1726204847504</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,6 +148,8 @@
     <MESSAGE value="Pseudocode \B added" />
     <MESSAGE value="Reverted \\Ref change in HashingInsertion.js" />
     <MESSAGE value="Added explanation to Hash1 in HashingInsertion.js pseudocode as well as a potential solution for the collision handling pseudocode without resorting to two separate pseudocode files." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added explanation to Hash1 in HashingInsertion.js pseudocode as well as a potential solution for the collision handling pseudocode without resorting to two separate pseudocode files." />
+    <MESSAGE value="At" />
+    <MESSAGE value="Turned Pseudocode output to variables so that it shows a different collision handling pseudocode for linear probing and double hashing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Turned Pseudocode output to variables so that it shows a different collision handling pseudocode for linear probing and double hashing" />
   </component>
 </project>

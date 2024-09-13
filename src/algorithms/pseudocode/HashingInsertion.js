@@ -26,24 +26,27 @@ let text1 = `
             HashInsert(T, k)  // Insert key k into table T
                 \\In{
                     Check how full the table is
-                    \\Expl{ If the table gets too full (over 80%, say), performance degrades
-                        a lot. Ideally, we should prevent this by allocating a larger table
-                        (eg, the size being a prime number around twice the size of T),
-                        inserting each element into the new table and continuing with T
-                        being the larger table. It is essential the table has at least one
-                        slot Empty, otherwise the Search code may loop; we just return
-                        with failure here rather than fill the last slot or expand the table.
+                    \\Expl{ One empty slot must always be maintained, to prevent to potential for infinite looping.
+                    Even before this point performance degrades if the table gets too full, say over 80% full.
+                    See Overview for more details.
                     \\Expl}
                     Insertions <- Insertions + 1 \\B 3
                     \\Expl{ To check how full the table is we can maintain a simple
                         counter.
                     \\Expl}
+                    \\Note{The following has a choose increment value -- assumes we can make a choice
+                    	here between linear probing and double hashing. NOTE TO DEVELOPERS: We are planning to
+                    	make linear probing and double hashing as two separate modules.
+                    	So -- in the linear probing pseudocode there is no "Choose increment",
+                    	increment is just 1, and further on in the pseudocode Increment will be replaced
+                    	by 1.  For the double hashing, we need to calculate the second hash function.
+                    \\Note}
                     i <- hash(k) \\Ref Hash1
                     Choose Increment value in case of collisions \\Ref SetIncrement
                     while T[i] is occupied by another element // search for unoccupied slot \\B 6
-                    \\Expl{ If T[i] = k then k already exists in the table. Ideally,
-                        duplicates should be avoided as they decrease performance and
-                        search just returns the first one.
+                    \\Expl{ If T[i] = k then k already exists in the table.  We could explicitly check
+                            for this but the code here simply over-writes the previous
+                            ocurrence of k, as if the slot was empty.
                     \\Expl}
                         \\In{
                             i <- (i + Increment) mod TableSize \\B 7
