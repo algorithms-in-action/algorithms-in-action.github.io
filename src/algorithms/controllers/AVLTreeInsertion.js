@@ -7,6 +7,7 @@ import { Update } from '@mui/icons-material';
 export default {
     initVisualisers() {
         return {
+
             array: {
                 instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
                 order: 0,
@@ -71,6 +72,8 @@ export default {
                         vis.graph.updateTID(a, 't2');
                         if (b !== null) vis.graph.updateTID(b, 't1');
                         if (rr !== null) vis.graph.updateTID(rr, 't7');
+                        vis.graph.setFunctionName('Rotation: ');
+                        vis.graph.setAVLText(`LLR`);
                     }
                 },
                 [A.key, R.key, A.left ? A.left.key : null, R.right ? R.right.key : null, tidVis]
@@ -115,7 +118,7 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutBST(g, true);
+                    vis.graph.layoutAVL(g, true);
 
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
@@ -174,6 +177,8 @@ export default {
                         vis.graph.updateTID(a, 't6');
                         if (b !== null) vis.graph.updateTID(b, 't7');
                         if (rl !== null) vis.graph.updateTID(rl, 't1');
+                        vis.graph.setFunctionName('Rotation: ');
+                        vis.graph.setAVLText(`RRR`);
                     }
                 },
                 [A.key, R.key, A.right ? A.right.key : null, R.left ? R.left.key : null, tidVis]
@@ -211,7 +216,7 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutBST(g, true);
+                    vis.graph.layoutAVL(g, true);
 
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
@@ -276,6 +281,8 @@ export default {
                     if (t3 != null) vis.graph.updateTID(t3, 't3');
                     if (t5 != null) vis.graph.updateTID(t5, 't5');
                     if (t7 != null) vis.graph.updateTID(t7, 't7');
+                    vis.graph.setFunctionName('Rotation: ');
+                    vis.graph.setAVLText(`LRR`);
                 },
                 [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
                 t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null]
@@ -308,6 +315,8 @@ export default {
                     if (t3 != null) vis.graph.updateTID(t3, 't3');
                     if (t5 != null) vis.graph.updateTID(t5, 't5');
                     if (t7 != null) vis.graph.updateTID(t7, 't7');
+                    vis.graph.setFunctionName('Rotation: ');
+                    vis.graph.setAVLText(`RLR`);
                 },
                 [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
                 t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null]
@@ -334,11 +343,14 @@ export default {
                         if (index > 0) vis.array.deselect(index - 1);
                         vis.array.select(index);
                         vis.graph.addNode(r, r, 1);
+                        vis.graph.setFunctionName("AVLT_Insert");
+                        vis.graph.setAVLText("( t , " + key + " )");
+
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
                         }
                         vis.graph.select(r, p);
-                        if (index === 0) vis.graph.layoutBST(r, true);
+                        if (index === 0) vis.graph.layoutAVL(r, true);
                     },
                     [key, parentNode ? parentNode.key : null, currIndex],
                 );
@@ -431,6 +443,8 @@ export default {
                 vis.array.set(elements);
                 vis.array.select(0);
                 vis.graph.isWeighted = true;
+                vis.graph.setFunctionName('Tree is Empty');
+                vis.graph.setAVLText(``);
             },
             [nodes],
         );

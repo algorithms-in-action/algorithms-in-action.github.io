@@ -4,35 +4,30 @@
 // --graph-node-fill: orange;
 
 @keyframes colorChange {
-  0% {
-    fill: var(--graph-node-circle-fill-rgb1);
-  }
 
-  25% {
-    fill: var(--graph-node-circle-fill-rgb2);
+  0% {
+    fill: var(--stable_color);
   }
 
   50% {
-    fill: var(--graph-node-circle-fill-rgb3);
-  }
-
-  75% {
-    fill: var(--graph-node-circle-fill-rgb4);
+    fill: var(--breath_color);
   }
 
   100% {
-    fill: var(--graph-node-circle-fill-rgb5);
+    fill: var(--stable_color);
   }
 }
 
 .graph {
   flex: 1;
   align-self: stretch;
+  --stable_color: var(--graph-node-circle-fill);
+  --breath_color: var(--graph-node-circle-fill);
 
   .node {
     .circle {
       fill: var(--graph-node-circle-fill);
-
+      //--breath_color: --graph-node-circle-fill-rgb1;
       //animation: colorChange 3s infinite; // anmation
 
       stroke: var(--graph-node-circle-stroke);
@@ -61,14 +56,18 @@
     }
 
     .height {
-      fill: var(--graph-node-height-fill);
+      --breath_color: var(--graph-node-height-fill);
+      animation: colorChange 1.5s 3; // anmation
+
+      fill: var(--graph-node-circle-fill);
+
       // font-weight: bold;
       // font-size: 15px;
       // alignment-baseline: central;
       dominant-baseline: central;
       text-anchor: middle;
       font-size: 40px; // font size for labels inside nodes
-      transform: translateY(-50px);
+      transform: translateY(-53px);
       // text-anchor: left;
     }
 
@@ -85,9 +84,18 @@
       // text-anchor: left;
     }
 
+    .highlight_height {
+      .height {
+        --breath_color: var(--graph-node-height-fill);
+        animation: colorChange 1.5s 3; // anmation
+      }
+    }
+
     &.selected {
       .circle {
-        fill: var(--graph-node-circle-fill-selected);
+        //fill: var(--graph-node-circle-fill-selected);
+        --breath_color: var(--graph-node-circle-fill-selected);
+        animation: colorChange 1.5s infinite; // anmation
         stroke: var(--graph-node-circle-stroke-selected);
       }
 
@@ -99,6 +107,14 @@
       .id {
         fill: var(--graph-node-id-fill-selected);
       }
+
+      .height {
+        --breath_color: var(--graph-node-height-fill);
+        animation: colorChange 1.5s 3; // anmation
+
+        fill: var(--graph-node-circle-fill-selected);
+      }
+
     }
 
     &.visited0 {
@@ -115,6 +131,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited0);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited0);
+      }
+
     }
 
     &.visited {
@@ -131,6 +155,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited);
+      }
+
     }
 
     &.sorted {
@@ -153,6 +185,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited1);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited1);
+      }
+
     }
 
     &.visited2 {
@@ -164,6 +204,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited2);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited2);
+      }
+
     }
 
     &.visited3 {
@@ -175,6 +223,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited3);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited3);
+      }
+
     }
 
     &.visited4 {
@@ -186,6 +242,14 @@
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        --breath_color: var(--graph-node-circle-fill-visited4);
+        animation: colorChange 1.5s 0; // anmation
+
+        fill: var(--graph-node-circle-fill-visited4);
+      }
+
     }
   }
 
@@ -336,7 +400,6 @@
     }
   }
 
-
   // X, Y axis
   .axis {
     stroke: var(--axis);
@@ -349,6 +412,19 @@
     // font-size: 15px;
     font-size: 35px;
     font-weight: 1;
+  }
+
+  .text {
+    fill: var(--array-2d-row-col-value-color); // to support light and dark mode
+    dominant-baseline: central;
+    text-anchor: middle;
+    font-size: 30px;
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+  }
+
+  .pseudocode_function {
+    fill: var(--right-code-function-font);
+    dominant-baseline: central;
   }
 
 }

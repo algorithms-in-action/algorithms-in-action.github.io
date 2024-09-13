@@ -49,6 +49,8 @@ class GraphTracer extends Tracer {
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
+    this.AVLtext = null;
+    this.functionName = '';
     this.logTracer = null;
     this.istc = false;
   }
@@ -153,6 +155,7 @@ class GraphTracer extends Tracer {
       node.selectedCount = 0;
     });
     this.text = null;
+    //this.AVLtext = null;
   }
 
   isEmpty() {
@@ -299,6 +302,7 @@ class GraphTracer extends Tracer {
 
   updateHeight(id, height) {
     this.findNode(id).height = height;
+    this.findNode(id).highlight_height;
   }
 
   updateTID(id, AVL_TID) {
@@ -600,6 +604,74 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
+  layoutAVL(root = 0, sorted = false) {
+    this.root = root;
+    this.callLayout = { method: this.layoutAVL, args: arguments };
+    const rect = this.getRect();
+    // If there is a sole node, it centers it.
+    const middleX = (rect.left + rect.right) / 2;
+    const middleY = (rect.top + rect.bottom) / 2;
+    if (this.nodes.length === 1) {
+      const [node] = this.nodes;
+      node.x = middleX;
+      node.y = middleY;
+      return;
+    }
+
+    // Traversal of the entire tree, counting number of nodes.
+    let maxDepth = 0;
+    const nodeDepth = {};
+    let marked = {};
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(root, 0);
+
+    // Calculates node's x and y.
+    // adjust hGap to some function of node number later//
+    const hGap = rect.width - 150;
+    const vGap = rect.height / maxDepth;
+    marked = {};
+    const recursivePosition = (node, h, v) => {
+      marked[node.id] = true;
+      // 120 magic number to center root node//
+      node.x = rect.left + h * hGap + 120;
+      node.y = rect.top + v * vGap;
+      /* used to debug, delete in merge
+      console.log(node.x + " " +  node.y + " "  + node.id );
+      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
+      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
+      */
+      const linkedNodes = this.findLinkedNodes(node.id, false);
+      if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
+      for (const linkedNode of linkedNodes) {
+        if (marked[linkedNode.id]) continue;
+        if (linkedNode.id > node.id) {
+          if (node.id > this.root) {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          }
+        } else if (linkedNode.id < node.id) {
+          if (node.id < this.root) {
+            recursivePosition(linkedNode, h - 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h - 1 / (2 * v + 1), v + 1);
+          }
+        }
+      }
+    };
+    const rootNode = this.findNode(root);
+    recursivePosition(rootNode, 0, 0);
+  }
+
   layoutRandom() {
     this.callLayout = { method: this.layoutRandom, args: arguments };
     const rect = this.getRect();
@@ -787,12 +859,21 @@ class GraphTracer extends Tracer {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
-  setText(text, id) {
+  setText(text) {
     // this.findNode(id).height = 100;
     // this.findNode(id).text = text;
     this.text = text;
     // this.text.push({ text });
   }
+
+  setAVLText(AVLtext) {
+    this.AVLtext = AVLtext;
+  }
+
+  setFunctionName(name) {
+    this.functionName = name;
+  }
+
 
   setIstc() {
     this.istc = true;
