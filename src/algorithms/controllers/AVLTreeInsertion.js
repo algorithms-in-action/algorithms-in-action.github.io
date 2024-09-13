@@ -344,7 +344,7 @@ export default {
         // Function to insert a key into the AVL tree and balance the tree if needed
         function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
-            chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
+            // chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
 
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
@@ -389,14 +389,14 @@ export default {
 
             if (key < root.key) {
                 // Ref insertLeft
-                chunker.add('prepare for the left recursive call', (vis) => null, [], depth);
-                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
+                chunker.add('prepare for the left recursive call', (vis) => null, [], depth + 1);
+                // chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
                 insert(root.left, key, currIndex, root, depth + 1);
             } else if (key > root.key) {
                 chunker.add('else if k > root(t).key', (vis) => null, [], depth);
                 // Ref insertRight
-                chunker.add('prepare for the right recursive call', (vis) => null, [], depth);
-                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
+                chunker.add('prepare for the right recursive call', (vis) => null, [], depth + 1);
+                // chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
                 insert(root.right, key, currIndex, root, depth + 1);
             } else {
                 // Key already exists in the tree
@@ -468,6 +468,7 @@ export default {
         let globalRoot = null;
 
         for (let i = 0; i < nodes.length; i++) {
+            chunker.add('Insert key k in AVL tree t', (vis) => null, [], 1);
             chunker.add(
                 't = AVLT_Insert(t, k)',
                 (vis, index) => {
@@ -475,7 +476,7 @@ export default {
                     vis.array.select(index);
                 },
                 [i],
-                0
+                1
             );
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
             chunker.add('for each k in keys', (vis) => null, [], 0);
