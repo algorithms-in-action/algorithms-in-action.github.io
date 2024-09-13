@@ -21,12 +21,13 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
     // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
     // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
     const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
-    const [nodes, setNodes] = useState(list || DEFAULT_NODES);
+    const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
     const [message, setMessage] = useState(null);
+    const { nodes, setNodes } = useContext(GlobalContext);
   
     useEffect(() => {
-      setNodes(nodes); // Sync with global state
-    }, [nodes, setNodes]);
+      setNodes(localNodes); // Sync with global state
+    }, [localNodes, setNodes]);
   
     return (
         <>
@@ -36,8 +37,8 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
                     buttonName="Sort"
                     mode="sort"
                     formClassName="formLeft"
-                    DEFAULT_VAL={nodes}
-                    SET_VAL={setNodes}
+                    DEFAULT_VAL={localNodes}
+                    SET_VAL={setLocalNodes}
                     ALGORITHM_NAME={HEAP_SORT}
                     EXAMPLE={HEAP_SORT_EXAMPLE}
                     setMessage={setMessage}

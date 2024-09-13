@@ -33,6 +33,7 @@ export const GlobalProvider = ({ children }) => {
   // for later calls from elsewhere in the app.
   const dispatch = dispatcher(state, setState);
 
+  // nodes and search value are used liberally
   const globalState = {
     algorithm: state,
     algorithmKey: Object.keys(algorithms).find(key => algorithms[key].name === state.name),

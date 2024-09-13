@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
+import { GlobalContext } from '../../context/GlobalState';
 
 // const DEFAULT_STRING = 'cddaadddabdda';
 // const DEFAULT_PATTERN = 'dddac';
@@ -16,6 +18,13 @@ function HSSParam({mode, string, pattern}) {
   const [message, setMessage] = useState(null);
   const [string_, setString] = useState(string || DEFAULT_STRING);
   const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
+  const { setNodes, setSearchValue } = useContext(GlobalContext);
+
+  useEffect(() => {
+    setNodes(string_); // sync with global state
+    setSearchValue(pattern_)
+  }, [string_, setNodes, pattern_, setSearchValue]);
+
   return (
     <>
       <div className="form">

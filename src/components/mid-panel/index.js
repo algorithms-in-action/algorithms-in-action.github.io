@@ -50,7 +50,9 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         url += `&list=${nodes}`;
       } else if (category == 'Insert/Search') {
         url += `&list=${nodes}&value=${searchValue}`;
-      }
+      } else if (category == 'String Search') {
+        url += `&string=${nodes}&pattern=${searchValue}`;
+      } 
       
       setCurrentUrl(url);
     }
