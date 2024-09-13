@@ -38,6 +38,7 @@ export function setIncrement(
       break;
     case 'HashingDH':
       increment = hash2(chunker, key, smallishprime);
+      bookmark = 10;
       break;
   }
   chunker.add(
