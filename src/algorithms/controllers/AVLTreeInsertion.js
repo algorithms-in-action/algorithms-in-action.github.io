@@ -457,6 +457,15 @@ export default {
             chunker.add('for each k in keys');
         }
 
+        chunker.add('done',
+            vis => {
+                vis.graph.setAVLText();
+                vis.graph.setFunctionName("Complete");
+            },
+            [],
+            0
+        );
+
         return globalRoot;
     }
 };
