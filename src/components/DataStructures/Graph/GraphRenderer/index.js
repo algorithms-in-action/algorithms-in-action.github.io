@@ -713,8 +713,8 @@ class GraphRenderer extends Renderer {
         </text>
 
         <text className={classes(styles.text)}
-          x={this.centerX - 80}
-          y={this.centerY - 200}
+          x={this.centerX + 530}
+          y={this.centerY - 250}
           textAnchor="middle">
           <tspan className={styles.pseudocode_function}>
             {this.props.data.functionName}
