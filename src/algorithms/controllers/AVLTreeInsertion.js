@@ -280,8 +280,7 @@ export default {
             let t4 = t2 ? t2.right : null;
             let t3 = t4 ? t4.left : null;
             let t5 = t4 ? t4.right : null;
-            root.left = RRR(root.left, root, depth, false, false);
-            chunker.add('left(t) <- leftRotate(left(t));',
+            chunker.add('perform right rotation on the left subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
                     if (t6 != null) vis.graph.updateTID(t6, 't6');
                     if (t2 != null) vis.graph.updateTID(t2, 't2');
@@ -292,17 +291,13 @@ export default {
                     if (t7 != null) vis.graph.updateTID(t7, 't7');
                 },
                 [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
-                t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
-                depth
-            );
+                    t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
+                    depth
+                );
+            root.left = RRR(root.left, root, depth, false, false);
+            chunker.add('left(t) <- leftRotate(left(t));', (vis) => {}, [], depth);
+            chunker.add('return right rotation on t', (vis) => {}, [], depth);
             let finalRoot = LLR(root, parentNode, depth, true, false);
-            chunker.add('return rightRotate(t) after leftRotate',
-                vis => {
-                    vis.graph.clearTID();
-                },
-                [],
-                depth - 1
-            );
             return finalRoot;
         }
 
@@ -315,8 +310,7 @@ export default {
             let t7 = t6 ? t6.right : null;
             let t3 = t4 ? t4.left : null;
             let t5 = t4 ? t4.right : null;
-            root.right = LLR(root.right, root, depth, false, false);
-            chunker.add('right(t) <- rightRotate(right(t));',
+            chunker.add('perform right rotation on the right subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
                     if (t6 != null) vis.graph.updateTID(t6, 't6');
                     if (t2 != null) vis.graph.updateTID(t2, 't2');
@@ -330,14 +324,10 @@ export default {
                 t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
                 depth
             );
+            root.right = LLR(root.right, root, depth, false, false);
+            chunker.add('right(t) <- rightRotate(right(t));', (vis) => {}, [], depth);
+            chunker.add('return left rotation on t', (vis) => {}, [], depth);
             let finalRoot = RRR(root, parentNode, depth, true, false);
-            chunker.add('return leftRotate(t) after rightRotate',
-                vis => {
-                    vis.graph.clearTID();
-                },
-                [],
-                depth - 1
-            );
             return finalRoot;
         }
 
@@ -437,10 +427,24 @@ export default {
                 chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 // console.log("LRR");
                 root = LRR(root, parentNode, rotateDepth);
+                chunker.add('return rightRotate(t) after leftRotate',
+                    vis => {
+                        vis.graph.clearTID();
+                    },
+                    [],
+                    depth
+                );
             } else if (balance < -1 && key < root.right.key) {
                 chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 root = RLR(root, parentNode, rotateDepth);
+                chunker.add('return leftRotate(t) after rightRotate',
+                    vis => {
+                        vis.graph.clearTID();
+                    },
+                    [],
+                    depth
+                );
             }
 
             chunker.add('return t',

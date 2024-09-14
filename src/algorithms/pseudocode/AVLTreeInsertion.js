@@ -335,7 +335,7 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  // Perform "left rotation" on the left subtree
+  // Perform "left rotation" on the left subtree \\B perform left rotation on the left subtree
   \\Note{
     Animation should stop at the comment above then jump to the
     leftRotate code???; May be better to inline it
@@ -346,7 +346,7 @@ for diagrams etc explaining rotations.
   \\Expl{
     The result returned is the new t.left.
   \\Expl}
-  // Return "right rotation" on t
+  // Return "right rotation" on t \\B return right rotation on t
   \\Note{
     Animation should stop at the comment above then jump to the
     rightRotate code then stop at return *after* rightRotate then go
@@ -360,7 +360,7 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  // Perform "right rotation" on the right subtree
+  // Perform "right rotation" on the right subtree \\B perform right rotation on the right subtree
   \\Note{
     See notes for left-right case
   \\Note} 
@@ -368,7 +368,7 @@ for diagrams etc explaining rotations.
   \\Expl{
     The result returned is the new t.right.
   \\Expl}
-  // Return "left rotation" on t
+  // Return "left rotation" on t \\B return left rotation on t
   return leftRotate(t) \\B return leftRotate(t) after rightRotate
 \\In}
 \\Code}
