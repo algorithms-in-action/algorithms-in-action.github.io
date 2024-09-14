@@ -120,7 +120,58 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
   back up is sufficient - there is only one path back up to the root.
   The "current" node should certainly be highlighted in some way also.
 \\Note}
-AVLT_Insert(t, k) \\Ref ActualInsert
+AVLT_Insert(t, k)
+  \\In{
+    if t = Empty \\B if t = Empty
+    \\In{
+      create new node n containing k \\Ref NewNode
+      return (pointer to) n // return a single-node tree \\B return n
+      \\Expl{  The returned tree has just
+              one node, with key k, empty sub-trees and height 1.
+              This is the base case of the recursion.
+      \\Expl}
+    \\In}
+    if k < root(t).key \\B if k < root(t).key
+    \\Expl{ The key in the root determines if we insert into the left or
+          right subtree.
+    \\Expl}
+    \\In{
+        insert k into the left subtree of t \\Ref insertLeft
+    \\In}
+    else if k > root(t).key \\B else if k > root(t).key
+      \\Note{ XXX allow duplicate keys or not???
+        Should be possible, but have to carefully review code to make sure its
+        correct. What does BST code do?
+      \\Note}
+    \\In{
+        insert k into the right subtree of t \\Ref insertRight
+    \\In}
+    else \\B else k = root(t).key
+    \\In{
+        return t // key k is already in the tree \\B return t, no change
+        \\Expl{  The key is already in the tree, so no change is needed.
+        \\Expl}
+    \\In}
+    Update the height of t \\Ref updateHeight
+    \\Expl{ The height of t may have increased by one
+    \\Expl}
+    Determine the balance of t \\Ref getBalance
+    \\Expl{ For AVL trees, we must ensure the height of the two subtrees
+      varies by at most one.
+    \\Expl}
+    Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
+    \\Expl{ Rotations are local tree operations that increase the
+      height/depth of one subtree but decrease that of another, used to
+      make the tree more balanced.
+      See Background (click at the top of the right panel)
+      for diagrams etc explaining rotations.
+    \\Expl}
+    return t \\B return t
+    \\Expl{
+      Tree t must be sufficiently balanced (-1 <= balance <= 1) so no
+      rotations are needed:)
+    \\Expl}
+  \\In}
 
 //============================================================================
 \\Note{ Might be best to expand these inline rather than having extra
@@ -130,17 +181,50 @@ with two copies of each, and rather long code if we expand everyting.
 The variable names here are linked to the diagrams, which may be easier for
 functions but may also be confusing.
 \\Note}
-rightRotate(t6) \\Ref ActualRightRotate
+rightRotate(t6)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
+  \\In{
+    t2 <- left(t6) \\B t2 = left(t6)
+    t4 <- right(t2) \\B t4 = right(t2)
+    t2.right <- t6 \\B t2.right = t6
+    t6.left <- t4 \\B t6.left = t4
+    \\Note{ Animation here should be as smooth an intuitive as possible.
+      Ideally node 4 should get detached from 2 but remain in place then
+      get re-attached to 6. We could possibly move 7 down to the level of 4
+      at the first step and delay moving 1 up until the end. Best highlight
+      the edge between 6 and 2. If extra steps are required for animation
+      we can stay on the same line of code for more than one step if
+      needed. Similarly for left rotation.
+    \\Note}
+    recompute heights of t6 and t2 \\B recompute heights of t6 and t2
+    \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
+      t2.height <- max(t6.height, t1.height) + 1;
+    \\Expl}
+    \\Note{ Best not expand this? Should be clear enough and we are a bit
+      fast and loose with nodes versus pointers here
+    \\Note}
+    return (pointer to) t2 // new root \\B return t2
+  \\In} 
 //============================================================================
-leftRotate(t2) \\Ref ActualLeftRotate
+leftRotate(t2)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
+  \\In{
+    t6 <- right(t2) \\B t6 = right(t2)
+    t4 <- left(t6) \\B t4 = left(t6)
+    t6.left <- t2 \\B t6.left = t2
+    t2.right <- t4 \\B t2.right = t4
+    recompute heights of t2 and t6 \\B recompute heights of t2 and t6
+    \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
+      t6.height <- max(t2.height, t7.height) + 1;
+    \\Expl}
+    return (pointer to) t6 // new root \\B return t6
+  \\In} 
 \\Code}
 
 \\Code{
@@ -170,107 +254,6 @@ explanation enough? (same for right)
 \\Note}
 \\Code}
 
-\\Code{
-GlobalInsert
-  // Insert key k in AVL tree t \\B Insert key k in AVL tree t
-  t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
-\\Code}
-
-\\Code{
-ActualInsert
-\\In{
-  if t = Empty \\B if t = Empty
-  \\In{
-    create new node n containing k \\Ref NewNode
-    return (pointer to) n // return a single-node tree \\B return n
-    \\Expl{  The returned tree has just
-            one node, with key k, empty sub-trees and height 1.
-            This is the base case of the recursion.
-    \\Expl}
-  \\In}
-  if k < root(t).key \\B if k < root(t).key
-  \\Expl{ The key in the root determines if we insert into the left or
-        right subtree.
-  \\Expl}
-  \\In{
-      insert k into the left subtree of t \\Ref insertLeft
-  \\In}
-  else if k > root(t).key \\B else if k > root(t).key
-    \\Note{ XXX allow duplicate keys or not???
-      Should be possible, but have to carefully review code to make sure its
-      correct. What does BST code do?
-    \\Note}
-  \\In{
-      insert k into the right subtree of t \\Ref insertRight
-  \\In}
-  else \\B else k = root(t).key
-  \\In{
-      return t // key k is already in the tree \\B return t, no change
-      \\Expl{  The key is already in the tree, so no change is needed.
-      \\Expl}
-  \\In}
-  Update the height of t \\Ref updateHeight
-  \\Expl{ The height of t may have increased by one
-  \\Expl}
-  Determine the balance of t \\Ref getBalance
-  \\Expl{ For AVL trees, we must ensure the height of the two subtrees
-    varies by at most one.
-  \\Expl}
-  Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
-  \\Expl{ Rotations are local tree operations that increase the
-    height/depth of one subtree but decrease that of another, used to
-    make the tree more balanced.
-    See Background (click at the top of the right panel)
-    for diagrams etc explaining rotations.
-  \\Expl}
-  return t \\B return t
-  \\Expl{
-    Tree t must be sufficiently balanced (-1 <= balance <= 1) so no
-    rotations are needed:)
-  \\Expl}
-\\In}
-\\Code}
-
-\\Code{
-ActualRightRotate
-\\In{
-  t2 <- left(t6) \\B t2 = left(t6)
-  t4 <- right(t2) \\B t4 = right(t2)
-  t2.right <- t6 \\B t2.right = t6
-  t6.left <- t4 \\B t6.left = t4
-  \\Note{ Animation here should be as smooth an intuitive as possible.
-    Ideally node 4 should get detached from 2 but remain in place then
-    get re-attached to 6. We could possibly move 7 down to the level of 4
-    at the first step and delay moving 1 up until the end. Best highlight
-    the edge between 6 and 2. If extra steps are required for animation
-    we can stay on the same line of code for more than one step if
-    needed. Similarly for left rotation.
-  \\Note}
-  recompute heights of t6 and t2 \\B recompute heights of t6 and t2
-  \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
-    t2.height <- max(t6.height, t1.height) + 1;
-  \\Expl}
-  \\Note{ Best not expand this? Should be clear enough and we are a bit
-    fast and loose with nodes versus pointers here
-  \\Note}
-  return (pointer to) t2 // new root \\B return t2
-\\In} 
-\\Code}
-
-\\Code{
-ActualLeftRotate
-\\In{
-  t6 <- right(t2) \\B t6 = right(t2)
-  t4 <- left(t6) \\B t4 = left(t6)
-  t6.left <- t2 \\B t6.left = t2
-  t2.right <- t4 \\B t2.right = t4
-  recompute heights of t2 and t6 \\B recompute heights of t2 and t6
-  \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
-    t6.height <- max(t2.height, t7.height) + 1;
-  \\Expl}
-  return (pointer to) t6 // new root \\B return t6
-\\In} 
-\\Code}
 
 \\Code{
 insertRight
