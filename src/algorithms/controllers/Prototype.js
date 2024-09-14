@@ -34,7 +34,7 @@ export default {
     },
 
 
-    run(chunker, {nodes}) {
+    run(chunker, { nodes }) {
 
         const A = [...nodes];
         let n = nodes.length;
@@ -65,14 +65,14 @@ export default {
         chunker.add(
             201,
             (vis) => {
-                vis.list.addLabel(0,"Slow");
-                vis.list.addLabel(0,"Fast");
+                vis.list.addLabel(0, "Slow");
+                vis.list.addLabel(0, "Fast");
             },
         );
 
         chunker.add(202);
 
-        for (let i=1; i< n/2; i++) {
+        for (let i = 1; i < n / 2; i++) {
             let fast = i * 2;
             slow = i;
             chunker.add(
@@ -89,13 +89,11 @@ export default {
             204,
             (vis) => {
                 vis.list.clearLabels();
-                vis.list.addLabel(0,"Left");
-                vis.list.addLabel(slow + 1,"Right");
+                vis.list.addLabel(0, "Left");
+                vis.list.addLabel(slow + 1, "Right");
                 vis.list.select(slow + 1);
             })
     }
 
 
 };
-
-
