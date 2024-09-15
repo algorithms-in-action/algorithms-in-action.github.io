@@ -44,10 +44,19 @@ class Array2DTracer extends Tracer {
    */
   set(array2d = [], algo, kth = 1, splitArray) {
     if (splitArray === undefined || splitArray.rowLength < 1) {
+      this.splitArray = {doSplit: false};
       this.data = array2d.map((array1d) =>
         [...array1d].map((value, i) => new Element(value, i))
       );
     } else {
+      this.splitArray = splitArray;
+      this.splitArray.doSplit = true;
+
+      if (Array.isArray(splitArray.rowHeader) && splitArray.rowHeader.length) {
+        this.splitArray.hasHeader = true;
+      } else {
+        this.splitArray.hasHeader = false;
+      }
       let split = [];
 
       let step = 0;
@@ -75,7 +84,6 @@ class Array2DTracer extends Tracer {
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
-    this.splitArray = splitArray;
     super.set();
   }
 
@@ -131,18 +139,123 @@ class Array2DTracer extends Tracer {
   // a simple fill function based on aia themes
   // where green=1, yellow=2, and red=3
   fill(sx, sy, ex = sx, ey = sy, c = 0) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].fill = c === 1 || c === 2 || c === 3 ? c : 0;
+    if (!this.splitArray.doSplit) {
+      for (let x = sx; x <= ex; x++) {
+        for (let y = sy; y <= ey; y++) {
+          this.data[x][y].fill = c === 1 || c === 2 || c === 3 ? c : 0;
+        }
+      }
+    } else {
+      for (let i = 0; i < this.data.length; i++) {
+        if (sy === ey) {
+          let relativeY = sy + (this.splitArray.hasHeader ? 1 : 0);
+          if (relativeY > this.splitArray.rowLength) {
+            sy -= this.splitArray.rowLength;
+            ey -= this.splitArray.rowLength;
+            continue;
+          }
+
+          for (let x = sx; x <= ex; x++) {
+            this.data[i][x][relativeY].fill =
+              c === 1 ||
+              c === 2 ||
+              c === 3 ?
+              c : 0;
+          }
+
+          break;
+        }
+
+
+        let relativeSY = sy + (this.splitArray.hasHeader ? 1 : 0);
+        if (relativeSY > this.splitArray.rowLength) {
+          sy -= this.splitArray.rowLength;
+          ey -= this.splitArray.rowLength;
+          continue;
+        }
+
+        let relativeEY = ey + (this.splitArray.hasHeader ? 1 : 0);
+        if (relativeEY > this.splitArray.rowLength) {
+          relativeEY = this.splitArray.rowLength;
+        }
+
+        // out of range
+        if (relativeEY < 0) {
+          break;
+        }
+
+        // start at the first index of subarray
+        if (relativeSY < 0) {
+          relativeSY = 0;
+        }
+
+        for (let x = sx; x <= ex; x++) {
+          for (let y = relativeSY; y <= relativeEY; y++) {
+            this.data[i][x][y].fill = c === 1 || c === 2 || c === 3 ? c : 0;
+          }
+        }
+
+        sy -= this.splitArray.rowLength;
+        ey -= this.splitArray.rowLength;
       }
     }
   }
 
   // unfills the given element (used with fill)
   unfill(sx, sy, ex = sx, ey = sy) {
-    for (let x = sx; x <= ex; x++) {
-      for (let y = sy; y <= ey; y++) {
-        this.data[x][y].fill = 0;
+    if (!this.splitArray.doSplit) {
+      for (let x = sx; x <= ex; x++) {
+        for (let y = sy; y <= ey; y++) {
+          this.data[x][y].fill = 0;
+        }
+      }
+    } else {
+      for (let i = 0; i < this.data.length; i++) {
+        if (sy === ey) {
+          let relativeSY = sy + (this.splitArray.hasHeader ? 1 : 0);
+          if (relativeSY > this.splitArray.rowLength) {
+            sy -= this.splitArray.rowLength;
+            continue;
+          }
+
+          for (let x = sx; x <= ex; x++) {
+            this.data[i][x][relativeSY].fill = 0;
+          }
+
+          break;
+        }
+
+
+        let relativeSY = sy + (this.splitArray.hasHeader ? 1 : 0);
+        if (relativeSY > this.splitArray.rowLength) {
+          sy -= this.splitArray.rowLength;
+          ey -= this.splitArray.rowLength;
+          continue;
+        }
+
+        let relativeEY = ey + (this.splitArray.hasHeader ? 1 : 0);
+        if (relativeEY > this.splitArray.rowLength) {
+          relativeEY = this.splitArray.rowLength;
+        }
+
+        // out of range
+        if (relativeEY < 0) {
+          break;
+        }
+
+        // start at the first index of subarray
+        if (relativeSY < 0) {
+          relativeSY = 0;
+        }
+
+        for (let x = sx; x <= ex; x++) {
+          for (let y = relativeSY; y <= relativeEY; y++) {
+            this.data[i][x][y].fill = 0;
+          }
+        }
+
+        sy -= this.splitArray.rowLength;
+        ey -= this.splitArray.rowLength;
       }
     }
   }
@@ -178,10 +291,12 @@ class Array2DTracer extends Tracer {
         if (val.selected) newEl.selected = true;
         if (val.sorted) newEl.sorted = true;
         newEl.variables = val.variables;
+        newEl.fill = val.fill;
         return newEl;
       }
     }
-    if (this.splitArray === undefined || this.splitArray.rowLength < 1) {
+
+    if (!this.splitArray.doSplit) {
       const newData = cloneDeepWith(this.data, customizer);
 
       // remove all current occurences of the variable
@@ -214,7 +329,7 @@ class Array2DTracer extends Tracer {
         if (idx !== null && idx !== undefined) {
           // check if idx is in subarray
           // add i to account for header offset
-          let relativeIdx = idx + 1;
+          let relativeIdx = idx + (this.splitArray.hasHeader ? 1 : 0);
           if (relativeIdx > 0 && relativeIdx <= this.splitArray.rowLength)
             _newData[row][relativeIdx].variables.push(v);
         }
@@ -308,26 +423,112 @@ class Array2DTracer extends Tracer {
    * @param {*} y the column index.
    * @param {*} newValue the new value.
    */
-  updateValueAt(row, idx, newValue) {
-    if (this.splitArray === undefined || this.splitArray.rowLength < 1) {
-      if (!this.data[row] || !this.data[row][idx]) {
+  updateValueAt(x, y, newValue) {
+    if (!this.splitArray.doSplit) {
+      if (!this.data[x] || !this.data[x][y]) {
         return;
       }
-      this.data[row][idx].value = newValue;
+      this.data[x][y].value = newValue;
     } else {
       for (let i = 0; i < this.data.length; i++) {
-        if (idx !== null || idx !== undefined || idx >= 0) {
-          // check if idx is in subarray
+        if (y !== null || y !== undefined || y >= 0) {
+          // check if y is in subarray
           // add 1 to account for header offset
-          let relativeIdx = idx + 1;
-          if (relativeIdx > 0 && relativeIdx <= this.splitArray.rowLength) {
-            if (!this.data[i][row] || !this.data[i][row][relativeIdx]) continue;
-            this.data[i][row][relativeIdx].value = newValue;
+          let relativeY = y + (this.splitArray.hasHeader ? 1 : 0);
+          if (relativeY > 0 && relativeY <= this.splitArray.rowLength) {
+            if (!this.data[i][x] || !this.data[i][x][relativeY]) continue;
+            this.data[i][x][relativeY].value = newValue;
           }
-          idx -= this.splitArray.rowLength;
+          y -= this.splitArray.rowLength;
         }
       }
     }
+  }
+
+  /**
+   * Get the value at the given position of the array.
+   * @param {*} x the row index.
+   * @param {*} y the column index.
+   */
+  getValueAt(x, y) {
+    if (!this.splitArray.doSplit) {
+      if (!this.data[x] || !this.data[x][y]) {
+        return;
+      }
+
+      return this.data[x][y].value;
+    } else {
+      for (let i = 0; i < this.data.length; i++) {
+        if (y !== null || y !== undefined || y >= 0) {
+          // check if y is in subarray
+          // add 1 to account for header offset
+          let relativeY = y + (this.splitArray.hasHeader ? 1 : 0);
+          if (relativeY > 0 && relativeY <= this.splitArray.rowLength) {
+            if (!this.data[i][x] || !this.data[i][x][relativeY]) continue;
+            return this.data[i][x][relativeY].value;
+          }
+          y -= this.splitArray.rowLength;
+        }
+      }
+    }
+  }
+
+  /**(e) => e.value
+   * Extract the array at the given row(s) of the array.
+   * @param {*} row the row index(es).
+   * @param {*} empty the character to change to empty.
+   */
+  extractArray(row, empty) {
+    let extract = [];
+    if (!this.splitArray.doSplit) {
+      if (Array.isArray(row) && row.length) {
+        for (const i of row) {
+          extract.push(this.data[i].map((e) => e.value));
+        }
+      } else {
+        extract = this.data[row].map((e) => e.value);
+      }
+
+    } else {
+      // combine the split array and remove the headers if exist
+      let combined = [];
+      if (this.splitArray.hasHeader) {
+        for (const array of this.data) {
+          if (!combined.length) {
+            combined = array.map((arr) => arr.slice(1));
+            continue;
+          }
+
+          for (let i = 0; i < combined.length; i++) {
+            combined[i] = [...combined[i], ...array[i].slice(1)];
+          }
+        }
+      } else {
+        for (const array of this.data) {
+          if (!combined.length) {
+            combined = array;
+            continue;
+          }
+
+          for (let i = 0; i < combined.length; i++) {
+            combined[i] = [...combined[i], ...array[i]];
+          }
+        }
+      }
+
+      if (Array.isArray(row) && row.length) {
+        for (const i of row) {
+          extract.push(combined[i].map((e) => e.value));
+        }
+      } else {
+        extract = combined[row].map((e) => e.value);
+      }
+    }
+
+    for (let i = 0; i < extract.length; i++) {
+      extract[i] = (extract[i] === empty) ? undefined : extract[i];
+    }
+    return extract;
   }
 }
 
