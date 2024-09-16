@@ -3,10 +3,10 @@
 //
 // OMG, colors for array and graph require different types and are
 // inconsistent!
-// Arrary: '0'=Blue, '1'=Green
+// Array: '0'=Blue, '1'=Green
 // Nodes: 1=Green, 4= Blue
 // Edges: 1=Green, 2=Orange, 3=Red, 4=Blue
-// XXX not sure how this interracts with color perception options -
+// XXX not sure how this interacts with color perception options -
 // doesn't seem to work like this - should figure out how it's done if
 // it's still supported
 export const colors = {
