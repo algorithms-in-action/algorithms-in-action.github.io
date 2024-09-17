@@ -290,7 +290,7 @@ export default {
             let t4 = t2 ? t2.right : null;
             let t3 = t4 ? t4.left : null;
             let t5 = t4 ? t4.right : null;
-            chunker.add('perform right rotation on the left subtree',
+            chunker.add('perform left rotation on the left subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
                     if (t6 != null) vis.graph.updateTID(t6, 't6');
                     if (t2 != null) vis.graph.updateTID(t2, 't2');
