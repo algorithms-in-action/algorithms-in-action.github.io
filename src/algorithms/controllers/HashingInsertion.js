@@ -7,7 +7,7 @@ import {
   HASH_TABLE,
   EMPTY_CHAR,
   Colors
-} from './HashingCommon';
+} from './HashingCommon.js';
 
 
 const IBookmarks = {

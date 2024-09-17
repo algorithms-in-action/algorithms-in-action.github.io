@@ -14,7 +14,11 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Hashing**][G4GLink]
+Geeks for Geeks Basic Hashing Link: [**Hashing**][G4GLink]
+<br>
+<br>
+Geeks for Geeks Double Hashing Link: [**Hashing**][G4GDBLINK]
 
 
 [G4GLink]: https://www.geeksforgeeks.org/hashing-data-structure/
+[G4GDBLINK]: https://www.geeksforgeeks.org/double-hashing/

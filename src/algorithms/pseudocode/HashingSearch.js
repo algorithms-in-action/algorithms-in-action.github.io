@@ -3,25 +3,25 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    HashSearch(T, k)  // Search for key k in table T \\B HashSearch(T, k)
+    HashSearch(T, k)  // Search for key k in table T \\B 1
     \\In{
-        i <- hash(k) \\Ref Hash1
+        i <- hash(k) \\B 2
         Choose Increment value for stepping through T \\Ref SetIncrementLinearProbing
-        while not (T[i] = k or T[i] = Empty) // search for T or Empty
+        while not (T[i] = k or T[i] = Empty) // search for T or Empty \\B 7
         \\In{
-            i <- (i + Increment) mod TableSize
+            i <- (i + Increment) mod TableSize \\B 4
             \\Expl{ T[i] is not k or Empty so we jump ahead Increment
                 steps and "wrapping around" if we reach the end, mirroring
                 the insertion code.
             \\Expl}
         \\In}
-        if T[i] = key
+        if T[i] = key \\B 3
         \\In{
-            return i // return the table index where the key has been found
+            return i // return the table index where the key has been found \\B 5
         \\In}
         else
         \\In{
-            return NOTFOUND
+            return NOTFOUND \\B 6
         \\In}
     \\In}
 \\Code}
