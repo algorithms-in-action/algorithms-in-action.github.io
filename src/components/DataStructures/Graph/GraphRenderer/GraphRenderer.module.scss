@@ -56,18 +56,18 @@
     }
 
     .height {
-      --breath_color: var(--graph-node-height-fill);
-      animation: colorChange 1.5s 3; // anmation
+      //--breath_color: var(--graph-node-height-fill);
+      //animation: colorChange 1.5s 3; // anmation
 
-      fill: var(--graph-node-circle-fill);
+      fill: var(--graph-node-id-fill);
 
       // font-weight: bold;
       // font-size: 15px;
       // alignment-baseline: central;
       dominant-baseline: central;
       text-anchor: middle;
-      font-size: 40px; // font size for labels inside nodes
-      transform: translateY(-53px);
+      font-size: 35px; // font size for labels inside nodes
+      transform: translateY(-50px);
       // text-anchor: left;
     }
 
@@ -109,8 +109,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-height-fill);
-        animation: colorChange 1.5s 3; // anmation
+        //--breath_color: var(--graph-node-height-fill);
+        //animation: colorChange 1.5s 3; // anmation
 
         fill: var(--graph-node-circle-fill-selected);
       }

@@ -874,7 +874,6 @@ class GraphTracer extends Tracer {
     this.functionName = name;
   }
 
-
   setIstc() {
     this.istc = true;
   }
@@ -905,7 +904,6 @@ class GraphTracer extends Tracer {
     edge.visitedCount3 = 0;
     edge.visitedCount4 = 0;
   }
-
 
   colorNode(node, colorIndex) {
     const _node = this.findNode(node);
