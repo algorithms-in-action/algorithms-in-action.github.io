@@ -375,7 +375,7 @@ class Array2DRenderer extends Renderer {
       )
     }
 
-    if (splitArray === undefined || splitArray.rowLength < 1) {
+    if (!splitArray.doSplit) {
       let longestRow = data.reduce(
         (longestRow, row) => (longestRow.length < row.length ? row : longestRow),
         []
@@ -404,7 +404,7 @@ class Array2DRenderer extends Renderer {
           <div
             style={{
               flex: 1,
-                margin: '1% 0',
+              margin: '1% 0',
             }}
             >
             {(algo === 'HashingLP' ||
@@ -412,7 +412,7 @@ class Array2DRenderer extends Renderer {
               kth !== '' &&
               (
                 <span
-                className={styles.captionHashing}
+                  className={styles.captionHashing}
                 >
                   Insertions: {Array.isArray(kth) ? kth[0] : kth}
                   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;

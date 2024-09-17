@@ -177,8 +177,7 @@
   display: flex;
   width: 100%;
   justify-content: center;
-  overflow-x: clip;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 .container {
