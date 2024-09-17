@@ -24,7 +24,7 @@ NaturalMergesort(A, size) \\B Main
 
 \\Code{
 MergeAll
-    runcount <- 0 // we count the runs (for the outer loop condition)
+    runcount <- 0 // we count the runs (for the outer loop condition) \\B runcount
     left <- 1 \\B left
     do \\B MergeAllWhile
         find the first run, A[left..mid] \\Ref FirstRun
@@ -35,7 +35,7 @@ MergeAll
         \\Expl{ We compute right to get the longest sequence where A[mid+1] <=
             A[mid+2] <= ... <= A[right].  If mid = size this will be empty.
         \\Expl}
-        if mid < size // if the second run isn't empty
+        if mid < size // if the second run isn't empty \\B ifmidsize
         \\Expl{ If the number of runs is odd, the last one
             found doesn't need to be merged. This test could be
             moved before the code to find the second run and/or used to
@@ -44,7 +44,7 @@ MergeAll
         \\In{
             merge A[left..mid] and A[mid+1..right], with the result in A \\Ref MergeCopy
         \\In}
-        runcount <- runcount + 1
+        runcount <- runcount + 1 \\B runcount+
         left <- right + 1 // skip to the next pair of runs (if any) \\B left2
     until left >= size
     \\In}
@@ -52,25 +52,25 @@ MergeAll
 
 \\Code{
 FirstRun
-    mid <- left
-    while mid < size and A[mid] <= A[mid+1]
+    mid <- left \\B mid
+    while mid < size and A[mid] <= A[mid+1] \\B FirstRunWhile
     \\Expl{ Scan until we find an element that is less than the previous
         element (or we reach the end).
     \\Expl}
     \\In{
-        mid <- mid + 1
+        mid <- mid + 1 \\B mid++
     \\In}
 \\Code}
 
 \\Code{
 SecondRun
-    right <- mid + 1
-    while right < size and A[right] <= A[right+1]
+    right <- mid + 1 \\B right
+    while right < size and A[right] <= A[right+1] \\B SecondRunWhile
     \\Expl{ Scan until we find an element that is less than the previous
         element (or we reach the end).
     \\Expl}
     \\In{
-        right <- right + 1
+        right <- right + 1 \\B right++
     \\In}
 \\Code}
 

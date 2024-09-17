@@ -230,6 +230,13 @@ class Array1DRenderer extends Array2DRenderer {
               kth-tag="msort_arr_bup_caption"
             > runlength = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
+        {
+          algo === 'msort_arr_nat' && listOfNumbers && (
+            <caption
+              className={styles.captionmsort_arr_nat}
+              kth-tag="msort_arr_nat_caption"
+            > runlength = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+        }
       </table>
     );
   }
