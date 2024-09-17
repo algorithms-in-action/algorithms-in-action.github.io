@@ -60,7 +60,7 @@ export default {
 
         // Left-Left Case (LLR) to balance the AVL tree
         function LLR(root, parentNode, depth, rotateVis = true, tidVis = true) {
-            chunker.add('rightRotate(t6)', (vis) => null, [], depth);
+            // chunker.add('rightRotate(t6)', (vis) => null, [], depth);
 
             console.log('LLR');
             console.log("the root of LLR is " + root.key);
@@ -172,7 +172,7 @@ export default {
 
         // Right-Right Rotation (RRR) to balance the AVL tree
         function RRR(root, parentNode, depth, rotateVis = true, tidVis = true) {
-            chunker.add('leftRotate(t2)', (vis) => null, [], depth);
+            // chunker.add('leftRotate(t2)', (vis) => null, [], depth);
             console.log('RRR');
             console.log("the root of RRR is " + root.key);
 
@@ -285,7 +285,7 @@ export default {
             let t4 = t2 ? t2.right : null;
             let t3 = t4 ? t4.left : null;
             let t5 = t4 ? t4.right : null;
-            chunker.add('left(t) <- leftRotate(left(t));',
+            chunker.add('perform right rotation on the left subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
                     if (t6 != null) vis.graph.updateTID(t6, 't6');
                     if (t2 != null) vis.graph.updateTID(t2, 't2');
@@ -298,18 +298,13 @@ export default {
                     vis.graph.setAVLText(`LRR`);
                 },
                 [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
-                t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
-                depth
-            );
+                    t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
+                    depth
+                );
             root.left = RRR(root.left, root, depth, false, false);
+            chunker.add('left(t) <- leftRotate(left(t));', (vis) => {}, [], depth);
+            chunker.add('return right rotation on t', (vis) => {}, [], depth);
             let finalRoot = LLR(root, parentNode, depth, true, false);
-            chunker.add('return rightRotate(t) after leftRotate',
-                vis => {
-                    vis.graph.clearTID();
-                },
-                [],
-                depth
-            );
             return finalRoot;
         }
 
@@ -322,7 +317,7 @@ export default {
             let t7 = t6 ? t6.right : null;
             let t3 = t4 ? t4.left : null;
             let t5 = t4 ? t4.right : null;
-            chunker.add('right(t) <- rightRotate(right(t));',
+            chunker.add('perform right rotation on the right subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
                     if (t6 != null) vis.graph.updateTID(t6, 't6');
                     if (t2 != null) vis.graph.updateTID(t2, 't2');
@@ -339,21 +334,16 @@ export default {
                 depth
             );
             root.right = LLR(root.right, root, depth, false, false);
+            chunker.add('right(t) <- rightRotate(right(t));', (vis) => {}, [], depth);
+            chunker.add('return left rotation on t', (vis) => {}, [], depth);
             let finalRoot = RRR(root, parentNode, depth, true, false);
-            chunker.add('return leftRotate(t) after rightRotate',
-                vis => {
-                    vis.graph.clearTID();
-                },
-                [],
-                depth
-            );
             return finalRoot;
         }
 
         // Function to insert a key into the AVL tree and balance the tree if needed
         function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
-            chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
+            // chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
 
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
@@ -402,14 +392,14 @@ export default {
             if (key < root.key) {
                 // Ref insertLeft
                 chunker.add('prepare for the left recursive call', (vis) => null, [], depth);
-                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
                 insert(root.left, key, currIndex, root, depth + 1);
+                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
             } else if (key > root.key) {
                 chunker.add('else if k > root(t).key', (vis) => null, [], depth);
                 // Ref insertRight
                 chunker.add('prepare for the right recursive call', (vis) => null, [], depth);
-                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
                 insert(root.right, key, currIndex, root, depth + 1);
+                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
             } else {
                 // Key already exists in the tree
                 chunker.add('else k = root(t).key',
@@ -435,24 +425,38 @@ export default {
 
             let rotateDepth = depth + 1;
             // console.log(key, parentNode, tree[parentNode].left);
-            chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], rotateDepth);
+            chunker.add('if balance > 1 && k < left(t).key', (vis) => null, [], depth);
             if (balance > 1 && key < root.left.key) {
-                chunker.add('return rightRotate(t)', (vis) => null, [], rotateDepth);
                 // console.log("LLR");
                 root = LLR(root, parentNode, rotateDepth);
+                chunker.add('return rightRotate(t)', (vis) => null, [], depth);
             } else if (balance < -1 && key > root.right.key) {
-                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], rotateDepth);
-                chunker.add('return leftRotate(t)', (vis) => null, [], rotateDepth);
+                chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
                 // console.log("RRR");
                 root = RRR(root, parentNode, rotateDepth);
+                chunker.add('return leftRotate(t)', (vis) => null, [], depth);
             } else if (balance > 1 && key > root.left.key) {
-                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], rotateDepth);
+                chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 // console.log("LRR");
                 root = LRR(root, parentNode, rotateDepth);
+                chunker.add('return rightRotate(t) after leftRotate',
+                    vis => {
+                        vis.graph.clearTID();
+                    },
+                    [],
+                    depth
+                );
             } else if (balance < -1 && key < root.right.key) {
-                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], rotateDepth);
+                chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 root = RLR(root, parentNode, rotateDepth);
+                chunker.add('return leftRotate(t) after rightRotate',
+                    vis => {
+                        vis.graph.clearTID();
+                    },
+                    [],
+                    depth
+                );
             }
 
             chunker.add('return t',
