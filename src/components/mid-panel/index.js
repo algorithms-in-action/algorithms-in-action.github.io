@@ -54,7 +54,9 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         url += `&string=${nodes}&pattern=${searchValue}`;
       } else if (category == 'Set') {
         url += `&union=${nodes}&value=${searchValue}`;
-      } 
+      } else if (category == 'Graph') {
+        url += `&cords=${nodes}&size=${searchValue}`;
+      }
       
       setCurrentUrl(url);
     }

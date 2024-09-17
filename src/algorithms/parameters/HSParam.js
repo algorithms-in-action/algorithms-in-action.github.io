@@ -27,7 +27,7 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
   
     useEffect(() => {
       setNodes(localNodes); // Sync with global state
-    }, [localNodes]);
+    }, [localNodes, setNodes]);
   
     return (
         <>

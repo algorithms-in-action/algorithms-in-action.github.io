@@ -52,7 +52,7 @@ function MergesortParam({ list }) {
 
   useEffect(() => {
     setNodes(array); // sync with global state
-  }, [array]);
+  }, [array, setNodes]);
 
 // XXX best case definitely not needed; could skip choice of cases
   // function for choosing the type of input

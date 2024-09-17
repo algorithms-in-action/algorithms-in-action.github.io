@@ -50,7 +50,7 @@ function QuicksortParam({ list }) {
 
   useEffect(() => {
     setNodes(array); // sync with global state
-  }, [array]);
+  }, [array, setNodes]);
 
 
   // function for choosing the type of pivot (median of three)
