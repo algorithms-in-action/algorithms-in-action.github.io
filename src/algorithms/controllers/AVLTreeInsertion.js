@@ -160,6 +160,7 @@ export default {
                 (vis, tid) => {
                     if (tid) {
                         vis.graph.clearTID();
+                        vis.graph.setTagInfo('');
                     }
                 },
                 [tidVis],
@@ -273,6 +274,7 @@ export default {
                 (vis, tid) => {
                     if (tid) {
                         vis.graph.clearTID();
+                        vis.graph.setTagInfo('');
                     }
                 },
                 [tidVis],
@@ -292,13 +294,25 @@ export default {
             let t5 = t4 ? t4.right : null;
             chunker.add('perform left rotation on the left subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
-                    if (t6 != null) vis.graph.updateTID(t6, 't6');
-                    if (t2 != null) vis.graph.updateTID(t2, 't2');
-                    if (t4 != null) vis.graph.updateTID(t4, 't4');
-                    if (t1 != null) vis.graph.updateTID(t1, 't1');
-                    if (t3 != null) vis.graph.updateTID(t3, 't3');
-                    if (t5 != null) vis.graph.updateTID(t5, 't5');
-                    if (t7 != null) vis.graph.updateTID(t7, 't7');
+                    let text = '';
+                    if (t6 != null) { vis.graph.updateTID(t6, 't6') }
+                    else { text += 't6 ' }
+                    if (t2 != null) { vis.graph.updateTID(t2, 't2') }
+                    else { text += 't2 ' }
+                    if (t4 != null) { vis.graph.updateTID(t4, 't4') }
+                    else { text += 't4 ' }
+                    if (t1 != null) { vis.graph.updateTID(t1, 't1') }
+                    else { text += 't1 ' }
+                    if (t3 != null) { vis.graph.updateTID(t3, 't3') }
+                    else { text += 't3 ' }
+                    if (t5 != null) { vis.graph.updateTID(t5, 't5') }
+                    else { text += 't5 ' }
+                    if (t7 != null) { vis.graph.updateTID(t7, 't7') }
+                    else { text += 't7 ' }
+                    console.log("------------------", text);
+                    if (text !== '') {
+                        vis.graph.setTagInfo(text);
+                    }
                     vis.graph.setFunctionName('Rotation: ');
                     vis.graph.setAVLText(`LRR`);
                 },
@@ -324,13 +338,25 @@ export default {
             let t5 = t4 ? t4.right : null;
             chunker.add('perform right rotation on the right subtree',
                 (vis, t1, t2, t3, t4, t5, t6, t7) => {
-                    if (t6 != null) vis.graph.updateTID(t6, 't6');
-                    if (t2 != null) vis.graph.updateTID(t2, 't2');
-                    if (t4 != null) vis.graph.updateTID(t4, 't4');
-                    if (t1 != null) vis.graph.updateTID(t1, 't1');
-                    if (t3 != null) vis.graph.updateTID(t3, 't3');
-                    if (t5 != null) vis.graph.updateTID(t5, 't5');
-                    if (t7 != null) vis.graph.updateTID(t7, 't7');
+                    let text = '';
+                    if (t6 != null) { vis.graph.updateTID(t6, 't6') }
+                    else { text += 't6 ' }
+                    if (t2 != null) { vis.graph.updateTID(t2, 't2') }
+                    else { text += 't2 ' }
+                    if (t4 != null) { vis.graph.updateTID(t4, 't4') }
+                    else { text += 't4 ' }
+                    if (t1 != null) { vis.graph.updateTID(t1, 't1') }
+                    else { text += 't1 ' }
+                    if (t3 != null) { vis.graph.updateTID(t3, 't3') }
+                    else { text += 't3 ' }
+                    if (t5 != null) { vis.graph.updateTID(t5, 't5') }
+                    else { text += 't5 ' }
+                    if (t7 != null) { vis.graph.updateTID(t7, 't7') }
+                    else { text += 't7 ' }
+                    console.log("------------------", text);
+                    if (text !== '') {
+                        vis.graph.setTagInfo(text);
+                    }
                     vis.graph.setFunctionName('Rotation: ');
                     vis.graph.setAVLText(`RLR`);
                 },
@@ -456,6 +482,7 @@ export default {
                 chunker.add('return rightRotate(t) after leftRotate',
                     vis => {
                         vis.graph.clearTID();
+                        vis.graph.setTagInfo('');
                     },
                     [],
                     depth
@@ -467,6 +494,7 @@ export default {
                 chunker.add('return leftRotate(t) after rightRotate',
                     vis => {
                         vis.graph.clearTID();
+                        vis.graph.setTagInfo('');
                     },
                     [],
                     depth

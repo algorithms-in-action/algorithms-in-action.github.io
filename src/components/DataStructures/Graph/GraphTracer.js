@@ -50,7 +50,8 @@ class GraphTracer extends Tracer {
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
     this.AVLtext = null;
-    this.functionName = '';
+    this.functionName = null;
+    this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
   }
@@ -866,12 +867,25 @@ class GraphTracer extends Tracer {
     // this.text.push({ text });
   }
 
+  // display text on the AVL tree (for the rotation, key)
   setAVLText(AVLtext) {
     this.AVLtext = AVLtext;
   }
 
+  // dispaly the function name on the AVL tree
   setFunctionName(name) {
     this.functionName = name;
+  }
+
+  // display null tree since the tree is empty
+  setTagInfo(text) {
+    this.tagInfo = text;
+    if (text.length > 3) {
+      this.tagInfo += 'are null';
+    }
+    else if (text !== '') {
+      this.tagInfo += 'is null';
+    }
   }
 
   setIstc() {

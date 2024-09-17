@@ -420,7 +420,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, AVLtext } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, AVLtext, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -722,6 +722,12 @@ class GraphRenderer extends Renderer {
           {AVLtext}
         </text>
 
+        <text className={classes(styles.text)}
+          x={this.centerX + 530}
+          y={this.centerY - 200}
+          textAnchor="middle">
+          {tagInfo}
+        </text>
       </svg>
     );
   }

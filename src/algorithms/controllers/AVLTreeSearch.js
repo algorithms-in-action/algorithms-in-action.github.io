@@ -31,7 +31,10 @@ export default {
         let current = root;
         let parent = null;
 
-        chunker.add('AVL_Search(t, k)');
+        chunker.add('AVL_Search(t, k)', (vis) => {
+            vis.graph.setAVLText(" (" + target + ") ");
+            vis.graph.setFunctionName("AVL_Search");
+        });
         // chunker.add('while t not Empty', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         chunker.add('while t not Empty');
 
