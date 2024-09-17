@@ -45,17 +45,32 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     if (share) {
       let url = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
-      
-      if (category == 'Sort') {
-        url += `&list=${nodes}`;
-      } else if (category == 'Insert/Search') {
-        url += `&list=${nodes}&value=${searchValue}`;
-      } else if (category == 'String Search') {
-        url += `&string=${nodes}&pattern=${searchValue}`;
-      } else if (category == 'Set') {
-        url += `&union=${nodes}&value=${searchValue}`;
-      } else if (category == 'Graph') {
-        url += `&cords=${nodes}&size=${searchValue}`;
+
+      switch (category) {
+        case 'Sort':
+          url += `&list=${nodes}`;
+          break;
+          
+        case 'Insert/Search':
+          url += `&list=${nodes}&value=${searchValue}`;
+          break;
+          
+        case 'String Search':
+          url += `&string=${nodes}&pattern=${searchValue}`;
+          break;
+          
+        case 'Set':
+          url += `&union=${nodes}&value=${searchValue}`;
+          break;
+          
+        // case 'Graph':
+        //   url += `&size=${size}&start=${start}&end=${end}&size=${size}
+        //           &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}
+        //           &min=${min}&max=${max}`;
+        //   break;
+        
+        default:
+          break;
       }
       
       setCurrentUrl(url);
