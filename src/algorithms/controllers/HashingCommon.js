@@ -7,6 +7,8 @@ const BIGPRIME2 = 1429;
 export const HASH_TABLE = {
   Key: 0,
   Value: 1,
+  Key2: 2,
+  Value2: 3
 }
 
 export function hash1(chunker, bookmark, key, hashValue) {
@@ -26,7 +28,7 @@ export function hash2(chunker, bookmark, key, hashValue) {
   chunker.add(
     bookmark,
     (vis, val) => {
-      vis.graph.updateNode(HASH_TABLE.Value, val);
+      vis.graph.updateNode(HASH_TABLE.Value2, val);
     },
     [hashed]
   )
