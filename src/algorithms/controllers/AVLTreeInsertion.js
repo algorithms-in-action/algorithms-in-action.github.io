@@ -46,15 +46,6 @@ export default {
                 const leftHeight = root.left ? root.left.height : 0;
                 const rightHeight = root.right ? root.right.height : 0;
                 root.height = 1 + Math.max(leftHeight, rightHeight);
-
-                // update height in the graph
-                chunker.add('root(t).height = 1 + max(left(t).height, right(t).height)',
-                    (vis, r, h) => {
-                        vis.graph.updateHeight(r, h);
-                    },
-                    [root.key, root.height],
-                    depth
-                );
             }
         }
 
@@ -145,9 +136,16 @@ export default {
             const temp = root.left;
             root.left = temp.right;
             temp.right = root;
-            chunker.add('recompute heights of t6 and t2', (vis) => null, [], depth);
             updateHeight(root, depth);
             updateHeight(temp, depth);
+            // update height in the graph
+            chunker.add('recompute heights of t6 and t2', (vis, r, h1, t, h2) => {
+                vis.graph.updateHeight(r, h1);
+                vis.graph.updateHeight(t, h2);
+            },
+                [root.key, root.height, temp.key, temp.height],
+                depth,
+            );
 
             if (parentNode !== null) {
                 if (temp.key < parentNode.key) {
@@ -249,9 +247,16 @@ export default {
             const temp = root.right;
             root.right = temp.left;
             temp.left = root;
-            chunker.add('recompute heights of t2 and t6', (vis) => null, [], depth);
             updateHeight(root, depth);
             updateHeight(temp, depth);
+            // update height in the graph
+            chunker.add('recompute heights of t2 and t6', (vis, r, h1, t, h2) => {
+                vis.graph.updateHeight(r, h1);
+                vis.graph.updateHeight(t, h2);
+            },
+                [root.key, root.height, temp.key, temp.height],
+                depth,
+            );
 
             if (parentNode !== null) {
                 if (temp.key < parentNode.key) {
@@ -298,12 +303,12 @@ export default {
                     vis.graph.setAVLText(`LRR`);
                 },
                 [t1 ? t1.key : null, t2 ? t2.key : null, t3 ? t3.key : null, t4 ? t4.key : null,
-                    t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
-                    depth
-                );
+                t5 ? t5.key : null, t6 ? t6.key : null, t7 ? t7.key : null],
+                depth
+            );
             root.left = RRR(root.left, root, depth, false, false);
-            chunker.add('left(t) <- leftRotate(left(t));', (vis) => {}, [], depth);
-            chunker.add('return right rotation on t', (vis) => {}, [], depth);
+            chunker.add('left(t) <- leftRotate(left(t));', (vis) => { }, [], depth);
+            chunker.add('return right rotation on t', (vis) => { }, [], depth);
             let finalRoot = LLR(root, parentNode, depth, true, false);
             return finalRoot;
         }
@@ -334,8 +339,8 @@ export default {
                 depth
             );
             root.right = LLR(root.right, root, depth, false, false);
-            chunker.add('right(t) <- rightRotate(right(t));', (vis) => {}, [], depth);
-            chunker.add('return left rotation on t', (vis) => {}, [], depth);
+            chunker.add('right(t) <- rightRotate(right(t));', (vis) => { }, [], depth);
+            chunker.add('return left rotation on t', (vis) => { }, [], depth);
             let finalRoot = RRR(root, parentNode, depth, true, false);
             return finalRoot;
         }
@@ -414,6 +419,15 @@ export default {
             }
 
             updateHeight(root, depth);
+
+            // update height in the graph
+            chunker.add('root(t).height = 1 + max(left(t).height, right(t).height)',
+                (vis, r, h) => {
+                    vis.graph.updateHeight(r, h);
+                },
+                [root.key, root.height],
+                depth
+            );
 
             // get balance factor of the root
             const leftHeight = root.left ? root.left.height : 0;
