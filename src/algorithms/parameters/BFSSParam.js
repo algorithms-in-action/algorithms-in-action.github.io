@@ -23,7 +23,7 @@ function BFSSParam( { mode, string, pattern } ) {
   useEffect(() => {
     setNodes(string_); // sync with global state
     setSearchValue(pattern_)
-  }, [string_, pattern_, setNodes, setSearchValue]);
+  }, [string_, pattern_]);
 
   return (
     <>

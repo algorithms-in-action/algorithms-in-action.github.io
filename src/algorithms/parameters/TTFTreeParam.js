@@ -38,7 +38,7 @@ function TTFTreeParam({ mode, list, value }) {
   useEffect(() => {
     setNodes(nodes); // sync with global state
     setSearchValue(localValue);
-  }, [nodes, localValue, setNodes, setSearchValue])
+  }, [nodes, localValue])
   
   const handleInsertion = (e) => {
     e.preventDefault();

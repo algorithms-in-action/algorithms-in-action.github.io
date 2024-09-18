@@ -51,7 +51,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
 
   useEffect(() => {
     setNodes(array); // sync with global state
-  }, [array, setNodes]);
+  }, [array]);
 
   // function for choosing the type of pivot (median of three)
   const handleChange = (e) => {
