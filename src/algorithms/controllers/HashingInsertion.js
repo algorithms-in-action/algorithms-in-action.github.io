@@ -33,13 +33,14 @@ export default {
         order: 0,
       },
       graph: {
-        instance: new GraphTracer('graph', null, 'Hash'),
+        instance: new GraphTracer('graph', null, 'Hashing Functions'),
         order: 1,
       },
     };
   },
 
   run(chunker, params) {
+    const ALGORITHM_NAME = params.name;
     let inputs = params.values;
     let hashValue = params.hashSize;
     let indexArr = Array.from({ length: hashValue }, (_, i) => i);
@@ -66,6 +67,11 @@ export default {
           // update key value
           vis.graph.updateNode(HASH_TABLE.Key, key);
           vis.graph.updateNode(HASH_TABLE.Value, ' ');
+
+          if (ALGORITHM_NAME === "HashingDH") {
+            vis.graph.updateNode(HASH_TABLE.Key2, key);
+            vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+          }
         },
         [key, insertions, prevKey, prevIdx]
       );
@@ -134,10 +140,17 @@ export default {
       (vis) => {
         // Show the value row
         vis.array.hideArrayAtIndex(VAR);
-
+        
         // Init hashing animation
         vis.graph.weighted(true);
-        vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, 0], [5, 0]]);
+        switch (ALGORITHM_NAME) {
+          case "HashingLP" :
+            vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, 0], [5, 0]]);
+            break;
+          case "HashingDH" :
+            vis.graph.set([[0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]], [' ', ' ', ' ', ' '], [[-5, 2], [5, 2], [-5, -2], [5, -2]]);
+            break;
+        }
       },
     );
 
@@ -155,6 +168,11 @@ export default {
         vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
         vis.graph.updateNode(HASH_TABLE.Key, ' ');
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
+        
+        if (ALGORITHM_NAME === 'HashingDH') {
+          vis.graph.updateNode(HASH_TABLE.Key2, ' ');
+          vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+        }
       },
       [prevKey]
     )
