@@ -41,8 +41,9 @@ export function hash2(chunker, bookmark, key, hashValue) {
   return hashed;
 }
 
+
 export function setIncrement(
-  chunker, bookmark, key, hashValue, collisionHandling
+  chunker, bookmark, key, hashValue, collisionHandling, type
 ) {
   let smallishprime = hashValue == SMALL ? 3 : 23;
   let increment;
@@ -54,14 +55,25 @@ export function setIncrement(
       increment = hash2(chunker, bookmark, key, smallishprime);
       break;
   }
-  chunker.add(
-    bookmark,
-    (vis, increment) => {
-      let insertions = vis.array.getKth();
-      vis.array.showKth([insertions, increment]);
-    },
-    [increment]
-  )
+  if (type == "Insert") {
+      chunker.add(
+        bookmark,
+        (vis, increment) => {
+          let insertions = vis.array.getKth();
+          vis.array.showKth([insertions, increment]);
+        },
+        [increment]
+      )
+  }
+  else if (type == "Search") {
+    chunker.add(
+        bookmark,
+        (vis, increment) => {
+            vis.array.showKth(['N/A', increment])
+        },
+        [increment]
+    )
+  }
   return increment;
 }
 

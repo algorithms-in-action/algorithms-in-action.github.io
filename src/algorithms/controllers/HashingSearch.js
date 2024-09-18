@@ -8,6 +8,8 @@ import {
   Colors
 } from './HashingCommon.js';
 
+const MAX_PARAMS_SIZE = 100;
+
 //TEMP
 const IBookmarks = {
   Init: 1,
@@ -18,6 +20,8 @@ const IBookmarks = {
   NotFound: 6,
   WhileNot: 7,
 }
+
+const TYPE = 'Search';
 
 export default {
   initVisualisers({ visualisers }) {
@@ -45,13 +49,17 @@ export default {
     const VAR = 2;
 
     // Clear previous stuff and set start value to target value
+    // Currently has a bug where if you search for a different number, the previous one remains on the screen
     chunker.add(
       1,
       (vis, val) => {
         vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
         vis.graph.updateNode(HASH_TABLE.Key, val);
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
-
+        vis.array.showKth('');
+        for (let i = 0; i < MAX_PARAMS_SIZE; i++) {
+            vis.array.assignVariable(i, VAR, undefined);
+            }
       },
       [target]
     );
@@ -68,7 +76,7 @@ export default {
     let i = hashed
 
     // Fix later, should have different line of Pseudocode
-    let increment = setIncrement(chunker, IBookmarks.WhileNot, target, hashValue, params.name);
+    let increment = setIncrement(chunker, IBookmarks.WhileNot, target, hashValue, params.name, TYPE);
 
     // Highlight initial search position
     chunker.add(
@@ -113,6 +121,7 @@ export default {
         },
         [i]
       );
+      let tablePos = i
     }
     // If target has been found in search
     if (table[i] === target) {
@@ -131,7 +140,6 @@ export default {
         IBookmarks.NotFound,
         (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
-        //vis.graph.updateNode(HASH_TABLE.Key, 'Not Found'); // Just placebolder until something else
         },
         [i]
       );

@@ -22,6 +22,8 @@ const IBookmarks = {
   Done: 9,
 }
 
+const TYPE = 'Insert';
+
 export default {
   explanation: HashingExp,
   initVisualisers() {
@@ -70,7 +72,7 @@ export default {
       // get initial hash index
       let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name
+        chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name, TYPE
       );
 
       chunker.add(
@@ -151,7 +153,6 @@ export default {
       (vis, key) => {
         vis.array.assignVariable(key, VAR, undefined);
         vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
-
         vis.graph.updateNode(HASH_TABLE.Key, ' ');
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
       },

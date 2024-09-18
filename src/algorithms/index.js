@@ -154,7 +154,7 @@ const allalgs = {
   },
 
   'HashingLP': {
-    name: 'Hashing (linear probing)',
+    name: 'Hashing (Linear probing)',
     category: 'Insert/Search',
     param: <Param.HashingLPParam/>,
     instructions: Instructions.HashingInstruction,
@@ -171,7 +171,7 @@ const allalgs = {
   },
 
   'HashingDH': {
-    name: 'Hashing (double hashing)',
+    name: 'Hashing (Double hashing)',
     category: 'Insert/Search',
     param: <Param.HashingDHParam/>,
     instructions: Instructions.HashingInstruction,
