@@ -16,7 +16,7 @@ import ShareIcon from '@mui/icons-material/Share';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm, algorithmKey, category, mode } = useContext(GlobalContext);
-  const { nodes, searchValue } = useContext(URLContext);
+  const { nodes, searchValue, graphSize, graphStart, graphEnd, heuristic } = useContext(URLContext);
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -66,11 +66,8 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           break;
           
         case 'Graph':
-          // url += `&size=${size}&start=${start}&end=${end}&size=${size}
-          //         &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}
-          //         &min=${min}&max=${max}`;
-
-          url += `&xy=${nodes}&edges=${searchValue}`; // just for testing
+          url += `&size=${graphSize}&start=${graphStart}&end=${graphEnd}
+                  &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}`;
           break;
         
         default:
@@ -79,7 +76,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
       
       setCurrentUrl(url);
     }
-  }, [share, algorithmKey, category, mode, searchValue]);
+  }, [share]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentUrl);

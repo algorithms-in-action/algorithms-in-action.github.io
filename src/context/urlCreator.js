@@ -8,12 +8,17 @@ export const URLContext = createContext();
 export const URLProvider = ({ children }) => {
   const [nodes, setNodes] = useState([]);
   const [searchValue, setSearchValue] = useState([]);
-
+  const [graphSize, setGraphSize] = useState([]);
+  const [graphStart, setGraphStart] = useState([]);
+  const [graphEnd, setGraphEnd] = useState([]);
+  const [heuristic, setHeuristic] = useState([]);
   const value = {
-    nodes,
-    setNodes,
-    searchValue,
-    setSearchValue,
+    nodes, setNodes,
+    searchValue, setSearchValue,
+    graphSize, setGraphSize,
+    graphStart, setGraphStart,
+    graphEnd, setGraphEnd,
+    heuristic, setHeuristic,
   };
 
   return (

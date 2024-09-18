@@ -58,7 +58,7 @@
 // it's fixed now - hasn't cropped up for a while??).
 // A bunch of other things with XXX comments in code.
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
@@ -86,6 +86,7 @@ import { template } from 'lodash';
 // comments elsewhere (search for ListParam)
 import ListParam from './ListParam';
 import '../../../styles/Param.scss';
+import { URLContext } from '../../../context/urlCreator';
 
 
 // We have an initial graph that is generated randomly (we could add
@@ -269,6 +270,8 @@ function EuclideanMatrixParams({
   // const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
   const [graphChoice, setgraphChoice] = useState(1);
 
+  const { setNodes, setSearchValue, setGraphSize, setGraphStart, setGraphEnd, setHeuristic } = useContext(URLContext);
+
 //   // reset the XY coordinates when the size changes
 //   // (now done in updateTableSize - this is probably not needed XXX)
 //   useEffect(() => {
@@ -293,8 +296,15 @@ function EuclideanMatrixParams({
   useEffect(() => {
     // const element = document.querySelector('button[id="startBtnGrp"]');
     // simulateMouseClick(element);
+
     handleSearch();
-  }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc]);
+    setNodes(coordsTxt);
+    setSearchValue(edgesTxt);
+    setGraphSize(size);
+    setGraphStart(startNode);
+    setGraphEnd(endNodes);
+    setHeuristic(heurCalcName[weightCalc]);
+  }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc, coordsTxt, edgesTxt]);
 
   // change graph choice; Note setData1 etc are asynchronous
   // newSize is passed in for random graphs; if it is zero the default
