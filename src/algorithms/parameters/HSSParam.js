@@ -5,7 +5,7 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlCreator';
 
 // const DEFAULT_STRING = 'cddaadddabdda';
 // const DEFAULT_PATTERN = 'dddac';
@@ -18,7 +18,7 @@ function HSSParam({mode, string, pattern}) {
   const [message, setMessage] = useState(null);
   const [string_, setString] = useState(string || DEFAULT_STRING);
   const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
-  const { setNodes, setSearchValue } = useContext(GlobalContext);
+  const { setNodes, setSearchValue } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(string_); // sync with global state

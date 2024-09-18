@@ -7,6 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
 import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlCreator';
 import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
@@ -52,7 +53,7 @@ function BSTParam({ mode, list, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
   const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
-  const { setNodes, setSearchValue } = useContext(GlobalContext);
+  const { setNodes, setSearchValue } = useContext(URLContext);
   const [bstCase, setBSTCase] = useState({
     random: true,
     sorted: false,

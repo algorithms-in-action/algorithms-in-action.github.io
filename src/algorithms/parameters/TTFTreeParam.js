@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
+import { URLContext } from '../../context/urlCreator';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
@@ -33,7 +34,7 @@ function TTFTreeParam({ mode, list, value }) {
   const [message, setMessage] = useState(null);
   const [nodes, setLocalNodes] = useState(list || DEFAULT_NODES);
   const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
-  const { setNodes, setSearchValue } = useContext(GlobalContext);
+  const { setNodes, setSearchValue } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(nodes); // sync with global state

@@ -7,6 +7,7 @@ import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
+import { URLContext } from '../../context/urlCreator';
 
 import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
@@ -46,7 +47,7 @@ function UFParam({ mode, union, value }) {
   const [unions, setUnions] = useState(union || DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
   const [localValue, setLocalValue] = useState(DEFAULT_FIND);
-  const { setNodes, setSearchValue } = useContext(GlobalContext);
+  const { setNodes, setSearchValue } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(unions); // sync with global state

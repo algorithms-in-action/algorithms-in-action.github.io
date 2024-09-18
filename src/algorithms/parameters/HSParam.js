@@ -7,7 +7,7 @@ import ListParam from './helpers/ListParam.js';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlCreator';
 import '../../styles/Param.scss';
 
 
@@ -23,7 +23,7 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
     const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
     const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
     const [message, setMessage] = useState(null);
-    const { nodes, setNodes } = useContext(GlobalContext);
+    const { setNodes } = useContext(URLContext);
   
     useEffect(() => {
       setNodes(localNodes); // Sync with global state

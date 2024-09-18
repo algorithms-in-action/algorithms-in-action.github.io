@@ -6,6 +6,7 @@ import '../../styles/MidPanel.scss';
 /* eslint-disable-next-line import/no-named-as-default */
 import Popup from 'reactjs-popup';
 import ReactMarkDown from 'react-markdown/with-html';
+import { URLContext } from '../../context/urlCreator'; // imported to create urls for sharing
 import toc from 'remark-toc';
 import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
@@ -14,7 +15,8 @@ import ControlButton from '../common/ControlButton';
 import ShareIcon from '@mui/icons-material/Share';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
-  const { algorithm, algorithmKey, category, mode, nodes, searchValue } = useContext(GlobalContext);
+  const { algorithm, algorithmKey, category, mode } = useContext(GlobalContext);
+  const { nodes, searchValue } = useContext(URLContext);
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -63,11 +65,13 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           url += `&union=${nodes}&value=${searchValue}`;
           break;
           
-        // case 'Graph':
-        //   url += `&size=${size}&start=${start}&end=${end}&size=${size}
-        //           &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}
-        //           &min=${min}&max=${max}`;
-        //   break;
+        case 'Graph':
+          // url += `&size=${size}&start=${start}&end=${end}&size=${size}
+          //         &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}
+          //         &min=${min}&max=${max}`;
+
+          url += `&xy=${nodes}&edges=${searchValue}`; // just for testing
+          break;
         
         default:
           break;

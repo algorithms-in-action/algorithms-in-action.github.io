@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
-import { GlobalContext } from '../../context/GlobalState';
 
 const DEFAULT_SIZE = 5;
 const DFSrec = 'DFSrec\'s';
@@ -34,7 +33,6 @@ const GRAPH_EGS = [ // XXX think up better examples?
 
 function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
   const [message, setMessage] = useState(null);
-  const { setNodes } = useContext(GlobalContext);
   const graph_egs = [
     { name: 'URL Input Graph',
       size: size || GRAPH_EGS[0].size,
@@ -42,9 +40,6 @@ function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic,
       edges: edgeWeights || GRAPH_EGS[0].edges
     }
     ]
-
-    useEffect(() => {
-    }, []);
 
   return (
     <>

@@ -10,7 +10,7 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlCreator';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
@@ -40,7 +40,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
   const [message, setMessage] = useState(null)
 
   const [array, setArray] = useState(list || DEFAULT_ARR)
-  const { setNodes } = useContext(GlobalContext)
+  const { setNodes } = useContext(URLContext)
   
   const [QSCase, setQSCase] = useState({
     random: true,
