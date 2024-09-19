@@ -1,3 +1,4 @@
+import { array } from 'prop-types';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
@@ -39,11 +40,12 @@ export default {
 
   run(chunker, params) {
     const ALGORITHM_NAME = params.name;
+    const SIZE = params.hashSize;
     let inputs = params.values;
-    let hashValue = params.hashSize;
-    let indexArr = Array.from({ length: hashValue }, (_, i) => i);
-    let valueArr = Array(hashValue).fill(EMPTY_CHAR);
-    let nullArr = Array(hashValue).fill('');
+    let indexArr = Array.from({ length: SIZE }, (_, i) => i);
+    let valueArr = Array(SIZE).fill(EMPTY_CHAR);
+    let nullArr = Array(SIZE).fill('');
+    let table_result;
 
     const INDEX = 0;
     const VALUE = 1;
@@ -57,7 +59,7 @@ export default {
         IBookmarks.IncrementInsertions,
         (vis, key, insertions, prevKey, prevIdx) => {
           vis.array.showKth(insertions);
-          vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
+          vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
           // change variable value
           vis.array.assignVariable(key, VAR, prevIdx, prevKey);
@@ -74,9 +76,9 @@ export default {
         [key, insertions, prevKey, prevIdx]
       );
       // get initial hash index
-      let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
+      let i = hash1(chunker, IBookmarks.Hash1, key, SIZE);
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, hashValue, params.name
+        chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name
       );
 
       chunker.add(
@@ -89,7 +91,7 @@ export default {
       )
       while (table[i] !== undefined) {
         let prevI = i;
-        i = (i + increment) % hashValue;
+        i = (i + increment) % SIZE;
         chunker.add(
           IBookmarks.Collision,
           (vis, idx) => {
@@ -123,7 +125,7 @@ export default {
 
     // Init hash table
     // Hide third row to show assigned variables
-    let table = new Array(hashValue);
+    let table = new Array(SIZE);
     chunker.add(
       IBookmarks.Init,
       (vis, array) => {
@@ -163,7 +165,7 @@ export default {
       IBookmarks.Done,
       (vis, key) => {
         vis.array.assignVariable(key, VAR, undefined);
-        vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
+        vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
         vis.graph.updateNode(HASH_TABLE.Key, ' ');
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
@@ -172,8 +174,12 @@ export default {
           vis.graph.updateNode(HASH_TABLE.Key2, ' ');
           vis.graph.updateNode(HASH_TABLE.Value2, ' ');
         }
+
+        table_result = vis.array.extractArray([1], "x")
       },
       [prevKey]
     )
+    
+    return table_result;
   },
 };

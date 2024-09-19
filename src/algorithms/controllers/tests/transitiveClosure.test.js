@@ -5,10 +5,10 @@
 
 /* eslint-disable no-undef */
 
-import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Chunker from '../../context/chunker';
-import transitiveClosure from './transitiveClosure';
+import Array2DTracer from '../../../components/DataStructures/Array/Array2DTracer';
+import GraphTracer from '../../../components/DataStructures/Graph/GraphTracer';
+import Chunker from '../../../context/chunker';
+import transitiveClosure from '../transitiveClosure';
 
 
 // Simple stub for the chunker
