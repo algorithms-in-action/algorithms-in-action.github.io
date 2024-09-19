@@ -14,13 +14,14 @@ import {
 const IBookmarks = {
   Init: 1,
   EmptyArray: 2,
-  IncrementInsertions: 3,
-  Hash1: 4,
-  ChooseIncrement: 5,
-  Probing: 6,
-  Collision: 7,
-  PutIn: 8,
-  Done: 9,
+  InitInsertion: 3,
+  IncrementInsertions: 4,
+  Hash1: 5,
+  ChooseIncrement: 6,
+  Probing: 7,
+  Collision: 8,
+  PutIn: 9,
+  Done: 10,
 }
 
 const TYPE = 'Insert';
@@ -51,7 +52,7 @@ export default {
 
     const INDEX = 0;
     const VALUE = 1;
-    const VAR = 2;
+    const POINTER = 2;
 
     let insertions = 0;
 
@@ -64,7 +65,7 @@ export default {
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
           // change variable value
-          vis.array.assignVariable(key, VAR, prevIdx, prevKey);
+          vis.array.assignVariable(key, POINTER, prevIdx, prevKey);
 
           // update key value
           vis.graph.updateNode(HASH_TABLE.Key, key);
@@ -86,7 +87,7 @@ export default {
       chunker.add(
         IBookmarks.Probing,
         (vis, key, idx) => {
-          vis.array.assignVariable(key, VAR, idx);
+          vis.array.assignVariable(key, POINTER, idx);
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
         },
         [key, i]
@@ -105,7 +106,7 @@ export default {
         chunker.add(
           IBookmarks.Probing,
           (vis, key, idx) => {
-            vis.array.assignVariable(key, VAR, idx);
+            vis.array.assignVariable(key, POINTER, idx);
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
           },
           [key, i]
@@ -132,18 +133,8 @@ export default {
       IBookmarks.Init,
       (vis, array) => {
         vis.array.set(array, params.name, '', { rowLength: 20, rowHeader: ['Index', 'Value', ''] });
-        vis.array.hideArrayAtIndex([VALUE, VAR]);
-      },
-      [[indexArr, valueArr, nullArr]]
-    );
+        vis.array.hideArrayAtIndex([VALUE, POINTER]);
 
-    chunker.add(
-      IBookmarks.EmptyArray,
-      (vis) => {
-        // Show the value row
-        vis.array.hideArrayAtIndex(VAR);
-        
-        // Init hashing animation
         vis.graph.weighted(true);
         switch (ALGORITHM_NAME) {
           case "HashingLP" :
@@ -154,7 +145,23 @@ export default {
             break;
         }
       },
+      [[indexArr, valueArr, nullArr]]
     );
+
+    chunker.add(
+      IBookmarks.EmptyArray,
+      (vis) => {
+        // Show the value row
+        vis.array.hideArrayAtIndex(POINTER);
+      },
+    );
+
+    chunker.add(
+      IBookmarks.InitInsertion,
+      (vis) => {
+        vis.array.showKth([0, ""]);
+      }
+    )
 
     let prevKey;
     let prevIdx;
@@ -166,7 +173,7 @@ export default {
     chunker.add(
       IBookmarks.Done,
       (vis, key) => {
-        vis.array.assignVariable(key, VAR, undefined);
+        vis.array.assignVariable(key, POINTER, undefined);
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
         vis.graph.updateNode(HASH_TABLE.Key, ' ');

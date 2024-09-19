@@ -18,7 +18,7 @@ let text1 = `
             HashInit(T)    // TableSize is prime \\B 1
                 \\In{
                     Initialize Hash Table Slots to Empty   \\Ref NullTable
-                    Insertions <- 0    // Keep track of how full table is
+                    Insertions <- 0    // Keep track of how full table is \\B 3
                 \\In}
 
             //=======================================================
@@ -30,7 +30,7 @@ let text1 = `
                     Even before this point performance degrades if the table gets too full, say over 80% full.
                     See Overview for more details.
                     \\Expl}
-                    Insertions <- Insertions + 1 \\B 3
+                    Insertions <- Insertions + 1 \\B 4
                     \\Expl{ To check how full the table is we can maintain a simple
                         counter.
                     \\Expl}
@@ -43,26 +43,26 @@ let text1 = `
                     \\Note}
                     i <- hash(k) \\Ref Hash1
                     Choose Increment value in case of collisions \\Ref SetIncrement
-                    while T[i] is occupied by another element // search for unoccupied slot \\B 6
+                    while T[i] is occupied by another element // search for unoccupied slot \\B 7
                     \\Expl{ If T[i] = k then k already exists in the table.  We could explicitly check
                             for this but the code here simply over-writes the previous
                             ocurrence of k, as if the slot was empty.
                     \\Expl}
                         \\In{
-                            i <- (i + Increment) mod TableSize \\B 7
+                            i <- (i + Increment) mod TableSize \\B 8
                             \\Expl{ T[i] is occupied so we jump ahead Increment steps.
                                 We use modulo TableSize to "wrap around" if we reach the end.
                             \\Expl}
                         \\In}
-                    T[i] <- k // unoccupied slot found so we put k in it \\B 8
-                    // Done \\B 9
+                    T[i] <- k // unoccupied slot found so we put k in it \\B 9
+                    // Done \\B 10
                 \\In}
         \\Code}
 
         \\Code{
             HashDelete(T, i)    // mark T[i] as Deleted
                                 // To delete a key we need to search for it first
-                T[i] <- Deleted \\B 11
+                T[i] <- Deleted \\B 12
                 \\Expl{ T[i] is no longer considered occupied, so a key may be
                         inserted here, but searching does not stop at Deleted slots,
                         only Empty ones (or if we find the key).
@@ -79,7 +79,7 @@ let text1 = `
 
         \\Code{
             Hash1
-                i <- (k * BIGPRIME) mod TableSize \\B 4
+                i <- (k * BIGPRIME) mod TableSize \\B 5
                 \\Expl{ BIGPRIME much bigger than TableSize (which is also prime).
                 The object is to spread the values across the hash table as widely as possible.
                     Here we use BIGPRIME = 3457
@@ -90,7 +90,7 @@ let text2 = `
 
         \\Code{
             SetIncrement
-            Increment <- 1 \\B 5
+            Increment <- 1 \\B 6
             \\Expl{ For linear probing, if we have a collision we successively look at the
                     next table entry.
             \\Expl}
@@ -102,7 +102,7 @@ let text3 = `
 
         \\Code{
             SetIncrement
-                Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1 \\B 5
+                Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1 \\B 6
                 \\Expl{Double hashing resolves collisions by hashing the key k a second time to set the increment
                     to find the next empty slot in the table R. The value given by the function must be non-zero
                     and must also be relatively prime to the table size.
