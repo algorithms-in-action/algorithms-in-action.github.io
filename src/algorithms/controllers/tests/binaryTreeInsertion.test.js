@@ -5,7 +5,7 @@
 
 /* eslint-disable no-undef */
 
-import binaryTreeInsertion from './binaryTreeInsertion';
+import binaryTreeInsertion from '../binaryTreeInsertion';
 
 // Simple stub for the chunker
 const chunker = {

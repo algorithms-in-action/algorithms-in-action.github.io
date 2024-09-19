@@ -5,7 +5,7 @@
 
 /* eslint-disable no-undef */
 
-import quickSort from './quickSort';
+import quickSort from '../quickSort';
 
 // Simple stub for the chunker
 const chunker = {

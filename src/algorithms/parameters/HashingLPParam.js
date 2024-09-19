@@ -14,6 +14,7 @@ import {
   successParamMsg,
   errorParamMsg,
 } from './helpers/ParamHelper';
+import { SMALL_TABLE, LARGE_TABLE } from '../controllers/HashingCommon';
 
 const ALGORITHM_NAME = 'Hashing (linear probing)';
 const HASHING_INSERT = 'Hashing Insertion';
@@ -26,8 +27,6 @@ const UNCHECKED = {
     smallTable: false,
     largeTable: false
 };
-const SMALL_TABLE = 11;
-const LARGE_TABLE = 97;
 
 const BlueRadio = withStyles({
   root: {
@@ -41,7 +40,7 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />)
 
 
-const ERROR_INPUT = 'Please enter only positive integers';
+const ERROR_NEGATIVE_INPUT = 'Please enter only positive integers';
 const ERROR_TOO_LARGE = `Please enter the right number of digits`;
 
 
@@ -79,7 +78,7 @@ function HashingLPParam() {
         setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
       }
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
     }
   }
 
@@ -101,7 +100,7 @@ function HashingLPParam() {
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
     }
   }
 
