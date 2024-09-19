@@ -17,7 +17,7 @@ export default parse(`
     HashInit(T)    // TableSize is prime \\B 1
         \\In{
             Initialize Hash Table Slots to Empty   \\Ref NullTable
-            Insertions <- 0    // Keep track of how full table is
+            Insertions <- 0    // Keep track of how full table is \\B 3
         \\In}
 
     //=======================================================
@@ -33,25 +33,25 @@ export default parse(`
                 slot Empty, otherwise the Search code may loop; we just return
                 with failure here rather than fill the last slot or expand the table.
             \\Expl}
-            Insertions <- Insertions + 1 \\B 3
+            Insertions <- Insertions + 1 \\B 4
             \\Expl{ To check how full the table is we can maintain a simple
                 counter.
             \\Expl}
             i <- hash(k) \\Ref Hash1
             Choose Increment value in case of collisions \\Ref SetIncrementLinearProbing
-            while T[i] is occupied by another element // search for unoccupied slot \\B 6
+            while T[i] is occupied by another element // search for unoccupied slot \\B 7
             \\Expl{ If T[i] = k then k already exists in the table. Ideally,
                 duplicates should be avoided as they decrease performance and
                 search just returns the first one.
             \\Expl}
                 \\In{
-                    i <- (i + Increment) mod TableSize \\B 7
+                    i <- (i + Increment) mod TableSize \\B 8
                     \\Expl{ T[i] is occupied so we jump ahead Increment steps.
                         We use modulo TableSize to "wrap around" if we reach the end.
                     \\Expl}
                 \\In}
-            T[i] <- k // unoccupied slot found so we put k in it \\B 8
-            // Done \\B 9
+            T[i] <- k // unoccupied slot found so we put k in it \\B 9
+            // Done \\B 10
         \\In}
 \\Code}
 
@@ -74,7 +74,7 @@ export default parse(`
 
 \\Code{
     Hash1
-        i <- (k * BIGPRIME) mod TableSize \\B 4
+        i <- (k * BIGPRIME) mod TableSize \\B 5
         \\Expl{ XXX blah blah Want BIGPRIME much bigger than TableSize
             Here we use BIGPRIME = 3457
         \\Expl}
@@ -82,7 +82,7 @@ export default parse(`
 
 \\Code{
     SetIncrementLinearProbing
-        Increment <- 1 \\B 5
+        Increment <- 1 \\B 6
         \\Expl{ For linear probing, if we have a collision we just look at the
             next table entry. This tends to form "clusters" of full table
             entries, reducing performance.  Offset linear probing adds some

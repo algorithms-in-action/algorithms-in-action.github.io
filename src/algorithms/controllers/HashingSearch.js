@@ -14,11 +14,12 @@ const MAX_PARAMS_SIZE = 100;
 const IBookmarks = {
   Init: 1,
   ApplyHash: 2,
-  CheckValue: 3,
-  Increment: 4,
-  Found: 5,
-  NotFound: 6,
-  WhileNot: 7,
+  ChooseIncrement: 3,
+  WhileNot: 4,
+  Increment: 5,
+  CheckValue: 6,
+  Found: 7,
+  NotFound: 8,
 }
 
 const TYPE = 'Search';
@@ -39,58 +40,50 @@ export default {
 
   run(chunker, params) {
 
-    let target = params.target; // Target value we are searching for
-    let hashValue = params.hashSize; // Hash Modulo being used in the table
-    let hashed = target % hashValue; // Target value after being hashed
+    const TARGET = params.target; // Target value we are searching for
+    const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
 
     const INDEX = 0;
-    const VALUE = 1;
-    const VAR = 2;
+    const POINTER = 2;
+    const POINTER_VALUE = "i";
 
     // Clear previous stuff and set start value to target value
     // Currently has a bug where if you search for a different number, the previous one remains on the screen
     chunker.add(
-      1,
-      (vis, val) => {
-        vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
-        vis.graph.updateNode(HASH_TABLE.Key, val);
+      IBookmarks.Init,
+      (vis, target) => {
+
+        vis.array.showKth(["N/A", ""]);
+
+        vis.graph.updateNode(HASH_TABLE.Key, target);
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
-        vis.array.showKth('');
-        for (let i = 0; i < MAX_PARAMS_SIZE; i++) {
-            vis.array.assignVariable(i, VAR, undefined);
-            }
+
+        for (let i = 0; i < SIZE; i++) {
+          vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
+        }
       },
-      [target]
+      [TARGET]
     );
 
     // Hashing the search value
-    chunker.add(
-        2,
-        (vis, val) => {
-            vis.graph.updateNode(1, val);
-        },
-        [hashed]
-    );
-
-    let i = hashed
+    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE); // Target value after being hashed
 
     // Fix later, should have different line of Pseudocode
-    let increment = setIncrement(chunker, IBookmarks.WhileNot, target, hashValue, params.name, TYPE);
+    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, TYPE);
 
     // Highlight initial search position
     chunker.add(
       IBookmarks.WhileNot,
-      (vis, key, idx) => {
-        vis.array.assignVariable(key, VAR, idx);
+      (vis, idx) => {
+        vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
         vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
       },
-      [target, i]
+      [i]
     );
 
     // Search for the target key, checking each probed position
-    while (table[i] !== target && table[i] !== undefined) {
-      let prevI = i;
+    while (table[i] !== TARGET && table[i] !== undefined) {
 
       // Highlight the position with Red since not a match
       chunker.add(
@@ -98,19 +91,19 @@ export default {
         (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
         },
-        [prevI]
+        [i]
       );
 
       // Move to the next index based on collision handling
-      i = (i + increment) % hashValue;
+      i = (i + increment) % SIZE;
 
       // Move number to next position based on Increment
       chunker.add(
         IBookmarks.Increment,
-        (vis, key, idx) => {
-          vis.array.assignVariable(key, VAR, idx);
+        (vis, idx) => {
+          vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
         },
-        [target, i]
+        [i]
       );
 
       // Changes colour for pending search status
@@ -121,10 +114,9 @@ export default {
         },
         [i]
       );
-      let tablePos = i
     }
     // If target has been found in search
-    if (table[i] === target) {
+    if (table[i] === TARGET) {
       chunker.add(
         IBookmarks.Found,
         (vis, idx) => {
@@ -144,6 +136,5 @@ export default {
         [i]
       );
     }
-
   },
 };
