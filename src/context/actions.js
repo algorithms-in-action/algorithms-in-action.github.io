@@ -211,6 +211,51 @@ function addLineExplanation(procedurePseudocode) {
   }
 }
 
+// get an object showing the code block that the bookmarks belong to
+function getBookmarkList(pseudocode) {
+  let bookmarkList = {};
+  for (const codeBlockName of Object.keys(pseudocode)) {
+    for (const line of pseudocode[codeBlockName]) {
+      if (line.bookmark !== undefined) {
+        bookmarkList[line.bookmark] = codeBlockName;
+      }
+    }
+  }
+
+  return bookmarkList;
+}
+
+// set the visibility attribute for chunks if the chunk can be reached
+// i.e. not in a collapsed code block
+function setChunkAccessibility(chunker, pseudocode, collapse) {
+  // initialising
+  // for (let i = 0; i < chunker.chunks.length; i++) {
+  //   chunker.chunks[i].accessible = false;
+  // }
+
+  let currChunkNum = 0;
+  let prevChunkNum = 0;
+  let accessibleList = Array(chunker.chunks.length).fill(false);
+  // chunker.chunks[0].accessible = true;
+  accessibleList[0] = true;
+
+  while (currChunkNum < chunker.chunks.length - 1) {
+    currChunkNum = findNext(chunker.chunks, currChunkNum, pseudocode, collapse);
+
+    // for (let i = prevChunkNum + 1; i < currChunkNum; i++) {
+    //   chunker.chunks[i].accessible = false;
+    // }
+
+    accessibleList[currChunkNum] = true;
+    // accessibleList.push(currChunkNum);
+    prevChunkNum = currChunkNum;
+  }
+  // chunker.chunks[currChunkNum].accessible = true;
+  // accessibleList.push(currChunkNum);
+
+  chunker.accessibleList = accessibleList;
+}
+
 // At any time the app may call dispatch(action, params), which will trigger one of
 // the following functions. Each comment shows the expected properties in the
 // params argument.
@@ -269,6 +314,10 @@ export const GlobalActions = {
     const bookmarkInfo = chunker.next();
     //const firstLineExplan = findBookmark(procedurePseudocode, bookmarkInfo.bookmark).explanation;
     const firstLineExplan = null;
+    const collapse = state === undefined || state.collapse === undefined
+      ? getCollapseController(algorithms)
+      : state.collapse;
+    setChunkAccessibility(chunker, procedurePseudocode, collapse[params.name][params.mode]);
 
     return {
       ...state,
@@ -282,10 +331,7 @@ export const GlobalActions = {
       ...bookmarkInfo, // sets bookmark & finished fields
       chunker,
       visualisers: chunker.visualisers,
-      collapse:
-        state === undefined || state.collapse === undefined
-          ? getCollapseController(algorithms)
-          : state.collapse,
+      collapse: collapse,
       playing: false,
       lineExplanation: firstLineExplan,
     };
@@ -306,14 +352,18 @@ export const GlobalActions = {
     let result;
 
     let triggerPauseInCollapse = false;
+    let stopAt = undefined;
     if (typeof playing === 'object') {
       triggerPauseInCollapse = playing.triggerPauseInCollapse;
+      stopAt = playing.stopAt;
       playing = playing.playing;
     }
 
     // console.log(['NEXT_LINE', playing, triggerPauseInCollapse]);
     // figure out what chunk we need to stop at
-    let stopAt = findNext(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
+    if (stopAt === undefined) {
+      stopAt = findNext(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
+    }
     // step forward until we are at stopAt, or last chunk, or some weird
     // pauseInCollapse stuff (for Warshall's?) I don't really understand:( XXX
     do {
@@ -363,7 +413,15 @@ export const GlobalActions = {
     if (state.chunker.currentChunk > state.chunker.chunks.length ) {
       state.chunker.currentChunk = state.chunker.chunks.length - 1;
     }
-    let stopAt = findPrev(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode])
+
+    let stopAt = undefined;
+    if (typeof playing === 'object') {
+      stopAt = playing.stopAt;
+      playing = playing.playing;
+    }
+    if (stopAt === undefined) {
+      stopAt = findPrev(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode])
+    }
     let result1 = {bookmark:"", chunk: state.chunker.currentChunk};
     const result = state.chunker.goBackTo(stopAt); // changes state
 
@@ -400,6 +458,8 @@ export const GlobalActions = {
     onCollapseChange(state.chunker); // generic plugin for expand/collapse
     onCollapseStateChange(); // Transitive closure plugin
     unionFindToggleRank(state);
+
+    setChunkAccessibility(state.chunker, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
 
     return {
       ...state,

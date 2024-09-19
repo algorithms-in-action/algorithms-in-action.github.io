@@ -46,6 +46,7 @@ const DEFAULT_SPEED = 50;
 function ControlPanel() {
   // eslint-disable-next-line
   const { algorithm, dispatch } = useContext(GlobalContext);
+  console.log(algorithm);
   const { chunker } = algorithm;
   const currentChunk = chunker ? chunker.currentChunk : -1;
   const chunkerLength = chunker ? chunker.chunks.length : -1;
@@ -182,6 +183,8 @@ function ControlPanel() {
           <ProgressBar
             current={currentChunk}
             max={chunkerLength}
+            state={algorithm}
+            dispatch={dispatch}
           />
         </div>
 
