@@ -161,7 +161,7 @@ const allalgs = {
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfoLP,
     pseudocode: {
-      insertion: Pseudocode.HashingInsertion,
+      insertion: Pseudocode.linearProbing,
       search: Pseudocode.HashingSearch,
     },
     controller: {
@@ -178,7 +178,7 @@ const allalgs = {
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfoDH,
     pseudocode: {
-      insertion: Pseudocode.HashingInsertion,
+      insertion: Pseudocode.doubleHashing,
       search: Pseudocode.HashingSearch,
     },
     controller: {
