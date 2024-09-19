@@ -20,5 +20,5 @@ export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
-export { default as HashingInsertion } from './HashingInsertion';
+export { linearProbing, doubleHashing } from './HashingInsertion';
 export { default as HashingSearch } from './HashingSearch';

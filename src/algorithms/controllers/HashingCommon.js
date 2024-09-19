@@ -7,6 +7,7 @@ const H2_LARGE_HASH_VALUE = 23
 export const SMALL_TABLE = 11;
 export const LARGE_TABLE = 97;
 
+
 export const EMPTY_CHAR = '-';
 
 export const Colors = {
