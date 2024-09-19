@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="">
+    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Search function working for LP small table, also added instructions and extra-info">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsert.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsert.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingCommon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingCommon.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsertion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsertion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,13 +36,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hashing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "SearchHashing",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -66,7 +69,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725347405907</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Search function working for LP small table, also added instructions and extra-info">
+      <option name="closed" value="true" />
+      <created>1726555275650</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726555275650</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -89,6 +100,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Updating functions" />
     <MESSAGE value="Generalised code so that it works for big and small hashes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Generalised code so that it works for big and small hashes" />
+    <MESSAGE value="Search function working for LP small table, also added instructions and extra-info" />
+    <option name="LAST_COMMIT_MESSAGE" value="Search function working for LP small table, also added instructions and extra-info" />
   </component>
 </project>

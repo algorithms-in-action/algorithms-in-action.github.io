@@ -8,7 +8,7 @@ import {
   HASH_TABLE,
   EMPTY_CHAR,
   Colors
-} from './HashingCommon';
+} from './HashingCommon.js';
 
 
 const IBookmarks = {
@@ -22,6 +22,8 @@ const IBookmarks = {
   PutIn: 8,
   Done: 9,
 }
+
+const TYPE = 'Insert';
 
 export default {
   explanation: HashingExp,
@@ -78,7 +80,7 @@ export default {
       // get initial hash index
       let i = hash1(chunker, IBookmarks.Hash1, key, SIZE);
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name
+        chunker, IBookmarks.ChooseIncrement, key, SIZE, ALGORITHM_NAME, TYPE
       );
 
       chunker.add(

@@ -8,11 +8,13 @@ export const SMALL_TABLE = 11;
 export const LARGE_TABLE = 97;
 
 export const EMPTY_CHAR = '-';
+
 export const Colors = {
   Insert: 1,
   Pending: 2,
   Collision: 3,
-}
+};
+
 export const HASH_TABLE = {
   Key: 0,
   Value: 1,
@@ -45,8 +47,9 @@ export function hash2(chunker, bookmark, key, tableSize) {
   return hashed;
 }
 
+
 export function setIncrement(
-  chunker, bookmark, key, tableSize, collisionHandling
+  chunker, bookmark, key, hashValue, collisionHandling, type
 ) {
   let increment;
   switch (collisionHandling) {
@@ -57,14 +60,25 @@ export function setIncrement(
       increment = hash2(chunker, bookmark, key, tableSize);
       break;
   }
-  chunker.add(
-    bookmark,
-    (vis, increment) => {
-      let insertions = vis.array.getKth();
-      vis.array.showKth([insertions, increment]);
-    },
-    [increment]
-  )
+  if (type == "Insert") {
+      chunker.add(
+        bookmark,
+        (vis, increment) => {
+          let insertions = vis.array.getKth();
+          vis.array.showKth([insertions, increment]);
+        },
+        [increment]
+      )
+  }
+  else if (type == "Search") {
+    chunker.add(
+        bookmark,
+        (vis, increment) => {
+            vis.array.showKth(['N/A', increment])
+        },
+        [increment]
+    )
+  }
   return increment;
 }
 
