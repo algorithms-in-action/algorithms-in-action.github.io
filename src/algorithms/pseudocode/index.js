@@ -21,4 +21,4 @@ export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
 export { linearProbing, doubleHashing } from './HashingInsertion';
-export { default as HashingSearch } from './HashingSearch';
+export { linearSearch, doubleSearch } from './HashingSearch';

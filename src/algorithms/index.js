@@ -162,7 +162,7 @@ const allalgs = {
     extraInfo: ExtraInfo.HashingInfoLP,
     pseudocode: {
       insertion: Pseudocode.linearProbing,
-      search: Pseudocode.HashingSearch,
+      search: Pseudocode.linearSearch,
     },
     controller: {
       insertion: Controller.HashingInsertion,
@@ -179,7 +179,7 @@ const allalgs = {
     extraInfo: ExtraInfo.HashingInfoDH,
     pseudocode: {
       insertion: Pseudocode.doubleHashing,
-      search: Pseudocode.HashingSearch,
+      search: Pseudocode.doubleSearch,
     },
     controller: {
       insertion: Controller.HashingInsertion,
