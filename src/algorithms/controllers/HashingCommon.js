@@ -1,17 +1,21 @@
-const SMALL= 11;
-const BIG = 97;
-const BIGPRIME = 3457;
-const BIGPRIME2 = 1429;
-const SMALLPRIME1 = 3;
-const SMALLPRIME2 = 23;
+const SMALL_SIZE = 11;
+const LARGE_SIZE = 97;
+const PRIME = 3457;
+const PRIME2 = 1429;
+const H2_SMALL_HASH_VALUE = 3;
+const H2_LARGE_HASH_VALUE = 23
+export const SMALL_TABLE = 11;
+export const LARGE_TABLE = 97;
 
 
 export const EMPTY_CHAR = '-';
+
 export const Colors = {
   Insert: 1,
   Pending: 2,
   Collision: 3,
-}
+};
+
 export const HASH_TABLE = {
   Key: 0,
   Value: 1,
@@ -19,8 +23,8 @@ export const HASH_TABLE = {
   Value2: 3
 }
 
-export function hash1(chunker, bookmark, key, hashValue) {
-  let hashed = (key * BIGPRIME) % hashValue;
+export function hash1(chunker, bookmark, key, tableSize) {
+  let hashed = (key * PRIME) % tableSize;
   chunker.add(
     bookmark,
     (vis, val) => {
@@ -31,8 +35,9 @@ export function hash1(chunker, bookmark, key, hashValue) {
   return hashed;
 }
 
-export function hash2(chunker, bookmark, key, hashValue) {
-  let hashed = (key * BIGPRIME2) % hashValue + 1;
+export function hash2(chunker, bookmark, key, tableSize) {
+  let smallishPrime = tableSize == SMALL_SIZE ? H2_SMALL_HASH_VALUE : H2_LARGE_HASH_VALUE;
+  let hashed = (key * PRIME2) % smallishPrime + 1;
   chunker.add(
     bookmark,
     (vis, val) => {
@@ -43,27 +48,38 @@ export function hash2(chunker, bookmark, key, hashValue) {
   return hashed;
 }
 
+
 export function setIncrement(
-  chunker, bookmark, key, hashValue, collisionHandling
+  chunker, bookmark, key, tableSize, collisionHandling, type
 ) {
-  let smallishprime = hashValue == SMALL ? SMALLPRIME1 : SMALLPRIME2;
   let increment;
   switch (collisionHandling) {
     case 'HashingLP':
       increment = 1;
       break;
     case 'HashingDH':
-      increment = hash2(chunker, bookmark, key, smallishprime);
+      increment = hash2(chunker, bookmark, key, tableSize);
       break;
   }
-  chunker.add(
-    bookmark,
-    (vis, increment) => {
-      let insertions = vis.array.getKth();
-      vis.array.showKth([insertions, increment]);
-    },
-    [increment]
-  )
+  if (type == "Insert") {
+      chunker.add(
+        bookmark,
+        (vis, increment) => {
+          let insertions = vis.array.getKth();
+          vis.array.showKth([insertions, increment]);
+        },
+        [increment]
+      )
+  }
+  else if (type == "Search") {
+    chunker.add(
+        bookmark,
+        (vis, increment) => {
+            vis.array.showKth(['N/A', increment])
+        },
+        [increment]
+    )
+  }
   return increment;
 }
 

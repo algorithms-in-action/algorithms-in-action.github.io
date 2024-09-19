@@ -5,7 +5,7 @@
 
 /* eslint-disable no-undef */
 
-import heapSort from './heapSort';
+import heapSort from '../heapSort';
 
 // Simple stub for the chunker
 const chunker = {

@@ -51,6 +51,28 @@ const stringInstructions = [{
   ],
 }];
 
+const hashingInstructions = [
+  {
+    title: 'Insert Mode',
+    content: [
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter a list of Integers in the Insert parameter.',
+    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+    ],
+  },
+  {
+    title: 'Search Mode',
+    content: [
+    'Make sure table has inserted values before searching.',
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter an Integer in the Search parameter.',
+    `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run.`,
+    ],
+  },
+];
+
 const sortInstructions = [{
   title: 'Sorting Numbers',
   content: [
@@ -127,4 +149,4 @@ export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
 export const DFSInstruction = graphInstructions;
 export const DFSrecInstruction = graphInstructions;
-export const HashingInstruction = graphInstructions;
+export const HashingInstruction = hashingInstructions;
