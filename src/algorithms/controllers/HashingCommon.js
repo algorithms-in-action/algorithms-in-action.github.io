@@ -49,7 +49,7 @@ export function hash2(chunker, bookmark, key, tableSize) {
 
 
 export function setIncrement(
-  chunker, bookmark, key, hashValue, collisionHandling, type
+  chunker, bookmark, key, tableSize, collisionHandling, type
 ) {
   let increment;
   switch (collisionHandling) {
