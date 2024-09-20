@@ -303,7 +303,7 @@ function EuclideanMatrixParams({
     setGraphSize(size);
     setGraphStart(startNode);
     setGraphEnd(endNodes);
-    setHeuristic(heurCalcName[weightCalc]);
+    setHeuristic(heurCalcName[heurCalc]);
   }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc, coordsTxt, edgesTxt]);
 
   // change graph choice; Note setData1 etc are asynchronous
