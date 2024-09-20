@@ -121,7 +121,7 @@ AVLT_Build(keys)  // return the AVL tree that results from inserting
   back up is sufficient - there is only one path back up to the root.
   The "current" node should certainly be highlighted in some way also.
 \\Note}
-AVLT_Insert(t, k)
+AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
   \\In{
     if t = Empty \\B if t = Empty
     \\In{
@@ -182,7 +182,7 @@ with two copies of each, and rather long code if we expand everyting.
 The variable names here are linked to the diagrams, which may be easier for
 functions but may also be confusing.
 \\Note}
-rightRotate(t6)
+rightRotate(t6) \\B rightRotate(t6)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
@@ -210,7 +210,7 @@ for diagrams etc explaining rotations.
     return (pointer to) t2 // new root \\B return t2
   \\In} 
 //============================================================================
-leftRotate(t2)
+leftRotate(t2) \\B leftRotate(t2)
 \\Expl{
 See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
@@ -301,7 +301,7 @@ if balance > 1 && k < left(t).key // left-left case \\B if balance > 1 && k < le
   subtree.
 \\Expl}
 \\In{
-  // Perform "right rotation" to re-balance t
+  // Perform "right rotation" to re-balance t \\B perform right rotation to re-balance t
   \\Expl{
     See Background (click at the top of the right panel)
     for diagrams etc explaining rotations.
@@ -320,7 +320,7 @@ if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k
   subtree.
 \\Expl}
 \\In{
-  // Perform "left rotation" to re-balance t
+  // Perform "left rotation" to re-balance t \\B perform left rotation to re-balance t
   \\Expl{
     See Background (click at the top of the right panel)
     for diagrams etc explaining rotations.

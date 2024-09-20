@@ -49,8 +49,9 @@ class GraphTracer extends Tracer {
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
     this.text = null;
-    this.AVLtext = null;
+    this.functionInsertText = null;
     this.functionName = null;
+    this.functionBRText = null;
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
@@ -868,14 +869,19 @@ class GraphTracer extends Tracer {
   }
 
   // display text on the AVL tree (for the rotation, key)
-  setAVLText(AVLtext) {
-    this.AVLtext = AVLtext;
+  setFunctionInsertText(functionInsertText) {
+    this.functionInsertText = functionInsertText;
+  }
+
+  setFunctionBRText(functionBRText) {
+    this.functionBRText = functionBRText;
   }
 
   // dispaly the function name on the AVL tree
   setFunctionName(name) {
     this.functionName = name;
   }
+
 
   // display null tree since the tree is empty
   setTagInfo(text) {

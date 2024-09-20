@@ -420,7 +420,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, AVLtext, tagInfo } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionBRText, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -706,25 +706,35 @@ class GraphRenderer extends Renderer {
           style={{ fill: '#ff0000' }}
           textAnchor="middle"
           fontSize={50} // font size
-          x={this.centerX - 80}
-          y={this.centerY - 350}
+          x={- 80}
+          y={- 350}
         >
           {text}
         </text>
 
         <text className={classes(styles.text)}
-          x={this.centerX + 530}
-          y={this.centerY - 250}
+          x={+ 530}
+          y={- 250}
           textAnchor="middle">
           <tspan className={styles.pseudocode_function}>
             {this.props.data.functionName}
           </tspan>
-          {AVLtext}
+          {functionInsertText}
         </text>
 
         <text className={classes(styles.text)}
-          x={this.centerX + 530}
-          y={this.centerY - 200}
+          x={+ 530}
+          y={- 200}
+          textAnchor="middle">
+          {/* <tspan className={styles.pseudocode_function}>
+            {this.props.data.functionName}
+          </tspan> */}
+          {functionBRText}
+        </text>
+
+        <text className={classes(styles.text)}
+          x={+ 530}
+          y={- 150}
           textAnchor="middle">
           {tagInfo}
         </text>
