@@ -468,7 +468,7 @@ export default {
             chunker.add('balance = left(t).height - right(t).height', (vis) => {
                 // vis.graph.setFunctionName(`balance = ${balance}, `);
                 // vis.graph.setFunctionInsertText('case ?');
-                vis.graph.setFunctionBRText(`balance=${balance}`);
+                vis.graph.setFunctionBRText(`Node(${root.key}): balance=${balance}`);
             }, [], depth);
 
             let rotateDepth = depth + 1;
@@ -480,7 +480,7 @@ export default {
                     (vis) => {
                         // vis.graph.setFunctionName(`balance= ${balance}, `);
                         // vis.graph.setFunctionInsertText('case LL');
-                        vis.graph.setFunctionBRText(`balance=${balance}, case LL`)
+                        vis.graph.setFunctionBRText(`Node(${root.key}): balance=${balance}, case LL`)
                     },
                     [],
                     depth
@@ -493,7 +493,7 @@ export default {
                     (vis) => {
                         // vis.graph.setFunctionName(`balance= ${balance}, `);
                         // vis.graph.setFunctionInsertText('case RR');
-                        vis.graph.setFunctionBRText(`balance=${balance}, case RR`)
+                        vis.graph.setFunctionBRText(`Node(${root.key}): balance=${balance}, case RR`)
                     },
                     [],
                     depth
@@ -507,7 +507,7 @@ export default {
                     (vis) => {
                         // vis.graph.setFunctionName(`balance= ${balance}, `);
                         // vis.graph.setFunctionInsertText(`case LR`);
-                        vis.graph.setFunctionBRText(`balance=${balance}, case LR`)
+                        vis.graph.setFunctionBRText(`Node(${root.key}): balance=${balance}, case LR`)
                     },
                     [],
                     depth
@@ -522,7 +522,7 @@ export default {
                     (vis) => {
                         // vis.graph.setFunctionName(`balance= ${balance}, `);
                         // vis.graph.setFunctionInsertText('case RL');
-                        vis.graph.setFunctionBRText(`balance=${balance}, case RL`)
+                        vis.graph.setFunctionBRText(`Node(${root.key}): balance=${balance}, case RL`)
                     },
                     [],
                     depth
