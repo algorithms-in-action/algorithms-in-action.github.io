@@ -53,20 +53,26 @@ export function useUrlParams() {
     const alg = urlParams.get('alg') || DEFAULT_ALGORITHM;  // Default algorithm
     const mode = urlParams.get('mode') || DEFAULT_MODE;    // Default mode
 
+    // Helper function to handle both missing and 'null' values
+    const getParamOrDefault = (param, defaultValue) => {
+        return param === null || param === "null" ? defaultValue : param;
+    };
+
     // Parse individual parameters directly from URL
-    const list = urlParams.get('list') || DEFAULT_LIST;
-    const value = urlParams.get('value') || DEFAULT_VALUE;
-    const xyCoords = urlParams.get('xyCoords') || DEFAULT_XY_COORDS;
-    const edgeWeights = urlParams.get('edgeWeights') || DEFAULT_EDGE_WEIGHTS;
-    const size = urlParams.get('size') || DEFAULT_SIZE;
-    const start = urlParams.get('start') || DEFAULT_START;
-    const end = urlParams.get('end') || DEFAULT_END;
-    const string = urlParams.get('string') || DEFAULT_STRING;
+    const list = getParamOrDefault(urlParams.get('list'), DEFAULT_LIST);
+    const value = getParamOrDefault(urlParams.get('value'), DEFAULT_VALUE);
+    const xyCoords = getParamOrDefault(urlParams.get('xyCoords'), DEFAULT_XY_COORDS);
+    const edgeWeights = getParamOrDefault(urlParams.get('edgeWeights'), DEFAULT_EDGE_WEIGHTS);
+    const size = getParamOrDefault(urlParams.get('size'), DEFAULT_SIZE);
+    const start = getParamOrDefault(urlParams.get('start'), DEFAULT_START);
+    const end = getParamOrDefault(urlParams.get('end'), DEFAULT_END);
+    const string = urlParams.get('string') || DEFAULT_STRING
     const pattern = urlParams.get('pattern') || DEFAULT_PATTERN;
-    const union = urlParams.get('union') || DEFAULT_UNION;
-    const heuristic = urlParams.get('heuristic') || DEFAULT_HEURISTIC;
-    const min = urlParams.get('min') || DEFAULT_MIN;
-    const max = urlParams.get('max') || DEFAULT_MAX;
+    const union = getParamOrDefault(urlParams.get('union'), DEFAULT_UNION);
+    const heuristic = getParamOrDefault(urlParams.get('heuristic'), DEFAULT_HEURISTIC);
+    const min = getParamOrDefault(urlParams.get('min'), DEFAULT_MIN);
+    const max = getParamOrDefault(urlParams.get('max'), DEFAULT_MAX);
+
 
     console.log("Raw URL alg:", urlParams.get('alg'));
     console.log("Raw URL mode:", urlParams.get('mode'));
