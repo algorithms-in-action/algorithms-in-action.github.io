@@ -380,7 +380,14 @@ export default {
         // Function to insert a key into the AVL tree and balance the tree if needed
         function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
-            chunker.add('AVLT_Insert(t, k)', (vis) => null, [], depth);
+            chunker.add('AVLT_Insert(t, k)',
+                (vis, k) => {
+                    vis.graph.setFunctionName("AVLT_Insert");
+                    vis.graph.setFunctionInsertText("( t , " + k + " )");
+                },
+                [key],
+                depth
+            );
 
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
@@ -389,8 +396,6 @@ export default {
                 chunker.add('n = new Node',
                     (vis, r, p, index) => {
                         vis.graph.addNode(r, r, 1);
-                        vis.graph.setFunctionName("AVLT_Insert");
-                        vis.graph.setFunctionInsertText("( t , " + key + " )");
 
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
