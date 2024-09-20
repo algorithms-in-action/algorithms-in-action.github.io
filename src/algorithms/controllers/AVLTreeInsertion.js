@@ -86,6 +86,14 @@ export default {
                     [D.key, tidVis],
                     depth
                 );
+            } else {
+                chunker.add('t4 = right(t2)',
+                    (vis) => {
+                        vis.graph.setTagInfo('t4 ');
+                    },
+                    [],
+                    depth
+                );
             }
 
             console.log("the height of R is " + R.height);
@@ -206,6 +214,14 @@ export default {
                         }
                     },
                     [D.key, tidVis],
+                    depth
+                );
+            } else {
+                chunker.add('t4 = left(t6)',
+                    (vis) => {
+                        vis.graph.setTagInfo('t4 ');
+                    },
+                    [],
                     depth
                 );
             }
