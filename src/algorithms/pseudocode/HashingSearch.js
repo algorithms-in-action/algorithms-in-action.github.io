@@ -16,11 +16,11 @@ let text1 = `
                     \\Expl}
                  \\In}
             if T[i] = k \\B 6
-                \\{In
-                return i // return the table index where the key has been found \\B 7
+                \\In{
+                    return i // return the table index where the key has been found \\B 7
                 \\In}
             else
-                \\{In
+                \\In{
                 return NOTFOUND \\B 8
                 \\In}
         \\In}
