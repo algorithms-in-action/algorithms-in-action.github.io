@@ -9,7 +9,7 @@ const insertSearchAlgorithms = [
 const InsertSearchAlgorithms = () => {
   return (
     <div className="insertSearch-container">
-      <h1 className="category">Insert/Search</h1>
+      <h2 className="category">Insert/Search</h2>
       {insertSearchAlgorithms.map((algorithm, index) => (
         <a key={index} href={algorithm.url} className="insertSearch-link">
           {algorithm.name}

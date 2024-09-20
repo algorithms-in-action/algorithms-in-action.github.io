@@ -16,7 +16,7 @@ const graphAlgorithms = [
 const GraphAlgorithms = () => {
   return (
     <div className="graph-container">
-      <h1 className="category">Graph</h1>
+      <h2 className="category">Graph</h2>
       {graphAlgorithms.map((algorithm, index) => (
         <a key={index} href={algorithm.url} className="graph-link">
           {algorithm.name}

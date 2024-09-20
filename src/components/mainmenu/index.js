@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import '../../styles/title.scss';
+import { Link } from 'react-router-dom';  // 添加这行
+import '../../styles/mainmenu.scss';
+import logo from '../../assets/logo.svg';
 import SortingAlgorithms from './SortingAlgorithms';
 import InsertSearchAlgorithms from './InsertSearchAlgorithms';
 import GraphAlgorithms from './GraphAlgorithms';
@@ -36,35 +38,38 @@ const Mainmenu = () => {
     algorithm.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
-    <div className="container">
-      <h1 className="title">
-        <span className="algorithm">Algorithm</span>
-        &nbsp;
-        <span className="in-action">In Action</span>
-      </h1>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Algorithms"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="search-bar"
-        />
-        {searchTerm && (
-          <div className="search-results">
-            {filteredAlgorithms.length > 0 ? (
-              filteredAlgorithms.map((algorithm, index) => (
-                <a key={index} href={algorithm.url} className="search-result-link">
-                  {algorithm.name}
-                </a>
-              ))
-            ) : (
-              <p>No results found</p>
-            )}
-          </div>
-        )}
+    <div className="mainmenu-container">
+      <div className="sidebar">
+        <img src={logo} alt="Logo" className="logo" />
+        <h1 className="title">
+          <span className="algorithm">Algorithm</span>
+          <span className="in-action">In Action</span>
+        </h1>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search Algorithms"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-bar"
+          />
+          {searchTerm && (
+            <div className="search-results">
+              {filteredAlgorithms.length > 0 ? (
+                filteredAlgorithms.map((algorithm, index) => (
+                  <a key={index} href={algorithm.url} className="search-result-link">
+                    {algorithm.name}
+                  </a>
+                ))
+              ) : (
+                <p>No results found</p>
+              )}
+            </div>
+          )}
+        </div>
+        <Link to="/about" className="about-link">About</Link>
       </div>
-      <div>
+      <div className="main-content">
         <SortingAlgorithms />
         <InsertSearchAlgorithms />
         <GraphAlgorithms />

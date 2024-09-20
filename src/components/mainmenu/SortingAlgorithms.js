@@ -11,7 +11,7 @@ const sortingAlgorithms = [
 const SortingAlgorithms = () => {
   return (
     <div className="sorting-container">
-      <h1 className="category">Sort</h1>
+      <h2 className="category">Sort</h2>
       {sortingAlgorithms.map((algorithm, index) => (
         <a key={index} href={algorithm.url} className="sorting-link">
           {algorithm.name}

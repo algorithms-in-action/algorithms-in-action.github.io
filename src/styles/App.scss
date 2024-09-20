@@ -15,12 +15,12 @@ $dragBarWidth: 10px;
 	background: none;
 	display: grid;
 	grid-template-areas:
-		'header header header header header'
-		'leftcol leftdragbar tabpages rightdragbar rightcol'
-    'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
-    'leftcol leftdragbar footer rightdragbar rightcol';
-	grid-template-rows: min-content 7fr $dragBarWidth 2fr;
-	grid-template-columns: min-content $dragBarWidth 6fr $dragBarWidth 4fr;	
+		'header header header'
+		'tabpages rightdragbar rightcol'
+		'bottomdragbar rightdragbar rightcol'
+		'footer rightdragbar rightcol';
+	grid-template-rows: min-content 1fr $dragBarWidth min-content;
+	grid-template-columns: 1fr $dragBarWidth min-content;  
 }
 
 #page:focus {
@@ -30,14 +30,10 @@ $dragBarWidth: 10px;
 }
 
 #header {
-	overflow: visible;
 	grid-area: header;
-}
-
-#leftcol {
-	overflow: auto;
-	grid-area: leftcol;
-	background-color: var(--left-bg);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 #rightcol {
@@ -47,9 +43,8 @@ $dragBarWidth: 10px;
 }
 
 #tabpages {
-	overflow: auto;
 	grid-area: tabpages;
-
+	width: 100%;
 }
 
 #footer {

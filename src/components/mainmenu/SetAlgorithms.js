@@ -8,7 +8,7 @@ const setAlgorithms = [
 const SetAlgorithms = () => {
   return (
     <div className="set-container">
-      <h1 className="category">Set</h1>
+      <h2 className="category">Set</h2>
       {setAlgorithms.map((algorithm, index) => (
         <a key={index} href={algorithm.url} className="set-link">
           {algorithm.name}

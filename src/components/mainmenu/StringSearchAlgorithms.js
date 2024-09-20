@@ -9,7 +9,7 @@ const stringSearchAlgorithms = [
 const StringSearchAlgorithms = () => {
   return (
     <div className="stringSearch-container">
-      <h1 className="category">StringSearch</h1>
+      <h2 className="category">StringSearch</h2>
       {stringSearchAlgorithms.map((algorithm, index) => (
         <a key={index} href={algorithm.url} className="stringSearch-link">
           {algorithm.name}
