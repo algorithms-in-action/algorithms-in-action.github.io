@@ -6,7 +6,7 @@ import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveC
 import { dispatcher, initialState } from './actions';
 import algorithms, { getDefaultMode, getCategory } from '../algorithms';
 import { Search } from '@mui/icons-material';
-import { URLProvider, URLContext } from './urlCreator';
+import { URLProvider, URLContext } from './urlState';
 
 /* What's going on here?
  * We maintain a global state to hold info about the currently executing algorithm.
@@ -32,7 +32,6 @@ export const GlobalProvider = ({ children }) => {
   // for later calls from elsewhere in the app.
   const dispatch = dispatcher(state, setState);
 
-  // nodes and search value are used liberally
   const globalState = {
     algorithm: state,
     algorithmKey: Object.keys(algorithms).find(key => algorithms[key].name === state.name),

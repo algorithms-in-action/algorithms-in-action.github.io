@@ -12,7 +12,7 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
@@ -51,7 +51,7 @@ function MergesortParam({ list }) {
   });
 
   useEffect(() => {
-    setNodes(array); // sync with global state
+    setNodes(array);
   }, [array]);
 
   // XXX best case definitely not needed; could skip choice of cases

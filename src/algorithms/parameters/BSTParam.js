@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
 import { GlobalContext } from '../../context/GlobalState';
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState';
 import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
@@ -62,7 +62,7 @@ function BSTParam({ mode, list, value }) {
   const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
-    setNodes(localNodes); // sync with global state
+    setNodes(localNodes);
     setSearchValue(localValue);
   }, [localNodes, localValue, setNodes, setSearchValue]);
 

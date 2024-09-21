@@ -7,7 +7,7 @@ import ListParam from './helpers/ListParam.js';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState.js';
 import '../../styles/Param.scss';
 
 
@@ -24,11 +24,11 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
     const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
     const [message, setMessage] = useState(null);
     const { setNodes } = useContext(URLContext);
-  
+
     useEffect(() => {
-      setNodes(localNodes); // Sync with global state
+        setNodes(localNodes); 
     }, [localNodes]);
-  
+
     return (
         <>
             <div className="form">

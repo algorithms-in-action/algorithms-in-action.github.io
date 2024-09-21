@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
@@ -37,10 +37,10 @@ function TTFTreeParam({ mode, list, value }) {
   const { setNodes, setSearchValue } = useContext(URLContext);
 
   useEffect(() => {
-    setNodes(nodes); // sync with global state
+    setNodes(nodes);
     setSearchValue(localValue);
   }, [nodes, localValue])
-  
+
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;

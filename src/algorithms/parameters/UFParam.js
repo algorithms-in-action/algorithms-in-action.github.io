@@ -7,7 +7,7 @@ import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState';
 
 import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
@@ -50,7 +50,7 @@ function UFParam({ mode, union, value }) {
   const { setNodes, setSearchValue } = useContext(URLContext);
 
   useEffect(() => {
-    setNodes(unions); // sync with global state
+    setNodes(unions);
     setSearchValue(localValue);
   }, [unions, localValue]);
 

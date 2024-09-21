@@ -10,7 +10,7 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { URLContext } from '../../context/urlCreator';
+import { URLContext } from '../../context/urlState';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
@@ -41,7 +41,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
 
   const [array, setArray] = useState(list || DEFAULT_ARR)
   const { setNodes } = useContext(URLContext)
-  
+
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
@@ -50,7 +50,7 @@ function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mo
   });
 
   useEffect(() => {
-    setNodes(array); // sync with global state
+    setNodes(array);
   }, [array]);
 
   // function for choosing the type of pivot (median of three)
