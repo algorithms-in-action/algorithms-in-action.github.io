@@ -228,32 +228,21 @@ function getBookmarkList(pseudocode) {
 // set the visibility attribute for chunks if the chunk can be reached
 // i.e. not in a collapsed code block
 function setChunkAccessibility(chunker, pseudocode, collapse) {
-  // initialising
-  // for (let i = 0; i < chunker.chunks.length; i++) {
-  //   chunker.chunks[i].accessible = false;
-  // }
-
   let currChunkNum = 0;
   let prevChunkNum = 0;
   let accessibleList = Array(chunker.chunks.length).fill(false);
-  // chunker.chunks[0].accessible = true;
   accessibleList[0] = true;
+  // let accessible = [0];
 
   while (currChunkNum < chunker.chunks.length - 1) {
     currChunkNum = findNext(chunker.chunks, currChunkNum, pseudocode, collapse);
-
-    // for (let i = prevChunkNum + 1; i < currChunkNum; i++) {
-    //   chunker.chunks[i].accessible = false;
-    // }
-
     accessibleList[currChunkNum] = true;
-    // accessibleList.push(currChunkNum);
+    // accessible.push(currChunkNum);
     prevChunkNum = currChunkNum;
   }
-  // chunker.chunks[currChunkNum].accessible = true;
-  // accessibleList.push(currChunkNum);
 
   chunker.accessibleList = accessibleList;
+  // chunker.accessible = accessible;
 }
 
 // At any time the app may call dispatch(action, params), which will trigger one of

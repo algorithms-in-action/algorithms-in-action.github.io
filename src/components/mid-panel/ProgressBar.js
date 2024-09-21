@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/ProgressBar.scss';
+import { chunk } from 'lodash';
 
 class ProgressBar extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class ProgressBar extends React.Component {
     this.max;
     this.current;
     this.accessibleList;
+    this.searchRadius = 5;
     this.next;
     this.prev;
 
@@ -36,7 +38,6 @@ class ProgressBar extends React.Component {
     let chunkNum;
     let rect = this.ref.current.getBoundingClientRect();
     let width = this.ref.current.offsetWidth;
-    let radius = Math.round((1 / width) * (this.max - 1)) * 5;
 
     let x = e.clientX - rect.left;
     if (x <= 0) {
@@ -46,31 +47,41 @@ class ProgressBar extends React.Component {
       chunkNum = this.max - 1;
 
     } else {
-      x = Math.round((x / width) * (this.max - 1));
+      x = Math.round((x / width) * this.max);
+      if (x === this.current) {
+        return;
+      }
 
       // search for the closest accessible chunk
-      // in the radius of 5
-      let closestChunk = null;
-      for (let i = x - radius; i <= x + radius; i++) {
-        if (!closestChunk) {
-          closestChunk = i;
+      // in a certain radius
+      for (let i = 0; i <= this.searchRadius; i++) {
+        if (i === 0) {
+          if (this.accessibleList[x]) {
+            chunkNum = x;
+            break;
+          }
           continue;
         }
 
-        if (Math.abs(i - x) < Math.abs(closestChunk)) {
-          closestChunk = i;
+        if (this.accessibleList[x + i]) {
+          chunkNum = x + i;
+          break;
+        }
+
+        if (this.accessibleList[x - i]) {
+          chunkNum = x - i;
+          break;
         }
       }
-
-      chunkNum = closestChunk;
     }
 
+    console.log(chunkNum);
     if (this.accessibleList[chunkNum]) {
       if (chunkNum > this.current) {
-        this.next({stopAt: chunkNum});
+        this.next({stopAt: chunkNum, playing: false});
       }
-      if (chunkNum < this.current) {
-        this.prev({stopAt: chunkNum});
+      if (chunkNum < this.current && chunkNum !== this.max - 1) {
+        this.prev({stopAt: chunkNum, playing: false});
       }
     }
   }

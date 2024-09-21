@@ -178,6 +178,7 @@ $progWidth: 320px;
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
+  background-color: #343434;
   transition: opacity 250ms linear;
   width: 100%;
   @include border-radius(16px); // makes the border curvy
