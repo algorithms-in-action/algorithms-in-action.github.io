@@ -211,20 +211,6 @@ function addLineExplanation(procedurePseudocode) {
   }
 }
 
-// get an object showing the code block that the bookmarks belong to
-function getBookmarkList(pseudocode) {
-  let bookmarkList = {};
-  for (const codeBlockName of Object.keys(pseudocode)) {
-    for (const line of pseudocode[codeBlockName]) {
-      if (line.bookmark !== undefined) {
-        bookmarkList[line.bookmark] = codeBlockName;
-      }
-    }
-  }
-
-  return bookmarkList;
-}
-
 // set the visibility attribute for chunks if the chunk can be reached
 // i.e. not in a collapsed code block
 function setChunkAccessibility(chunker, pseudocode, collapse) {
@@ -232,17 +218,14 @@ function setChunkAccessibility(chunker, pseudocode, collapse) {
   let prevChunkNum = 0;
   let accessibleList = Array(chunker.chunks.length).fill(false);
   accessibleList[0] = true;
-  // let accessible = [0];
 
   while (currChunkNum < chunker.chunks.length - 1) {
     currChunkNum = findNext(chunker.chunks, currChunkNum, pseudocode, collapse);
     accessibleList[currChunkNum] = true;
-    // accessible.push(currChunkNum);
     prevChunkNum = currChunkNum;
   }
 
   chunker.accessibleList = accessibleList;
-  // chunker.accessible = accessible;
 }
 
 // At any time the app may call dispatch(action, params), which will trigger one of
@@ -351,7 +334,12 @@ export const GlobalActions = {
     // console.log(['NEXT_LINE', playing, triggerPauseInCollapse]);
     // figure out what chunk we need to stop at
     if (stopAt === undefined) {
-      stopAt = findNext(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
+      stopAt = state.chunker.currentChunk;
+      if (stopAt < state.chunker.chunks.length - 1) {
+        do {
+          stopAt++;
+        } while (!state.chunker.accessibleList[stopAt])
+      }
     }
     // step forward until we are at stopAt, or last chunk, or some weird
     // pauseInCollapse stuff (for Warshall's?) I don't really understand:( XXX
@@ -399,7 +387,7 @@ export const GlobalActions = {
     // of range (perhaps should change this XXX); we need check for
     // that here
     // console.log(['PREV_LINE', state.chunker.currentChunk, state.chunker.chunks.length]);
-    if (state.chunker.currentChunk > state.chunker.chunks.length ) {
+    if (state.chunker.currentChunk > state.chunker.chunks.length) {
       state.chunker.currentChunk = state.chunker.chunks.length - 1;
     }
 
@@ -409,7 +397,14 @@ export const GlobalActions = {
       playing = playing.playing;
     }
     if (stopAt === undefined) {
-      stopAt = findPrev(state.chunker.chunks, state.chunker.currentChunk, state.pseudocode, state.collapse[state.id.name][state.id.mode])
+      stopAt = state.chunker.currentChunk === state.chunker.chunks.length ?
+        state.chunker.currentChunk - 1 :
+        state.chunker.currentChunk;
+      if (stopAt > 0) {
+        do {
+          stopAt--;
+        } while (!state.chunker.accessibleList[stopAt])
+      }
     }
     let result1 = {bookmark:"", chunk: state.chunker.currentChunk};
     const result = state.chunker.goBackTo(stopAt); // changes state

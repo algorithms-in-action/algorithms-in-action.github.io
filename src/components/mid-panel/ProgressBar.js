@@ -17,7 +17,7 @@ class ProgressBar extends React.Component {
     this.max;
     this.current;
     this.accessibleList;
-    this.searchRadius = 5;
+    this.searchRadius = 10;
     this.next;
     this.prev;
 
@@ -25,19 +25,16 @@ class ProgressBar extends React.Component {
   }
 
   handleMouseDown(e) {
-    // let rect = e.currentTarget.getBoundingClientRect();
-    // let x = e.clientX - rect.left;
-    // this.lastX = x;
+    this.handleMouseMove(e);
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
   }
 
   handleMouseMove(e) {
     e.preventDefault();
-
     let chunkNum;
     let rect = this.ref.current.getBoundingClientRect();
-    let width = this.ref.current.offsetWidth;
+    let width = rect.right - rect.left;
 
     let x = e.clientX - rect.left;
     if (x <= 0) {
@@ -75,7 +72,6 @@ class ProgressBar extends React.Component {
       }
     }
 
-    console.log(chunkNum);
     if (this.accessibleList[chunkNum]) {
       if (chunkNum > this.current) {
         this.next({stopAt: chunkNum, playing: false});
@@ -100,6 +96,8 @@ class ProgressBar extends React.Component {
     const node = {
       rectPrimary: document.querySelector('.mux-lpi-rect--primary'),
       buffer: document.querySelector('.mux-lpi-buffer'),
+      inner: document.querySelector('.mux-lpi-inner'),
+      handle: document.querySelector('.progressHandle'),
     };
 
     this.max = max;
@@ -127,7 +125,7 @@ class ProgressBar extends React.Component {
       }
     }
 
-    function setProgress(ref, val) {
+    const setProgress = (ref, val) => {
       setTransform(ref, `scaleX(${val})`);
     }
 
@@ -135,8 +133,27 @@ class ProgressBar extends React.Component {
       setTransform(ref, `scaleX(${val})`);
     }
 
+    const setHandle = (handle, inner, value) => {
+      if (handle !== null) {
+        const { style } = handle;
+        let x = 0;
+
+        if (this !== undefined) {
+          x = (value * inner.offsetWidth);
+        }
+        let transform = `translateX(${x}px)`;
+
+        style.transform = transform;
+        style.WebkitTransform = transform;
+        style.MozTransform = transform;
+        style.OTransform = transform;
+        style.MSTransform = transform;
+      }
+    }
+
     setProgress(node.rectPrimary, parseFloat(current / max, 10));
     setBuffer(node.buffer, 1);
+    setHandle(node.handle, node.inner, parseFloat(current / max, 10));
 
 
     return (
@@ -147,20 +164,26 @@ class ProgressBar extends React.Component {
           ref={this.ref}
           onMouseDown={this.handleMouseDown}
         >
-          <div className="progressLable" id="progressLabel">
-            <div className="innerText">
-              {
-                // if the user enters a valid input and clicks on LOAD
-                // the progress bar displays the percentage of progress
-                // convert the lines of code to percentge by multiplying the division by 100
-                `Progress: ${Math.round((current / max) * 100, 2)} %`
-                // if the user does not enter a valid input, initialise the progress bar as not loaded
-              }
+          <div className="mux-lpi-padding" />
+          <div className="mux-lpi-inner">
+            <div className="progressLable" id="progressLabel">
+              <div className="innerText">
+                {
+                  // if the user enters a valid input and clicks on LOAD
+                  // the progress bar displays the percentage of progress
+                  // convert the lines of code to percentge by multiplying the division by 100
+                  `Progress: ${Math.round((current / max) * 100, 2)} %`
+                  // if the user does not enter a valid input, initialise the progress bar as not loaded
+                }
+              </div>
             </div>
-          </div>
-          <div className="mux-lpi-buffer" />
-          <div className="mux-lpi-rect mux-lpi-rect--primary">
-            <span className="mux-lpi-rect-inner" />
+            <div className="progressHandle">
+              <div className="innerHandle" />
+            </div>
+            <div className="mux-lpi-buffer" />
+            <div className="mux-lpi-rect mux-lpi-rect--primary">
+              <span className="mux-lpi-rect-inner" />
+            </div>
           </div>
         </div>
     );

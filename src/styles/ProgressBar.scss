@@ -178,11 +178,28 @@ $progWidth: 320px;
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
-  background-color: #343434;
+  background-color: var(--mid-control-slider-bg);
   transition: opacity 250ms linear;
-  width: 100%;
+  width: $progWidth;
   @include border-radius(16px); // makes the border curvy
   margin: 0 12px;
+}
+
+.mux-lpi-inner {
+  height: 100%;
+  width: $progWidth - $progHeight;
+  transform: translateZ(0);
+  left: calc(#{$progHeight}/2);
+  position: absolute;
+  background-color: none;
+}
+
+.mux-lpi-padding {
+  height: 100%;
+  width: calc(#{$progHeight}/2);
+  left: 0;
+  position: absolute;
+  background-color: var(--mid-control-progress-active);
 }
 
 $textWidth: 50px;
@@ -193,8 +210,8 @@ $border: 4px;
   position: absolute;
   z-index: 100;
   top: $border;
-  left: $border;
-  width: $progWidth - ($border + $border);
+  left: 0;
+  width: 100%;
   height: $progHeight - ($border + $border);
   background-color: 'blue';
   @include border-radius(24px);
@@ -214,6 +231,29 @@ $border: 4px;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+}
+
+.progressHandle {
+  position: absolute;
+  z-index: 50;
+  top: 0;
+  left: calc(-#{$progHeight}/2);
+  width: $progHeight;
+  height: $progHeight;
+  background-color: var(--mid-control-progress-active);
+  @include border-radius(16px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 250ms ease;
+
+  .innerHandle {
+    z-index: 51;
+    width: $progHeight - ($border + $border);
+    height: $progHeight - ($border + $border);
+    background-color: $darkerBlue;
+    @include border-radius(14px);
   }
 }
 
