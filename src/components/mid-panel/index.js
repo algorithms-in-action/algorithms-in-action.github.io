@@ -87,7 +87,6 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         default:
           break;
       }
-
       setCurrentUrl(url);
     }
   }, [share]);

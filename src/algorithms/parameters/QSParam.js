@@ -36,7 +36,7 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />)
 
 
-function QuicksortParam({ list }) { // Parse the quicksort's parameters: alg, mode, list
+function QuicksortParam({ list }) { // Parse the quicksort's parameters: list
   const [message, setMessage] = useState(null)
 
   const [array, setArray] = useState(list || DEFAULT_ARR)
