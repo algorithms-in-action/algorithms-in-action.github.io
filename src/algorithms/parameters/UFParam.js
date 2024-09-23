@@ -7,6 +7,7 @@ import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
+import { URLContext } from '../../context/urlState';
 
 import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
@@ -45,6 +46,13 @@ function UFParam({ mode, union, value }) {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(union || DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
+  const [localValue, setLocalValue] = useState(DEFAULT_FIND);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+
+  useEffect(() => {
+    setNodes(unions);
+    setSearchValue(localValue);
+  }, [unions, localValue]);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
@@ -55,6 +63,7 @@ function UFParam({ mode, union, value }) {
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
     // eslint-disable-next-line no-restricted-globals
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {

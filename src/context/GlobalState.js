@@ -4,7 +4,9 @@ import React, { createContext, useState } from 'react';
 import { initGlobalAlgorithmGetter } from '../algorithms/controllers/collapseChunkPlugin';
 import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { dispatcher, initialState } from './actions';
-import algorithms, { getDefaultMode } from '../algorithms';
+import algorithms, { getDefaultMode, getCategory } from '../algorithms';
+import { Search } from '@mui/icons-material';
+import { URLProvider, URLContext } from './urlState';
 
 /* What's going on here?
  * We maintain a global state to hold info about the currently executing algorithm.
@@ -26,7 +28,6 @@ const init = initialState();
 // eslint-disable-next-line react/prop-types
 export const GlobalProvider = ({ children }) => {
   const [state, setState] = useState(init);
-  const [nodes, setNodes] = useState([]);
   // Think of this as partial function application to get state & setState in scope
   // for later calls from elsewhere in the app.
   const dispatch = dispatcher(state, setState);
@@ -34,9 +35,8 @@ export const GlobalProvider = ({ children }) => {
   const globalState = {
     algorithm: state,
     algorithmKey: Object.keys(algorithms).find(key => algorithms[key].name === state.name),
+    category: getCategory(Object.keys(algorithms).find(key => algorithms[key].name === state.name)),
     mode: getDefaultMode(Object.keys(algorithms).find(key => algorithms[key].name === state.name)),
-    nodes,
-    setNodes,
     dispatch,
   };
 
@@ -49,7 +49,9 @@ export const GlobalProvider = ({ children }) => {
 
   return (
     <GlobalContext.Provider value={globalState}>
-      {children}
+      <URLProvider>
+        {children}
+      </URLProvider>
     </GlobalContext.Provider>
   );
 };

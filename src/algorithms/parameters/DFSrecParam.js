@@ -40,6 +40,7 @@ function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic,
       edges: edgeWeights || GRAPH_EGS[0].edges
     }
     ]
+
   return (
     <>
       {/* Matrix input */}
@@ -65,7 +66,8 @@ function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic,
       {message}
     </>
   );
-}
+}    
+
 
 // Define the prop types for URL Params
 DFSrecParam.propTypes = {

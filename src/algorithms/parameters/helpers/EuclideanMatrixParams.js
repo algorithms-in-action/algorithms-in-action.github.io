@@ -58,7 +58,7 @@
 // it's fixed now - hasn't cropped up for a while??).
 // A bunch of other things with XXX comments in code.
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
@@ -86,6 +86,7 @@ import { template } from 'lodash';
 // comments elsewhere (search for ListParam)
 import ListParam from './ListParam';
 import '../../../styles/Param.scss';
+import { URLContext } from '../../../context/urlState';
 
 
 // We have an initial graph that is generated randomly (we could add
@@ -104,9 +105,9 @@ const coordsEgsInit = ['1-1'];
 const edgesEgsInit = ['1-2'];
 
 const COORDS_EXAMPLE =
- "Please follow example: 1-1,3-4,4-1,6-6 giving the X-Y coordinates for each of the nodes in the graph.";
+  "Please follow example: 1-1,3-4,4-1,6-6 giving the X-Y coordinates for each of the nodes in the graph.";
 const EDGES_EXAMPLE =
- "Please follow example: 1-2,1-3,2-3,3-2-6,3-4-7 giving NodeA-NodeB-Weight for each in the graph; -Weight is optional and defaults to 1.";
+  "Please follow example: 1-2,1-3,2-3,3-2-6,3-4-7 giving NodeA-NodeB-Weight for each in the graph; -Weight is optional and defaults to 1.";
 
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -126,17 +127,17 @@ function simulateMouseClick(element) {
 // is not rendered until that is done
 const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
   const textInput = value.replace(/\s+/g, '');
- 
+
   if (isListofTuples(textInput, 2, 2)) {
     const coordMatrix =
       textInput
         .split(',')
-        .map((pair) => pair.trim().split('-')) ;
+        .map((pair) => pair.trim().split('-'));
     const newSize = coordMatrix.length;
     let newData1 = [];
-    for (let i=0; i < coordMatrix.length; i++) {
+    for (let i = 0; i < coordMatrix.length; i++) {
       const xyArray = coordMatrix[i];
-      newData1.push({col0: xyArray[0], col1: xyArray[1]});
+      newData1.push({ col0: xyArray[0], col1: xyArray[1] });
     }
     return [newData1, newSize];
   } else {
@@ -157,13 +158,13 @@ const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage, ALGORITHM
     let edgeList =
       textInput
         .split(',')
-        .map((pair) => pair.trim().split('-')) ;
+        .map((pair) => pair.trim().split('-'));
     const newSize = edgeList.length;
     let newData2 = [];
     for (let i = 0; i < size; i += 1) {
       const data = {};
       for (let j = 0; j < size; j += 1) {
-        data[`col${j}`] = searchEdgeList(edgeList, i+1, j+1, unweighted, symmetric);
+        data[`col${j}`] = searchEdgeList(edgeList, i + 1, j + 1, unweighted, symmetric);
       }
       newData2.push(data);
     }
@@ -203,7 +204,7 @@ function EuclideanMatrixParams({
   // they depend on graphEgs, which is passed in as a parameter.  It
   // would also be nicer to initialize all these together (something I
   // wrote code for initially but for some reason it didn't quite work)
-  let graphChoiceNum = 1+graphEgs.length; // number of graph choice options
+  let graphChoiceNum = 1 + graphEgs.length; // number of graph choice options
   // let sizeEgs = [SIZE_RANDOM, 5, 4];
   // let coordsEgs = ['1-1', COORDS_TXT_EG1, COORDS_TXT_EG2];
   // let edgesEgs = ['1-1', EDGES_TXT_EG1, EDGES_TXT_EG2];
@@ -269,32 +270,41 @@ function EuclideanMatrixParams({
   // const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
   const [graphChoice, setgraphChoice] = useState(1);
 
-//   // reset the XY coordinates when the size changes
-//   // (now done in updateTableSize - this is probably not needed XXX)
-//   useEffect(() => {
-//     const newData1 = makeXYCoords(size, min, max);
-//     setData1(newData1);
-//     setCoordsTxt(getCoordinateList(newData1));
-//     setOriginalData1(newData1);
-//   }, [min, max, symmetric, unweighted]);
-// 
-//   // reset the edge weight matrix when the size changes
-//   // (now done in updateTableSize - this is probably not needed XXX)
-//   // XXX Best just trim/extend
-//   useEffect(() => {
-//     const newData2 = makeWeights(size, 1, 10, symmetric, unweighted);
-//     setData2(newData2);
-//     setEdgesTxt(getEdgeList(newData2, size));
-//     setOriginalData2(newData2);
-//   }, [min, max, symmetric, unweighted]);
+  const { setNodes, setSearchValue, setGraphSize, setGraphStart, setGraphEnd, setHeuristic } = useContext(URLContext);
+
+  //   // reset the XY coordinates when the size changes
+  //   // (now done in updateTableSize - this is probably not needed XXX)
+  //   useEffect(() => {
+  //     const newData1 = makeXYCoords(size, min, max);
+  //     setData1(newData1);
+  //     setCoordsTxt(getCoordinateList(newData1));
+  //     setOriginalData1(newData1);
+  //   }, [min, max, symmetric, unweighted]);
+  // 
+  //   // reset the edge weight matrix when the size changes
+  //   // (now done in updateTableSize - this is probably not needed XXX)
+  //   // XXX Best just trim/extend
+  //   useEffect(() => {
+  //     const newData2 = makeWeights(size, 1, 10, symmetric, unweighted);
+  //     setData2(newData2);
+  //     setEdgesTxt(getEdgeList(newData2, size));
+  //     setOriginalData2(newData2);
+  //   }, [min, max, symmetric, unweighted]);
 
   // synchonise input data with rendered graph etc
   // if graph data etc change
   useEffect(() => {
     // const element = document.querySelector('button[id="startBtnGrp"]');
     // simulateMouseClick(element);
+
     handleSearch();
-  }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc]);
+    setNodes(coordsTxt);
+    setSearchValue(edgesTxt);
+    setGraphSize(size);
+    setGraphStart(startNode);
+    setGraphEnd(endNodes);
+    setHeuristic(heurCalcName[heurCalc]);
+  }, [size, startNode, endNodes, data1, data2, weightCalc, heurCalc, coordsTxt, edgesTxt]);
 
   // change graph choice; Note setData1 etc are asynchronous
   // newSize is passed in for random graphs; if it is zero the default
@@ -303,12 +313,12 @@ function EuclideanMatrixParams({
     graphChoice = (graphChoice + 1) % graphChoiceNum;
     setgraphChoice(graphChoice);
     if (newSize === 0) {
-       newSize = sizeEgs[graphChoice];
+      newSize = sizeEgs[graphChoice];
     }
     // some repeated code from updateTableSize here...
     setSize(newSize);
     if (newSize < startNode)
-        setStartNode(newSize);
+      setStartNode(newSize);
     // remove and end nodes > newSize
     if (endNodes.some((e) => e > newSize)) {
       let newEndNodes = endNodes.filter((e) => e <= newSize);
@@ -349,13 +359,13 @@ function EuclideanMatrixParams({
   const updateTableSize = (newSize) => {
     if (newSize < 1) return;
     if (newSize < startNode)
-        setStartNode(newSize);
+      setStartNode(newSize);
     // remove and end nodes > newSize
     // A* must have end node so we pick size if needed
     if (endNodes.some((e) => e > newSize)) {
       let newEndNodes = endNodes.filter((e) => e <= newSize);
       if (newEndNodes.length === 0 && ALGORITHM_NAME === 'A* Algorithm')
-          newEndNodes = [newSize];
+        newEndNodes = [newSize];
       setEndNodesTxt(nums2Txt(newEndNodes));
       setEndNodes(newEndNodes);
     }
@@ -364,7 +374,7 @@ function EuclideanMatrixParams({
     // This also calls setSize (see XXX note above)
     // Note changeGraphChoice takes the previous graph choice as it's
     // first argument and increments it (with modulo) to get new choice
-    changeGraphChoice(GRAPHCHOICERAND-1, newSize);
+    changeGraphChoice(GRAPHCHOICERAND - 1, newSize);
   };
 
   // Update start node
@@ -381,7 +391,7 @@ function EuclideanMatrixParams({
   // required
   // useEffect() triggers handleSearch() to update animation
   const updateEndNode = (newEnd) => {
-    newEnd = (newEnd + size+1) % (size+1);
+    newEnd = (newEnd + size + 1) % (size + 1);
     if (newEnd === 0 && ALGORITHM_NAME === 'A* Algorithm')
       newEnd = size;
     setMessage(null);
@@ -392,13 +402,13 @@ function EuclideanMatrixParams({
   // change weight calculation method
   const changeCalcMethod = (state) => {
     setMessage(null);
-    setCalcMethod((state+1) % WEIGHTCALCMAX);
+    setCalcMethod((state + 1) % WEIGHTCALCMAX);
   };
 
   // change weight calculation method
-  const changeHeurCalc= (state) => {
+  const changeHeurCalc = (state) => {
     setMessage(null);
-    setHeurCalc((state+1) % HEURCALCMAX);
+    setHeurCalc((state + 1) % HEURCALCMAX);
   };
 
   // When cell renderer calls updateData1, we'll use
@@ -425,7 +435,7 @@ function EuclideanMatrixParams({
     let rowIndexMirror = -1;
     let columnIdMirror = 'colXYZZY';
     if (symmetric) {
-      rowIndexMirror = parseInt(columnId.substring(3,columnId.length, 10));
+      rowIndexMirror = parseInt(columnId.substring(3, columnId.length, 10));
       columnIdMirror = 'col' + rowIndex;
     }
     const newData2 = data2.map((row, index) => {
@@ -471,7 +481,7 @@ function EuclideanMatrixParams({
     data1.forEach((row) => {
       coordsTxt += row.col0 + `-` + row.col1 + `,`;
     });
-    coordsTxt = coordsTxt.substring(0,coordsTxt.length-1); // strip final `,`
+    coordsTxt = coordsTxt.substring(0, coordsTxt.length - 1); // strip final `,`
     return coordsTxt;
   };
 
@@ -507,7 +517,7 @@ function EuclideanMatrixParams({
 
     for (let i = 0; i < coords.length; i++) {
       const temp_edges = [];
-      
+
       for (let j = 0; j < coords.length; j++) {
         let distance = 0;
         if (adjacent[i][j] !== 0) {
@@ -542,9 +552,9 @@ function EuclideanMatrixParams({
     for (var rowNum = 0; rowNum < size; rowNum++) {
       for (const [colId, val] of Object.entries(data2[rowNum])) {
         if (val !== '0') {
-          const colNum = parseInt(colId.substring(3,colId.length, 10));
+          const colNum = parseInt(colId.substring(3, colId.length, 10));
           if (!(rowNum == colNum || (symmetric && colNum < rowNum))) {
-            edgesTxt += (rowNum+1).toString() + `-` + (colNum+1).toString();
+            edgesTxt += (rowNum + 1).toString() + `-` + (colNum + 1).toString();
             if (val !== '1') {
               edgesTxt += `-` + val;
             }
@@ -553,7 +563,7 @@ function EuclideanMatrixParams({
         }
       }
     }
-    edgesTxt = edgesTxt.substring(0,edgesTxt.length-1); // strip final `,`
+    edgesTxt = edgesTxt.substring(0, edgesTxt.length - 1); // strip final `,`
     return edgesTxt;
   };
 
@@ -579,7 +589,7 @@ function EuclideanMatrixParams({
         coordsMatrix,
         edgeValueMatrix
       });
-    //   setButtonMessage('Reset');
+      //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE)); // FIX message
     }
@@ -603,7 +613,7 @@ function EuclideanMatrixParams({
     setSize(newSize);
     // some repeated code from updateTableSize here...
     if (newSize < startNode)
-        setStartNode(newSize);
+      setStartNode(newSize);
     // remove and end nodes > newSize
     if (endNodes.some((e) => e > newSize)) {
       let newEndNodes = endNodes.filter((e) => e <= newSize);
@@ -649,7 +659,7 @@ function EuclideanMatrixParams({
   // must have just one, others can have several)
   const endTxt2EndNodes = (value, size) => {
     const textInput = value.replace(/\s+/g, '');
-  
+
     if (isListofTuples(textInput, 1, 1)) {
       const endNodes =
         textInput
@@ -683,126 +693,126 @@ function EuclideanMatrixParams({
   let endButton = '';
   if (defaultEnd !== null)
     // Temp disabled version supporting multiple end nodes
- // endNodeDiv = 
- //     (<div className="disabled">
- //       <ListParam
- //         name="EndNodes"
- //         buttonName="Set&nbsp;End&nbsp;Nodes"
- //         formClassName="formLeft"
- //         mode="search"
- //         handleSubmit={handleEndNodesTxt}
- //         DEFAULT_VAL={endNodesTxt}
- //         SET_VAL={setEndNodesTxt}
- //         REFRESH_FUNCTION={() => ''}
- //         ALGORITHM_NAME={ALGORITHM_NAME}
- //         EXAMPLE={COORDS_EXAMPLE}
- //         setMessage={setMessage}
- //       />
- //     </div>);
+    // endNodeDiv = 
+    //     (<div className="disabled">
+    //       <ListParam
+    //         name="EndNodes"
+    //         buttonName="Set&nbsp;End&nbsp;Nodes"
+    //         formClassName="formLeft"
+    //         mode="search"
+    //         handleSubmit={handleEndNodesTxt}
+    //         DEFAULT_VAL={endNodesTxt}
+    //         SET_VAL={setEndNodesTxt}
+    //         REFRESH_FUNCTION={() => ''}
+    //         ALGORITHM_NAME={ALGORITHM_NAME}
+    //         EXAMPLE={COORDS_EXAMPLE}
+    //         setMessage={setMessage}
+    //       />
+    //     </div>);
     // XXX would be nice to display ' ' instead of '0'
     endButton =
-        (<div className="sLineButtonContainer">
-          <button className="endBtn" onClick={() => updateEndNode(endNodes[0] - 1)}>
-            −
-          </button>
-          <span className='size'>End: {endNodes[0]}</span>
-          <button className="sizeBtn" onClick={() => updateEndNode(endNodes[0] + 1)}>
-            +
-          </button>
-        </div>);
- 
+      (<div className="sLineButtonContainer">
+        <button className="endBtn" onClick={() => updateEndNode(endNodes[0] - 1)}>
+          −
+        </button>
+        <span className='size'>End: {endNodes[0]}</span>
+        <button className="sizeBtn" onClick={() => updateEndNode(endNodes[0] + 1)}>
+          +
+        </button>
+      </div>);
+
   let weightButton = '';
   if (!unweighted)
-    weightButton = 
-        (<button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
-          Weights: {weightCalcName[weightCalc]}
-        </button>);
+    weightButton =
+      (<button className="algorithmBtn" onClick={() => changeCalcMethod(weightCalc)}>
+        Weights: {weightCalcName[weightCalc]}
+      </button>);
   let heurButton = '';
   if (defaultHeur !== null)
-    heurButton = 
-        (<button className="algorithmBtn" onClick={() => changeHeurCalc(heurCalc)}>
-          Heuristic: {heurCalcName[heurCalc]}
-        </button>);
+    heurButton =
+      (<button className="algorithmBtn" onClick={() => changeHeurCalc(heurCalc)}>
+        Heuristic: {heurCalcName[heurCalc]}
+      </button>);
 
   return (
-  <>
+    <>
       <div className="matrixButtonContainer">
         <div className="sLineButtonContainer">
-  <div className="form">
-        <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice, 0)}>
-          {namesEgs[graphChoice]}
-        </button>
-        <div className="sLineButtonContainer">
-          <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
-            −
-          </button>
-          <span className="size">Size: {size}</span>
-          <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
-            +
-          </button>
-          
-        </div>
-        {weightButton}
-        {heurButton}
-        <div className="sLineButtonContainer">
-          <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
-            −
-          </button>
-          <span className='size'>Start: {startNode}</span>
-          <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
-            +
-          </button>
-          
-        </div>
-        {endButton}
-  </div>
-  {endNodeDiv}
-  <div className="disabled">
-        <ListParam
-          name="graphCoords"
-          buttonName="Set&nbsp;X-Y&nbsp;Coordinates"
-          formClassName="formLeft"
-          mode="search"
-          handleSubmit={handleXYTxt}
-          DEFAULT_VAL={coordsTxt}
-          SET_VAL={setCoordsTxt}
-          REFRESH_FUNCTION={() => '1,1'}
-          ALGORITHM_NAME={ALGORITHM_NAME}
-          EXAMPLE={COORDS_EXAMPLE}
-          setMessage={setMessage}
-        />
-  </div>
-  <div className="disabled">
-        <ListParam
-          name="graphEdges"
-          buttonName="Set&nbsp;Edges/Weights"
-          formClassName="formLeft"
-          mode="search"
-          handleSubmit={handleEdgeTxt}
-          DEFAULT_VAL={edgesTxt}
-          SET_VAL={setEdgesTxt}
-          REFRESH_FUNCTION={() => '1-2'}
-          ALGORITHM_NAME={ALGORITHM_NAME}
-          EXAMPLE={EDGES_EXAMPLE}
-          setMessage={setMessage}
-        />
-  </div>
-        </div>
-      </div>
-    <div className="matrixContainer">
+          <div className="form">
+            <button className="graphChoiceBtn" onClick={() => changeGraphChoice(graphChoice, 0)}>
+              {namesEgs[graphChoice]}
+            </button>
+            <div className="sLineButtonContainer">
+              <button className="sizeBtn" onClick={() => updateTableSize(size - 1)}>
+                −
+              </button>
+              <span className="size">Size: {size}</span>
+              <button className="sizeBtn" onClick={() => updateTableSize(size + 1)}>
+                +
+              </button>
 
-      <div className="coord">
-        <text className="titles"> Coordinates (X,Y) </text>
-        <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
-      </div>
-      
-      <div className="edge">
-        <text className="titles"> Edges (0,1)</text>
-        <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
-      </div>
+            </div>
+            {weightButton}
+            {heurButton}
+            <div className="sLineButtonContainer">
+              <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
+                −
+              </button>
+              <span className='size'>Start: {startNode}</span>
+              <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
+                +
+              </button>
 
-    </div>
-  </>
+            </div>
+            {endButton}
+          </div>
+          {endNodeDiv}
+          <div className="disabled">
+            <ListParam
+              name="graphCoords"
+              buttonName="Set&nbsp;X-Y&nbsp;Coordinates"
+              formClassName="formLeft"
+              mode="search"
+              handleSubmit={handleXYTxt}
+              DEFAULT_VAL={coordsTxt}
+              SET_VAL={setCoordsTxt}
+              REFRESH_FUNCTION={() => '1,1'}
+              ALGORITHM_NAME={ALGORITHM_NAME}
+              EXAMPLE={COORDS_EXAMPLE}
+              setMessage={setMessage}
+            />
+          </div>
+          <div className="disabled">
+            <ListParam
+              name="graphEdges"
+              buttonName="Set&nbsp;Edges/Weights"
+              formClassName="formLeft"
+              mode="search"
+              handleSubmit={handleEdgeTxt}
+              DEFAULT_VAL={edgesTxt}
+              SET_VAL={setEdgesTxt}
+              REFRESH_FUNCTION={() => '1-2'}
+              ALGORITHM_NAME={ALGORITHM_NAME}
+              EXAMPLE={EDGES_EXAMPLE}
+              setMessage={setMessage}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="matrixContainer">
+
+        <div className="coord">
+          <text className="titles"> Coordinates (X,Y) </text>
+          <Table columns={columns1} data={data1} updateData={updateData1} algo={name} />
+        </div>
+
+        <div className="edge">
+          <text className="titles"> Edges (0,1)</text>
+          <Table columns={columns2} data={data2} updateData={updateData2} algo={name} />
+        </div>
+
+      </div>
+    </>
   );
 }
 
@@ -839,7 +849,7 @@ function searchEdgeList(edgeList, i, j, unweighted, symmetric) {
   for (var r = 0; r < edgeList.length; r++) {
     const node1 = edgeList[r][0];
     const node2 = edgeList[r][1];
-    let weight = (edgeList[r].length == 2? '1' : edgeList[r][2]);
+    let weight = (edgeList[r].length == 2 ? '1' : edgeList[r][2]);
     if (unweighted && weight > 0) {
       weight = '1';
     }
@@ -900,21 +910,21 @@ const graphEgsNames = (graphEgs) => {
   return namesEgs;
 }
 
-  // converts [1,2,3] into '1,2,3' etc
-  const nums2Txt = (nums) => {
-    if (nums === null) return '';
-    let txt = ``;
-    if (!Array.isArray(nums)) {
-      console.log('Expected an array but received:', nums);
-      if (typeof nums === 'number') {
-        txt = nums.toString();
-      }
-      return txt; // or handle this case appropriately
+// converts [1,2,3] into '1,2,3' etc
+const nums2Txt = (nums) => {
+  if (nums === null) return '';
+  let txt = ``;
+  if (!Array.isArray(nums)) {
+    console.log('Expected an array but received:', nums);
+    if (typeof nums === 'number') {
+      txt = nums.toString();
     }
-    nums.forEach((n) => {
-      txt += n + `,`;
-    });
-    txt = txt.substring(0,txt.length-1); // strip final `,`
-    return txt;
-  };
+    return txt; // or handle this case appropriately
+  }
+  nums.forEach((n) => {
+    txt += n + `,`;
+  });
+  txt = txt.substring(0, txt.length - 1); // strip final `,`
+  return txt;
+};
 

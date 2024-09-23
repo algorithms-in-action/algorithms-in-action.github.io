@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { genRandNumList } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
 import StringParam from './helpers/StringParam';
@@ -7,15 +7,24 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
+import { URLContext } from '../../context/urlState';
+
 const DEFAULT_STRING = 'dcaccdddabddac';
 const DEFAULT_PATTERN = 'ddac';
 const BFSS_SEARCH = 'Brute force String Search';
 const BFSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
-function BFSSParam( { mode, string, pattern } ) {
+function BFSSParam({ mode, string, pattern }) {
   const [message, setMessage] = useState(null);
-  const [string_, setString] = useState( string || DEFAULT_STRING );
-  const [pattern_, setPattern] = useState( pattern || DEFAULT_PATTERN );
+  const [string_, setString] = useState(string || DEFAULT_STRING);
+  const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+
+  useEffect(() => {
+    setNodes(string_);
+    setSearchValue(pattern_)
+  }, [string_, pattern_]);
+
   return (
     <>
       <div className="form">
@@ -36,7 +45,7 @@ function BFSSParam( { mode, string, pattern } ) {
       {/* render success/error message */}
       <text className="message">{message}</text>
     </>
-    
+
   );
 }
 
