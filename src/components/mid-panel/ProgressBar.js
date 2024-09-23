@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { GlobalActions } from '../../context/actions';
 import '../../styles/ProgressBar.scss';
-import { chunk } from 'lodash';
 
 class ProgressBar extends React.Component {
   constructor(props) {
@@ -17,11 +16,10 @@ class ProgressBar extends React.Component {
     this.max;
     this.current;
     this.accessibleList;
-    this.searchRadius = 10;
     this.next;
     this.prev;
 
-    this.ref = React.createRef();
+    this.inner;
   }
 
   handleMouseDown(e) {
@@ -33,7 +31,8 @@ class ProgressBar extends React.Component {
   handleMouseMove(e) {
     e.preventDefault();
     let chunkNum;
-    let rect = this.ref.current.getBoundingClientRect();
+    let searchRadius = 10;
+    let rect = this.inner.getBoundingClientRect();
     let width = rect.right - rect.left;
 
     let x = e.clientX - rect.left;
@@ -51,7 +50,7 @@ class ProgressBar extends React.Component {
 
       // search for the closest accessible chunk
       // in a certain radius
-      for (let i = 0; i <= this.searchRadius; i++) {
+      for (let i = 0; i <= searchRadius; i++) {
         if (i === 0) {
           if (this.accessibleList[x]) {
             chunkNum = x;
@@ -99,6 +98,7 @@ class ProgressBar extends React.Component {
       inner: document.querySelector('.mux-lpi-inner'),
       handle: document.querySelector('.progressHandle'),
     };
+    this.inner = node.inner;
 
     this.max = max;
     this.current = current;
@@ -133,13 +133,13 @@ class ProgressBar extends React.Component {
       setTransform(ref, `scaleX(${val})`);
     }
 
-    const setHandle = (handle, inner, value) => {
+    const setHandle = (handle, value) => {
       if (handle !== null) {
         const { style } = handle;
         let x = 0;
 
         if (this !== undefined) {
-          x = (value * inner.offsetWidth);
+          x = value * this.inner.offsetWidth;
         }
         let transform = `translateX(${x}px)`;
 
@@ -153,7 +153,7 @@ class ProgressBar extends React.Component {
 
     setProgress(node.rectPrimary, parseFloat(current / max, 10));
     setBuffer(node.buffer, 1);
-    setHandle(node.handle, node.inner, parseFloat(current / max, 10));
+    setHandle(node.handle, parseFloat(current / max, 10));
 
 
     return (
@@ -161,7 +161,6 @@ class ProgressBar extends React.Component {
           role="progressbar"
           className="mux-lpi"
           tabIndex={0}
-          ref={this.ref}
           onMouseDown={this.handleMouseDown}
         >
           <div className="mux-lpi-padding" />
