@@ -215,17 +215,15 @@ function addLineExplanation(procedurePseudocode) {
 // i.e. not in a collapsed code block
 function setChunkAccessibility(chunker, pseudocode, collapse) {
   let currChunkNum = 0;
-  let prevChunkNum = 0;
-  let accessibleList = Array(chunker.chunks.length).fill(false);
-  accessibleList[0] = true;
+  let accessibleChunks = Array(chunker.chunks.length).fill(false);
+  accessibleChunks[0] = true;
 
   while (currChunkNum < chunker.chunks.length - 1) {
     currChunkNum = findNext(chunker.chunks, currChunkNum, pseudocode, collapse);
-    accessibleList[currChunkNum] = true;
-    prevChunkNum = currChunkNum;
+    accessibleChunks[currChunkNum] = true;
   }
 
-  chunker.accessibleList = accessibleList;
+  chunker.accessibleChunks = accessibleChunks;
 }
 
 // At any time the app may call dispatch(action, params), which will trigger one of
@@ -338,7 +336,7 @@ export const GlobalActions = {
       if (stopAt < state.chunker.chunks.length - 1) {
         do {
           stopAt++;
-        } while (!state.chunker.accessibleList[stopAt])
+        } while (!state.chunker.accessibleChunks[stopAt])
       }
     }
     // step forward until we are at stopAt, or last chunk, or some weird
@@ -387,7 +385,7 @@ export const GlobalActions = {
     // of range (perhaps should change this XXX); we need check for
     // that here
     // console.log(['PREV_LINE', state.chunker.currentChunk, state.chunker.chunks.length]);
-    if (state.chunker.currentChunk > state.chunker.chunks.length) {
+    if (state.chunker.currentChunk >= state.chunker.chunks.length) {
       state.chunker.currentChunk = state.chunker.chunks.length - 1;
     }
 
@@ -397,13 +395,11 @@ export const GlobalActions = {
       playing = playing.playing;
     }
     if (stopAt === undefined) {
-      stopAt = state.chunker.currentChunk === state.chunker.chunks.length ?
-        state.chunker.currentChunk - 1 :
-        state.chunker.currentChunk;
+      stopAt = state.chunker.currentChunk;
       if (stopAt > 0) {
         do {
           stopAt--;
-        } while (!state.chunker.accessibleList[stopAt])
+        } while (!state.chunker.accessibleChunks[stopAt])
       }
     }
     let result1 = {bookmark:"", chunk: state.chunker.currentChunk};

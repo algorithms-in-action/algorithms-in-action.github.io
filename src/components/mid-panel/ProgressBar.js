@@ -15,7 +15,7 @@ class ProgressBar extends React.Component {
 
     this.max;
     this.current;
-    this.accessibleList;
+    this.accessibleChunks;
     this.next;
     this.prev;
 
@@ -52,26 +52,26 @@ class ProgressBar extends React.Component {
       // in a certain radius
       for (let i = 0; i <= searchRadius; i++) {
         if (i === 0) {
-          if (this.accessibleList[x]) {
+          if (this.accessibleChunks[x]) {
             chunkNum = x;
             break;
           }
           continue;
         }
 
-        if (this.accessibleList[x + i]) {
+        if (this.accessibleChunks[x + i]) {
           chunkNum = x + i;
           break;
         }
 
-        if (this.accessibleList[x - i]) {
+        if (this.accessibleChunks[x - i]) {
           chunkNum = x - i;
           break;
         }
       }
     }
 
-    if (this.accessibleList[chunkNum]) {
+    if (this.accessibleChunks[chunkNum]) {
       if (chunkNum > this.current) {
         this.next({stopAt: chunkNum, playing: false});
       }
@@ -96,14 +96,14 @@ class ProgressBar extends React.Component {
       rectPrimary: document.querySelector('.mux-lpi-rect--primary'),
       buffer: document.querySelector('.mux-lpi-buffer'),
       inner: document.querySelector('.mux-lpi-inner'),
-      handle: document.querySelector('.progressHandle'),
+      thumb: document.querySelector('.progressThumb'),
     };
     this.inner = node.inner;
 
     this.max = max;
     this.current = current;
-    this.accessibleList = (state.chunker !== undefined) ?
-      state.chunker.accessibleList :
+    this.accessibleChunks = (state.chunker !== undefined) ?
+      state.chunker.accessibleChunks :
       null;
 
     this.prev = (playing) => {
@@ -133,9 +133,9 @@ class ProgressBar extends React.Component {
       setTransform(ref, `scaleX(${val})`);
     }
 
-    const setHandle = (handle, value) => {
-      if (handle !== null) {
-        const { style } = handle;
+    const setThumb = (thumb, value) => {
+      if (thumb !== null) {
+        const { style } = thumb;
         let x = 0;
 
         if (this !== undefined) {
@@ -153,7 +153,7 @@ class ProgressBar extends React.Component {
 
     setProgress(node.rectPrimary, parseFloat(current / max, 10));
     setBuffer(node.buffer, 1);
-    setHandle(node.handle, parseFloat(current / max, 10));
+    setThumb(node.thumb, parseFloat(current / max, 10));
 
 
     return (
@@ -176,8 +176,8 @@ class ProgressBar extends React.Component {
                 }
               </div>
             </div>
-            <div className="progressHandle">
-              <div className="innerHandle" />
+            <div className="progressThumb">
+              <div className="innerThumb" />
             </div>
             <div className="mux-lpi-buffer" />
             <div className="mux-lpi-rect mux-lpi-rect--primary">

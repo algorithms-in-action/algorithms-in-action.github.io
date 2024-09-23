@@ -182,7 +182,7 @@ $progWidth: 320px;
   transition: opacity 250ms linear;
   width: $progWidth;
   @include border-radius(16px); // makes the border curvy
-  margin: 0 12px;
+  margin: 0 0 0 12px;
 }
 
 .mux-lpi-inner {
@@ -234,7 +234,7 @@ $border: 4px;
   }
 }
 
-.progressHandle {
+.progressThumb {
   position: absolute;
   z-index: 50;
   top: 0;
@@ -248,7 +248,7 @@ $border: 4px;
   align-items: center;
   transition: transform 250ms ease;
 
-  .innerHandle {
+  .innerThumb {
     z-index: 51;
     width: $progHeight - ($border + $border);
     height: $progHeight - ($border + $border);
