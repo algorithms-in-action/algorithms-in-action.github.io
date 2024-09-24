@@ -92,7 +92,7 @@ export default {
         },
         [key, i]
       )
-      while (table[i] !== undefined) {
+      while (table[i] !== undefined && table[i] !== key) {
         let prevI = i;
         i = (i + increment) % SIZE;
         chunker.add(
