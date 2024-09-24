@@ -66,11 +66,11 @@
 
             .variable {
                 font-size: 18px;
-                color: var(--apple);
+                color: var(--peach);
             }
 
             &.selected {
-                background-color: var(--apple);
+                background-color: var(--peach);
 
                 span {
                     color: var(--array-2d-row-col-selected);
@@ -78,7 +78,7 @@
             }
 
             &.selected1 {
-                background-color: var(--leaf);
+                background-color: var(--sky);
 
                 span {
                     color: var(--array-2d-row-col-selected);
@@ -102,14 +102,6 @@
             }
 
             &.selected4 {
-                background-color: var(--apple);
-
-                span {
-                    color: var(--array-2d-row-col-selected);
-                }
-            }
-
-            &.selected5 {
                 background-color: var(--peach);
 
                 span {
@@ -117,8 +109,16 @@
                 }
             }
 
+            &.selected5 {
+                background-color: var(--apple);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
             &.patched {
-                background-color: var(--sky);
+                background-color: var(--leaf);
 
                 span {
                     color: var(--array-2d-row-col-patched);
@@ -172,7 +172,7 @@
 
             --not-started-section: rgba(0, 0, 0, 0); // transparent
             --in-progress-section: rgb(169, 169, 169);
-            --current-section: var(--apple);
+            --current-section: var(--peach);
             --finished-section: rgb(0, 0, 0);
 
             .stackSubElement {
