@@ -305,11 +305,10 @@ class GraphTracer extends Tracer {
 
   updateHeight(id, height) {
     this.findNode(id).height = height;
-    this.findNode(id).highlight_height;
   }
 
   updateTID(id, AVL_TID) {
-    this.findNode(id).AVL_TID = AVL_TID;
+    this.findNode(id).height = AVL_TID;
   }
 
   clearTID() {

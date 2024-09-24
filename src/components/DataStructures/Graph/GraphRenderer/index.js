@@ -688,12 +688,19 @@ class GraphRenderer extends Renderer {
                   {this.toString(weight)}
                 </text>
               )}
+
               <text className={styles.height}>
-                {this.toString(height)}
+                {height != null && height.toString().includes('t') ? (
+                  <tspan className={styles.AVL_TID}>
+                    {height}
+                  </tspan>
+                ) : (
+                  <tspan>
+                    {height != null ? height : ''}
+                  </tspan>
+                )}
               </text>
-              <text className={styles.AVL_TID}>
-                {this.toString(AVL_TID)}
-              </text>
+
               {isPointer && (
                 <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
                   {this.toString(pointerText)}
@@ -755,8 +762,6 @@ class GraphRenderer extends Renderer {
             <tspan>{functionBalence}</tspan>
           )}
         </text>
-
-
 
         <text className={classes(styles.text)}
           x={+ 530}

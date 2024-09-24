@@ -72,23 +72,18 @@
     }
 
     .AVL_TID {
-      fill: var(--graph-node-AVL_TID-fill);
+      //fill: var(--graph-node-AVL_TID-fill);
+      --breath_color: var(--graph-node-AVL_TID-fill);
+      animation: colorChange 1.5s infinite; // anmation
       // font-weight: bold;
       // font-size: 15px;
       // alignment-baseline: central;
       dominant-baseline: central;
       text-anchor: middle;
-      font-size: 35px; // font size for labels inside nodes
+      font-size: 40px; // font size for labels inside nodes
       // transform: translateY(-40px);
-      transform: translate(+50px, -30px);
+      transform: translate(+50px, -35px);
       // text-anchor: left;
-    }
-
-    .highlight_height {
-      .height {
-        --breath_color: var(--graph-node-height-fill);
-        animation: colorChange 1.5s 3; // anmation
-      }
     }
 
     &.selected {
