@@ -43,19 +43,30 @@ let text1 = `
                     \\Note}
                     i <- hash(k) \\Ref Hash1
                     Choose Increment value in case of collisions \\Ref SetIncrement
-                    while T[i] is occupied by another element // search for unoccupied slot \\B 7
-                    \\Expl{ If T[i] = k then k already exists in the table.  We could explicitly check
-                            for this but the code here simply over-writes the previous
-                            ocurrence of k, as if the slot was empty.
+                    Search for unoccupied slot \\Ref InsertionLoop
+                    \\Expl{ Check slots in steps of the chosen increment value, wrapping around at the end of the table
                     \\Expl}
-                        \\In{
-                            i <- (i + Increment) mod TableSize \\B 8
-                            \\Expl{ T[i] is occupied so we jump ahead Increment steps.
-                                We use modulo TableSize to "wrap around" if we reach the end.
-                            \\Expl}
-                        \\In}
                     T[i] <- k // unoccupied slot found so we put k in it \\B 9
                     // Done \\B 10
+                \\In}
+        \\Code}
+
+        \\Code{
+            InsertionLoop
+                \\Expl{ If T[i] = k then k already exists in the table.  We could explicitly check
+                    for this but the code here simply over-writes the previous
+                    ocurrence of k, as if the slot was empty.
+                \\Expl}
+                while T[i] is occupied by another element // search for unoccupied slot \\B 7
+                \\Expl{ If T[i] = k then k already exists in the table.  We could explicitly check
+                        for this but the code here simply over-writes the previous
+                        ocurrence of k, as if the slot was empty.
+                \\Expl}
+                \\In{
+                    i <- (i + Increment) mod TableSize \\B 8
+                    \\Expl{ T[i] is occupied so we jump ahead Increment steps.
+                        We use modulo TableSize to "wrap around" if we reach the end.
+                    \\Expl}
                 \\In}
         \\Code}
 
