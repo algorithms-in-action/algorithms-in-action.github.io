@@ -15,7 +15,9 @@
     "start:win32": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "test": "react-scripts test",
     "test-uf": "npm test -- ./src/algorithms/controllers/unionFind.test.js",
-    "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js"
+    "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
+    "test-hashinsert": "npm test -- ./src/algorithms/controllers/HashingInsertion.test.js",
+    "test-hashsearch": "npm test -- ./src/algorithms/controllers/HashingSearch.test.js"
   },
   "husky": {
     "hooks": {
