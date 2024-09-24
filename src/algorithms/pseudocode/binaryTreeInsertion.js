@@ -1,3 +1,8 @@
+// DO NOT MERGE TO OTHER BRANCHES!
+// This is a hacked version of the BST insertion code to play around with
+// node rotations for AVL trees and the like.  It simpler to smash the BST
+// code than create a new algorithm and the AVL tree code isn't in the main
+// repo yet.
 import parse from '../../pseudocode/parse';
 
 export default parse(`
@@ -62,6 +67,12 @@ export default parse(`
       \\Expl{  Parent p and child c will move in lockstep, with p always 
               trailing one step behind c.
       \\Expl}
+      // rotate step 1 \\B RotateR1
+      // rotate step 2 \\B RotateR2
+      // rotate step 3 \\B RotateR3
+      // rotate step 4 \\B RotateR4
+      // rotate step 5 \\B RotateR5
+      // rotate step 6 \\B RotateR6
       if k < c.key \\B 15
       \\Expl{  The BST condition is that nodes with keys less than the current
               node's key are to be found in the left subtree, and nodes whose

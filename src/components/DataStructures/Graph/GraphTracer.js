@@ -50,6 +50,7 @@ class GraphTracer extends Tracer {
     this.text = null;
     this.logTracer = null;
     this.istc = false;
+    this.pauseLayout = false; // flag to stop disable layout function
   }
 
   /* 
@@ -389,8 +390,16 @@ class GraphTracer extends Tracer {
     return { left, top, right, bottom, width, height };
   }
 
+  // Pick x-y coordinates for each node.
+  // If the data structure changes, layout is triggered (with whatever
+  // function is in this.callLayout).  If this.pauseLayout is true we do
+  // nothing (used to stop changing AVL tree layout during rotation
+  // operations, when the tree is temporarily broken). Edges can still be
+  // added/removed and setNodePosition can be used to explicitly move nodes
+  // around.
   layout() {
-    if(this.callLayout === null)
+
+    if(this.callLayout === null || this.pauseLayout)
     {
       return;
     }
@@ -538,6 +547,7 @@ class GraphTracer extends Tracer {
   layoutBST(root = 0, sorted = false) {
     this.root = root;
     this.callLayout = { method: this.layoutBST, args: arguments };
+
     const rect = this.getRect();
     // If there is a sole node, it centers it.
     const middleX = (rect.left + rect.right) / 2;
@@ -838,6 +848,22 @@ class GraphTracer extends Tracer {
     _node.visitedCount3 = 0;
     _node.visitedCount4 = 0;
   }
+
+  // Messing about with stuff for rotation of tree nodes for AVL 
+
+  setPauseLayout(b = true) {
+    (b? this.pauseLayout = true: this.pauseLayout = false)
+  }
+
+  // Set position of a node (to override layout)
+  setNodePosition(n, x, y) {
+    let node = this.findNode(n);
+    console.log(node);
+    this.motionOn = true;
+    node.x = x;
+    node.y = y;
+  }
+
 } 
 
 export default GraphTracer;
