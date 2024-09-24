@@ -5,8 +5,8 @@ import '../../styles/InsertSearchAlgorithms.scss';
 const baseUrl = window.location.origin;
 
 const insertSearchAlgorithms = [
-  { name: 'Binary Search Tree', url: `${baseUrl}/alg=binarySearchTree&mode=search` },
-  { name: '2-3-4 Tree', url: `${baseUrl}/alg=TTFTree&mode=search` },
+  { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
+  { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
 ];
 
 const InsertSearchAlgorithms = () => {

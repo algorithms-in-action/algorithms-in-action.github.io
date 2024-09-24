@@ -5,7 +5,7 @@ import '../../styles/SetAlgorithms.scss';
 const baseUrl = window.location.origin;
 
 const setAlgorithms = [
-  { name: 'Union Find', url: `${baseUrl}/alg=unionFind&mode=find` }
+  { name: 'Union Find', url: `${baseUrl}/?alg=unionFind&mode=find` }
 ];
 
 const SetAlgorithms = () => {

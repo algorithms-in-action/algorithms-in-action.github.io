@@ -12,24 +12,24 @@ import StringSearchAlgorithms from './StringSearchAlgorithms';
 const baseUrl = window.location.origin;
 
 const allAlgorithms = [
-    { name: 'Brute Force', url: `${baseUrl}/alg=bruteForceStringSearch&mode=search` },
-    { name: "Horspool's", url: `${baseUrl}/alg=horspoolStringSearch&mode=search` },
-    { name: 'Depth First Search', url: `${baseUrl}/alg=DFSrec&mode=find` },
-    { name: 'DFS (iterative)', url: `${baseUrl}/alg=DFS&mode=find` },
-    { name: 'Breadth First Search', url: `${baseUrl}/alg=BFS&mode=find` },
-    { name: "Dijkstra's (shortest path)", url: `${baseUrl}/alg=dijkstra&mode=find` },
-    { name: 'A* (heuristic search)', url: `${baseUrl}/alg=aStar&mode=find` },
-    { name: "Prim's (min. spanning tree)", url: `${baseUrl}/alg=prim&mode=find` },
-    { name: "Prim's (simpler code)", url: `${baseUrl}/alg=prim_old&mode=find` },
-    { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/alg=kruskal&mode=find` },
-    { name: "Warshall's (transitive closure)", url: `${baseUrl}/alg=transitiveClosure&mode=tc` },
-    { name: 'Binary Search Tree', url: `${baseUrl}/alg=binarySearchTree&mode=search` },
-    { name: '2-3-4 Tree', url: `${baseUrl}/alg=TTFTree&mode=search` },
-    { name: 'Union Find', url: `${baseUrl}/alg=unionFind&mode=find` },
-    { name: 'Heapsort', url: `${baseUrl}/alg=heapSort&mode=sort` },
-    { name: 'Quicksort', url: `${baseUrl}/alg=quickSort&mode=sort` },
-    { name: 'Quicksort (Median of 3)', url: `${baseUrl}/alg=quickSortM3&mode=sort` },
-    { name: 'Merge Sort', url: `${baseUrl}/alg=msort_arr_td&mode=sort` } // don't include list mergesort?
+    { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
+    { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` },
+    { name: 'Depth First Search', url: `${baseUrl}/?alg=DFSrec&mode=find` },
+    { name: 'DFS (iterative)', url: `${baseUrl}/?alg=DFS&mode=find` },
+    { name: 'Breadth First Search', url: `${baseUrl}/?alg=BFS&mode=find` },
+    { name: "Dijkstra's (shortest path)", url: `${baseUrl}/?alg=dijkstra&mode=find` },
+    { name: 'A* (heuristic search)', url: `${baseUrl}/?alg=aStar&mode=find` },
+    { name: "Prim's (min. spanning tree)", url: `${baseUrl}/?alg=prim&mode=find` },
+    { name: "Prim's (simpler code)", url: `${baseUrl}/?alg=prim_old&mode=find` },
+    { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/?alg=kruskal&mode=find` },
+    { name: "Warshall's (transitive closure)", url: `${baseUrl}/?alg=transitiveClosure&mode=tc` },
+    { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
+    { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
+    { name: 'Union Find', url: `${baseUrl}/?alg=unionFind&mode=find` },
+    { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
+    { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
+    { name: 'Quicksort (Median of 3)', url: `${baseUrl}/?alg=quickSortM3&mode=sort` },
+    { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` } // don't include list mergesort?
   ];
 
 // const allAlgorithms = [

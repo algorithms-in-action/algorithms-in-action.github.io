@@ -5,8 +5,8 @@ import '../../styles/StringSearchAlgorithms.scss';
 const baseUrl = window.location.origin;
 
 const stringSearchAlgorithms = [
-  { name: 'Brute Force', url: `${baseUrl}/alg=bruteForceStringSearch&mode=search` },
-  { name: "Horspool's", url: `${baseUrl}/alg=horspoolStringSearch&mode=search` }
+  { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
+  { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` }
 ];
 
 const StringSearchAlgorithms = () => {
