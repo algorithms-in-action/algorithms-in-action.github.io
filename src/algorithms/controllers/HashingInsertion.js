@@ -9,6 +9,7 @@ import {
   EMPTY_CHAR,
   Colors
 } from './HashingCommon.js';
+import { returnInputFromRange } from '../parameters/helpers/ParamHelper.js';
 
 
 const IBookmarks = {
@@ -22,6 +23,7 @@ const IBookmarks = {
   Collision: 8,
   PutIn: 9,
   Done: 10,
+  BulkInsert: 11
 }
 
 const TYPE = 'Insert';
@@ -178,9 +180,11 @@ export default {
 
     let prevKey;
     let prevIdx;
-    for (const key of inputs) {
-      prevIdx = hashInsert(table, key, prevKey, prevIdx);
-      prevKey = key;
+    for (const item of inputs) {
+      for (const key of returnInputFromRange(item)) {
+        prevIdx = hashInsert(table, key, prevKey, prevIdx);
+        prevKey = key;
+      }
     }
 
     chunker.add(

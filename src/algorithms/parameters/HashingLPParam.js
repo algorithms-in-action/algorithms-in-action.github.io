@@ -13,6 +13,8 @@ import {
   singleNumberValidCheck,
   successParamMsg,
   errorParamMsg,
+  commaSeparatedPairTripleCheck,
+  returnInputFromRange,
 } from './helpers/ParamHelper';
 import { SMALL_TABLE, LARGE_TABLE } from '../controllers/HashingCommon';
 
@@ -40,8 +42,9 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />)
 
 
-const ERROR_NEGATIVE_INPUT = 'Please enter only positive integers';
-const ERROR_TOO_LARGE = `Please enter the right number of digits`;
+const ERROR_INVALID_INPUT_INSERT = 'Please enter a list of positive integers';
+const ERROR_INVALID_INPUT_SEARCH = 'Please enter a positive integer';
+const ERROR_TOO_LARGE = `Please enter the right amount of inputs`;
 
 
 function HashingLPParam() {
@@ -62,11 +65,12 @@ function HashingLPParam() {
     e.preventDefault();
     const inputs = e.target[0].value;
 
-    if (commaSeparatedNumberListValidCheck(inputs)) {
-      let values = inputs.split(',').map(Number);
+    if (commaSeparatedPairTripleCheck(true, inputs)) {
+      let values = inputs.split(",");
       let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
-
-      if (values.length < hashSize) {
+      let totalInputs = 0;
+      for (const item of values) totalInputs += returnInputFromRange(item).length;
+      if (totalInputs < hashSize) {
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingLP',
           mode: 'insertion',
@@ -78,7 +82,7 @@ function HashingLPParam() {
         setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
       }
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_INSERT));
     }
   }
 
@@ -100,7 +104,7 @@ function HashingLPParam() {
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH));
     }
   }
 

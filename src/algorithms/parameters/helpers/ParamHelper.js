@@ -414,3 +414,45 @@ export const shuffleArray = (array) => {
   }
   return array;
 };
+
+/**
+ * Check if the input string are comma-separated numbers, pairs and triples
+ * @param {*} allowNumber is a toggle, if true it allows numbers, if not it only allows pairs and triples
+ * @param {*} input the input string
+ * @returns whether the check is true
+ */
+export const commaSeparatedPairTripleCheck = (allowNumber, input) => {
+  let regex;
+  if (allowNumber) regex = /^[0-9](-[0-9]){0,2}$/
+  else regex = /^[0-9](-[0-9]){1,2}$/
+  let array = input.split(",");
+  for (let item in array) {
+    if (!item.match(regex)) return false;
+  }
+  return true;
+}
+
+/**
+ * return an array of number according to the range specified
+ * @param {*} str the string of range, e.g."2-7-4", "2-5"
+ * @returns the array of number in that range
+ */
+export const returnInputFromRange = (str) => {
+  let arr = str.split("-").map(Number);
+  if (arr.length == 1) return arr;
+  else if (arr.length == 2) return arrayRange(arr[0], arr[1], 1);
+  else if (arr.length == 3) return arrayRange(arr[0], arr[1], arr[2]);
+}
+
+/**
+ * return an array of number according to the range specified
+ * @param {*} start start point(inclusive)
+ * @param {*} stop end point(inclusive)
+ * @param {*} step the step
+ * @returns an array of number
+ */
+const arrayRange = (start, stop, step) => 
+  Array.from(
+  { length: (stop - start) / step + 1 },
+  (value, index) => start + index * step
+  );
