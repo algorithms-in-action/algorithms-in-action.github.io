@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Search function working for LP small table, also added instructions and extra-info">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/HashingInsertion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/HashingInsertion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/instructions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/instructions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/HashingDHParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/HashingDHParam.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/HashingLPParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/HashingLPParam.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +39,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "josh__pseudocode__update",
+    "git-widget-placeholder": "josh__instructions__update",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
@@ -74,7 +76,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726555275650</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updated Hash Insertion Pseudocode so that hash insertion while loop is hidden">
+      <option name="closed" value="true" />
+      <created>1727151457157</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727151457158</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
