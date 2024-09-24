@@ -108,24 +108,3 @@ export function hashDelete(
 
   return insertions;
 }
-
-// export function newHashGraphCycle(chunker, bookmark, hashKey, algo) {
-//   chunker.add(
-//     bookmark,
-//     (vis, key) => {
-//       // update key value
-//       vis.graph.updateNode(HASH_TABLE.Key, key);
-//       vis.graph.updateNode(HASH_TABLE.Value, ' ');
-//       vis.graph.select(HASH_TABLE.Key);
-//       vis.graph.colorEdge(HASH_TABLE.Key, HASH_TABLE.Value, Colors.Pending)
-
-//       if (algo === "HashingDH") {
-//         vis.graph.updateNode(HASH_TABLE.Key2, key);
-//         vis.graph.updateNode(HASH_TABLE.Value2, ' ');
-//         vis.graph.select(HASH_TABLE.Key2);
-//         vis.graph.colorEdge(HASH_TABLE.Key2, HASH_TABLE.Value2, Colors.Pending)
-//       }
-//     },
-//     [hashKey]
-//   )
-// }
