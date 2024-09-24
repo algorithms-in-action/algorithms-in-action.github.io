@@ -10,7 +10,6 @@ import {
 
 const MAX_PARAMS_SIZE = 100;
 
-//TEMP
 const IBookmarks = {
   Init: 1,
   ApplyHash: 2,
@@ -47,6 +46,8 @@ export default {
     const INDEX = 0;
     const POINTER = 2;
     const POINTER_VALUE = "i";
+
+    let found = true;
 
     // Clear previous stuff and set start value to target value
     // Currently has a bug where if you search for a different number, the previous one remains on the screen
@@ -132,9 +133,11 @@ export default {
         IBookmarks.NotFound,
         (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
+          found = false;
         },
         [i]
       );
     }
+    return found;
   },
 };
