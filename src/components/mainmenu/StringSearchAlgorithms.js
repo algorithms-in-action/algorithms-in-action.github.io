@@ -1,9 +1,12 @@
 import React from 'react';
 import '../../styles/StringSearchAlgorithms.scss';
 
+// Get the base URL dynamically
+const baseUrl = window.location.origin;
+
 const stringSearchAlgorithms = [
-  { name: 'Brute Force', url: 'http://localhost:3000/' },
-  { name: "Horspool's", url: 'http://localhost:3000/' }
+  { name: 'Brute Force', url: `${baseUrl}/alg=bruteForceStringSearch&mode=search` },
+  { name: "Horspool's", url: `${baseUrl}/alg=horspoolStringSearch&mode=search` }
 ];
 
 const StringSearchAlgorithms = () => {

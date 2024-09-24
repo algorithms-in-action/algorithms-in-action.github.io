@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';  // 添加这行
+import { Link } from 'react-router-dom';  // add this line
 import '../../styles/mainmenu.scss';
 import logo from '../../assets/logo.svg';
 import SortingAlgorithms from './SortingAlgorithms';
@@ -7,26 +7,52 @@ import InsertSearchAlgorithms from './InsertSearchAlgorithms';
 import GraphAlgorithms from './GraphAlgorithms';
 import SetAlgorithms from './SetAlgorithms';
 import StringSearchAlgorithms from './StringSearchAlgorithms';
+
+// Get the base URL dynamically
+const baseUrl = window.location.origin;
+
 const allAlgorithms = [
-    { name: 'Brute Force', url: 'http://localhost:3000/' },
-    { name: "Horspool's", url: 'http://localhost:3000/' },
-    { name: 'Depth First Search', url: 'http://localhost:3000/' },
-    { name: 'DFS (iterative)', url: 'http://localhost:3000/' },
-    { name: 'Breadth First Search', url: 'http://localhost:3000/' },
-    { name: "Dijkstra's (shortest path)", url: 'http://localhost:3000/' },
-    { name: 'A* (heuristic search)', url: 'http://localhost:3000/' },
-    { name: "Prim's (min. spanning tree)", url: 'http://localhost:3000/' },
-    { name: "Prim's (simpler code)", url: 'http://localhost:3000/' },
-    { name: "Kruskal's (min. spanning tree)", url: 'http://localhost:3000/' },
-    { name: "Warshall's (transitive closure)", url: 'http://localhost:3000/' },
-    { name: 'Binary Search Tree', url: 'http://localhost:3000/' },
-    { name: '2-3-4 Tree', url: 'http://localhost:3000/' },
-    { name: 'Union Find', url: 'http://localhost:3000/' },
-    { name: 'Heapsort', url: 'http://localhost:3000/' },
-    { name: 'Quicksort', url: 'http://localhost:3000/' },
-    { name: 'Quicksort (Median of 3)', url: 'http://localhost:3000/' },
-    { name: 'Merge Sort', url: 'http://localhost:3000/' }
+    { name: 'Brute Force', url: `${baseUrl}/alg=bruteForceStringSearch&mode=search` },
+    { name: "Horspool's", url: `${baseUrl}/alg=horspoolStringSearch&mode=search` },
+    { name: 'Depth First Search', url: `${baseUrl}/alg=DFSrec&mode=find` },
+    { name: 'DFS (iterative)', url: `${baseUrl}/alg=DFS&mode=find` },
+    { name: 'Breadth First Search', url: `${baseUrl}/alg=BFS&mode=find` },
+    { name: "Dijkstra's (shortest path)", url: `${baseUrl}/alg=dijkstra&mode=find` },
+    { name: 'A* (heuristic search)', url: `${baseUrl}/alg=aStar&mode=find` },
+    { name: "Prim's (min. spanning tree)", url: `${baseUrl}/alg=prim&mode=find` },
+    { name: "Prim's (simpler code)", url: `${baseUrl}/alg=prim_old&mode=find` },
+    { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/alg=kruskal&mode=find` },
+    { name: "Warshall's (transitive closure)", url: `${baseUrl}/alg=transitiveClosure&mode=tc` },
+    { name: 'Binary Search Tree', url: `${baseUrl}/alg=binarySearchTree&mode=search` },
+    { name: '2-3-4 Tree', url: `${baseUrl}/alg=TTFTree&mode=search` },
+    { name: 'Union Find', url: `${baseUrl}/alg=unionFind&mode=find` },
+    { name: 'Heapsort', url: `${baseUrl}/alg=heapSort&mode=sort` },
+    { name: 'Quicksort', url: `${baseUrl}/alg=quickSort&mode=sort` },
+    { name: 'Quicksort (Median of 3)', url: `${baseUrl}/alg=quickSortM3&mode=sort` },
+    { name: 'Merge Sort', url: `${baseUrl}/alg=msort_arr_td&mode=sort` } // don't include list mergesort?
   ];
+
+// const allAlgorithms = [
+//   { name: 'Brute Force', url: 'alg=bruteForceStringSearch&mode=search' },
+//   { name: "Horspool's", url: 'alg=horspoolStringSearch&mode=search' },
+//   { name: 'Depth First Search', url: 'alg=DFSrec&mode=find' },
+//   { name: 'DFS (iterative)', url: 'alg=DFS&mode=find' },
+//   { name: 'Breadth First Search', url: 'alg=BFS&mode=find' },
+//   { name: "Dijkstra's (shortest path)", url: 'alg=dijkstra&mode=find' },
+//   { name: 'A* (heuristic search)', url: 'alg=aStar&mode=find' },
+//   { name: "Prim's (min. spanning tree)", url: 'alg=prim&mode=find' },
+//   { name: "Prim's (simpler code)", url: 'alg=prim_old&mode=find' },
+//   { name: "Kruskal's (min. spanning tree)", url: 'alg=kruskal&mode=find' },
+//   { name: "Warshall's (transitive closure)", url: 'alg=transitiveClosure&mode=tc' },
+//   { name: 'Binary Search Tree', url: 'alg=binarySearchTree&mode=search' },
+//   { name: '2-3-4 Tree', url: 'alg=TTFTree&mode=search' },
+//   { name: 'Union Find', url: 'alg=unionFind&mode=find' },
+//   { name: 'Heapsort', url: 'alg=heapSort&mode=sort' },
+//   { name: 'Quicksort', url: 'alg=quickSort&mode=sort' },
+//   { name: 'Quicksort (Median of 3)', url: 'alg=quickSortM3&mode=sort' },
+//   { name: 'Merge Sort', url: 'alg=msort_arr_td&mode=sort' } // don't include list mergesort?
+// ];
+
 const Mainmenu = () => {
     const [searchTerm, setSearchTerm] = useState('');
 

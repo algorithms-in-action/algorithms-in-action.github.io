@@ -1,8 +1,11 @@
 import React from 'react';
 import '../../styles/SetAlgorithms.scss';
 
+// Get the base URL dynamically
+const baseUrl = window.location.origin;
+
 const setAlgorithms = [
-  { name: 'Union Find', url: 'http://localhost:3000/' }
+  { name: 'Union Find', url: `${baseUrl}/alg=unionFind&mode=find` }
 ];
 
 const SetAlgorithms = () => {

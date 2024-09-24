@@ -1,9 +1,12 @@
 import React from 'react';
 import '../../styles/InsertSearchAlgorithms.scss'; 
 
+// Get the base URL dynamically
+const baseUrl = window.location.origin;
+
 const insertSearchAlgorithms = [
-  { name: 'Binary Search Tree', url: 'http://localhost:3000/' },
-  { name: '2-3-4 Tree', url: 'http://localhost:3000/' },
+  { name: 'Binary Search Tree', url: `${baseUrl}/alg=binarySearchTree&mode=search` },
+  { name: '2-3-4 Tree', url: `${baseUrl}/alg=TTFTree&mode=search` },
 ];
 
 const InsertSearchAlgorithms = () => {

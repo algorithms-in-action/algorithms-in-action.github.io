@@ -1,16 +1,19 @@
 import React from 'react';
 import '../../styles/GraphAlgorithms.scss'; 
 
+// Get the base URL dynamically
+const baseUrl = window.location.origin;
+
 const graphAlgorithms = [
-  { name: 'Depth First Search', url: 'http://localhost:3000/' },
-  { name: 'DFS (iterative)', url: 'http://localhost:3000/' },
-  { name: 'Breadth First Search', url: 'http://localhost:3000/' },
-  { name: "Dijkstra's (shortest path)", url: 'http://localhost:3000/' },
-  { name: 'A* (heuristic search)', url: 'http://localhost:3000/' },
-  { name: "Prim's (min. spanning tree)", url: 'http://localhost:3000/' },
-  { name: "Prim's (simpler code)", url: 'http://localhost:3000/' },
-  { name: "Kruskal's (min. spanning tree)", url: 'http://localhost:3000/' },
-  { name: "Warshall's (transitive closure)", url: 'http://localhost:3000/' }
+  { name: 'Depth First Search', url: `${baseUrl}/alg=DFSrec&mode=find` },
+  { name: 'DFS (iterative)', url: `${baseUrl}/alg=DFS&mode=find` },
+  { name: 'Breadth First Search', url: `${baseUrl}/alg=BFS&mode=find` },
+  { name: "Dijkstra's (shortest path)", url: `${baseUrl}/alg=dijkstra&mode=find` },
+  { name: 'A* (heuristic search)', url: `${baseUrl}/alg=aStar&mode=find` },
+  { name: "Prim's (min. spanning tree)", url: `${baseUrl}/alg=prim&mode=find` },
+  { name: "Prim's (simpler code)", url: `${baseUrl}/alg=prim_old&mode=find` },
+  { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/alg=kruskal&mode=find` },
+  { name: "Warshall's (transitive closure)", url: `${baseUrl}/alg=transitiveClosure&mode=tc` }
 ];
 
 const GraphAlgorithms = () => {
