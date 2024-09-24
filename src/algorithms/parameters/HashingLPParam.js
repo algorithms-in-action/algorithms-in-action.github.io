@@ -171,7 +171,7 @@ function HashingLPParam() {
             name="largeTable"
           />
         }
-        label="Large Table"
+        label="Larger Table"
         className="checkbox"
       />
 
