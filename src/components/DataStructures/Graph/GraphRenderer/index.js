@@ -420,7 +420,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionBRText, tagInfo } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalence, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -723,14 +723,40 @@ class GraphRenderer extends Renderer {
         </text>
 
         <text className={classes(styles.text)}
-          x={+ 530}
-          y={- 200}
+          x={+400}
+          y={-200}
           textAnchor="middle">
-          {/* <tspan className={styles.pseudocode_function}>
-            {this.props.data.functionName}
-          </tspan> */}
-          {functionBRText}
+          {functionNode != null && (
+            <tspan className={styles.pseudocode_function}>
+              {"Node["}
+            </tspan>
+          )}
+          {functionNode}
+
+          {functionNode != null && (
+            <tspan className={styles.pseudocode_function}>
+              {"] => "}
+            </tspan>
+          )}
         </text>
+
+        <text className={classes(styles.text)}
+          x={+650}
+          y={-200}
+          textAnchor="middle">
+          {functionBalence != null && (
+            <tspan className={styles.pseudocode_function}>
+              {"Balence: "}
+            </tspan>
+          )}
+          {(functionBalence < -1 || functionBalence > 1) ? (
+            <tspan style={{ fill: '#ff0000' }}>{functionBalence}</tspan>
+          ) : (
+            <tspan>{functionBalence}</tspan>
+          )}
+        </text>
+
+
 
         <text className={classes(styles.text)}
           x={+ 530}

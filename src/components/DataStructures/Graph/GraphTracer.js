@@ -51,7 +51,8 @@ class GraphTracer extends Tracer {
     this.text = null;
     this.functionInsertText = null;
     this.functionName = null;
-    this.functionBRText = null;
+    this.functionNode = null;
+    this.functionBalence = null;
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
@@ -862,8 +863,6 @@ class GraphTracer extends Tracer {
   }
 
   setText(text) {
-    // this.findNode(id).height = 100;
-    // this.findNode(id).text = text;
     this.text = text;
     // this.text.push({ text });
   }
@@ -873,8 +872,12 @@ class GraphTracer extends Tracer {
     this.functionInsertText = functionInsertText;
   }
 
-  setFunctionBRText(functionBRText) {
-    this.functionBRText = functionBRText;
+  setFunctionNode(functionNode) {
+    this.functionNode = functionNode;
+  }
+
+  setFunctionBalence(functionBalence) {
+    this.functionBalence = functionBalence;
   }
 
   // dispaly the function name on the AVL tree

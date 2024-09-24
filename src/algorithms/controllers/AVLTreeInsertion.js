@@ -489,7 +489,8 @@ export default {
             chunker.add('balance = left(t).height - right(t).height', (vis, r) => {
                 // vis.graph.setFunctionName(`balance = ${balance}, `);
                 // vis.graph.setFunctionInsertText('case ?');
-                vis.graph.setFunctionBRText(`Node(${r}): balance=${balance}`);
+                vis.graph.setFunctionNode(`${r}`);
+                vis.graph.setFunctionBalence(balance);
             }, [root.key], depth);
 
             let rotateDepth = depth + 1;
@@ -499,24 +500,27 @@ export default {
                 // console.log("LLR");
                 chunker.add('perform right rotation to re-balance t',
                     (vis, r) => {
-                        // vis.graph.setFunctionName(`balance= ${balance}, `);
-                        // vis.graph.setFunctionInsertText('case LL');
-                        vis.graph.setFunctionBRText(`Node(${r}): balance=${balance}, case LL`)
+                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionInsertText(`LL`);
+                        vis.graph.setFunctionNode(`${r}`);
+                        vis.graph.setFunctionBalence(balance);
                     },
                     [root.key],
                     depth
                 );
                 root = LLR(root, parentNode, rotateDepth);
                 chunker.add('return rightRotate(t)', (vis) => {
-                    vis.graph.setFunctionBRText('');
+                    vis.graph.setFunctionNode(null);
+                    vis.graph.setFunctionBalence(null);
                 }, [], depth);
             } else if (balance < -1 && key > root.right.key) {
                 chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
                 chunker.add('perform left rotation to re-balance t',
                     (vis, r) => {
-                        // vis.graph.setFunctionName(`balance= ${balance}, `);
-                        // vis.graph.setFunctionInsertText('case RR');
-                        vis.graph.setFunctionBRText(`Node(${r}): balance=${balance}, case RR`)
+                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionInsertText(`RR`);
+                        vis.graph.setFunctionNode(`${r}`);
+                        vis.graph.setFunctionBalence(balance);
                     },
                     [root.key],
                     depth
@@ -524,15 +528,17 @@ export default {
                 // console.log("RRR");
                 root = RRR(root, parentNode, rotateDepth);
                 chunker.add('return leftRotate(t)', (vis) => {
-                    vis.graph.setFunctionBRText('');
+                    vis.graph.setFunctionNode(null);
+                    vis.graph.setFunctionBalence(null);
                 }, [], depth);
             } else if (balance > 1 && key > root.left.key) {
                 chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 chunker.add('perform left rotation on the left subtree',
                     (vis, r) => {
-                        // vis.graph.setFunctionName(`balance= ${balance}, `);
-                        // vis.graph.setFunctionInsertText(`case LR`);
-                        vis.graph.setFunctionBRText(`Node(${r}): balance=${balance}, case LR`)
+                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionInsertText(`LR`);
+                        vis.graph.setFunctionNode(`${r}`);
+                        vis.graph.setFunctionBalence(balance);
                     },
                     [root.key],
                     depth
@@ -540,23 +546,26 @@ export default {
                 // console.log("LRR");
                 root = LRR(root, parentNode, rotateDepth);
                 chunker.add('return rightRotate(t) after leftRotate', (vis) => {
-                    vis.graph.setFunctionBRText('');
+                    vis.graph.setFunctionNode(null);
+                    vis.graph.setFunctionBalence(null);
                 }, [], depth);
             } else if (balance < -1 && key < root.right.key) {
                 chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 chunker.add('perform right rotation on the right subtree',
                     (vis, r) => {
-                        // vis.graph.setFunctionName(`balance= ${balance}, `);
-                        // vis.graph.setFunctionInsertText('case RL');
-                        vis.graph.setFunctionBRText(`Node(${r}): balance=${balance}, case RL`)
+                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionInsertText(`RL`);
+                        vis.graph.setFunctionNode(`${r}`);
+                        vis.graph.setFunctionBalence(balance);
                     },
                     [root.key],
                     depth
                 );
                 root = RLR(root, parentNode, rotateDepth);
                 chunker.add('return leftRotate(t) after rightRotate', (vis) => {
-                    vis.graph.setFunctionBRText('');
+                    vis.graph.setFunctionNode(null);
+                    vis.graph.setFunctionBalence(null);
                 }, [], depth);
             }
 
