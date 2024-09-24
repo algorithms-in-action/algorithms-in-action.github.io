@@ -1,5 +1,3 @@
-import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import {
   hash1,
   setIncrement,
@@ -7,8 +5,6 @@ import {
   EMPTY_CHAR,
   Colors
 } from './HashingCommon.js';
-
-const MAX_PARAMS_SIZE = 100;
 
 const IBookmarks = {
   Init: 1,
@@ -38,7 +34,7 @@ export default {
   },
 
   run(chunker, params) {
-
+    const ALGORITHM_NAME = params.name;
     const TARGET = params.target; // Target value we are searching for
     const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
@@ -59,8 +55,18 @@ export default {
 
         vis.graph.updateNode(HASH_TABLE.Key, target);
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
+        vis.graph.select(HASH_TABLE.Key);
+        vis.graph.colorEdge(HASH_TABLE.Key, HASH_TABLE.Value, Colors.Pending)
+
+        if (ALGORITHM_NAME === "HashingDH") {
+          vis.graph.updateNode(HASH_TABLE.Key2, target);
+          vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+          vis.graph.select(HASH_TABLE.Key2);
+          vis.graph.colorEdge(HASH_TABLE.Key2, HASH_TABLE.Value2, Colors.Pending)
+        }
 
         for (let i = 0; i < SIZE; i++) {
+          vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
         }
       },
@@ -79,6 +85,14 @@ export default {
       (vis, idx) => {
         vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
         vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
+        vis.graph.deselect(HASH_TABLE.Key);
+        vis.graph.deselect(HASH_TABLE.Value);
+        vis.graph.removeEdgeColor(HASH_TABLE.Key, HASH_TABLE.Value);
+        if (ALGORITHM_NAME == "HashingDH") {
+          vis.graph.deselect(HASH_TABLE.Key2);
+          vis.graph.deselect(HASH_TABLE.Value2);
+          vis.graph.removeEdgeColor(HASH_TABLE.Key2, HASH_TABLE.Value2);
+        }
       },
       [i]
     );

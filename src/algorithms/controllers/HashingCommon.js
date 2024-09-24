@@ -29,6 +29,7 @@ export function hash1(chunker, bookmark, key, tableSize) {
     bookmark,
     (vis, val) => {
       vis.graph.updateNode(HASH_TABLE.Value, val);
+      vis.graph.select(HASH_TABLE.Value);
     },
     [hashed]
   )
@@ -42,6 +43,7 @@ export function hash2(chunker, bookmark, key, tableSize) {
     bookmark,
     (vis, val) => {
       vis.graph.updateNode(HASH_TABLE.Value2, val);
+      vis.graph.select(HASH_TABLE.Value2);
     },
     [hashed]
   )
@@ -61,25 +63,17 @@ export function setIncrement(
       increment = hash2(chunker, bookmark, key, tableSize);
       break;
   }
-  if (type == "Insert") {
-      chunker.add(
-        bookmark,
-        (vis, increment) => {
+  chunker.add(
+      bookmark,
+      (vis, increment) => {
+        if (type === "Insert")  {
           let insertions = vis.array.getKth();
           vis.array.showKth([insertions, increment]);
-        },
-        [increment]
-      )
-  }
-  else if (type == "Search") {
-    chunker.add(
-        bookmark,
-        (vis, increment) => {
-            vis.array.showKth(['N/A', increment])
-        },
-        [increment]
-    )
-  }
+        }
+        else vis.array.showKth(['N/A', increment]);
+      },
+      [increment]
+  )
   return increment;
 }
 
@@ -114,3 +108,24 @@ export function hashDelete(
 
   return insertions;
 }
+
+// export function newHashGraphCycle(chunker, bookmark, hashKey, algo) {
+//   chunker.add(
+//     bookmark,
+//     (vis, key) => {
+//       // update key value
+//       vis.graph.updateNode(HASH_TABLE.Key, key);
+//       vis.graph.updateNode(HASH_TABLE.Value, ' ');
+//       vis.graph.select(HASH_TABLE.Key);
+//       vis.graph.colorEdge(HASH_TABLE.Key, HASH_TABLE.Value, Colors.Pending)
+
+//       if (algo === "HashingDH") {
+//         vis.graph.updateNode(HASH_TABLE.Key2, key);
+//         vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+//         vis.graph.select(HASH_TABLE.Key2);
+//         vis.graph.colorEdge(HASH_TABLE.Key2, HASH_TABLE.Value2, Colors.Pending)
+//       }
+//     },
+//     [hashKey]
+//   )
+// }

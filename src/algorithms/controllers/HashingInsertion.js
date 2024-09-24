@@ -53,6 +53,7 @@ export default {
     const INDEX = 0;
     const VALUE = 1;
     const POINTER = 2;
+    const POINTER_VALUE = "i"
 
     let insertions = 0;
 
@@ -60,23 +61,27 @@ export default {
       insertions = insertions + 1;
       chunker.add(
         IBookmarks.IncrementInsertions,
-        (vis, key, insertions, prevKey, prevIdx) => {
+        (vis, insertions, prevIdx) => {
           vis.array.showKth(insertions);
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
           // change variable value
-          vis.array.assignVariable(key, POINTER, prevIdx, prevKey);
+          vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE);
 
           // update key value
           vis.graph.updateNode(HASH_TABLE.Key, key);
           vis.graph.updateNode(HASH_TABLE.Value, ' ');
+          vis.graph.select(HASH_TABLE.Key);
+          vis.graph.colorEdge(HASH_TABLE.Key, HASH_TABLE.Value, Colors.Pending)
 
           if (ALGORITHM_NAME === "HashingDH") {
             vis.graph.updateNode(HASH_TABLE.Key2, key);
             vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+            vis.graph.select(HASH_TABLE.Key2);
+            vis.graph.colorEdge(HASH_TABLE.Key2, HASH_TABLE.Value2, Colors.Pending)
           }
         },
-        [key, insertions, prevKey, prevIdx]
+        [insertions, prevIdx]
       );
       // get initial hash index
       let i = hash1(chunker, IBookmarks.Hash1, key, SIZE);
@@ -86,11 +91,19 @@ export default {
 
       chunker.add(
         IBookmarks.Probing,
-        (vis, key, idx) => {
-          vis.array.assignVariable(key, POINTER, idx);
+        (vis, idx) => {
+          vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
+          vis.graph.deselect(HASH_TABLE.Key);
+          vis.graph.deselect(HASH_TABLE.Value);
+          vis.graph.removeEdgeColor(HASH_TABLE.Key, HASH_TABLE.Value);
+          if (ALGORITHM_NAME == "HashingDH") {
+            vis.graph.deselect(HASH_TABLE.Key2);
+            vis.graph.deselect(HASH_TABLE.Value2);
+            vis.graph.removeEdgeColor(HASH_TABLE.Key2, HASH_TABLE.Value2);
+          }
         },
-        [key, i]
+        [i]
       )
       while (table[i] !== undefined && table[i] !== key) {
         let prevI = i;
@@ -105,11 +118,11 @@ export default {
 
         chunker.add(
           IBookmarks.Probing,
-          (vis, key, idx) => {
-            vis.array.assignVariable(key, POINTER, idx);
+          (vis, idx) => {
+            vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
           },
-          [key, i]
+          [i]
         )
       }
 
@@ -172,8 +185,8 @@ export default {
 
     chunker.add(
       IBookmarks.Done,
-      (vis, key) => {
-        vis.array.assignVariable(key, POINTER, undefined);
+      (vis) => {
+        vis.array.assignVariable(POINTER_VALUE, POINTER, undefined);
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
 
         vis.graph.updateNode(HASH_TABLE.Key, ' ');
@@ -186,7 +199,6 @@ export default {
 
         table_result = vis.array.extractArray([1], "x")
       },
-      [prevKey]
     )
     
     return table_result;
