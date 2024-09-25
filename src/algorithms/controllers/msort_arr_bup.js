@@ -96,6 +96,27 @@ function highlight2Runlength(vis, left, mid, right, colorA, colorB) {
   for (let j = mid + 1; j <= right; j++) highlight(vis, j, colorB);
 }
 
+// Highlight entire array alternating colors for runlength
+function highlightAllRunlengths(vis, runlength, colorA, colorB, size) {
+  let toggle = 0; // 0 = colorA, 1 = colorB
+
+  for (let i = 0; i < size; i++) {
+    if (toggle == 0) {
+      highlight(vis, i, colorA);
+    }
+    if (toggle == 1) {
+      highlight(vis, i, colorB);
+    }
+    // Switch color after completing a run of length 'runlength'
+    if ((i + 1) % runlength == 0) {
+      console.log("switching toggle");
+
+      toggle = 1 - toggle; // Flip toggle between 0 and 1
+
+    } console.log("toggle = " + toggle);
+  }
+}
+
 // unhighlights arrayA
 function unhighlight(vis, index, color) {
   if (color == 'red') {
@@ -146,6 +167,8 @@ function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
   if (isMergeExpanded()) assignVarToB(vis, 'bp', bp, size);
 }
 
+
+
 function set_simple_stack(vis_array, c_stk) {
   console.log("set_simple_stack" + c_stk);
   console.log(c_stk);
@@ -190,7 +213,9 @@ export function run_msort() {
 
     chunker.add('runlength', (vis, c_rlength) => {
       displayRunlength(vis, c_rlength, size);
+
       set_simple_stack(vis.array, [c_rlength]);
+      highlightAllRunlengths(vis, runlength, colorA, colorB, size);
     }, [runlength, simple_stack]);
 
     while (runlength < size) {
