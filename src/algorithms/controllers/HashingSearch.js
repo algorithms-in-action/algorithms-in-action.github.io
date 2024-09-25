@@ -65,7 +65,7 @@ export default {
 
         vis.array.showKth({key: target}); // Show stats
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
-        if (SIZE === SMALL) {
+        if (SIZE === SMALL_SIZE) {
           vis.array.resetVariable(POINTER); // Reset pointer
         }
 
