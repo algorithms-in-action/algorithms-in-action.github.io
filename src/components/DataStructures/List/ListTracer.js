@@ -71,6 +71,27 @@ class ListTracer extends Tracer {
         }
     }
 
+    // Search for a node by value in a specific list
+    searchNode(value, listIndex = 0) {
+        console.log('searchNode called with value:', value, 'listIndex:', listIndex);
+
+        if (!this.lists[listIndex]) {
+            console.warn('List at index', listIndex, 'does not exist.');
+            return null;
+        }
+
+        const foundNode = this.lists[listIndex].objects.find(node => node.value === value);
+
+        if (foundNode) {
+            console.log('Node found:', foundNode);
+            return foundNode;
+        } else {
+            console.warn('Node with value', value, 'not found in list', listIndex);
+            return null;
+        }
+    }
+
+
     // Swap elements in a specific list
     swapElements(i, j, listIndex = 0) {
         console.log('swapElements called with i:', i, 'j:', j, 'listIndex:', listIndex);
