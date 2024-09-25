@@ -422,12 +422,11 @@ export const shuffleArray = (array) => {
  * @returns whether the check is true
  */
 export const commaSeparatedPairTripleCheck = (allowNumber, input) => {
-  let regex;
-  if (allowNumber) regex = /^[0-9](-[0-9]){0,2}$/
-  else regex = /^[0-9](-[0-9]){1,2}$/
+  const regex_num = /^[0-9]+(-[0-9]+){0,2}$/g;
+  const regex_no_num = /^[0-9]+(-[0-9]+){1,2}$/g;
   let array = input.split(",");
-  for (let item in array) {
-    if (!item.match(regex)) return false;
+  for (let item of array) {
+    if (!item.match(allowNumber ? regex_num : regex_no_num)) return false;
   }
   return true;
 }
