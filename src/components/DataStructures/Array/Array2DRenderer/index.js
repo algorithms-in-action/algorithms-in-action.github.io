@@ -458,7 +458,7 @@ class Array2DRenderer extends Renderer {
           <div
             style={{
               flex: 1,
-              margin: '1% 0',
+              margin: '1% 0 2%',
             }}
             >
             {(algo === 'HashingLP' ||
