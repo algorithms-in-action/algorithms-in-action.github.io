@@ -15,7 +15,7 @@ class ProgressBar extends React.Component {
 
     this.max;
     this.current;
-    this.accessibleChunks;
+    this.viewable;
     this.next;
     this.prev;
 
@@ -48,30 +48,29 @@ class ProgressBar extends React.Component {
         return;
       }
 
-      // search for the closest accessible chunk
-      // in a certain radius
+      // search for the closest viewable chunk in a certain radius
       for (let i = 0; i <= searchRadius; i++) {
         if (i === 0) {
-          if (this.accessibleChunks[x]) {
+          if (this.viewable[x]) {
             chunkNum = x;
             break;
           }
           continue;
         }
 
-        if (this.accessibleChunks[x + i]) {
+        if (this.viewable[x + i]) {
           chunkNum = x + i;
           break;
         }
 
-        if (this.accessibleChunks[x - i]) {
+        if (this.viewable[x - i]) {
           chunkNum = x - i;
           break;
         }
       }
     }
 
-    if (this.accessibleChunks[chunkNum]) {
+    if (this.viewable[chunkNum]) {
       if (chunkNum > this.current) {
         this.next({stopAt: chunkNum, playing: false});
       }
@@ -102,8 +101,8 @@ class ProgressBar extends React.Component {
 
     this.max = max;
     this.current = current;
-    this.accessibleChunks = (state.chunker !== undefined) ?
-      state.chunker.accessibleChunks :
+    this.viewable = (state.chunker !== undefined) ?
+      state.chunker.viewable :
       null;
 
     this.prev = (playing) => {

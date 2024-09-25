@@ -211,19 +211,18 @@ function addLineExplanation(procedurePseudocode) {
   }
 }
 
-// set the visibility attribute for chunks if the chunk can be reached
-// i.e. not in a collapsed code block
-function setChunkAccessibility(chunker, pseudocode, collapse) {
+// get the list showing which chunks can be viewed
+function viewableChunks(chunker, pseudocode, collapse) {
   let currChunkNum = 0;
-  let accessibleChunks = Array(chunker.chunks.length).fill(false);
-  accessibleChunks[0] = true;
+  let viewable = Array(chunker.chunks.length).fill(false);
+  viewable[0] = true;
 
   while (currChunkNum < chunker.chunks.length - 1) {
     currChunkNum = findNext(chunker.chunks, currChunkNum, pseudocode, collapse);
-    accessibleChunks[currChunkNum] = true;
+    viewable[currChunkNum] = true;
   }
 
-  chunker.accessibleChunks = accessibleChunks;
+  chunker.viewable = viewable;
 }
 
 // At any time the app may call dispatch(action, params), which will trigger one of
@@ -287,7 +286,7 @@ export const GlobalActions = {
     const collapse = state === undefined || state.collapse === undefined
       ? getCollapseController(algorithms)
       : state.collapse;
-    setChunkAccessibility(chunker, procedurePseudocode, collapse[params.name][params.mode]);
+    viewableChunks(chunker, procedurePseudocode, collapse[params.name][params.mode]);
 
     return {
       ...state,
@@ -336,7 +335,7 @@ export const GlobalActions = {
       if (stopAt < state.chunker.chunks.length - 1) {
         do {
           stopAt++;
-        } while (!state.chunker.accessibleChunks[stopAt])
+        } while (!state.chunker.viewable[stopAt])
       }
     }
     // step forward until we are at stopAt, or last chunk, or some weird
@@ -399,7 +398,7 @@ export const GlobalActions = {
       if (stopAt > 0) {
         do {
           stopAt--;
-        } while (!state.chunker.accessibleChunks[stopAt])
+        } while (!state.chunker.viewable[stopAt])
       }
     }
     let result1 = {bookmark:"", chunk: state.chunker.currentChunk};
@@ -439,7 +438,12 @@ export const GlobalActions = {
     onCollapseStateChange(); // Transitive closure plugin
     unionFindToggleRank(state);
 
-    setChunkAccessibility(state.chunker, state.pseudocode, state.collapse[state.id.name][state.id.mode]);
+    // update viewable chunks
+    viewableChunks(
+      state.chunker,
+      state.pseudocode,
+      state.collapse[state.id.name][state.id.mode]
+    );
 
     return {
       ...state,

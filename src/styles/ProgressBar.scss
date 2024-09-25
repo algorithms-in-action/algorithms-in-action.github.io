@@ -178,7 +178,7 @@ $progWidth: 320px;
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
-  background-color: var(--mid-control-slider-bg);
+  background-color: var(--mid-control-progress-bg);
   transition: opacity 250ms linear;
   width: $progWidth;
   @include border-radius(16px); // makes the border curvy
@@ -252,7 +252,7 @@ $border: 4px;
     z-index: 51;
     width: $progHeight - ($border + $border);
     height: $progHeight - ($border + $border);
-    background-color: $darkerBlue;
+    background-color: var(--mid-control-progress-thumb);
     @include border-radius(14px);
   }
 }
