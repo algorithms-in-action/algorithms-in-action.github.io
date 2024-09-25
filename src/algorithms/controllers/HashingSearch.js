@@ -65,7 +65,9 @@ export default {
 
         vis.array.showKth({key: target}); // Show stats
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
-        vis.array.resetVariable(POINTER); // Reset pointer
+        if (SIZE === SMALL) {
+          vis.array.resetVariable(POINTER); // Reset pointer
+        }
 
         // Initialize graph and color them for hashing
         vis.graph.updateNode(HASH_GRAPH.Key, target);
@@ -82,7 +84,9 @@ export default {
 
         // Rest pointer and colors
         for (let i = 0; i < SIZE; i++) {
-          vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
+          if (SIZE === SMALL) {
+            vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
+          }
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
         }
       },
