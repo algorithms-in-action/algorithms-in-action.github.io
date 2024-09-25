@@ -15,20 +15,24 @@ import {
   commaSeparatedPairTripleCheck,
   returnInputFromRange
 } from './helpers/ParamHelper';
-import { SMALL_TABLE, LARGE_TABLE } from '../controllers/HashingCommon';
+import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
+// Algotiyhm information and magic phrases
 const ALGORITHM_NAME = 'Hashing (double hashing)';
 const HASHING_INSERT = 'Hashing Insertion';
 const HASHING_SEARCH = 'Hashing Search';
 const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
 
+// Default inputs
 const DEFAULT_ARRAY = genUniqueRandNumList(10, 1, 50);
 const DEFAULT_SEARCH = 2
+
 const UNCHECKED = {
     smallTable: false,
     largeTable: false
 };
 
+// Styling of radio buttons
 const BlueRadio = withStyles({
   root: {
     color: '#2289ff',
@@ -40,12 +44,15 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-
-const ERROR_INVALID_INPUT_INSERT = 'Please enter a list of positive integers';
+// Error messages
+const ERROR_INVALID_INPUT_INSERT = 'Please enter a list containing positive integers, pairs or triples';
 const ERROR_INVALID_INPUT_SEARCH = 'Please enter a positive integer';
 const ERROR_TOO_LARGE = `Please enter the right amount of inputs`;
 
-
+/**
+ * Double Hashing input component
+ * @returns the component
+ */
 function HashingDHParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -56,19 +63,32 @@ function HashingDHParam() {
     largeTable: false,
   });
 
+  /**
+   * Handle changes to input
+   * @param {*} e the input box component
+   */
   const handleChange = (e) => {
     setHashSize({ ...UNCHECKED, [e.target.name]: true })
   }
 
+  /**
+   * Handle insert box inputs
+   * @param {*} e the insert box component
+   */
   const handleInsertion = (e) => {
     e.preventDefault();
-    const inputs = e.target[0].value;
+    const inputs = e.target[0].value; // Get the value of the input
 
+    // Check if the inputs are either positive integers, pairs or triples
     if (commaSeparatedPairTripleCheck(true, inputs)) {
-      let values = inputs.split(",");
-      let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
+      let values = inputs.split(","); // Split input to calculate amount of inputs
+      let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
+
+      // Calculate total inputs considering bulk insertion
       let totalInputs = 0;
       for (let item of values) totalInputs += returnInputFromRange(item).length;
+
+      // Only dispatch algorithm if amount of input is less than table size
       if (totalInputs < hashSize) {
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingDH',
@@ -85,15 +105,20 @@ function HashingDHParam() {
     }
   }
 
+  /**
+   * Handle search box input
+   * @param {*} e search box component
+   */
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
+    let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-    const visualisers = algorithm.chunker.visualisers;
-    if (singleNumberValidCheck(inputValue)) {
+    const visualisers = algorithm.chunker.visualisers; // Visualizers from insertion
+    if (singleNumberValidCheck(inputValue)) { // Check if input is a single positive number
       const target = parseInt(inputValue);
 
+      // Dispatch algorithm
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'HashingDH',
         mode: 'search',
@@ -107,6 +132,7 @@ function HashingDHParam() {
     }
   }
 
+  // Use effect to detect changes in radio box choice
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
@@ -128,10 +154,10 @@ function HashingDHParam() {
           REFRESH_FUNCTION={
             (() => {
               if (HASHSize.smallTable) {
-                return () => genUniqueRandNumList(SMALL_TABLE-1, 1, 50);
+                return () => genUniqueRandNumList(SMALL_SIZE-1, 1, 50);
               }
               else if(HASHSize.largeTable) {
-                return () => genUniqueRandNumList(LARGE_TABLE-1, 1, 100);
+                return () => genUniqueRandNumList(LARGE_SIZE-1, 1, 100);
               }
             })()
           }
