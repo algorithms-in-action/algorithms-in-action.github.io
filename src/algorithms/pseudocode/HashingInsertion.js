@@ -1,7 +1,7 @@
 import parse from '../../pseudocode/parse';
 
 
-let text1 = `
+const main = `
 
         \\Code{
             NullTable
@@ -86,8 +86,8 @@ let text1 = `
                         inserted into the new table and the old table discarded.
                 \\Expl}
         \\Code}
-
-
+`
+export const hash1 = `
         \\Code{
             Hash1
                 i <- (k * BIGPRIME) mod TableSize \\B 5
@@ -97,7 +97,7 @@ let text1 = `
                 \\Expl}
         \\Code}
 `
-let text2 = `
+export const linearProbingIncrement = `
 
         \\Code{
             SetIncrement
@@ -109,7 +109,7 @@ let text2 = `
 
 `
 
-let text3 = `
+export const doubleHashingIncrement = `
 
         \\Code{
             SetIncrement
@@ -121,5 +121,5 @@ let text3 = `
                 \\Expl}
         \\Code}
 `
-export const doubleHashing = parse(text1 + '\n' + text3);
-export const linearProbing = parse(text1 + '\n' + text2);
+export const doubleHashing = parse(main + hash1 + '\n' + doubleHashingIncrement);
+export const linearProbing = parse(main + hash1 + '\n' + linearProbingIncrement);

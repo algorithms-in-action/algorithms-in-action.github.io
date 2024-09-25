@@ -4,15 +4,15 @@ import {
   HASH_TABLE,
   EMPTY_CHAR,
   Colors
-} from './HashingCommon.js';
+} from './HashingCommon';
 
 const IBookmarks = {
   Init: 1,
-  ApplyHash: 2,
-  ChooseIncrement: 3,
-  WhileNot: 4,
-  Increment: 5,
-  CheckValue: 6,
+  ApplyHash: 5,
+  ChooseIncrement: 6,
+  WhileNot: 2,
+  Increment: 3,
+  CheckValue: 4,
   Found: 7,
   NotFound: 8,
 }
@@ -42,6 +42,7 @@ export default {
     const INDEX = 0;
     const POINTER = 2;
     const POINTER_VALUE = "i";
+    const SMALL = 11;
 
     let found = true;
 
@@ -51,7 +52,9 @@ export default {
       IBookmarks.Init,
       (vis, target) => {
 
-        vis.array.showKth(["N/A", ""]);
+        vis.array.showKth({key: target});
+        vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
+        vis.array.resetVariable(POINTER);
 
         vis.graph.updateNode(HASH_TABLE.Key, target);
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
@@ -83,7 +86,9 @@ export default {
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
-        vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
+        if (SIZE === SMALL) {
+          vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
+        }
         vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
         vis.graph.deselect(HASH_TABLE.Key);
         vis.graph.deselect(HASH_TABLE.Value);
@@ -116,7 +121,9 @@ export default {
       chunker.add(
         IBookmarks.Increment,
         (vis, idx) => {
-          vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
+          if (SIZE === SMALL) {
+            vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
+          }
         },
         [i]
       );

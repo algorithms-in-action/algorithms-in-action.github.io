@@ -63,17 +63,33 @@ export function setIncrement(
       increment = hash2(chunker, bookmark, key, tableSize);
       break;
   }
-  chunker.add(
+
+  if (type == "Insert") {
+    chunker.add(
       bookmark,
       (vis, increment) => {
-        if (type === "Insert")  {
-          let insertions = vis.array.getKth();
-          vis.array.showKth([insertions, increment]);
-        }
-        else vis.array.showKth(['N/A', increment]);
+        let kth = vis.array.getKth();
+        vis.array.showKth({
+          key: key,
+          insertions: kth.insertions,
+          increment: increment
+        });
       },
       [increment]
-  )
+    )
+  }
+  else if (type == "Search") {
+    chunker.add(
+      bookmark,
+      (vis, increment) => {
+        vis.array.showKth({
+          key: key,
+          increment: increment
+        });
+      },
+      [increment]
+    )
+  }
   return increment;
 }
 
