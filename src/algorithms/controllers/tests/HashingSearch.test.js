@@ -4,7 +4,7 @@ The purpose of the test here is to detect whether the correct result is generate
 
 /* eslint-disable no-undef */
 
-import { LARGE_TABLE, SMALL_TABLE } from '../HashingCommon';
+import { LARGE_SIZE, SMALL_SIZE } from '../HashingCommon';
 import HashingInsertion from '../HashingInsertion';
 import HashingSearch from '../HashingSearch';
 

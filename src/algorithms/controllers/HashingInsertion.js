@@ -1,17 +1,23 @@
-import { array } from 'prop-types';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
 import {
   hash1,
   setIncrement,
-  HASH_TABLE,
+  HASH_GRAPH,
   EMPTY_CHAR,
-  Colors
+  Colors,
+  INDEX,
+  POINTER,
+  POINTER_VALUE,
+  SMALL_SIZE,
+  VALUE,
+  LARGE_SIZE,
+  SPLIT_SIZE
 } from './HashingCommon';
 import { returnInputFromRange } from '../parameters/helpers/ParamHelper.js';
 
-
+// Bookmarks to link chunker with pseudocode
 const IBookmarks = {
   Init: 1,
   EmptyArray: 2,
@@ -26,10 +32,13 @@ const IBookmarks = {
   BulkInsert: 11
 }
 
+// Type to use functions in HashingCommon
 const TYPE = 'Insert';
 
 export default {
   explanation: HashingExp,
+
+  // Initialize visualizers
   initVisualisers() {
     return {
       array: {
@@ -43,153 +52,190 @@ export default {
     };
   },
 
+  /**
+   * Run function for insertion, using the user input to display the illustration through chunker
+   * @param {*} chunker the chunker for the illustrations
+   * @param {*} params different parameters of the algorithm insertion mode e.g. name, array size,...
+   * @returns a table of concluding array to serve testing purposes
+   */
   run(chunker, params) {
+
+    // Storing algorithms parameters as local variables
     const ALGORITHM_NAME = params.name;
     let inputs = params.values;
     let hashValue = params.hashSize;
+
+    // Initialize arrays
     let indexArr = Array.from({ length: hashValue }, (_, i) => i);
     let valueArr = Array(hashValue).fill(EMPTY_CHAR);
     let nullArr = Array(hashValue).fill('');
+
+    // For return
     let table_result;
 
-    const INDEX = 0;
-    const VALUE = 1;
-    const POINTER = 2;
-    const POINTER_VALUE = "i"
-    const SMALL = 11;
-    const BIG = 97;
-    const SPLIT_SIZE = 17;
-
+    // Variable to keep track of insertions done
     let insertions = 0;
 
+    /**
+     * Insertion function for each key
+     * @param {*} table the table to keep track of the internal and illustrated array
+     * @param {*} key the key to insert
+     * @param {*} prevIdx previous index of the previous key
+     * @returns the index the key is assigned
+     */
     function hashInsert(table, key, prevIdx) {
-      insertions = insertions + 1;
+      insertions = insertions + 1; // increment insertions
+
+      // Chunker step for increasing the insertion stat
       chunker.add(
         IBookmarks.IncrementInsertions,
         (vis, key, insertions, prevIdx) => {
-          vis.array.showKth({key: key, insertions: insertions});
-          vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
+          vis.array.showKth({key: key, insertions: insertions}); // Change insertion stats visually
+          vis.array.unfill(INDEX, 0, undefined, hashValue - 1); // Reset any coloring of slots
 
-          // change variable value
-          if (hashValue === SMALL) {
+          // Change variable value
+          if (hashValue === SMALL_SIZE) {
             vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE);
           }
 
-          // update key value
-          vis.graph.updateNode(HASH_TABLE.Key, key);
-          vis.graph.updateNode(HASH_TABLE.Value, ' ');
-          vis.graph.select(HASH_TABLE.Key);
-          vis.graph.colorEdge(HASH_TABLE.Key, HASH_TABLE.Value, Colors.Pending)
-
+          // Update key value for the hashing graph and color them to emphasize hashing initialization
+          vis.graph.updateNode(HASH_GRAPH.Key, key);
+          vis.graph.updateNode(HASH_GRAPH.Value, ' ');
+          vis.graph.select(HASH_GRAPH.Key);
+          vis.graph.colorEdge(HASH_GRAPH.Key, HASH_GRAPH.Value, Colors.Pending)
           if (ALGORITHM_NAME === "HashingDH") {
-            vis.graph.updateNode(HASH_TABLE.Key2, key);
-            vis.graph.updateNode(HASH_TABLE.Value2, ' ');
-            vis.graph.select(HASH_TABLE.Key2);
-            vis.graph.colorEdge(HASH_TABLE.Key2, HASH_TABLE.Value2, Colors.Pending)
+            vis.graph.updateNode(HASH_GRAPH.Key2, key);
+            vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
+            vis.graph.select(HASH_GRAPH.Key2);
+            vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
           }
         },
         [insertions, prevIdx]
       );
-      // get initial hash index
+
+      // Get initial hash index for current key
       let i = hash1(chunker, IBookmarks.Hash1, key, hashValue);
+
+      // Calculate increment for current key
       let increment = setIncrement(
         chunker, IBookmarks.ChooseIncrement, key, hashValue, ALGORITHM_NAME, TYPE
       );
 
+      // Chunker for first pending slot
       chunker.add(
         IBookmarks.Probing,
         (vis, idx) => {
-          if (hashValue === SMALL) {
+
+          // Pointer only appear for small table
+          if (hashValue === SMALL_SIZE) {
             vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
           }
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
-          vis.graph.deselect(HASH_TABLE.Key);
-          vis.graph.deselect(HASH_TABLE.Value);
-          vis.graph.removeEdgeColor(HASH_TABLE.Key, HASH_TABLE.Value);
+
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Color pending slot
+
+          // Uncolor the hashing graph
+          vis.graph.deselect(HASH_GRAPH.Key);
+          vis.graph.deselect(HASH_GRAPH.Value);
+          vis.graph.removeEdgeColor(HASH_GRAPH.Key, HASH_GRAPH.Value);
           if (ALGORITHM_NAME == "HashingDH") {
-            vis.graph.deselect(HASH_TABLE.Key2);
-            vis.graph.deselect(HASH_TABLE.Value2);
-            vis.graph.removeEdgeColor(HASH_TABLE.Key2, HASH_TABLE.Value2);
+            vis.graph.deselect(HASH_GRAPH.Key2);
+            vis.graph.deselect(HASH_GRAPH.Value2);
+            vis.graph.removeEdgeColor(HASH_GRAPH.Key2, HASH_GRAPH.Value2);
           }
         },
         [i]
       )
+
+      // Internal code for probing, while loop indicates finding an empty slot for insertion
       while (table[i] !== undefined && table[i] !== key) {
         let prevI = i;
-        i = (i + increment) % hashValue;
+        i = (i + increment) % hashValue; // This is to ensure the index never goes over table size
+
+        // Chunker for collision
         chunker.add(
           IBookmarks.Collision,
           (vis, idx) => {
-            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill the slot with red, indicating collision
           },
           [prevI]
         )
 
+        // Chunker for Probing
         chunker.add(
           IBookmarks.Probing,
           (vis, idx) => {
-            if (hashValue === SMALL) {
+
+            // Pointer only appears for small tables
+            if (hashValue === SMALL_SIZE) {
               vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             }
-            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Filling the pending slot with yellow
           },
           [i]
         )
       }
 
+      // Internally assign the key to the index
       table[i] = key;
+
+      // Chunker for placing the key
       chunker.add(
         IBookmarks.PutIn,
         (vis, val, idx) => {
-          vis.array.updateValueAt(VALUE, idx, val);
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert);
+          vis.array.updateValueAt(VALUE, idx, val); // Update value of that index
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
         },
         [key, i]
       )
 
+      // Return the insertion index
       return i;
     }
 
     // Init hash table
-    // Hide third row to show assigned variables
     let table = new Array(hashValue);
     chunker.add(
       IBookmarks.Init,
       (vis, array) => {
-        // increase Array2D visualizer render space
-        if (hashValue >= BIG) {
-          vis.array.setSize(2);
+        // Increase Array2D visualizer render space
+        if (hashValue >= LARGE_SIZE) {
+          vis.array.setSize(3);
         }
 
+        // Initialize the array
         vis.array.set(array,
           params.name,
           '',
           {
-            rowLength: hashValue === BIG ? SPLIT_SIZE : SMALL,
+            rowLength: hashValue === LARGE_SIZE ? SPLIT_SIZE : SMALL_SIZE,
             rowHeader: ['Index', 'Value', '']
           }
         );
-        vis.array.hideArrayAtIndex([VALUE, POINTER]);
+
+        vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
 
         vis.graph.weighted(true);
+
+        // Intialize the graphs
         switch (ALGORITHM_NAME) {
           case "HashingLP" :
             vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, 0], [5, 0]]);
             break;
           case "HashingDH" :
             vis.graph.set([
-              [0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]],
-              [' ', ' ', ' ', ' '],
-              [[-5, 2], [5, 2], [-5, -2], [5, -2]]);
+              [0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]], // Node edges
+              [' ', ' ', ' ', ' '], // Node values
+              [[-5, 2], [5, 2], [-5, -2], [5, -2]]); // Node positions
             break;
         }
       },
-      [hashValue === SMALL ?
+      [hashValue === SMALL_SIZE ?
         [indexArr, valueArr, nullArr] :
         [indexArr, valueArr]
       ]
     );
 
+    // Chunker to initialize empty array visually
     chunker.add(
       IBookmarks.EmptyArray,
       (vis) => {
@@ -198,6 +244,7 @@ export default {
       },
     );
 
+    // Chunker for intializing insertion stat
     chunker.add(
       IBookmarks.InitInsertion,
       (vis) => {
@@ -205,6 +252,7 @@ export default {
       }
     )
 
+    // Inserting inputs
     let prevIdx;
     for (const item of inputs) {
       for (const key of returnInputFromRange(item)) {
@@ -212,24 +260,31 @@ export default {
       }
     }
 
+    // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(
       IBookmarks.Done,
       (vis) => {
-        if (hashValue === SMALL) {
+
+        // Hide pointer
+        if (hashValue === SMALL_SIZE) {
           vis.array.assignVariable(POINTER_VALUE, POINTER, undefined);
         }
-        vis.array.unfill(INDEX, 0, undefined, hashValue - 1);
 
-        vis.graph.updateNode(HASH_TABLE.Key, ' ');
-        vis.graph.updateNode(HASH_TABLE.Value, ' ');
+        vis.array.unfill(INDEX, 0, undefined, hashValue - 1); // Unfill all boxes
+        
+        // Reset graphs
+        vis.graph.updateNode(HASH_GRAPH.Key, ' ');
+        vis.graph.updateNode(HASH_GRAPH.Value, ' ');
         if (ALGORITHM_NAME === 'HashingDH') {
-          vis.graph.updateNode(HASH_TABLE.Key2, ' ');
-          vis.graph.updateNode(HASH_TABLE.Value2, ' ');
+          vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
+          vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
         }
+
+        // Extract resulting array for testing
         table_result = vis.array.extractArray([1], "x")
       },
     )
 
-    return table_result;
+    return table_result; // Return resulting array for testing
   },
 };
