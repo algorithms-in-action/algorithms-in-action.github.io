@@ -158,7 +158,7 @@ export default {
       (vis, array) => {
         // increase Array2D visualizer render space
         if (hashValue >= BIG) {
-          vis.array.setSize(3);
+          vis.array.setSize(2);
         }
 
         vis.array.set(array,

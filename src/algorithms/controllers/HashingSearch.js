@@ -54,7 +54,10 @@ export default {
 
         vis.array.showKth({key: target});
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1);
-        vis.array.resetVariable(POINTER);
+
+        if (SIZE === SMALL) {
+          vis.array.resetVariable(POINTER);
+        }
 
         vis.graph.updateNode(HASH_TABLE.Key, target);
         vis.graph.updateNode(HASH_TABLE.Value, ' ');
@@ -69,7 +72,9 @@ export default {
         }
 
         for (let i = 0; i < SIZE; i++) {
-          vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
+          if (SIZE === SMALL) {
+            vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
+          }
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
         }
       },
