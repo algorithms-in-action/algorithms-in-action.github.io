@@ -84,7 +84,7 @@ export default {
 
         // Rest pointer and colors
         for (let i = 0; i < SIZE; i++) {
-          if (SIZE === SMALL) {
+          if (SIZE === SMALL_SIZE) {
             vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
           }
           vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
