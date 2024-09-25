@@ -103,13 +103,18 @@ function highlightAllRunlengths(vis, runlength, colorA, colorB, size) {
   for (let i = 0; i < size; i++) {
     if (toggle == 0) {
       highlight(vis, i, colorA);
+      console.log("toggle == 0");
     }
     if (toggle == 1) {
       highlight(vis, i, colorB);
+      console.log("toggle == 1");
     }
+    console.log("(i + 1) % runlength = " + (runlength % (i + 1)));
+    console.log("(runlength = " + (runlength));
     // Switch color after completing a run of length 'runlength'
     if ((i + 1) % runlength == 0) {
-      console.log("switching toggle");
+
+      console.log("(i + 1) % runlength == 0");
 
       toggle = 1 - toggle; // Flip toggle between 0 and 1
 
@@ -215,7 +220,7 @@ export function run_msort() {
       displayRunlength(vis, c_rlength, size);
 
       set_simple_stack(vis.array, [c_rlength]);
-      highlightAllRunlengths(vis, runlength, colorA, colorB, size);
+      highlightAllRunlengths(vis, c_rlength, colorA, colorB, size);
     }, [runlength, simple_stack]);
 
     while (runlength < size) {
