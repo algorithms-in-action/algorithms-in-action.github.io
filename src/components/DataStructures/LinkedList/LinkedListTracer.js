@@ -195,7 +195,7 @@ export default LinkedListTracer;
 
 
 
-
+// old code supporting only one list
 
 // /* eslint-disable class-methods-use-this */
 // /* eslint-disable consistent-return */

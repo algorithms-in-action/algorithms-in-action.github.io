@@ -63,7 +63,7 @@ export default LinkedListRenderer;
 
 
 
-
+// old code supporting only 1 list
 
 // import React from 'react';
 // import { motion, AnimateSharedLayout } from 'framer-motion';
