@@ -753,7 +753,7 @@ class GraphRenderer extends Renderer {
           textAnchor="middle">
           {functionBalence != null && (
             <tspan className={styles.pseudocode_function}>
-              {"Balence: "}
+              {"Balance: "}
             </tspan>
           )}
           {(functionBalence < -1 || functionBalence > 1) ? (
