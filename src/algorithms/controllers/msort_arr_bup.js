@@ -122,6 +122,32 @@ function highlightAllRunlengths(vis, runlength, colorA, colorB, size) {
   }
 }
 
+// Unhighlight entire array alternating colors for runlength
+function unhighlightAllRunlengths(vis, runlength, colorA, colorB, size) {
+  let toggle = 0; // 0 = colorA, 1 = colorB
+
+  for (let i = 0; i < size; i++) {
+    if (toggle == 0) {
+      unhighlight(vis, i, colorA);
+      console.log("toggle == 0");
+    }
+    if (toggle == 1) {
+      unhighlight(vis, i, colorB);
+      console.log("toggle == 1");
+    }
+    console.log("(i + 1) % runlength = " + (runlength % (i + 1)));
+    console.log("(runlength = " + (runlength));
+    // Switch color after completing a run of length 'runlength'
+    if ((i + 1) % runlength == 0) {
+
+      console.log("(i + 1) % runlength == 0");
+
+      toggle = 1 - toggle; // Flip toggle between 0 and 1
+
+    } console.log("toggle = " + toggle);
+  }
+}
+
 // unhighlights arrayA
 function unhighlight(vis, index, color) {
   if (color == 'red') {
@@ -227,20 +253,25 @@ export function run_msort() {
       let left = 0;
 
       chunker.add('MainWhile', (vis, c_rlength, c_left) => {
+
         // display size label
         assignVarToA(vis, ("size = " + size), size, size);
+
+
+
+      }, [runlength, left]);
+
+      chunker.add('left', (vis, c_left, c_rlength) => {
+        assignVarToA(vis, 'left', c_left, size);
+
+        unhighlightAllRunlengths(vis, c_rlength, colorA, colorB, size);
 
         let left_2 = c_left;
         let mid_2 = (c_rlength + c_left - 1);
         let right_2 = (Math.min(c_rlength * 2, size) - 1);
 
         highlight2Runlength(vis, left_2, mid_2, right_2, colorA, colorB);
-
-      }, [runlength, left]);
-
-      chunker.add('left', (vis, c_left) => {
-        assignVarToA(vis, 'left', c_left, size);
-      }, [left]);
+      }, [left, runlength]);
 
       while ((left + runlength) <= size) {
 
@@ -442,7 +473,7 @@ export function run_msort() {
 
         left = right + 1;
 
-        chunker.add('left2', (vis, old_left, c_left, c_right) => {
+        chunker.add('left2', (vis, old_left, c_left, c_right, c_rlength) => {
           // unhighlight all elements in A
           for (let i = old_left; i <= c_right; i++) {
             unhighlight(vis, i, colorC);
@@ -450,14 +481,22 @@ export function run_msort() {
           if (c_left < size) {
             assignVarToA(vis, 'left', c_left, size);
           }
+          if (c_left + c_rlength >= size) {
+            highlightAllRunlengths(vis, c_rlength * 2, colorA, colorB, size);
 
-        }, [left2, left, right]);
+          }
+
+        }, [left2, left, right, runlength]);
 
       }
 
 
+
+
       runlength = 2 * runlength;
       chunker.add('runlength2', (vis, c_rlength) => {
+
+        // highlightAllRunlengths(vis, c_rlength, colorA, colorB, size);
         assignVarToA(vis, 'left', undefined, size);
         set_simple_stack(vis.array, [c_rlength]);
 
