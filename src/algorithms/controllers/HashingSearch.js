@@ -82,22 +82,23 @@ export default {
           vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
         }
 
-        // Rest pointer and colors
+        vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all slots color
+
+        // Rest pointer
         for (let i = 0; i < SIZE; i++) {
           if (SIZE === SMALL_SIZE) {
             vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
           }
-          vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
         }
       },
       [TARGET]
     );
 
     // Hashing the key
-    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE); // Target value after being hashed
+    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE, true); // Target value after being hashed
 
     // Calculate increment for key
-    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, TYPE);
+    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, TYPE, true);
 
     // Chunker for initial slot
     chunker.add(
