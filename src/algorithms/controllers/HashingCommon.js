@@ -35,20 +35,23 @@ export const HASH_GRAPH = {
  * @param {*} bookmark the bookmark for chunker step
  * @param {*} key the key to hash
  * @param {*} tableSize the size of the table
+ * @param {*} toggleAnimate whether animation is carried out or not
  * @returns the hashed value
  */
-export function hash1(chunker, bookmark, key, tableSize) {
+export function hash1(chunker, bookmark, key, tableSize, toggleAnimate) {
   let hashed = (key * PRIME) % tableSize; // Hash the key
 
-  // Update the graph
-  chunker.add(
-    bookmark,
-    (vis, val) => {
-      vis.graph.updateNode(HASH_GRAPH.Value, val);
-      vis.graph.select(HASH_GRAPH.Value);
-    },
-    [hashed]
-  )
+  if (toggleAnimate) {
+    // Update the graph
+    chunker.add(
+      bookmark,
+      (vis, val) => {
+        vis.graph.updateNode(HASH_GRAPH.Value, val);
+        vis.graph.select(HASH_GRAPH.Value);
+      },
+      [hashed]
+    )
+  }
 
   return hashed; // Return hashed value
 }
@@ -59,21 +62,24 @@ export function hash1(chunker, bookmark, key, tableSize) {
  * @param {*} bookmark the bookmark for chunker step
  * @param {*} key the key to hash
  * @param {*} tableSize the size of the table
+ * @param {*} toggleAnimate whether animation is carried out or not
  * @returns the hashed value
  */
-export function hash2(chunker, bookmark, key, tableSize) {
+export function hash2(chunker, bookmark, key, tableSize, toggleAnimate) {
   let smallishPrime = tableSize == SMALL_SIZE ? H2_SMALL_HASH_VALUE : H2_LARGE_HASH_VALUE; // This variable is to limit the increment to 3 for small table and 23 for large
   let hashed = (key * PRIME2) % smallishPrime + 1; // Hash the key
 
-  // Update the graph
-  chunker.add(
-    bookmark,
-    (vis, val) => {
-      vis.graph.updateNode(HASH_GRAPH.Value2, val);
-      vis.graph.select(HASH_GRAPH.Value2);
-    },
-    [hashed]
-  )
+  if (toggleAnimate) {
+    // Update the graph
+    chunker.add(
+      bookmark,
+      (vis, val) => {
+        vis.graph.updateNode(HASH_GRAPH.Value2, val);
+        vis.graph.select(HASH_GRAPH.Value2);
+      },
+      [hashed]
+    )
+  }
 
   return hashed; // Return hashed value
 }
@@ -86,10 +92,11 @@ export function hash2(chunker, bookmark, key, tableSize) {
  * @param {*} tableSize size of the table
  * @param {*} collisionHandling name of the algorithm, representing how collision is handled
  * @param {*} type either search or insert because they have different stat updates
+ * @param {*} toggleAnimate whether animation is carried out or not
  * @returns the calculated increment value
  */
 export function setIncrement(
-  chunker, bookmark, key, tableSize, collisionHandling, type
+  chunker, bookmark, key, tableSize, collisionHandling, type, toggleAnimate
 ) {
 
   // Increment = 1 if the algo is Linear Probing, and hashed value of second hash function if its Double Hashing
@@ -99,38 +106,40 @@ export function setIncrement(
       increment = 1;
       break;
     case 'HashingDH':
-      increment = hash2(chunker, bookmark, key, tableSize);
+      increment = hash2(chunker, bookmark, key, tableSize, toggleAnimate);
       break;
   }
 
-  // Show key, insertions and increment if the type is Insertion
-  if (type == "Insert") {
-    chunker.add(
-      bookmark,
-      (vis, increment) => {
-        let kth = vis.array.getKth();
-        vis.array.showKth({
-          key: key,
-          insertions: kth.insertions,
-          increment: increment
-        });
-      },
-      [increment]
-    )
-  }
+  if (toggleAnimate) {
+    // Show key, insertions and increment if the type is Insertion
+    if (type == "Insert") {
+      chunker.add(
+        bookmark,
+        (vis, increment) => {
+          let kth = vis.array.getKth();
+          vis.array.showKth({
+            key: key,
+            insertions: kth.insertions,
+            increment: increment
+          });
+        },
+        [increment]
+      )
+    }
 
-  // Show key\ and increment if the type is Search
-  else if (type == "Search") {
-    chunker.add(
-      bookmark,
-      (vis, increment) => {
-        vis.array.showKth({
-          key: key,
-          increment: increment
-        });
-      },
-      [increment]
-    )
+    // Show key\ and increment if the type is Search
+    else if (type == "Search") {
+      chunker.add(
+        bookmark,
+        (vis, increment) => {
+          vis.array.showKth({
+            key: key,
+            increment: increment
+          });
+        },
+        [increment]
+      )
+    }
   }
   return increment; // Return calculated increment
 }
