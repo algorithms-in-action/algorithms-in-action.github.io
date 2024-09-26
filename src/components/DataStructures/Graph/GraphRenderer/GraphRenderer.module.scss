@@ -72,9 +72,9 @@
     }
 
     .AVL_TID {
-      //fill: var(--graph-node-AVL_TID-fill);
-      --breath_color: var(--graph-node-AVL_TID-fill);
-      animation: colorChange 1.5s infinite; // anmation
+      fill: var(--graph-node-AVL_TID-fill);
+      //--breath_color: var(--graph-node-AVL_TID-fill);
+      //animation: colorChange 1.5s infinite; // anmation
       // font-weight: bold;
       // font-size: 15px;
       // alignment-baseline: central;
@@ -88,9 +88,9 @@
 
     &.selected {
       .circle {
-        //fill: var(--graph-node-circle-fill-selected);
+        fill: var(--graph-node-circle-fill-selected);
         --breath_color: var(--graph-node-circle-fill-selected);
-        animation: colorChange 1.5s infinite; // anmation
+        //animation: colorChange 1.5s infinite; // anmation
         stroke: var(--graph-node-circle-stroke-selected);
       }
 
@@ -128,8 +128,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited0);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited0);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited0);
       }
@@ -152,8 +152,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited);
       }
@@ -182,8 +182,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited1);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited1);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited1);
       }
@@ -201,8 +201,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited2);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited2);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited2);
       }
@@ -220,8 +220,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited3);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited3);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited3);
       }
@@ -239,8 +239,8 @@
       }
 
       .height {
-        --breath_color: var(--graph-node-circle-fill-visited4);
-        animation: colorChange 1.5s 0; // anmation
+        //--breath_color: var(--graph-node-circle-fill-visited4);
+        //animation: colorChange 1.5s 0; // anmation
 
         fill: var(--graph-node-circle-fill-visited4);
       }

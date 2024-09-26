@@ -751,15 +751,18 @@ class GraphRenderer extends Renderer {
           x={+650}
           y={-200}
           textAnchor="middle">
-          {functionBalence != null && (
-            <tspan className={styles.pseudocode_function}>
-              {"Balance: "}
-            </tspan>
-          )}
-          {(functionBalence < -1 || functionBalence > 1) ? (
-            <tspan style={{ fill: '#ff0000' }}>{functionBalence}</tspan>
+
+          {functionBalence != null && (functionBalence < -1 || functionBalence > 1) ? (
+            <tspan style={{ fill: '#ff0000' }}>{"Balance: "}{functionBalence}</tspan>
           ) : (
-            <tspan>{functionBalence}</tspan>
+            <tspan>
+              {functionBalence != null && (
+                <tspan className={styles.pseudocode_function}>
+                  {"Balance: "}
+                </tspan>
+              )}
+              {functionBalence}
+            </tspan>
           )}
         </text>
 
