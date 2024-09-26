@@ -29,7 +29,7 @@ const IBookmarks = {
   Collision: 8,
   PutIn: 9,
   Done: 10,
-  BulkInsert: 11
+  BulkInsert: 1,
 }
 
 // Type to use functions in HashingCommon
@@ -63,12 +63,12 @@ export default {
     // Storing algorithms parameters as local variables
     const ALGORITHM_NAME = params.name;
     let inputs = params.values;
-    let hashValue = params.hashSize;
+    const SIZE = params.hashSize;
 
     // Initialize arrays
-    let indexArr = Array.from({ length: hashValue }, (_, i) => i);
-    let valueArr = Array(hashValue).fill(EMPTY_CHAR);
-    let nullArr = Array(hashValue).fill('');
+    let indexArr = Array.from({ length: SIZE }, (_, i) => i);
+    let valueArr = Array(SIZE).fill(EMPTY_CHAR);
+    let nullArr = Array(SIZE).fill('');
 
     // For return
     let table_result;
@@ -81,22 +81,22 @@ export default {
      * @param {*} table the table to keep track of the internal and illustrated array
      * @param {*} key the key to insert
      * @param {*} prevIdx previous index of the previous key
-     * @param {*} toggleBulkInsert whether it is bulk insert or not
+     * @param {*} isBulkInsert whether it is bulk insert or not
      * @returns the index the key is assigned
      */
-    function hashInsert(table, key, prevIdx, toggleBulkInsert) {
+    function hashInsert(table, key, prevIdx, isBulkInsert) {
       insertions = insertions + 1; // increment insertions
 
-      if (!toggleBulkInsert) {
+      if (!isBulkInsert) {
       // Chunker step for increasing the insertion stat
         chunker.add(
           IBookmarks.IncrementInsertions,
           (vis, key, insertions, prevIdx) => {
             vis.array.showKth({key: key, insertions: insertions, increment: ""}); // Change insertion stats visually
-            vis.array.unfill(INDEX, 0, undefined, hashValue - 1); // Reset any coloring of slots
+            vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
 
-            // Change variable value
-            if (hashValue === SMALL_SIZE) {
+            // Hide pointer
+            if (SIZE === SMALL_SIZE) {
               vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE);
             }
 
@@ -117,21 +117,21 @@ export default {
       }
 
       // Get initial hash index for current key
-      let i = hash1(chunker, IBookmarks.Hash1, key, hashValue, !toggleBulkInsert);
+      let i = hash1(chunker, IBookmarks.Hash1, key, SIZE, !isBulkInsert);
 
       // Calculate increment for current key
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, hashValue, ALGORITHM_NAME, TYPE, !toggleBulkInsert
+        chunker, IBookmarks.ChooseIncrement, key, SIZE, ALGORITHM_NAME, TYPE, !isBulkInsert
       );
 
-      if (!toggleBulkInsert) {
+      if (!isBulkInsert) {
         // Chunker for first pending slot
         chunker.add(
           IBookmarks.Probing,
           (vis, idx) => {
 
             // Pointer only appear for small table
-            if (hashValue === SMALL_SIZE) {
+            if (SIZE === SMALL_SIZE) {
               vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             }
 
@@ -154,9 +154,9 @@ export default {
       // Internal code for probing, while loop indicates finding an empty slot for insertion
       while (table[i] !== undefined && table[i] !== key) {
         let prevI = i;
-        i = (i + increment) % hashValue; // This is to ensure the index never goes over table size
+        i = (i + increment) % SIZE; // This is to ensure the index never goes over table size
 
-        if (!toggleBulkInsert) {
+        if (!isBulkInsert) {
           // Chunker for collision
           chunker.add(
             IBookmarks.Collision,
@@ -172,7 +172,7 @@ export default {
             (vis, idx) => {
 
               // Pointer only appears for small tables
-              if (hashValue === SMALL_SIZE) {
+              if (SIZE === SMALL_SIZE) {
                 vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
               }
               vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Filling the pending slot with yellow
@@ -188,15 +188,14 @@ export default {
       // Chunker for placing the key
       chunker.add(
         IBookmarks.PutIn,
-        (vis, val, idx) => {
+        (vis, val, idx, insertions) => {
           vis.array.updateValueAt(VALUE, idx, val); // Update value of that index
-          if (toggleBulkInsert) {
+          if (isBulkInsert) {
             vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
-            vis.array.unfill(INDEX, 0, undefined, hashValue - 1); // Reset any coloring of slots
           }
-          if (!toggleBulkInsert) vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
+          if (!isBulkInsert) vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
         },
-        [key, i]
+        [key, i, insertions]
       )
 
       // Return the insertion index
@@ -204,12 +203,12 @@ export default {
     }
 
     // Init hash table
-    let table = new Array(hashValue);
+    let table = new Array(SIZE);
     chunker.add(
       IBookmarks.Init,
       (vis, array) => {
         // Increase Array2D visualizer render space
-        if (hashValue >= LARGE_SIZE) {
+        if (SIZE >= LARGE_SIZE) {
           vis.array.setSize(3);
         }
 
@@ -218,7 +217,7 @@ export default {
           params.name,
           '',
           {
-            rowLength: hashValue === LARGE_SIZE ? SPLIT_SIZE : SMALL_SIZE,
+            rowLength: SIZE === LARGE_SIZE ? SPLIT_SIZE : SMALL_SIZE,
             rowHeader: ['Index', 'Value', '']
           }
         );
@@ -240,7 +239,7 @@ export default {
             break;
         }
       },
-      [hashValue === SMALL_SIZE ?
+      [SIZE === SMALL_SIZE ?
         [indexArr, valueArr, nullArr] :
         [indexArr, valueArr]
       ]
@@ -258,13 +257,14 @@ export default {
     // Chunker for intializing insertion stat
     chunker.add(
       IBookmarks.InitInsertion,
-      (vis) => {
+      (vis, insertions) => {
         vis.array.showKth({
           key: "",
           insertions: insertions,
           increment: "",
         });
-      }
+      },
+      [insertions]
     )
 
     // Inserting inputs
@@ -276,6 +276,24 @@ export default {
         }
       }
       else {
+        // Preparation for bulk insertion
+        chunker.add(
+          IBookmarks.BulkInsert,
+          (vis, insertions, prevIdx) => {
+            vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
+            vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
+            if (SIZE === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
+
+            // Empty graphs
+            vis.graph.updateNode(HASH_GRAPH.Key, ' ');
+            vis.graph.updateNode(HASH_GRAPH.Value, ' ');
+            if (ALGORITHM_NAME === "HashingDH") {
+              vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
+              vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
+            }
+          },
+          [insertions, prevIdx]
+        )
         for (const key of returnInputFromRange(item)) {
           prevIdx = hashInsert(table, key, prevIdx, true);
         }
@@ -290,11 +308,11 @@ export default {
         vis.array.showKth({key: "", insertions: insertions, increment: ""}) // Nullify some stats, for better UI
 
         // Hide pointer
-        if (hashValue === SMALL_SIZE) {
+        if (SIZE === SMALL_SIZE) {
           vis.array.assignVariable(POINTER_VALUE, POINTER, undefined);
         }
 
-        vis.array.unfill(INDEX, 0, undefined, hashValue - 1); // Unfill all boxes
+        vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all boxes
         
         // Reset graphs
         vis.graph.updateNode(HASH_GRAPH.Key, ' ');

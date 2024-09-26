@@ -455,3 +455,18 @@ const arrayRange = (start, stop, step) =>
   { length: (stop - start) / step + 1 },
   (value, index) => start + index * step
   );
+
+/**
+ * Check if all ranges in array of inputs are valid (e.g for a-b, a must < b)
+ * @param {*} values the array of inputs
+ * @returns whether the check is true or not
+ */
+export const checkAllRangesValid = (values) => {
+  for (let item of values) {
+    let rangesItems = item.split("-").map(Number);
+    if ((rangesItems.length == 2 || rangesItems.length == 3) && rangesItems[0] > rangesItems[1]) {
+      return false;
+    }
+  }
+  return true;
+}

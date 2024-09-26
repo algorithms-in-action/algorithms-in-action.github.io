@@ -15,6 +15,7 @@ import {
   errorParamMsg,
   commaSeparatedPairTripleCheck,
   returnInputFromRange,
+  checkAllRangesValid,
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
@@ -49,6 +50,7 @@ const BlueRadio = withStyles({
 const ERROR_INVALID_INPUT_INSERT = 'Please enter a list containing positive integers, pairs or triples';
 const ERROR_INVALID_INPUT_SEARCH = 'Please enter a positive integer';
 const ERROR_TOO_LARGE = `Please enter the right amount of inputs`;
+const ERROR_INVALID_RANGES = 'If you had entered ranges, please input valid ranges'
 
 /**
  * Linear probing input component
@@ -82,24 +84,29 @@ function HashingLPParam() {
 
     // Check if the inputs are either positive integers, pairs or triples
     if (commaSeparatedPairTripleCheck(true, inputs)) {
-      let values = inputs.split(","); // Split input to calculate amount of inputs
-      let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
+      let values = inputs.split(","); // Converts input to array
+      if (checkAllRangesValid(values)) {
+        let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-      // Calculate total inputs considering bulk insertion
-      let totalInputs = 0;
-      for (const item of values) totalInputs += returnInputFromRange(item).length;
+        // Calculate total inputs considering bulk insertion
+        let totalInputs = 0;
+        for (const item of values) totalInputs += returnInputFromRange(item).length;
 
-      // Only dispatch algorithm if amount of input is less than table size
-      if (totalInputs < hashSize) {
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'HashingLP',
-          mode: 'insertion',
-          hashSize: hashSize,
-          values
-        });
-        setMessage(successParamMsg(ALGORITHM_NAME));
-      } else {
-        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
+        // Only dispatch algorithm if amount of input is less than table size
+        if (totalInputs < hashSize) {
+          dispatch(GlobalActions.RUN_ALGORITHM, {
+            name: 'HashingLP',
+            mode: 'insertion',
+            hashSize: hashSize,
+            values
+          });
+          setMessage(successParamMsg(ALGORITHM_NAME));
+        } else {
+          setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
+        }
+      }
+      else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));
       }
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_INSERT));
