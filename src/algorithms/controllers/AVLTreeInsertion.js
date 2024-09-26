@@ -407,8 +407,6 @@ export default {
 
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
-                // Initialize the AVL tree with the first key
-                let root = new AVLNode(key, depth);
                 chunker.add('n = new Node',
                     (vis, r, p, index) => {
                         vis.graph.addNode(r, r, 1);
@@ -422,6 +420,9 @@ export default {
                     [key, parentNode ? parentNode.key : null, currIndex],
                     depth
                 );
+                // Initialize the AVL tree with the first key
+                let root = new AVLNode(key, depth);
+
                 chunker.add('return n',
                     (vis, r, p) => {
                         vis.graph.resetVisitAndSelect(r, p);
