@@ -1,104 +1,61 @@
 @import "../../common/stylesheet/index";
 
-
 .multiLinkedListContainer {
   display: flex;
   flex-direction: column; /* Keep lists stacked vertically */
-}
+  justify-content: flex-end;
 
-.linkedListContainer {
-  display: flex; /* Makes the nodes in each list align horizontally */
-  flex-direction: row; /* Aligns the nodes in a row */
-  align-items: center; /* Vertically aligns items if they have different heights */
-}
+  .linkedListContainer {
+    display: flex; /* Makes the nodes in each list align horizontally */
+    flex-direction: row; /* Aligns the nodes in a row */
+    justify-content: center;
 
-.nodeContainer {
-  margin-right: 20px; /* Adds space between nodes */
-}
+    .nodeContainer {
+      display: flex; /* Makes the nodes in each list align horizontally */
+      flex-direction: row; /* Aligns the nodes in a row */
+      flex-wrap: nowrap;
+      align-items: center;
 
-.linked_list {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  flex-wrap: wrap;
 
-  .node {
-    display: flex;
-    align-items: center;
-    background-color: var(--linked-list-node-bg);
-    border: 2px solid var(--linked-list-node-border);
-    border-radius: 8px;
-    padding: 10px;
-    margin: 0 10px;
-    min-width: 60px;
-    text-align: center;
-
-    .value {
-      font-size: 16px;
-      font-weight: bold;
-      color: var(--linked-list-node-value-color);
-    }
-
-    &.head {
-      background-color: var(--linked-list-head-bg);
-      border-color: var(--linked-list-head-border);
 
       .value {
-        color: var(--linked-list-head-value-color);
+        background-color: var(--linked-list-node-bg);
+        border: 2px solid var(--linked-list-node-border);
+        font-size: 16px;
+        font-weight: bold;
+        color: var(--linked-list-node-value-color);
+        height: 32px;
+        width: 32px;
+
+        /* Flexbox properties for vertical and horizontal centering */
+        display: flex;
+        align-items: center;      /* Vertically centers the text */
+        justify-content: center;
+
+        &.visited {
+          background-color: var(--linked-list-highlighted-bg);
+          border: 2px solid var(--linked-list-highlighted-border);
+        }
+        &.selected {
+          background-color: var(--linked-list-selected-bg);
+          border: 2px solid var(--linked-list-selected-border);
+        }
+
       }
-    }
 
-    &.tail {
-      background-color: var(--linked-list-tail-bg);
-      border-color: var(--linked-list-tail-border);
-
-      .value {
-        color: var(--linked-list-tail-value-color);
+      .symbol {
+        vertical-align: center;
       }
-    }
 
-    &.selected {
-      background-color: var(--linked-list-selected-bg);
-      border-color: var(--linked-list-selected-border);
-
-      .value {
-        color: var(--linked-list-selected-value-color);
+      .label {
+        vertical-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--linked-list-caption-color);
+        transform: translateY(20px); /* translate down by 20 pixels */
       }
+
     }
-
-    &.highlighted {
-      background-color: var(--linked-list-highlighted-bg);
-      border-color: var(--linked-list-highlighted-border);
-
-      .value {
-        color: var(--linked-list-highlighted-value-color);
-      }
-    }
-  }
-
-  .arrow {
-    width: 40px;
-    height: 2px;
-    background-color: var(--linked-list-arrow-color);
-    position: relative;
-    margin: 0 5px;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      right: -10px;
-      border: 6px solid transparent;
-      border-left-color: var(--linked-list-arrow-color);
-    }
-  }
-
-  .caption {
-    text-align: center;
-    font-size: 14px;
-    color: var(--linked-list-caption-color);
-    margin-top: 10px;
   }
 }
 

@@ -33,61 +33,77 @@ class LinkedListRenderer extends Renderer {
 
     renderData() {
         const { lists } = this.state;
-        console.log(lists)
         return (
             <div className={styles.multiLinkedListContainer}>
                 {this.renderSymbols()}
 
-                <AnimateSharedLayout>
                     {lists.map((list, listIndex) => (
                         <div className={styles.linkedListContainer} key={`list-${listIndex}`}>
-
                             {list.data.map((node, nodeIndex) => (
                                 <div className={styles.nodeContainer} key={`node-${listIndex}-${nodeIndex}`}>
+                                    <AnimateSharedLayout>
+                                    {/* Nodes */}
                                     <motion.div
                                         layoutId={`list-${listIndex}-node-${nodeIndex}`}
-                                        className={styles.node}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ type: 'spring', stiffness: 100 }}
+                                        className={styles.nodeContainer}
+                                        initial={{opacity: 0}}
+                                        animate={{opacity: 1}}
+                                        transition={{type: 'spring', stiffness: 100}}
                                     >
-                                        <div className={styles.value}>{node.value}</div>
-
-                                        <div className={styles.pointer}>
-                                            {node.next !== null ? (
-                                                <motion.div
-                                                    className={styles.arrow}
-                                                    layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
-                                                >
-                                                    <svg className={styles.icon} width="20" height="20">
-                                                        <use href="#arrow-symbol"/>
-                                                    </svg>
-                                                </motion.div>
-                                            ) : (
-                                                <motion.div className={styles.null}>
-
-                                                    <svg className={styles.icon} width="20" height="20">
-                                                        <use href="#arrow-symbol"/>
-                                                    </svg>
-                                                    <svg className={styles.icon} width="20" height="20">
-                                                        <use href="#null-marker"/>
-                                                    </svg>
-                                                </motion.div>
-                                            )}
+                                        <div className={
+                                            classes(styles.value,
+                                                node.patched && styles.visited,
+                                                node.selected && styles.selected)}>
+                                            {node.value}
                                         </div>
                                     </motion.div>
+
+                                    {/* Arrows */}
+                                    <div className={styles.symbol}>
+                                        <motion.div
+                                            className={styles.symbol}
+                                            layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
+                                        >
+                                            <svg className={styles.symbol} width="40" height="40">
+                                                <use href="#arrow-symbol"/>
+                                            </svg>
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Null Marker */}
+                                    {node.next == null && (
+                                        <motion.div className={styles.symbol}>
+                                            <svg className={styles.symbol} width="20" height="20">
+                                                <use href="#null-marker"/>
+                                            </svg>
+                                        </motion.div>
+                                    )}
+                                </AnimateSharedLayout>
+                                    {/* Labels */}
+                                    {node.variables.map(variable => (
+                                        <div className={styles.label}>
+                                            <motion.div
+                                                className={styles.label}
+                                                layoutId={node.variables}
+                                            >
+                                                {variable}
+                                            </motion.div>
+                                        </div>))}
                                 </div>
-                            ))}
+                            )
+                        )}
                         </div>
-                    ))}
-                </AnimateSharedLayout>
+                        )
+                    )}
             </div>
-        );
+        )
+            ;
     }
 
     render() {
         return this.renderData();
     }
+
 }
 
 export default LinkedListRenderer;

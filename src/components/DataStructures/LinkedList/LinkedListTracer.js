@@ -15,7 +15,6 @@ class LinkedListTracer extends Tracer{
     }
 
     init() {
-        console.log("Init Tracer");
         this.chartTracer = null;
         this.lists = [];
     }
@@ -33,7 +32,7 @@ class LinkedListTracer extends Tracer{
 
     // Appends a value to a specific linked list
     appendToList(value, list) {
-        const newNode = { value, next: null, variables: [] };
+        const newNode = { value, next: null, patched: false, selected: false, variables: [] };
         if (!list.head) {
             list.head = newNode;
             list.tail = newNode;
@@ -108,7 +107,7 @@ class LinkedListTracer extends Tracer{
     patch(index, value, listIndex = 0) {
         const list = this.lists[listIndex];
         if (list && index >= 0 && index < list.size) {
-            list.data[index].value = value;
+            list.data[index].patched = true;
         }
     }
 
@@ -116,7 +115,7 @@ class LinkedListTracer extends Tracer{
     depatch(index, listIndex = 0) {
         const list = this.lists[listIndex];
         if (list && index >= 0 && index < list.size) {
-            list.data[index].value = list.data[index].originalValue;
+            list.data[index].patched = false;
         }
     }
 
@@ -171,7 +170,7 @@ class LinkedListTracer extends Tracer{
 
     // Assigns a variable to a specific node in a specific list, removing it from all others
     assignVariable(variable, nodeIndex, listIndex = 0) {
-        this.clearVariables();
+        this.removeVariable(variable);
         this.addVariable(variable, nodeIndex, listIndex);
     }
 

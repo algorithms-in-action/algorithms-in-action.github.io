@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Renderer support of multiple list">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'fix': issues around linked list initiation in tracer and renderer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/msort_lista_td.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/msort_lista_td.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/context/chunker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/chunker.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +115,7 @@
       <workItem from="1724037366078" duration="9880000" />
       <workItem from="1724577427107" duration="11050000" />
       <workItem from="1725063617753" duration="5788000" />
-      <workItem from="1727495974535" duration="12678000" />
+      <workItem from="1727495974535" duration="26653000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -144,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725758267977</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="'fix': issues around linked list initiation in tracer and renderer">
+      <option name="closed" value="true" />
+      <created>1727515923081</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727515923081</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,6 +172,7 @@
     <MESSAGE value="Linked List Data Structure and List Data Structure Added" />
     <MESSAGE value="Resolved error with parameter files. Blocker currently at data structure." />
     <MESSAGE value="Deleting useless documents" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleting useless documents" />
+    <MESSAGE value="'fix': issues around linked list initiation in tracer and renderer" />
+    <option name="LAST_COMMIT_MESSAGE" value="'fix': issues around linked list initiation in tracer and renderer" />
   </component>
 </project>
