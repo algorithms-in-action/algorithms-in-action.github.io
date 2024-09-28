@@ -306,7 +306,7 @@ export default {
             },
             [insertions, prevIdx]
           )
-          for (const key of translateInput(item, "Array'")) {
+          for (const key of translateInput(item, "Array")) {
             prevIdx = hashInsert(table, key, prevIdx, true);
           }
         }
@@ -326,7 +326,7 @@ export default {
         }
 
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all boxes
-        
+
         // Reset graphs
         vis.graph.updateNode(HASH_GRAPH.Key, ' ');
         vis.graph.updateNode(HASH_GRAPH.Value, ' ');
