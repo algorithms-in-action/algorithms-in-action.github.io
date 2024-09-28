@@ -323,7 +323,7 @@ export default {
         }
 
         // Extract resulting array for testing
-        table_result = vis.array.extractArray([1], "x")
+        table_result = vis.array.extractArray([1], "-")
       },
     )
 
