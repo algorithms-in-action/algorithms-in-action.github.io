@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Search function working for LP small table, also added instructions and extra-info">
+      <change afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingDelete.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/HashingDelete.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsertion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingInsertion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +41,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "josh__bugfix8",
+    "git-widget-placeholder": "josh__add__hash__delete",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
