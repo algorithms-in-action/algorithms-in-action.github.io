@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Deleting useless documents">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Renderer support of multiple list">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/msort_lista_td.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/msort_lista_td.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/context/chunker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/chunker.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Team2Main" />
+        <entry key="$PROJECT_DIR$" value="LinkedListRenderer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,6 +52,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -69,7 +75,7 @@
     "Node.js.quickSort_shared.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Team2Main",
+    "git-widget-placeholder": "LinkedListRender",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/carli/Downloads/index (2).js",
     "node.js.detected.package.eslint": "true",
@@ -78,7 +84,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.1.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -88,6 +94,13 @@
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List" />
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List\ListTracer" />
     </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -105,6 +118,7 @@
       <workItem from="1724037366078" duration="9880000" />
       <workItem from="1724577427107" duration="11050000" />
       <workItem from="1725063617753" duration="5788000" />
+      <workItem from="1727495974535" duration="12678000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />

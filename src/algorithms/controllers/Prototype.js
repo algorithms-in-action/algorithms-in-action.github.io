@@ -3,6 +3,7 @@
 import {areExpanded} from './collapseChunkPlugin';
  */
 import ListTracer from "../../components/DataStructures/List/ListTracer";
+import LinkedListTracer from "../../components/DataStructures/LinkedList/LinkedListTracer";
 
 
 
@@ -27,7 +28,7 @@ export default {
     initVisualisers() {
         return {
             list: {
-                instance: new ListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
+                instance: new LinkedListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
                 order: 0,
             }
         };
@@ -44,6 +45,7 @@ export default {
                 vis.list.swapElements(_n1, _n2);
             }, [n1, n2]);
         };
+
 
         // Initialise
         chunker.add(
