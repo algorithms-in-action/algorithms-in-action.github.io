@@ -163,12 +163,10 @@ const allalgs = {
     pseudocode: {
       insertion: Pseudocode.linearProbing,
       search: Pseudocode.linearSearch,
-      del: Pseudocode.linearDelete,
     },
     controller: {
       insertion: Controller.HashingInsertion,
       search: Controller.HashingSearch,
-      del: Controller.HashingDelete,
     },
   },
 
@@ -182,12 +180,10 @@ const allalgs = {
     pseudocode: {
       insertion: Pseudocode.doubleHashing,
       search: Pseudocode.doubleSearch,
-      del: Pseudocode.doubleDelete,
     },
     controller: {
       insertion: Controller.HashingInsertion,
       search: Controller.HashingSearch,
-      del: Controller.HashingDelete,
     },
   },
 

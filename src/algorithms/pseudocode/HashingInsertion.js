@@ -23,7 +23,7 @@ const main = `
 
             //=======================================================
 
-            HashInsert(T, k)  // Insert key k into table T \\B 11
+            HashInsert(T, k)  // Insert key k into table
                 \\In{
                     Check how full the table is
                     \\Expl{ One empty slot must always be maintained, to prevent to potential for infinite looping.
@@ -49,6 +49,30 @@ const main = `
                     T[i] <- k // unoccupied slot found so we put k in it \\B 9
                     // Done \\B 10
                 \\In}
+            
+            //=======================================================
+
+            HashDelete(T, k)  // Delete key k in table T \\B 11
+            \\In{
+                i <- hash(k) // Expand Hash in HashInsert for details \\B 16
+                Choose Increment value for stepping through T //Expand ChooseIncrement in HashInsert for details \\B 17
+                while not (T[i] = k or T[i] = Empty or T[i] = "X") // search for k or Empty or Deleted \\B 12
+                    \\In{
+                        i <- (i + Increment) mod TableSize \\B 13
+                        \\Expl{ T[i] is not k or Empty so we jump ahead Increment
+                            steps and "wrapping around" if we reach the end, mirroring
+                            the insertion code.
+                        \\Expl}
+                    \\In}
+                if T[i] = k \\B 14
+                    \\In{
+                        T[i] <- "x" \\B 15
+                        \\Expl{ If T[i] contains the index element, it is deleted from the array.
+                            In this implementation, deletion of said integer occurs by replacing it
+                            with "x" to help with visualisation.
+                        \\Expl}
+                    \\In}
+            \\In}            
         \\Code}
 
         \\Code{
@@ -68,23 +92,6 @@ const main = `
                         We use modulo TableSize to "wrap around" if we reach the end.
                     \\Expl}
                 \\In}
-        \\Code}
-
-        \\Code{
-            HashDelete(T, i)    // mark T[i] as Deleted
-                                // To delete a key we need to search for it first
-                T[i] <- Deleted \\B 12
-                \\Expl{ T[i] is no longer considered occupied, so a key may be
-                        inserted here, but searching does not stop at Deleted slots,
-                        only Empty ones (or if we find the key).
-                \\Expl}
-                Check how many Deleted slots there are in the table
-                \\Expl{ Deleted slots slow down searching and limit table capacity as
-                        there must be at least one Empty slot for searching. If
-                        some threshold is reached a new table can be allocated with
-                        all slots Empty then all keys in the old table can be
-                        inserted into the new table and the old table discarded.
-                \\Expl}
         \\Code}
 `
 export const hash1 = `

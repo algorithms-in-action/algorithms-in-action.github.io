@@ -13,6 +13,7 @@ export const SPLIT_SIZE = 17;
 // Magic character used between all 3 files
 export const POINTER_VALUE = "i"
 export const EMPTY_CHAR = '-';
+export const DELETE_CHAR = 'X';
 
 // Color indexes
 export const Colors = {
@@ -142,20 +143,4 @@ export function setIncrement(
     }
   }
   return increment; // Return calculated increment
-}
-
-// Just put here for storage, will be implemented in sprint 3
-export function hashDelete(
-    chunker, table, key, hashValue, collisionHandling, insertions
-) {
-
-  insertions = insertions - 1;
-  let i = hash1(key);
-  let increment = setIncrement(chunker, key, hashValue, collisionHandling);
-  while (table[i] != key) {
-    i = (i + increment) % table.length;
-  }
-  table[i] = null;
-
-  return insertions;
 }
