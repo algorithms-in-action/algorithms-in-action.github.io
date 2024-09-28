@@ -14,7 +14,7 @@ import {
   successParamMsg,
   errorParamMsg,
   commaSeparatedPairTripleCheck,
-  returnInputFromRange,
+  translateInput,
   checkAllRangesValid,
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
@@ -83,14 +83,15 @@ function HashingLPParam() {
     const inputs = e.target[0].value; // Get the value of the input
 
     // Check if the inputs are either positive integers, pairs or triples
-    if (commaSeparatedPairTripleCheck(true, inputs)) {
+    if (commaSeparatedPairTripleCheck(true, true, inputs)) {
       let values = inputs.split(","); // Converts input to array
       if (checkAllRangesValid(values)) {
         let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
         // Calculate total inputs considering bulk insertion
         let totalInputs = 0;
-        for (const item of values) totalInputs += returnInputFromRange(item).length;
+        for (const item of values) totalInputs += translateInput(item, "Count");
+        console.log(totalInputs);
 
         // Only dispatch algorithm if amount of input is less than table size
         if (totalInputs < hashSize) {
@@ -154,7 +155,7 @@ function HashingLPParam() {
       <div className="form">
         <ListParam
           name="Hashing"
-          buttonName="INSERT"
+          buttonName="INSERT/DELETE"
           mode="insertion"
           formClassName="formLeft"
           DEFAULT_VAL = {array}

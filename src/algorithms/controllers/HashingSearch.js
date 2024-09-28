@@ -7,7 +7,8 @@ import {
   INDEX,
   POINTER,
   POINTER_VALUE,
-  SMALL_SIZE
+  SMALL_SIZE,
+  DELETE_CHAR
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -83,13 +84,6 @@ export default {
         }
 
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all slots color
-
-        // Rest pointer
-        for (let i = 0; i < SIZE; i++) {
-          if (SIZE === SMALL_SIZE) {
-            vis.array.assignVariable("", POINTER, i, POINTER_VALUE);
-          }
-        }
       },
       [TARGET]
     );
@@ -123,7 +117,7 @@ export default {
     );
 
     // Search for the target key, checking each probed position
-    while (table[i] !== TARGET && table[i] !== undefined) {
+    while (table[i] !== TARGET && table[i] !== undefined && table[i] !== DELETE_CHAR) {
 
       // Chunker for not matching
       chunker.add(

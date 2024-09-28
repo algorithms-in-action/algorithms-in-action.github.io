@@ -15,7 +15,8 @@ import {
   LARGE_SIZE,
   SPLIT_SIZE
 } from './HashingCommon';
-import { returnInputFromRange } from '../parameters/helpers/ParamHelper.js';
+import { translateInput } from '../parameters/helpers/ParamHelper.js';
+import HashingDelete from './HashingDelete.js';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
@@ -267,35 +268,47 @@ export default {
       [insertions]
     )
 
+    // Magic numbers for length of splitting a postive integer string by "-", the index of "", and the number to delete when a negative integer is split by "-"
+    const POS_INTEGER_SPLIT_LENGTH = 1;
+    const EMPTY_DELETE_SPLIT_INDEX = 0;
+    const NUMBER_DELETE_SPLIT_INDEX = 1;
+
     // Inserting inputs
     let prevIdx;
     for (const item of inputs) {
-      if (item.split('-').length == 1) {
-        for (const key of returnInputFromRange(item)) {
+      let split_arr = item.split("-");
+      if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) {
+        for (const key of translateInput(item, "Array")) {
           prevIdx = hashInsert(table, key, prevIdx, false);
         }
       }
       else {
-        // Preparation for bulk insertion
-        chunker.add(
-          IBookmarks.BulkInsert,
-          (vis, insertions, prevIdx) => {
-            vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
-            vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
-            if (SIZE === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
+        if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") {
+          let key = Number(split_arr[NUMBER_DELETE_SPLIT_INDEX]);
+          HashingDelete(chunker, params, key, table);
+        }
+        else {
+          // Preparation for bulk insertion
+          chunker.add(
+            IBookmarks.BulkInsert,
+            (vis, insertions, prevIdx) => {
+              vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
+              vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
+              if (SIZE === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
 
-            // Empty graphs
-            vis.graph.updateNode(HASH_GRAPH.Key, ' ');
-            vis.graph.updateNode(HASH_GRAPH.Value, ' ');
-            if (ALGORITHM_NAME === "HashingDH") {
-              vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
-              vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
-            }
-          },
-          [insertions, prevIdx]
-        )
-        for (const key of returnInputFromRange(item)) {
-          prevIdx = hashInsert(table, key, prevIdx, true);
+              // Empty graphs
+              vis.graph.updateNode(HASH_GRAPH.Key, ' ');
+              vis.graph.updateNode(HASH_GRAPH.Value, ' ');
+              if (ALGORITHM_NAME === "HashingDH") {
+                vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
+                vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
+              }
+            },
+            [insertions, prevIdx]
+          )
+          for (const key of translateInput(item, "Array'")) {
+            prevIdx = hashInsert(table, key, prevIdx, true);
+          }
         }
       }
     }
@@ -323,7 +336,7 @@ export default {
         }
 
         // Extract resulting array for testing
-        table_result = vis.array.extractArray([1], "-")
+        table_result = vis.array.extractArray([1], EMPTY_CHAR)
       },
     )
 
