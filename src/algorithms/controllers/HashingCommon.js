@@ -11,7 +11,7 @@ export const POINTER = 2;
 export const SPLIT_SIZE = 17;
 
 // Magic character used between all 3 files
-export const POINTER_VALUE = "i"
+export const POINTER_VALUE = 'i'
 export const EMPTY_CHAR = '-';
 export const DELETE_CHAR = 'X';
 
@@ -20,6 +20,8 @@ export const Colors = {
   Insert: 1,
   Pending: 2,
   Collision: 3,
+  Found: 1,
+  NotFound: 3,
 };
 
 // Graph indexes
@@ -28,6 +30,13 @@ export const HASH_GRAPH = {
   Value: 1,
   Key2: 2,
   Value2: 3
+}
+
+export const HASH_TYPE = {
+  Insert: 'I',
+  Search: 'S',
+  Delete: 'D',
+  BulkInsert: 'BI'
 }
 
 /**
@@ -113,13 +122,14 @@ export function setIncrement(
 
   if (toggleAnimate) {
     // Show key, insertions and increment if the type is Insertion
-    if (type == "Insert") {
+    if (type == HASH_TYPE.Insert || type == HASH_TYPE.Delete) {
       chunker.add(
         bookmark,
         (vis, increment) => {
           let kth = vis.array.getKth();
           vis.array.showKth({
             key: key,
+            type,
             insertions: kth.insertions,
             increment: increment
           });
@@ -129,12 +139,13 @@ export function setIncrement(
     }
 
     // Show key\ and increment if the type is Search
-    else if (type == "Search") {
+    else if (type == HASH_TYPE.Search) {
       chunker.add(
         bookmark,
         (vis, increment) => {
           vis.array.showKth({
             key: key,
+            type,
             increment: increment
           });
         },

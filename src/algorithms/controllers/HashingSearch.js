@@ -8,7 +8,8 @@ import {
   POINTER,
   POINTER_VALUE,
   SMALL_SIZE,
-  DELETE_CHAR
+  DELETE_CHAR,
+  HASH_TYPE
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -22,9 +23,6 @@ const IBookmarks = {
   Found: 7,
   NotFound: 8,
 }
-
-// Type to use HashingCommon functions
-const TYPE = 'Search';
 
 export default {
 
@@ -64,7 +62,7 @@ export default {
       IBookmarks.Init,
       (vis, target) => {
 
-        vis.array.showKth({key: target}); // Show stats
+        vis.array.showKth({key: target, type: HASH_TYPE.Search}); // Show stats
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
         if (SIZE === SMALL_SIZE) {
           vis.array.resetVariable(POINTER); // Reset pointer
@@ -92,7 +90,7 @@ export default {
     let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE, true); // Target value after being hashed
 
     // Calculate increment for key
-    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, TYPE, true);
+    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, HASH_TYPE.Search, true);
 
     // Chunker for initial slot
     chunker.add(
