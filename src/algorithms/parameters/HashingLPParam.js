@@ -9,12 +9,10 @@ import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 import {
   genUniqueRandNumList,
-  commaSeparatedNumberListValidCheck,
   singleNumberValidCheck,
   successParamMsg,
   errorParamMsg,
   commaSeparatedPairTripleCheck,
-  translateInput,
   checkAllRangesValid,
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
@@ -88,23 +86,14 @@ function HashingLPParam() {
       if (checkAllRangesValid(values)) {
         let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-        // Calculate total inputs considering bulk insertion
-        let totalInputs = 0;
-        for (const item of values) totalInputs += translateInput(item, "Count");
-        console.log(totalInputs);
-
-        // Only dispatch algorithm if amount of input is less than table size
-        if (totalInputs < hashSize) {
-          dispatch(GlobalActions.RUN_ALGORITHM, {
-            name: 'HashingLP',
-            mode: 'insertion',
-            hashSize: hashSize,
-            values
-          });
-          setMessage(successParamMsg(ALGORITHM_NAME));
-        } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
-        }
+        // Dispatch algo
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'HashingLP',
+          mode: 'insertion',
+          hashSize: hashSize,
+          values
+        });
+        setMessage(successParamMsg(ALGORITHM_NAME));
       }
       else {
         setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));

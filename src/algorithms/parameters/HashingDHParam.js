@@ -13,7 +13,6 @@ import {
   successParamMsg,
   errorParamMsg,
   commaSeparatedPairTripleCheck,
-  translateInput,
   checkAllRangesValid
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
@@ -87,22 +86,14 @@ function HashingDHParam() {
       if (checkAllRangesValid(values)) {
         let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-        // Calculate total inputs considering bulk insertion
-        let totalInputs = 0;
-        for (let item of values) totalInputs += translateInput(item, "Count");
-
-        // Only dispatch algorithm if amount of input is less than table size
-        if (totalInputs < hashSize) {
-          dispatch(GlobalActions.RUN_ALGORITHM, {
-            name: 'HashingDH',
-            mode: 'insertion',
-            hashSize: hashSize,
-            values
-          });
-          setMessage(successParamMsg(ALGORITHM_NAME));
-        } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
-        }
+        // Dispatch algo
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'HashingDH',
+          mode: 'insertion',
+          hashSize: hashSize,
+          values
+        });
+        setMessage(successParamMsg(ALGORITHM_NAME));
       }
       else {
         setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));

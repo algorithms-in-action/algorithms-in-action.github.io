@@ -15,7 +15,9 @@ import {
   LARGE_SIZE,
   SPLIT_SIZE,
   DELETE_CHAR,
-  HASH_TYPE
+  HASH_TYPE,
+  FULL_SIGNAL,
+  newCycle
 } from './HashingCommon';
 import { translateInput } from '../parameters/helpers/ParamHelper.js';
 import HashingDelete from './HashingDelete.js';
@@ -25,15 +27,16 @@ const IBookmarks = {
   Init: 1,
   EmptyArray: 2,
   InitInsertion: 3,
-  CheckTableFull: 4,
-  IncrementInsertions: 5,
-  Hash1: 6,
-  ChooseIncrement: 7,
-  Probing: 8,
-  Collision: 9,
-  PutIn: 10,
-  Done: 11,
+  IncrementInsertions: 4,
+  Hash1: 5,
+  ChooseIncrement: 6,
+  Probing: 7,
+  Collision: 8,
+  PutIn: 9,
+  Done: 10,
   BulkInsert: 1,
+  TableFull: 19,
+  TableNotFull: 20,
 }
 
 export default {
@@ -74,8 +77,9 @@ export default {
     // For return
     let table_result;
 
-    // Variable to keep track of insertions done
+    // Variable to keep track of insertions done and total inputs hashed into the table
     let insertions = 0;
+    let total = 0;
 
     /**
      * Insertion function for each key
@@ -86,34 +90,43 @@ export default {
      * @returns the index the key is assigned
      */
     function hashInsert(table, key, prevIdx, isBulkInsert) {
-      insertions = insertions + 1; // increment insertions
+      // Chunker for when table is full
+      if (total == SIZE - 1) {
+        chunker.add(
+          IBookmarks.TableFull,
+          (vis, total) => {
+            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is full, stopping insertion..."});
+          },
+          [total]
+        )
+        return FULL_SIGNAL;
+      }
+
+      // Chunker for when the table is not full
+      else {
+        if (!isBulkInsert) { // Only show when the table is full in bulk insert mode
+          chunker.add(
+            IBookmarks.TableNotFull,
+            (vis, total) => {
+              newCycle(vis, SIZE, key, ALGORITHM_NAME); // New insert cycle
+              vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is not full, continuing..."});
+            },
+            [total]
+          )
+        }
+      }
+
+      insertions = insertions + 1; // Increment insertions
+      total = total + 1; // Increment total
 
       if (!isBulkInsert) {
       // Chunker step for increasing the insertion stat
         chunker.add(
           IBookmarks.IncrementInsertions,
-          (vis, key, insertions, prevIdx) => {
+          (vis, key, insertions) => {
             vis.array.showKth({key: key, type: HASH_TYPE.Insert, insertions: insertions, increment: ""}); // Change insertion stats visually
-            vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
-
-            // Hide pointer
-            if (SIZE === SMALL_SIZE) {
-              vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE);
-            }
-
-            // Update key value for the hashing graph and color them to emphasize hashing initialization
-            vis.graph.updateNode(HASH_GRAPH.Key, key);
-            vis.graph.updateNode(HASH_GRAPH.Value, ' ');
-            vis.graph.select(HASH_GRAPH.Key);
-            vis.graph.colorEdge(HASH_GRAPH.Key, HASH_GRAPH.Value, Colors.Pending)
-            if (ALGORITHM_NAME === "HashingDH") {
-              vis.graph.updateNode(HASH_GRAPH.Key2, key);
-              vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
-              vis.graph.select(HASH_GRAPH.Key2);
-              vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
-            }
           },
-          [key ,insertions, prevIdx]
+          [key ,insertions]
         );
       }
 
@@ -277,18 +290,21 @@ export default {
     // Inserting inputs
     let prevIdx;
     for (const item of inputs) {
+      if (prevIdx == FULL_SIGNAL) break; // Stop insertion when the table is full
+
+      // Different cases of insertion and deletion
       let split_arr = item.split("-");
-      if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) {
+      if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
         for (const key of translateInput(item, "Array")) {
           prevIdx = hashInsert(table, key, prevIdx, false);
         }
       }
       else {
-        if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") {
+        if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") { // When the input is a negative integer -> delete
           let key = Number(split_arr[NUMBER_DELETE_SPLIT_INDEX]);
-          HashingDelete(chunker, params, key, table);
+          total = HashingDelete(chunker, params, key, table, total);
         }
-        else {
+        else { // When the input is a range -> bulk insert
           // Preparation for bulk insertion
           chunker.add(
             IBookmarks.BulkInsert,
@@ -328,7 +344,7 @@ export default {
 
         vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all boxes
 
-        // Reset graphs
+        // Reset graphs and uncolor the graph if needed
         vis.graph.updateNode(HASH_GRAPH.Key, ' ');
         vis.graph.updateNode(HASH_GRAPH.Value, ' ');
         if (ALGORITHM_NAME === 'HashingDH') {

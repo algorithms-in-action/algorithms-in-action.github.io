@@ -9,6 +9,7 @@ export const INDEX = 0;
 export const VALUE = 1;
 export const POINTER = 2;
 export const SPLIT_SIZE = 17;
+export const FULL_SIGNAL = -1;
 
 // Magic character used between all 3 files
 export const POINTER_VALUE = 'i'
@@ -154,4 +155,31 @@ export function setIncrement(
     }
   }
   return increment; // Return calculated increment
+}
+
+/**
+ * Reset the visualizations for a new cycle of either insertion, deletion or search
+ * @param {*} vis the visualzisers to reset
+ * @param {*} size table size
+ * @param {*} key key to insert/search/delete
+ * @param {*} name name of the algorithm/collision handling
+ */
+export function newCycle(vis, size, key, name) {
+  vis.array.unfill(INDEX, 0, undefined, size - 1); // Reset any coloring of slots
+
+  if (size === SMALL_SIZE) {
+    vis.array.resetVariable(POINTER); // Reset pointer
+  }
+
+  // Update key value for the hashing graph and color them to emphasize hashing initialization
+  vis.graph.updateNode(HASH_GRAPH.Key, key);
+  vis.graph.updateNode(HASH_GRAPH.Value, ' ');
+  vis.graph.select(HASH_GRAPH.Key);
+  vis.graph.colorEdge(HASH_GRAPH.Key, HASH_GRAPH.Value, Colors.Pending)
+  if (name === "HashingDH") {
+    vis.graph.updateNode(HASH_GRAPH.Key2, key);
+    vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
+    vis.graph.select(HASH_GRAPH.Key2);
+    vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
+  }
 }
