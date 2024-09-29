@@ -2,7 +2,6 @@ import {
   hash1,
   setIncrement,
   HASH_GRAPH,
-  EMPTY_CHAR,
   Colors,
   INDEX,
   POINTER,
@@ -10,19 +9,20 @@ import {
   SMALL_SIZE,
   VALUE,
   DELETE_CHAR,
-  HASH_TYPE
+  HASH_TYPE,
+  newCycle
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
-  ApplyHash: 17,
-  ChooseIncrement: 18,
-  InitDelete: 12,
-  WhileNot: 13,
-  MoveThrough: 14,
-  Found: 15,
-  Delete: 16,
-  NotFound: 19,
+  ApplyHash: 16,
+  ChooseIncrement: 17,
+  InitDelete: 11,
+  WhileNot: 12,
+  MoveThrough: 13,
+  Found: 14,
+  Delete: 15,
+  NotFound: 18,
 }
 
 /**
@@ -32,7 +32,7 @@ const IBookmarks = {
  * @returns whether the key is found or not
  */
 export default function HashingDelete(
-  chunker, params, key, table
+  chunker, params, key, table, total
 ) {
 
   // Assigning parameter values to local variables
@@ -45,23 +45,8 @@ export default function HashingDelete(
     (vis, target) => {
 
       vis.array.showKth({key: target, insertions: vis.array.getKth().insertions, type: HASH_TYPE.Delete}); // Show stats
-      vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
-      if (SIZE === SMALL_SIZE) {
-        vis.array.resetVariable(POINTER); // Reset pointer
-      }
-
-      // Initialize graph and color them for hashing
-      vis.graph.updateNode(HASH_GRAPH.Key, target);
-      vis.graph.updateNode(HASH_GRAPH.Value, ' ');
-      vis.graph.select(HASH_GRAPH.Key);
-      vis.graph.colorEdge(HASH_GRAPH.Key, HASH_GRAPH.Value, Colors.Pending)
-
-      if (ALGORITHM_NAME === "HashingDH") {
-        vis.graph.updateNode(HASH_GRAPH.Key2, target);
-        vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
-        vis.graph.select(HASH_GRAPH.Key2);
-        vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
-      }
+      
+      newCycle(vis, SIZE, key, ALGORITHM_NAME); // New delete cycle
     },
     [key]
   );
@@ -148,6 +133,8 @@ export default function HashingDelete(
         },
         [DELETE_CHAR, i]
       )
+
+      return total - 1; // Decrement total
   }
   else {
     chunker.add(
@@ -157,5 +144,7 @@ export default function HashingDelete(
       },
       [i]
     )
+
+    return total; // Since the deletion key is not found, nothing is deleted
   }
 }

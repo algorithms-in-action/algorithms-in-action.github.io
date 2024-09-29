@@ -9,7 +9,8 @@ import {
   POINTER_VALUE,
   SMALL_SIZE,
   DELETE_CHAR,
-  HASH_TYPE
+  HASH_TYPE,
+  newCycle
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -63,25 +64,8 @@ export default {
       (vis, target) => {
 
         vis.array.showKth({key: target, type: HASH_TYPE.Search}); // Show stats
-        vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
-        if (SIZE === SMALL_SIZE) {
-          vis.array.resetVariable(POINTER); // Reset pointer
-        }
-
-        // Initialize graph and color them for hashing
-        vis.graph.updateNode(HASH_GRAPH.Key, target);
-        vis.graph.updateNode(HASH_GRAPH.Value, ' ');
-        vis.graph.select(HASH_GRAPH.Key);
-        vis.graph.colorEdge(HASH_GRAPH.Key, HASH_GRAPH.Value, Colors.Pending)
-
-        if (ALGORITHM_NAME === "HashingDH") {
-          vis.graph.updateNode(HASH_GRAPH.Key2, target);
-          vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
-          vis.graph.select(HASH_GRAPH.Key2);
-          vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
-        }
-
-        vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all slots color
+        
+        newCycle(vis, SIZE, target, ALGORITHM_NAME);
       },
       [TARGET]
     );

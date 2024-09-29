@@ -464,6 +464,7 @@ class Array2DRenderer extends Renderer {
             {(algo === 'HashingLP' ||
               algo === 'HashingDH' ) &&
               kth !== '' &&
+              (kth.fullCheck == undefined ? 
               (
                 <span
                   className={styles.captionHashing}
@@ -480,7 +481,13 @@ class Array2DRenderer extends Renderer {
                   &emsp;&emsp;&emsp;&emsp;
                   Increment: {kth.increment}
                 </span>
-              )
+              ) : (
+                <span
+                  className={styles.captionHashing}
+                >
+                  {kth.fullCheck}
+                </span>
+              ))
             }
           </div>
         </div>
