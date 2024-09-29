@@ -9,22 +9,21 @@ import {
   POINTER_VALUE,
   SMALL_SIZE,
   VALUE,
-  DELETE_CHAR
+  DELETE_CHAR,
+  HASH_TYPE
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
-  ApplyHash: 16,
-  ChooseIncrement: 17,
-  InitDelete: 11,
-  WhileNot: 12,
-  MoveThrough: 13,
-  Found: 14,
-  Delete: 15,
+  ApplyHash: 17,
+  ChooseIncrement: 18,
+  InitDelete: 12,
+  WhileNot: 13,
+  MoveThrough: 14,
+  Found: 15,
+  Delete: 16,
+  NotFound: 19,
 }
-
-// Type to use HashingCommon functions
-const TYPE = 'Delete';
 
 /**
  * Running function for chunker of delete, using the key provided
@@ -45,7 +44,7 @@ export default function HashingDelete(
     IBookmarks.InitDelete,
     (vis, target) => {
 
-      vis.array.showKth({key: -target}); // Show stats
+      vis.array.showKth({key: target, insertions: vis.array.getKth().insertions, type: HASH_TYPE.Delete}); // Show stats
       vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill any colored slots
       if (SIZE === SMALL_SIZE) {
         vis.array.resetVariable(POINTER); // Reset pointer
@@ -63,8 +62,6 @@ export default function HashingDelete(
         vis.graph.select(HASH_GRAPH.Key2);
         vis.graph.colorEdge(HASH_GRAPH.Key2, HASH_GRAPH.Value2, Colors.Pending)
       }
-
-      vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all slots color
     },
     [key]
   );
@@ -73,7 +70,7 @@ export default function HashingDelete(
   let i = hash1(chunker, IBookmarks.ApplyHash, key, SIZE, true); // Target value after being hashed
 
   // Calculate increment for key
-  let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name, TYPE, true);
+  let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name, HASH_TYPE.Delete, true);
 
   // Chunker for initial slot
   chunker.add(
@@ -104,7 +101,7 @@ export default function HashingDelete(
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill the slot with red if the slot does not match key
+        vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with red if the slot does not match key
       },
       [i]
     );
@@ -138,7 +135,7 @@ export default function HashingDelete(
     chunker.add(
       IBookmarks.Found,
       (vis, idx) => {
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill the slot with green, indicating that the key is found
+        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
       },
       [i]
     );
@@ -148,9 +145,17 @@ export default function HashingDelete(
         IBookmarks.Delete,
         (vis, val, idx) => {
           vis.array.updateValueAt(VALUE, idx, val);
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert);
         },
         [DELETE_CHAR, i]
       )
+  }
+  else {
+    chunker.add(
+      IBookmarks.NotFound,
+      (vis, idx) => {
+        vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with green, indicating that the key is found
+      },
+      [i]
+    )
   }
 }

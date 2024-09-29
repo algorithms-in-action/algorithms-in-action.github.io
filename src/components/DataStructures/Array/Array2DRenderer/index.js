@@ -468,7 +468,7 @@ class Array2DRenderer extends Renderer {
                 <span
                   className={styles.captionHashing}
                 >
-                  Key: {kth.key}
+                  {(kth.type == 'I' || kth.type == 'BI') ? 'Inserting' : (kth.type == 'S' ? 'Searching' : (kth.type == 'D' ? 'Deleting' : '')) } Key{kth.type == 'BI' ? 's' : ''}: {kth.key}
                   {kth.insertions !== undefined && (
                     <span
                       className={styles.captionHashing}

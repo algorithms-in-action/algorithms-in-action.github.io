@@ -13,7 +13,9 @@ import {
   SMALL_SIZE,
   VALUE,
   LARGE_SIZE,
-  SPLIT_SIZE
+  SPLIT_SIZE,
+  DELETE_CHAR,
+  HASH_TYPE
 } from './HashingCommon';
 import { translateInput } from '../parameters/helpers/ParamHelper.js';
 import HashingDelete from './HashingDelete.js';
@@ -23,18 +25,16 @@ const IBookmarks = {
   Init: 1,
   EmptyArray: 2,
   InitInsertion: 3,
-  IncrementInsertions: 4,
-  Hash1: 5,
-  ChooseIncrement: 6,
-  Probing: 7,
-  Collision: 8,
-  PutIn: 9,
-  Done: 10,
+  CheckTableFull: 4,
+  IncrementInsertions: 5,
+  Hash1: 6,
+  ChooseIncrement: 7,
+  Probing: 8,
+  Collision: 9,
+  PutIn: 10,
+  Done: 11,
   BulkInsert: 1,
 }
-
-// Type to use functions in HashingCommon
-const TYPE = 'Insert';
 
 export default {
   explanation: HashingExp,
@@ -93,7 +93,7 @@ export default {
         chunker.add(
           IBookmarks.IncrementInsertions,
           (vis, key, insertions, prevIdx) => {
-            vis.array.showKth({key: key, insertions: insertions, increment: ""}); // Change insertion stats visually
+            vis.array.showKth({key: key, type: HASH_TYPE.Insert, insertions: insertions, increment: ""}); // Change insertion stats visually
             vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
 
             // Hide pointer
@@ -122,7 +122,7 @@ export default {
 
       // Calculate increment for current key
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, SIZE, ALGORITHM_NAME, TYPE, !isBulkInsert
+        chunker, IBookmarks.ChooseIncrement, key, SIZE, ALGORITHM_NAME, HASH_TYPE.Insert, !isBulkInsert
       );
 
       if (!isBulkInsert) {
@@ -153,7 +153,7 @@ export default {
       }
 
       // Internal code for probing, while loop indicates finding an empty slot for insertion
-      while (table[i] !== undefined && table[i] !== key) {
+      while (table[i] !== undefined && table[i] !== key && table[i] !== DELETE_CHAR) {
         let prevI = i;
         i = (i + increment) % SIZE; // This is to ensure the index never goes over table size
 
@@ -192,7 +192,7 @@ export default {
         (vis, val, idx, insertions) => {
           vis.array.updateValueAt(VALUE, idx, val); // Update value of that index
           if (isBulkInsert) {
-            vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
+            vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
           }
           if (!isBulkInsert) vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
         },
@@ -261,6 +261,7 @@ export default {
       (vis, insertions) => {
         vis.array.showKth({
           key: "",
+          type: EMPTY_CHAR,
           insertions: insertions,
           increment: "",
         });
@@ -293,7 +294,7 @@ export default {
             IBookmarks.BulkInsert,
             (vis, insertions, prevIdx) => {
               vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
-              vis.array.showKth({key: "Bulk Inserting...", insertions: insertions, increment: ""});
+              vis.array.showKth({key: item, type: HASH_TYPE.BulkInsert, insertions: insertions, increment: ""});
               if (SIZE === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
 
               // Empty graphs
@@ -318,7 +319,7 @@ export default {
       IBookmarks.Done,
       (vis) => {
 
-        vis.array.showKth({key: "", insertions: insertions, increment: ""}) // Nullify some stats, for better UI
+        vis.array.showKth({key: "", type: EMPTY_CHAR, insertions: insertions, increment: ""}) // Nullify some stats, for better UI
 
         // Hide pointer
         if (SIZE === SMALL_SIZE) {
