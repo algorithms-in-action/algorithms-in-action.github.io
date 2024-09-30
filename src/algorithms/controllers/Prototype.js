@@ -51,8 +51,7 @@ export default {
         chunker.add(
             1,
             (vis, list) => {
-                vis.list.addList(list);
-            },
+                vis.list.addList(list);},
             [nodes]
         );
 
@@ -82,6 +81,7 @@ export default {
             chunker.add(
                 203,
                 (vis) => {
+                    vis.list.setIndex(1,0);
                     vis.list.assignVariable('Slow', i);
                     vis.list.assignVariable('Fast', fast);
                 },
@@ -95,7 +95,7 @@ export default {
                 vis.list.clearVariables();
                 vis.list.assignVariable("Left", 0);
                 vis.list.assignVariable("Right", slow + 1);
-                vis.list.select(slow + 1);
+                vis.list.select(slow + 1, );
             })
     }
 

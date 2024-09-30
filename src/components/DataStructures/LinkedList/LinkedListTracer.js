@@ -24,7 +24,7 @@ class LinkedListTracer extends Tracer{
         if (!this.lists) {
             this.lists();
         }
-        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex};
+        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0};
             for (let value of listData) {
                 if (format === "values") {
                     const newNode = this.createNode(value);
@@ -52,6 +52,7 @@ class LinkedListTracer extends Tracer{
             list.tail = newNode;
         }
         list.data.push(newNode);
+        list.size++;
     }
 
     // Appends a value to a specific list by index
@@ -130,8 +131,8 @@ class LinkedListTracer extends Tracer{
     }
 
     // Selects a node or a range of nodes in a specific list
-    select(startIndex, endIndex = startIndex, listIndex = 0) {
-        const list = this.lists[listIndex];
+    select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
+        const list = this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {
                 list.data[i].selected = true;
@@ -141,6 +142,7 @@ class LinkedListTracer extends Tracer{
 
     // Deselects a node or a range of nodes in a specific list
     deselect(startIndex, endIndex = startIndex, listIndex = 0) {
+
         const list = this.lists[listIndex];
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {

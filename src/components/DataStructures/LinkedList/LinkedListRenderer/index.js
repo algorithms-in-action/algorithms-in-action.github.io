@@ -34,7 +34,7 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const {lists} = this.state;
         const layers = this.layer(lists);
-        console.log(layers);
+        // console.log(layers);
 
         return (
             <div className={styles.LayerContainer}>
@@ -65,18 +65,18 @@ class LinkedListRenderer extends Renderer {
                                                 <div className={classes(styles.value)}>
                                                     {node.value}
                                                 </div>
-                                            </motion.div>
 
-                                            {/* Labels */}
-                                            {node.variables.map((variable, variableIndex) => (
-                                                <div className={styles.label} key={`variable-${variableIndex}`}>
-                                                    <motion.div
-                                                        className={styles.label}
-                                                        layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`} // Unique layoutId
-                                                    >
-                                                        {variable}
-                                                    </motion.div>
-                                                </div>))}
+                                                {/* Labels */}
+                                                {node.variables.map((variable, variableIndex) => (
+                                                    <div className={styles.label} key={`variable-${variableIndex}`}>
+                                                        <motion.div
+                                                            className={styles.label}
+                                                            layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`} // Unique layoutId
+                                                        >
+                                                            {variable}
+                                                        </motion.div>
+                                                    </div>))}
+                                            </motion.div>
 
                                             {/* Arrows */}
                                             <div className={styles.symbol}>
@@ -89,8 +89,11 @@ class LinkedListRenderer extends Renderer {
                                                     </svg>
                                                 </motion.div>
                                             </div>
+
+
                                         </>
                                     </React.Fragment>
+
                                     ))}
                                 </AnimateSharedLayout>
                             </div>))}
