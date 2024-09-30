@@ -67,8 +67,8 @@ export default {
         chunker.add(
             201,
             (vis) => {
-                vis.list.assignVariable("Slow", 0);
-                vis.list.assignVariable("Fast", 0);
+                vis.list.addVariable("Slow", 0);
+                vis.list.addVariable("Fast", 0);
             },
         );
 
@@ -80,8 +80,8 @@ export default {
             chunker.add(
                 203,
                 (vis) => {
-                    vis.list.addVariable('Slow', i);
-                    vis.list.addVariable('Fast', fast);
+                    vis.list.assignVariable('Slow', i);
+                    vis.list.assignVariable('Fast', fast);
                 },
             );
             chunker.add(202);

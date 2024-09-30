@@ -1,59 +1,69 @@
 @import "../../common/stylesheet/index";
 
 .multiLinkedListContainer {
+  padding-top: 10px;
   display: flex;
   flex-direction: column; /* Keep lists stacked vertically */
-  justify-content: flex-end;
+  align-items: center; /* Main axis centered horizontally */
 
   .linkedListContainer {
-    display: flex; /* Makes the nodes in each list align horizontally */
+    display: flex;
     flex-direction: row; /* Aligns the nodes in a row */
-    justify-content: center;
 
     .nodeContainer {
-      display: flex; /* Makes the nodes in each list align horizontally */
-      flex-direction: row; /* Aligns the nodes in a row */
-      flex-wrap: nowrap;
-      align-items: center;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
 
 
-
-      .value {
+      .node {
         background-color: var(--linked-list-node-bg);
         border: 2px solid var(--linked-list-node-border);
-        font-size: 16px;
-        font-weight: bold;
-        color: var(--linked-list-node-value-color);
         height: 32px;
         width: 32px;
 
-        /* Flexbox properties for vertical and horizontal centering */
         display: flex;
-        align-items: center;      /* Vertically centers the text */
-        justify-content: center;
+        flex-direction: column; /* Node elements in a column*/
+        align-items: center;
+        justify-content: flex-start;
 
         &.visited {
           background-color: var(--linked-list-highlighted-bg);
           border: 2px solid var(--linked-list-highlighted-border);
         }
+
         &.selected {
           background-color: var(--linked-list-selected-bg);
           border: 2px solid var(--linked-list-selected-border);
+        }
+
+        .value {
+          padding-top: 6px;
+          font-size: 16px;
+          font-weight: bold;
+          color: var(--linked-list-node-value-color);
+
+        }
+
+        .label {
+          vertical-align: center;
+          font-size: 20px;
+          font-weight: bold;
+          color: var(--linked-list-caption-color);
+          transform: translateY(10px); /* translate down by 20 pixels */
+
+          display: grid;
         }
 
       }
 
       .symbol {
         vertical-align: center;
+        color: var(--linked-list-node-bg);
+
       }
 
-      .label {
-        vertical-align: center;
-        font-size: 20px;
-        font-weight: bold;
-        color: var(--linked-list-caption-color);
-        transform: translateY(20px); /* translate down by 20 pixels */
-      }
+
 
     }
   }
