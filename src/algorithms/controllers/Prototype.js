@@ -46,7 +46,6 @@ export default {
             }, [n1, n2]);
         };
 
-
         // Initialise
         chunker.add(
             1,
@@ -65,39 +64,26 @@ export default {
         );
 
         chunker.add(
-            201,
+            3,
             (vis) => {
                 vis.list.splitList(2,1);
-                vis.list.addVariable("Slow", 0);
-                vis.list.addVariable("Fast", 0);
+                vis.list.addVariable("example", 0);
+            },
+        );
+        chunker.add(
+            4,
+            (vis) => {
+                vis.list.setIndex(1,0,0);
             },
         );
 
-        chunker.add(202);
-
-        for (let i = 1; i < n / 2; i++) {
-            let fast = i * 2;
-            slow = i;
-            chunker.add(
-                203,
-                (vis) => {
-                    vis.list.setIndex(1,0);
-                    vis.list.assignVariable('Slow', i);
-                    vis.list.assignVariable('Fast', fast);
-                },
-            );
-            chunker.add(202);
-        }
-
         chunker.add(
-            204,
+            5,
             (vis) => {
-                vis.list.clearVariables();
-                vis.list.assignVariable("Left", 0);
-                vis.list.assignVariable("Right", slow + 1);
-                vis.list.select(slow + 1, );
-            })
+                vis.list.shiftRight(1,0,1);
+            },
+        );
+
+
     }
-
-
 };

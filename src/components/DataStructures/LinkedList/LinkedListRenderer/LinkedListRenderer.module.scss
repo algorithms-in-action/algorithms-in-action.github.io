@@ -55,21 +55,16 @@
           font-size: 20px;
           font-weight: bold;
           color: var(--linked-list-caption-color);
-          transform: translateY(10px); /* translate down by 20 pixels */
+          transform: translateY(5px); /* translate down*/
 
           display: grid;
         }
-
       }
 
       .symbol {
         vertical-align: center;
         color: var(--linked-list-node-bg);
-
       }
-
-
-
     }
   }
 }

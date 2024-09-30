@@ -19,12 +19,12 @@ class LinkedListTracer extends Tracer{
     }
 
     // Sets multiple linked lists
-    addList(listData = [], format = "values", listIndex = -1, layerIndex = 0) {
-        const index = listIndex >= 0 ? listIndex : this.lists.length;
+    addList(listData = [], format = "values", listIndex = null, layerIndex = 0) {
+        const index = listIndex ? listIndex : this.lists.length;
         if (!this.lists) {
             this.lists();
         }
-        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0};
+        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0, unitShift: 0};
             for (let value of listData) {
                 if (format === "values") {
                     const newNode = this.createNode(value);
@@ -104,8 +104,8 @@ class LinkedListTracer extends Tracer{
     }
 
     // Swaps two nodes by index within a specific list
-    swapNodes(index1, index2, listIndex = 0) {
-        const list = this.lists[listIndex];
+    swapNodes(index1, index2, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
         if (list && index1 >= 0 && index1 < list.size && index2 >= 0 && index2 < list.size) {
             const temp = list.data[index1].value;
             list.data[index1].value = list.data[index2].value;
@@ -115,16 +115,16 @@ class LinkedListTracer extends Tracer{
     }
 
     // Patches/highlights a node at a specific index in a specific list
-    patch(index, value, listIndex = 0) {
-        const list = this.lists[listIndex];
+    patch(index, value, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
         if (list && index >= 0 && index < list.size) {
             list.data[index].patched = true;
         }
     }
 
     // Removes patch/highlight from a node
-    depatch(index, listIndex = 0) {
-        const list = this.lists[listIndex];
+    depatch(index, listIndex = 0, layerIndex) {
+        const list = this.findList(listIndex,  layerIndex);
         if (list && index >= 0 && index < list.size) {
             list.data[index].patched = false;
         }
@@ -132,7 +132,7 @@ class LinkedListTracer extends Tracer{
 
     // Selects a node or a range of nodes in a specific list
     select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
-        const list = this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
+        const list = this.findList(listIndex,  layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {
                 list.data[i].selected = true;
@@ -141,9 +141,9 @@ class LinkedListTracer extends Tracer{
     }
 
     // Deselects a node or a range of nodes in a specific list
-    deselect(startIndex, endIndex = startIndex, listIndex = 0) {
+    deselect(startIndex, endIndex = startIndex, listIndex = 0, layerIndex=0) {
 
-        const list = this.lists[listIndex];
+        const list = this.findList(listIndex,  layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {
                 list.data[i].selected = false;
@@ -153,8 +153,8 @@ class LinkedListTracer extends Tracer{
 
 
     // Adds a variable to a specific node in a specific list
-    addVariable(variable, nodeIndex, listIndex = 0) {
-        const list = this.lists[listIndex];
+    addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
         if (list && nodeIndex >= 0 && nodeIndex < list.size) {
             list.data[nodeIndex].variables.push(variable);
             this.syncChartTracer();
@@ -201,12 +201,13 @@ class LinkedListTracer extends Tracer{
             .join('\n');
     }
 
-    splitList(nodeIndex, listIndex=0 ) {
-        const {data} = this.lists.find(list => list.listIndex === listIndex);
+    splitList(nodeIndex, listIndex=0 , layerIndex = 0) {
+        const {data} = this.findList(listIndex,  layerIndex);
         const left = data.slice(0,nodeIndex);
         const right = data.slice(nodeIndex);
         // Old list
         this.deleteList(listIndex);
+
 
         // Increment lists to the right
         for (let i = listIndex; i < this.lists.length + 1; i++) {
@@ -221,11 +222,55 @@ class LinkedListTracer extends Tracer{
         this.lists.splice(listIndex, 1);
     }
 
-    setIndex(listIndex, newIndex) {
-        const listItem = this.lists.find(list => list.listIndex === listIndex);
+    setIndex(listIndex, layerIndex, newIndex) {
+        const listItem = this.findList(listIndex,  layerIndex);
         if (listItem) {
+            let i = 0;
+            while (this.findList(newIndex, i)) {
+                i++;
+            }
+            listItem.layerIndex = i;
             listItem.listIndex = newIndex;
         }
+        this.updateIndices();
+    }
+
+    findList(listIndex, layerIndex) {
+        return this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
+    }
+
+    shiftRight(shiftUnits, listIndex, layerIndex) {
+        const listItem = this.findList(listIndex,  layerIndex);
+        listItem.unitShift = listItem.unitShift + 1;
+    }
+
+    // Shifting indices to account for empty indices
+    updateIndices() {
+        const maxIndex = this.getMaxIndex();
+        let emptyIndex;
+        for (let i = 0; i <= maxIndex; i++) {
+            if(!this.findList(i,0)) {
+                emptyIndex = i;
+                break;
+            }
+        }
+        for (let list of this.lists) {
+            if (list.listIndex > emptyIndex) {
+                console.log('append');
+                list.listIndex = list.listIndex - 1;
+            }
+        }
+    }
+
+    getMaxIndex() {
+        let maxIndex = 0;  // Start with a very small number or you can use 0
+
+        for (let i = 0; i < this.lists.length; i++) {
+            if (this.lists[i].listIndex > maxIndex) {
+                maxIndex = this.lists[i].listIndex;
+            }
+        }
+        return maxIndex;
     }
 }
 

@@ -34,7 +34,7 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const {lists} = this.state;
         const layers = this.layer(lists);
-        // console.log(layers);
+        console.log(layers);
 
         return (
             <div className={styles.LayerContainer}>
@@ -44,7 +44,8 @@ class LinkedListRenderer extends Renderer {
                     <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
 
                         {layer.map((list, listIndex) => (
-                            <div className={styles.nodeContainer} key={`list-${listIndex}`}>
+                            <div className={styles.nodeContainer} key={`list-${listIndex}`}
+                                style={{transform: `translate(${list.unitShift*76}px)`}}>
                                 <AnimateSharedLayout>
 
                                 {list.data.map((node, nodeIndex) => (
@@ -105,6 +106,7 @@ class LinkedListRenderer extends Renderer {
         return this.renderData();
     }
 
+    // group by listIndex for rendering
     layer(lists = []) {
         const layers = [];
         lists.forEach(item => {

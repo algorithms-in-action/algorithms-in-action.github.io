@@ -6,8 +6,6 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
-import {PROTOTYPE_PARAM} from "./parameters";
-
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
@@ -350,7 +348,7 @@ const allalgs = {
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      sort: Pseudocode.PROTOTYPE,
+      sort: Pseudocode.jeffPrototype,
     },
     controller: {
       sort: Controller.PROTOTYPE,
