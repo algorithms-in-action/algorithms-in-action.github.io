@@ -68,6 +68,7 @@ export default {
         chunker.add(
             201,
             (vis) => {
+                vis.list.splitList(2,1);
                 vis.list.addVariable("Slow", 0);
                 vis.list.addVariable("Fast", 0);
             },

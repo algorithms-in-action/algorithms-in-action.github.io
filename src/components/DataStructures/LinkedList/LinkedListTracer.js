@@ -19,11 +19,12 @@ class LinkedListTracer extends Tracer{
     }
 
     // Sets multiple linked lists
-    addList(listData = [], format = "values", listIndex = 0, layerIndex = 0) {
+    addList(listData = [], format = "values", listIndex = -1, layerIndex = 0) {
+        const index = listIndex >= 0 ? listIndex : this.lists.length;
         if (!this.lists) {
             this.lists();
         }
-        const list = {listIndex:this.lists.length, head: null, tail: null, data: [], layerIndex: layerIndex};
+        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex};
             for (let value of listData) {
                 if (format === "values") {
                     const newNode = this.createNode(value);
@@ -199,20 +200,30 @@ class LinkedListTracer extends Tracer{
     }
 
     splitList(nodeIndex, listIndex=0 ) {
-        const {data} = this.lists[listIndex];
-        const left = data.slice(0,nodeIndex-1);
-        const right = data.slice(nodeIndex-1);
+        const {data} = this.lists.find(list => list.listIndex === listIndex);
+        const left = data.slice(0,nodeIndex);
+        const right = data.slice(nodeIndex);
+        // Old list
         this.deleteList(listIndex);
-        this.addList(left,"nodes");
-        this.addList(right, "nodes");
+
+        // Increment lists to the right
+        for (let i = listIndex; i < this.lists.length + 1; i++) {
+            this.setIndex(i, i+1);
+        }
+
+        this.addList(left,"nodes", listIndex);
+        this.addList(right, "nodes", listIndex + 1);
     }
 
     deleteList(listIndex) {
         this.lists.splice(listIndex, 1);
     }
 
-    setLayer(listIndex, layer) {
-        this.lists[listIndex].layerIndex = layer;
+    setIndex(listIndex, newIndex) {
+        const listItem = this.lists.find(list => list.listIndex === listIndex);
+        if (listItem) {
+            listItem.listIndex = newIndex;
+        }
     }
 }
 

@@ -34,7 +34,6 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const {lists} = this.state;
         const layers = this.layer(lists);
-        console.log(lists);
         console.log(layers);
 
         return (
@@ -106,10 +105,10 @@ class LinkedListRenderer extends Renderer {
     layer(lists = []) {
         const layers = [];
         lists.forEach(item => {
-            if (!layers[item.layerIndex]) {
-                layers[item.layerIndex] = [];
+            if (!layers[item.listIndex]) {
+                layers[item.listIndex] = [];
             }
-            layers[item.layerIndex].push(item);
+            layers[item.listIndex].push(item);
         });
         return layers;
     }

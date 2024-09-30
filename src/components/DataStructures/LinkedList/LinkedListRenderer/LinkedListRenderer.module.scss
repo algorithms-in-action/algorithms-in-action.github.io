@@ -3,20 +3,22 @@
 .LayerContainer {
   padding-top: 10px;
   display: flex;
-  flex-direction: column; /* Keep lists stacked vertically */
-  align-items: center; /* Main axis centered horizontally */
-  justify-content: space-between;
+  flex-direction: row; /* primary horizontal stack  */
+  justify-content: center; /* Main axis centered horizontally */
+  margin: 10px 30px 10px 10px; /* top border*/
+
 
   .linkedListContainer {
     display: flex;
-    flex-direction: row; /* Aligns the nodes in a row */
-    justify-content: space-between;
+    flex-direction: column; /* secondary vertical stack */
+    align-items: flex-start; /* Separate layers align at start*/
+
 
     .nodeContainer {
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      margin: 0 20px; /* Gaps between lists */
+      margin: 15px 10px 15px 10px; /* gap between vertical layers */
 
 
       .node {
