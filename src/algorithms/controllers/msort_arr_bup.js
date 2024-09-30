@@ -325,6 +325,8 @@ export function run_msort() {
 
             assignVarToA(vis, 'left', undefined, size); // ap1 replaces left
             assignVarToA(vis, 'ap1', c_ap1, size);
+            assignVarToA(vis, 'mid', c_mid, size);
+            assignVarToA(vis, 'right', c_right, size);
 
           }
         }, [A, ap1, left, mid, right, runlength]);
