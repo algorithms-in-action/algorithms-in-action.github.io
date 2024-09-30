@@ -19,11 +19,13 @@ class LinkedListTracer extends Tracer{
     }
 
     // Sets multiple linked lists
-    addList(listData = [], format = "values", listIndex = null, layerIndex = 0) {
-        const index = listIndex ? listIndex : this.lists.length;
+    addList(listData = [], format = "values", listIndex = -1, layerIndex = 0) {
+        const index = listIndex >= 0 ? listIndex : this.lists.length;
         if (!this.lists) {
             this.lists();
         }
+
+        // Generating a list
         const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0, unitShift: 0};
             for (let value of listData) {
                 if (format === "values") {
@@ -33,6 +35,9 @@ class LinkedListTracer extends Tracer{
                 else if (format === "nodes") {
                     this.appendToList(value, list);
                 }
+        }
+        if (this.findList(listIndex,layerIndex)) {
+            this.moveList(listIndex,layerIndex,listIndex+1,'insert');
         }
         this.lists.push(list);
     }
@@ -208,40 +213,52 @@ class LinkedListTracer extends Tracer{
         // Old list
         this.deleteList(listIndex);
 
-
-        // Increment lists to the right
-        for (let i = listIndex; i < this.lists.length + 1; i++) {
-            this.setIndex(i, i+1);
-        }
-
-        this.addList(left,"nodes", listIndex);
-        this.addList(right, "nodes", listIndex + 1);
+        this.addList(left,"nodes", listIndex, layerIndex);
+        this.addList(right, "nodes", listIndex + 1, layerIndex);
     }
 
     deleteList(listIndex) {
         this.lists.splice(listIndex, 1);
     }
 
-    setIndex(listIndex, layerIndex, newIndex) {
-        const listItem = this.findList(listIndex,  layerIndex);
-        if (listItem) {
-            let i = 0;
-            while (this.findList(newIndex, i)) {
-                i++;
-            }
-            listItem.layerIndex = i;
-            listItem.listIndex = newIndex;
-        }
-        this.updateIndices();
-    }
-
     findList(listIndex, layerIndex) {
         return this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
     }
 
+    // Visual shift right, no change to index
     shiftRight(shiftUnits, listIndex, layerIndex) {
         const listItem = this.findList(listIndex,  layerIndex);
         listItem.unitShift = listItem.unitShift + 1;
+    }
+
+    // moving index location
+    moveList(oldIndex,oldLayer,newIndex, method) {
+        let List = this.findList(oldIndex,oldLayer);
+        if (this.findList(newIndex, 0)) {
+            // if stack, place at last open layer.
+            if (method==='stack') {
+                let i = 0;
+                while (this.findList(newIndex, i)) {
+                    i++;
+                }
+                List.layerIndex = i;
+                List.listIndex = newIndex;
+
+                // Stacking may result in empty indices
+                this.updateIndices();
+            }
+
+            // if insert, shift all to right.
+            else if (method==='insert') {
+                console.log('inserting');
+                this.moveList(newIndex,0,newIndex+1, method = 'insert');
+            }
+        }
+        // directly move
+        else {
+            List.layerIndex = 0;
+            List.listIndex = newIndex;
+        }
     }
 
     // Shifting indices to account for empty indices
@@ -256,14 +273,13 @@ class LinkedListTracer extends Tracer{
         }
         for (let list of this.lists) {
             if (list.listIndex > emptyIndex) {
-                console.log('append');
                 list.listIndex = list.listIndex - 1;
             }
         }
     }
 
     getMaxIndex() {
-        let maxIndex = 0;  // Start with a very small number or you can use 0
+        let maxIndex = 0;
 
         for (let i = 0; i < this.lists.length; i++) {
             if (this.lists[i].listIndex > maxIndex) {
@@ -271,6 +287,17 @@ class LinkedListTracer extends Tracer{
             }
         }
         return maxIndex;
+    }
+
+    getMaxSize() {
+        let maxSize = 0;
+
+        for (let i = 0; i < this.lists.length; i++) {
+            if (this.lists[i].size > maxSize) {
+                maxSize = this.lists[i].size;
+            }
+        }
+        return maxSize;
     }
 }
 

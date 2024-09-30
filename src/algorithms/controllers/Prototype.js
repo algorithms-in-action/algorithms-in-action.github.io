@@ -55,25 +55,27 @@ export default {
         );
 
         // Split List into two sections
+
         chunker.add(
             2,
             (vis) => {
+                vis.list.splitList(vis.list.findList(0,0).size / 2,0,0);
                 vis.list.select(0);
-                vis.list.splitList(5);
             },
         );
 
         chunker.add(
             3,
             (vis) => {
-                vis.list.splitList(2,1);
+                vis.list.splitList(vis.list.findList(0,0).size / 2,0,0);
                 vis.list.addVariable("example", 0);
             },
         );
         chunker.add(
             4,
             (vis) => {
-                vis.list.setIndex(1,0,0);
+                vis.list.moveList(1,0,0, 'stack');
+                vis.list.clearVariables();
             },
         );
 

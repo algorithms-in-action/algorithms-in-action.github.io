@@ -64,6 +64,10 @@
       .symbol {
         vertical-align: center;
         color: var(--linked-list-node-bg);
+
+        &.diagonal {
+          transform: translateY(35px); /* translate down*/
+        }
       }
     }
   }

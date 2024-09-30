@@ -17,16 +17,27 @@ class LinkedListRenderer extends Renderer {
     // Define the symbols
     renderSymbols() {
         return (
-            <svg style={{ display: 'none' }}>
+            <svg style={{display: 'none'}}>
                 <symbol id="null-marker" viewBox="0 0 100 100">
-                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20" />
-                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20" />
+                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20"/>
+                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20"/>
                 </symbol>
 
                 <symbol id="arrow-symbol" viewBox="0 0 100 100">
-                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2" />
-                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none" />
+                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2"/>
+                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none"/>
                 </symbol>
+
+                <symbol id="downwards-diagonal" viewBox="0 0 100 100">
+                    <line x1="30" y1="30" x2="70" y2="70" stroke="white" strokeWidth="2"/>
+                    <polyline points="50,70 70,70 70,50" stroke="white" strokeWidth="2" fill="none"/>
+                </symbol>
+
+                <symbol id="upwards-diagonal" viewBox="0 0 100 100">
+                    <line x1="30" y1="70" x2="70" y2="30" stroke="white" strokeWidth="2"/>
+                    <polyline points="50,30 70,30 70,50" stroke="white" strokeWidth="2" fill="none"/>
+                </symbol>
+
             </svg>
         );
     }
@@ -85,9 +96,16 @@ class LinkedListRenderer extends Renderer {
                                                     className={styles.symbol}
                                                     layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
                                                 >
-                                                    <svg className={styles.symbol} width="40" height="40">
+                                                    <svg className={classes(styles.symbol)} width="40"
+                                                         height="40">
                                                         <use href="#arrow-symbol"/>
                                                     </svg>
+
+
+                                                    {// upwards and downwards diagonal arrows
+                                                        /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
+                                                        <use href="#downwards-diagonal"/>
+                                                    </svg> */}
                                                 </motion.div>
                                             </div>
 
@@ -95,7 +113,7 @@ class LinkedListRenderer extends Renderer {
                                         </>
                                     </React.Fragment>
 
-                                    ))}
+                                ))}
                                 </AnimateSharedLayout>
                             </div>))}
                     </div>))}
