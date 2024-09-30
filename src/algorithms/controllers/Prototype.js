@@ -51,7 +51,7 @@ export default {
         chunker.add(
             1,
             (vis, list) => {
-                vis.list.set(list);
+                vis.list.addList(list);
             },
             [nodes]
         );
@@ -61,6 +61,8 @@ export default {
             2,
             (vis) => {
                 vis.list.select(0);
+                vis.list.splitList(5);
+
             },
         );
 

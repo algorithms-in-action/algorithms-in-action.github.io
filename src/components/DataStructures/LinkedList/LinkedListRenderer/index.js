@@ -44,33 +44,35 @@ class LinkedListRenderer extends Renderer {
                             <>
                                 <div className={styles.nodeContainer} key={`node-${listIndex}-${nodeIndex}`}>
                                     <AnimateSharedLayout>
-                                    {/* Nodes */}
-                                    <motion.div
-                                        layoutId={`list-${listIndex}-node-${nodeIndex}`}
-                                        className={
-                                        classes(styles.node,
-                                            node.patched && styles.visited,
-                                            node.selected && styles.selected
-                                        )}
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        transition={{type: 'spring', stiffness: 100}}
-                                    >
-                                        <div className={classes(styles.value)}>
-                                            {node.value}
-                                        </div>
 
-                                        {/* Labels */}
-                                        {node.variables.map(variable => (
-                                            <div className={styles.label}>
-                                                <motion.div
-                                                    className={styles.label}
-                                                    layoutId={node.variables}
-                                                >
-                                                    {variable}
-                                                </motion.div>
-                                            </div>))}
-                                    </motion.div>
+                                        {/* Nodes */}
+                                        <motion.div
+                                            layoutId={`list-${listIndex}-node-${nodeIndex}`}
+                                            className={
+                                                classes(styles.node,
+                                                    node.patched && styles.visited,
+                                                    node.selected && styles.selected
+                                                )}
+                                            initial={{opacity: 0}}
+                                            animate={{opacity: 1}}
+                                            transition={{type: 'spring', stiffness: 100}}
+                                        >
+                                            <div className={classes(styles.value)}>
+                                                {node.value}
+                                            </div>
+
+                                            {/* Labels */}
+                                            {node.variables.map(((variable) => (
+                                                <div className={styles.label}>
+                                                    <motion.div
+                                                        className={styles.label}
+                                                        layoutId={node.variables}
+                                                    >
+                                                        {variable}
+                                                    </motion.div>
+                                                </div>)))}
+
+                                        </motion.div>
                                 </AnimateSharedLayout>
                                 </div>
                                 <div>

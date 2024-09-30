@@ -20,19 +20,30 @@ class LinkedListTracer extends Tracer{
     }
 
     // Sets multiple linked lists
-    set(listData = []) {
-        this.init();
-        const list = { head: null, tail: null, size: 0, data: [] };
-        for (let value of listData) {
-            console.log(value);
-            this.appendToList(value, list);
+    addList(listData = [], format = "values") {
+        if (!this.lists) {
+            this.init();
+        }
+        const list = { head: null, tail: null, size: 0, data: [],listIndex:listData.length};
+            for (let value of listData) {
+                if (format === "values") {
+                    const newNode = this.createNode(value);
+                    this.appendToList(newNode, list);
+                }
+                else if (format === "nodes") {
+                    this.appendToList(value, list);
+                }
         }
         this.lists.push(list);
     }
 
-    // Appends a value to a specific linked list
-    appendToList(value, list) {
+    createNode(value) {
         const newNode = { value, next: null, patched: false, selected: false, variables: [] };
+        return newNode;
+    }
+
+    // Appends a value to a specific linked list
+    appendToList(newNode, list) {
         if (!list.head) {
             list.head = newNode;
             list.tail = newNode;
@@ -186,6 +197,15 @@ class LinkedListTracer extends Tracer{
         return this.lists
             .map((list, index) => `List ${index + 1}: ${list.data.map((node) => node.value).join(' -> ')}`)
             .join('\n');
+    }
+
+    splitList(nodeIndex, listIndex=0) {
+        const {data} = this.lists[listIndex];
+        const left = data.slice(0,nodeIndex-1);
+        const right = data.slice(nodeIndex-1);
+        this.addList(left, "nodes");
+        this.addList(right, "nodes");
+
     }
 }
 
