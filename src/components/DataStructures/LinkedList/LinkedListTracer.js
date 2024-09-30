@@ -2,7 +2,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
-import { cloneDeepWith } from 'lodash';
 // eslint-disable-next-line import/no-unresolved
 import Tracer from "../common/Tracer"; // Assume we have a renderer for linked lists
 import LinkedListRenderer from './LinkedListRenderer';
@@ -14,6 +13,7 @@ class LinkedListTracer extends Tracer{
     }
 
     init() {
+        this.key = 0;
         this.chartTracer = null;
         this.lists = [];
     }
@@ -26,7 +26,7 @@ class LinkedListTracer extends Tracer{
         }
 
         // Generating a list
-        const list = {listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0, unitShift: 0};
+        const list = {key: this.key, listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0, unitShift: 0};
             for (let value of listData) {
                 if (format === "values") {
                     const newNode = this.createNode(value);
@@ -39,6 +39,7 @@ class LinkedListTracer extends Tracer{
         if (this.findList(listIndex,layerIndex)) {
             this.moveList(listIndex,layerIndex,listIndex+1,'insert');
         }
+        this.key++;
         this.lists.push(list);
     }
 
@@ -207,18 +208,18 @@ class LinkedListTracer extends Tracer{
     }
 
     splitList(nodeIndex, listIndex=0 , layerIndex = 0) {
-        const {data} = this.findList(listIndex,  layerIndex);
+        const {key, data} = this.findList(listIndex,  layerIndex);
         const left = data.slice(0,nodeIndex);
         const right = data.slice(nodeIndex);
         // Old list
-        this.deleteList(listIndex);
+        this.deleteList(key);
 
         this.addList(left,"nodes", listIndex, layerIndex);
         this.addList(right, "nodes", listIndex + 1, layerIndex);
     }
 
-    deleteList(listIndex) {
-        this.lists.splice(listIndex, 1);
+    deleteList(key) {
+        this.lists = this.lists.filter(list => list.key !== key);
     }
 
     findList(listIndex, layerIndex) {
@@ -237,6 +238,7 @@ class LinkedListTracer extends Tracer{
         if (this.findList(newIndex, 0)) {
             // if stack, place at last open layer.
             if (method==='stack') {
+                console.log('stacking');
                 let i = 0;
                 while (this.findList(newIndex, i)) {
                     i++;
@@ -251,7 +253,9 @@ class LinkedListTracer extends Tracer{
             // if insert, shift all to right.
             else if (method==='insert') {
                 console.log('inserting');
-                this.moveList(newIndex,0,newIndex+1, method = 'insert');
+                this.moveList(newIndex,0,newIndex+1, 'insert');
+                List.layerIndex = 0;
+                List.listIndex = newIndex;
             }
         }
         // directly move

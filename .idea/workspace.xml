@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': shift right for list, fix for empty index counts">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'fix': Issue with update indices and stacking">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -115,7 +113,7 @@
       <workItem from="1727495974535" duration="26728000" />
       <workItem from="1727654844546" duration="10811000" />
       <workItem from="1727666934294" duration="12026000" />
-      <workItem from="1727681905135" duration="12415000" />
+      <workItem from="1727681905135" duration="15401000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -205,7 +203,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727687986316</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="'fix': Issue with update indices and stacking">
+      <option name="closed" value="true" />
+      <created>1727694804330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1727694804330</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -237,6 +243,7 @@
     <MESSAGE value="'fix': Split function working as intended now" />
     <MESSAGE value="'fix': Labels rendering messing up positioning of nodes" />
     <MESSAGE value="'feat': shift right for list, fix for empty index counts" />
-    <option name="LAST_COMMIT_MESSAGE" value="'feat': shift right for list, fix for empty index counts" />
+    <MESSAGE value="'fix': Issue with update indices and stacking" />
+    <option name="LAST_COMMIT_MESSAGE" value="'fix': Issue with update indices and stacking" />
   </component>
 </project>

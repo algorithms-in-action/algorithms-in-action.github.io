@@ -63,16 +63,21 @@ export default {
                 vis.list.select(0);
             },
         );
-
         chunker.add(
             3,
             (vis) => {
                 vis.list.splitList(vis.list.findList(0,0).size / 2,0,0);
-                vis.list.addVariable("example", 0);
+            },
+        );
+
+        chunker.add(
+            4,
+            (vis) => {
+                vis.list.splitList(vis.list.findList(0,0).size / 2,0,0);
             },
         );
         chunker.add(
-            4,
+            5,
             (vis) => {
                 vis.list.moveList(1,0,0, 'stack');
                 vis.list.clearVariables();
