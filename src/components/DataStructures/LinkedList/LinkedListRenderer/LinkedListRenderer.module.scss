@@ -1,19 +1,22 @@
 @import "../../common/stylesheet/index";
 
-.multiLinkedListContainer {
+.LayerContainer {
   padding-top: 10px;
   display: flex;
   flex-direction: column; /* Keep lists stacked vertically */
   align-items: center; /* Main axis centered horizontally */
+  justify-content: space-between;
 
   .linkedListContainer {
     display: flex;
     flex-direction: row; /* Aligns the nodes in a row */
+    justify-content: space-between;
 
     .nodeContainer {
       display: flex;
       flex-direction: row;
       align-items: flex-start;
+      margin: 0 20px; /* Gaps between lists */
 
 
       .node {

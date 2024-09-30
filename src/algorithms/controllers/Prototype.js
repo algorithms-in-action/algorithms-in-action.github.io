@@ -62,7 +62,6 @@ export default {
             (vis) => {
                 vis.list.select(0);
                 vis.list.splitList(5);
-
             },
         );
 

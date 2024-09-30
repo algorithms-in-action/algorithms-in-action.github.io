@@ -32,75 +32,87 @@ class LinkedListRenderer extends Renderer {
     }
 
     renderData() {
-        const { lists } = this.state;
+        const {lists} = this.state;
+        const layers = this.layer(lists);
+        console.log(lists);
+        console.log(layers);
+
         return (
-            <div className={styles.multiLinkedListContainer}>
+            <div className={styles.LayerContainer}>
                 {this.renderSymbols()}
 
+                {layers.map((layer, layerIndex) => (
+                    <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
 
-                    {lists.map((list, listIndex) => (
-                        <div className={styles.linkedListContainer} key={`list-${listIndex}`}>
-                            {list.data.map((node, nodeIndex) => (
-                            <>
-                                <div className={styles.nodeContainer} key={`node-${listIndex}-${nodeIndex}`}>
-                                    <AnimateSharedLayout>
+                        {layer.map((list, listIndex) => (
+                            <div className={styles.nodeContainer} key={`list-${listIndex}`}>
+                                <AnimateSharedLayout>
 
-                                        {/* Nodes */}
-                                        <motion.div
-                                            layoutId={`list-${listIndex}-node-${nodeIndex}`}
-                                            className={
-                                                classes(styles.node,
+                                {list.data.map((node, nodeIndex) => (
+
+                                    <React.Fragment key={`node-${listIndex}-${nodeIndex}`}>
+                                        <>
+                                            {/* Nodes */}
+                                            <motion.div
+                                                layoutId={`list-${listIndex}-node-${nodeIndex}`}
+                                                className={classes(styles.node,
                                                     node.patched && styles.visited,
                                                     node.selected && styles.selected
                                                 )}
-                                            initial={{opacity: 0}}
-                                            animate={{opacity: 1}}
-                                            transition={{type: 'spring', stiffness: 100}}
-                                        >
-                                            <div className={classes(styles.value)}>
-                                                {node.value}
-                                            </div>
+                                                initial={{opacity: 0}}
+                                                animate={{opacity: 1}}
+                                                transition={{type: 'spring', stiffness: 100}}
+                                            >
+                                                <div className={classes(styles.value)}>
+                                                    {node.value}
+                                                </div>
+                                            </motion.div>
 
                                             {/* Labels */}
-                                            {node.variables.map(((variable) => (
-                                                <div className={styles.label}>
+                                            {node.variables.map((variable, variableIndex) => (
+                                                <div className={styles.label} key={`variable-${variableIndex}`}>
                                                     <motion.div
                                                         className={styles.label}
-                                                        layoutId={node.variables}
+                                                        layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`} // Unique layoutId
                                                     >
                                                         {variable}
                                                     </motion.div>
-                                                </div>)))}
+                                                </div>))}
 
-                                        </motion.div>
+                                            {/* Arrows */}
+                                            <div className={styles.symbol}>
+                                                <motion.div
+                                                    className={styles.symbol}
+                                                    layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
+                                                >
+                                                    <svg className={styles.symbol} width="40" height="40">
+                                                        <use href="#arrow-symbol"/>
+                                                    </svg>
+                                                </motion.div>
+                                            </div>
+                                        </>
+                                    </React.Fragment>
+                                    ))}
                                 </AnimateSharedLayout>
-                                </div>
-                                <div>
-                                    {/* Arrows */}
-                                    <div className={styles.symbol}>
-                                        <motion.div
-                                            className={styles.symbol}
-                                            layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
-                                        >
-                                            <svg className={styles.symbol} width="40" height="40">
-                                                <use href="#arrow-symbol"/>
-                                            </svg>
-                                        </motion.div>
-                                    </div>
-                                </div>
-                            </>
-                            ))}
-                    </div>
-                    )
-                )}
-        </div>
-    )
-}
+                            </div>))}
+                    </div>))}
+            </div>)
+    }
 
     render() {
         return this.renderData();
     }
 
+    layer(lists = []) {
+        const layers = [];
+        lists.forEach(item => {
+            if (!layers[item.layerIndex]) {
+                layers[item.layerIndex] = [];
+            }
+            layers[item.layerIndex].push(item);
+        });
+        return layers;
+    }
 }
 
 export default LinkedListRenderer;

@@ -6,7 +6,6 @@ import { cloneDeepWith } from 'lodash';
 // eslint-disable-next-line import/no-unresolved
 import Tracer from "../common/Tracer"; // Assume we have a renderer for linked lists
 import LinkedListRenderer from './LinkedListRenderer';
-import ListRenderer from "../List/ListRenderer";
 
 class LinkedListTracer extends Tracer{
 
@@ -20,11 +19,11 @@ class LinkedListTracer extends Tracer{
     }
 
     // Sets multiple linked lists
-    addList(listData = [], format = "values") {
+    addList(listData = [], format = "values", listIndex = 0, layerIndex = 0) {
         if (!this.lists) {
-            this.init();
+            this.lists();
         }
-        const list = { head: null, tail: null, size: 0, data: [],listIndex:listData.length};
+        const list = {listIndex:this.lists.length, head: null, tail: null, data: [], layerIndex: layerIndex};
             for (let value of listData) {
                 if (format === "values") {
                     const newNode = this.createNode(value);
@@ -52,7 +51,6 @@ class LinkedListTracer extends Tracer{
             list.tail = newNode;
         }
         list.data.push(newNode);
-        list.size++;
     }
 
     // Appends a value to a specific list by index
@@ -150,6 +148,7 @@ class LinkedListTracer extends Tracer{
         }
     }
 
+
     // Adds a variable to a specific node in a specific list
     addVariable(variable, nodeIndex, listIndex = 0) {
         const list = this.lists[listIndex];
@@ -199,13 +198,21 @@ class LinkedListTracer extends Tracer{
             .join('\n');
     }
 
-    splitList(nodeIndex, listIndex=0) {
+    splitList(nodeIndex, listIndex=0 ) {
         const {data} = this.lists[listIndex];
         const left = data.slice(0,nodeIndex-1);
         const right = data.slice(nodeIndex-1);
-        this.addList(left, "nodes");
+        this.deleteList(listIndex);
+        this.addList(left,"nodes");
         this.addList(right, "nodes");
+    }
 
+    deleteList(listIndex) {
+        this.lists.splice(listIndex, 1);
+    }
+
+    setLayer(listIndex, layer) {
+        this.lists[listIndex].layerIndex = layer;
     }
 }
 
