@@ -102,7 +102,7 @@ as possible with BST
 
 \\Code{
 Main
-AVLT_Build(keys)  // return the AVL tree that results from inserting
+AVLT_Build(keys)  // return the AVL tree that results from inserting \\B AVLT_Build(keys)
                   // all 'keys' into an initially empty tree
 \\In{
     t <- Empty \\B t = Empty

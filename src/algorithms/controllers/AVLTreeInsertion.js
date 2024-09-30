@@ -571,16 +571,24 @@ export default {
             return root;
         }
 
-        // Populate the ArrayTracer using nodes
+        // Start the first chunk of the algorithm
         chunker.add(
-            't = Empty',
+            'AVLT_Build(keys)',
             (vis, elements) => {
                 vis.array.set(elements);
                 vis.graph.isWeighted = true;
+            },
+            [nodes],
+            0);
+
+        // Populate the ArrayTracer using nodes
+        chunker.add(
+            't = Empty',
+            (vis) => {
                 vis.graph.setFunctionName('Tree is Empty');
                 vis.graph.setFunctionInsertText(``);
             },
-            [nodes],
+            [],
             0
         );
 
