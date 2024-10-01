@@ -397,11 +397,15 @@ export default {
         function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
             chunker.add('AVLT_Insert(t, k)',
-                (vis, k) => {
+                (vis, k, d, index) => {
+                    if (d === 1) {
+                        vis.array.depatch(index - 1);
+                        vis.array.patch(index);
+                    }
                     vis.graph.setFunctionName("AVLT_Insert");
                     vis.graph.setFunctionInsertText("( t , " + k + " )");
                 },
-                [key],
+                [key, depth, currIndex],
                 depth
             );
 
@@ -594,42 +598,44 @@ export default {
             return root;
         }
 
-        // Start the first chunk of the algorithm
+        // init the tree with the first key
         chunker.add(
-            'AVLT_Build(keys)',
+            'AVLT_Insert(t, k)',
             (vis, elements) => {
                 vis.array.set(elements);
                 vis.graph.isWeighted = true;
+                vis.graph.setFunctionName('Tree is Empty');
+                vis.graph.setFunctionInsertText(``);
+                vis.array.patch(0);
             },
             [nodes],
-            0);
+            1
+        );
 
         // Populate the ArrayTracer using nodes
         chunker.add(
-            't = Empty',
-            (vis) => {
-                vis.graph.setFunctionName('Tree is Empty');
-                vis.graph.setFunctionInsertText(``);
+            'if t = Empty',
+            (vis, k) => {
+                vis.graph.setFunctionName("AVLT_Insert");
+                vis.graph.setFunctionInsertText("( t , " + k + " )");
             },
-            [],
-            0
+            [nodes[0]],
+            1
         );
 
-        chunker.add('for each k in keys', (vis) => null, [], 0);
-        let globalRoot = null;
+        chunker.add('n = new Node',
+            (vis, k) => {
+                vis.graph.addNode(k, k, 1);
+                vis.graph.layoutAVL(k, true);
+            },
+            [nodes[0]],
+            1
+        );
 
-        for (let i = 0; i < nodes.length; i++) {
-            chunker.add(
-                't = AVLT_Insert(t, k)',
-                (vis, index) => {
-                    if (index > 0) vis.array.depatch(index - 1);
-                    vis.array.patch(index);
-                },
-                [i],
-                0
-            );
+        let globalRoot = new AVLNode(nodes[0], 1);
+
+        for (let i = 1; i < nodes.length; i++) {
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
-            chunker.add('for each k in keys', (vis) => null, [], 0);
         }
 
         chunker.add('done',
@@ -641,7 +647,7 @@ export default {
                 vis.graph.clearSelect_Circle_Count();
             },
             [],
-            0
+            1
         );
         return globalRoot;
     }

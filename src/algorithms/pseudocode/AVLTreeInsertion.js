@@ -102,18 +102,6 @@ as possible with BST
 
 \\Code{
 Main
-AVLT_Build(keys)  // return the AVL tree that results from inserting \\B AVLT_Build(keys)
-                  // all 'keys' into an initially empty tree
-\\In{
-    t <- Empty \\B t = Empty
-    for each k in keys \\B for each k in keys
-    \\In{
-        t <- AVLT_Insert(t, k) \\B t = AVLT_Insert(t, k)
-    \\In}
-    // Done \\B done
-\\In}
-
-//============================================================================
 \\Note{
   This is recursive, with most of the work done as we return back up from
   recursive calls. This should be visualised in some way. Perhaps
@@ -173,7 +161,7 @@ AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
       rotations are needed:)
     \\Expl}
   \\In}
-
+  // Done \\B done
 //============================================================================
 \\Note{ Might be best to expand these inline rather than having extra
 functions. Functions are always visible, which is distracting when things
