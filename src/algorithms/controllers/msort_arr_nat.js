@@ -175,19 +175,19 @@ export function run_msort() {
     let A = nodes;
     let B = [...entire_num_array].fill(undefined);
     let runlength = 1; // length of run to merge
-    let runcount = 2; // number of runs merged
+    let runcount = 0; // number of runs merged
 
     chunker.add('Main', (vis, a, b, c_length, c_count) => {
       vis.array.set(a, 'msort_arr_nat');
-      //if (c_length === 1) {
-      vis.array.setLargestValue(maxValue);
-      //} 
+      if (runcount === 0) {
+        vis.array.setLargestValue(maxValue);
+      }
       if (isMergeCopyExpanded()) {
         vis.arrayB.set(b, 'msort_arr_nat');
         vis.arrayB.setLargestValue(maxValue);
       }
 
-    }, [A, B, size]);
+    }, [A, B, size, runcount]);
 
     /*chunker.add('runlength', (vis, c_rlength) => {
       displayRunlength(vis, c_rlength, size);
@@ -218,12 +218,12 @@ export function run_msort() {
         assignVarToA(vis, 'left', c_left, size);
       }, [left]);
 
-      while (left <= size) {
+      do {
 
         let mid = left;
 
         chunker.add('MergeAllWhile', (vis, c_left, c_mid, c_right) => {
-          highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorB);
+          //highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorB);
         }, [left, mid]);
 
         chunker.add('mid', (vis, c_mid, c_rlength) => {
@@ -445,8 +445,11 @@ export function run_msort() {
           }, [A, B, left, right, runlength]);
         }
         let left2 = left; // this is the old left before it was updated
-
+        //if (right + 1 <= size) {
         left = right + 1;
+        //} else {
+        //  left = 0;
+        //}
         runcount = runcount + 1;
         chunker.add('runcount+', (vis, c_rlength) => {
           /*assignVarToA(vis, 'left', undefined, size);
@@ -466,9 +469,9 @@ export function run_msort() {
 
         }, [left2, left, right]);
 
-      }
+      } while (left < size);
 
-    } while (runcount <= 1);
+    } while (runcount > 1);
 
     chunker.add('Done', (vis) => {
       for (let i = 0; i < size; i++) {
