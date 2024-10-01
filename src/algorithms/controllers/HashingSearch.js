@@ -1,29 +1,33 @@
-import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
-import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import {
   hash1,
   setIncrement,
-  HASH_TABLE,
+  HASH_GRAPH,
   EMPTY_CHAR,
-  Colors
-} from './HashingCommon.js';
+  Colors,
+  INDEX,
+  POINTER,
+  POINTER_VALUE,
+  SMALL_SIZE,
+  DELETE_CHAR,
+  HASH_TYPE,
+  newCycle
+} from './HashingCommon';
 
-const MAX_PARAMS_SIZE = 100;
-
+// Bookmarks to link chunker with pseudocode
 const IBookmarks = {
   Init: 1,
-  ApplyHash: 2,
-  ChooseIncrement: 3,
-  WhileNot: 4,
-  Increment: 5,
-  CheckValue: 6,
+  ApplyHash: 5,
+  ChooseIncrement: 6,
+  WhileNot: 2,
+  Probing: 3,
+  CheckValue: 4,
   Found: 7,
   NotFound: 8,
 }
 
-const TYPE = 'Search';
-
 export default {
+
+  // Initialize visualizers
   initVisualisers({ visualisers }) {
     return {
       array: {
@@ -37,60 +41,71 @@ export default {
     };
   },
 
+  /**
+   * Running function for chunker of search, using the key provided
+   * @param {*} chunker the chunker for searching
+   * @param {*} params parameters for searching algorithm, e.g. name, key, insertion visualizer instances,...
+   * @returns whether the key is found or not
+   */
   run(chunker, params) {
 
+    // Assigning parameter values to local variables
+    const ALGORITHM_NAME = params.name;
     const TARGET = params.target; // Target value we are searching for
     const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
 
-    const INDEX = 0;
-    const POINTER = 2;
-    const POINTER_VALUE = "i";
-
+    // Variable for testing
     let found = true;
 
-    // Clear previous stuff and set start value to target value
-    // Currently has a bug where if you search for a different number, the previous one remains on the screen
+    // Chunker for intial state of visualizers
     chunker.add(
       IBookmarks.Init,
       (vis, target) => {
 
-        vis.array.showKth(["N/A", ""]);
-
-        vis.graph.updateNode(HASH_TABLE.Key, target);
-        vis.graph.updateNode(HASH_TABLE.Value, ' ');
-
-        for (let i = 0; i < SIZE; i++) {
-          vis.array.unfill(INDEX, 0, undefined, SIZE - 1)
-        }
+        vis.array.showKth({key: target, type: HASH_TYPE.Search}); // Show stats
+        
+        newCycle(vis, SIZE, target, ALGORITHM_NAME);
       },
       [TARGET]
     );
 
-    // Hashing the search value
-    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE); // Target value after being hashed
+    // Hashing the key
+    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE, true); // Target value after being hashed
 
-    // Fix later, should have different line of Pseudocode
-    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, TYPE);
+    // Calculate increment for key
+    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, TARGET, SIZE, params.name, HASH_TYPE.Search, true);
 
-    // Highlight initial search position
+    // Chunker for initial slot
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
-        vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
+        if (SIZE === SMALL_SIZE) {
+          vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer only shows for small tables
+        }
+        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Highlight initial search position
+
+        // Uncoloring the graphs
+        vis.graph.deselect(HASH_GRAPH.Key);
+        vis.graph.deselect(HASH_GRAPH.Value);
+        vis.graph.removeEdgeColor(HASH_GRAPH.Key, HASH_GRAPH.Value);
+        if (ALGORITHM_NAME == "HashingDH") {
+          vis.graph.deselect(HASH_GRAPH.Key2);
+          vis.graph.deselect(HASH_GRAPH.Value2);
+          vis.graph.removeEdgeColor(HASH_GRAPH.Key2, HASH_GRAPH.Value2);
+        }
       },
       [i]
     );
 
     // Search for the target key, checking each probed position
-    while (table[i] !== TARGET && table[i] !== undefined) {
+    while (table[i] !== TARGET && table[i] !== undefined && table[i] !== DELETE_CHAR) {
 
-      // Highlight the position with Red since not a match
+      // Chunker for not matching
       chunker.add(
         IBookmarks.WhileNot,
         (vis, idx) => {
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill the slot with red if the slot does not match key
         },
         [i]
       );
@@ -98,46 +113,49 @@ export default {
       // Move to the next index based on collision handling
       i = (i + increment) % SIZE;
 
-      // Move number to next position based on Increment
+      // Chunker for probing
       chunker.add(
-        IBookmarks.Increment,
+        IBookmarks.Probing,
         (vis, idx) => {
-          vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
+          if (SIZE === SMALL_SIZE) {
+            vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer is only shown for small tables
+          }
         },
         [i]
       );
 
-      // Changes colour for pending search status
+      // Chunker for searching the slots based on increment
       chunker.add(
         IBookmarks.WhileNot,
         (vis, idx) => {
-            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending);
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Fill pending slots with yellow
         },
         [i]
       );
     }
-    // If target has been found in search
+
+    // Chunker for found
     if (table[i] === TARGET) {
       chunker.add(
         IBookmarks.Found,
         (vis, idx) => {
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Indicate that the key is found
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill the slot with green, indicating that the key is found
         },
         [i]
       );
     }
 
-    // If target is not found in the list
+    // Chunker for not found
     else {
       chunker.add(
         IBookmarks.NotFound,
         (vis, idx) => {
-          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision);
-          found = false;
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill last slot with red
+          found = false; // Set testing variable
         },
         [i]
       );
     }
-    return found;
+    return found; // Return found or not for testing
   },
 };

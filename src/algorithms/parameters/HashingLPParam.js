@@ -9,25 +9,30 @@ import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 import {
   genUniqueRandNumList,
-  commaSeparatedNumberListValidCheck,
   singleNumberValidCheck,
   successParamMsg,
   errorParamMsg,
+  commaSeparatedPairTripleCheck,
+  checkAllRangesValid,
 } from './helpers/ParamHelper';
-import { SMALL_TABLE, LARGE_TABLE } from '../controllers/HashingCommon';
+import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
+// Algotiyhm information and magic phrases
 const ALGORITHM_NAME = 'Hashing (linear probing)';
 const HASHING_INSERT = 'Hashing Insertion';
 const HASHING_SEARCH = 'Hashing Search';
 const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
 
+// Default inputs
 const DEFAULT_ARRAY = genUniqueRandNumList(10, 1, 50);
 const DEFAULT_SEARCH = 2
+
 const UNCHECKED = {
     smallTable: false,
     largeTable: false
 };
 
+// Styling of radio buttons
 const BlueRadio = withStyles({
   root: {
     color: '#2289ff',
@@ -39,11 +44,16 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
+// Error messages
+const ERROR_INVALID_INPUT_INSERT = 'Please enter a list containing positive integers, pairs or triples';
+const ERROR_INVALID_INPUT_SEARCH = 'Please enter a positive integer';
+const ERROR_TOO_LARGE = `Please enter the right amount of inputs`;
+const ERROR_INVALID_RANGES = 'If you had entered ranges, please input valid ranges'
 
-const ERROR_NEGATIVE_INPUT = 'Please enter only positive integers';
-const ERROR_TOO_LARGE = `Please enter the right number of digits`;
-
-
+/**
+ * Linear probing input component
+ * @returns the component
+ */
 function HashingLPParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
@@ -54,19 +64,29 @@ function HashingLPParam() {
     largeTable: false,
   });
 
+    /**
+   * Handle changes to input
+   * @param {*} e the input box component
+   */
   const handleChange = (e) => {
     setHashSize({ ...UNCHECKED, [e.target.name]: true })
   }
 
+  /**
+   * Handle insert box inputs
+   * @param {*} e the insert box component
+   */
   const handleInsertion = (e) => {
     e.preventDefault();
-    const inputs = e.target[0].value;
+    const inputs = e.target[0].value; // Get the value of the input
 
-    if (commaSeparatedNumberListValidCheck(inputs)) {
-      let values = inputs.split(',').map(Number);
-      let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
+    // Check if the inputs are either positive integers, pairs or triples
+    if (commaSeparatedPairTripleCheck(true, true, inputs)) {
+      let values = inputs.split(","); // Converts input to array
+      if (checkAllRangesValid(values)) {
+        let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-      if (values.length < hashSize) {
+        // Dispatch algo
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingLP',
           mode: 'insertion',
@@ -74,23 +94,29 @@ function HashingLPParam() {
           values
         });
         setMessage(successParamMsg(ALGORITHM_NAME));
-      } else {
-        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_TOO_LARGE));
+      }
+      else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));
       }
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_INSERT));
     }
   }
 
+  /**
+   * Handle search box input
+   * @param {*} e search box component
+   */
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    let hashSize = HASHSize.smallTable ? SMALL_TABLE : LARGE_TABLE;
+    let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-    const visualisers = algorithm.chunker.visualisers;
-    if (singleNumberValidCheck(inputValue)) {
+    const visualisers = algorithm.chunker.visualisers; // Visualizers from insertion
+    if (singleNumberValidCheck(inputValue)) { // Check if input is a single positive number
       const target = parseInt(inputValue);
 
+      // Dispatch algorithm
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'HashingLP',
         mode: 'search',
@@ -100,10 +126,11 @@ function HashingLPParam() {
       });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_NEGATIVE_INPUT));
+      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH));
     }
   }
 
+  // Use effect to detect changes in radio box choice
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
@@ -117,7 +144,7 @@ function HashingLPParam() {
       <div className="form">
         <ListParam
           name="Hashing"
-          buttonName="INSERT"
+          buttonName="INSERT/DELETE"
           mode="insertion"
           formClassName="formLeft"
           DEFAULT_VAL = {array}
@@ -125,10 +152,10 @@ function HashingLPParam() {
           REFRESH_FUNCTION={
             (() => {
               if (HASHSize.smallTable) {
-                return () => genUniqueRandNumList(SMALL_TABLE-1, 1, 50);
+                return () => genUniqueRandNumList(SMALL_SIZE-1, 1, 50);
               }
               else if(HASHSize.largeTable) {
-                return () => genUniqueRandNumList(LARGE_TABLE-1, 1, 100);
+                return () => genUniqueRandNumList(LARGE_SIZE-1, 1, 100);
               }
             })()
           }

@@ -172,9 +172,15 @@
   }
 }
 
+.array_body {
+  margin: 0;
+  padding: 0;
+}
+
 .array2d_container {
-  flex: 1 1 100%;
   display: flex;
+  align-items: flex-start;
+  height: 100%;
   width: 100%;
   justify-content: center;
   overflow: hidden;
@@ -186,11 +192,11 @@
   width: 100%;
   align-items: center;
   overflow: auto;
+  height: 100%;
 }
 
 .captionHashing {
   text-align: center;
-  margin-top: -12px; // need to squeeze a bit
   color: var(--array-2d-row-col-value-color);
 }
 

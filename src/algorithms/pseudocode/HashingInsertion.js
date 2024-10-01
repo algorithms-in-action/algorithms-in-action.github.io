@@ -1,7 +1,7 @@
 import parse from '../../pseudocode/parse';
 
 
-let text1 = `
+const main = `
 
         \\Code{
             NullTable
@@ -23,9 +23,9 @@ let text1 = `
 
             //=======================================================
 
-            HashInsert(T, k)  // Insert key k into table T
+            HashInsert(T, k)  // Insert key k into table
                 \\In{
-                    Check how full the table is
+                    Check how full the table is \\Ref CheckTableFullness
                     \\Expl{ One empty slot must always be maintained, to prevent to potential for infinite looping.
                     Even before this point performance degrades if the table gets too full, say over 80% full.
                     See Overview for more details.
@@ -49,6 +49,34 @@ let text1 = `
                     T[i] <- k // unoccupied slot found so we put k in it \\B 9
                     // Done \\B 10
                 \\In}
+            
+            //=======================================================
+
+            HashDelete(T, k)  // Delete key k in table T \\B 11
+            \\In{
+                i <- hash(k) // Expand Hash in HashInsert for details \\B 16
+                Choose Increment value for stepping through T //Expand ChooseIncrement in HashInsert for details \\B 17
+                while not (T[i] = k or T[i] = Empty or T[i] = "X") // search for k or Empty or Deleted \\B 12
+                    \\In{
+                        i <- (i + Increment) mod TableSize \\B 13
+                        \\Expl{ T[i] is not k or Empty so we jump ahead Increment
+                            steps and "wrapping around" if we reach the end, mirroring
+                            the insertion code.
+                        \\Expl}
+                    \\In}
+                if T[i] = k \\B 14
+                    \\In{
+                        T[i] <- "X" \\B 15
+                        \\Expl{ If T[i] contains the index element, it is deleted from the array.
+                            In this implementation, deletion of said integer occurs by replacing it
+                            with "x" to help with visualisation.
+                        \\Expl}
+                    \\In}
+                else \\B 18
+                    \\In{
+                        // Do nothing
+                    \\In}
+            \\In}            
         \\Code}
 
         \\Code{
@@ -71,23 +99,18 @@ let text1 = `
         \\Code}
 
         \\Code{
-            HashDelete(T, i)    // mark T[i] as Deleted
-                                // To delete a key we need to search for it first
-                T[i] <- Deleted \\B 12
-                \\Expl{ T[i] is no longer considered occupied, so a key may be
-                        inserted here, but searching does not stop at Deleted slots,
-                        only Empty ones (or if we find the key).
-                \\Expl}
-                Check how many Deleted slots there are in the table
-                \\Expl{ Deleted slots slow down searching and limit table capacity as
-                        there must be at least one Empty slot for searching. If
-                        some threshold is reached a new table can be allocated with
-                        all slots Empty then all keys in the old table can be
-                        inserted into the new table and the old table discarded.
-                \\Expl}
+            CheckTableFullness
+                if Insertions - Deletions = TableSize - 1 \\B 19
+                    \\In{
+                        Stop insertion \\B 19
+                    \\In}
+                else
+                    \\In{
+                        Continue insertion \\B 20
+                    \\In}
         \\Code}
-
-
+`
+export const hash1 = `
         \\Code{
             Hash1
                 i <- (k * BIGPRIME) mod TableSize \\B 5
@@ -97,7 +120,7 @@ let text1 = `
                 \\Expl}
         \\Code}
 `
-let text2 = `
+export const linearProbingIncrement = `
 
         \\Code{
             SetIncrement
@@ -109,7 +132,7 @@ let text2 = `
 
 `
 
-let text3 = `
+export const doubleHashingIncrement = `
 
         \\Code{
             SetIncrement
@@ -121,5 +144,5 @@ let text3 = `
                 \\Expl}
         \\Code}
 `
-export const doubleHashing = parse(text1 + '\n' + text3);
-export const linearProbing = parse(text1 + '\n' + text2);
+export const doubleHashing = parse(main + hash1 + '\n' + doubleHashingIncrement);
+export const linearProbing = parse(main + hash1 + '\n' + linearProbingIncrement);

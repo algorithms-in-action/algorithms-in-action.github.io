@@ -10,6 +10,7 @@ class Tracer {
     if (options !== undefined) {
       this.arrayItemMagnitudes = options.arrayItemMagnitudes;
       this.largestValue = options.largestValue;
+      this.size = options.size;
     }
     this.init();
     this.reset();
@@ -25,11 +26,21 @@ class Tracer {
   render() {
     const RendererClass = this.getRendererClass();
     return (
-      <RendererClass key={this.key} title={this.title} data={this} />
+      <RendererClass
+        key={this.key}
+        title={this.title}
+        data={this}
+        size={this.size}
+      />
     );
   }
 
   set() {
+  }
+
+  // set visualiser size multiplier
+  setSize(size) {
+    this.size = size;
   }
 
   reset() {
