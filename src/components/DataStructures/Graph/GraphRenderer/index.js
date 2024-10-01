@@ -420,7 +420,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionBRText, tagInfo } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -632,6 +632,7 @@ class GraphRenderer extends Renderer {
             y,
             weight,
             height,
+            Select_Circle_Count,
             AVL_TID,
             visitedCount0,
             visitedCount,
@@ -664,6 +665,7 @@ class GraphRenderer extends Renderer {
                 styles.node,
                 selectNode && styles.selected,
                 sorted && styles.sorted,
+
                 visitedNode0 && styles.visited0,
                 visitedNode && styles.visited,
                 visitedNode1 && styles.visited1,
@@ -673,6 +675,28 @@ class GraphRenderer extends Renderer {
               )}
               key={key}
             >
+              {Select_Circle_Count > 0 && (
+                functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+                  <circle
+                    className={classes(
+                      styles.select_circle,
+                      style && style.backgroundStyle
+                    )}
+                    style={{ '--stroke-color': '#ff0000' }}
+                    r={nodeRadius}
+                  />
+                ) : (
+                  <circle
+                    className={classes(
+                      styles.select_circle,
+                      style && style.backgroundStyle
+                    )}
+                    r={nodeRadius}
+                  />
+                )
+              )}
+
+
               <circle
                 className={classes(
                   styles.circle,
@@ -680,6 +704,7 @@ class GraphRenderer extends Renderer {
                 )}
                 r={nodeRadius}
               />
+
               <text className={classes(styles.id, style && style.textStyle)}>
                 {value}
               </text>
@@ -688,12 +713,19 @@ class GraphRenderer extends Renderer {
                   {this.toString(weight)}
                 </text>
               )}
+
               <text className={styles.height}>
-                {this.toString(height)}
+                {height != null && height.toString().includes('t') ? (
+                  <tspan className={styles.AVL_TID}>
+                    {height}
+                  </tspan>
+                ) : (
+                  <tspan>
+                    {height != null ? height : ''}
+                  </tspan>
+                )}
               </text>
-              <text className={styles.AVL_TID}>
-                {this.toString(AVL_TID)}
-              </text>
+
               {isPointer && (
                 <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
                   {this.toString(pointerText)}
@@ -723,13 +755,44 @@ class GraphRenderer extends Renderer {
         </text>
 
         <text className={classes(styles.text)}
-          x={+ 530}
-          y={- 200}
+          x={+400}
+          y={-200}
           textAnchor="middle">
-          {/* <tspan className={styles.pseudocode_function}>
-            {this.props.data.functionName}
-          </tspan> */}
-          {functionBRText}
+          {functionNode != null && (
+            <tspan className={styles.pseudocode_function}>
+              {"Node["}
+            </tspan>
+          )}
+          {functionNode}
+
+          {functionNode != null && (
+            <tspan className={styles.pseudocode_function}>
+              {"] => "}
+            </tspan>
+          )}
+        </text>
+
+        <text className={classes(styles.text)}
+          x={+650}
+          y={-200}
+          textAnchor="middle">
+
+          {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+            <tspan style={{ fill: '#ff0000', fontWeight: 'bold' }}>
+
+              {"Balance: "}
+              {functionBalance}
+            </tspan>
+          ) : (
+            <tspan>
+              {functionBalance != null && (
+                <tspan className={styles.pseudocode_function}>
+                  {"Balance: "}
+                </tspan>
+              )}
+              {functionBalance}
+            </tspan>
+          )}
         </text>
 
         <text className={classes(styles.text)}
