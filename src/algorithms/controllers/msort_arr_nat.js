@@ -174,7 +174,6 @@ export function run_msort() {
 
     let A = nodes;
     let B = [...entire_num_array].fill(undefined);
-    let runlength = 1; // length of run to merge
     let runcount = 0; // number of runs merged
 
     chunker.add('Main', (vis, a, b, c_length, c_count) => {
@@ -208,7 +207,7 @@ export function run_msort() {
 
         highlight2Runlength(vis, left_2, mid_2, right_2, colorA, colorB);*/
 
-      }, [runlength, left, runcount]);
+      }, [left, runcount]);
 
       chunker.add('runcount', (vis, c_rcount) => {
 
@@ -232,7 +231,7 @@ export function run_msort() {
           //assignVarToA(vis, ('size = ' + (size)), undefined, size);
 
           assignVarToA(vis, 'mid', c_mid, size);
-        }, [mid, runlength]);
+        }, [mid]);
 
         while (mid < size && A[mid] <= A[mid + 1]) {
           chunker.add('FirstRunWhile', (vis, c_left, c_mid, c_right) => {
@@ -246,6 +245,7 @@ export function run_msort() {
         }
 
         let right = mid + 1;
+
 
         chunker.add('right', (vis, c_right) => {
           assignVarToA(vis, 'right', c_right, size);
@@ -313,12 +313,13 @@ export function run_msort() {
             if (!(ap1 <= max1 && ap2 <= max2)) break;
 
             chunker.add('MergeWhile', (vis, a, c_left, c_right, c_mid, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_rlength) => {
+              console.log("c_left, c_mid, c_right" + left + " " + mid + " " + right);
               vis.array.set(a, 'msort_arr_nat');
               displayMergeLabels(vis, c_ap1, c_max1, c_ap2, c_max2, c_bp, size);
               // future color: should be colorA & colorB
               highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
               set_simple_stack(vis.array, [c_rlength]);
-            }, [A, left, right, mid, ap1, max1, ap2, max2, bp, runlength]);
+            }, [A, left, right, mid, ap1, max1, ap2, max2, bp]);
 
             chunker.add('findSmaller', () => {
               // no animation 
@@ -340,7 +341,7 @@ export function run_msort() {
                 // highlight sorted elements green (colorC)
                 for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, colorC);
                 //set_simple_stack(vis.array, [c_rlength]);
-              }, [A, B, ap1, max1, ap2, max2, bp, left, right, mid, runlength]);
+              }, [A, B, ap1, max1, ap2, max2, bp, left, right, mid]);
 
               ap1 = ap1 + 1;
               chunker.add('ap1++', (vis, c_ap1) => {
@@ -371,7 +372,7 @@ export function run_msort() {
                 // highlight sorted elements green / colorB
                 for (let i = c_left; i <= c_bp; i++) highlightB(vis, i, 'green')
                 //set_simple_stack(vis.array, [c_rlength]);
-              }, [A, B, ap1, ap2, bp, max1, max2, left, right, mid, runlength]);
+              }, [A, B, ap1, ap2, bp, max1, max2, left, right, mid]);
 
               ap2 = ap2 + 1;
               chunker.add('ap2++', (vis, c_ap2) => {
@@ -407,7 +408,7 @@ export function run_msort() {
             // future color: should be colorA & colorB
             highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
             set_simple_stack(vis.array, [c_rlength]);
-          }, [A, B, ap1, max1, left, right, mid, bp, runlength]);
+          }, [A, B, ap1, max1, left, right, mid, bp]);
 
           for (let i = ap2; i <= max2; i++) {
             B[bp] = A[i];
@@ -427,7 +428,7 @@ export function run_msort() {
             // future color: should be colorA & colorB
             highlight2Runlength(vis, c_left, c_mid, c_right, colorA, colorA);
             set_simple_stack(vis.array, [c_rlength]);
-          }, [A, B, ap2, max2, left, right, mid, runlength]);
+          }, [A, B, ap2, max2, left, right, mid]);
 
           // copy merged elements from B to A
           for (let i = left; i <= right; i++) {
@@ -442,7 +443,7 @@ export function run_msort() {
             // highlight all sorted elements green
             for (let i = c_left; i <= c_right; i++) highlight(vis, i, colorC);
             set_simple_stack(vis.array, [c_rlength]);
-          }, [A, B, left, right, runlength]);
+          }, [A, B, left, right]);
         }
         let left2 = left; // this is the old left before it was updated
         //if (right + 1 <= size) {
@@ -459,7 +460,7 @@ export function run_msort() {
             displayRunlength(vis, c_rlength, size);
           }*/
 
-        }, [runlength, runcount]);
+        }, [runcount]);
         chunker.add('left2', (vis, old_left, c_left, c_right) => {
           // unhighlight all elements in A
           for (let i = old_left; i <= c_right; i++) {
@@ -469,7 +470,7 @@ export function run_msort() {
 
         }, [left2, left, right]);
 
-      } while (left < size);
+      } while (left < size - 1);
 
     } while (runcount > 1);
 
