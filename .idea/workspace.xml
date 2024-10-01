@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Arrows not displacing nodes and inclusion of all arrow directions">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Tracer support for moving arrows in 5 directions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/JEFFPROTOTYPE.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/JEFFPROTOTYPE.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
@@ -221,7 +222,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727790927984</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="'feat': Tracer support for moving arrows in 5 directions">
+      <option name="closed" value="true" />
+      <created>1727791997341</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727791997341</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,6 +264,7 @@
     <MESSAGE value="'feat': shift right for list, fix for empty index counts" />
     <MESSAGE value="'fix': Issue with update indices and stacking" />
     <MESSAGE value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
-    <option name="LAST_COMMIT_MESSAGE" value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
+    <MESSAGE value="'feat': Tracer support for moving arrows in 5 directions" />
+    <option name="LAST_COMMIT_MESSAGE" value="'feat': Tracer support for moving arrows in 5 directions" />
   </component>
 </project>

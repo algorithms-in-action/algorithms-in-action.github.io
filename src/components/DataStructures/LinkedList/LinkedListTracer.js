@@ -208,10 +208,11 @@ class LinkedListTracer extends Tracer{
         return maxSize;
     }
     // Patches/highlights a node at a specific index in a specific list
-    patch(index, value, listIndex = 0, layerIndex = 0) {
+    patch(nodeIndex, listIndex = 0, layerIndex = 0) {
         const list = this.findList(listIndex,  layerIndex);
-        if (list && index >= 0 && index < list.size) {
-            list.data[index].patched = true;
+        if (list && nodeIndex >= 0 && nodeIndex < list.size) {
+            list.data[nodeIndex].patched = true;
+            list.data[nodeIndex].selected = false;
         }
     }
 

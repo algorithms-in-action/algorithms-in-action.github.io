@@ -57,8 +57,8 @@ class LinkedListRenderer extends Renderer {
                                                 key={`node-${node.key}`}
                                                 layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
-                                                    node.patched && styles.visited,
-                                                    node.selected && styles.selected
+                                                    node.selected && styles.selected,
+                                                    node.patched && styles.visited
                                                 )}
                                                 whileHover={{scale: 1.2}}
                                                 transition={{type: 'spring', stiffness: 100}}

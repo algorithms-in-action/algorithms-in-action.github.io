@@ -85,5 +85,12 @@ export default {
                 vis.list.setArrow(0,0,0,90);
             },
         );
+
+        chunker.add(
+            6,
+            (vis) => {
+                vis.list.patch(0,0,0);
+            },
+        );
     }
 };
