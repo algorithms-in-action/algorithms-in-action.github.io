@@ -56,8 +56,11 @@ const hashingInstructions = [
     title: 'Insert Mode',
     content: [
     `Click on ${KEY_CODE} on the right panel.`,
-    `Choose to use small or larger hash table. Using the radio buttons`,
-    'Enter a list of positive Integers in the Insert parameter. There should be less than 11 Integers if it is a small table, and less than 97 if it is a large table.',
+    `Select small or larger table via the radio buttons.`,
+    `Enter a comma separated list of integers into the Insert parameter.
+     There should be less than 11 integers if it is a small table, and less than 97 if it is a large table.
+     Valid inputs include a positive integer (e.g. 5) or a range of positive integers (e.g. 3-19) to insert
+     values into the table. Negative integers (e.g. -10) will attempt to delete the absolute value from the hash table.`,
     `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
     ],
@@ -69,7 +72,7 @@ const hashingInstructions = [
     `Click on ${KEY_CODE} on the right panel.`,
     'Enter an Integer in the Search parameter.',
     `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run The speed may be adjusted using the speed slider.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
     ],
   },
 ];
