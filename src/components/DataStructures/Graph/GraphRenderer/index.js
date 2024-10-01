@@ -420,7 +420,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalence, tagInfo } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -632,6 +632,7 @@ class GraphRenderer extends Renderer {
             y,
             weight,
             height,
+            Select_Circle_Count,
             AVL_TID,
             visitedCount0,
             visitedCount,
@@ -664,6 +665,7 @@ class GraphRenderer extends Renderer {
                 styles.node,
                 selectNode && styles.selected,
                 sorted && styles.sorted,
+
                 visitedNode0 && styles.visited0,
                 visitedNode && styles.visited,
                 visitedNode1 && styles.visited1,
@@ -673,6 +675,28 @@ class GraphRenderer extends Renderer {
               )}
               key={key}
             >
+              {Select_Circle_Count > 0 && (
+                functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+                  <circle
+                    className={classes(
+                      styles.select_circle,
+                      style && style.backgroundStyle
+                    )}
+                    style={{ '--stroke-color': '#ff0000' }}
+                    r={nodeRadius}
+                  />
+                ) : (
+                  <circle
+                    className={classes(
+                      styles.select_circle,
+                      style && style.backgroundStyle
+                    )}
+                    r={nodeRadius}
+                  />
+                )
+              )}
+
+
               <circle
                 className={classes(
                   styles.circle,
@@ -680,6 +704,7 @@ class GraphRenderer extends Renderer {
                 )}
                 r={nodeRadius}
               />
+
               <text className={classes(styles.id, style && style.textStyle)}>
                 {value}
               </text>
@@ -752,16 +777,20 @@ class GraphRenderer extends Renderer {
           y={-200}
           textAnchor="middle">
 
-          {functionBalence != null && (functionBalence < -1 || functionBalence > 1) ? (
-            <tspan style={{ fill: '#ff0000' }}>{"Balance: "}{functionBalence}</tspan>
+          {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+            <tspan style={{ fill: '#ff0000', fontWeight: 'bold' }}>
+
+              {"Balance: "}
+              {functionBalance}
+            </tspan>
           ) : (
             <tspan>
-              {functionBalence != null && (
+              {functionBalance != null && (
                 <tspan className={styles.pseudocode_function}>
                   {"Balance: "}
                 </tspan>
               )}
-              {functionBalence}
+              {functionBalance}
             </tspan>
           )}
         </text>

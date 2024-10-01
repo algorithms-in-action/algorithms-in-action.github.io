@@ -490,7 +490,9 @@ export default {
                 // vis.graph.setFunctionName(`balance = ${balance}, `);
                 // vis.graph.setFunctionInsertText('case ?');
                 vis.graph.setFunctionNode(`${r}`);
-                vis.graph.setFunctionBalence(balance);
+                vis.graph.clearSelect_Circle_Count();
+                vis.graph.setSelect_Circle_Count(r);
+                vis.graph.setFunctionBalance(balance);
             }, [root.key], depth);
 
             let rotateDepth = depth + 1;
@@ -502,8 +504,10 @@ export default {
                     (vis, r) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`LL`);
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalence(balance);
+                        vis.graph.setFunctionBalance(balance);
                     },
                     [root.key],
                     depth
@@ -511,7 +515,8 @@ export default {
                 root = LLR(root, parentNode, rotateDepth);
                 chunker.add('return rightRotate(t)', (vis) => {
                     vis.graph.setFunctionNode(null);
-                    vis.graph.setFunctionBalence(null);
+                    vis.graph.clearSelect_Circle_Count();
+                    vis.graph.setFunctionBalance(null);
                 }, [], depth);
             } else if (balance < -1 && key > root.right.key) {
                 chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
@@ -520,7 +525,9 @@ export default {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`RR`);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalence(balance);
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.setSelect_Circle_Count(r);
+                        vis.graph.setFunctionBalance(balance);
                     },
                     [root.key],
                     depth
@@ -529,7 +536,8 @@ export default {
                 root = RRR(root, parentNode, rotateDepth);
                 chunker.add('return leftRotate(t)', (vis) => {
                     vis.graph.setFunctionNode(null);
-                    vis.graph.setFunctionBalence(null);
+                    vis.graph.setFunctionBalance(null);
+                    vis.graph.clearSelect_Circle_Count();
                 }, [], depth);
             } else if (balance > 1 && key > root.left.key) {
                 chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
@@ -537,8 +545,10 @@ export default {
                     (vis, r) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`LR`);
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalence(balance);
+                        vis.graph.setFunctionBalance(balance);
                     },
                     [root.key],
                     depth
@@ -547,7 +557,8 @@ export default {
                 root = LRR(root, parentNode, rotateDepth);
                 chunker.add('return rightRotate(t) after leftRotate', (vis) => {
                     vis.graph.setFunctionNode(null);
-                    vis.graph.setFunctionBalence(null);
+                    vis.graph.setFunctionBalance(null);
+                    vis.graph.clearSelect_Circle_Count();
                 }, [], depth);
             } else if (balance < -1 && key < root.right.key) {
                 chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
@@ -557,7 +568,9 @@ export default {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`RL`);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalence(balance);
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.setSelect_Circle_Count(r);
+                        vis.graph.setFunctionBalance(balance);
                     },
                     [root.key],
                     depth
@@ -565,7 +578,8 @@ export default {
                 root = RLR(root, parentNode, rotateDepth);
                 chunker.add('return leftRotate(t) after rightRotate', (vis) => {
                     vis.graph.setFunctionNode(null);
-                    vis.graph.setFunctionBalence(null);
+                    vis.graph.setFunctionBalance(null);
+                    vis.graph.clearSelect_Circle_Count();
                 }, [], depth);
             }
 
@@ -613,11 +627,13 @@ export default {
             vis => {
                 vis.graph.setFunctionInsertText();
                 vis.graph.setFunctionName("Complete");
+                vis.graph.setFunctionNode(null);
+                vis.graph.setFunctionBalance(null);
+                vis.graph.clearSelect_Circle_Count();
             },
             [],
             0
         );
-
         return globalRoot;
     }
 };

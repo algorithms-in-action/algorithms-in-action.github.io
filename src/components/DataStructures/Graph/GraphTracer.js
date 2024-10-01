@@ -52,7 +52,7 @@ class GraphTracer extends Tracer {
     this.functionInsertText = null;
     this.functionName = null;
     this.functionNode = null;
-    this.functionBalence = null;
+    this.functionBalance = null;
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
@@ -272,13 +272,13 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, height = undefined, AVL_TID = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    x = 0, y = 0, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '') {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, height, AVL_TID, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    this.nodes.push({ id, value, height, AVL_TID, shape, color, weight, x, y, Select_Circle_Count, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
     this.layout();
   }
 
@@ -861,6 +861,16 @@ class GraphTracer extends Tracer {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
+  setSelect_Circle_Count(id) {
+    this.findNode(id).Select_Circle_Count++;
+  }
+
+  clearSelect_Circle_Count() {
+    this.nodes.forEach(node => {
+      node.Select_Circle_Count = 0;
+    });
+  }
+
   setText(text) {
     this.text = text;
     // this.text.push({ text });
@@ -875,8 +885,8 @@ class GraphTracer extends Tracer {
     this.functionNode = functionNode;
   }
 
-  setFunctionBalence(functionBalence) {
-    this.functionBalence = functionBalence;
+  setFunctionBalance(functionBalance) {
+    this.functionBalance = functionBalance;
   }
 
   // dispaly the function name on the AVL tree

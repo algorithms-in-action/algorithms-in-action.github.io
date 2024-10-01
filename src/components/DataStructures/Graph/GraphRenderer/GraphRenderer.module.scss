@@ -34,6 +34,16 @@
       stroke-width: 1;
     }
 
+    .select_circle {
+      --stroke-color: var(--graph-node-circle-fill-selected);
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--stroke-color);
+      stroke-width: 7;
+      filter: drop-shadow(0 0 5px var(--stroke-color));
+      /* 添加模糊阴影，模拟外扩 */
+
+    }
+
     .rect {
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
@@ -89,7 +99,7 @@
     &.selected {
       .circle {
         fill: var(--graph-node-circle-fill-selected);
-        --breath_color: var(--graph-node-circle-fill-selected);
+        //--breath_color: var(--graph-node-circle-fill-selected);
         //animation: colorChange 1.5s infinite; // anmation
         stroke: var(--graph-node-circle-stroke-selected);
       }
