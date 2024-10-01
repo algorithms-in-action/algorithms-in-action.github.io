@@ -14,6 +14,7 @@ class LinkedListTracer extends Tracer{
 
     init() {
         this.key = 0;
+        this.nodeKey = 0;
         this.chartTracer = null;
         this.lists = [];
     }
@@ -26,66 +27,41 @@ class LinkedListTracer extends Tracer{
         }
 
         // Generating a list
-        const list = {key: this.key, listIndex:index, head: null, tail: null, data: [], layerIndex: layerIndex, size: 0, unitShift: 0};
-            for (let value of listData) {
+        const list = {key: this.key++, listIndex:index, data: [],
+            layerIndex: layerIndex, size: 0, unitShift: 0};
+            for (let node of listData) {
                 if (format === "values") {
-                    const newNode = this.createNode(value);
-                    this.appendToList(newNode, list);
+                    this.appendToList(this.createNode(node), list);
                 }
                 else if (format === "nodes") {
-                    this.appendToList(value, list);
+                    this.appendToList(node, list);
                 }
         }
         if (this.findList(listIndex,layerIndex)) {
             this.moveList(listIndex,layerIndex,listIndex+1,'insert');
         }
-        this.key++;
         this.lists.push(list);
     }
 
     createNode(value) {
-        const newNode = { value, next: null, patched: false, selected: false, variables: [] };
+        const newNode = {key: this.nodeKey++, value, next: null, patched: false, selected: false, variables: [] };
         return newNode;
     }
 
     // Appends a value to a specific linked list
     appendToList(newNode, list) {
-        if (!list.head) {
-            list.head = newNode;
-            list.tail = newNode;
-        } else {
-            list.tail.next = newNode;
-            list.tail = newNode;
-        }
         list.data.push(newNode);
         list.size++;
     }
 
-    // Appends a value to a specific list by index
-    append(value, listIndex = 0) {
-        if (listIndex >= 0 && listIndex < this.lists.length) {
-            this.appendToList(value, this.lists[listIndex]);
-            this.syncChartTracer();
-        }
+    // TO DO Appends a value to a specific list by index
+    addToList(value, listIndex = 0) {
+        // TO DO
     }
 
-    // Prepends a value to a specific list
-    prepend(value, listIndex = 0) {
-        if (listIndex >= 0 && listIndex < this.lists.length) {
-            const list = this.lists[listIndex];
-            const newNode = { value, next: list.head, variables: [] };
-            list.head = newNode;
-            if (!list.tail) {
-                list.tail = newNode;
-            }
-            list.data.unshift(newNode);
-            list.size++;
-            this.syncChartTracer();
-        }
-    }
-
-    // Removes a node at a specific index from a specific list
+    // TO DO Removes a node at a specific index from a specific list
     removeAt(index, listIndex = 0) {
+        // REWRITE
         const list = this.lists[listIndex];
         if (!list || index < 0 || index >= list.size) return;
 
@@ -120,97 +96,14 @@ class LinkedListTracer extends Tracer{
         }
     }
 
-    // Patches/highlights a node at a specific index in a specific list
-    patch(index, value, listIndex = 0, layerIndex = 0) {
-        const list = this.findList(listIndex,  layerIndex);
-        if (list && index >= 0 && index < list.size) {
-            list.data[index].patched = true;
-        }
-    }
-
-    // Removes patch/highlight from a node
-    depatch(index, listIndex = 0, layerIndex) {
-        const list = this.findList(listIndex,  layerIndex);
-        if (list && index >= 0 && index < list.size) {
-            list.data[index].patched = false;
-        }
-    }
-
-    // Selects a node or a range of nodes in a specific list
-    select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
-        const list = this.findList(listIndex,  layerIndex);
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = true;
-            }
-        }
-    }
-
-    // Deselects a node or a range of nodes in a specific list
-    deselect(startIndex, endIndex = startIndex, listIndex = 0, layerIndex=0) {
-
-        const list = this.findList(listIndex,  layerIndex);
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = false;
-            }
-        }
-    }
-
-
-    // Adds a variable to a specific node in a specific list
-    addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
-        const list = this.findList(listIndex,  layerIndex);
-        if (list && nodeIndex >= 0 && nodeIndex < list.size) {
-            list.data[nodeIndex].variables.push(variable);
-            this.syncChartTracer();
-        }
-    }
-
-    // Removes a variable from all nodes in all lists
-    removeVariable(variable) {
-        this.lists.forEach(list => {
-            list.data.forEach((node) => {
-                node.variables = node.variables.filter((val) => val !== variable);
-            });
-        });
-        this.syncChartTracer();
-    }
-
-    // Clears all variables from all nodes in all lists
-    clearVariables() {
-        this.lists.forEach(list => {
-            list.data.forEach((node) => {
-                node.variables = [];
-            });
-        });
-        this.syncChartTracer();
-    }
-
-    // Assigns a variable to a specific node in a specific list, removing it from all others
-    assignVariable(variable, nodeIndex, listIndex = 0) {
-        this.removeVariable(variable);
-        this.addVariable(variable, nodeIndex, listIndex);
-    }
-
-    // Synchronizes the chart tracer
-    syncChartTracer() {
-        if (this.chartTracer) {
-            this.chartTracer.data = this.lists.map(list => list.data); // Sync all lists with the tracer
-        }
-    }
-
-    // Returns a string representation of all linked lists
-    stringTheContent() {
-        return this.lists
-            .map((list, index) => `List ${index + 1}: ${list.data.map((node) => node.value).join(' -> ')}`)
-            .join('\n');
-    }
-
     splitList(nodeIndex, listIndex=0 , layerIndex = 0) {
         const {key, data} = this.findList(listIndex,  layerIndex);
+        if (key<0) return;
+
         const left = data.slice(0,nodeIndex);
         const right = data.slice(nodeIndex);
+
+
         // Old list
         this.deleteList(key);
 
@@ -265,6 +158,8 @@ class LinkedListTracer extends Tracer{
         }
     }
 
+    // Theoretically unproblematic code::
+
     // Shifting indices to account for empty indices
     updateIndices() {
         const maxIndex = this.getMaxIndex();
@@ -302,6 +197,90 @@ class LinkedListTracer extends Tracer{
             }
         }
         return maxSize;
+    }
+    // Patches/highlights a node at a specific index in a specific list
+    patch(index, value, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
+        if (list && index >= 0 && index < list.size) {
+            list.data[index].patched = true;
+        }
+    }
+
+    // Removes patch/highlight from a node
+    depatch(index, listIndex = 0, layerIndex) {
+        const list = this.findList(listIndex,  layerIndex);
+        if (list && index >= 0 && index < list.size) {
+            list.data[index].patched = false;
+        }
+    }
+
+    // Selects a node or a range of nodes in a specific list
+    select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
+        for (let i = startIndex; i <= endIndex; i++) {
+            if (i >= 0 && i < list.size) {
+                list.data[i].selected = true;
+            }
+        }
+    }
+
+    // Deselects a node or a range of nodes in a specific list
+    deselect(startIndex, endIndex = startIndex, listIndex = 0, layerIndex=0) {
+        const list = this.findList(listIndex,  layerIndex);
+        for (let i = startIndex; i <= endIndex; i++) {
+            if (i >= 0 && i < list.size) {
+                list.data[i].selected = false;
+            }
+        }
+    }
+
+    // Adds a variable to a specific node in a specific list
+    addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
+        const list = this.findList(listIndex,  layerIndex);
+        if (list && nodeIndex >= 0 && nodeIndex < list.size) {
+            list.data[nodeIndex].variables.push(variable);
+            this.syncChartTracer();
+        }
+    }
+
+    // Removes a variable from all nodes in all lists
+    removeVariable(variable) {
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                node.variables = node.variables.filter((val) => val !== variable);
+            });
+        });
+        this.syncChartTracer();
+    }
+
+    // Clears all variables from all nodes in all lists
+    clearVariables() {
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                node.variables = [];
+            });
+        });
+        this.syncChartTracer();
+    }
+
+    // Assigns a variable to a specific node in a specific list, removing it from all others
+    assignVariable(variable, nodeIndex, listIndex = 0) {
+        this.removeVariable(variable);
+        this.addVariable(variable, nodeIndex, listIndex);
+    }
+
+    // Synchronizes the chart tracer
+    syncChartTracer() {
+        if (this.chartTracer) {
+            this.chartTracer.data = this.lists.map(list => list.data); // Sync all lists with the tracer
+        }
+    }
+
+    // Returns a string representation of all linked lists
+    stringTheContent() {
+        return this.lists
+            .map((list, index) => `List ${index + 1}: ${list.data.map((node) => node.value).join(' -> ')}`)
+            .join('\n');
     }
 }
 

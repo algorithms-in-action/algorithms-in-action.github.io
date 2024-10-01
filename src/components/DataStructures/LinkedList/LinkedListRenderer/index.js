@@ -27,17 +27,6 @@ class LinkedListRenderer extends Renderer {
                     <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2"/>
                     <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none"/>
                 </symbol>
-
-                <symbol id="downwards-diagonal" viewBox="0 0 100 100">
-                    <line x1="30" y1="30" x2="70" y2="70" stroke="white" strokeWidth="2"/>
-                    <polyline points="50,70 70,70 70,50" stroke="white" strokeWidth="2" fill="none"/>
-                </symbol>
-
-                <symbol id="upwards-diagonal" viewBox="0 0 100 100">
-                    <line x1="30" y1="70" x2="70" y2="30" stroke="white" strokeWidth="2"/>
-                    <polyline points="50,30 70,30 70,50" stroke="white" strokeWidth="2" fill="none"/>
-                </symbol>
-
             </svg>
         );
     }
@@ -48,7 +37,10 @@ class LinkedListRenderer extends Renderer {
         console.log(layers);
 
         return (
-            <div className={styles.LayerContainer}>
+            <AnimateSharedLayout>
+                <motion.div className={styles.LayerContainer}
+                            drag
+                >
                 {this.renderSymbols()}
 
                 {layers.map((layer, layerIndex) => (
@@ -57,67 +49,63 @@ class LinkedListRenderer extends Renderer {
                         {layer.map((list, listIndex) => (
                             <div className={styles.nodeContainer} key={`list-${listIndex}`}
                                 style={{transform: `translate(${list.unitShift*76}px)`}}>
-                                <AnimateSharedLayout>
 
                                 {list.data.map((node, nodeIndex) => (
 
-                                    <React.Fragment key={`node-${listIndex}-${nodeIndex}`}>
-                                        <>
-                                            {/* Nodes */}
+                                    <React.Fragment>
                                             <motion.div
-                                                layoutId={`list-${listIndex}-node-${nodeIndex}`}
+                                                key={`node-${node.key}`}
+                                                layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
                                                     node.patched && styles.visited,
                                                     node.selected && styles.selected
                                                 )}
-                                                initial={{opacity: 0}}
-                                                animate={{opacity: 1}}
+                                                whileHover={{scale: 1.2}}
                                                 transition={{type: 'spring', stiffness: 100}}
                                             >
+                                                {/* Nodes */}
                                                 <div className={classes(styles.value)}>
+                                                    {console.log(node.key)}
                                                     {node.value}
                                                 </div>
 
                                                 {/* Labels */}
                                                 {node.variables.map((variable, variableIndex) => (
-                                                    <div className={styles.label} key={`variable-${variableIndex}`}>
-                                                        <motion.div
-                                                            className={styles.label}
-                                                            layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`} // Unique layoutId
+                                                    <div className={styles.label} key={`variable-${variableIndex}`}
+                                                            layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
                                                         >
                                                             {variable}
-                                                        </motion.div>
                                                     </div>))}
                                             </motion.div>
 
-                                            {/* Arrows */}
-                                            <div className={styles.symbol}>
-                                                <motion.div
-                                                    className={styles.symbol}
-                                                    layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
-                                                >
-                                                    <svg className={classes(styles.symbol)} width="40"
-                                                         height="40">
-                                                        <use href="#arrow-symbol"/>
-                                                    </svg>
+                                        {/* Arrows */}
+                                        <div className={styles.symbol}>
+                                            <div
+                                                className={styles.arrow}
+                                                layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
+                                            >
+                                                <svg className={classes(styles.arrow)}>
+                                                    <use href="#arrow-symbol"/>
+                                                </svg>
 
-
-                                                    {// upwards and downwards diagonal arrows
-                                                        /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
-                                                        <use href="#downwards-diagonal"/>
-                                                    </svg> */}
-                                                </motion.div>
+                                                {
+                                                    // upwards and downwards diagonal arrows
+                                                    /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
+                                                    <use href="#downwards-diagonal"/>
+                                                </svg> */
+                                                }
+                                                {
+                                                    // testing for last node
+                                                    // {list.size-nodeIndex>1 && <use href="#arrow-symbol"/>}
+                                                }
                                             </div>
-
-
-                                        </>
+                                        </div>
                                     </React.Fragment>
-
                                 ))}
-                                </AnimateSharedLayout>
                             </div>))}
                     </div>))}
-            </div>)
+            </motion.div>
+        </AnimateSharedLayout>)
     }
 
     render() {

@@ -5,9 +5,9 @@ export default parse(`
 Main
 // Sort list(head) in ascending order
 Initialise \\B 1
-select and split \\B 2
-Split and add variable \\B 3
-Move list to Second layer \\B 4
+Split \\B 2
+Move list to Second layer \\B 3
+Select first node \\B 4
 Shift list to right \\B 5
 Mergesort(head) \\B 6
 Mergesort(head) \\B 7
