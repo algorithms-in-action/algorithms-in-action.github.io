@@ -80,9 +80,11 @@ function HashingLPParam() {
     e.preventDefault();
     const inputs = e.target[0].value; // Get the value of the input
 
+    let removeSpace = inputs.split(' ').join('');
+
     // Check if the inputs are either positive integers, pairs or triples
-    if (commaSeparatedPairTripleCheck(true, true, inputs)) {
-      let values = inputs.split(","); // Converts input to array
+    if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
+      let values = removeSpace.split(","); // Converts input to array
       if (checkAllRangesValid(values)) {
         let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 

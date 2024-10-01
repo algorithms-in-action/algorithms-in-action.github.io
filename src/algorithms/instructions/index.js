@@ -13,9 +13,10 @@ const KEY_UF_UNION = 'UNION';
 const KEY_UF_FIND = 'FIND';
 const KEY_UF_PC_ON = 'ON';
 const KEY_UF_PC_OFF = 'OFF';
+const KEY_INSDEL = 'INSERT/DELETE';
 
 export const KEY_WORDS = [
-  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
+  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD, KEY_INSDEL
 ];
 
 const bstInstructions = [
@@ -51,9 +52,9 @@ const stringInstructions = [{
   ],
 }];
 
-const hashingInstructions = [
+const hashingInstructions2 = [
   {
-    title: 'Insert Mode',
+    title: 'Insert/Delete Mode',
     content: [
     `Click on ${KEY_CODE} on the right panel.`,
     `Select small or larger table via the radio buttons.`,
@@ -153,4 +154,4 @@ export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
 export const DFSInstruction = graphInstructions;
 export const DFSrecInstruction = graphInstructions;
-export const HashingInstruction = hashingInstructions;
+export const HashingInstruction = hashingInstructions2;
