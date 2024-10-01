@@ -159,7 +159,7 @@ const allalgs = {
     param: <Param.HashingLPParam/>,
     instructions: Instructions.HashingInstruction,
     explanation: Explanation.HashingExp,
-    extraInfo: ExtraInfo.HashingInfoLP,
+    extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
       insertion: Pseudocode.linearProbing,
       search: Pseudocode.linearSearch,
@@ -176,7 +176,7 @@ const allalgs = {
     param: <Param.HashingDHParam/>,
     instructions: Instructions.HashingInstruction,
     explanation: Explanation.HashingExp,
-    extraInfo: ExtraInfo.HashingInfoDH,
+    extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
       insertion: Pseudocode.doubleHashing,
       search: Pseudocode.doubleSearch,
