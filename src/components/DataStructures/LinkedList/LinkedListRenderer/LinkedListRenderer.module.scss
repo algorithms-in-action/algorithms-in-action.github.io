@@ -70,17 +70,17 @@
           height: 40px;
           width: 30px;
 
-          &.diagonal {
-            // left: 100px;
-            transform: rotate(45deg) translateY(20px) translateX(20px);
-          }
-
           &.up {
             transform: rotate(-90deg) translateY(-32px) translateX(32px);
           }
-
           &.down {
             transform: rotate(90deg) translateY(32px) translateX(32px);
+          }
+          &.diagDown {
+            transform: rotate(45deg) translateY(20px) translateX(20px);
+          }
+          &.diagUp {
+            transform: rotate(-45deg) translateY(-20px) translateX(20px);
           }
         }
       }

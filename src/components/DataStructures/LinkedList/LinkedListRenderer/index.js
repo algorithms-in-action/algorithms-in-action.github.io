@@ -84,7 +84,12 @@ class LinkedListRenderer extends Renderer {
                                                 className={styles.arrow}
                                                 layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
                                             >
-                                                <svg className={classes(styles.arrow)}>
+                                                <svg className={classes(styles.arrow,
+                                                node.arrow===90 && styles.down,
+                                                node.arrow===-90 && styles.up,
+                                                node.arrow===45 && styles.diagDown,
+                                                node.arrow===-45 && styles.diagUp)
+                                                }>
                                                     <use href="#arrow-symbol"/>
                                                 </svg>
 

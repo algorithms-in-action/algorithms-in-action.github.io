@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'fix': Issue with update indices and stacking">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Arrows not displacing nodes and inclusion of all arrow directions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,28 +60,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Node.js.App.js.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.BFS.js.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.Prototype.js.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.heapSort.js.executor&quot;: &quot;Debug&quot;,
-    &quot;Node.js.quickSort_shared.js.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;LinkedListRender&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/carli/Downloads/index (2).js&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.1.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.App.js.executor": "Run",
+    "Node.js.BFS.js.executor": "Run",
+    "Node.js.Prototype.js.executor": "Run",
+    "Node.js.heapSort.js.executor": "Debug",
+    "Node.js.quickSort_shared.js.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "LinkedListRender",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/carli/Downloads/index (2).js",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\carli\WebstormProjects\ITprojectTeam2\src\components\DataStructures\LinkedList" />
@@ -211,7 +213,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727694804330</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="'feat': Arrows not displacing nodes and inclusion of all arrow directions">
+      <option name="closed" value="true" />
+      <created>1727790927984</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727790927984</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,6 +254,7 @@
     <MESSAGE value="'fix': Labels rendering messing up positioning of nodes" />
     <MESSAGE value="'feat': shift right for list, fix for empty index counts" />
     <MESSAGE value="'fix': Issue with update indices and stacking" />
-    <option name="LAST_COMMIT_MESSAGE" value="'fix': Issue with update indices and stacking" />
+    <MESSAGE value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
+    <option name="LAST_COMMIT_MESSAGE" value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
   </component>
 </project>

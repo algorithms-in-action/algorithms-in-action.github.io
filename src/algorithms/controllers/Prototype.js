@@ -82,6 +82,7 @@ export default {
         chunker.add(
             5,
             (vis) => {
+                vis.list.setArrow(0,0,0,90);
             },
         );
     }

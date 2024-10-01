@@ -44,7 +44,7 @@ class LinkedListTracer extends Tracer{
     }
 
     createNode(value) {
-        const newNode = {key: this.nodeKey++, value, next: null, patched: false, selected: false, variables: [] };
+        const newNode = {key: this.nodeKey++, value, next: null, patched: false, selected: false, variables: [], arrow: 0 };
         return newNode;
     }
 
@@ -83,6 +83,15 @@ class LinkedListTracer extends Tracer{
         }
         list.size--;
         this.syncChartTracer();
+    }
+
+    // set angle based on degree of rotation.
+    setArrow(nodeIndex, listIndex, layerIndex, direction) {
+        console.assert(Math.abs(direction)===45, "Invalid arrow Direction");
+
+        const node = this.findList(listIndex,  layerIndex).data[nodeIndex];
+        node.arrow = direction;
+
     }
 
     // Swaps two nodes by index within a specific list
