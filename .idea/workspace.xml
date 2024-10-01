@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="Fixed typos and updated instruc">
+    <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/instructions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/instructions/index.js" afterDir="false" />
     </list>
@@ -37,7 +37,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "josh__modify__instructions",
+    "git-widget-placeholder": "josh__modify__instructions__2",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
@@ -82,7 +82,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727151457158</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fixed typos and included instructions for better specificity as well as noting the 3 types of potential inputs into the insert parameter.">
+      <option name="closed" value="true" />
+      <created>1727764126263</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727764126263</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,6 +114,8 @@
     <MESSAGE value="Updating functions" />
     <MESSAGE value="Generalised code so that it works for big and small hashes" />
     <MESSAGE value="Search function working for LP small table, also added instructions and extra-info" />
-    <option name="LAST_COMMIT_MESSAGE" value="Search function working for LP small table, also added instructions and extra-info" />
+    <MESSAGE value="Fixed typos and updated instruc" />
+    <MESSAGE value="Fixed typos and included instructions for better specificity as well as noting the 3 types of potential inputs into the insert parameter." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed typos and included instructions for better specificity as well as noting the 3 types of potential inputs into the insert parameter." />
   </component>
 </project>
