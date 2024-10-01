@@ -56,26 +56,24 @@ const hashingInstructions2 = [
   {
     title: 'Insert/Delete Mode',
     content: [
-        `Enter a list of comma seperated integers into the ${KEY_INSDEL} field`,
-        'Make sure the length of the list does not exceed the table size:<br>' +
-        '<ul><li>For small table less than 11</li>' +
-        '<li>For larger table less than 97</li></ul>',
-        'Example inputs:<br>' +
-        '<ul><li>1 inputs standard integer 1</li>' +
-        '<li>1-5 inputs all numbers between 1 and 5</li>' +
-        '<li>1-5-2 inputs all numbers between 1 and 5 with an increment of 2 -> (1, 3, 5)</li>' +
-        '<li>-1 deletes (if it exists) the key 1 in the table</li></ul>',
-        `Click on ${KEY_INSDEL} to load the algorithm with the given input array.`,
-        `Click on ${KEY_PLAY} to watch the algorithm run.`
+    `Click on ${KEY_CODE} on the right panel.`,
+    `Select small or larger table via the radio buttons.`,
+    `Enter a comma separated list of integers into the Insert parameter.
+     There should be less than 11 integers if it is a small table, and less than 97 if it is a large table.
+     Valid inputs include a positive integer (e.g. 5) or a range of positive integers (e.g. 3-19) to insert
+     values into the table. Negative integers (e.g. -10) will attempt to delete the absolute value from the hash table.`,
+    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
     ],
   },
   {
     title: 'Search Mode',
     content: [
-        'Make sure table has inserted values before searching.',
-        'Enter a non-negative integer in the search parameter',
-        `Click on ${KEY_SEARCH} to enter search mode and load the algorithm`,
-        `Click on ${KEY_PLAY} to watch the algorithm run`
+    'Make sure table has inserted values before searching.',
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter an Integer in the Search parameter.',
+    `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
     ],
   },
 ];
