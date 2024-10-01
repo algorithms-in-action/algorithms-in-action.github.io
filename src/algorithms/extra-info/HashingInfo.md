@@ -14,34 +14,31 @@ a:hover{
 
 -----
 
-<h3>For a comprehensive explanation of Hashing algorithm:</h3>
+### For a comprehensive explanation of Hashing algorithm:
 
-<p>Geeks for Geeks Hashing introductory video:</p>
+Geeks for Geeks Hashing introductory video:
 
 <iframe width="320" height="180"
-src="https://www.youtube.com/embed/wWgIAphfn2U"
-frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
+    src="https://www.youtube.com/embed/wWgIAphfn2U"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
 </iframe>
 
-<h3>Extra Reading:</h3>
+### Extra Reading:
 
-<p>Geeks for Geeks Hashing Links:</p>
-<ul>
-    <li><a href="https://www.geeksforgeeks.org/hashing-data-structure/" 
-        target="_blank">Hashing</a>
-    </li>
-    <li><a href="https://www.geeksforgeeks.org/implementing-hash-table-open-addressing-linear-probing-cpp/"
-        target="_blank">Linear Probing</a>
-    </li>
-    <li><a href="https://www.geeksforgeeks.org/double-hashing/" 
-        target="_blank">Double Hashing</a>
-    </li>
-</ul>
+Geeks for Geeks Hashing Links:
 
-<h3>Real-life appliation of Hashing</h3>
+* [**Hashing**][G4GHashing]
+* [**Linear Probing**][G4GLP]
+* [**Double Hashing**][G4GDH]
 
-<span>Geeks for Geeks:</span>
-    <a href="https://www.geeksforgeeks.org/applications-of-hashing/"
-        target="_blank">Hashing Applications</a>
+### Real-life appliation of Hashing
+
+Geeks for Geeks: [**Hashing Applications**][G4GApplication]
+
+[G4GHashing]: "https://www.geeksforgeeks.org/hashing-data-structure/"
+[G4GLP]: "https://www.geeksforgeeks.org/implementing-hash-table-open-addressing-linear-probing-cpp/"
+[G4GDH]: "https://www.geeksforgeeks.org/double-hashing/"
+[G4GApplication]: "https://www.geeksforgeeks.org/applications-of-hashing/"
+
