@@ -613,8 +613,8 @@ export default {
             chunker.add(
                 't = AVLT_Insert(t, k)',
                 (vis, index) => {
-                    if (index > 0) vis.array.deselect(index - 1);
-                    vis.array.select(index);
+                    if (index > 0) vis.array.depatch(index - 1);
+                    vis.array.patch(index);
                 },
                 [i],
                 0
