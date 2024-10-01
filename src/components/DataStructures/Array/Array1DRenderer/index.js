@@ -235,7 +235,7 @@ class Array1DRenderer extends Array2DRenderer {
             <caption
               className={styles.captionmsort_arr_nat}
               kth-tag="msort_arr_nat_caption"
-            > runlength = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+            > runcount = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
       </table>
     );
