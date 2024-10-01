@@ -150,11 +150,12 @@ export default {
             updateHeight(root, depth);
             updateHeight(temp, depth);
             // update height in the graph
-            chunker.add('recompute heights of t6 and t2', (vis, r, h1, t, h2) => {
+            chunker.add('recompute heights of t6 and t2', (vis, r, h1, t, h2, d, h3) => {
                 vis.graph.updateHeight(r, h1);
                 vis.graph.updateHeight(t, h2);
+                if (d !== null) vis.graph.updateHeight(d, h3);
             },
-                [root.key, root.height, temp.key, temp.height],
+                [root.key, root.height, temp.key, temp.height, D ? D.key : null, D ? D.height : 0],
                 depth,
             );
 
@@ -273,11 +274,12 @@ export default {
             updateHeight(root, depth);
             updateHeight(temp, depth);
             // update height in the graph
-            chunker.add('recompute heights of t2 and t6', (vis, r, h1, t, h2) => {
+            chunker.add('recompute heights of t2 and t6', (vis, r, h1, t, h2, d, h3) => {
                 vis.graph.updateHeight(r, h1);
                 vis.graph.updateHeight(t, h2);
+                if (d !== null) vis.graph.updateHeight(d, h3);
             },
-                [root.key, root.height, temp.key, temp.height],
+                [root.key, root.height, temp.key, temp.height, D ? D.key : null, D ? D.height : 0],
                 depth,
             );
 
