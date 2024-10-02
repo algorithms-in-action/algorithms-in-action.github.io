@@ -56,6 +56,8 @@ class GraphTracer extends Tracer {
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
+
+    this.prevDepth = 0;
   }
 
   /* 
@@ -606,7 +608,7 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
-  layoutAVL(root = 0, sorted = false) {
+  layoutAVL(root = 0, sorted = false, freezDepth = false) {
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();
@@ -624,17 +626,25 @@ class GraphTracer extends Tracer {
     let maxDepth = 0;
     const nodeDepth = {};
     let marked = {};
-    const recursiveAnalyze = (id, depth) => {
-      marked[id] = true;
-      nodeDepth[id] = depth;
-      if (maxDepth < depth) maxDepth = depth;
-      const linkedNodeIds = this.findLinkedNodeIds(id, false);
-      for (const linkedNodeId of linkedNodeIds) {
-        if (marked[linkedNodeId]) continue;
-        recursiveAnalyze(linkedNodeId, depth + 1);
-      }
-    };
-    recursiveAnalyze(root, 0);
+    // Use 'freezDepth' to control the depth of the tree
+    if (!freezDepth) {
+      // Normally calculate the depth of the tree
+      const recursiveAnalyze = (id, depth) => {
+        marked[id] = true;
+        nodeDepth[id] = depth;
+        if (maxDepth < depth) maxDepth = depth;
+        const linkedNodeIds = this.findLinkedNodeIds(id, false);
+        for (const linkedNodeId of linkedNodeIds) {
+          if (marked[linkedNodeId]) continue;
+          recursiveAnalyze(linkedNodeId, depth + 1);
+        }
+      };
+      recursiveAnalyze(root, 0);
+      this.prevDepth = maxDepth; // store the previous depth
+    }else{
+      // kept the nodes in the same position as the previous layout
+      maxDepth = this.prevDepth;
+    }
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
@@ -644,6 +654,8 @@ class GraphTracer extends Tracer {
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       // 120 magic number to center root node//
+      // node.x = rect.left + h * this.hGap + 120;
+      // node.y = rect.top + v * this.vGap;
       node.x = rect.left + h * hGap + 120;
       node.y = rect.top + v * vGap;
       /* used to debug, delete in merge
