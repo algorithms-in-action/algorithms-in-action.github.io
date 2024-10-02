@@ -608,7 +608,7 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
-  layoutAVL(root = 0, sorted = false, isRotate = false) {
+  layoutAVL(root = 0, sorted = false, freezDepth = false) {
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();
@@ -626,48 +626,26 @@ class GraphTracer extends Tracer {
     let maxDepth = 0;
     const nodeDepth = {};
     let marked = {};
-    const recursiveAnalyze = (id, depth) => {
-      marked[id] = true;
-      nodeDepth[id] = depth;
-      if (maxDepth < depth) maxDepth = depth;
-      const linkedNodeIds = this.findLinkedNodeIds(id, false);
-      for (const linkedNodeId of linkedNodeIds) {
-        if (marked[linkedNodeId]) continue;
-        recursiveAnalyze(linkedNodeId, depth + 1);
-      }
-    };
-    recursiveAnalyze(root, 0);
-
-    // if (isRotate) {
-    //   console.log('isRotate');
-    //   this.hGap = this.hGap_prev;
-    //   this.vGap = this.vGap_prev;
-    // } else {
-    //   console.log('not isRotate');
-    //   // Calculates node's x and y.
-    //   // adjust hGap to some function of node number later//
-    //   this.hGap = rect.width - 150;
-    //   this.vGap = rect.height / maxDepth;
-
-    //   // record the previous hGap and vGap for rotation
-    //   this.hGap_prev = this.hGap;
-    //   this.vGap_prev = this.vGap;
-    // }
-
-    console.log('prev maxDepth', this.prevDepth);
-    if (isRotate) {
+    // Use 'freezDepth' to control the depth of the tree
+    if (!freezDepth) {
+      // Normally calculate the depth of the tree
+      const recursiveAnalyze = (id, depth) => {
+        marked[id] = true;
+        nodeDepth[id] = depth;
+        if (maxDepth < depth) maxDepth = depth;
+        const linkedNodeIds = this.findLinkedNodeIds(id, false);
+        for (const linkedNodeId of linkedNodeIds) {
+          if (marked[linkedNodeId]) continue;
+          recursiveAnalyze(linkedNodeId, depth + 1);
+        }
+      };
+      recursiveAnalyze(root, 0);
+      this.prevDepth = maxDepth; // store the previous depth
+    }else{
+      // kept the nodes in the same position as the previous layout
       maxDepth = this.prevDepth;
-    } else {
-      this.prevDepth = maxDepth;
     }
-    console.log('curr maxDepth', maxDepth);
 
-    // console.log('maxDepth!!!!!!!!!!!!', maxDepth);
-    // if (isRotate) {
-    //   console.log('--------------isRotate');
-    //   maxDepth = maxDepth + 1;
-    //   console.log('maxDepthRotate!!!!!!!!!!', maxDepth);
-    // }
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;

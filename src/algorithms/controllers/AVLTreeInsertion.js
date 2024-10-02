@@ -110,6 +110,8 @@ export default {
             console.log("add edge between " + A.key + " and " + R.key);
             chunker.add('t2.right = t6',
                 (vis, r, a, d, p, g, rotate) => {
+                    // freeze the depth of the tree, from start rotation
+                    vis.graph.layoutAVL(g, true, true);
                     if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
@@ -124,8 +126,6 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutAVL(g, true, true);
-
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
                 },
@@ -174,6 +174,7 @@ export default {
                         vis.graph.clearTID();
                         vis.graph.setTagInfo('');
                     }
+                    // de-freeze the depth of the tree, after finish rotation
                     vis.graph.layoutAVL(g, true, false);
                 },
                 [tidVis, G.key],
@@ -235,6 +236,8 @@ export default {
             }
             chunker.add('t6.left = t2',
                 (vis, r, a, d, p, g, rotate) => {
+                    // freeze the depth of the tree, from start rotation
+                    vis.graph.layoutAVL(g, true, true);
                     if (p !== null) {
                         vis.graph.removeEdge(p, r);
                         vis.graph.addEdge(p, a);
@@ -249,8 +252,6 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutAVL(g, true, true);
-
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
                 },
@@ -301,6 +302,7 @@ export default {
                         vis.graph.clearTID();
                         vis.graph.setTagInfo('');
                     }
+                    // de-freeze the depth of the tree, after finish rotation
                     vis.graph.layoutAVL(g, true, false);
                 },
                 [tidVis, G.key],
@@ -423,7 +425,6 @@ export default {
                             vis.graph.addEdge(p, r);
                         }
                         vis.graph.select(r, p);
-                        if (index === 0) vis.graph.layoutAVL(r, true);
                     },
                     [key, parentNode ? parentNode.key : null, currIndex],
                     depth
