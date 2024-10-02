@@ -124,7 +124,7 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutAVL(g, true);
+                    vis.graph.layoutAVL(g, true, true);
 
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
@@ -169,13 +169,14 @@ export default {
             }
 
             chunker.add('return t2',
-                (vis, tid) => {
+                (vis, tid, g) => {
                     if (tid) {
                         vis.graph.clearTID();
                         vis.graph.setTagInfo('');
                     }
+                    vis.graph.layoutAVL(g, true, false);
                 },
-                [tidVis],
+                [tidVis, G.key],
                 depth
             );
             return temp;
@@ -248,7 +249,7 @@ export default {
                     vis.graph.removeEdge(r, a);
                     if (rotate) vis.graph.resetVisitAndSelect(r, null);
                     vis.graph.addEdge(a, r);
-                    vis.graph.layoutAVL(g, true);
+                    vis.graph.layoutAVL(g, true, true);
 
                     // remove edge after layout to perform the middle step
                     if (d !== null) vis.graph.removeEdge(r, d);
@@ -295,13 +296,14 @@ export default {
             console.log("the height of " + root.key + " is " + root.height);
             console.log("the height of " + temp.key + " is " + temp.height);
             chunker.add('return t6',
-                (vis, tid) => {
+                (vis, tid, g) => {
                     if (tid) {
                         vis.graph.clearTID();
                         vis.graph.setTagInfo('');
                     }
+                    vis.graph.layoutAVL(g, true, false);
                 },
-                [tidVis],
+                [tidVis, G.key],
                 depth
             );
             return temp;
@@ -628,7 +630,7 @@ export default {
         chunker.add('n = new Node',
             (vis, k) => {
                 vis.graph.addNode(k, k, 1);
-                vis.graph.layoutAVL(k, true);
+                vis.graph.layoutAVL(k, true, false);
             },
             [nodes[0]],
             1

@@ -56,6 +56,8 @@ class GraphTracer extends Tracer {
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
+
+    this.prevDepth = 0;
   }
 
   /* 
@@ -606,7 +608,7 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
-  layoutAVL(root = 0, sorted = false) {
+  layoutAVL(root = 0, sorted = false, isRotate = false) {
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();
@@ -636,6 +638,36 @@ class GraphTracer extends Tracer {
     };
     recursiveAnalyze(root, 0);
 
+    // if (isRotate) {
+    //   console.log('isRotate');
+    //   this.hGap = this.hGap_prev;
+    //   this.vGap = this.vGap_prev;
+    // } else {
+    //   console.log('not isRotate');
+    //   // Calculates node's x and y.
+    //   // adjust hGap to some function of node number later//
+    //   this.hGap = rect.width - 150;
+    //   this.vGap = rect.height / maxDepth;
+
+    //   // record the previous hGap and vGap for rotation
+    //   this.hGap_prev = this.hGap;
+    //   this.vGap_prev = this.vGap;
+    // }
+
+    console.log('prev maxDepth', this.prevDepth);
+    if (isRotate) {
+      maxDepth = this.prevDepth;
+    } else {
+      this.prevDepth = maxDepth;
+    }
+    console.log('curr maxDepth', maxDepth);
+
+    // console.log('maxDepth!!!!!!!!!!!!', maxDepth);
+    // if (isRotate) {
+    //   console.log('--------------isRotate');
+    //   maxDepth = maxDepth + 1;
+    //   console.log('maxDepthRotate!!!!!!!!!!', maxDepth);
+    // }
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;
@@ -644,6 +676,8 @@ class GraphTracer extends Tracer {
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       // 120 magic number to center root node//
+      // node.x = rect.left + h * this.hGap + 120;
+      // node.y = rect.top + v * this.vGap;
       node.x = rect.left + h * hGap + 120;
       node.y = rect.top + v * vGap;
       /* used to debug, delete in merge
