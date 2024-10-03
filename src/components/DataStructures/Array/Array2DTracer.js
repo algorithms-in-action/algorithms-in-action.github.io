@@ -49,6 +49,7 @@ class Array2DTracer extends Tracer {
         [...array1d].map((value, i) => new Element(value, i))
       );
     } else {
+      this.data = [];
       this.splitArray = splitArray;
       this.splitArray.doSplit = true;
 

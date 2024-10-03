@@ -254,8 +254,6 @@ export default {
             vis.array.setSize(3);
           }
 
-          // reset array
-          vis.array.set();
           // Initialize the array
           vis.array.set(array,
             params.name,
