@@ -31,6 +31,8 @@ class ProgressBar extends React.Component {
   handleMouseMove(e) {
     e.preventDefault();
     let chunkNum;
+
+    // how far around mouse on X to look for viewable chunk
     let searchRadius = 10;
     let rect = this.inner.getBoundingClientRect();
     let width = rect.right - rect.left;
@@ -43,6 +45,7 @@ class ProgressBar extends React.Component {
       chunkNum = this.max - 1;
 
     } else {
+      // translate to viewable chunk array index
       x = Math.round((x / width) * this.max);
       if (x === this.current) {
         return;
@@ -70,6 +73,7 @@ class ProgressBar extends React.Component {
       }
     }
 
+    // move to chunk
     if (this.viewable[chunkNum]) {
       if (chunkNum > this.current) {
         this.next({stopAt: chunkNum, playing: false});
@@ -124,6 +128,7 @@ class ProgressBar extends React.Component {
       }
     }
 
+    // set the progress bar body
     const setProgress = (ref, val) => {
       setTransform(ref, `scaleX(${val})`);
     }
@@ -132,6 +137,7 @@ class ProgressBar extends React.Component {
       setTransform(ref, `scaleX(${val})`);
     }
 
+    // set the slider thumb position
     const setThumb = (thumb, value) => {
       if (thumb !== null) {
         const { style } = thumb;

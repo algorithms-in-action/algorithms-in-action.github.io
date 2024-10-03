@@ -211,7 +211,12 @@ function addLineExplanation(procedurePseudocode) {
   }
 }
 
-// get the list showing which chunks can be viewed
+/**
+ * Get the array of viewable state of chunks
+ * @param {object} chunker: current chunker instance
+ * @param {object} pseudocode: pseudocode of current algorithm
+ * @param {object} collapse: collapse state of pseudocode
+ */
 function viewableChunks(chunker, pseudocode, collapse) {
   let currChunkNum = 0;
   let viewable = Array(chunker.chunks.length).fill(false);
