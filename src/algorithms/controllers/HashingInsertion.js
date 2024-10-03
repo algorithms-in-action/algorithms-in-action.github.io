@@ -19,8 +19,8 @@ import {
   FULL_SIGNAL,
   newCycle
 } from './HashingCommon';
-import { translateInput } from '../parameters/helpers/ParamHelper.js';
-import HashingDelete from './HashingDelete.js';
+import { translateInput } from '../parameters/helpers/ParamHelper';
+import HashingDelete from './HashingDelete';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
@@ -108,7 +108,8 @@ export default {
      */
     function hashInsert(table, key, prevIdx, isBulkInsert) {
       // Chunker for when table is full
-      if (total == table.length - 1) {
+      console.log(total);
+      if (total + 1 === Math.round(table.length * 0.8)) {
         chunker.add(
           IBookmarks.TableFull,
           (vis, total) => {
@@ -116,12 +117,6 @@ export default {
           },
           [total]
         )
-        // chunker.add(
-        //   IBookmarks.TableFull,
-        //   (vis) => {
-        //     vis.array.set();
-        //   },
-        // )
         return FULL_SIGNAL;
       }
 
@@ -139,8 +134,8 @@ export default {
         }
       }
 
-      insertions = insertions + 1; // Increment insertions
-      total = total + 1; // Increment total
+      insertions++; // Increment insertions
+      total++; // Increment total
 
       if (!isBulkInsert) {
       // Chunker step for increasing the insertion stat
