@@ -13,6 +13,7 @@
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
 /* eslint-disable import/no-unresolved */
+import { node } from 'prop-types';
 import AVLTreeInsertion from '../../../algorithms/controllers/AVLTreeInsertion';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
@@ -53,6 +54,8 @@ class GraphTracer extends Tracer {
     this.functionName = null;
     this.functionNode = null;
     this.functionBalance = null;
+    this.rectangleNode = null;
+    this.rectangle = null;
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
@@ -282,6 +285,88 @@ class GraphTracer extends Tracer {
     // eslint-disable-next-line max-len
     this.nodes.push({ id, value, height, AVL_TID, shape, color, weight, x, y, Select_Circle_Count, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
     this.layout();
+  }
+
+  setRect(x_r, y_u, x_l, y_d) {
+    if (this.rectangle == null) {
+      this.rectangle = [x_r, y_u, x_l, y_d, ''];
+    } else {
+      if (x_r < this.rectangle[0]) {
+        this.rectangle[0] = x_r;
+      }
+      if (y_u < this.rectangle[1]) {
+        this.rectangle[1] = y_u;
+      }
+      if (x_l > this.rectangle[2]) {
+        this.rectangle[2] = x_l;
+      }
+      if (y_d > this.rectangle[3]) {
+        this.rectangle[3] = y_d;
+      }
+      if (this.functionName == `Rotaiton: `) {
+        this.rectangle[4] = this.functionInsertText;
+      }
+    }
+  }
+
+  Children_Balance() {
+    // Traversal of the entire tree, counting number of leaves.
+    let maxDepth = 0;
+    let marked = {};
+    let root = Number(this.functionNode);
+    let nodeDepth = {};
+    this.rectangleNode = [];
+
+    //console.log(`??????????? Node ID: ${root}`);
+
+    const recursiveAnalyze = (id, depth) => {
+
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(this.root, 0);
+
+    let mark = {};
+    const recursive = (id) => {
+      mark[id] = true;
+
+      this.rectangleNode.push(id);
+      //console.log(`|||||||||||||||||||||: ${id} depth ${nodeDepth[id]} `);
+
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (mark[linkedNodeId]) continue;
+        if (nodeDepth[linkedNodeId] < nodeDepth[root]) continue;
+
+        recursive(linkedNodeId);
+      }
+    };
+    recursive(root);
+  }
+
+  rectangle_size() {
+    if (this.rectangleNode != null) {
+      for (const id of this.rectangleNode) {
+        const node = this.findNode(id);
+        if (node != null && node.x != null && node.y != null) {
+          this.setRect(node.x, node.y, node.x, node.y);
+          //console.log(`freezDepth!!!!!!!!!!!!!!!!!!!!!!!!! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
+          //this.clearRect();
+        }
+      }
+    }
+
+  }
+
+  clearRect() {
+    //this.rectangleNode = null;
+    this.rectangle = null;
   }
 
   addResult(text, id) {
@@ -628,6 +713,7 @@ class GraphTracer extends Tracer {
     let marked = {};
     // Use 'freezDepth' to control the depth of the tree
     if (!freezDepth) {
+
       // Normally calculate the depth of the tree
       const recursiveAnalyze = (id, depth) => {
         marked[id] = true;
@@ -641,7 +727,7 @@ class GraphTracer extends Tracer {
       };
       recursiveAnalyze(root, 0);
       this.prevDepth = maxDepth; // store the previous depth
-    }else{
+    } else {
       // kept the nodes in the same position as the previous layout
       maxDepth = this.prevDepth;
     }
@@ -663,6 +749,12 @@ class GraphTracer extends Tracer {
       console.log(middle_x + " " + h + " " + hGap + " " +node.id);
       console.log(middle_y + " " + v + " " + vGap + " " +node.id);
       */
+      if (this.functionName == `Rotaiton: `) {
+        this.clearRect();
+        //this.Children_Balance();
+        this.rectangle_size();
+      }
+
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -898,12 +990,25 @@ class GraphTracer extends Tracer {
   }
 
   setFunctionBalance(functionBalance) {
+
+    if (functionBalance != null && (functionBalance > 1 || functionBalance < -1)) {
+      this.Children_Balance();
+      this.rectangle_size();
+    } else {
+      this.clearRect();
+    }
     this.functionBalance = functionBalance;
   }
 
   // dispaly the function name on the AVL tree
   setFunctionName(name) {
     this.functionName = name;
+    if (this.functionName !== `Rotaiton: `) {
+      this.clearRect();
+    } else {
+      this.Children_Balance();
+      this.rectangle_size();
+    }
   }
 
 
