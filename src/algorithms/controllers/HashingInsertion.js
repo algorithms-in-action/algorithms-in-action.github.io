@@ -17,6 +17,8 @@ import {
   DELETE_CHAR,
   HASH_TYPE,
   FULL_SIGNAL,
+  PRIMES,
+  POINTER_CUT_OFF,
   newCycle
 } from './HashingCommon';
 import { translateInput } from '../parameters/helpers/ParamHelper';
@@ -39,14 +41,9 @@ const IBookmarks = {
   TableNotFull: 20,
 }
 
-// size of table to extend
-const primesExtend = [
-  11, 23, 47, 97, 197, 397
-];
-
 function extendTable(table) {
   let currSize = table.length;
-  let nextSize = primesExtend[primesExtend.indexOf(currSize) + 1];
+  let nextSize = PRIMES[PRIMES.indexOf(currSize) + 1];
 
   return [
     new Array(nextSize),
@@ -163,7 +160,7 @@ export default {
           (vis, idx) => {
 
             // Pointer only appear for small table
-            if (table.length === SMALL_SIZE) {
+            if (table.length <= PRIMES[POINTER_CUT_OFF]) {
               vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             }
 
@@ -204,7 +201,7 @@ export default {
             (vis, idx) => {
 
               // Pointer only appears for small tables
-              if (table.length === SMALL_SIZE) {
+              if (table.length <= PRIMES[POINTER_CUT_OFF]) {
                 vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
               }
               vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Filling the pending slot with yellow
@@ -281,7 +278,7 @@ export default {
               break;
           }
         },
-        [table.length, table.length === SMALL_SIZE ?
+        [table.length, table.length <= PRIMES[POINTER_CUT_OFF] ?
           [indexArr, valueArr, nullArr] :
           [indexArr, valueArr]
         ]
@@ -340,7 +337,8 @@ export default {
               (vis, insertions, prevIdx) => {
                 vis.array.unfill(INDEX, 0, undefined, table.length - 1); // Reset any coloring of slots
                 vis.array.showKth({key: item, type: HASH_TYPE.BulkInsert, insertions: insertions, increment: ""});
-                if (table.length === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
+                if (table.length <= PRIMES[POINTER_CUT_OFF])
+                  vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
 
                 // Empty graphs
                 vis.graph.updateNode(HASH_GRAPH.Key, ' ');
@@ -368,7 +366,7 @@ export default {
         vis.array.showKth({key: "", type: EMPTY_CHAR, insertions: insertions, increment: ""}) // Nullify some stats, for better UI
 
         // Hide pointer
-        if (table.length === SMALL_SIZE) {
+        if (table.length <= PRIMES[POINTER_CUT_OFF]) {
           vis.array.assignVariable(POINTER_VALUE, POINTER, undefined);
         }
 

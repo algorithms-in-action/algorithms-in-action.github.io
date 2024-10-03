@@ -10,6 +10,8 @@ import {
   SMALL_SIZE,
   DELETE_CHAR,
   HASH_TYPE,
+  PRIMES,
+  POINTER_CUT_OFF,
   newCycle
 } from './HashingCommon';
 
@@ -64,7 +66,7 @@ export default {
       (vis, target) => {
 
         vis.array.showKth({key: target, type: HASH_TYPE.Search}); // Show stats
-        
+
         newCycle(vis, SIZE, target, ALGORITHM_NAME);
       },
       [TARGET]
@@ -80,7 +82,7 @@ export default {
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
-        if (SIZE === SMALL_SIZE) {
+        if (SIZE <= PRIMES[POINTER_CUT_OFF]) {
           vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer only shows for small tables
         }
         vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Highlight initial search position
@@ -117,7 +119,7 @@ export default {
       chunker.add(
         IBookmarks.Probing,
         (vis, idx) => {
-          if (SIZE === SMALL_SIZE) {
+          if (SIZE <= PRIMES[POINTER_CUT_OFF]) {
             vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer is only shown for small tables
           }
         },
