@@ -405,18 +405,15 @@ export default {
             //console.log("the root of insert is " + root.key);
 
             chunker.add('AVLT_Insert(t, k)',
-
-
-                (vis, k, d, index) => {
+                (vis, k, d, index, r) => {
                     if (d === 1) {
                         vis.array.depatch(index - 1);
                         vis.array.patch(index);
                     }
                     vis.graph.setFunctionName("AVLT_Insert");
-                    vis.graph.setFunctionInsertText("(  t , " + k + " )");
-
+                    vis.graph.setFunctionInsertText(`( ...${r}... , ${k} )`);
                 },
-                [key, depth, currIndex],
+                [key, depth, currIndex, root ? root.key : "empty"],
                 depth
             );
 
@@ -465,12 +462,14 @@ export default {
             if (key < root.key) {
                 // Ref insertLeft
                 chunker.add('prepare for the left recursive call', (vis) => null, [], depth);
+                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
                 insert(root.left, key, currIndex, root, depth + 1);
                 chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
             } else if (key > root.key) {
                 chunker.add('else if k > root(t).key', (vis) => null, [], depth);
                 // Ref insertRight
                 chunker.add('prepare for the right recursive call', (vis) => null, [], depth);
+                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
                 insert(root.right, key, currIndex, root, depth + 1);
                 chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
             } else {
@@ -627,7 +626,7 @@ export default {
             'if t = Empty',
             (vis, k, k_p) => {
                 vis.graph.setFunctionName("AVLT_Insert");
-                vis.graph.setFunctionInsertText("( " + k_p + " , " + k + " )");
+                vis.graph.setFunctionInsertText(`( ...empty... , ${k} )`);
             },
             [nodes[0], nodes[0].parentNode],
             1
