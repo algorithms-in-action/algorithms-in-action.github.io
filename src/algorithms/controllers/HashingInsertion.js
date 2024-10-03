@@ -39,6 +39,23 @@ const IBookmarks = {
   TableNotFull: 20,
 }
 
+// size of table to extend
+const primesExtend = [
+  11, 23, 47, 97, 197, 397
+];
+
+function extendTable(table) {
+  let currSize = table.length;
+  let nextSize = primesExtend[primesExtend.indexOf(currSize) + 1];
+
+  return [
+    new Array(nextSize),
+    Array.from({ length: nextSize }, (_, i) => i),
+    Array(nextSize).fill(EMPTY_CHAR),
+    Array(nextSize).fill('')
+  ]
+}
+
 export default {
   explanation: HashingExp,
 
@@ -91,14 +108,20 @@ export default {
      */
     function hashInsert(table, key, prevIdx, isBulkInsert) {
       // Chunker for when table is full
-      if (total == SIZE - 1) {
+      if (total == table.length - 1) {
         chunker.add(
           IBookmarks.TableFull,
           (vis, total) => {
-            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is full, stopping insertion..."});
+            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is full, extending table..."});
           },
           [total]
         )
+        // chunker.add(
+        //   IBookmarks.TableFull,
+        //   (vis) => {
+        //     vis.array.set();
+        //   },
+        // )
         return FULL_SIGNAL;
       }
 
@@ -108,8 +131,8 @@ export default {
           chunker.add(
             IBookmarks.TableNotFull,
             (vis, total) => {
-              newCycle(vis, SIZE, key, ALGORITHM_NAME); // New insert cycle
-              vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is not full, continuing..."});
+              newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
+              vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is not full, continuing..."});
             },
             [total]
           )
@@ -131,11 +154,11 @@ export default {
       }
 
       // Get initial hash index for current key
-      let i = hash1(chunker, IBookmarks.Hash1, key, SIZE, !isBulkInsert);
+      let i = hash1(chunker, IBookmarks.Hash1, key, table.length, !isBulkInsert);
 
       // Calculate increment for current key
       let increment = setIncrement(
-        chunker, IBookmarks.ChooseIncrement, key, SIZE, ALGORITHM_NAME, HASH_TYPE.Insert, !isBulkInsert
+        chunker, IBookmarks.ChooseIncrement, key, table.length, ALGORITHM_NAME, HASH_TYPE.Insert, !isBulkInsert
       );
 
       if (!isBulkInsert) {
@@ -145,7 +168,7 @@ export default {
           (vis, idx) => {
 
             // Pointer only appear for small table
-            if (SIZE === SMALL_SIZE) {
+            if (table.length === SMALL_SIZE) {
               vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             }
 
@@ -168,7 +191,7 @@ export default {
       // Internal code for probing, while loop indicates finding an empty slot for insertion
       while (table[i] !== undefined && table[i] !== key && table[i] !== DELETE_CHAR) {
         let prevI = i;
-        i = (i + increment) % SIZE; // This is to ensure the index never goes over table size
+        i = (i + increment) % table.length; // This is to ensure the index never goes over table size
 
         if (!isBulkInsert) {
           // Chunker for collision
@@ -186,7 +209,7 @@ export default {
             (vis, idx) => {
 
               // Pointer only appears for small tables
-              if (SIZE === SMALL_SIZE) {
+              if (table.length === SMALL_SIZE) {
                 vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
               }
               vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Filling the pending slot with yellow
@@ -216,119 +239,133 @@ export default {
       return i;
     }
 
-    // Init hash table
-    let table = new Array(SIZE);
-    chunker.add(
-      IBookmarks.Init,
-      (vis, array) => {
-        // Increase Array2D visualizer render space
-        if (SIZE >= LARGE_SIZE) {
-          vis.array.setSize(3);
-        }
-
-        // Initialize the array
-        vis.array.set(array,
-          params.name,
-          '',
-          {
-            rowLength: SIZE === LARGE_SIZE ? SPLIT_SIZE : SMALL_SIZE,
-            rowHeader: ['Index', 'Value', '']
-          }
-        );
-
-        vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
-
-        vis.graph.weighted(true);
-
-        // Intialize the graphs
-        switch (ALGORITHM_NAME) {
-          case "HashingLP" :
-            vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, 0], [5, 0]]);
-            break;
-          case "HashingDH" :
-            vis.graph.set([
-              [0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]], // Node edges
-              [' ', ' ', ' ', ' '], // Node values
-              [[-5, 2], [5, 2], [-5, -2], [5, -2]]); // Node positions
-            break;
-        }
-      },
-      [SIZE === SMALL_SIZE ?
-        [indexArr, valueArr, nullArr] :
-        [indexArr, valueArr]
-      ]
-    );
-
-    // Chunker to initialize empty array visually
-    chunker.add(
-      IBookmarks.EmptyArray,
-      (vis) => {
-        // Show the value row
-        vis.array.hideArrayAtIndex(POINTER);
-      },
-    );
-
-    // Chunker for intializing insertion stat
-    chunker.add(
-      IBookmarks.InitInsertion,
-      (vis, insertions) => {
-        vis.array.showKth({
-          key: "",
-          type: EMPTY_CHAR,
-          insertions: insertions,
-          increment: "",
-        });
-      },
-      [insertions]
-    )
-
-    // Magic numbers for length of splitting a postive integer string by "-", the index of "", and the number to delete when a negative integer is split by "-"
-    const POS_INTEGER_SPLIT_LENGTH = 1;
-    const EMPTY_DELETE_SPLIT_INDEX = 0;
-    const NUMBER_DELETE_SPLIT_INDEX = 1;
 
     // Inserting inputs
     let prevIdx;
-    for (const item of inputs) {
-      if (prevIdx == FULL_SIGNAL) break; // Stop insertion when the table is full
+    // Init hash table
+    let table = new Array(SIZE);
 
-      // Different cases of insertion and deletion
-      let split_arr = item.split("-");
-      if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
-        for (const key of translateInput(item, "Array")) {
-          prevIdx = hashInsert(table, key, prevIdx, false);
-        }
-      }
-      else {
-        if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") { // When the input is a negative integer -> delete
-          let key = Number(split_arr[NUMBER_DELETE_SPLIT_INDEX]);
-          total = HashingDelete(chunker, params, key, table, total);
-        }
-        else { // When the input is a range -> bulk insert
-          // Preparation for bulk insertion
-          chunker.add(
-            IBookmarks.BulkInsert,
-            (vis, insertions, prevIdx) => {
-              vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Reset any coloring of slots
-              vis.array.showKth({key: item, type: HASH_TYPE.BulkInsert, insertions: insertions, increment: ""});
-              if (SIZE === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
+    // main loop allowing table extension
+    do {
+      prevIdx = null;
+      insertions = 0;
+      total = 0;
 
-              // Empty graphs
-              vis.graph.updateNode(HASH_GRAPH.Key, ' ');
-              vis.graph.updateNode(HASH_GRAPH.Value, ' ');
-              if (ALGORITHM_NAME === "HashingDH") {
-                vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
-                vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
-              }
-            },
-            [insertions, prevIdx]
-          )
+      chunker.add(
+        IBookmarks.Init,
+        (vis, size, array) => {
+          // Increase Array2D visualizer render space
+          if (size >= LARGE_SIZE) {
+            vis.array.setSize(3);
+          }
+
+          // reset array
+          vis.array.set();
+          // Initialize the array
+          vis.array.set(array,
+            params.name,
+            '',
+            {
+              rowLength: size > SMALL_SIZE ? SPLIT_SIZE : SMALL_SIZE,
+              rowHeader: ['Index', 'Value', '']
+            }
+          );
+
+          vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+
+          vis.graph.weighted(true);
+
+          // Intialize the graphs
+          switch (ALGORITHM_NAME) {
+            case "HashingLP" :
+              vis.graph.set([[0, 'Hash'], [0, 0]], [' ', ' '], [[-5, 0], [5, 0]]);
+              break;
+            case "HashingDH" :
+              vis.graph.set([
+                [0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]], // Node edges
+                [' ', ' ', ' ', ' '], // Node values
+                [[-5, 2], [5, 2], [-5, -2], [5, -2]]); // Node positions
+              break;
+          }
+        },
+        [table.length, table.length === SMALL_SIZE ?
+          [indexArr, valueArr, nullArr] :
+          [indexArr, valueArr]
+        ]
+      );
+
+      // Chunker to initialize empty array visually
+      chunker.add(
+        IBookmarks.EmptyArray,
+        (vis) => {
+          // Show the value row
+          vis.array.hideArrayAtIndex(POINTER);
+        },
+      );
+
+      // Chunker for intializing insertion stat
+      chunker.add(
+        IBookmarks.InitInsertion,
+        (vis, insertions) => {
+          vis.array.showKth({
+            key: "",
+            type: EMPTY_CHAR,
+            insertions: insertions,
+            increment: "",
+          });
+        },
+        [insertions]
+      )
+
+      // Magic numbers for length of splitting a postive integer string by "-", the index of "", and the number to delete when a negative integer is split by "-"
+      const POS_INTEGER_SPLIT_LENGTH = 1;
+      const EMPTY_DELETE_SPLIT_INDEX = 0;
+      const NUMBER_DELETE_SPLIT_INDEX = 1;
+
+      for (const item of inputs) {
+        if (prevIdx == FULL_SIGNAL) {
+          [table, indexArr, valueArr, nullArr] = extendTable(table);
+          break;
+        }
+
+        // Different cases of insertion and deletion
+        let split_arr = item.split("-");
+        if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
           for (const key of translateInput(item, "Array")) {
-            prevIdx = hashInsert(table, key, prevIdx, true);
+            prevIdx = hashInsert(table, key, prevIdx, false);
+          }
+        }
+        else {
+          if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") { // When the input is a negative integer -> delete
+            let key = Number(split_arr[NUMBER_DELETE_SPLIT_INDEX]);
+            total = HashingDelete(chunker, params, key, table, total);
+          }
+          else { // When the input is a range -> bulk insert
+            // Preparation for bulk insertion
+            chunker.add(
+              IBookmarks.BulkInsert,
+              (vis, insertions, prevIdx) => {
+                vis.array.unfill(INDEX, 0, undefined, table.length - 1); // Reset any coloring of slots
+                vis.array.showKth({key: item, type: HASH_TYPE.BulkInsert, insertions: insertions, increment: ""});
+                if (table.length === SMALL_SIZE) vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
+
+                // Empty graphs
+                vis.graph.updateNode(HASH_GRAPH.Key, ' ');
+                vis.graph.updateNode(HASH_GRAPH.Value, ' ');
+                if (ALGORITHM_NAME === "HashingDH") {
+                  vis.graph.updateNode(HASH_GRAPH.Key2, ' ');
+                  vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
+                }
+              },
+              [insertions, prevIdx]
+            )
+            for (const key of translateInput(item, "Array")) {
+              prevIdx = hashInsert(table, key, prevIdx, true);
+            }
           }
         }
       }
-    }
+    } while (prevIdx == FULL_SIGNAL);
 
     // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(
@@ -338,11 +375,11 @@ export default {
         vis.array.showKth({key: "", type: EMPTY_CHAR, insertions: insertions, increment: ""}) // Nullify some stats, for better UI
 
         // Hide pointer
-        if (SIZE === SMALL_SIZE) {
+        if (table.length === SMALL_SIZE) {
           vis.array.assignVariable(POINTER_VALUE, POINTER, undefined);
         }
 
-        vis.array.unfill(INDEX, 0, undefined, SIZE - 1); // Unfill all boxes
+        vis.array.unfill(INDEX, 0, undefined, table.length - 1); // Unfill all boxes
 
         // Reset graphs and uncolor the graph if needed
         vis.graph.updateNode(HASH_GRAPH.Key, ' ');
