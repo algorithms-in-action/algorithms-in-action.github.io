@@ -112,6 +112,7 @@ class GraphTracer extends Tracer {
    * @param {array} array2d 2D array of nodes
    */
   set(array2d = [], values = [], coordinates = []) {
+    this.scaledCoords = coordinates;
     this.setNodeRadius(coordinates);
 
     // Set layout to null if nodes are to be displayed by coordinates.
@@ -130,6 +131,7 @@ class GraphTracer extends Tracer {
       else
       {
         // Do not change this value unless you also change axis scales
+        // and also check handleMouseMove
         const scaleSize = 30;
         const x = coordinates[i][0] * scaleSize;
         const y = -coordinates[i][1] * scaleSize;
@@ -273,6 +275,10 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
+  moveNodeFn(moveNode) {
+    this.moveNode = moveNode;
+  }
+
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
     x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '') {
@@ -398,8 +404,10 @@ class GraphTracer extends Tracer {
     const unitAngle = (2 * Math.PI) / this.nodes.length;
     let angle = -Math.PI / 2;
     for (const node of this.nodes) {
-      const x = (Math.cos(angle) * rect.width) / 2;
-      const y = (Math.sin(angle) * rect.height) / 2;
+      // XXX see comment about magic numbers in constructor() in
+      // Graph/GraphRenderer/index.js
+      const x = 650 - 200 + (Math.cos(angle) * rect.width) / 2;
+      const y = -200 - 70 + (Math.sin(angle) * rect.height) / 2;
       node.x = x;
       node.y = y;
       angle += unitAngle;
