@@ -402,6 +402,8 @@ export default {
         // Function to insert a key into the AVL tree and balance the tree if needed
         function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
+            //console.log("the root of insert is " + root.key);
+
             chunker.add('AVLT_Insert(t, k)',
                 (vis, k, d, index, r) => {
                     if (d === 1) {
@@ -620,11 +622,11 @@ export default {
         // Populate the ArrayTracer using nodes
         chunker.add(
             'if t = Empty',
-            (vis, k) => {
+            (vis, k, k_p) => {
                 vis.graph.setFunctionName("AVLT_Insert");
                 vis.graph.setFunctionInsertText(`( ...empty... , ${k} )`);
             },
-            [nodes[0]],
+            [nodes[0], nodes[0].parentNode],
             1
         );
 
