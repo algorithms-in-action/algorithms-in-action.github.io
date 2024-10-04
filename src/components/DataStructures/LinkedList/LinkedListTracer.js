@@ -1,6 +1,10 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable max-classes-per-file */
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable arrow-parens */
+/* eslint-disable operator-linebreak */
 /* eslint-disable max-len */
 // eslint-disable-next-line import/no-unresolved
 import Tracer from "../common/Tracer"; // Assume we have a renderer for linked lists
@@ -8,6 +12,8 @@ import LinkedListRenderer from './LinkedListRenderer';
 
 class LinkedListTracer extends Tracer{
 
+
+class LinkedListTracer extends Tracer {
     getRendererClass() {
         return LinkedListRenderer;
     }
@@ -63,26 +69,27 @@ class LinkedListTracer extends Tracer{
     removeAt(index, listIndex = 0) {
         // REWRITE
         const list = this.lists[listIndex];
-        if (!list || index < 0 || index >= list.size) return;
-
-        let current = list.head;
-        if (index === 0) {
-            list.head = current.next;
-            list.data.shift();
-        } else {
-            let previous = null;
-            for (let i = 0; i < index; i++) {
-                previous = current;
-                current = current.next;
-            }
-            previous.next = current.next;
-            if (index === list.size - 1) {
-                list.tail = previous;
-            }
-            list.data.splice(index, 1);
+        if (list && nodeIndex >= 0 && nodeIndex < list.length) {
+            list[nodeIndex].sorted = true;
         }
-        list.size--;
-        this.syncChartTracer();
+    }
+
+    select(listIndex, startIndex, endIndex = startIndex) {
+        const list = this.lists[listIndex];
+        for (let i = startIndex; i <= endIndex; i++) {
+            if (i >= 0 && i < list.length) {
+                list[i].selected++;
+            }
+        }
+    }
+
+    deselect(listIndex, startIndex, endIndex = startIndex) {
+        const list = this.lists[listIndex];
+        for (let i = startIndex; i <= endIndex; i++) {
+            if (i >= 0 && i < list.length) {
+                list[i].selected = false;
+            }
+        }
     }
 
     // set angle based on degree of rotation.
@@ -228,8 +235,8 @@ class LinkedListTracer extends Tracer{
     select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
         const list = this.findList(listIndex,  layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = true;
+            if (i >= 0 && i < list.length) {
+                list[i].faded = true;
             }
         }
     }
@@ -238,11 +245,12 @@ class LinkedListTracer extends Tracer{
     deselect(startIndex, endIndex = startIndex, listIndex = 0, layerIndex=0) {
         const list = this.findList(listIndex,  layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = false;
+            if (i >= 0 && i < list.length) {
+                list[i].faded = false;
             }
         }
     }
+
 
     // Adds a variable to a specific node in a specific list
     addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
@@ -253,23 +261,35 @@ class LinkedListTracer extends Tracer{
         }
     }
 
-    // Removes a variable from all nodes in all lists
-    removeVariable(variable) {
-        this.lists.forEach(list => {
-            list.data.forEach((node) => {
-                node.variables = node.variables.filter((val) => val !== variable);
-            });
-        });
+    syncChartTracer() {
+        if (this.chartTracer) {
+            this.chartTracer.data = this.lists.map(list => list);
+        }
+    }
+
+    swap(listIndex, nodeIndex1, nodeIndex2) {
+        const list = this.lists[listIndex];
+        if (nodeIndex1 < 0 || nodeIndex1 >= list.length || nodeIndex2 < 0 || nodeIndex2 >= list.length) {
+            return;
+        }
+
+        const tempValue = list[nodeIndex1].value;
+        list[nodeIndex1].value = list[nodeIndex2].value;
+        list[nodeIndex2].value = tempValue;
+
         this.syncChartTracer();
     }
 
-    // Clears all variables from all nodes in all lists
-    clearVariables() {
-        this.lists.forEach(list => {
-            list.data.forEach((node) => {
-                node.variables = [];
-            });
-        });
+    reverse(listIndex) {
+        let prev = null;
+        let current = this.lists[listIndex][0];
+        while (current) {
+            let next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        this.lists[listIndex][0] = prev;
         this.syncChartTracer();
     }
 
@@ -277,21 +297,44 @@ class LinkedListTracer extends Tracer{
     assignVariable(variable, nodeIndex, listIndex = 0) {
         this.removeVariable(variable);
         this.addVariable(variable, nodeIndex, listIndex);
+
     }
 
-    // Synchronizes the chart tracer
-    syncChartTracer() {
-        if (this.chartTracer) {
-            this.chartTracer.data = this.lists.map(list => list.data); // Sync all lists with the tracer
+    split(listIndex, nodeIndex) {
+        const list = this.lists[listIndex];
+        if (nodeIndex < 0 || nodeIndex >= list.length) {
+            return;
+        }
+
+        const newList = list.splice(nodeIndex + 1);
+        list[nodeIndex].next = null;
+        this.lists.push(newList);
+        this.syncChartTracer();
+    }
+
+    clear(listIndex) {
+        this.lists[listIndex] = [];
+        this.syncChartTracer();
+    }
+
+    setList(array) {
+        if (array) {
+            this.lists = array.map(listData =>
+                listData.map(value => new Element(value))
+            );
+        } else {
+            this.lists = [];
         }
     }
 
-    // Returns a string representation of all linked lists
-    stringTheContent() {
-        return this.lists
-            .map((list, index) => `List ${index + 1}: ${list.data.map((node) => node.value).join(' -> ')}`)
-            .join('\n');
+    getKth() {
+        return this.kth; // Ensure `this.kth` is defined somewhere if you want to track this
+    }
+
+    showKth(k = '0') {
+        this.kth = k; // Define `this.kth` in your class constructor if you need it
     }
 }
 
 export default LinkedListTracer;
+
