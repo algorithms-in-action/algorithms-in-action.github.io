@@ -12,8 +12,6 @@ import LinkedListRenderer from './LinkedListRenderer';
 
 class LinkedListTracer extends Tracer{
 
-
-class LinkedListTracer extends Tracer {
     getRendererClass() {
         return LinkedListRenderer;
     }
@@ -60,36 +58,9 @@ class LinkedListTracer extends Tracer {
         list.size++;
     }
 
-    // TO DO Appends a value to a specific list by index
+    // TO DO: append a value to a specific list by index
     addToList(value, listIndex = 0) {
         // TO DO
-    }
-
-    // TO DO Removes a node at a specific index from a specific list
-    removeAt(index, listIndex = 0) {
-        // REWRITE
-        const list = this.lists[listIndex];
-        if (list && nodeIndex >= 0 && nodeIndex < list.length) {
-            list[nodeIndex].sorted = true;
-        }
-    }
-
-    select(listIndex, startIndex, endIndex = startIndex) {
-        const list = this.lists[listIndex];
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.length) {
-                list[i].selected++;
-            }
-        }
-    }
-
-    deselect(listIndex, startIndex, endIndex = startIndex) {
-        const list = this.lists[listIndex];
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.length) {
-                list[i].selected = false;
-            }
-        }
     }
 
     // set angle based on degree of rotation.
