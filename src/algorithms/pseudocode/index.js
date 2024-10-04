@@ -21,3 +21,5 @@ export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
 export { default as PROTOTYPE } from './PROTOTYPE';
+export { default as jeffPrototype } from './JEFFPROTOTYPE';
+

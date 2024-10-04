@@ -1,8 +1,13 @@
 /* eslint-disable import/no-unresolved */
 import Tracer from '../common/Tracer';
 import ListRenderer from './ListRenderer/index';
+import LinkedListRenderer from "../LinkedList/LinkedListRenderer";
 
 class ListTracer extends Tracer {
+
+    getRendererClass() {
+        return ListRenderer;
+    }
 
     init() {
         super.init();
@@ -27,13 +32,11 @@ class ListTracer extends Tracer {
 
     // Set values for a specific list
     set(values = [], listIndex = 0) {
-        console.log('set called with values:', values, 'listIndex:', listIndex);
         this.addList(listIndex);  // Ensure list exists
         this.lists[listIndex].objects = [];  // Clear the list objects
         for (let index in values) {
             this.addNode(index, values[index], listIndex);  // Add each node to the list
         }
-        console.log('Set list at index', listIndex, 'to values:', values);
     }
 
     // Add a new list if it doesn't exist
@@ -130,7 +133,6 @@ class ListTracer extends Tracer {
 
     // Set label in a specific list
     setLabel(label, newIndex = null, newLabel = null, listIndex = 0) {
-        console.log('setLabel called with label:', label, 'newIndex:', newIndex, 'newLabel:', newLabel, 'listIndex:', listIndex);
         const matchedLabel = this.lists[listIndex]?.labels.find(match => match.label === label);
 
         if (matchedLabel) {
@@ -150,11 +152,9 @@ class ListTracer extends Tracer {
 
     // Clear all nodes and labels from a specific list
     clear(listIndex = 0) {
-        console.log('clear called with listIndex:', listIndex);
         if (this.lists[listIndex]) {
             this.lists[listIndex].objects = [];
             this.lists[listIndex].labels = [];
-            console.log('Cleared objects and labels in list', listIndex);
         } else {
             console.warn('List at index', listIndex, 'does not exist. Cannot clear.');
         }
@@ -162,7 +162,6 @@ class ListTracer extends Tracer {
 
     // Clear all lists
     clearAll() {
-        console.log('clearAll called');
         this.lists = [];
         // Reset nextListIndex
         this.nextListIndex = 0;
@@ -171,11 +170,9 @@ class ListTracer extends Tracer {
 
     // Select a node in a specific list
     select(id, listIndex = 0) {
-        console.log('select called with id:', id, 'listIndex:', listIndex);
         const node = this.lists[listIndex]?.objects.find(obj => obj.id === id);
         if (node) {
             node.isSelected = true;
-            console.log('Node selected:', node);
         } else {
             console.warn('Node with id', id, 'not found in list', listIndex);
         }
@@ -183,10 +180,8 @@ class ListTracer extends Tracer {
 
     // Clear all labels across all lists
     clearLabels(listIndex = 0) {
-        console.log('clearLabels called with listIndex:', listIndex);
         if (this.lists[listIndex]) {
             this.lists[listIndex].labels = [];
-            console.log('Cleared labels in list', listIndex);
         } else {
             console.warn('List at index', listIndex, 'does not exist. Cannot clear labels.');
         }

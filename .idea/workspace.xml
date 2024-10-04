@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="Deleting useless documents">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Tracer support for moving arrows in 5 directions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/Prototype.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/PROTOTYPE.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/ListRenderer.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListRenderer/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/pseudocode/JEFFPROTOTYPE.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/pseudocode/JEFFPROTOTYPE.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/LinkedListRenderer.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Team2Main" />
+        <entry key="$PROJECT_DIR$" value="LinkedListRenderer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,16 +38,17 @@
     &quot;assignee&quot;: &quot;jiafeilin1&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="d036ae6e-463a-46c4-b630-71721b110fc8" />
-        <option name="url" value="https://github.com/jiafeilin1/ITprojectTeam2.git" />
-      </UrlAndAccount>
-    </option>
-  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jiafeilin1/ITprojectTeam2.git&quot;,
+    &quot;accountId&quot;: &quot;110a167a-08af-4a12-bab1-3ebea60bce8d&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -69,7 +70,7 @@
     "Node.js.quickSort_shared.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Team2Main",
+    "git-widget-placeholder": "LinkedListRender",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/carli/Downloads/index (2).js",
     "node.js.detected.package.eslint": "true",
@@ -89,6 +90,13 @@
       <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List\ListTracer" />
     </key>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -105,6 +113,10 @@
       <workItem from="1724037366078" duration="9880000" />
       <workItem from="1724577427107" duration="11050000" />
       <workItem from="1725063617753" duration="5788000" />
+      <workItem from="1727495974535" duration="26728000" />
+      <workItem from="1727654844546" duration="10811000" />
+      <workItem from="1727666934294" duration="12026000" />
+      <workItem from="1727681905135" duration="15401000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -130,7 +142,95 @@
       <option name="project" value="LOCAL" />
       <updated>1725758267977</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="'fix': issues around linked list initiation in tracer and renderer">
+      <option name="closed" value="true" />
+      <created>1727515923081</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727515923081</updated>
+    </task>
+    <task id="LOCAL-00005" summary="'feat': Rendering of multi list with animation and label">
+      <option name="closed" value="true" />
+      <created>1727536811936</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727536811936</updated>
+    </task>
+    <task id="LOCAL-00006" summary="'fix': class separation of labels and nodes">
+      <option name="closed" value="true" />
+      <created>1727658638985</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727658638985</updated>
+    </task>
+    <task id="LOCAL-00007" summary="'feat': Splitting lists and renderer support">
+      <option name="closed" value="true" />
+      <created>1727662676533</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727662676533</updated>
+    </task>
+    <task id="LOCAL-00008" summary="'feat': Renderer Vertical layering + list split">
+      <option name="closed" value="true" />
+      <created>1727670649610</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727670649610</updated>
+    </task>
+    <task id="LOCAL-00009" summary="'fix': Split function working as intended now">
+      <option name="closed" value="true" />
+      <created>1727679281891</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727679281891</updated>
+    </task>
+    <task id="LOCAL-00010" summary="'fix': Labels rendering messing up positioning of nodes">
+      <option name="closed" value="true" />
+      <created>1727681093294</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1727681093294</updated>
+    </task>
+    <task id="LOCAL-00011" summary="'feat': shift right for list, fix for empty index counts">
+      <option name="closed" value="true" />
+      <created>1727687986316</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1727687986316</updated>
+    </task>
+    <task id="LOCAL-00012" summary="'fix': Issue with update indices and stacking">
+      <option name="closed" value="true" />
+      <created>1727694804330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1727694804330</updated>
+    </task>
+    <task id="LOCAL-00013" summary="'feat': Arrows not displacing nodes and inclusion of all arrow directions">
+      <option name="closed" value="true" />
+      <created>1727790927984</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727790927984</updated>
+    </task>
+    <task id="LOCAL-00014" summary="'feat': Tracer support for moving arrows in 5 directions">
+      <option name="closed" value="true" />
+      <created>1727791997341</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727791997341</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -153,6 +253,18 @@
     <MESSAGE value="Linked List Data Structure and List Data Structure Added" />
     <MESSAGE value="Resolved error with parameter files. Blocker currently at data structure." />
     <MESSAGE value="Deleting useless documents" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleting useless documents" />
+    <MESSAGE value="'fix': issues around linked list initiation in tracer and renderer" />
+    <MESSAGE value="'feat': Rendering of multi list with animation and label" />
+    <MESSAGE value="'fix': class separation of labels and nodes" />
+    <MESSAGE value="'feat': Splitting lists and renderer support" />
+    <MESSAGE value="'feat': Vertical layering + list split" />
+    <MESSAGE value="'feat': Renderer Vertical layering + list split" />
+    <MESSAGE value="'fix': Split function working as intended now" />
+    <MESSAGE value="'fix': Labels rendering messing up positioning of nodes" />
+    <MESSAGE value="'feat': shift right for list, fix for empty index counts" />
+    <MESSAGE value="'fix': Issue with update indices and stacking" />
+    <MESSAGE value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
+    <MESSAGE value="'feat': Tracer support for moving arrows in 5 directions" />
+    <option name="LAST_COMMIT_MESSAGE" value="'feat': Tracer support for moving arrows in 5 directions" />
   </component>
 </project>

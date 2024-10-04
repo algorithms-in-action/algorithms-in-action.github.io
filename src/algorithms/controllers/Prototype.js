@@ -3,6 +3,7 @@
 import {areExpanded} from './collapseChunkPlugin';
  */
 import ListTracer from "../../components/DataStructures/List/ListTracer";
+import LinkedListTracer from "../../components/DataStructures/LinkedList/LinkedListTracer";
 
 
 
@@ -27,7 +28,7 @@ export default {
     initVisualisers() {
         return {
             list: {
-                instance: new ListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
+                instance: new LinkedListTracer('list', null, 'List Prototype', { arrayItemMagnitudes: true }),
                 order: 0,
             }
         };
@@ -49,51 +50,47 @@ export default {
         chunker.add(
             1,
             (vis, list) => {
-                vis.list.set(list);
-            },
+                vis.list.addList(list);},
             [nodes]
         );
 
         // Split List into two sections
-        chunker.add(
-            2,
-            (vis) => {
-                vis.list.select(0);
-            },
-        );
-
-        chunker.add(
-            201,
-            (vis) => {
-                vis.list.addLabel(0, "Slow");
-                vis.list.addLabel(0, "Fast");
-            },
-        );
-
-        chunker.add(202);
-
-        for (let i = 1; i < n / 2; i++) {
-            let fast = i * 2;
-            slow = i;
+        for (let i= 0; i <= 2; i++) {
             chunker.add(
-                203,
+                2,
                 (vis) => {
-                    vis.list.setLabel('Slow', i);
-                    vis.list.setLabel('Fast', fast);
+                    vis.list.splitList(vis.list.findList(0, 0).size / 2, 0, 0);
                 },
             );
-            chunker.add(202);
         }
 
         chunker.add(
-            204,
+            3,
             (vis) => {
-                vis.list.clearLabels();
-                vis.list.addLabel(0, "Left");
-                vis.list.addLabel(slow + 1, "Right");
-                vis.list.select(slow + 1);
-            })
+                vis.list.moveList(1,0,0, 'stack');
+            },
+        );
+
+        chunker.add(
+            4,
+            (vis) => {
+                vis.list.select(0);
+                vis.list.select(0,0,0,1);
+            },
+        );
+
+        chunker.add(
+            5,
+            (vis) => {
+                vis.list.setArrow(0,0,0,90);
+            },
+        );
+
+        chunker.add(
+            6,
+            (vis) => {
+                vis.list.patch(0,0,0);
+            },
+        );
     }
-
-
 };
