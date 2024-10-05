@@ -168,6 +168,13 @@
         opacity: 0.2
       }
 
+      &.highlightRow {
+        background-color: var(--graph-node-circle-fill);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
     }
   }
 }

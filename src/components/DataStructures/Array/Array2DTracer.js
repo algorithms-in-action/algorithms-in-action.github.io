@@ -42,13 +42,14 @@ class Array2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], algo, kth = 1, splitArray) {
+  set(array2d = [], algo, kth = 1, highlightRow, splitArray) {
     if (splitArray === undefined || splitArray.rowLength < 1) {
       this.splitArray = {doSplit: false};
       this.data = array2d.map((array1d) =>
         [...array1d].map((value, i) => new Element(value, i))
       );
     } else {
+      this.data = [];
       this.splitArray = splitArray;
       this.splitArray.doSplit = true;
 
@@ -92,6 +93,7 @@ class Array2DTracer extends Tracer {
     this.motionOn = true; // whether to use animation
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
+    this.highlightRow = highlightRow;
     super.set();
   }
 
@@ -523,7 +525,7 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  /**(e) => e.value
+  /**
    * Extract the array at the given row(s) of the array.
    * @param {*} row the row index(es).
    * @param {*} empty the character to change to empty.
@@ -579,6 +581,10 @@ class Array2DTracer extends Tracer {
       extract[i] = (extract[i] === empty) ? undefined : extract[i];
     }
     return extract;
+  }
+
+  setHighlightRow(row) {
+    this.highlightRow = row;
   }
 }
 
