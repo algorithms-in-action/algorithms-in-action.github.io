@@ -307,6 +307,7 @@ export default {
           vis.array.set(array,
             params.name,
             '',
+            INDEX,
             {
               rowLength: size > SMALL_SIZE ? SPLIT_SIZE : SMALL_SIZE,
               rowHeader: ['Index', 'Value', '']
