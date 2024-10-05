@@ -19,8 +19,8 @@ import {
   FULL_SIGNAL,
   newCycle
 } from './HashingCommon';
-import { translateInput } from '../parameters/helpers/ParamHelper.js';
-import HashingDelete from './HashingDelete.js';
+import { translateInput } from '../parameters/helpers/ParamHelper';
+import HashingDelete from './HashingDelete';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
@@ -89,7 +89,7 @@ export default {
      * @param {*} isBulkInsert whether it is bulk insert or not
      * @returns the index the key is assigned
      */
-    function hashInsert(table, key, prevIdx, isBulkInsert) {
+    function hashInsert(table, key, isBulkInsert) {
       // Chunker for when table is full
       if (total == SIZE - 1) {
         chunker.add(
@@ -216,6 +216,58 @@ export default {
       return i;
     }
 
+    function hashBulkInsert(table, keys) {
+      let lastHash;
+      let inserts = {};
+      for (const key of keys) {
+        if (total == table.length - 1) {
+          inserts[key] = FULL_SIGNAL;
+          lastHash = FULL_SIGNAL;
+          break;
+        }
+
+        insertions++;
+        total++;
+
+        // hashed value
+        let i = hash1(null, null, key, table.length, false);
+
+        // increment for probing
+        let increment = setIncrement(
+          null,
+          null,
+          key,
+          table.length,
+          ALGORITHM_NAME,
+          HASH_TYPE.Insert,
+          false
+        );
+
+        while (table[i] !== undefined) {
+          i = (i + increment) % table.length; // This is to ensure the index never goes over table size
+        }
+
+        table[i] = key;
+        inserts[key] = i;
+        lastHash = i;
+      }
+
+      chunker.add(
+        IBookmarks.PutIn,
+        (vis, keys, inserts, insertions) => {
+          for (const key of keys) {
+            if (inserts[key] === FULL_SIGNAL) break;
+            vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
+            vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert); // Filling the pending slot with yellow
+          }
+          vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
+        },
+        [keys, inserts, insertions]
+      )
+
+      return lastHash;
+    }
+
     // Init hash table
     let table = new Array(SIZE);
     chunker.add(
@@ -294,10 +346,8 @@ export default {
 
       // Different cases of insertion and deletion
       let split_arr = item.split("-");
-      if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
-        for (const key of translateInput(item, "Array")) {
-          prevIdx = hashInsert(table, key, prevIdx, false);
-        }
+      if (split_arr.length === POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
+        prevIdx = hashInsert(table, parseInt(item), false);
       }
       else {
         if (split_arr[EMPTY_DELETE_SPLIT_INDEX] === "") { // When the input is a negative integer -> delete
@@ -323,9 +373,7 @@ export default {
             },
             [insertions, prevIdx]
           )
-          for (const key of translateInput(item, "Array")) {
-            prevIdx = hashInsert(table, key, prevIdx, true);
-          }
+          prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
         }
       }
     }
