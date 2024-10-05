@@ -102,7 +102,8 @@ class Array2DRenderer extends Renderer {
       listOfNumbers,
       motionOn,
       hideArrayAtIdx,
-      splitArray
+      splitArray,
+      highlightRow
     } = this.props.data;
     let centerX = this.centerX;
     let centerY = this.centerY;
@@ -186,21 +187,6 @@ class Array2DRenderer extends Renderer {
               if (algo === 'prim' || algo == 'unionFind') {
                 return <React.Fragment key={i} />;
               }
-              // if (algo === 'HashingLP' || algo === 'HashingDH') {
-              //   if (currentSub === 0) {
-              //     return;
-              //   }
-              //   return (
-              //     <th
-              //       className={styles.col}
-              //       style={{
-              //         backgroundColor: 'var(--array-2d-row-col-border)'
-              //       }}
-              //     >
-              //       <span />
-              //     </th>
-              //   )
-              // }
               return (
                 <th className={classes(styles.col, styles.index)} key={i}>
                   <span className={styles.value}>{i}</span>
@@ -250,6 +236,7 @@ class Array2DRenderer extends Renderer {
                   <td
                     className={classes(
                       styles.col,
+                      (i === highlightRow) && styles.highlightRow,
                       col.selected && styles.selected,
                       col.patched && styles.patched,
                       col.sorted && styles.sorted,
@@ -258,7 +245,7 @@ class Array2DRenderer extends Renderer {
                       col.selected3 && styles.selected3,
                       varGreen && styles.variableGreen,
                       varOrange && styles.variableOrange,
-                      varRed && styles.variableRed
+                      varRed && styles.variableRed,
                     )}
                     key={j}
                   >
@@ -464,7 +451,7 @@ class Array2DRenderer extends Renderer {
             {(algo === 'HashingLP' ||
               algo === 'HashingDH' ) &&
               kth !== '' &&
-              (kth.fullCheck == undefined ? 
+              (kth.fullCheck == undefined ?
               (
                 <span
                   className={styles.captionHashing}
