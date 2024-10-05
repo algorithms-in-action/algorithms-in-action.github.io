@@ -258,7 +258,7 @@ export default {
           for (const key of keys) {
             if (inserts[key] === FULL_SIGNAL) break;
             vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
-            vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert); // Filling the pending slot with yellow
+            vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
           }
           vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
         },

@@ -236,6 +236,7 @@ class Array2DRenderer extends Renderer {
                   <td
                     className={classes(
                       styles.col,
+                      (i === highlightRow) && styles.highlightRow,
                       col.selected && styles.selected,
                       col.patched && styles.patched,
                       col.sorted && styles.sorted,
@@ -245,7 +246,6 @@ class Array2DRenderer extends Renderer {
                       varGreen && styles.variableGreen,
                       varOrange && styles.variableOrange,
                       varRed && styles.variableRed,
-                      (highlightRow === i) && styles.highlightRow
                     )}
                     key={j}
                   >
