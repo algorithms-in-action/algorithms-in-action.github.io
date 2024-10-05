@@ -103,7 +103,7 @@ export default {
      * @param {*} isBulkInsert whether it is bulk insert or not
      * @returns the index the key is assigned
      */
-    function hashInsert(table, key, prevIdx, isBulkInsert) {
+    function hashInsert(table, key, isBulkInsert) {
       // Chunker for when table is full
       console.log(total);
       if (total + 1 === Math.round(table.length * 0.8)) {
@@ -231,6 +231,58 @@ export default {
       return i;
     }
 
+    function hashBulkInsert(table, keys) {
+      let lastHash;
+      let inserts = {};
+      for (const key of keys) {
+        if (total == table.length - 1) {
+          inserts[key] = FULL_SIGNAL;
+          lastHash = FULL_SIGNAL;
+          break;
+        }
+
+        insertions++;
+        total++;
+
+        // hashed value
+        let i = hash1(null, null, key, table.length, false);
+
+        // increment for probing
+        let increment = setIncrement(
+          null,
+          null,
+          key,
+          table.length,
+          ALGORITHM_NAME,
+          HASH_TYPE.Insert,
+          false
+        );
+
+        while (table[i] !== undefined) {
+          i = (i + increment) % table.length; // This is to ensure the index never goes over table size
+        }
+
+        table[i] = key;
+        inserts[key] = i;
+        lastHash = i;
+      }
+
+      chunker.add(
+        IBookmarks.PutIn,
+        (vis, keys, inserts, insertions) => {
+          for (const key of keys) {
+            if (inserts[key] === FULL_SIGNAL) break;
+            vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
+            vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
+          }
+          vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
+        },
+        [keys, inserts, insertions]
+      )
+
+      return lastHash;
+    }
+
 
     // Inserting inputs
     let prevIdx;
@@ -340,7 +392,6 @@ export default {
                 if (table.length <= PRIMES[POINTER_CUT_OFF])
                   vis.array.assignVariable("", POINTER, prevIdx, POINTER_VALUE); // Hide pointer
 
-                // Empty graphs
                 vis.graph.updateNode(HASH_GRAPH.Key, ' ');
                 vis.graph.updateNode(HASH_GRAPH.Value, ' ');
                 if (ALGORITHM_NAME === "HashingDH") {
@@ -350,10 +401,8 @@ export default {
               },
               [insertions, prevIdx]
             )
-            for (const key of translateInput(item, "Array")) {
-              prevIdx = hashInsert(table, key, prevIdx, true);
-            }
           }
+          prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
         }
       }
     } while (prevIdx == FULL_SIGNAL);
