@@ -459,13 +459,25 @@ export default {
                 // Ref insertLeft
                 chunker.add('prepare for the left recursive call', (vis) => null, [], depth);
                 insert(root.left, key, currIndex, root, depth + 1);
-                chunker.add('left(t) <- AVLT_Insert(left(t), k)', (vis) => null, [], depth);
+                chunker.add('left(t) <- AVLT_Insert(left(t), k)',
+                    (vis, k, r) => {
+                        vis.graph.setFunctionName("AVLT_Insert");
+                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                    },
+                    [key, root ? root.key : "Empty"],
+                    depth);
             } else if (key > root.key) {
                 chunker.add('else if k > root(t).key', (vis) => null, [], depth);
                 // Ref insertRight
                 chunker.add('prepare for the right recursive call', (vis) => null, [], depth);
                 insert(root.right, key, currIndex, root, depth + 1);
-                chunker.add('right(t) <- AVLT_Insert(right(t), k)', (vis) => null, [], depth);
+                chunker.add('right(t) <- AVLT_Insert(right(t), k)',
+                    (vis, k, r) => {
+                        vis.graph.setFunctionName("AVLT_Insert");
+                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                    },
+                    [key, root ? `...${root.key}...` : "Empty"],
+                    depth);
             } else {
                 // Key already exists in the tree
                 chunker.add('else k = root(t).key',
