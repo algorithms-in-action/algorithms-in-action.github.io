@@ -175,7 +175,7 @@ export function setIncrement(
 export function newCycle(vis, size, key, name) {
   vis.array.unfill(INDEX, 0, undefined, size - 1); // Reset any coloring of slots
 
-  if (size === SMALL_SIZE) {
+  if (size <= PRIMES[POINTER_CUT_OFF]) {
     vis.array.resetVariable(POINTER); // Reset pointer
   }
 

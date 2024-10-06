@@ -375,7 +375,7 @@ export default {
         let split_arr = item.split("-");
         if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
           for (const key of translateInput(item, "Array")) {
-            prevIdx = hashInsert(table, key, prevIdx, false);
+            prevIdx = hashInsert(table, key, false);
           }
         }
         else {
@@ -402,8 +402,8 @@ export default {
               },
               [insertions, prevIdx]
             )
+            prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
           }
-          prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
         }
       }
     } while (prevIdx == FULL_SIGNAL);
