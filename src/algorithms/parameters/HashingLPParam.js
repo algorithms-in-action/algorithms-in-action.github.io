@@ -32,6 +32,8 @@ const UNCHECKED = {
     largeTable: false
 };
 
+const DEFAULT_EXTEND = false;
+
 // Styling of radio buttons
 const BlueRadio = withStyles({
   root: {
@@ -63,6 +65,7 @@ function HashingLPParam() {
     smallTable: true,
     largeTable: false,
   });
+  const [extend, setExtend] = useState(DEFAULT_EXTEND);
 
     /**
    * Handle changes to input
@@ -70,6 +73,14 @@ function HashingLPParam() {
    */
   const handleChange = (e) => {
     setHashSize({ ...UNCHECKED, [e.target.name]: true })
+  }
+
+  /**
+   * Handle extend
+   * @param {*} e the input box component
+   */
+  const handleExtend = (e) => {
+    setExtend(!extend.on)
   }
 
   /**
@@ -93,7 +104,8 @@ function HashingLPParam() {
           name: 'HashingLP',
           mode: 'insertion',
           hashSize: hashSize,
-          values
+          values,
+          extend: extend
         });
         setMessage(successParamMsg(ALGORITHM_NAME));
       }
@@ -140,6 +152,14 @@ function HashingLPParam() {
     [HASHSize],
   );
 
+  // Use effect to detect changes in extend radio box choice
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [extend],
+  );
+
 
   return (
     <>
@@ -181,28 +201,51 @@ function HashingLPParam() {
          />}
       </div>
 
-      <FormControlLabel
-        control={
-          <BlueRadio
-            checked={HASHSize.smallTable}
-            onChange={handleChange}
-            name="smallTable"
+      <div
+        style={{
+          justifyContent: 'space-between',
+          display: 'flex',
+        }}
+      >
+        <div>
+          <FormControlLabel
+            control={
+              <BlueRadio
+                checked={HASHSize.smallTable}
+                onChange={handleChange}
+                name="smallTable"
+              />
+            }
+            label="Small Table"
+            className="checkbox"
           />
-        }
-        label="Small Table"
-        className="checkbox"
-      />
-      <FormControlLabel
-        control={
-          <BlueRadio
-            checked={HASHSize.largeTable}
-            onChange={handleChange}
-            name="largeTable"
+          <FormControlLabel
+            control={
+              <BlueRadio
+                checked={HASHSize.largeTable}
+                onChange={handleChange}
+                name="largeTable"
+              />
+            }
+            label="Larger Table"
+            className="checkbox"
           />
-        }
-        label="Larger Table"
-        className="checkbox"
-      />
+        </div>
+
+
+        <div>
+          <FormControlLabel
+            control={
+              <BlueRadio
+                checked={extend}
+                onClick={handleExtend}
+              />
+            }
+            label="Extend Table"
+            className="checkbox"
+          />
+        </div>
+      </div>
 
       {/* render success/error message */}
       {message}

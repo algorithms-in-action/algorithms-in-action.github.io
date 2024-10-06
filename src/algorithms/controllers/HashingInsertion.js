@@ -105,8 +105,11 @@ export default {
      */
     function hashInsert(table, key, isBulkInsert) {
       // Chunker for when table is full
-      console.log(total);
-      if (total + 1 === Math.round(table.length * 0.8)) {
+      const limit = () => {
+        if (params.extend) return total + 1 === Math.round(table.length * 0.8);
+        return total === table.length - 1;
+      }
+      if (limit()) {
         chunker.add(
           IBookmarks.TableFull,
           (vis, total) => {
@@ -406,7 +409,7 @@ export default {
           }
         }
       }
-    } while (prevIdx == FULL_SIGNAL);
+    } while (params.extend && prevIdx == FULL_SIGNAL);
 
     // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(
