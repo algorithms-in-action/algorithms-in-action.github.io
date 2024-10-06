@@ -113,7 +113,8 @@ AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
   \\In{
     if t = Empty \\B if t = Empty
     \\In{
-      create new node n containing k \\Ref NewNode
+      //Both subtrees are Empty and the height is 1
+      create new node n containing k \\B create new node
       return (pointer to) n // return a single-node tree \\B return n
       \\Expl{  The returned tree has just
               one node, with key k, empty sub-trees and height 1.
@@ -214,15 +215,6 @@ for diagrams etc explaining rotations.
     \\Expl}
     return (pointer to) t6 // new root \\B return t6
   \\In} 
-\\Code}
-
-\\Code{
-NewNode
-    n <- new Node     // create a new node to hold key k \\B n = new Node
-    n.key <- k \\B n.key = k
-    n.left <- Empty   // It will be a leaf, that is, \\B n.left = Empty
-    n.right <- Empty  //  it has empty subtrees. \\B n.right = Empty
-    n.height <- 1     // It has height 1 \\B n.height = 1
 \\Code}
 
 \\Code{

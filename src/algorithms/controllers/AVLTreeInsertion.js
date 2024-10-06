@@ -28,15 +28,11 @@ export default {
         if (nodes.length === 0) return;
 
         class AVLNode {
-            constructor(key, depth) {
+            constructor(key) {
                 this.key = key;
-                chunker.add('n.key = k', (vis, k) => { }, [], depth);
                 this.left = null;
-                chunker.add('n.left = Empty', (vis, k) => { }, [], depth);
                 this.right = null;
-                chunker.add('n.right = Empty', (vis, k) => { }, [], depth);
                 this.height = 1;
-                chunker.add('n.height = 1', (vis, k) => { }, [], depth);
             }
         }
 
@@ -419,7 +415,7 @@ export default {
 
             if (root === null) {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
-                chunker.add('n = new Node',
+                chunker.add('create new node',
                     (vis, r, p, index) => {
                         vis.graph.addNode(r, r, 1);
 
@@ -432,7 +428,7 @@ export default {
                     depth
                 );
                 // Initialize the AVL tree with the first key
-                let root = new AVLNode(key, depth);
+                let root = new AVLNode(key);
 
                 chunker.add('return n',
                     (vis, r, p) => {
@@ -630,7 +626,7 @@ export default {
             1
         );
 
-        chunker.add('n = new Node',
+        chunker.add('create new node',
             (vis, k) => {
                 vis.graph.addNode(k, k, 1);
                 vis.graph.layoutAVL(k, true, false);
@@ -639,7 +635,11 @@ export default {
             1
         );
 
-        let globalRoot = new AVLNode(nodes[0], 1);
+        chunker.add('return n',
+            (vis) => {}, [], 1
+        );
+
+        let globalRoot = new AVLNode(nodes[0]);
 
         for (let i = 1; i < nodes.length; i++) {
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
