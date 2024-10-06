@@ -281,6 +281,37 @@ if balance > 1 && k < left(t).key // left-left case \\B if balance > 1 && k < le
   subtree.
 \\Expl}
 \\In{
+  Perform "Left-Left Case" rotation \\Ref left-left_case_rotate
+\\In}
+if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k > right(t).key
+\\Expl{
+  Key k was inserted into the right-right subtree and made t unbalanced.
+  We must re-balance the tree with a "left rotation" that lifts up this
+  subtree.
+\\Expl}
+\\In{
+    Perform "Right-Right Case" rotation \\Ref right-right_case_rotate
+\\In}
+if balance > 1 && k > left(t).key // left-right case (double rotation) \\B if balance > 1 && k > left(t).key
+\\Expl{
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
+\\Expl}
+\\In{
+  Perform "Left-Right Case" rotation \\Ref left-right_case_rotate
+\\In}
+if balance < -1 && k < right(t).key // right-left case (double rotation) \\B if balance < -1 && k < right(t).key
+\\Expl{
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
+\\Expl}
+\\In{
+  Perform "Right-Left Case" rotation \\Ref right-left_case_rotate
+\\In}
+\\Code}
+
+\\Code{
+left-left_case_rotate
   // Perform "right rotation" to re-balance t \\B perform right rotation to re-balance t
   \\Expl{
     See Background (click at the top of the right panel)
@@ -292,14 +323,10 @@ if balance > 1 && k < left(t).key // left-left case \\B if balance > 1 && k < le
     back to the insert call???; May be better to inline it
   \\Note} 
   return rightRotate(t) \\B return rightRotate(t)
-\\In}
-if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k > right(t).key
-\\Expl{
-  Key k was inserted into the right-right subtree and made t unbalanced.
-  We must re-balance the tree with a "left rotation" that lifts up this
-  subtree.
-\\Expl}
-\\In{
+\\Code}
+
+\\Code{
+right-right_case_rotate
   // Perform "left rotation" to re-balance t \\B perform left rotation to re-balance t
   \\Expl{
     See Background (click at the top of the right panel)
@@ -309,13 +336,10 @@ if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k
     See notes in left-left case
   \\Note} 
   return leftRotate(t) \\B return leftRotate(t)
-\\In}
-if balance > 1 && k > left(t).key // left-right case (double rotation) \\B if balance > 1 && k > left(t).key
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-\\In{
+\\Code}
+
+\\Code{
+left-right_case_rotate
   // Perform "left rotation" on the left subtree \\B perform left rotation on the left subtree
   \\Note{
     Animation should stop at the comment above then jump to the
@@ -334,13 +358,10 @@ for diagrams etc explaining rotations.
     back to the insert call???; May be better to inline it
   \\Note} 
   return rightRotate(t) \\B return rightRotate(t) after leftRotate
-\\In}
-if balance < -1 && k < right(t).key // right-left case (double rotation) \\B if balance < -1 && k < right(t).key
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-\\In{
+\\Code}
+
+\\Code{
+right-left_case_rotate
   // Perform "right rotation" on the right subtree \\B perform right rotation on the right subtree
   \\Note{
     See notes for left-right case
@@ -351,7 +372,6 @@ for diagrams etc explaining rotations.
   \\Expl}
   // Return "left rotation" on t \\B return left rotation on t
   return leftRotate(t) \\B return leftRotate(t) after rightRotate
-\\In}
 \\Code}
 
 \\Note{  This is an implementation in C (from geeksforgeeks, with very
