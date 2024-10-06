@@ -356,7 +356,7 @@ class GraphTracer extends Tracer {
         const node = this.findNode(id);
         if (node != null && node.x != null && node.y != null) {
           this.setRect(node.x, node.y, node.x, node.y);
-          //console.log(`freezDepth!!!!!!!!!!!!!!!!!!!!!!!!! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
+          //console.log(`freezDepth! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
           //this.clearRect();
         }
       }
