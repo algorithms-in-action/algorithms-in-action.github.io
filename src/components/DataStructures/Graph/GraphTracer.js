@@ -351,6 +351,8 @@ class GraphTracer extends Tracer {
   }
 
   rectangle_size() {
+    // this.clearRect();
+    // this.setRect();
     if (this.rectangleNode != null) {
       for (const id of this.rectangleNode) {
         const node = this.findNode(id);
