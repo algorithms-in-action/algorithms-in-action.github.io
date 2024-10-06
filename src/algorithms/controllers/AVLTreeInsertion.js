@@ -401,15 +401,18 @@ export default {
             //console.log("the root of insert is " + root.key);
 
             chunker.add('AVLT_Insert(t, k)',
-                (vis, k, d, index, r) => {
+                (vis, k, d, index, r, p, rr) => {
                     if (d === 1) {
                         vis.array.depatch(index - 1);
                         vis.array.patch(index);
                     }
+                    if (rr) {
+                        vis.graph.visit(rr, p);
+                    }
                     vis.graph.setFunctionName("AVLT_Insert");
-                    vis.graph.setFunctionInsertText(`( ...${r}... , ${k} )`);
+                    vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
                 },
-                [key, depth, currIndex, root ? root.key : "empty"],
+                [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
                 depth
             );
 
@@ -448,10 +451,8 @@ export default {
             }
 
             chunker.add('if k < root(t).key',
-                (vis, r, p) => {
-                    vis.graph.visit(r, p);
-                },
-                [root.key, parentNode ? parentNode.key : null],
+                (vis) => {},
+                [],
                 depth
             );
 
