@@ -58,42 +58,10 @@ export default {
                 }, [root.key, tidVis], depth
             );
 
+
+
             let R = root;
             let A = root.left;
-            chunker.add('t2 = left(t6)',
-                (vis, a, r, b, rr, tid) => {
-                    if (tid) {
-                        vis.graph.updateTID(a, 't2');
-                        // if (b !== null) vis.graph.updateTID(b, 't1');
-                        // if (rr !== null) vis.graph.updateTID(rr, 't7');
-                    }
-                },
-                [A.key, R.key, A.left ? A.left.key : null, R.right ? R.right.key : null, tidVis],
-                depth
-            );
-            let D = A.right;
-            if (D) {
-                chunker.add('t4 = right(t2)',
-                    (vis, d, tid) => {
-                        if (tid) {
-                            vis.graph.updateTID(d, 't4');
-                        }
-                    },
-                    [D.key, tidVis],
-                    depth
-                );
-            } else {
-                chunker.add('t4 = right(t2)',
-                    (vis) => {
-                        vis.graph.setTagInfo('t4 ');
-                    },
-                    [],
-                    depth
-                );
-            }
-
-            console.log("the height of R is " + R.height);
-            console.log("the height of A is " + A.height);
 
             let G = null;
             if (parentNode !== null) {
@@ -101,33 +69,100 @@ export default {
             } else {
                 G = A;
             }
+            chunker.add('t2 = left(t6)',
+                (vis, tt2, tt6, tid, g) => {
+
+
+                    // // freeze the depth of the tree, from start rotation
+                    // vis.graph.layoutAVL(g, true, true);
+
+
+                    if (tid) {
+                        vis.graph.updateTID(tt2, 't2');
+                        // if (b !== null) vis.graph.updateTID(b, 't1');
+                        // if (rr !== null) vis.graph.updateTID(rr, 't7');
+                    }
+                    vis.graph.removeEdge(tt2, tt2.right);
+                    // console.log([tt2, tt6, t]);
+                    let pNode = vis.graph.findNode(tt6);
+                    let lNode = vis.graph.findNode(tt2);
+                    vis.graph.storePrevHeight(pNode.y);
+                    let newY = (pNode.y + lNode.y) / 2;
+                    vis.graph.setNodePosition(tt6, pNode.x, newY);
+                    vis.graph.setNodePosition(tt2, lNode.x, newY);
+                },
+                [A.key, R.key, tidVis, G.key],
+                depth
+            );
+            let D = A.right;
+            if (D) {
+                chunker.add('t4 = right(t2)',
+                    (vis, tid, tt6, tt2, tt4) => {
+                        if (tid) {
+                            vis.graph.updateTID(tt4, 't4');
+                        }
+                        let pNode = vis.graph.findNode(tt6);
+                        let lNode = vis.graph.findNode(tt2);
+                        // let newXp = (pNode.+lNode.y)/2;
+                        let newY = (pNode.y + lNode.y) / 2; // positions reset somewhere???
+                        vis.graph.setNodePosition(tt6, pNode.x, newY);
+                        // vis.graph.setNodePosition(tt2, lNode.x, pNode.y);
+                        console.log(['x-y 1', lNode.x, lNode.y]);
+                        vis.graph.setPauseLayout(true);
+                        vis.graph.setNodePosition(tt2, (lNode.x * 2 + pNode.x) / 3, vis.graph.getPrevHeight());
+                        // vis.graph.setNodePosition(tt6, pNode.x+15, pNode.y);
+                    },
+                    [tidVis, R.key, A.key, D.key],
+                    depth
+                );
+            } else {
+                chunker.add('t4 = right(t2)',
+                    (vis, tt6, tt2) => {
+                        vis.graph.setTagInfo('t4 ');
+                        let pNode = vis.graph.findNode(tt6);
+                        let lNode = vis.graph.findNode(tt2);
+                        // let newXp = (pNode.+lNode.y)/2;
+                        // let newY = (pNode.y + lNode.y) / 2; // positions reset somewhere???
+                        // vis.graph.setNodePosition(tt6, pNode.x, newY);
+                        // vis.graph.setNodePosition(tt2, lNode.x, pNode.y);
+                        console.log(['x-y 1', lNode.x, lNode.y]);
+                        vis.graph.setPauseLayout(true);
+                        vis.graph.setNodePosition(tt2, (lNode.x * 2 + pNode.x) / 3, vis.graph.getPrevHeight());
+                        // vis.graph.setNodePosition(tt6, pNode.x+15, pNode.y);
+                    },
+                    [R.key, A.key],
+                    depth
+                );
+            }
+
+            console.log("the height of R is " + R.height);
+            console.log("the height of A is " + A.height);
 
             console.log("delete edge between " + R.key + " and " + A.key);
             console.log("add edge between " + A.key + " and " + R.key);
             chunker.add('t2.right = t6',
-                (vis, r, a, d, p, g, rotate) => {
-                    // freeze the depth of the tree, from start rotation
-                    vis.graph.layoutAVL(g, true, true);
-                    if (p !== null) {
-                        vis.graph.removeEdge(p, r);
-                        vis.graph.addEdge(p, a);
-                    }
-                    if (rotate) vis.graph.visit(a, p);
+                (vis, t6, t2, t4, p, rotate) => {
+                    if (rotate) vis.graph.visit(t2, p);
+                    vis.graph.removeEdge(t6, t2);
 
-                    if (d !== null) {
-                        vis.graph.removeEdge(a, d);
-                        vis.graph.addEdge(r, d);
+                    if (t4 !== null) {
+                        vis.graph.removeEdge(t2, t4);
                     }
 
-                    vis.graph.removeEdge(r, a);
-                    if (rotate) vis.graph.resetVisitAndSelect(r, null);
-                    vis.graph.addEdge(a, r);
+                    if (rotate) vis.graph.resetVisitAndSelect(t6, null);
+
+                    vis.graph.addEdge(t2, t6);
                     // remove edge after layout to perform the middle step
-                    if (d !== null) vis.graph.removeEdge(r, d);
+                    if (t4 !== null) vis.graph.removeEdge(t6, t4);
                 },
-                [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, G.key, rotateVis],
+                [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, rotateVis],
                 depth
             );
+
+            // if (p !== null) {
+            //     vis.graph.removeEdge(p, t6);
+            //     vis.graph.addEdge(p, t2);
+            // }
 
             if (D) {
                 chunker.add('t6.left = t4',
@@ -165,17 +200,29 @@ export default {
             }
 
             chunker.add('return t2',
-                (vis, tid, g) => {
+                (vis, tid, p, t2, t6) => {
                     if (tid) {
                         vis.graph.clearTID();
                         vis.graph.setTagInfo('');
                     }
-                    // de-freeze the depth of the tree, after finish rotation
-                    vis.graph.layoutAVL(g, true, false);
+                    if (p !== null) {
+                        vis.graph.removeEdge(p, t6);
+                        vis.graph.addEdge(p, t2);
+                    }
                 },
-                [tidVis, G.key],
+                [tidVis, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
             );
+
+            // chunker.add('return t2',
+            //     (vis, g) => {
+            //         // de-freeze the depth of the tree, after finish rotation
+            //         vis.graph.setPauseLayout(false);
+            //         vis.graph.layoutAVL(g, true, false);
+            //     },
+            //     [G.key],
+            //     depth
+            // );
             return temp;
         }
 
@@ -184,6 +231,7 @@ export default {
             // chunker.add('leftRotate(t2)', (vis) => null, [], depth);
             console.log('RRR');
             console.log("the root of RRR is " + root.key);
+
             chunker.add('leftRotate(t2)', (vis, r, tid) => {
                 if (tid) {
                     vis.graph.updateTID(r, 't2');
@@ -191,8 +239,11 @@ export default {
             }, [root.key, tidVis],
                 depth
             );
+
+
             let R = root;
             let A = root.right;
+
             chunker.add('t6 = right(t2)',
                 (vis, a, r, b, rl, tid) => {
                     if (tid) {
@@ -451,7 +502,7 @@ export default {
             }
 
             chunker.add('if k < root(t).key',
-                (vis) => {},
+                (vis) => { },
                 [],
                 depth
             );
@@ -534,11 +585,17 @@ export default {
                     depth
                 );
                 root = LLR(root, parentNode, rotateDepth);
-                chunker.add('return rightRotate(t)', (vis) => {
+
+                console.log("gr: " + globalRoot);
+                console.log("root: " + root);
+                console.log("parentNode: " + parentNode);
+                chunker.add('return rightRotate(t)', (vis, g) => {
                     vis.graph.setFunctionNode(null);
                     vis.graph.clearSelect_Circle_Count();
                     vis.graph.setFunctionBalance(null);
-                }, [], depth);
+                    vis.graph.setPauseLayout(false);
+                    vis.graph.layoutAVL(g, true, false);
+                }, [(parentNode !== null) ? globalRoot.key : root.key], depth);
             } else if (balance < -1 && key > root.right.key) {
                 chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
                 chunker.add('perform left rotation to re-balance t',
@@ -649,7 +706,7 @@ export default {
         );
 
         chunker.add('return n',
-            (vis) => {}, [], 1
+            (vis) => { }, [], 1
         );
 
         let globalRoot = new AVLNode(nodes[0]);

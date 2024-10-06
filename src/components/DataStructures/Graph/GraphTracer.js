@@ -61,6 +61,8 @@ class GraphTracer extends Tracer {
     this.istc = false;
 
     this.prevDepth = 0;
+    this.pauseLayout = false;
+    this.prebHeight = 0;  // restore the previous height of the node
   }
 
   /* 
@@ -483,7 +485,7 @@ class GraphTracer extends Tracer {
   }
 
   layout() {
-    if (this.callLayout === null) {
+    if (this.callLayout === null || this.pauseLayout) {
       return;
     }
     const { method, args } = this.callLayout;
@@ -1078,6 +1080,26 @@ class GraphTracer extends Tracer {
     _node.visitedCount3 = 0;
     _node.visitedCount4 = 0;
   }
+
+  setPauseLayout(b = true) {
+    (b ? this.pauseLayout = true : this.pauseLayout = false)
+  }
+
+  setNodePosition(n, x, y) {
+    let node = this.findNode(n);
+    console.log(node);
+    node.x = x;
+    node.y = y;
+  }
+
+  storePrevHeight(prebHeight) {
+    this.prebHeight = prebHeight;
+  }
+  getPrevHeight() {
+    return this.prebHeight;
+  }
+
+
 }
 
 export default GraphTracer;
