@@ -75,8 +75,12 @@ export default {
                     let lNode = vis.graph.findNode(tt2);
                     vis.graph.storePrevHeight(pNode.y);
                     let newY = (pNode.y + lNode.y) / 2;
-                    vis.graph.setNodePosition(tt6, pNode.x, newY);
-                    vis.graph.setNodePosition(tt2, lNode.x, newY);
+                    let moveX = 0;
+                    if((pNode.x - lNode.x) < 85){
+                        moveX = 85 - (pNode.x - lNode.x);
+                    }
+                    vis.graph.setNodePosition(tt6, pNode.x + moveX, newY);
+                    vis.graph.setNodePosition(tt2, lNode.x - moveX, newY);
                 },
                 [A.key, R.key, tidVis],
                 depth
@@ -98,9 +102,10 @@ export default {
                     console.log(['x-y 1', lNode.x, lNode.y]);
                     vis.graph.setPauseLayout(true);
                     // let mid = lNode.y - vis.graph.getPrevHeight();
-                    vis.graph.setNodePosition(tt2, (lNode.x * 2 + pNode.x) / 3, vis.graph.getPrevHeight());
+                    let move = (pNode.x - lNode.x) / 5;
+                    vis.graph.setNodePosition(tt2, lNode.x + move, vis.graph.getPrevHeight());
                     // vis.graph.setNodePosition(tt6, pNode.x, pNode.y);
-                    // vis.graph.setNodePosition(tt6, pNode.x, pNode.y + mid);
+                    vis.graph.setNodePosition(tt6, pNode.x - move, pNode.y + (pNode.y - lNode.y)*0.5);
                 },
                 [tidVis, R.key, A.key, D ? D.key : false],
                 depth
@@ -228,8 +233,13 @@ export default {
                     let lNode = vis.graph.findNode(tt2);
                     vis.graph.storePrevHeight(lNode.y);
                     let newY = (pNode.y + lNode.y) / 2;
-                    vis.graph.setNodePosition(tt6, pNode.x, newY);
-                    vis.graph.setNodePosition(tt2, lNode.x, newY);
+                    let moveX = 0;
+                    // avoid overlapping
+                    if((pNode.x - lNode.x) < 85){
+                        moveX = 85 - (pNode.x - lNode.x);
+                    }
+                    vis.graph.setNodePosition(tt6, pNode.x + moveX, newY);
+                    vis.graph.setNodePosition(tt2, lNode.x - moveX, newY);
                 },
                 [A.key, R.key, tidVis],
                 depth
@@ -250,8 +260,9 @@ export default {
                     // vis.graph.setNodePosition(tt2, lNode.x, pNode.y);
                     console.log(['x-y 1', lNode.x, lNode.y]);
                     vis.graph.setPauseLayout(true);
-                    vis.graph.setNodePosition(tt6, (pNode.x * 2 + lNode.x) / 3, vis.graph.getPrevHeight());
-                    // vis.graph.setNodePosition(tt2, pNode.x+15, pNode.y);
+                    let move = (lNode.x - pNode.x) / 5;
+                    vis.graph.setNodePosition(tt6, pNode.x + move, vis.graph.getPrevHeight());
+                    vis.graph.setNodePosition(tt2, lNode.x - move, lNode.y - (pNode.y - lNode.y)*0.5);
                 },
                 [tidVis, R.key, A.key, D ? D.key : false],
                 depth
