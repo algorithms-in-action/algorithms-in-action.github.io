@@ -492,9 +492,9 @@ export default {
                 chunker.add('left(t) <- AVLT_Insert(left(t), k)',
                     (vis, k, r) => {
                         vis.graph.setFunctionName("AVLT_Insert");
-                        vis.graph.setFunctionInsertText(`( ...${r}... , ${k} )`);
+                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
                     },
-                    [key, root ? root.key : "Empty"],
+                    [key, root ? `...${root.key}...` : "Empty"],
                     depth);
             } else if (key > root.key) {
                 chunker.add('else if k > root(t).key', (vis) => null, [], depth);
@@ -504,7 +504,7 @@ export default {
                 chunker.add('right(t) <- AVLT_Insert(right(t), k)',
                     (vis, k, r) => {
                         vis.graph.setFunctionName("AVLT_Insert");
-                        vis.graph.setFunctionInsertText(`( ...${r}... , ${k} )`);
+                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
                     },
                     [key, root ? `...${root.key}...` : "Empty"],
                     depth);
