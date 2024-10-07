@@ -15,8 +15,7 @@
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
     }
-
-    .rect {
+    .rect{
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
@@ -37,15 +36,13 @@
 
     &.selected {
       .circle {
-        fill: var(--sky);
-        stroke: var(--sky);
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
       }
-
       .rect {
-        fill: var(--sky);
-        stroke: var(--sky);
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
       }
-
       .id {
         fill: var(--graph-node-id-fill-selected);
       }
@@ -54,15 +51,13 @@
 
     &.visited {
       .circle {
-        fill: var(--apple);
-        stroke: var(--apple);
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
       }
-
       .rect {
-        fill: var(--apple);
-        stroke: var(--apple);
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
@@ -87,7 +82,7 @@
 
     &.selected {
       .line {
-        stroke: var(--sky);
+        stroke: var(--graph-edge-line-stroke-selected);
 
         &.directed {
           marker-end: url(#markerArrowSelected);
@@ -95,13 +90,13 @@
       }
 
       .weight {
-        fill: var(--sky);
+        fill: var(--graph-edge-weight-fill-selected);
       }
     }
 
     &.visited {
       .line {
-        stroke: var(--leaf);
+        stroke: var(--graph-edge-line-stroke-visited);
 
         &.directed {
           marker-end: url(#markerArrowVisited);
@@ -109,7 +104,7 @@
       }
 
       .weight {
-        fill: var(--leaf);
+        fill: var(--graph-edge-weight-fill-visited);
       }
     }
   }
@@ -118,11 +113,11 @@
     fill: var(--graph-arrow-fill);
 
     &.selected {
-      fill: var(--sky);
+      fill: var(--graph-arrow-fill-selected);
     }
 
     &.visited {
-      fill: var(--leaf);
+      fill: var(--graph-arrow-fill-visited);
     }
   }
 }

@@ -51,11 +51,11 @@
 
       .variable {
         font-size: 18px;
-        color: var(--array-2d-row-col-value-color); //var(--array-2d-row-col-sorted);
+        color: var(--array-2d-row-col-value-color);//var(--array-2d-row-col-sorted);
       }
 
       &.selected {
-        background-color: var(--sky);
+        background-color: var(--array-2d-row-col-bg-selected);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -63,7 +63,7 @@
       }
 
       &.selected1 {
-        background-color: var(--leaf);
+        background-color: var(--array-2d-row-col-bg-selected1);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -84,10 +84,10 @@
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }
+      } 
 
       &.variableGreen {
-        background-color: var(--leaf);
+        background-color: var(--simple-fill-var-green);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -96,7 +96,7 @@
 
       &.variableOrange {
         // more of a yellow, really
-        background-color: var(--peach);
+        background-color: var(--simple-fill-var-orange);
 
         span {
           color: var(--array-2d-row-col);
@@ -104,7 +104,7 @@
       }
 
       &.variableRed {
-        background-color: var(--apple);
+        background-color: var(--simple-fill-var-red);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -113,25 +113,25 @@
 
 
       &.selected4 {
-        background-color: var(--apple);
+        background-color: var(--array-2d-row-col-bg-selected4);
 
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }
+      }  
 
       &.selected5 {
-        background-color: var(--peach);
+        background-color: var(--array-2d-row-col-bg-selected5);
 
         span {
           color: var(--array-2d-row-col-selected);
         }
-      }
+      }  
 
 
 
       &.patched {
-        background-color: var(--peach);
+        background-color: var(--array-2d-row-col-bg-patched);
 
         span {
           color: var(--array-2d-row-col-patched);
@@ -167,7 +167,7 @@
       &.faded {
         opacity: 0.2
       }
-
+      
     }
   }
 }
@@ -176,33 +176,33 @@
   caption-side: bottom;
   text-align: right;
   margin-top: -12px; // need to squeeze a bit
-  color: var(--array-2d-row-col-value-color);
-}
+  color: var(--array-2d-row-col-value-color); 
+}  
 
 .captionBFS {
   caption-side: bottom;
   text-align: center;
   margin-top: -12px; // need to squeeze a bit
-  color: var(--array-2d-row-col-value-color);
+  color: var(--array-2d-row-col-value-color); 
 }
 
 .captionDFSrec {
   caption-side: bottom;
   margin-top: -12px; // doesn't hurt to squeeze a bit like above
   text-align: right;
-  color: var(--array-2d-row-col-value-color);
+  color: var(--array-2d-row-col-value-color); 
 }
 
 .captionmsort_lista_td {
   caption-side: bottom;
   font-size: 14px; // squeeze a bit
   text-align: right;
-  color: var(--array-2d-row-col-value-color);
+  color: var(--array-2d-row-col-value-color); 
 }
 
 // redefined in 1D array
 .captionmsort_arr_td {
   caption-side: bottom;
   text-align: right;
-  color: var(--array-2d-row-col-value-color);
-}
+  color: var(--array-2d-row-col-value-color); 
+}  
