@@ -48,11 +48,18 @@ export default {
             console.log("the root of LLR is " + root.key);
 
             chunker.add('rightRotate(t6)',
-                (vis, r, tid) => {
+                (vis, r, tid, rl, rll) => {
                     if (tid) {
                         vis.graph.updateTID(r, 't6');
                     }
-                }, [root.key, tidVis], depth
+
+                    // cancel highlight of the edges
+                    vis.graph.resetVisitAndSelect(rl, r);
+                    if (rll) {
+                        vis.graph.resetVisitAndSelect(rll, rl);
+                    }
+                }, [root.key, tidVis, root.left.key, root.left.left ? root.left.left.key : null],
+                depth
             );
             let R = root;
             let A = root.left;
@@ -90,7 +97,7 @@ export default {
                 (vis, tid, tt6, tt2, tt4) => {
                     if (tt4 && tid) {
                         vis.graph.updateTID(tt4, 't4');
-                    }else{
+                    } else {
                         vis.graph.setTagInfo('t4 ');
                     }
                     let pNode = vis.graph.findNode(tt6);
@@ -208,11 +215,18 @@ export default {
             console.log('RRR');
             console.log("the root of RRR is " + root.key);
 
-            chunker.add('leftRotate(t2)', (vis, r, tid) => {
-                if (tid) {
-                    vis.graph.updateTID(r, 't2');
-                }
-            }, [root.key, tidVis],
+            chunker.add('leftRotate(t2)',
+                (vis, r, tid, rr, rrr) => {
+                    if (tid) {
+                        vis.graph.updateTID(r, 't2');
+                    }
+                    // cancel highlight of the edges
+                    vis.graph.resetVisitAndSelect(rr, r);
+                    if (rrr) {
+                        vis.graph.resetVisitAndSelect(rrr, rr);
+                    }
+
+                }, [root.key, tidVis, root.right.key, root.right.right ? root.right.right.key : null],
                 depth
             );
 
@@ -249,7 +263,7 @@ export default {
                 (vis, tid, tt2, tt6, tt4) => {
                     if (tt4 && tid) {
                         vis.graph.updateTID(tt4, 't4');
-                    }else{
+                    } else {
                         vis.graph.setTagInfo('t4 ');
                     }
                     let pNode = vis.graph.findNode(tt6);
@@ -562,15 +576,21 @@ export default {
             if (balance > 1 && key < root.left.key) {
                 // console.log("LLR");
                 chunker.add('perform right rotation to re-balance t',
-                    (vis, r, b) => {
+                    (vis, r, b, rl, rll) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`LL`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.setFunctionBalance(b);
+
+                        // highlight the edge about the case
+                        vis.graph.visit(rl, r);
+                        if (rll) {
+                            vis.graph.visit(rll, rl);
+                        }
                     },
-                    [root.key, balance],
+                    [root.key, balance, root.left.key, root.left.left ? root.left.left.key : null],
                     depth
                 );
                 root = LLR(root, parentNode, rotateDepth);
@@ -588,15 +608,21 @@ export default {
             } else if (balance < -1 && key > root.right.key) {
                 chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
                 chunker.add('perform left rotation to re-balance t',
-                    (vis, r, b) => {
+                    (vis, r, b, rr, rrr) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`RR`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionBalance(b);
+
+                        // highlight the edge about the case
+                        vis.graph.visit(rr, r);
+                        if (rrr) {
+                            vis.graph.visit(rrr, rr);
+                        }
                     },
-                    [root.key, balance],
+                    [root.key, balance, root.right.key, root.right.right ? root.right.right.key : null],
                     depth
                 );
                 // console.log("RRR");
@@ -611,15 +637,21 @@ export default {
             } else if (balance > 1 && key > root.left.key) {
                 chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
                 chunker.add('perform left rotation on the left subtree',
-                    (vis, r, b) => {
+                    (vis, r, b, rl, rlr) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`LR`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.setFunctionBalance(b);
+
+                        // highlight the edge about the case
+                        vis.graph.visit(rl, r);
+                        if (rlr) {
+                            vis.graph.visit(rlr, rl);
+                        }
                     },
-                    [root.key, balance],
+                    [root.key, balance, root.left.key, root.left.right ? root.left.right.key : null],
                     depth
                 );
                 // console.log("LRR");
@@ -638,15 +670,21 @@ export default {
                 chunker.add('if balance < -1 && k < right(t).key', (vis) => null, [], depth);
                 // console.log("RLR");
                 chunker.add('perform right rotation on the right subtree',
-                    (vis, r, b) => {
+                    (vis, r, b, rr, rrl) => {
                         vis.graph.setFunctionName(`Rotaiton: `);
                         vis.graph.setFunctionInsertText(`RL`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionBalance(b);
+
+                        // highlight the edge about the case
+                        vis.graph.visit(rr, r);
+                        if (rrl) {
+                            vis.graph.visit(rrl, rr);
+                        }
                     },
-                    [root.key, balance],
+                    [root.key, balance, root.right.key, root.right.left ? root.right.left.key : null],
                     depth
                 );
                 root = RLR(root, parentNode, rotateDepth);
