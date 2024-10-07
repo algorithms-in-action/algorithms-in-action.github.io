@@ -734,7 +734,7 @@ export default {
             'if t = Empty',
             (vis, k, k_p) => {
                 vis.graph.setFunctionName("AVLT_Insert");
-                vis.graph.setFunctionInsertText(`( ...empty... , ${k} )`);
+                vis.graph.setFunctionInsertText(`( Empty , ${k} )`);
             },
             [nodes[0], nodes[0].parentNode],
             1
