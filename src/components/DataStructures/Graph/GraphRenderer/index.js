@@ -638,7 +638,7 @@ class GraphRenderer extends Renderer {
               <text className={classes(styles.select_color)}// Correctly moved this inside the text tag
 
                 fontSize={50} // font size
-                x={rectangle[0]} // Adjusted x position to center it relative to the rectangle
+                x={rectangle[0] - 30} // Adjusted x position to center it relative to the rectangle
                 y={rectangle[1] - 90} // Adjusted y position to center it relative to the rectangle
               >
                 {rectangle[4]} {/* Make sure text is defined and properly passed */}

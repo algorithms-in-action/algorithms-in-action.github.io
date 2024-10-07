@@ -371,6 +371,10 @@ class GraphTracer extends Tracer {
     this.rectangle = null;
   }
 
+  clearRectNode() {
+    this.rectangleNode = null;
+  }
+
   addResult(text, id) {
     this.findNode(id).Result = text;
   }
@@ -998,6 +1002,7 @@ class GraphTracer extends Tracer {
       this.rectangle_size();
     } else {
       this.clearRect();
+      this.clearRectNode();
     }
     this.functionBalance = functionBalance;
   }
@@ -1005,12 +1010,13 @@ class GraphTracer extends Tracer {
   // dispaly the function name on the AVL tree
   setFunctionName(name) {
     this.functionName = name;
-    if (this.functionName !== `Rotaiton: `) {
-      this.clearRect();
-    } else {
-      this.Children_Balance();
-      this.rectangle_size();
-    }
+    // if (this.functionName !== `Rotaiton: `) {
+    //   this.clearRect();
+    //   this.clearRectNode();
+    // } else {
+    //   this.Children_Balance();
+    //   this.rectangle_size();
+    // }
   }
 
 
