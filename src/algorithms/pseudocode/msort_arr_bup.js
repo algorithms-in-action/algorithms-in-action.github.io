@@ -39,6 +39,7 @@ MergeAll
         merge A[left..mid] and A[mid+1..right], with the result in A \\Ref MergeCopy
         left <- right + 1 // skip to the next pair of runs (if any) \\B left2
     \\In}
+    // all consecutive pairs of runs merged \\B mergeDone
 \\Code}
 
 \\Note{ 
