@@ -21,9 +21,13 @@
 .select_rect {
   //fill: var(--graph-node-circle-fill);
   fill: none;
-  stroke: var(--graph-node-circle-fill-selected);
+  stroke: var(--graph-select_color-fill);
   stroke-width: 5;
 
+}
+
+.select_color {
+  fill: var(--graph-select_color-fill);
 }
 
 .graph {
@@ -42,8 +46,18 @@
       stroke-width: 1;
     }
 
-    .select_circle {
+    .select_circle_t {
       --stroke-color: var(--graph-node-circle-fill-selected);
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--stroke-color);
+      stroke-width: 10;
+
+      //shadow display
+      filter: drop-shadow(0 0 5px var(--stroke-color));
+    }
+
+    .select_circle_f {
+      --stroke-color: var(--graph-select_color-fill);
       fill: var(--graph-node-circle-fill);
       stroke: var(--stroke-color);
       stroke-width: 10;
