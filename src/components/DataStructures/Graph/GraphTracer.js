@@ -353,12 +353,14 @@ class GraphTracer extends Tracer {
   }
 
   rectangle_size() {
+    // this.clearRect();
+    // this.setRect();
     if (this.rectangleNode != null) {
       for (const id of this.rectangleNode) {
         const node = this.findNode(id);
         if (node != null && node.x != null && node.y != null) {
           this.setRect(node.x, node.y, node.x, node.y);
-          //console.log(`freezDepth!!!!!!!!!!!!!!!!!!!!!!!!! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
+          //console.log(`freezDepth! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
           //this.clearRect();
         }
       }
@@ -369,6 +371,10 @@ class GraphTracer extends Tracer {
   clearRect() {
     //this.rectangleNode = null;
     this.rectangle = null;
+  }
+
+  clearRectNode() {
+    this.rectangleNode = null;
   }
 
   addResult(text, id) {
@@ -998,6 +1004,7 @@ class GraphTracer extends Tracer {
       this.rectangle_size();
     } else {
       this.clearRect();
+      this.clearRectNode();
     }
     this.functionBalance = functionBalance;
   }
@@ -1005,12 +1012,13 @@ class GraphTracer extends Tracer {
   // dispaly the function name on the AVL tree
   setFunctionName(name) {
     this.functionName = name;
-    if (this.functionName !== `Rotaiton: `) {
-      this.clearRect();
-    } else {
-      this.Children_Balance();
-      this.rectangle_size();
-    }
+    // if (this.functionName !== `Rotaiton: `) {
+    //   this.clearRect();
+    //   this.clearRectNode();
+    // } else {
+    //   this.Children_Balance();
+    //   this.rectangle_size();
+    // }
   }
 
 

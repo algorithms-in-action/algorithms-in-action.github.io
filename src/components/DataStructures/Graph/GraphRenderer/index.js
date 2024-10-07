@@ -18,6 +18,8 @@ import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
 
+import GraphTracer from '../../Graph/GraphTracer';
+
 let modename;
 function switchmode(modetype = mode()) {
   switch (modetype) {
@@ -87,7 +89,10 @@ class GraphRenderer extends Renderer {
       const node = this.props.data.findNode(this.selectedNode.id);
       node.x = x;
       node.y = y;
+
       this.refresh();
+      this.props.data.clearRect();
+      this.props.data.rectangle_size();
     } else if (this.selectedNode && this.props.title === 'Graph view') {
       // Ignore mouse movement if Graph view was used
       this.refresh();
@@ -630,25 +635,25 @@ class GraphRenderer extends Renderer {
         <g>
           {rectangle != null && (
             <>
+              <text className={classes(styles.select_color)}// Correctly moved this inside the text tag
+
+                fontSize={50} // font size
+                x={rectangle[0] - 30} // Adjusted x position to center it relative to the rectangle
+                y={rectangle[1] - 90} // Adjusted y position to center it relative to the rectangle
+              >
+                {rectangle[4]} {/* Make sure text is defined and properly passed */}
+              </text>
               <rect
                 className={classes(
                   styles.select_rect, // Apply the .rect class styles
                   styles && styles.backgroundStyle // Optionally apply additional styles
                 )}
                 x={rectangle[0] - 50} // x position
-                y={rectangle[1] - 75} // y position
+                y={rectangle[1] - 70} // y position
                 width={rectangle[2] - rectangle[0] + 100} // width of the rectangle
                 height={rectangle[3] - rectangle[1] + 120} // height of the rectangle
               />
-              <text
-                style={{ fill: '#ff0000' }} // Correctly moved this inside the text tag
-                textAnchor="middle"
-                fontSize={50} // font size
-                x={rectangle[0]} // Adjusted x position to center it relative to the rectangle
-                y={rectangle[1] - 100} // Adjusted y position to center it relative to the rectangle
-              >
-                {rectangle[4]} {/* Make sure text is defined and properly passed */}
-              </text>
+
             </>
           )}
         </g>
@@ -707,23 +712,21 @@ class GraphRenderer extends Renderer {
                 functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
                   <circle
                     className={classes(
-                      styles.select_circle,
+                      styles.select_circle_f,
                       style && style.backgroundStyle
                     )}
-                    style={{ '--stroke-color': '#ff0000' }}
                     r={nodeRadius}
                   />
                 ) : (
                   <circle
                     className={classes(
-                      styles.select_circle,
+                      styles.select_circle_t,
                       style && style.backgroundStyle
                     )}
                     r={nodeRadius}
                   />
                 )
               )}
-
 
               <circle
                 className={classes(
@@ -767,8 +770,7 @@ class GraphRenderer extends Renderer {
 
         {/* Text */}
         <g>
-          <text
-            style={{ fill: '#ff0000' }}
+          <text className={classes(styles.select_color)}
             textAnchor="middle"
             fontSize={50} // font size
             x={- 80}
@@ -800,7 +802,7 @@ class GraphRenderer extends Renderer {
 
             {functionNode != null && (
               <tspan className={styles.pseudocode_function}>
-                {"] => "}
+                {"] : "}
               </tspan>
             )}
           </text>
@@ -811,8 +813,7 @@ class GraphRenderer extends Renderer {
             textAnchor="middle">
 
             {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
-              <tspan style={{ fill: '#ff0000', fontWeight: 'bold' }}>
-
+              <tspan className={classes(styles.select_color)} style={{ fontWeight: 'bold' }} >
                 {"Balance: "}
                 {functionBalance}
               </tspan>
