@@ -60,7 +60,6 @@ class GraphTracer extends Tracer {
     this.logTracer = null;
     this.istc = false;
 
-    this.prevDepth = 0;
     this.pauseLayout = false;
     this.prebHeight = 0;  // restore the previous height of the node
   }
@@ -319,8 +318,6 @@ class GraphTracer extends Tracer {
     let nodeDepth = {};
     this.rectangleNode = [];
 
-    //console.log(`??????????? Node ID: ${root}`);
-
     const recursiveAnalyze = (id, depth) => {
 
       marked[id] = true;
@@ -339,7 +336,6 @@ class GraphTracer extends Tracer {
       mark[id] = true;
 
       this.rectangleNode.push(id);
-      //console.log(`|||||||||||||||||||||: ${id} depth ${nodeDepth[id]} `);
 
       const linkedNodeIds = this.findLinkedNodeIds(id, false);
       for (const linkedNodeId of linkedNodeIds) {
@@ -360,7 +356,6 @@ class GraphTracer extends Tracer {
         const node = this.findNode(id);
         if (node != null && node.x != null && node.y != null) {
           this.setRect(node.x, node.y, node.x, node.y);
-          //console.log(`freezDepth! Node ID: ${node.id} - Coordinates: x = ${node.x}, y = ${node.y}, Function Name: ${this.functionName}`);
           //this.clearRect();
         }
       }
@@ -398,14 +393,27 @@ class GraphTracer extends Tracer {
     Object.assign(node, update);
   }
 
+  /**
+   * udpate the height of the node
+   * @param {int} id the node id
+   * @param {int} height the height of the node
+   */
   updateHeight(id, height) {
     this.findNode(id).height = height;
   }
 
+  /**
+   * udpate the AVL_TID of the node
+   * @param {int} id 
+   * @param {String} AVL_TID 
+   */
   updateTID(id, AVL_TID) {
     this.findNode(id).height = AVL_TID;
   }
 
+  /**
+   * clear the AVL_TID of all nodes
+   */
   clearTID() {
     this.nodes.forEach(node => {
       node.AVL_TID = undefined;
@@ -701,9 +709,9 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
-  layoutAVL(root = 0, sorted = false, freezDepth = false) {
+  layoutAVL(root = 0, sorted = false) {
     this.root = root;
-    this.callLayout = { method: this.layoutAVL, args: arguments };
+    this.callLayout = { method: this.layoutBST, args: arguments };
     const rect = this.getRect();
     // If there is a sole node, it centers it.
     const middleX = (rect.left + rect.right) / 2;
@@ -719,26 +727,17 @@ class GraphTracer extends Tracer {
     let maxDepth = 0;
     const nodeDepth = {};
     let marked = {};
-    // Use 'freezDepth' to control the depth of the tree
-    if (!freezDepth) {
-
-      // Normally calculate the depth of the tree
-      const recursiveAnalyze = (id, depth) => {
-        marked[id] = true;
-        nodeDepth[id] = depth;
-        if (maxDepth < depth) maxDepth = depth;
-        const linkedNodeIds = this.findLinkedNodeIds(id, false);
-        for (const linkedNodeId of linkedNodeIds) {
-          if (marked[linkedNodeId]) continue;
-          recursiveAnalyze(linkedNodeId, depth + 1);
-        }
-      };
-      recursiveAnalyze(root, 0);
-      this.prevDepth = maxDepth; // store the previous depth
-    } else {
-      // kept the nodes in the same position as the previous layout
-      maxDepth = this.prevDepth;
-    }
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
@@ -748,8 +747,6 @@ class GraphTracer extends Tracer {
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       // 120 magic number to center root node//
-      // node.x = rect.left + h * this.hGap + 120;
-      // node.y = rect.top + v * this.vGap;
       node.x = rect.left + h * hGap + 120;
       node.y = rect.top + v * vGap;
       /* used to debug, delete in merge
@@ -757,12 +754,6 @@ class GraphTracer extends Tracer {
       console.log(middle_x + " " + h + " " + hGap + " " +node.id);
       console.log(middle_y + " " + v + " " + vGap + " " +node.id);
       */
-      if (this.functionName == `Rotaiton: `) {
-        this.clearRect();
-        //this.Children_Balance();
-        this.rectangle_size();
-      }
-
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -988,15 +979,26 @@ class GraphTracer extends Tracer {
     // this.text.push({ text });
   }
 
-  // display text on the AVL tree (for the rotation, key)
+  /**
+   * display text on the AVL tree (for the rotation, key)
+   * @param {String} functionInsertText 
+   */
   setFunctionInsertText(functionInsertText) {
     this.functionInsertText = functionInsertText;
   }
 
+  /**
+   * display the node id in avl function
+   * @param {int} functionNode  the node id
+   */
   setFunctionNode(functionNode) {
     this.functionNode = functionNode;
   }
 
+  /**
+   * set the balance factor of the node
+   * @param {int} functionBalance the balance factor of the node
+   */
   setFunctionBalance(functionBalance) {
 
     if (functionBalance != null && (functionBalance > 1 || functionBalance < -1)) {
@@ -1009,20 +1011,19 @@ class GraphTracer extends Tracer {
     this.functionBalance = functionBalance;
   }
 
-  // dispaly the function name on the AVL tree
+  /**
+   * dispaly the function name on the AVL tree
+   * @param {String} name the name of the function
+   */
   setFunctionName(name) {
     this.functionName = name;
-    // if (this.functionName !== `Rotaiton: `) {
-    //   this.clearRect();
-    //   this.clearRectNode();
-    // } else {
-    //   this.Children_Balance();
-    //   this.rectangle_size();
-    // }
   }
 
-
-  // display null tree since the tree is empty
+  /**
+   * if the tree is performing the rotation, display the null tree
+   * and display null tree since the tree is empty
+   * @param {String} text the tag of the node
+   */
   setTagInfo(text) {
     this.tagInfo = text;
     if (text.length > 3) {
@@ -1089,10 +1090,20 @@ class GraphTracer extends Tracer {
     _node.visitedCount4 = 0;
   }
 
+  /**
+   * if roataion is performed, pause the layout
+   * @param {boolean} b pause the layout
+   */
   setPauseLayout(b = true) {
     (b ? this.pauseLayout = true : this.pauseLayout = false)
   }
 
+  /**
+   * input the node id and set the x and y coordinates of this node
+   * @param {node} n find the node with the id n
+   * @param {float} x new x coordinate of the node
+   * @param {float} y new y coordinate of the node
+   */
   setNodePosition(n, x, y) {
     let node = this.findNode(n);
     console.log(node);
@@ -1100,13 +1111,21 @@ class GraphTracer extends Tracer {
     node.y = y;
   }
 
+  /**
+   * return the previous height of the tree in insertion
+   * @param {int} prebHeight the previous height of the tree
+   */
   storePrevHeight(prebHeight) {
     this.prebHeight = prebHeight;
   }
+
+  /**
+   * return the previous height of the tree in insertion
+   * @returns {int} the previous height of the tree
+   */
   getPrevHeight() {
     return this.prebHeight;
   }
-
 
 }
 
