@@ -312,7 +312,28 @@ export function run_msort() {
                     vis.llist.select(cur_R);
                 }, [linkedList, L, Mid, R, simple_stack], depth);
 
+                console.log("current L1:" + L);
+
                 L = MergeSort(L, Mid, depth + 1);
+
+                chunker.add('sortL', (vis, lists, cur_L, cur_R, cur_Mid, c_stk) => {
+                    set_simple_stack(vis.array, c_stk);
+                    vis.llist.assignVariable('L', cur_L);
+                    vis.llist.assignVariable('R', cur_R);
+                    // colour all of L list
+
+
+                    for (let i = cur_L; i < cur_R; i++) {
+                        vis.llist.patch(i);
+                    }
+
+                    vis.llist.select(cur_R);
+                    vis.llist.select(cur_R);
+
+                }, [linkedList, L, R, Mid, simple_stack], depth);
+                console.log("L before return:" + L);
+                return L;
+
             }
 
         }
