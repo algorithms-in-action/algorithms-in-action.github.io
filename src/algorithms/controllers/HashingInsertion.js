@@ -302,7 +302,7 @@ export default {
             vis.graph.set([
               [0, 'Hash1', 0, 0], [0, 0, 0, 0], [0, 0, 0, 'Hash2'], [0, 0, 0, 0]], // Node edges
               [' ', ' ', ' ', ' '], // Node values
-              [[-5, 2], [5, 2], [-5, -2], [5, -2]]); // Node positions
+              [[-13, 0], [-3, 0], [3, 0], [13, 0]]); // Node positions
             break;
         }
       },
