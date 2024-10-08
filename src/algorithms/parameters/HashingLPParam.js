@@ -32,7 +32,7 @@ const UNCHECKED = {
     largeTable: false
 };
 
-const DEFAULT_EXTEND = false;
+const DEFAULT_EXPAND = false;
 
 // Styling of radio buttons
 const BlueRadio = withStyles({
@@ -65,7 +65,8 @@ function HashingLPParam() {
     smallTable: true,
     largeTable: false,
   });
-  const [extend, setExtend] = useState(DEFAULT_EXTEND);
+  const [expand, setExpand] = useState(DEFAULT_EXPAND);
+  console.log(algorithm);
 
     /**
    * Handle changes to input
@@ -76,11 +77,11 @@ function HashingLPParam() {
   }
 
   /**
-   * Handle extend
+   * Handle expand
    * @param {*} e the input box component
    */
-  const handleExtend = (e) => {
-    setExtend(!extend.on)
+  const handleExpand = (e) => {
+    setExpand(!expand)
   }
 
   /**
@@ -105,7 +106,7 @@ function HashingLPParam() {
           mode: 'insertion',
           hashSize: hashSize,
           values,
-          extend: extend
+          expand: expand
         });
         setMessage(successParamMsg(ALGORITHM_NAME));
       }
@@ -152,12 +153,12 @@ function HashingLPParam() {
     [HASHSize],
   );
 
-  // Use effect to detect changes in extend radio box choice
+  // Use effect to detect changes in expand radio box choice
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
     },
-    [extend],
+    [expand],
   );
 
 
@@ -237,11 +238,11 @@ function HashingLPParam() {
           <FormControlLabel
             control={
               <BlueRadio
-                checked={extend}
-                onClick={handleExtend}
+                checked={expand}
+                onClick={handleExpand}
               />
             }
-            label="Extend Table"
+            label="Expand"
             className="checkbox"
           />
         </div>

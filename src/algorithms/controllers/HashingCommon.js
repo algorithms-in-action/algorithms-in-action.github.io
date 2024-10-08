@@ -42,7 +42,7 @@ export const HASH_TYPE = {
 
 // list of primes each roughly two times larger than previous
 export const PRIMES = [
-  11, 23, 47, 97, 197, 397
+  11, 23, 47, 97
 ];
 
 // which table size in PRIMES array to allow pointer
