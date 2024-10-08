@@ -178,10 +178,15 @@ export function run_msort() {
 
     //let setLargestValue = 0;
 
-    chunker.add('Main', (vis, a, b) => {
+    chunker.add('Main', (vis, a, b, c_rcount) => {
       vis.array.set(a, 'msort_arr_nat');
-      if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
-    }, [A, B]);
+      if (c_rcount === 0) {
+        vis.array.setLargestValue(maxValue);
+      } if (isMergeCopyExpanded()) {
+        vis.arrayB.set(b, 'msort_arr_nat');
+        vis.arrayB.setLargestValue(maxValue);
+      }
+    }, [A, B, runcount]);
 
     do {
 
@@ -456,6 +461,8 @@ export function run_msort() {
       }
       assignVarToA(vis, 'done', size, size);
     }, []);
+
+    const maxValue = entire_num_array.reduce((acc, curr) => (acc < curr ? curr : acc), 0);
 
     return A;
   }
