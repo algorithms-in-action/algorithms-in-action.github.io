@@ -17,42 +17,42 @@ class LinkedListRenderer extends Renderer {
     // Define the symbols
     renderSymbols() {
         return (
-            <svg style={{display: 'none'}}>
+            <svg style={{ display: 'none' }}>
                 <symbol id="null-marker" viewBox="0 0 100 100">
-                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20"/>
-                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20"/>
+                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20" />
+                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20" />
                 </symbol>
 
                 <symbol id="arrow-symbol" viewBox="0 0 100 100">
-                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2"/>
-                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none"/>
+                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2" />
+                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none" />
                 </symbol>
             </svg>
         );
     }
 
     renderData() {
-        const {lists} = this.state;
+        const { lists } = this.state;
         const layers = this.layer(lists);
         console.log(layers);
 
         return (
             <AnimateSharedLayout>
                 <motion.div className={styles.LayerContainer}
-                            drag
+                    drag
                 >
-                {this.renderSymbols()}
+                    {this.renderSymbols()}
 
-                {layers.map((layer, layerIndex) => (
-                    <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
+                    {layers.map((layer, layerIndex) => (
+                        <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
 
-                        {layer.map((list, listIndex) => (
-                            <div className={styles.nodeContainer} key={`list-${listIndex}`}
-                                style={{transform: `translate(${list.unitShift*76}px)`}}>
+                            {layer.map((list, listIndex) => (
+                                <div className={styles.nodeContainer} key={`list-${listIndex}`}
+                                    style={{ transform: `translate(${list.unitShift * 76}px)` }}>
 
-                                {list.data.map((node, nodeIndex) => (
+                                    {list.data.map((node, nodeIndex) => (
 
-                                    <React.Fragment>
+                                        <React.Fragment>
                                             <motion.div
                                                 key={`node-${node.key}`}
                                                 layoutId={`node-${node.key}`}
@@ -60,8 +60,8 @@ class LinkedListRenderer extends Renderer {
                                                     node.selected && styles.selected,
                                                     node.patched && styles.visited
                                                 )}
-                                                whileHover={{scale: 1.2}}
-                                                transition={{type: 'spring', stiffness: 100}}
+                                                whileHover={{ scale: 1.2 }}
+                                                transition={{ type: 'spring', stiffness: 100 }}
                                             >
                                                 {/* Nodes */}
                                                 <div className={classes(styles.value)}>
@@ -72,45 +72,45 @@ class LinkedListRenderer extends Renderer {
                                                 {/* Labels */}
                                                 {node.variables.map((variable, variableIndex) => (
                                                     <div className={styles.label} key={`variable-${variableIndex}`}
-                                                            layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
-                                                        >
-                                                            {variable}
+                                                        layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
+                                                    >
+                                                        {variable}
                                                     </div>))}
                                             </motion.div>
 
-                                        {/* Arrows */}
-                                        <div className={styles.symbol}>
-                                            <div
-                                                className={styles.arrow}
-                                                layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
-                                            >
-                                                <svg className={classes(styles.arrow,
-                                                node.arrow===90 && styles.down,
-                                                node.arrow===-90 && styles.up,
-                                                node.arrow===45 && styles.diagDown,
-                                                node.arrow===-45 && styles.diagUp)
-                                                }>
-                                                    <use href="#arrow-symbol"/>
-                                                </svg>
+                                            {/* Arrows */}
+                                            <div className={styles.symbol}>
+                                                <div
+                                                    className={styles.arrow}
+                                                    layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
+                                                >
+                                                    <svg className={classes(styles.arrow,
+                                                        node.arrow === 90 && styles.down,
+                                                        node.arrow === -90 && styles.up,
+                                                        node.arrow === 45 && styles.diagDown,
+                                                        node.arrow === -45 && styles.diagUp)
+                                                    }>
+                                                        <use href="#arrow-symbol" />
+                                                    </svg>
 
-                                                {
-                                                    // upwards and downwards diagonal arrows
-                                                    /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
-                                                    <use href="#downwards-diagonal"/>
-                                                </svg> */
-                                                }
-                                                {
-                                                    // testing for last node
-                                                    // {list.size-nodeIndex>1 && <use href="#arrow-symbol"/>}
-                                                }
+                                                    {
+                                                        // upwards and downwards diagonal arrows
+                                                        /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
+                                                        <use href="#downwards-diagonal"/>
+                                                    </svg> */
+                                                    }
+                                                    {
+                                                        // testing for last node
+                                                        // {list.size-nodeIndex>1 && <use href="#arrow-symbol"/>}
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
-                                    </React.Fragment>
-                                ))}
-                            </div>))}
-                    </div>))}
-            </motion.div>
-        </AnimateSharedLayout>)
+                                        </React.Fragment>
+                                    ))}
+                                </div>))}
+                        </div>))}
+                </motion.div>
+            </AnimateSharedLayout>)
     }
 
     render() {
@@ -128,7 +128,7 @@ class LinkedListRenderer extends Renderer {
         });
         return layers;
     }
+
 }
 
 export default LinkedListRenderer;
-

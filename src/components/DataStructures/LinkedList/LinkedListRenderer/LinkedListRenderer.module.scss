@@ -3,15 +3,20 @@
 .LayerContainer {
   padding-top: 10px;
   display: flex;
-  flex-direction: row; /* primary horizontal stack  */
-  justify-content: center; /* Main axis centered horizontally */
-  margin: 10px 30px 10px 10px; /* border*/
+  flex-direction: row;
+  /* primary horizontal stack  */
+  justify-content: center;
+  /* Main axis centered horizontally */
+  margin: 10px 30px 10px 10px;
+  /* border*/
 
 
   .linkedListContainer {
     display: flex;
-    flex-direction: column; /* secondary vertical stack */
-    align-items: center; /* Separate layers align at start*/
+    flex-direction: column;
+    /* secondary vertical stack */
+    align-items: center;
+    /* Separate layers align at start*/
 
 
     .nodeContainer {
@@ -19,7 +24,8 @@
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      margin: 15px 10px 15px 10px; /* gap between vertical layers */
+      margin: 15px 10px 15px 10px;
+      /* gap between vertical layers */
 
 
       .node {
@@ -29,7 +35,8 @@
         width: 30px;
 
         display: flex;
-        flex-direction: column; /* Node elements in a column*/
+        flex-direction: column;
+        /* Node elements in a column*/
         align-items: center;
         justify-content: flex-start;
 
@@ -55,14 +62,16 @@
           font-size: 20px;
           font-weight: bold;
           color: var(--linked-list-caption-color);
-          transform: translateY(5px); /* translate down*/
+          transform: translateY(5px);
+          /* translate down*/
 
           display: grid;
         }
       }
 
       .symbol {
-        position: relative; /* or relative based on your layout */
+        position: relative;
+        /* or relative based on your layout */
         vertical-align: center;
         color: var(--linked-list-node-bg);
 
@@ -73,12 +82,15 @@
           &.up {
             transform: rotate(-90deg) translateY(-32px) translateX(32px);
           }
+
           &.down {
             transform: rotate(90deg) translateY(32px) translateX(32px);
           }
+
           &.diagDown {
             transform: rotate(45deg) translateY(20px) translateX(20px);
           }
+
           &.diagUp {
             transform: rotate(-45deg) translateY(-20px) translateX(20px);
           }

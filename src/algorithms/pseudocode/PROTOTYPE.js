@@ -1,80 +1,151 @@
 import parse from '../../pseudocode/parse';
 
 export default parse(`
+\\Note{ top down merge sort for lists.  Should be able to use identical
+psuedocode independently of list implementation.  Needs more bookmarks.
+\\Note}
 \\Code{
 Main
-// Sort list(head) in ascending order
-Mergesort(head) \\B 1
-\\Expl{  Linked lists only support sequential access of data so we need the head 
-to linearly iterate through the list.
+// Sort list L of length len, in ascending order
+Mergesort(L, len) \\B Main
+\\Expl{ We pass in len so we can find the middle of the list more
+    easily; it can be computed using a separate scan of the list at the top
+    level if unknown.
 \\Expl}
-    if (head == null || head.next == null) \\B 2
+    if len > 1 \\B len>1
     \\Expl{  Terminating condition (if there are less than two
-            elements in the list segment do nothing).
+            elements in the list it's already sorted).
     \\Expl}
     \\In{
-        Split lists into 2 sections \\Ref SplitList
-        \\Expl{ This function will split the lists into two halves
-        \\Expl}
-        Sort FirstPart \\Ref MergeSortFirstPart
-        \\Expl{ Recursively sort first half of the list
-        \\Expl}
-        Sort SecondPart \\Ref MergeSortSecondPart
-        \\Expl{ Recursively sort second half of the list
-        \\Expl}
-        Merge LeftAndRight \\Ref MergeLeftRight
-        \\Expl{ Merge two sorted halves
+        split L at its mid point, giving lists L and R \\Ref split
+        sort L    \\Ref MergesortL
+        \\Note{ This should be animated in one step if not expanded
+        \\Note}
+        sort R    \\Ref MergesortR
+        \\Note{ This should be animated in one step if not expanded
+        \\Note}
+        M <- Merge of L and R \\Ref Merge
+        return M \\B returnM
+    \\In}
+    else
+    \\In{
+        return L // already sorted \\B returnL
+    \\In}
+\\Note{ Might want "Done" line+bookmark to clean up at end???
+\\Note}
+\\Code}
+
+\\Code{
+split
+    Mid <- mid point of L \\Ref scan
+    R <- tail(Mid)    // R starts after Mid
+    tail(Mid) <- Null // truncate L after Mid \\B tail(Mid)<-Null
+\\Code}
+
+\\Code{
+scan
+    Mid <- L \\B Mid
+    \\Expl{ Start at first element of L
+    \\Expl}
+    for i = 1 to len/2 - 1 // while not at middle
+    \\In{
+        Mid <- tail(Mid) \\B MidNext
+        \\Expl{ Skip to next element
         \\Expl}
     \\In}
-    //Done \\B 8
 \\Code}
 
 \\Code{
-SplitList
-// Split the linked list into two halves 
-SplitList(head) \\B placeholder
-    if (head == NULL || head.next == NULL) \\B 2
-        left <- head \\B placeholder
-        right <- NULL \\B placeholder
-    else  \\B 201
-        slow <- head \\B 201
-        fast <- head \\B 201
-        while (fast.next != NULL && fast.next.next != NULL) \\B 202
-            slow = slow.next \\B 203
-            fast = fast.next.next \\B 203
-        left <- head \\B 204
-        right <- slow.next \\B 204
-        slow.next <- NULL \\B 204
+MergesortL
+    \\Note{ Recursive call should be animated if this is expanded, like
+      quicksort.  We add the comment below to pause the animation,
+      making recursion clearer, and the animation also needs an extra
+      "chunk" at the right recursion level if we hit the "back" button.
+    \\Note}
+    // *recursively* sort the first half \\B preSortL
+    L <- Mergesort(L, len/2) \\B sortL
 \\Code}
 
 \\Code{
-MergeSortFirstPart
-// *Recursively* sort first part: \\B 300
-Mergesort(left) \\B 3
+MergesortR
+    \\Note{ See MergesortL note
+    \\Note}
+    // *recursively* sort the second half \\B preSortR
+    R <- Mergesort(R, len - len/2) \\B sortR
+    \\Expl{ We don't use len/2 for the length due to truncation with
+      integer division.
+    \\Expl}
 \\Code}
 
 \\Code{
-MergeSortSecondPart
-// *Recursively* sort second part: \\B 400
-Mergesort(right) \\B 4
+Merge
+    Initialise M with minimum of L and R \\Ref initM
+    \\Expl{ Set M to the input list with the smallest first element and
+      skip over (delete) that element for that input list.
+    \\Expl}
+    E <- M // E is the end element of M \\B E
+    while L != Null && R != Null  \\B whileNotNull
+    \\Expl{ Scan through L and R, appending elements to M.  E is always the
+        end element of M, and L and R are the remaining inputs that have
+        not yet been appended.
+    \\Expl}
+    \\In{
+        append the smaller input element to M, advance pointers \\Ref CopySmaller
+        \\Expl{ The smaller of head(L) and head(R) is appended to M.
+        \\Expl}
+    \\In}
+    append any remaining elements onto M \\Ref CopyRest
+    \\Expl{ One of the input lists will have been completely appended;
+        the other will have remaining elements.
+    \\Expl}
 \\Code}
 
 \\Code{
-MergeLeftRight
-// Merge two lists
-MergeLeftRight(left, right) \\B placeholder
-    left_pointer <- left \\B 5
-    right_pointer <- right \\B 6
-    
-    if (left == NULL) \\B placeholder
-        result <- right \\B 7
-    else if (right == NULL) \\B placeholder
-        result <- left \\B 7
-    else if (left.data <= right.data) \\B placeholder
-        result <- left \\B 7
-        result.next = MergeLeftRight(result.next, right) \\B placeholder
-    else  \\B placeholder
-        result <- right \\B 7
-        result.next = MergeLeftRight(left, result.next) \\B placeholder
+initM
+    if head(L) < head(R)
+    \\In{
+        M <- L \\B M<-L
+        L <- tail(L) \\B L<-tail(L)
+        \\Expl{ M will contain the first element of L so we skip L to
+          its next element.
+        \\Expl}
+    \\In}
+    else
+    \\In{
+        M <- R \\B M<-R
+        R <- tail(R) \\B R<-tail(R)
+        \\Expl{ M will contain the first element of R so we skip R to
+          its next element.
+        \\Expl}
+    \\In}
 \\Code}
+
+\\Code{
+CopySmaller
+    if head(L) <= head(R) \\B findSmaller
+    \\In{
+        tail(E) <- L // append L element to M
+        E <- L       // E <- end element of M
+        L <- tail(L)     // skip element in L that has been appended \\B popL
+    \\In}
+    else
+    \\In{
+        tail(E) <- R // append R element to M
+        E <- R       // E <- end element of M
+        R <- tail(R)     // skip element in R that has been appended \\B popR
+    \\In}
+\\Code}
+
+\\Code{
+CopyRest
+    if L == Null
+    \\In{
+        tail(E) <- R // append extra R elements to M \\B appendR
+    \\In}
+    else
+    \\In{
+        tail(E) <- L // append extra L elements to M \\B appendL
+    \\In}
+\\Code}
+
 `);

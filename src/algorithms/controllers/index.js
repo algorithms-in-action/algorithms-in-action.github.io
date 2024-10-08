@@ -21,4 +21,5 @@ export { default as prim_old } from './prim_old';
 export { default as prim } from './prim';
 export { default as kruskal } from './kruskal';
 export { default as PROTOTYPE } from './Prototype';
+export { default as listaProto } from './listaProto.js';
 
