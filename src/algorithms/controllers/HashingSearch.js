@@ -99,9 +99,10 @@ export default {
       },
       [i]
     );
-
+    let explored = 0;
     // Search for the target key, checking each probed position
-    while (table[i] !== TARGET && table[i] !== undefined && table[i] !== DELETE_CHAR) {
+    while (table[i] !== TARGET && table[i] !== undefined && explored < SIZE) {
+        explored += 1;
 
       // Chunker for not matching
       chunker.add(

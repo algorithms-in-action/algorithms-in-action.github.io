@@ -12,7 +12,7 @@ let main = `
         \\In{
             i <- hash(k) \\Ref Hash1
             Choose Increment value for stepping through T \\Ref SetIncrement
-            while not (T[i] = k or T[i] = Empty or T[i] = "X") // search for T or Empty or Deleted \\B 2
+            while not (T[i] = k or T[i] = Empty or T[i] = Deleted) // search for T or Empty or Deleted \\B 2
                 \\In{
                     i <- (i + Increment) mod TableSize \\B 3
                     \\Expl{ T[i] is not k or Empty so we jump ahead Increment
