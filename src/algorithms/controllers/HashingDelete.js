@@ -79,10 +79,11 @@ export default function HashingDelete(
     [i]
   );
 
+  let explored = 0;
   // Search for the target key, checking each probed position
-  while (table[i] !== key && table[i] !== undefined) {
-
+  while (table[i] !== key && table[i] !== undefined && explored < SIZE) {
     // Chunker for not matching
+    explored += 1;
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
