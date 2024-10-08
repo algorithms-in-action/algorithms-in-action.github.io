@@ -27,7 +27,7 @@ const IBookmarks = {
   Init: 1,
   EmptyArray: 2,
   InitInsertion: 3,
-  IncrementInsertions: 4,
+  // IncrementInsertions: 4,
   Hash1: 5,
   ChooseIncrement: 6,
   Probing: 7,
@@ -35,8 +35,7 @@ const IBookmarks = {
   PutIn: 9,
   Done: 10,
   BulkInsert: 1,
-  TableFull: 19,
-  TableNotFull: 20,
+  CheckTableFull: 19,
 }
 
 export default {
@@ -93,7 +92,7 @@ export default {
       // Chunker for when table is full
       if (total == SIZE - 1) {
         chunker.add(
-          IBookmarks.TableFull,
+          IBookmarks.CheckTableFull,
           (vis, total) => {
             vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is full, stopping insertion..."});
           },
@@ -106,7 +105,7 @@ export default {
       else {
         if (!isBulkInsert) { // Only show when the table is full in bulk insert mode
           chunker.add(
-            IBookmarks.TableNotFull,
+            IBookmarks.CheckTableFull,
             (vis, total) => {
               newCycle(vis, SIZE, key, ALGORITHM_NAME); // New insert cycle
               vis.array.showKth({fullCheck: "Table is filled " + total + "/" + SIZE + " -> Table is not full, continuing..."});
@@ -119,16 +118,16 @@ export default {
       insertions = insertions + 1; // Increment insertions
       total = total + 1; // Increment total
 
-      if (!isBulkInsert) {
-      // Chunker step for increasing the insertion stat
-        chunker.add(
-          IBookmarks.IncrementInsertions,
-          (vis, key, insertions) => {
-            vis.array.showKth({key: key, type: HASH_TYPE.Insert, insertions: insertions, increment: ""}); // Change insertion stats visually
-          },
-          [key ,insertions]
-        );
-      }
+      // if (!isBulkInsert) {
+      // // Chunker step for increasing the insertion stat
+      //   chunker.add(
+      //     IBookmarks.IncrementInsertions,
+      //     (vis, key, insertions) => {
+      //       vis.array.showKth({key: key, type: HASH_TYPE.Insert, insertions: insertions, increment: ""}); // Change insertion stats visually
+      //     },
+      //     [key ,insertions]
+      //   );
+      // }
 
       // Get initial hash index for current key
       let i = hash1(chunker, IBookmarks.Hash1, key, SIZE, !isBulkInsert);
