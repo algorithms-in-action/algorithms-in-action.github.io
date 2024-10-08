@@ -3,18 +3,12 @@
 
 import { msort_arr_nat } from '../explanations';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
-import {
-  areExpanded,
-} from './collapseChunkPlugin';
-
 
 import {
   isMergeCopyExpanded,
   isMergeExpanded,
   highlight,
   highlightB,
-  unhighlight,
-  highlight2Runlength,
   assignVarToA,
   assignVarToB,
   displayMergeLabels,
@@ -174,8 +168,6 @@ export function run_msort() {
         }
 
         if (mid < size - 1) {
-
-          // start merge[left, mid, right] ------------------------------------------------------------
           chunker.add('ifmidsize', (vis, a, c_left, c_mid, c_right, c_rcount) => {
             // future color: should be runAColor & runBColor
             resetArrayA(vis, "nat", a, c_left, c_mid, c_right, c_rcount, runAColor, runCColor);
@@ -184,6 +176,7 @@ export function run_msort() {
             assignVarToA(vis, 'right', c_right, size);
           }, [A, left, mid, right, runcount]);
 
+          // start merge[left, mid, right] ------------------------------------------------------------
           let ap1 = left;
           let max1 = mid;
           let ap2 = mid + 1;

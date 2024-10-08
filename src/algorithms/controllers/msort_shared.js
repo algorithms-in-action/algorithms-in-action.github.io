@@ -1,4 +1,4 @@
-//Functions used in both natural merge sort and bottom up merge sort
+// Functions used in both natural merge sort and bottom up merge sort
 
 
 import { areExpanded } from './collapseChunkPlugin';
@@ -17,7 +17,7 @@ export function isMergeExpanded() {
 }
 
 // Highlights Array A either red or green
-// Can add more colours in future
+// future color: Can add more colours in future
 export function highlight(vis, index, color) {
     if (color == 'red') {
         vis.array.select(index);
@@ -48,7 +48,7 @@ export function unhighlight(vis, index, color) {
     }
 }
 
-// Highlights two runlengths two different colours
+// Highlights two runlengths two colours
 export function highlight2Runlength(vis, left, mid, right, colorA, colorB) {
     // highlight first runlength color A
     for (let i = left; i <= mid; i++) highlight(vis, i, colorA);
@@ -88,6 +88,7 @@ export function displayMergeLabels(vis, ap1, max1, ap2, max2, bp, size) {
     if (isMergeExpanded()) assignVarToB(vis, 'bp', bp, size);
 }
 
+// highlight the ap1 and ap2 pointers, used when comparing the two elements
 export function highlightAPointers(vis, ap1, max1, ap2, max2, color) {
     if (ap1 <= max1) {
         highlight(vis, ap1, color);
@@ -97,7 +98,7 @@ export function highlightAPointers(vis, ap1, max1, ap2, max2, color) {
     }
 }
 
-
+// for displaying the runlength / runcount
 export function set_simple_stack(vis_array, c_stk) {
     vis_array.setList(c_stk);
 }
