@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f40d145-548f-4701-8a68-ff83c0f7b184" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/algorithms/controllers/tests/HashingDeletion.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/instructions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/instructions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingDelete.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingDelete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/HashingSearch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +39,9 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "josh__modify__instructions__2",
-    "kotlin-language-version-configured": "true"
+    "git-widget-placeholder": "josh__add__deletion__tests",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
