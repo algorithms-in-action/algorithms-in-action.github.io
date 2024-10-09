@@ -32,9 +32,17 @@
 
 .graph {
   flex: 1;
+
   align-self: stretch;
   --stable_color: var(--graph-node-circle-fill);
   --breath_color: var(--graph-node-circle-fill);
+
+  //AVL tree size
+  --circle-radius: 37px;
+  --text-fontsize: calc(var(--circle-radius)/37*35);
+  --height-Yposition: calc(var(--circle-radius)/37*-50);
+  --stroke-width: calc(var(--circle-radius)/37*7);
+
 
   .node {
     .circle {
@@ -44,12 +52,19 @@
 
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
+
+      r: var(--circle-radius);
+      //transform: scale(0.5);
+      /* Shrinks the size by 50% */
+      //transform-origin: center;
     }
 
     .select_circle_t {
       --stroke-color: var(--graph-node-circle-fill-selected);
       fill: var(--graph-node-circle-fill);
       stroke: var(--stroke-color);
+
+      r: var(--circle-radius);
       stroke-width: 10;
 
       //shadow display
@@ -60,6 +75,8 @@
       --stroke-color: var(--graph-select_color-fill);
       fill: var(--graph-node-circle-fill);
       stroke: var(--stroke-color);
+
+      r: var(--circle-radius);
       stroke-width: 10;
 
       //shadow display
@@ -76,7 +93,7 @@
       fill: var(--graph-node-id-fill);
       dominant-baseline: central;
       text-anchor: middle;
-      font-size: 35px; // font size for labels inside nodes
+      font-size: var(--text-fontsize); // font size for labels inside nodes
     }
 
     .weight {
@@ -98,8 +115,8 @@
       // alignment-baseline: central;
       dominant-baseline: central;
       text-anchor: middle;
-      font-size: 35px; // font size for labels inside nodes
-      transform: translateY(-50px);
+      font-size: var(--text-fontsize); // font size for labels inside nodes
+      transform: translateY(var(--height-Yposition));
       // text-anchor: left;
     }
 
@@ -288,8 +305,9 @@
       // want to highlight edges and change their color to we want
       // reasonable thick edges; this is a compromise (maybe we could
       // add an interface to adjust it for different algorithms XXX)
-      stroke-width: 7; // width of edges in graphs
+      stroke-width: var(--stroke-width); // width of edges in graphs
       fill: none;
+
 
       &.directed {
         marker-end: url(#markerArrow);

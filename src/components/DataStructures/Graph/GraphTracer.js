@@ -18,6 +18,7 @@ import AVLTreeInsertion from '../../../algorithms/controllers/AVLTreeInsertion';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
+//import GraphRender from './GraphRenderer/GraphRenderer.module.scss';
 
 export class Element {
   constructor() {
@@ -55,10 +56,11 @@ class GraphTracer extends Tracer {
     this.functionNode = null;
     this.functionBalance = null;
     this.rectangleNode = null;
-    this.rectangle = null;
+    this.rectangle = null; // [x_r, y_u, x_l, y_d, text]
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
+    this.radius = null;
 
     this.prevDepth = 0;
   }
@@ -363,7 +365,29 @@ class GraphTracer extends Tracer {
         }
       }
     }
+  }
 
+  dynamic_node() {
+
+    let max_height = 0;
+    //let node_count = this.nodes.length;
+    for (const node of this.nodes) {
+      if (node.height > max_height) {
+        max_height = node.height;
+      }
+    }
+    if (max_height > 3) {
+      let radius = 37 - (max_height - 3) * 8;
+      if (radius < 10) radius = 10;
+      //console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!Layer Count: ${max_height} - Radius: ${radius}`);
+      this.radius = radius;
+
+      //const graphElement = GraphRenderer.querySelector('.graph');
+      //console.log(graphElement, `Radius: ${radius}`);
+      //graphElement.style.setProperty('--circle-radius', radius + 'px');
+    } else {
+      this.radius = null;
+    }
   }
 
   clearRect() {
@@ -696,6 +720,9 @@ class GraphTracer extends Tracer {
   }
 
   layoutAVL(root = 0, sorted = false, freezDepth = false) {
+
+    this.dynamic_node();
+
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();

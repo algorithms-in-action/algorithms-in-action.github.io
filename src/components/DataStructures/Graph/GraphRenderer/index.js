@@ -17,8 +17,8 @@ import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
+import { node } from 'prop-types';
 
-import GraphTracer from '../../Graph/GraphTracer';
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -425,7 +425,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, tagInfo } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo } =
       this.props.data;
     const {
       baseWidth,
@@ -549,224 +549,233 @@ class GraphRenderer extends Renderer {
         {/* X axis and Y axis */}
         {this.renderAxis(this.computeMax(nodes))}
 
-        {edges
-          .sort(
-            (a, b) =>
-              a.visitedCount -
-              b.visitedCount +
-              a.visitedCount1 -
-              b.visitedCount1
-          )
-          .map((edge) => {
+        <g
+          className={classes(styles.graph)}
+          style={radius != null ? { '--circle-radius': `${radius}px` } : { '--circle-radius': `${nodeRadius}px` }}
+        >
+
+          {/* Circle radius */}
+          {edges
+            .sort(
+              (a, b) =>
+                a.visitedCount -
+                b.visitedCount +
+                a.visitedCount1 -
+                b.visitedCount1
+            )
+            .map((edge) => {
+              const {
+                source,
+                target,
+                weight,
+                visitedCount,
+                selectedCount,
+                visitedCount0,
+                visitedCount1,
+                visitedCount2,
+                visitedCount3,
+                visitedCount4,
+              } = edge;
+              const sourceNode = this.props.data.findNode(source);
+              const targetNode = this.props.data.findNode(target);
+              if (!sourceNode || !targetNode) return undefined;
+              const { x: sx, y: sy } = sourceNode;
+              let { x: ex, y: ey } = targetNode;
+              const mx = (sx + ex) / 2;
+              const my = (sy + ey) / 2;
+              const dx = ex - sx;
+              const dy = ey - sy;
+              if (isDirected) {
+                let length = Math.sqrt(dx * dx + dy * dy);
+                if (length !== 0) {
+                  ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
+                  ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
+                }
+                if (radius != null) {
+                  ex = (sx + (dx / length) * (length - radius - arrowGap));
+                  ey = (sy + (dy / length) * (length - radius - arrowGap));
+                }
+              }
+              let pathSvg = null;
+              if (this.props.data.isInterConnected(source, target)) {
+                const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+                pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+              } else {
+                pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              }
+              // console.log(sx,sy,ex,ey,cx,cy);
+              return (
+                <g
+                  className={classes(
+                    styles.edge,
+                    targetNode.sorted && styles.sorted,
+                    selectedCount && styles.selected,
+                    !selectedCount && visitedCount && styles.visited,
+                    visitedCount0 && styles.visited,
+                    visitedCount1 && styles.visited1,
+                    visitedCount2 && styles.visited2,
+                    visitedCount3 && styles.visited3,
+                    visitedCount4 && styles.visited4
+                  )}
+                  key={`${source}-${target}`}
+                >
+                  <path
+                    d={pathSvg}
+                    className={classes(
+                      styles.line,
+                      isDirected && styles.directed
+                    )}
+                  />
+                  {isWeighted && (
+                    <g transform={`translate(${mx},${my})`}>
+                      <text
+                        className={styles.weight}
+                        transform="rotate(0)"
+                        y={-edgeWeightGap}
+                      >
+                        {this.toString(weight)}
+                      </text>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+
+          {/* Select rectangle */}
+          <g>
+            {rectangle != null && (
+              <>
+                <text className={classes(styles.select_color)}// Correctly moved this inside the text tag
+
+                  fontSize={50} // font size
+                  x={rectangle[0] - 30} // Adjusted x position to center it relative to the rectangle
+                  y={rectangle[1] - 90} // Adjusted y position to center it relative to the rectangle
+                >
+                  {rectangle[4]} {/* Make sure text is defined and properly passed */}
+                </text>
+                <rect
+                  className={classes(
+                    styles.select_rect, // Apply the .rect class styles
+                    styles && styles.backgroundStyle // Optionally apply additional styles
+                  )}
+                  x={rectangle[0] - 50} // x position
+                  y={rectangle[1] - 70} // y position
+                  width={rectangle[2] - rectangle[0] + 100} // width of the rectangle
+                  height={rectangle[3] - rectangle[1] + 120} // height of the rectangle
+                />
+
+              </>
+            )}
+          </g>
+
+          {/* node graph */}
+          {nodes.map((node) => {
             const {
-              source,
-              target,
+              x,
+              y,
               weight,
-              visitedCount,
-              selectedCount,
+              height,
+              Select_Circle_Count,
+              AVL_TID,
               visitedCount0,
+              visitedCount,
               visitedCount1,
               visitedCount2,
               visitedCount3,
               visitedCount4,
-            } = edge;
-            const sourceNode = this.props.data.findNode(source);
-            const targetNode = this.props.data.findNode(target);
-            if (!sourceNode || !targetNode) return undefined;
-            const { x: sx, y: sy } = sourceNode;
-            let { x: ex, y: ey } = targetNode;
-            const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
-            const dx = ex - sx;
-            const dy = ey - sy;
-            if (isDirected) {
-              const length = Math.sqrt(dx * dx + dy * dy);
-              if (length !== 0) {
-                ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
-                ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
-              }
-            }
-            let pathSvg = null;
-            if (this.props.data.isInterConnected(source, target)) {
-              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
-              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
-            } else {
-              pathSvg = `M${sx},${sy} L${ex},${ey}`;
-            }
-            // console.log(sx,sy,ex,ey,cx,cy);
+              selectedCount,
+              value,
+              key,
+              style,
+              sorted,
+              isPointer,
+              pointerText,
+            } = node;
+            // only when selectedCount is 1, then highlight the node
+            const selectNode = selectedCount === 1;
+            const visitedNode0 = visitedCount0 === 1;
+            const visitedNode = visitedCount === 1;
+            const visitedNode1 = visitedCount1 === 1;
+            const visitedNode2 = visitedCount2 === 1;
+            const visitedNode3 = visitedCount3 === 1;
+            const visitedNode4 = visitedCount4 === 1;
             return (
-              <g
+              <motion.g
+                animate={{ x, y }}
+                initial={false}
+                transition={{ duration: 1 }}
                 className={classes(
-                  styles.edge,
-                  targetNode.sorted && styles.sorted,
-                  selectedCount && styles.selected,
-                  !selectedCount && visitedCount && styles.visited,
-                  visitedCount0 && styles.visited,
-                  visitedCount1 && styles.visited1,
-                  visitedCount2 && styles.visited2,
-                  visitedCount3 && styles.visited3,
-                  visitedCount4 && styles.visited4
+                  styles.node,
+                  selectNode && styles.selected,
+                  sorted && styles.sorted,
+
+                  visitedNode0 && styles.visited0,
+                  visitedNode && styles.visited,
+                  visitedNode1 && styles.visited1,
+                  visitedNode2 && styles.visited2,
+                  visitedNode3 && styles.visited3,
+                  visitedNode4 && styles.visited4
                 )}
-                key={`${source}-${target}`}
+                key={key}
               >
-                <path
-                  d={pathSvg}
-                  className={classes(
-                    styles.line,
-                    isDirected && styles.directed
-                  )}
-                />
-                {isWeighted && (
-                  <g transform={`translate(${mx},${my})`}>
-                    <text
-                      className={styles.weight}
-                      transform="rotate(0)"
-                      y={-edgeWeightGap}
-                    >
-                      {this.toString(weight)}
-                    </text>
-                  </g>
+                {Select_Circle_Count > 0 && (
+                  functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+                    <circle
+                      className={classes(
+                        styles.select_circle_f,
+                        style && style.backgroundStyle
+                      )}
+                      r={nodeRadius}
+                    />
+                  ) : (
+                    <circle
+                      className={classes(
+                        styles.select_circle_t,
+                        style && style.backgroundStyle
+                      )}
+                      r={nodeRadius}
+                    />
+                  )
                 )}
-              </g>
+
+                <circle
+                  className={classes(
+                    styles.circle,
+                    style && style.backgroundStyle
+                  )}
+                  r={nodeRadius}
+                />
+
+                <text className={classes(styles.id, style && style.textStyle)}>
+                  {value}
+                </text>
+                {isWeighted && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(weight)}
+                  </text>
+                )}
+
+                <text className={styles.height}>
+                  {height != null && height.toString().includes('t') ? (
+                    <tspan className={styles.AVL_TID}>
+                      {height}
+                    </tspan>
+                  ) : (
+                    <tspan>
+                      {height != null ? height : ''}
+                    </tspan>
+                  )}
+                </text>
+
+                {isPointer && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(pointerText)}
+                  </text>
+                )}
+              </motion.g>
             );
           })}
-
-        {/* Select rectangle */}
-        <g>
-          {rectangle != null && (
-            <>
-              <text className={classes(styles.select_color)}// Correctly moved this inside the text tag
-
-                fontSize={50} // font size
-                x={rectangle[0]} // Adjusted x position to center it relative to the rectangle
-                y={rectangle[1] - 90} // Adjusted y position to center it relative to the rectangle
-              >
-                {rectangle[4]} {/* Make sure text is defined and properly passed */}
-              </text>
-              <rect
-                className={classes(
-                  styles.select_rect, // Apply the .rect class styles
-                  styles && styles.backgroundStyle // Optionally apply additional styles
-                )}
-                x={rectangle[0] - 50} // x position
-                y={rectangle[1] - 70} // y position
-                width={rectangle[2] - rectangle[0] + 100} // width of the rectangle
-                height={rectangle[3] - rectangle[1] + 120} // height of the rectangle
-              />
-
-            </>
-          )}
         </g>
-
-        {/* node graph */}
-        {nodes.map((node) => {
-          const {
-            x,
-            y,
-            weight,
-            height,
-            Select_Circle_Count,
-            AVL_TID,
-            visitedCount0,
-            visitedCount,
-            visitedCount1,
-            visitedCount2,
-            visitedCount3,
-            visitedCount4,
-            selectedCount,
-            value,
-            key,
-            style,
-            sorted,
-            isPointer,
-            pointerText,
-          } = node;
-          // only when selectedCount is 1, then highlight the node
-          const selectNode = selectedCount === 1;
-          const visitedNode0 = visitedCount0 === 1;
-          const visitedNode = visitedCount === 1;
-          const visitedNode1 = visitedCount1 === 1;
-          const visitedNode2 = visitedCount2 === 1;
-          const visitedNode3 = visitedCount3 === 1;
-          const visitedNode4 = visitedCount4 === 1;
-          return (
-            <motion.g
-              animate={{ x, y }}
-              initial={false}
-              transition={{ duration: 1 }}
-              className={classes(
-                styles.node,
-                selectNode && styles.selected,
-                sorted && styles.sorted,
-
-                visitedNode0 && styles.visited0,
-                visitedNode && styles.visited,
-                visitedNode1 && styles.visited1,
-                visitedNode2 && styles.visited2,
-                visitedNode3 && styles.visited3,
-                visitedNode4 && styles.visited4
-              )}
-              key={key}
-            >
-              {Select_Circle_Count > 0 && (
-                functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
-                  <circle
-                    className={classes(
-                      styles.select_circle_f,
-                      style && style.backgroundStyle
-                    )}
-                    r={nodeRadius}
-                  />
-                ) : (
-                  <circle
-                    className={classes(
-                      styles.select_circle_t,
-                      style && style.backgroundStyle
-                    )}
-                    r={nodeRadius}
-                  />
-                )
-              )}
-
-              <circle
-                className={classes(
-                  styles.circle,
-                  style && style.backgroundStyle
-                )}
-                r={nodeRadius}
-              />
-
-              <text className={classes(styles.id, style && style.textStyle)}>
-                {value}
-              </text>
-              {isWeighted && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(weight)}
-                </text>
-              )}
-
-              <text className={styles.height}>
-                {height != null && height.toString().includes('t') ? (
-                  <tspan className={styles.AVL_TID}>
-                    {height}
-                  </tspan>
-                ) : (
-                  <tspan>
-                    {height != null ? height : ''}
-                  </tspan>
-                )}
-              </text>
-
-              {isPointer && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(pointerText)}
-                </text>
-              )}
-            </motion.g>
-          );
-        })}
-
-
 
         {/* Text */}
         <g>
@@ -837,7 +846,7 @@ class GraphRenderer extends Renderer {
           </text>
         </g>
 
-      </svg>
+      </svg >
     );
   }
 }
