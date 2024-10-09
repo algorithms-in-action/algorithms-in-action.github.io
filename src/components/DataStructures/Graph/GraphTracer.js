@@ -733,8 +733,11 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
+
+
   layoutAVL(root = 0, sorted = false, freezDepth = false) {
 
+    //reflash the Node
     this.dynamic_node();
 
     this.root = root;
