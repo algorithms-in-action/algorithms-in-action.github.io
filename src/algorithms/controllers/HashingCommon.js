@@ -40,6 +40,14 @@ export const HASH_TYPE = {
   BulkInsert: 'BI'
 }
 
+// list of primes each roughly two times larger than previous
+export const PRIMES = [
+  11, 23, 47, 97
+];
+
+// which table size in PRIMES array to allow pointer
+export const POINTER_CUT_OFF = 1;
+
 /**
  * First hash function
  * @param {*} chunker the chunker to step the visualized along with the calculation
@@ -167,7 +175,7 @@ export function setIncrement(
 export function newCycle(vis, size, key, name) {
   vis.array.unfill(INDEX, 0, undefined, size - 1); // Reset any coloring of slots
 
-  if (size === SMALL_SIZE) {
+  if (size <= PRIMES[POINTER_CUT_OFF]) {
     vis.array.resetVariable(POINTER); // Reset pointer
   }
 
