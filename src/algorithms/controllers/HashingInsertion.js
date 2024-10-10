@@ -305,7 +305,7 @@ export default {
         (vis, prevTable) => {
           newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
           vis.array.showKth({
-            fullCheck: `Expanding table, Reinserting: ${prevTable.slice(0, 3)}` + ((prevTable.length > 3) ? `,...` : ``)
+            fullCheck: `Reinserting: ${prevTable.slice(0, 3)}` + ((prevTable.length > 3) ? `,...` : ``)
           });
         },
         [prevTable]
@@ -415,8 +415,6 @@ export default {
     // main loop allowing table extension
     do {
       prevIdx = null;
-      insertions = 0;
-      total = 0;
 
       chunker.add(
         IBookmarks.Init,
@@ -473,12 +471,16 @@ export default {
       chunker.add(
         IBookmarks.InitInsertion,
         (vis, insertions) => {
-          vis.array.showKth({
-            key: "",
-            type: EMPTY_CHAR,
-            insertions: insertions,
-            increment: "",
-          });
+          vis.array.showKth(
+            (params.expand && (lastInput !== 0)) ? {
+              fullCheck: "Expanding Table"
+            } : {
+              key: "",
+              type: EMPTY_CHAR,
+              insertions: insertions,
+              increment: "",
+            }
+          );
         },
         [insertions]
       )
