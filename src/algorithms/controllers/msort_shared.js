@@ -26,6 +26,7 @@ export function highlight(vis, index, color) {
         vis.array.patch(index);
     }
 }
+
 // Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
 export function highlightB(vis, index, color) {
     if (isMergeExpanded()) {

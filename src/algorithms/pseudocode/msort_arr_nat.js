@@ -49,6 +49,7 @@ MergeAll
         left <- right + 1 // skip to the next pair of runs (if any) \\B left2
     until left >= size
     \\In}
+    // all consecutive pairs of runs merged \\B mergeDone
 \\Code}
 
 \\Code{
