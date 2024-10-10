@@ -299,20 +299,23 @@ export default {
     }
 
 
-    function hashReinsert(table, key) {
+    function hashReinsert(table, key, prevTable) {
       chunker.add(
-        IBookmarks.TableNotFull,
-        (vis) => {
+        IBookmarks.CheckTableFull,
+        (vis, prevTable) => {
           newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
-          vis.array.showKth({fullCheck: "Expanding table"});
+          vis.array.showKth({
+            fullCheck: `Expanding table, Reinserting: ${prevTable.slice(0, 3)}` + ((prevTable.length > 3) ? `,...` : ``)
+          });
         },
+        [prevTable]
       )
 
 
       // Get initial hash index for current key
       let i = hash1(
         chunker,
-        IBookmarks.TableFull,
+        IBookmarks.CheckTableFull,
         key,
         table.length,
         false
@@ -321,7 +324,7 @@ export default {
       // Calculate increment for current key
       let increment = setIncrement(
         chunker,
-        IBookmarks.TableFull,
+        IBookmarks.CheckTableFull,
         key,
         table.length,
         ALGORITHM_NAME,
@@ -331,7 +334,7 @@ export default {
 
         // Chunker for first pending slot
       chunker.add(
-        IBookmarks.TableFull,
+        IBookmarks.CheckTableFull,
         (vis, idx) => {
 
           // Pointer only appear for small table
@@ -361,7 +364,7 @@ export default {
 
         // Chunker for collision
         chunker.add(
-          IBookmarks.TableFull,
+          IBookmarks.CheckTableFull,
           (vis, idx) => {
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill the slot with red, indicating collision
           },
@@ -370,7 +373,7 @@ export default {
 
         // Chunker for Probing
         chunker.add(
-         IBookmarks.TableFull,
+         IBookmarks.CheckTableFull,
           (vis, idx) => {
 
             // Pointer only appears for small tables
@@ -388,7 +391,7 @@ export default {
 
       // Chunker for placing the key
       chunker.add(
-        IBookmarks.TableFull,
+        IBookmarks.CheckTableFull,
         (vis, val, idx) => {
           vis.array.updateValueAt(VALUE, idx, val); // Update value of that index
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
@@ -486,10 +489,10 @@ export default {
       const NUMBER_DELETE_SPLIT_INDEX = 1;
 
       if (params.expand && (lastInput !== 0)) {
-        for (let i = 0; i < prevTable.length; i++) {
-          if (prevTable[i] !== undefined) {
-            hashReinsert(table, prevTable[i]);
-          }
+        while (prevTable.length > 0) {
+          let key = prevTable[0];
+          hashReinsert(table, key, prevTable);
+          prevTable.shift();
         }
       }
 
