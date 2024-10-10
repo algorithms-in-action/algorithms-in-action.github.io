@@ -49,6 +49,14 @@ export function unhighlight(vis, index, color) {
     }
 }
 
+// Highlights one runlength 
+export function highlightFromTo(vis, from, to, color) {
+    // highlight first runlength color A
+    for (let i = from; i <= to; i++) {
+        highlight(vis, i, color);
+    }
+}
+
 // Highlights two runlengths two colours
 export function highlight2Runlength(vis, left, mid, right, colorA, colorB) {
     // highlight first runlength color A

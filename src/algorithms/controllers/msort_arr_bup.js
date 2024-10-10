@@ -16,7 +16,8 @@ import {
   displayMergeLabels,
   highlightAPointers,
   set_simple_stack,
-  resetArrayA
+  resetArrayA,
+  highlightFromTo
 } from './msort_shared.js';
 
 
@@ -149,13 +150,15 @@ export function run_msort() {
 
         let mid = left + runlength - 1;
         let right = Math.min(mid + runlength, (size - 1));
-        chunker.add('mid', (vis, c_mid) => {
+        chunker.add('mid', (vis, c_mid, c_left) => {
           assignVarToA(vis, 'mid', c_mid, size);
-        }, [mid]);
-        chunker.add('right', (vis, c_right) => {
+          //highlightFromTo(vis, c_left, c_mid, runAColor);
+        }, [mid, left]);
+        chunker.add('right', (vis, c_right, c_mid) => {
           assignVarToA(vis, 'right', c_right, size);
+          //highlightFromTo(vis, c_mid + 1, c_right, runBColor);
 
-        }, [right]);
+        }, [right, mid]);
 
         // start merge[left, mid, right] ------------------------------------------------------------
         let ap1 = left;
@@ -314,15 +317,19 @@ export function run_msort() {
           // highlight all sorted elements green
           for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
 
+          assignVarToA(vis, "left", c_left, size);
+          assignVarToA(vis, "right", c_right, size);
+
         }, [A, B, left, right, runlength]);
 
         left = right + 1;
 
-        chunker.add('left2', (vis, a, c_left, c_rlength) => {
+        chunker.add('left2', (vis, a, c_left, c_right, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup'); //unhighlight array a
           set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
           if (c_left < size) assignVarToA(vis, 'left', c_left, size);
+          assignVarToA(vis, "right", c_right, size);
 
           if ((c_left + c_rlength) < size) {
             let left_2 = c_left;
@@ -330,15 +337,19 @@ export function run_msort() {
             let right_2 = (Math.min((mid_2 + c_rlength + 1), size) - 1);
             highlight2Runlength(vis, left_2, mid_2, right_2, runAColor, runBColor);
           }
+          if ((c_left + c_rlength) >= size) {
+            highlightFromTo(vis, c_left, size - 1, runAColor);
+          }
 
 
-        }, [A, left, runlength]);
+        }, [A, left, right, runlength]);
 
       }
 
       runlength = 2 * runlength;
 
       chunker.add('mergeDone', (vis, c_rlength) => {
+        assignVarToA(vis, "right", undefined, size);
         highlightAllRunlengths(vis, c_rlength, runAColor, runBColor, size);
       }, [runlength])
 

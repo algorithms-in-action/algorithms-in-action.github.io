@@ -14,7 +14,8 @@ import {
   displayMergeLabels,
   highlightAPointers,
   set_simple_stack,
-  resetArrayA
+  resetArrayA,
+  highlightFromTo
 } from './msort_shared.js';
 
 const run = run_msort();
@@ -354,20 +355,30 @@ export function run_msort() {
             // highlight all sorted elements green
             for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
             set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+
+            assignVarToA(vis, "left", c_left, size);
+            assignVarToA(vis, "right", c_right, size);
+
           }, [A, B, left, right, runcount]);
         }
 
         runcount = runcount + 1;
-        chunker.add('runcount+', (vis, c_rcount) => {
+        chunker.add('runcount+', (vis, c_left, c_mid, c_rcount) => {
+          highlightFromTo(vis, c_left, c_mid, sortColor);
           set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
-        }, [runcount]);
+        }, [left, mid, runcount]);
 
         left = right + 1;
-        chunker.add('left2', (vis, a, c_left, c_rcount) => {
+        chunker.add('left2', (vis, a, c_left, c_right, c_rcount) => {
           vis.array.set(a, 'msort_arr_nat'); // unhighlight array a
           set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
-          if (c_left < size) assignVarToA(vis, 'left', c_left);
-        }, [A, left, runcount]);
+          if (c_left < size) {
+            assignVarToA(vis, 'left', c_left, size);
+            assignVarToA(vis, "right", c_right, size);
+          }
+
+
+        }, [A, left, right, runcount]);
 
       } while (left < size);
 
