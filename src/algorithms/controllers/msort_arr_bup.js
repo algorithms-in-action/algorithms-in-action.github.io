@@ -120,7 +120,7 @@ export function run_msort() {
 
     chunker.add('runlength', (vis, c_rlength) => {
       assignVarToA(vis, "runlength", c_rlength - 1, size);
-      set_simple_stack(vis.array, [c_rlength]);
+      set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
       highlightAllRunlengths(vis, c_rlength, runAColor, runBColor, size);
     }, [runlength]);
 
@@ -135,7 +135,7 @@ export function run_msort() {
       chunker.add('left', (vis, a, c_left, c_rlength) => {
         vis.array.set(a, 'msort_arr_bup'); // unhighlight arrayA
         assignVarToA(vis, 'left', c_left, size);
-        set_simple_stack(vis.array, [c_rlength]);
+        set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
         let left_2 = c_left;
         let mid_2 = (c_rlength + c_left - 1);
         let right_2 = (Math.min(c_rlength * 2, size) - 1);
@@ -307,7 +307,7 @@ export function run_msort() {
 
         chunker.add('copyBA', (vis, a, b, c_left, c_right, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup');
-          set_simple_stack(vis.array, [c_rlength]);
+          set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
           if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
 
@@ -320,7 +320,7 @@ export function run_msort() {
 
         chunker.add('left2', (vis, a, c_left, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup'); //unhighlight array a
-          set_simple_stack(vis.array, [c_rlength]);
+          set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
           if (c_left < size) assignVarToA(vis, 'left', c_left, size);
 
@@ -345,7 +345,7 @@ export function run_msort() {
       chunker.add('runlength2', (vis, c_rlength) => {
 
         assignVarToA(vis, 'left', undefined, size);
-        set_simple_stack(vis.array, [c_rlength]);
+        set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
         if (c_rlength < size) {
           assignVarToA(vis, "runlength", c_rlength - 1, size);
@@ -359,7 +359,7 @@ export function run_msort() {
       for (let i = 0; i < size; i++) {
         highlight(vis, i, sortColor);
       }
-      assignVarToA(vis, 'Done', size, size);
+
       set_simple_stack(vis.array, ["DONE"]);
 
     }, []);

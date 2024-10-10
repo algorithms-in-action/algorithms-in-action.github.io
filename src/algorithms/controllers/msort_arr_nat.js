@@ -145,7 +145,8 @@ export function run_msort() {
 
       chunker.add('runcount', (vis, a, c_rcount) => {
         vis.array.set(a, 'msort_arr_nat');
-        set_simple_stack(vis.array, [c_rcount]);
+        set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+
       }, [A, runcount]);
 
       chunker.add('left', (vis, c_left) => {
@@ -352,19 +353,19 @@ export function run_msort() {
             if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
             // highlight all sorted elements green
             for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
-            set_simple_stack(vis.array, [c_rcount]);
+            set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
           }, [A, B, left, right, runcount]);
         }
 
         runcount = runcount + 1;
         chunker.add('runcount+', (vis, c_rcount) => {
-          set_simple_stack(vis.array, [c_rcount]);
+          set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
         }, [runcount]);
 
         left = right + 1;
         chunker.add('left2', (vis, a, c_left, c_rcount) => {
           vis.array.set(a, 'msort_arr_nat'); // unhighlight array a
-          set_simple_stack(vis.array, [c_rcount]);
+          set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
           if (c_left < size) assignVarToA(vis, 'left', c_left);
         }, [A, left, runcount]);
 

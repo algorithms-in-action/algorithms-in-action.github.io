@@ -228,14 +228,14 @@ class Array1DRenderer extends Array2DRenderer {
             <caption
               className={styles.captionmsort_arr_bup}
               kth-tag="msort_arr_bup_caption"
-            > runlength = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+            > &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
         {
           algo === 'msort_arr_nat' && listOfNumbers && (
             <caption
               className={styles.captionmsort_arr_nat}
               kth-tag="msort_arr_nat_caption"
-            > runcount = &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+            > &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
       </table>
     );

@@ -111,5 +111,8 @@ export function resetArrayA(vis, arr_type, A, left, mid, right, stack, colorA, c
     if (arr_type === "nat") vis.array.set(A, 'msort_arr_nat');
 
     highlight2Runlength(vis, left, mid, right, colorA, colorB);
-    set_simple_stack(vis.array, [stack]);
+
+
+    if (arr_type === "bup") set_simple_stack(vis.array, [`runlength = ${stack}`]);
+    if (arr_type === "nat") set_simple_stack(vis.array, [`runcount = ${stack}`]);
 }
