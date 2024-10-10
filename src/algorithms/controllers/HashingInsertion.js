@@ -44,6 +44,7 @@ const IBookmarks = {
 function expandTable(table) {
   let currSize = table.length;
   let nextSize = PRIMES[PRIMES.indexOf(currSize) + 1];
+  if (nextSize === undefined) return [null, null, null, null];
 
   return [
     new Array(nextSize),
@@ -106,7 +107,7 @@ export default {
     function hashInsert(table, key, isBulkInsert) {
       // Chunker for when table is full
       const limit = () => {
-        if (params.expand) return total + 1 === Math.round(table.length * 0.8);
+        if (params.expand && table.length < LARGE_SIZE) return total + 1 === Math.round(table.length * 0.8);
         return total === table.length - 1;
       }
       if (limit()) {
@@ -239,8 +240,6 @@ export default {
      * ReInsertion function for inserted key to new table
      * @param {*} table the table to keep track of the internal and illustrated array
      * @param {*} key the key to insert
-     * @param {*} prevIdx previous index of the previous key
-     * @param {*} isBulkInsert whether it is bulk insert or not
      * @returns the index the key is assigned
      */
     function hashBulkInsert(table, keys) {
@@ -299,13 +298,24 @@ export default {
     }
 
 
+    const REINSERT_CAPTION_LEN = 5;
+
+    /**
+     * ReInsertion function for inserted key to new table
+     * @param {*} table the table to keep track of the internal and illustrated array
+     * @param {*} key the key to reinsert
+     * @param {*} prevTable rrray of emaining keys from old table to be inserted
+     * @returns the index the key is assigned
+     */
     function hashReinsert(table, key, prevTable) {
       chunker.add(
         IBookmarks.CheckTableFull,
         (vis, prevTable) => {
           newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
           vis.array.showKth({
-            fullCheck: `Reinserting: ${prevTable.slice(0, 3)}` + ((prevTable.length > 3) ? `,...` : ``)
+            reinserting: key,
+            toReinsert: `${prevTable.slice(0, REINSERT_CAPTION_LEN)}` +
+              ((prevTable.length > REINSERT_CAPTION_LEN) ? `,...` : ``)
           });
         },
         [prevTable]
@@ -493,8 +503,8 @@ export default {
       if (params.expand && (lastInput !== 0)) {
         while (prevTable.length > 0) {
           let key = prevTable[0];
-          hashReinsert(table, key, prevTable);
           prevTable.shift();
+          hashReinsert(table, key, prevTable);
         }
       }
 
@@ -503,7 +513,7 @@ export default {
         if (prevIdx == FULL_SIGNAL) {
           lastInput = i - 1;
           prevTable = table.filter(n => n !== undefined);
-          [table, indexArr, valueArr, nullArr] = expandTable(table);
+          if (table.length < LARGE_SIZE) [table, indexArr, valueArr, nullArr] = expandTable(table);
           break;
         }
 
@@ -542,7 +552,7 @@ export default {
           }
         }
       }
-    } while (params.expand && prevIdx == FULL_SIGNAL);
+    } while (params.expand && prevIdx == FULL_SIGNAL && table.length < LARGE_SIZE);
 
     // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(

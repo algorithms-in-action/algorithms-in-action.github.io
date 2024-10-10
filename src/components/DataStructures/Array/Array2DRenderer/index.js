@@ -451,30 +451,40 @@ class Array2DRenderer extends Renderer {
             {(algo === 'HashingLP' ||
               algo === 'HashingDH' ) &&
               kth !== '' &&
-              (kth.fullCheck == undefined ?
-              (
-                <span
-                  className={styles.captionHashing}
-                >
-                  {(kth.type == 'I' || kth.type == 'BI') ? 'Inserting' : (kth.type == 'S' ? 'Searching' : (kth.type == 'D' ? 'Deleting' : '')) } Key{kth.type == 'BI' ? 's' : ''}: {kth.key}
-                  {kth.insertions !== undefined && (
-                    <span
-                      className={styles.captionHashing}
-                    >
-                      &emsp;&emsp;&emsp;&emsp;
-                      Insertions: {kth.insertions}
-                    </span>
-                  )}
-                  &emsp;&emsp;&emsp;&emsp;
-                  Increment: {kth.increment}
-                </span>
-              ) : (
-                <span
-                  className={styles.captionHashing}
-                >
-                  {kth.fullCheck}
-                </span>
-              ))
+              ((kth.fullCheck === undefined) && (kth.reinserting === undefined) ?
+                (
+                  <span
+                    className={styles.captionHashing}
+                  >
+                    {(kth.type == 'I' || kth.type == 'BI') ? 'Inserting' : (kth.type == 'S' ? 'Searching' : (kth.type == 'D' ? 'Deleting' : '')) } Key{kth.type == 'BI' ? 's' : ''}: {kth.key}
+                    {kth.insertions !== undefined && (
+                      <span
+                        className={styles.captionHashing}
+                      >
+                        &emsp;&emsp;&emsp;&emsp;
+                        Insertions: {kth.insertions}
+                      </span>
+                    )}
+                    &emsp;&emsp;&emsp;&emsp;
+                    Increment: {kth.increment}
+                  </span>
+                ) : ((kth.fullCheck !== undefined) ? (
+                  <span
+                    className={styles.captionHashing}
+                  >
+                    {kth.fullCheck}
+                  </span>
+                ) : (
+                  <span
+                    className={styles.captionHashing}
+                  >
+                    Reinserting: {kth.reinserting}
+                    &emsp;&emsp;&emsp;&emsp;
+                    To reinsert: {kth.toReinsert}
+                  </span>
+                  )
+                )
+              )
             }
           </div>
         </div>
