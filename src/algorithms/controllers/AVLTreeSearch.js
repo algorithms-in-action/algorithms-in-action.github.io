@@ -1,3 +1,24 @@
+/**
+ * This file contains the AVL Tree Search algorithm,
+ * alongside the visualisation code.
+ *
+ * The AVL Tree Search algorithm is used to find a node.
+ * 
+ * The search algorithm is based on the tree created by the insertion algorithm. 
+ * By accessing the visualized AVL tree, it retrieves the complete tree structure. 
+ * The input is a node to be searched for, and the algorithm starts from the root, 
+ * traversing down to the child nodes to find the target node.
+ *
+ * @author StaticSound Team
+ *        - Hao Chen        (1314613) <hc4@student.unimelb.edu.au>
+ *        - Jiayi Sun       (1305340) <jisun5@student.unimelb.edu.au>
+ *        - Junhao Zhu      (1261757) <junhaoz3@student.unimelb.edu.au>
+ *        - Ziyu Wang       (1243302) <ziyu6@student.unimelb.edu.au>
+ *        - Gaoyongle Zhang (1346309) <gaoyonglez@student.edu.au>
+ * 
+ * @since  08/10/2024
+ */
+
 export default {
     /**
          * For the search algorithm, we use the tree that is created in
@@ -26,8 +47,6 @@ export default {
         const tree = visualiser.graph.instance.getTree();
         let root = visualiser.graph.instance.getRoot();
 
-        console.log('tree:', Object.keys(tree));
-
         let current = root;
         let parent = null;
 
@@ -35,22 +54,19 @@ export default {
             vis.graph.setFunctionInsertText(" (" + target + ") ");
             vis.graph.setFunctionName("AVL_Search");
         });
-        // chunker.add('while t not Empty', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         chunker.add('while t not Empty');
 
         let ptr = tree;
         parent = current;
 
         while (ptr) {
-            // chunker.add('n = root(t)');
+
             chunker.add('n = root(t)', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
             let node = current;
             chunker.add('if n.key = k');
             if (node === target) {
                 chunker.add('if n.key = k', (vis, c, p) => vis.graph.leave(c, p), [node, parent]);
                 chunker.add('return t', (vis, c, p) => vis.graph.select(c, p), [node, parent]);
-                // for test
-                console.log('success! found the target!');
                 return 'success';
             }
 
@@ -61,7 +77,7 @@ export default {
                     parent = node;
                     current = tree[node].left;
                     ptr = tree[node];
-                    // chunker.add('t <- n.left', (vis, c, p) => vis.graph.visit(c, p), [node, parent]);
+
                     chunker.add('t <- n.left');
                 } else {
                     break;
@@ -71,26 +87,14 @@ export default {
                 parent = node;
                 current = tree[node].right;
                 ptr = tree[node];
-                // chunker.add('t <- n.right', (vis, c, p) => vis.graph.visit(c, p), [node, parent]);
+
                 chunker.add('t <- n.right');
             } else {
                 break;
             }
         }
-        // chunker.add('return NotFound');
-        // for test
-        // chunker.add('return NotFound', (vis, final) => {
-        //     console.log('chunker.add called');
-        //     const ResultStr = 'NotFound';
-        //     console.log('ResultStr:', ResultStr);
-        //     console.log('vis:', vis);
-        //     console.log('final:', final);
-        //     vis.graph.addResult(ResultStr, final);
-        //     console.log('vis.graph.addResult called');
-        // }, [final]);
-        console.log('root:', root);
+
         chunker.add('return NotFound', (vis) => vis.graph.setText('RESULT NOT FOUND'));
-        console.log('fail! target not found!');
         return 'fail';
     },
 };
