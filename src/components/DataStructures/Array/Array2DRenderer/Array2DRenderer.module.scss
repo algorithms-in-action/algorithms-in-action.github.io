@@ -193,6 +193,13 @@
   color: var(--array-2d-row-col-value-color); 
 }
 
+.captionmsort_lista_td {
+  caption-side: bottom;
+  font-size: 14px; // squeeze a bit
+  text-align: right;
+  color: var(--array-2d-row-col-value-color); 
+}
+
 // redefined in 1D array
 .captionmsort_arr_td {
   caption-side: bottom;

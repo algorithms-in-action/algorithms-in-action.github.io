@@ -2,6 +2,7 @@ export { default as HSInfo } from './HSInfo.md';
 export { default as BSTInfo } from './BSTInfo.md';
 export { default as QSInfo } from './QSInfo.md';
 export { default as msort_arr_td } from './msort_arr_td.md';
+export { default as msort_lista_td } from './msort_lista_td.md';
 export { default as Prims_oldInfo } from './PRIM_oldInfo.md';
 export { default as PrimsInfo } from './PRIMInfo.md';
 export { default as KruskalInfo } from './KRUSKALInfo.md';

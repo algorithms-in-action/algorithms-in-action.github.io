@@ -17,8 +17,6 @@ import Renderer from '../../common/Renderer/index';
 import { classes, distance } from '../../common/util';
 import styles from './GraphRenderer.module.scss';
 import { mode } from '../../../top/Settings';
-import { node } from 'prop-types';
-
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -57,6 +55,12 @@ class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
 
+    // XXX shouldn't rely on this.props.title
+    // XXX This plus the code for axes and graph layout (eg layoutCircle()
+    // and code where X-Y coordinates are explicitly given by the user) is
+    // linked. Some magic numbers were added to shift things around and make
+    // things look ok.  It should be rethought or at least the numbers for
+    // this.centerX and this.centerY should be put in one place.
     if (this.props.title === 'Graph view') {
       // Center to new axis origin
       // this.centerX = 180;
@@ -83,21 +87,28 @@ class GraphRenderer extends Renderer {
   }
 
   handleMouseMove(e) {
-    if (this.selectedNode && this.props.title !== 'Graph view') {
-      // Allow mouse movement
+    // XXX would be nice to avoid selecting text with reverse video
+    // as we move the mouse around!
+    if (this.selectedNode && this.props.data.moveNode) {
+      // Allow mouse to move nodes (for Euclidean graphs) if
+      // this.props.data.moveNode function is defined
       const { x, y } = this.computeCoords(e);
       const node = this.props.data.findNode(this.selectedNode.id);
-      node.x = x;
-      node.y = y;
+      const scaleSize = 30; // XXX should define globally in one spot!
+      const scaledX = Math.round(x/scaleSize);
+      const scaledY = -Math.round(y/scaleSize);
+      if (scaledX > 0 && scaledY > 0) { // limit range, XXX add max?
+        this.props.data.moveNode(node.id, scaledX, scaledY);
+        node.x = x;
+        node.y = y;
+        this.refresh();
 
-      this.refresh();
-
-      //refresh AVL tree Rectangle
-      this.props.data.clearRect();
-      this.props.data.rectangle_size();
-
-    } else if (this.selectedNode && this.props.title === 'Graph view') {
-      // Ignore mouse movement if Graph view was used
+        //refresh AVL tree Rectangle
+        this.props.data.clearRect();
+        this.props.data.rectangle_size();
+      }
+    } else if (this.selectedNode) {
+      // Ignore mouse movement if no moveNode function is defined
       this.refresh();
     } else {
       super.handleMouseMove(e);
