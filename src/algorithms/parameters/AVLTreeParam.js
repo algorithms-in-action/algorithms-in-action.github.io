@@ -27,6 +27,10 @@ import {
     shuffleArray,
 } from './helpers/ParamHelper';
 
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { URLContext } from '../../context/urlState';
+
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
@@ -49,26 +53,34 @@ const BlueRadio = withStyles({
     checked: {},
 })((props) => <Radio {...props} />);
 
-function AVLTreeParam() {
+function AVLTreeParam({ mode, list, value }) {
     const { algorithm, dispatch } = useContext(GlobalContext);
     const [message, setMessage] = useState(null);
-    const [nodes, setNodes] = useState(DEFAULT_NODES);
+    const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
+    const { setNodes, setSearchValue } = useContext(URLContext);
     const [avlCase, setAVLCase] = useState({
         random: true,
         sorted: false,
         balanced: false,
     });
 
+    const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
+
+    useEffect(() => {
+        setNodes(localNodes);
+        setSearchValue(localValue);
+    }, [localNodes, localValue, setNodes, setSearchValue]);
+
     const handleChange = (e) => {
         switch (e.target.name) {
             case 'random':
-                setNodes(shuffleArray(nodes));
+                setlocalNodes(shuffleArray(localNodes));
                 break;
             case 'sorted':
-                setNodes([...nodes].sort((a, b) => a - b));
+                setlocalNodes([...localNodes].sort((a, b) => a - b));
                 break;
             case 'balanced':
-                setNodes(balanceBSTArray([...nodes].sort((a, b) => a - b)));
+                setlocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
                 break;
             default:
         }
@@ -83,6 +95,7 @@ function AVLTreeParam() {
     const handleSearch = (e) => {
         e.preventDefault();
         const inputValue = e.target[0].value;
+        setLocalValue(inputValue);
 
         if (singleNumberValidCheck(inputValue)) {
             const target = parseInt(inputValue, 10);
@@ -134,13 +147,13 @@ function AVLTreeParam() {
                     formClassName="formLeft"
                     DEFAULT_VAL={(() => {
                         if (avlCase.balanced) {
-                            return balanceBSTArray([...nodes].sort((a, b) => a - b));
+                            return balanceBSTArray([...localNodes].sort((a, b) => a - b));
                         } if (avlCase.sorted) {
-                            return [...nodes].sort((a, b) => a - b);
+                            return [...localNodes].sort((a, b) => a - b);
                         }
-                        return nodes;
+                        return localNodes;
                     })()}
-                    SET_VAL={setNodes}
+                    SET_VAL={setlocalNodes}
                     ALGORITHM_NAME={INSERTION}
                     EXAMPLE={INSERTION_EXAMPLE}
                     setMessage={setMessage}
@@ -152,7 +165,7 @@ function AVLTreeParam() {
                     buttonName="Search"
                     mode="search"
                     formClassName="formRight"
-                    DEFAULT_VAL={DEFAULT_TARGET}
+                    DEFAULT_VAL={value || localValue}
                     ALGORITHM_NAME={SEARCH}
                     EXAMPLE={SEARCH_EXAMPLE}
                     handleSubmit={handleSearch}
@@ -199,4 +212,12 @@ function AVLTreeParam() {
     );
 }
 
-export default AVLTreeParam;
+// Define the prop types for URL Params
+AVLTreeParam.propTypes = {
+    alg: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    list: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(AVLTreeParam); // Export with the wrapper for URL Params
