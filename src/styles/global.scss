@@ -1,5 +1,6 @@
 // Shared Colors and Sizes
 $blue: #037DFF;
+$darkerBlue: #01579B;
 $sigBlue: #027AFF;
 $red: #DC0707;
 $green: #53DD6C;
@@ -60,8 +61,9 @@ $yellowLine: #FFDE3C;
 	--mid-instruction-content-number-col: #2d2d2d;
 	--mid-instruction-content-key: #027AFF;
 
-	--mid-control-progress-bg: #b5b5b5;
+	--mid-control-progress-bg: #F7F7F7;
 	--mid-control-progress-active: #027AFF;
+    --mid-control-progress-thumb: #64B5F6;
 	--mid-control-progress-font: #161515;
 
 	--mid-control-param-border: #D4D4D4;
@@ -148,29 +150,23 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
 	--graph-node-circle-stroke-visited2: #f58b2f;
-	--graph-node-circle-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-node-circle-stroke-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-node-circle-fill-visited4: #2289ff;
-	/* Twitter Blue */
-	--graph-node-circle-stroke-visited4: #2289ff;
+	--graph-node-circle-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-node-circle-stroke-visited3: #FF0000;      /* YouTube Red */
+  --graph-node-circle-fill-visited4: #2289ff;        /* Twitter Blue */
+  --graph-node-circle-stroke-visited4: #2289ff;
 
 	--graph-edge-line-stroke-visited1: #11cc77;
 	--graph-edge-line-stroke-visited2: #f58b2f;
-	--graph-edge-line-stroke-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-line-stroke-visited4: #2289ff;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;
 	--graph-edge-weight-fill-visited1: #11cc77;
 	--graph-edge-weight-fill-visited2: #f58b2f;
-	--graph-edge-weight-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-weight-fill-visited4: #2289ff;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
-	--graph-arrow-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-arrow-fill-visited4: #2289ff;
+	--graph-arrow-fill-visited3: #FF0000;              /* YouTube Red */
+  --graph-arrow-fill-visited4: #2289ff;
 
 
 
@@ -196,8 +192,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-selected4: #FF0000;
-	--array-2d-row-col-bg-selected5: #f58b2f;
+	--array-2d-row-col-bg-selected4:  #FF0000;
+	--array-2d-row-col-bg-selected5:  #f58b2f;
 
 	--array-2d-row-col-selected: #FFFFFF;
 	--array-2d-row-col-bg-patched: #f58b2f;
@@ -296,6 +292,7 @@ $yellowLine: #FFDE3C;
 
 	--mid-control-progress-bg: #111215;
 	--mid-control-progress-active: #027AFF;
+    --mid-control-progress-thumb: #1565C0;
 	--mid-control-progress-font: #a0a0a0;
 
 	--mid-control-bg: #16171B;
@@ -370,29 +367,23 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
 	--graph-node-circle-stroke-visited2: #f58b2f;
-	--graph-node-circle-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-node-circle-stroke-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-node-circle-fill-visited4: #2289ff;
-	/* Twitter Blue */
-	--graph-node-circle-stroke-visited4: #2289ff;
+	--graph-node-circle-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-node-circle-stroke-visited3: #FF0000;      /* YouTube Red */
+  --graph-node-circle-fill-visited4: #2289ff;        /* Twitter Blue */
+  --graph-node-circle-stroke-visited4: #2289ff;
 
 	--graph-edge-line-stroke-visited1: #11cc77;
 	--graph-edge-line-stroke-visited2: #f58b2f;
-	--graph-edge-line-stroke-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-line-stroke-visited4: #2289ff;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;
 	--graph-edge-weight-fill-visited1: #11cc77;
 	--graph-edge-weight-fill-visited2: #f58b2f;
-	--graph-edge-weight-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-weight-fill-visited4: #2289ff;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
-	--graph-arrow-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-arrow-fill-visited4: #2289ff;
+	--graph-arrow-fill-visited3: #FF0000;              /* YouTube Red */
+  --graph-arrow-fill-visited4: #2289ff;
 
 	--graph-edge-line-stroke: #464646;
 	--graph-edge-line-weight-fill: #717171;
@@ -412,7 +403,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-selected4: #FF0000;
+	--array-2d-row-col-bg-selected4:  #FF0000;
 	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-selected: #FFFFFF;
 	--array-2d-row-col-bg-patched: #f58b2f;
@@ -473,15 +464,13 @@ $yellowLine: #FFDE3C;
 	--graph-edge-line-stroke-visited: #2289ff;
 	--graph-edge-line-stroke-visited1: #11cc77;
 	--graph-edge-line-stroke-visited2: #f58b2f;
-	--graph-edge-line-stroke-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-line-stroke-visited4: #2289ff;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;
 	--graph-edge-weight-fill-visited: #2289ff;
 	--graph-edge-weight-fill-visited1: #11cc77;
 	--graph-edge-weight-fill-visited2: #f58b2f;
-	--graph-edge-weight-fill-visited3: #FF0000;
-	/* YouTube Red */
-	--graph-edge-weight-fill-visited4: #2289ff;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff;
 
 	/* YouTube Red */
 	--graph-select_color-fill: #ff0000;
@@ -491,7 +480,7 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
 	--graph-arrow-fill-visited3: #FF0000;
-	--graph-arrow-fill-visited4: #2289ff;
+  --graph-arrow-fill-visited4: #2289ff;
 
 	--array-1d-row-col-bg-selected: #e85c49;
 	--array-1d-row-col-bg-patched: #83d489;
@@ -501,7 +490,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-selected4: #FF0000;
+	--array-2d-row-col-bg-selected4:  #FF0000;
 	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #FFFFFF;
@@ -556,7 +545,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-selected4: #FF0000;
+	--array-2d-row-col-bg-selected4:  #FF0000;
 	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-bg-patched: #258bff;
 	--array-2d-row-col-sorted: #ffffff;
@@ -610,7 +599,7 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
-	--array-2d-row-col-bg-selected4: #FF0000;
+	--array-2d-row-col-bg-selected4:  #FF0000;
 	--array-2d-row-col-bg-selected5: #f58b2f;
 	--array-2d-row-col-bg-patched: #9f2fe4;
 	--array-2d-row-col-sorted: #ffffff;

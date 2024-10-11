@@ -22,9 +22,6 @@ import * as Instructions from './instructions';
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
- XXX we could export and use allalgs in key places in the system,
- eg src/context/actions.js so we can still access them via the URL, but
- not have them appear in the index.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -139,7 +136,7 @@ const allalgs = {
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam />,
+    param: <Param.TTFTreeParam/>,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
     extraInfo: ExtraInfo.TTFInfo,
@@ -152,22 +149,7 @@ const allalgs = {
       search: Controller.TTFTreeSearch,
     },
   },
-  'AVLTree': {
-    name: 'AVL Tree',
-    category: 'Insert/Search',
-    param: <Param.AVLTreeParam />,
-    instructions: Instructions.AVLInstruction,
-    explanation: Explanation.AVLExp,
-    extraInfo: ExtraInfo.AVLInfo,
-    pseudocode: {
-      insertion: Pseudocode.AVLTreeInsertion,
-      search: Pseudocode.AVLTreeSearch,
-    },
-    controller: {
-      insertion: Controller.AVLTreeInsertion,
-      search: Controller.AVLTreeSearch,
-    },
-  },
+
   'DFSrec': {
     name: 'Depth First Search',
     category: 'Graph',
@@ -197,10 +179,9 @@ const allalgs = {
     },
   },
   'BFS': {
-
     name: 'Breadth First Search',
     category: 'Graph',
-    param: <Param.BFSParam />,
+    param: <Param.BFSParam/>,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,
@@ -225,8 +206,8 @@ const allalgs = {
       find: Controller.dijkstra,
 
     },
-  },
-  'aStar': {
+  }, 
+   'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
     param: <Param.ASTARParam />,
@@ -240,7 +221,7 @@ const allalgs = {
       find: Controller.AStar,
 
     },
-  },
+  }, 
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',
@@ -366,7 +347,13 @@ const algorithms =
  * Get the first mode of an algorithm
  * @param {string} key algorithm's name
  */
-const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+
+/**
+ * Get the category of an algorithm
+ * @param {string} key algorithm's name
+ */
+export const getCategory = (key) => algorithms[key].category;
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {
