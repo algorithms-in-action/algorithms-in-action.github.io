@@ -2,6 +2,7 @@
 
 // Shared Colors and Sizes
 $blue: #037DFF;
+$darkerBlue: #01579B;
 $sigBlue: #027AFF;
 $red: #DC0707;
 $green: #53DD6C;
@@ -62,8 +63,9 @@ $yellowLine: #FFDE3C;
 	--mid-instruction-content-number-col: #2d2d2d;
 	--mid-instruction-content-key: #027AFF;
 
-	--mid-control-progress-bg: #b5b5b5;
+	--mid-control-progress-bg: #F7F7F7;
 	--mid-control-progress-active: #027AFF;
+    --mid-control-progress-thumb: #64B5F6;
 	--mid-control-progress-font: #161515;
 
 	--mid-control-param-border: #D4D4D4;
@@ -165,6 +167,7 @@ $yellowLine: #FFDE3C;
 
 
 
+
 	--graph-text-fill: #1809ee;
 	--graph-text-stroke: #1809ee;
 
@@ -263,6 +266,7 @@ $yellowLine: #FFDE3C;
 
 	--mid-control-progress-bg: #111215;
 	--mid-control-progress-active: #027AFF;
+    --mid-control-progress-thumb: #1565C0;
 	--mid-control-progress-font: #a0a0a0;
 
 	--mid-control-bg: #16171B;
@@ -365,8 +369,6 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	// these will represent our main colours for this colour scheme
-
 	//graph colours
 	--leaf: #83d489;
 	--peach: #e85c49;
@@ -388,6 +390,7 @@ $yellowLine: #FFDE3C;
 	--peach: #f2c988;
 	--apple: #ec0a70;
 	--sky: #258bff;
+
 
 	//pseudocode colours
 	--right-code-keyword-font: #bf16b4;
