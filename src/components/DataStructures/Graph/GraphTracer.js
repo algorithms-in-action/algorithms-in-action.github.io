@@ -50,13 +50,18 @@ class GraphTracer extends Tracer {
     this.isDirected = true;
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
+
+    //textures
     this.text = null;
     this.functionInsertText = null;
     this.functionName = null;
     this.functionNode = null;
     this.functionBalance = null;
+
+    //rectangle
     this.rectangleNode = null;
     this.rectangle = null; // [x_r, y_u, x_l, y_d, text]
+
     this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
@@ -138,7 +143,7 @@ class GraphTracer extends Tracer {
         const scaleSize = 30;
         const x = coordinates[i][0] * scaleSize;
         const y = -coordinates[i][1] * scaleSize;
-        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
+        this.addNode(i, nodeValue, undefined, x, y);
       }
 
       for (let j = 0; j < array2d.length; j++) {
@@ -279,17 +284,29 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, height = undefined, AVL_TID = undefined, shape = 'circle', color = 'blue', weight = null,
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
     x = 0, y = 0, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+    isPointer = 0, pointerText = '',
+    height = undefined, AVL_TID = undefined) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, height, AVL_TID, shape, color, weight, x, y, Select_Circle_Count, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    this.nodes.push({
+      id, value, shape, color, weight, x, y, Select_Circle_Count,
+      visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText, height, AVL_TID
+    });
     this.layout();
   }
 
+  /* set_Rectangle_size(x_r, y_u, x_l, y_d) 
+    * maximum limit of the rectangle;
+    * x_r: x right
+    * y_u: y up
+    * x_l: x left
+    * y_d: y down
+    * text: text to be displayed on the rectangle 
+  */
   setRect(x_r, y_u, x_l, y_d) {
     if (this.rectangle == null) {
       this.rectangle = [x_r, y_u, x_l, y_d, ''];
@@ -312,6 +329,8 @@ class GraphTracer extends Tracer {
     }
   }
 
+  //Find all the child nodes of the given node in the tree.
+
   Children_Balance() {
     // Traversal of the entire tree, counting number of leaves.
     let maxDepth = 0;
@@ -320,8 +339,8 @@ class GraphTracer extends Tracer {
     let nodeDepth = {};
     this.rectangleNode = [];
 
+    //create the tree, marking the depth of each node
     const recursiveAnalyze = (id, depth) => {
-
       marked[id] = true;
       nodeDepth[id] = depth;
       if (maxDepth < depth) maxDepth = depth;
@@ -333,6 +352,7 @@ class GraphTracer extends Tracer {
     };
     recursiveAnalyze(this.root, 0);
 
+    //find the children of the given node
     let mark = {};
     const recursive = (id) => {
       mark[id] = true;
@@ -343,13 +363,14 @@ class GraphTracer extends Tracer {
       for (const linkedNodeId of linkedNodeIds) {
         if (mark[linkedNodeId]) continue;
         if (nodeDepth[linkedNodeId] < nodeDepth[root]) continue;
-
         recursive(linkedNodeId);
       }
     };
     recursive(root);
   }
 
+
+  //clculate && update the size of the rectangle
   rectangle_size() {
     // this.clearRect();
     // this.setRect();
@@ -364,6 +385,10 @@ class GraphTracer extends Tracer {
     }
   }
 
+  /*
+    * used in AVLtree
+    * dynamicllay update the size of the node.
+  */
   dynamic_node() {
 
     let max_height = 0;
@@ -376,19 +401,16 @@ class GraphTracer extends Tracer {
     if (max_height > 3) {
       let radius = 37 - (max_height - 3) * 8;
       if (radius < 10) radius = 10;
-      //console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!Layer Count: ${max_height} - Radius: ${radius}`);
       this.radius = radius;
-
-      //const graphElement = GraphRenderer.querySelector('.graph');
-      //console.log(graphElement, `Radius: ${radius}`);
-      //graphElement.style.setProperty('--circle-radius', radius + 'px');
     } else {
       this.radius = null;
     }
   }
 
+  /*
+    * clear the parameter in rectangle
+  */
   clearRect() {
-    //this.rectangleNode = null;
     this.rectangle = null;
   }
 
@@ -734,7 +756,7 @@ class GraphTracer extends Tracer {
   }
 
 
-
+  //AVL tree layout
   layoutAVL(root = 0, sorted = false, freezDepth = false) {
 
     //reflash the Node
@@ -1136,13 +1158,13 @@ class GraphTracer extends Tracer {
    */
   setNodePosition(n, x, y) {
     let node = this.findNode(n);
-    console.log(node);
+    //console.log(node);
     node.x = x;
     node.y = y;
+
+    // refresh rectangle size
     //this.clearRect();
     this.rectangle_size();
-    //this.props.data.clearRect();
-    //this.props.data.rectangle_size();
   }
 
   /**

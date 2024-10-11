@@ -3,8 +3,12 @@
 
 // --graph-node-fill: orange;
 
+/*
 @keyframes colorChange {
 
+  /*  
+  Animation for changing the color of the node
+  
   0% {
     fill: var(--stable_color);
   }
@@ -17,7 +21,10 @@
     fill: var(--stable_color);
   }
 }
+  */
 
+
+// AVL tree selction color
 .select_rect {
   //fill: var(--graph-node-circle-fill);
   fill: none;
@@ -37,7 +44,7 @@
   --stable_color: var(--graph-node-circle-fill);
   --breath_color: var(--graph-node-circle-fill);
 
-  //AVL tree size
+  //AVL tree parameters
   --circle-radius: 37px;
   --text-fontsize: calc(var(--circle-radius)/37*35);
   --height-Yposition: calc(var(--circle-radius)/37*-50);
@@ -45,6 +52,7 @@
 
 
   .node {
+
     .circle {
       fill: var(--graph-node-circle-fill);
       //--breath_color: --graph-node-circle-fill-rgb1;
@@ -153,9 +161,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-height-fill);
-        //animation: colorChange 1.5s 3; // anmation
-
         fill: var(--graph-node-circle-fill-selected);
       }
 
@@ -177,9 +182,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited0);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited0);
       }
 
@@ -201,9 +203,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited);
       }
 
@@ -231,9 +230,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited1);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited1);
       }
 
@@ -250,9 +246,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited2);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited2);
       }
 
@@ -269,9 +262,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited3);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited3);
       }
 
@@ -288,9 +278,6 @@
       }
 
       .height {
-        //--breath_color: var(--graph-node-circle-fill-visited4);
-        //animation: colorChange 1.5s 0; // anmation
-
         fill: var(--graph-node-circle-fill-visited4);
       }
 
@@ -450,7 +437,6 @@
     stroke: var(--axis);
     stroke-width: 1;
     fill: none;
-
   }
 
   .axisLabel {

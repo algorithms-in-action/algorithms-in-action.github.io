@@ -91,8 +91,11 @@ class GraphRenderer extends Renderer {
       node.y = y;
 
       this.refresh();
+
+      //refresh AVL tree Rectangle
       this.props.data.clearRect();
       this.props.data.rectangle_size();
+
     } else if (this.selectedNode && this.props.title === 'Graph view') {
       // Ignore mouse movement if Graph view was used
       this.refresh();
@@ -549,6 +552,7 @@ class GraphRenderer extends Renderer {
         {/* X axis and Y axis */}
         {this.renderAxis(this.computeMax(nodes))}
 
+        {/* Dynamically adjust the node size */}
         <g
           className={classes(styles.graph)}
           style={radius != null ? { '--circle-radius': `${radius}px` } : { '--circle-radius': `${nodeRadius}px` }}
@@ -591,6 +595,8 @@ class GraphRenderer extends Renderer {
                   ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
                   ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
                 }
+
+                {/* dynamic change the edge length */ }
                 if (radius != null) {
                   ex = (sx + (dx / length) * (length - radius - arrowGap));
                   ey = (sy + (dy / length) * (length - radius - arrowGap));
@@ -645,18 +651,18 @@ class GraphRenderer extends Renderer {
           <g>
             {rectangle != null && (
               <>
-                <text className={classes(styles.select_color)}// Correctly moved this inside the text tag
+                <text className={classes(styles.select_color)}
 
                   fontSize={50} // font size
-                  x={rectangle[0] - 30} // Adjusted x position to center it relative to the rectangle
-                  y={rectangle[1] - 90} // Adjusted y position to center it relative to the rectangle
+                  x={rectangle[0] - 30} // font position
+                  y={rectangle[1] - 90}
                 >
-                  {rectangle[4]} {/* Make sure text is defined and properly passed */}
+                  {rectangle[4]}
                 </text>
                 <rect
                   className={classes(
-                    styles.select_rect, // Apply the .rect class styles
-                    styles && styles.backgroundStyle // Optionally apply additional styles
+                    styles.select_rect,
+                    styles && styles.backgroundStyle
                   )}
                   x={rectangle[0] - 50} // x position
                   y={rectangle[1] - 70} // y position
@@ -755,7 +761,9 @@ class GraphRenderer extends Renderer {
                   </text>
                 )}
 
+                {/* AVL Tree height */}
                 <text className={styles.height}>
+                  {/* AVL Tree TID ? */}
                   {height != null && height.toString().includes('t') ? (
                     <tspan className={styles.AVL_TID}>
                       {height}
@@ -779,6 +787,8 @@ class GraphRenderer extends Renderer {
 
         {/* Text */}
         <g>
+
+          {/* Text */}
           <text className={classes(styles.select_color)}
             textAnchor="middle"
             fontSize={50} // font size
@@ -788,6 +798,7 @@ class GraphRenderer extends Renderer {
             {text}
           </text>
 
+          {/* Function Name */}
           <text className={classes(styles.text)}
             x={+ 530}
             y={- 250}
@@ -798,6 +809,7 @@ class GraphRenderer extends Renderer {
             {functionInsertText}
           </text>
 
+          {/* Function Node */}
           <text className={classes(styles.text)}
             x={+400}
             y={-200}
@@ -816,6 +828,7 @@ class GraphRenderer extends Renderer {
             )}
           </text>
 
+          {/* Function Balance */}
           <text className={classes(styles.text)}
             x={+650}
             y={-200}
@@ -838,6 +851,7 @@ class GraphRenderer extends Renderer {
             )}
           </text>
 
+          {/* AVL Tree ID */}
           <text className={classes(styles.text)}
             x={+ 530}
             y={- 150}

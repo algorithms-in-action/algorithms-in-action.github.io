@@ -499,7 +499,8 @@ export default {
                 chunker.add('if t = Empty', (vis) => null, [], depth);
                 chunker.add('create new node',
                     (vis, r, p) => {
-                        vis.graph.addNode(r, r, 1);
+                        vis.graph.addNode(r, r);
+                        vis.graph.updateHeight(r, 1);
 
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
@@ -787,7 +788,8 @@ export default {
         // initialise the tree with the first key
         chunker.add('create new node',
             (vis, k) => {
-                vis.graph.addNode(k, k, 1);
+                vis.graph.addNode(k, k);
+                vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
             },
             [nodes[0]],
