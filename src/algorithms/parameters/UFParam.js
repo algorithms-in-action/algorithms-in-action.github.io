@@ -7,14 +7,11 @@ import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
 import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
-import { URLContext } from '../../context/urlState';
 
 import SingleValueParam from './helpers/SingleValueParam';
 import ListParam from './helpers/ListParam';
 
 import '../../styles/Param.scss';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
@@ -41,18 +38,11 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function UFParam({ mode, union, value }) {
+function UFParam() {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
-  const [unions, setUnions] = useState(union || DEFAULT_UNION);
+  const [unions, setUnions] = useState(DEFAULT_UNION);
   const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
-  const [localValue, setLocalValue] = useState(DEFAULT_FIND);
-  const { setNodes, setSearchValue } = useContext(URLContext);
-
-  useEffect(() => {
-    setNodes(unions);
-    setSearchValue(localValue);
-  }, [unions, localValue]);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
@@ -63,7 +53,6 @@ function UFParam({ mode, union, value }) {
   const handleFind = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    setLocalValue(inputValue);
 
     // eslint-disable-next-line no-restricted-globals
     if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
@@ -137,7 +126,7 @@ function UFParam({ mode, union, value }) {
           buttonName="Find"
           mode="find"
           formClassName="formRight"
-          DEFAULT_VAL={value || DEFAULT_FIND}
+          DEFAULT_VAL={DEFAULT_FIND}
           ALGORITHM_NAME={FIND}
           EXAMPLE={FIND_EXAMPLE}
           handleSubmit={handleFind}
@@ -174,16 +163,7 @@ function UFParam({ mode, union, value }) {
   );
 }
 
-// Define the prop types for URL Params
-UFParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  union: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
-export default withAlgorithmParams(UFParam); // Export with the wrapper for URL Params
-
+export default UFParam;
 
 /**
  * Validate the text input within the DualValueParam component.

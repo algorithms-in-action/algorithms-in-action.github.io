@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const DEFAULT_SIZE = 5; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = 5; // XXX null should disable
@@ -31,25 +29,19 @@ const GRAPH_EGS = [ // XXX think up better examples?
 '1-2-10,1-4-4,2-3-6,3-4-10,3-5-5,4-7-3,5-6-7,6-7-8,7-8-2,7-9,8-9-3,9-10-5,9-11-7, 10-11-7,11-13-4,12-13-8,12-14-6,13-14-7,13-15-7,14-16-6,15-16-2,15-17-5,16-17-2'
         }];
 
-function PRIMParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
+function PRIMParam() {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-    { name: 'URL Input Graph',
-      size: size || GRAPH_EGS[0].size,
-      coords: xyCoords || GRAPH_EGS[0].coords,
-      edges: edgeWeights || GRAPH_EGS[0].edges
-    }
-    ]
+
   return (
     <>
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="prim"
         mode="find"
-        defaultSize={size || DEFAULT_SIZE}
-        defaultStart={start || DEFAULT_START}
-        defaultEnd={end || DEFAULT_END}
-        defaultHeur = {heuristic || DEFAULT_HEUR}
+        defaultSize={DEFAULT_SIZE}
+        defaultStart={DEFAULT_START}
+        defaultEnd={DEFAULT_END}
+        defaultHeur = {DEFAULT_HEUR}
         // XXX
         // min&max for weights originally, then used for X&Y coordinates
         // as well (DOH!) (maybe avoid for weights in the future but
@@ -59,10 +51,10 @@ function PRIMParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, m
         // - means precision is reasonably but both Manhattan and
         // Euclidean distances are at most two digits. Using something
         // smaller for now due to display size being a mystery...
-        min={min || 1}
+        min={1}
         // max={9}
-        max={max || 49}
-        graphEgs={graph_egs || GRAPH_EGS}
+        max={49}
+        graphEgs={GRAPH_EGS}
         symmetric
         ALGORITHM_NAME={PRIMS}
         EXAMPLE={PRIMS_EXAMPLE}
@@ -76,20 +68,4 @@ function PRIMParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, m
   );
 }
 
-// Define the prop types for URL Params
-PRIMParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  heuristic: PropTypes.string.isRequired,
-  xyCoords: PropTypes.string.isRequired,
-  edgeWeights: PropTypes.string.isRequired,
-  min: PropTypes.string.isRequired,
-  max: PropTypes.string.isRequired,
-};
-
-export default withAlgorithmParams(PRIMParam); // Export with the wrapper for URL Params
-
-
+export default PRIMParam;
