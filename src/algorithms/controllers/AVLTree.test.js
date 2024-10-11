@@ -13,6 +13,8 @@
  * @since  10/10/2024
  */
 
+/* eslint-disable no-undef */
+
 import AVLTreeInsertion from './AVLTreeInsertion';
 
 // Simple stub for the chunker
