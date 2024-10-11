@@ -1139,6 +1139,10 @@ class GraphTracer extends Tracer {
     console.log(node);
     node.x = x;
     node.y = y;
+    //this.clearRect();
+    this.rectangle_size();
+    //this.props.data.clearRect();
+    //this.props.data.rectangle_size();
   }
 
   /**
