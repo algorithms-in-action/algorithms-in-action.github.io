@@ -14,7 +14,8 @@ import {
   displayMergeLabels,
   highlightAPointers,
   set_simple_stack,
-  resetArrayA
+  resetArrayA,
+  highlightFromTo
 } from './msort_shared.js';
 
 const run = run_msort();
@@ -66,6 +67,33 @@ export function initVisualisers() {
 // Define helper functions
 // -------------------------------------------------------------------------------
 
+// This function highlights all the runs alternating colours, kudos to chatgpt
+function highlightNaturalRuns(vis, array, runAColor, runBColor) {
+  let toggle = 0; // 0 = runAColor, 1 = runBColor
+  let i = 0;
+
+  while (i < array.length) {
+    let start = i;
+
+    // Find the length of the increasing run
+    while (i < array.length - 1 && array[i] <= array[i + 1]) {
+      i++;
+    }
+
+    // Highlight the run
+    for (let j = start; j <= i; j++) {
+      highlight(vis, j, toggle == 0 ? runAColor : runBColor);
+    }
+
+    // Flip toggle between 0 and 1 for the next run
+    toggle = 1 - toggle;
+
+    // Move to the next element after the current run
+    i++;
+  }
+}
+
+
 
 
 /**
@@ -106,18 +134,21 @@ export function run_msort() {
 
     do {
 
-      chunker.add('MainWhile', () => {
+      chunker.add('MainWhile', (vis, a) => {
         // no animation
-      }, []);
+        highlightNaturalRuns(vis, a, runAColor, runBColor);
+      }, [A]);
 
 
 
       runcount = 0;
       let left = 0;
 
-      chunker.add('runcount', (vis, c_rcount) => {
-        set_simple_stack(vis.array, [c_rcount]);
-      }, [runcount]);
+      chunker.add('runcount', (vis, a, c_rcount) => {
+        vis.array.set(a, 'msort_arr_nat');
+        set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+
+      }, [A, runcount]);
 
       chunker.add('left', (vis, c_left) => {
         assignVarToA(vis, 'left', c_left, size);
@@ -306,7 +337,7 @@ export function run_msort() {
           chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rcount) => {
             // future color: should be runAColor & runBColor
             resetArrayA(vis, "nat", a, c_left, c_mid, c_right, c_rcount, runAColor, runCColor);
-            if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
             assignVarToA(vis, 'ap2', c_ap2, size);
             assignVarToA(vis, 'max2', c_max2, size);
             // highlight sorted elements green
@@ -320,33 +351,51 @@ export function run_msort() {
           }
           chunker.add('copyBA', (vis, a, b, c_left, c_right, c_rcount) => {
             vis.array.set(a, 'msort_arr_nat');
-            if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
             // highlight all sorted elements green
             for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
-            set_simple_stack(vis.array, [c_rcount]);
+            set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+
+            assignVarToA(vis, "left", c_left, size);
+            assignVarToA(vis, "right", c_right, size);
+
           }, [A, B, left, right, runcount]);
         }
 
         runcount = runcount + 1;
-        chunker.add('runcount+', (vis, c_rcount) => {
-          set_simple_stack(vis.array, [c_rcount]);
-        }, [runcount]);
+        chunker.add('runcount+', (vis, c_left, c_mid, c_rcount) => {
+          highlightFromTo(vis, c_left, c_mid, sortColor);
+          set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+        }, [left, mid, runcount]);
 
         left = right + 1;
-        chunker.add('left2', (vis, a, c_left, c_rcount) => {
+        chunker.add('left2', (vis, a, c_left, c_right, c_rcount) => {
           vis.array.set(a, 'msort_arr_nat'); // unhighlight array a
-          set_simple_stack(vis.array, [c_rcount]);
-          if (c_left < size) assignVarToA(vis, 'left', c_left);
-        }, [A, left, runcount]);
+          set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
+          if (c_left < size) {
+            assignVarToA(vis, 'left', c_left, size);
+            assignVarToA(vis, "right", c_right, size);
+          }
+
+
+        }, [A, left, right, runcount]);
 
       } while (left < size);
+
+      chunker.add('mergeDone', (vis, a) => {
+        highlightNaturalRuns(vis, a, runAColor, runBColor);
+      }, [A])
+
     } while (runcount > 1);
 
-    chunker.add('Done', (vis) => {
-      for (let i = 0; i < size; i++) highlight(vis, i, "sortColor");
-      assignVarToA(vis, 'Done', size, size);
+    chunker.add('Done', (vis, a) => {
+      vis.array.set(a, 'msort_arr_nat');
+      for (let i = 0; i < size; i++) {
+        highlight(vis, i, sortColor);
+      }
+
       set_simple_stack(vis.array, ["DONE"]);
-    }, []);
+    }, [A]);
 
     const maxValue = entire_num_array.reduce((acc, curr) => (acc < curr ? curr : acc), 0);
 

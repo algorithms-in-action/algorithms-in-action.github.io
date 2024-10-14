@@ -26,9 +26,10 @@ export function highlight(vis, index, color) {
         vis.array.patch(index);
     }
 }
+
 // Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
 export function highlightB(vis, index, color) {
-    if (isMergeExpanded()) {
+    if (isMergeCopyExpanded()) {
         if (color == 'red') {
             vis.arrayB.select(index);
         }
@@ -45,6 +46,14 @@ export function unhighlight(vis, index, color) {
     }
     if (color == 'green') {
         vis.array.depatch(index);
+    }
+}
+
+// Highlights one runlength 
+export function highlightFromTo(vis, from, to, color) {
+    // highlight first runlength color A
+    for (let i = from; i <= to; i++) {
+        highlight(vis, i, color);
     }
 }
 
@@ -110,5 +119,8 @@ export function resetArrayA(vis, arr_type, A, left, mid, right, stack, colorA, c
     if (arr_type === "nat") vis.array.set(A, 'msort_arr_nat');
 
     highlight2Runlength(vis, left, mid, right, colorA, colorB);
-    set_simple_stack(vis.array, [stack]);
+
+
+    if (arr_type === "bup") set_simple_stack(vis.array, [`runlength = ${stack}`]);
+    if (arr_type === "nat") set_simple_stack(vis.array, [`runcount = ${stack}`]);
 }
