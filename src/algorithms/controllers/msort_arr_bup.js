@@ -140,7 +140,7 @@ export function run_msort() {
         let left_2 = c_left;
         let mid_2 = (c_rlength + c_left - 1);
         let right_2 = (Math.min(c_rlength * 2, size) - 1);
-        highlight2Runlength(vis, left_2, mid_2, right_2, runAColor, runBColor);
+        // highlight2Runlength(vis, left_2, mid_2, right_2, runAColor, runBColor);
       }, [A, left, runlength]);
 
       while ((left + runlength) <= size) {
@@ -152,11 +152,11 @@ export function run_msort() {
         let right = Math.min(mid + runlength, (size - 1));
         chunker.add('mid', (vis, c_mid, c_left) => {
           assignVarToA(vis, 'mid', c_mid, size);
-          //highlightFromTo(vis, c_left, c_mid, runAColor);
+          highlightFromTo(vis, c_left, c_mid, runAColor);
         }, [mid, left]);
         chunker.add('right', (vis, c_right, c_mid) => {
           assignVarToA(vis, 'right', c_right, size);
-          //highlightFromTo(vis, c_mid + 1, c_right, runBColor);
+          highlightFromTo(vis, c_mid + 1, c_right, runBColor);
 
         }, [right, mid]);
 
@@ -293,7 +293,7 @@ export function run_msort() {
           // future color: should be runAColor & runBColor
           resetArrayA(vis, "bup", a, c_left, c_mid, c_right, c_rlength, runAColor, runCColor);
 
-          if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+          if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
           assignVarToA(vis, 'ap2', c_ap2, size);
           assignVarToA(vis, 'max2', c_max2, size);
 
@@ -312,9 +312,12 @@ export function run_msort() {
           vis.array.set(a, 'msort_arr_bup');
           set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
-          if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_bup');
+          if (isMergeCopyExpanded()) {
+            vis.arrayB.set(b, 'msort_arr_bup');
+          }
 
           // highlight all sorted elements green
+
           for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
 
           assignVarToA(vis, "left", c_left, size);
@@ -330,17 +333,6 @@ export function run_msort() {
 
           if (c_left < size) assignVarToA(vis, 'left', c_left, size);
           assignVarToA(vis, "right", c_right, size);
-
-          if ((c_left + c_rlength) < size) {
-            let left_2 = c_left;
-            let mid_2 = (c_rlength + c_left - 1);
-            let right_2 = (Math.min((mid_2 + c_rlength + 1), size) - 1);
-            highlight2Runlength(vis, left_2, mid_2, right_2, runAColor, runBColor);
-          }
-          if ((c_left + c_rlength) >= size) {
-            highlightFromTo(vis, c_left, size - 1, runAColor);
-          }
-
 
         }, [A, left, right, runlength]);
 

@@ -337,7 +337,7 @@ export function run_msort() {
           chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rcount) => {
             // future color: should be runAColor & runBColor
             resetArrayA(vis, "nat", a, c_left, c_mid, c_right, c_rcount, runAColor, runCColor);
-            if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
             assignVarToA(vis, 'ap2', c_ap2, size);
             assignVarToA(vis, 'max2', c_max2, size);
             // highlight sorted elements green
@@ -351,7 +351,7 @@ export function run_msort() {
           }
           chunker.add('copyBA', (vis, a, b, c_left, c_right, c_rcount) => {
             vis.array.set(a, 'msort_arr_nat');
-            if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
             // highlight all sorted elements green
             for (let i = c_left; i <= c_right; i++) highlight(vis, i, sortColor);
             set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);

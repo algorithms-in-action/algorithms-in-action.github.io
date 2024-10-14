@@ -29,7 +29,7 @@ export function highlight(vis, index, color) {
 
 // Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
 export function highlightB(vis, index, color) {
-    if (isMergeExpanded()) {
+    if (isMergeCopyExpanded()) {
         if (color == 'red') {
             vis.arrayB.select(index);
         }
