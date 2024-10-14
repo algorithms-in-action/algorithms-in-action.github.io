@@ -15,8 +15,8 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Iterative Merge Sort**][G4GLink]
+Happy Coders Link: [**Natural Merge Sort**][HCLink]
 
 
-[G4GLink]: https://www.geeksforgeeks.org/iterative-merge-sort/
+[HCLink]: https://www.happycoders.eu/algorithms/merge-sort/#Natural_Merge_Sort
 
