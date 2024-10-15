@@ -283,6 +283,7 @@ export default {
       }
 
       insertions += bulkInsertions;
+      total += bulkInsertions;
       chunker.add(
         IBookmarks.PutIn,
         (vis, keys, inserts, insertions) => {
