@@ -278,21 +278,23 @@ export default {
         lastHash = i;
       }
 
-      if (!params.expand && (lastHash == FULL_SIGNAL)) {
-        insertions += bulkInsertions;
-        chunker.add(
-          IBookmarks.PutIn,
-          (vis, keys, inserts, insertions) => {
-            for (const key of keys) {
-              if (inserts[key] === FULL_SIGNAL) break;
-              vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
-              vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
-            }
-            vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
-          },
-          [keys, inserts, insertions]
-        )
+      if (params.expand && (lastHash == FULL_SIGNAL)) {
+        return lastHash;
       }
+
+      insertions += bulkInsertions;
+      chunker.add(
+        IBookmarks.PutIn,
+        (vis, keys, inserts, insertions) => {
+          for (const key of keys) {
+            if (inserts[key] === FULL_SIGNAL) break;
+            vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
+            vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
+          }
+          vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
+        },
+        [keys, inserts, insertions]
+      )
 
       return lastHash;
     }
