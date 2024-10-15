@@ -25,12 +25,12 @@
 
         &.variableGreen {
             .circle {
-                fill: var(--simple-fill-var-green);
+                fill: var(--leaf);
                 stroke: var(--graph-node-circle-stroke);
             }
 
             .rect {
-                fill: var(--simple-fill-var-green);
+                fill: var(--leaf);
                 stroke: var(--graph-node-circle-stroke);
             }
 
@@ -41,12 +41,12 @@
 
         &.variableOrange {
             .circle {
-                fill: var(--simple-fill-var-orange);
+                fill: var(--peach);
                 stroke: var(--graph-node-circle-stroke);
             }
 
             .rect {
-                fill: var(--simple-fill-var-orange);
+                fill: var(--peach);
                 stroke: var(--graph-node-circle-stroke);
             }
 
@@ -57,12 +57,12 @@
 
         &.variableRed {
             .circle {
-                fill: var(--simple-fill-var-red);
+                fill: var(--apple);
                 stroke: var(--graph-node-circle-stroke);
             }
 
             .rect {
-                fill: var(--simple-fill-var-red);
+                fill: var(--apple);
                 stroke: var(--graph-node-circle-stroke);
             }
 

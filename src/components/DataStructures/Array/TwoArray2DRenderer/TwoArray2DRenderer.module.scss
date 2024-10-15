@@ -24,7 +24,7 @@
       }
 
       &.selected {
-        background-color: var(--two-array-2d-row-col-bg-selected);
+        background-color: var(--sky);
 
         span {
           color: var(--two-array-2d-row-col-selected);
@@ -33,7 +33,7 @@
 
 
       &.patched {
-        background-color: var(--two-array-2d-row-col-bg-patched);
+        background-color: var(--sky);
 
         span {
           color: var(--two-array-2d-row-col-patched);
@@ -43,7 +43,7 @@
 
       &.sorted {
         background-color: var(--array-2d-row-bg-sorted);
-        
+
         span {
           color: var(--array-2d-row-col-sorted);
         }
