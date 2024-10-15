@@ -114,7 +114,8 @@ export default {
         chunker.add(
           IBookmarks.CheckTableFull,
           (vis, total) => {
-            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is full, expanding table..."});
+            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is full, "
+              + ((params.expand) ? "expanding table..." : "stopping...")});
           },
           [total]
         )
