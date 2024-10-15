@@ -66,7 +66,6 @@ function HashingLPParam() {
     largeTable: false,
   });
   const [expand, setExpand] = useState(DEFAULT_EXPAND);
-  console.log(algorithm);
 
     /**
    * Handle changes to input
