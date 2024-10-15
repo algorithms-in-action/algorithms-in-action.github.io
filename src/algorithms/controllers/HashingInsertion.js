@@ -23,7 +23,6 @@ import {
 } from './HashingCommon';
 import { translateInput } from '../parameters/helpers/ParamHelper';
 import HashingDelete from './HashingDelete';
-import { last } from 'lodash';
 
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
@@ -78,7 +77,6 @@ export default {
    * @returns a table of concluding array to serve testing purposes
    */
   run(chunker, params) {
-
     // Storing algorithms parameters as local variables
     const ALGORITHM_NAME = params.name;
     let inputs = params.values;
@@ -247,8 +245,13 @@ export default {
       let lastHash;
       let inserts = {};
       let bulkInsertions = 0;
+      let prevTable = [...table];
+      const limit = () => {
+        if (params.expand && table.length < LARGE_SIZE) return total + 1 === Math.round(table.length * 0.8);
+        return total === table.length - 1;
+      }
       for (const key of keys) {
-        if (total == table.length - 1) {
+        if (limit()) {
           inserts[key] = FULL_SIGNAL;
           lastHash = FULL_SIGNAL;
           break;
@@ -279,7 +282,8 @@ export default {
         lastHash = i;
       }
 
-      if (params.expand && (lastHash == FULL_SIGNAL)) {
+      if (params.expand && (lastHash === FULL_SIGNAL)) {
+        table = [...prevTable];
         return lastHash;
       }
 
@@ -289,7 +293,6 @@ export default {
         IBookmarks.PutIn,
         (vis, keys, inserts, insertions) => {
           for (const key of keys) {
-            if (inserts[key] === FULL_SIGNAL) break;
             vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index
             vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
           }
@@ -514,12 +517,6 @@ export default {
 
       for (let i = lastInput; i < inputs.length; i++) {
         let item = inputs[i];
-        if (prevIdx == FULL_SIGNAL) {
-          lastInput = i - 1;
-          prevTable = table.filter(n => n !== undefined);
-          if (table.length < LARGE_SIZE) [table, indexArr, valueArr, nullArr] = expandTable(table);
-          break;
-        }
 
         // Different cases of insertion and deletion
         let split_arr = item.split("-");
@@ -555,8 +552,16 @@ export default {
             prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
           }
         }
+
+        // when table is full or almost full
+        if (prevIdx === FULL_SIGNAL) {
+          lastInput = i;
+          prevTable = table.filter(n => n !== undefined);
+          if (params.expand && (table.length < LARGE_SIZE)) [table, indexArr, valueArr, nullArr] = expandTable(table);
+          break;
+        }
       }
-    } while (params.expand && prevIdx == FULL_SIGNAL && table.length < LARGE_SIZE);
+    } while (params.expand && (prevIdx === FULL_SIGNAL) && (table.length < LARGE_SIZE));
 
     // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(
