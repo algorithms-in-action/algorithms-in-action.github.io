@@ -12,9 +12,12 @@ import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import ControlButton from '../common/ControlButton';
 import ShareIcon from '@mui/icons-material/Share';
+import { URLContext } from '../../context/urlState';
+import { createUrl } from './urlCreator';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
-  const { algorithm, algorithmKey, mode, nodes } = useContext(GlobalContext);
+  const { algorithm, algorithmKey, category, mode } = useContext(GlobalContext);
+  const urlContext = useContext(URLContext);
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -43,11 +46,13 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   }, [algorithm.instructions]);
 
   useEffect(() => {
+    // this creates the url of the current algorithm, with required parameters
     if (share) {
-      const url = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}&list=${nodes}`;
+      let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
+      let url = createUrl(baseUrl, category, urlContext);
       setCurrentUrl(url);
     }
-  }, [share, algorithmKey, mode]);
+  }, [share]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentUrl);
@@ -79,7 +84,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
                 &times;
               </a>
               {/* eslint-disable-next-line max-len */}
-              <p> 
+              <p>
                 {currentUrl}
               </p>
               <button onClick={copyToClipboard} style={{ cursor: 'pointer' }}>

@@ -55,6 +55,12 @@ class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
 
+    // XXX shouldn't rely on this.props.title
+    // XXX This plus the code for axes and graph layout (eg layoutCircle()
+    // and code where X-Y coordinates are explicitly given by the user) is
+    // linked. Some magic numbers were added to shift things around and make
+    // things look ok.  It should be rethought or at least the numbers for
+    // this.centerX and this.centerY should be put in one place.
     if (this.props.title === 'Graph view') {
       // Center to new axis origin
       // this.centerX = 180;

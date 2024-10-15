@@ -53,20 +53,26 @@ export function useUrlParams() {
     const alg = urlParams.get('alg') || DEFAULT_ALGORITHM;  // Default algorithm
     const mode = urlParams.get('mode') || DEFAULT_MODE;    // Default mode
 
+    // Helper function to handle both missing and 'null' values
+    const getParamOrDefault = (param, defaultValue) => {
+        return param === null || param === "null" ? defaultValue : param;
+    };
+
     // Parse individual parameters directly from URL
-    const list = urlParams.get('list') || DEFAULT_LIST;
-    const value = urlParams.get('value') || DEFAULT_VALUE;
-    const xyCoords = urlParams.get('xyCoords') || DEFAULT_XY_COORDS;
-    const edgeWeights = urlParams.get('edgeWeights') || DEFAULT_EDGE_WEIGHTS;
-    const size = urlParams.get('size') || DEFAULT_SIZE;
-    const start = urlParams.get('start') || DEFAULT_START;
-    const end = urlParams.get('end') || DEFAULT_END;
-    const string = urlParams.get('string') || DEFAULT_STRING;
+    const list = getParamOrDefault(urlParams.get('list'), DEFAULT_LIST);
+    const value = getParamOrDefault(urlParams.get('value'), DEFAULT_VALUE);
+    const xyCoords = getParamOrDefault(urlParams.get('xyCoords'), DEFAULT_XY_COORDS);
+    const edgeWeights = getParamOrDefault(urlParams.get('edgeWeights'), DEFAULT_EDGE_WEIGHTS);
+    const size = getParamOrDefault(urlParams.get('size'), DEFAULT_SIZE);
+    const start = getParamOrDefault(urlParams.get('start'), DEFAULT_START);
+    const end = getParamOrDefault(urlParams.get('end'), DEFAULT_END);
+    const string = urlParams.get('string') || DEFAULT_STRING
     const pattern = urlParams.get('pattern') || DEFAULT_PATTERN;
-    const union = urlParams.get('union') || DEFAULT_UNION;
-    const heuristic = urlParams.get('heuristic') || DEFAULT_HEURISTIC;
-    const min = urlParams.get('min') || DEFAULT_MIN;
-    const max = urlParams.get('max') || DEFAULT_MAX;
+    const union = getParamOrDefault(urlParams.get('union'), DEFAULT_UNION);
+    const heuristic = getParamOrDefault(urlParams.get('heuristic'), DEFAULT_HEURISTIC);
+    const min = getParamOrDefault(urlParams.get('min'), DEFAULT_MIN);
+    const max = getParamOrDefault(urlParams.get('max'), DEFAULT_MAX);
+
 
     console.log("Raw URL alg:", urlParams.get('alg'));
     console.log("Raw URL mode:", urlParams.get('mode'));
@@ -124,17 +130,17 @@ function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
-// // https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
-// // http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
+// https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
+// http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // http://localhost:3000/?alg=aStar&mode=find&size=4&start=1&end=4&min=1&max=30&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-3-2,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
 // http://localhost:3000/?alg=aStar&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
 // http://localhost:3000/?alg=BFS&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean
-//  http://localhost:3000/?alg=bruteForceStringSearch&mode=search&string=abcdef&pattern=def
+// http://localhost:3000/?alg=bruteForceStringSearch&mode=search&string=abcdef&pattern=def
 // http://localhost:3000/?alg=binarySearchTree&mode=search&list=1,5,2,6,6&value=5
-// // http://localhost:3000/?alg=DFS&mode=find&size=4&start=1&end=4&xyCoords=1-10,2-2,3-1,8-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=0&max=10 // why min, max not working?
-// // http://localhost:3000/?alg=DFSrec&mode=find&size=4&start=1&end=4&xyCoords=1-10,2-2,3-1,8-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=0&max=10
+// http://localhost:3000/?alg=DFS&mode=find&size=4&start=1&end=4&xyCoords=1-10,2-2,3-1,8-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=0&max=10 // why min, max not working?
+// http://localhost:3000/?alg=DFSrec&mode=find&size=4&start=1&end=4&xyCoords=1-10,2-2,3-1,8-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=0&max=10
 // http://localhost:3000/?alg=dijkstra&mode=find&size=4&start=1&end=4&xyCoords=1-10,2-2,3-1,8-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=0&max=10
-//  http://localhost:3000/?alg=horspoolStringSearch&mode=search&string=abcdef&pattern=def
+// http://localhost:3000/?alg=horspoolStringSearch&mode=search&string=abcdef&pattern=def
 // http://localhost:3000/?alg=kruskal&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=1&max=30
 // http://localhost:3000/?alg=prim_old&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=1&max=30
 // http://localhost:3000/?alg=prim&mode=find&size=4&start=1&end=4&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-4-3,2-3-1,2-4-2&heuristic=Euclidean&min=1&max=30

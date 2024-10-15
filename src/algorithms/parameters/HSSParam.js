@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
+import { URLContext } from '../../context/urlState';
 
 // const DEFAULT_STRING = 'cddaadddabdda';
 // const DEFAULT_PATTERN = 'dddac';
@@ -12,10 +14,17 @@ const DEFAULT_PATTERN = 'ddac';
 const HSS_SEARCH = 'Horspool String Search';
 const HSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
-function HSSParam({mode, string, pattern}) {
+function HSSParam({ mode, string, pattern }) {
   const [message, setMessage] = useState(null);
   const [string_, setString] = useState(string || DEFAULT_STRING);
   const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+
+  useEffect(() => {
+    setNodes(string_);
+    setSearchValue(pattern_)
+  }, [string_, pattern_]);
+
   return (
     <>
       <div className="form">

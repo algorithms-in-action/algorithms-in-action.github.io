@@ -12,7 +12,7 @@ import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlState';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
@@ -41,7 +41,7 @@ function MergesortParam({ list }) {
   const [message, setMessage] = useState(null)
 
   const [array, setArray] = useState(list || DEFAULT_ARR)
-  const { nodes, setNodes } = useContext(GlobalContext)
+  const { setNodes } = useContext(URLContext)
 
   const [QSCase, setQSCase] = useState({
     random: true,
@@ -51,28 +51,28 @@ function MergesortParam({ list }) {
   });
 
   useEffect(() => {
-    setNodes(array); // sync with global state
-  }, [array, setNodes]);
+    setNodes(array);
+  }, [array]);
 
-// XXX best case definitely not needed; could skip choice of cases
+  // XXX best case definitely not needed; could skip choice of cases
   // function for choosing the type of input
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
-        setArray([...array].sort(function(a,b) {
-         return (+a) - (+b)
+        setArray([...array].sort(function (a, b) {
+          return (+a) - (+b)
         }));
         break;
       case 'sortedDesc':
-        setArray([...array].sort(function(a,b) {
+        setArray([...array].sort(function (a, b) {
           return (+b) - (+a)
-         }));
-         break;
+        }));
+        break;
       case 'random':
         setArray(DEFAULT_ARRAY_GENERATOR());
         break;
       case 'bestCase':
-        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25))));
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
         break;
       default:
         break;
@@ -103,20 +103,20 @@ function MergesortParam({ list }) {
             (() => {
               if (QSCase.sortedAsc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+a) - (+b)
-                 }));
+                  }));
                 }
               }
               else if (QSCase.sortedDesc) {
                 return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a,b) {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
                     return (+b) - (+a)
-                 }));
+                  }));
                 }
               }
-              else if(QSCase.bestCase) {
-                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25+(Math.floor(Math.random()*25)));
+              else if (QSCase.bestCase) {
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
               }
             })()
           }
