@@ -293,6 +293,11 @@ export default {
 
         vis.graph.weighted(true);
 
+        if (SIZE === LARGE_SIZE) {
+          vis.array.setZoom(0.7);
+          vis.graph.setZoom(1.5);
+        }
+
         // Intialize the graphs
         switch (ALGORITHM_NAME) {
           case "HashingLP" :

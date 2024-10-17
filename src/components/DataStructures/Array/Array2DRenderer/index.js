@@ -103,11 +103,18 @@ class Array2DRenderer extends Renderer {
       motionOn,
       hideArrayAtIdx,
       splitArray,
-      highlightRow
+      highlightRow,
+      newZoom,
     } = this.props.data;
     let centerX = this.centerX;
     let centerY = this.centerY;
     let zoom = this.zoom;
+
+    // Change Renderer's zoom on newZoom change
+    if (newZoom != this.zoom && newZoom !== undefined) {
+      this.zoom = newZoom;
+      this.refresh();
+    }
 
     const isArray1D = true;
     let render = [];

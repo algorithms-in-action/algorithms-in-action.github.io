@@ -94,6 +94,7 @@ class Array2DTracer extends Tracer {
     this.hideArrayAtIdx = null; // to hide array at given index
     this.listOfNumbers = '';
     this.highlightRow = highlightRow;
+    this.newZoom = 1;
     super.set();
   }
 
@@ -585,6 +586,15 @@ class Array2DTracer extends Tracer {
 
   setHighlightRow(row) {
     this.highlightRow = row;
+  }
+
+  /**
+   * Change the zoom of the visualizer
+   * @param {*} zoom the new zoom
+   */
+  setZoom(zoom) {
+    this.newZoom = zoom;
+    window.setTimeout(() => {this.newZoom = undefined}, 200)
   }
 }
 

@@ -439,7 +439,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, newZoom } =
       this.props.data;
     const {
       baseWidth,
@@ -461,6 +461,12 @@ class GraphRenderer extends Renderer {
     if (root) {
       rootX = root.x;
       rootY = root.y;
+    }
+
+    // Change Renderer's zoom on newZoom change
+    if (newZoom != this.zoom && newZoom !== undefined) {
+      this.zoom = newZoom;
+      this.refresh();
     }
 
     return (

@@ -836,6 +836,15 @@ class GraphTracer extends Tracer {
     _node.visitedCount3 = 0;
     _node.visitedCount4 = 0;
   }
+
+  /**
+   * Change the zoom of the visualizer
+   * @param {*} zoom the new zoom
+   */
+  setZoom(zoom) {
+    this.newZoom = zoom;
+    window.setTimeout(() => {this.newZoom = undefined}, 200)
+  }
 } 
 
 export default GraphTracer;
