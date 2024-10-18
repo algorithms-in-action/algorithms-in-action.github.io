@@ -1,8 +1,8 @@
 @import './global.scss';
 
 body {
-  margin:0; 
-  padding: 0;
+	margin: 0;
+	padding: 0;
 	font-family: Roboto, 'sans-serif';
 	-webkit-font-smoothing: subpixel-antialiased;
 }
@@ -12,21 +12,20 @@ $dragBarWidth: 10px;
 
 #page {
 	height: 100vh;
-	background: none;
 	display: grid;
 	grid-template-areas:
 		'header header header header header'
 		'leftcol leftdragbar tabpages rightdragbar rightcol'
-    'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
-    'leftcol leftdragbar footer rightdragbar rightcol';
+		'leftcol leftdragbar bottomdragbar rightdragbar rightcol'
+		'leftcol leftdragbar footer rightdragbar rightcol';
 	grid-template-rows: min-content 7fr $dragBarWidth 2fr;
-	grid-template-columns: min-content $dragBarWidth 6fr $dragBarWidth 4fr;	
+	grid-template-columns: min-content $dragBarWidth 6fr $dragBarWidth 4fr;
 }
 
 #page:focus {
-  outline-style: none;
-  box-shadow: none;
-  border-color: transparent;
+	outline-style: none;
+	box-shadow: none;
+	border-color: transparent;
 }
 
 #header {
@@ -35,6 +34,7 @@ $dragBarWidth: 10px;
 }
 
 #leftcol {
+	width: 0px;
 	overflow: auto;
 	grid-area: leftcol;
 	background-color: var(--left-bg);
@@ -49,13 +49,13 @@ $dragBarWidth: 10px;
 #tabpages {
 	overflow: auto;
 	grid-area: tabpages;
-
+	width: 100%;
 }
 
 #footer {
 	grid-area: footer;
 	background-color: var(--mid-control-bg);
-  overflow-y: hidden;
+	overflow-y: hidden;
 
 }
 
@@ -70,9 +70,9 @@ $dragBarWidth: 10px;
 }
 
 .dragbar:focus {
-  outline-style: none;
-  box-shadow: none;
-  border-color: transparent;
+	outline-style: none;
+	box-shadow: none;
+	border-color: transparent;
 }
 
 .dragbar:hover {
@@ -122,7 +122,20 @@ $dragBarWidth: 10px;
 // Left Dragbar
 #leftdragbar {
 	grid-area: leftdragbar;
+	width: 0px;
+	/* 或者您想要的宽度 */
+	background-color: #ccc;
+	/* 或者您想要的颜色 */
+	cursor: default;
+}
 
+#leftdragbar.collapsed {
+	width: 5px;
+}
+
+#leftdragbar .handle {
+	display: none;
+	/* 隐藏拖动手柄 */
 }
 
 #leftdraghandle {
@@ -142,6 +155,27 @@ $dragBarWidth: 10px;
 
 
 
+#tabpages.full-width {
+	top: 60px;
+	/* 调整这个值以匹配新的 header 高度 */
+	left: 0;
+	width: calc(100% - 300px);
+	/* 假设右侧面板宽度为 300px，根据实际情况调整 */
+}
 
+.header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #f0f0f0;
+}
 
+.header-left {
+	flex: 1;
+}
 
+.header-right {
+	flex: 18;
+	display: flex;
+	justify-content: flex-end;
+}

@@ -6,25 +6,18 @@ import '../../styles/MidPanel.scss';
 /* eslint-disable-next-line import/no-named-as-default */
 import Popup from 'reactjs-popup';
 import ReactMarkDown from 'react-markdown/with-html';
-import { URLContext } from '../../context/urlState'; // imported to create urls for sharing
 import toc from 'remark-toc';
 import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
 import ControlButton from '../common/ControlButton';
 import ShareIcon from '@mui/icons-material/Share';
+import { URLContext } from '../../context/urlState';
+import { createUrl } from './urlCreator';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm, algorithmKey, category, mode } = useContext(GlobalContext);
-  const { 
-    nodes, 
-    searchValue, 
-    graphSize, 
-    graphStart, 
-    graphEnd, 
-    heuristic, 
-    graphMin, 
-    graphMax } = useContext(URLContext);
+  const urlContext = useContext(URLContext);
   const fontID = 'algorithmTitle';
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
@@ -55,38 +48,8 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     // this creates the url of the current algorithm, with required parameters
     if (share) {
-      let url = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
-
-      switch (category) {
-        case 'Sort':
-          url += `&list=${nodes}`;
-          break;
-
-        case 'Insert/Search':
-          url += `&list=${nodes}&value=${searchValue}`;
-          break;
-
-        case 'String Search':
-          url += `&string=${nodes}&pattern=${searchValue}`;
-          break;
-
-        case 'Set':
-          url += `&union=${nodes}&value=${searchValue}`;
-          break;
-
-        case 'Graph':
-          // awkward as Graph algorithms require different url strucutres
-          if (algorithmKey == 'transitiveClosure') {
-            url += `&size=${graphSize}&min=${graphMin}&max=${graphMax}`;
-          } else {
-            url += `&size=${graphSize}&start=${graphStart}&end=${graphEnd}
-                  &xyCoords=${nodes}&edgeWeights=${searchValue}&heuristic=${heuristic}`;
-          }
-          break;
-
-        default:
-          break;
-      }
+      let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
+      let url = createUrl(baseUrl, category, urlContext);
       setCurrentUrl(url);
     }
   }, [share]);

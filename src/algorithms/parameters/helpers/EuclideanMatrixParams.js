@@ -436,6 +436,7 @@ function EuclideanMatrixParams({
   // components/DataStructures/Graph/GraphRenderer/index.js) so
   // coordinates here can be updated
   const moveNode = (nodeID, x, y) => {
+    console.log(['moveNode', nodeID, x, y]);
     const newData1 = data1.map((row, index) => {
       if (index === nodeID) {
         return {
