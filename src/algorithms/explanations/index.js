@@ -2,6 +2,7 @@ export { default as HSExp } from './HSExp.md';
 export { default as BSTExp } from './BSTExp.md';
 export { default as QSExp } from './QSExp.md';
 export { default as msort_arr_td } from './msort_arr_td.md';
+export { default as MSDRadixSortExp } from './MSDRadixSortExp.md';
 export { default as msort_lista_td } from './msort_lista_td.md';
 export { default as Prims_oldExp } from './PRIM_oldExp.md';
 export { default as PrimsExp } from './PRIMExp.md';
