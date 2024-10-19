@@ -86,6 +86,20 @@ const allalgs = {
       sort: Controller.quickSortM3,
     },
   },
+  'radixSortStraight': {
+    name: 'Straight Radix Sort',
+    category: 'Sort',
+    explanation: Explanation.StraightRadixSortExp,
+    param: <Param.StraightRadixSortParam />,
+    instructions: Instructions.RadixSortInstruction,
+    extraInfo: ExtraInfo.StraightRadixSortInfo,
+    pseudocode: {
+      sort: Pseudocode.straightRadixSort,
+    },
+    controller: {
+      sort: Controller.straightRadixSort,
+    },
+  },
   'msort_arr_td': {
     name: 'Merge Sort',
     noDeploy: false,

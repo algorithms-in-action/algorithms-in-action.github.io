@@ -52,8 +52,8 @@ class Array1DRenderer extends Array2DRenderer {
     this.maxStackDepth = 0;
   }
 
-// XXX "Warning: Each child in a list should have a unique "key" prop.
-// Check the render method of `Array1DRenderer`" ???
+  // XXX "Warning: Each child in a list should have a unique "key" prop.
+  // Check the render method of `Array1DRenderer`" ???
   renderData() {
 
     // listOfNumbers used for stack caption in msort_arr_td
@@ -78,11 +78,11 @@ class Array1DRenderer extends Array2DRenderer {
     }
     // handle non-numbers by using minimum height
     let scaleY = ((largest, columnValue) =>
-      (typeof columnValue !== "number"? 0 :
-       (columnValue / largest) * arrayMagnitudeScaleValue)).bind(
-      null,
-      largestColumnValue,
-    );
+    (typeof columnValue !== "number" ? 0 :
+      (columnValue / largest) * arrayMagnitudeScaleValue)).bind(
+        null,
+        largestColumnValue,
+      );
     if (!this.props.data.arrayItemMagnitudes) {
       scaleY = () => 0;
     }
@@ -97,132 +97,133 @@ class Array1DRenderer extends Array2DRenderer {
           transform: `scale(${this.zoom})`,
         }}
       >
-      <tbody>
-      <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
-        {/* Values */}
-        {data.map((row, i) => (
-          <div
-            className={styles.row}
-            key={i}
-            style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            }}
-          >
-            {row.map((col) => (
-              <motion.div
-                layout
-                transition={{ duration: 0.6 }}
+        <tbody>
+          <motion.div animate={{ scale: this.zoom }} className={switchmode(mode())}>
+            {/* Values */}
+            {data.map((row, i) => (
+              <div
+                className={styles.row}
+                key={i}
                 style={{
-                  height: `${this.toString(scaleY(col.value))}vh`,
                   display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
                 }}
-                /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
-                className={classes(
-                  styles.col,
-                  col.faded && styles.faded,
-                  col.selected && styles.selected,
-                  col.patched && styles.patched,
-                  col.sorted && styles.sorted,
-                  col.style && col.style.backgroundStyle,
-                )}
-                key={col.key}
               >
-                <motion.span
-                  layout="position"
-                  className={classes(
-                    styles.value,
-                    col.style && col.style.textStyle,
-                  )}
-                >
-                  {this.toString(col.value)}
-                </motion.span>
-              </motion.div>
-            ))}
-          </div>
-        ))}
-
-        <div>
-          {/* Indexes  XXX maybe avoid for arrayB in Merge sort? */}
-          <div
-            className={styles.row}
-            style={{ display: 'flex', justifyContent: 'space-between' }}
-          >
-            {longestRow.map((_, i) => {
-              // if the graph instance is heapsort, then the array index starts from 1
-
-                i += 1;
-              
-              return (
-                <div className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{i}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Variable pointers */}
-          {data.map(
-            (
-              row,
-              i, // variable pointer only working for 1D arrays
-            ) => (
-              <AnimateSharedLayout>
-                <div
-                  layout
-                  className={styles.row}
-                  key={i}
-                  style={{
-                    minHeight: '50px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'start',
-                  }}
-                >
-                  {row.map((col) => (
-                    <div
-                      className={classes(styles.col, styles.variables)}
-                      key={`vars-${col.key}`}
+                {row.map((col) => (
+                  <motion.div
+                    layout
+                    transition={{ duration: 0.6 }}
+                    style={{
+                      height: `${this.toString(scaleY(col.value))}vh`,
+                      display: 'flex',
+                    }}
+                    /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
+                    className={classes(
+                      styles.col,
+                      col.faded && styles.faded,
+                      col.selected && styles.selected,
+                      col.patched && styles.patched,
+                      col.sorted && styles.sorted,
+                      col.style && col.style.backgroundStyle,
+                    )}
+                    key={col.key}
+                  >
+                    <motion.span
+                      layout="position"
+                      className={classes(
+                        styles.value,
+                        col.style && col.style.textStyle,
+                      )}
                     >
-                      {col.variables.map((v) => (
-                        <motion.div
-                          layoutId={v}
-                          key={v}
-                          className={styles.variable}
-                          style={{ fontSize: v.length > 2 ? '12px' : null }}
+                      {this.toString(col.value)}
+                    </motion.span>
+                  </motion.div>
+                ))}
+              </div>
+            ))}
+
+            <div>
+              {/* Indexes  XXX maybe avoid for arrayB in Merge sort? */}
+              <div
+                className={styles.row}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                {longestRow.map((_, i) => {
+                  // if the graph instance is heapsort, then the array index starts from 1
+                  if (algo !== "straightRadixSort") {
+                    i += 1;
+                  }
+
+                  return (
+                    <div className={classes(styles.col, styles.index)} key={i}>
+                      <span className={styles.value}>{i}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Variable pointers */}
+              {data.map(
+                (
+                  row,
+                  i, // variable pointer only working for 1D arrays
+                ) => (
+                  <AnimateSharedLayout>
+                    <div
+                      layout
+                      className={styles.row}
+                      key={i}
+                      style={{
+                        minHeight: '50px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'start',
+                      }}
+                    >
+                      {row.map((col) => (
+                        <div
+                          className={classes(styles.col, styles.variables)}
+                          key={`vars-${col.key}`}
                         >
-                          {v}
-                        </motion.div>
+                          {col.variables.map((v) => (
+                            <motion.div
+                              layoutId={v}
+                              key={v}
+                              className={styles.variable}
+                              style={{ fontSize: v.length > 2 ? '12px' : null }}
+                            >
+                              {v}
+                            </motion.div>
+                          ))}
+                        </div>
                       ))}
                     </div>
-                  ))}
-                </div>
-              </AnimateSharedLayout>
-            ),
-          )}
-        </div>
-        <div>
-          {// Quicksort stuff
-          stack && stack.length > 0 ? (
-            this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
-            stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
-          ) : (
-            <div />
-          )}
-        </div>
-      </motion.div>
-      </tbody>
-      { // XXX I've given up trying to avoid this warning:(
-        // "Whitespace text nodes cannot appear as a child of <table>. Make
-        // sure you don't have any extra whitespace between tags on each
-        // line of your source code."  Similariy div inside tbody.
-        algo === 'msort_arr_td' && listOfNumbers && (
-          <caption
-            className={styles.captionmsort_arr_td}
-            kth-tag="msort_arr_td_caption"
-          > Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </caption>)
-      }
+                  </AnimateSharedLayout>
+                ),
+              )}
+            </div>
+            <div>
+              {// Quicksort stuff
+                stack && stack.length > 0 ? (
+                  this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
+                  stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
+                ) : (
+                  <div />
+                )}
+            </div>
+          </motion.div>
+        </tbody>
+        { // XXX I've given up trying to avoid this warning:(
+          // "Whitespace text nodes cannot appear as a child of <table>. Make
+          // sure you don't have any extra whitespace between tags on each
+          // line of your source code."  Similariy div inside tbody.
+          algo === 'msort_arr_td' && listOfNumbers && (
+            <caption
+              className={styles.captionmsort_arr_td}
+              kth-tag="msort_arr_td_caption"
+            > Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+        }
       </table>
     );
   }
@@ -233,16 +234,16 @@ class Array1DRenderer extends Array2DRenderer {
  * @returns string
  */
 
- function stackFrameColour(color_index) {
-	return [
-		'var(--not-started-section)', // 0
-		'var(--in-progress-section)', // 1
-		'var(--current-section)',     // 2
-		'var(--finished-section)',    // 3
+function stackFrameColour(color_index) {
+  return [
+    'var(--not-started-section)', // 0
+    'var(--in-progress-section)', // 1
+    'var(--current-section)',     // 2
+    'var(--finished-section)',    // 3
     'var(--i-section)',    // 4
     'var(--j-section)',    // 5
     'var(--p-section)',    // 6
-	][color_index]
+  ][color_index]
 }
 
 /**
@@ -253,7 +254,7 @@ class Array1DRenderer extends Array2DRenderer {
  * @param {*} stackDepth
  * @returns
  */
-function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) { 
+function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
   if (!stack) {
     return <div />;
   }
@@ -262,17 +263,17 @@ function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
     stackItems.push(
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         {stack[i].map(({ base, extra }, index) =>
-          (
-            <div
-              className={styles.stackElement}
-              style={{
-                width: `calc(100%/${nodeCount})`,
-                textAlign: 'center',
-                color: 'gray',
-                backgroundColor: stackFrameColour(base),
-              }}
-            >
-              {/* 
+        (
+          <div
+            className={styles.stackElement}
+            style={{
+              width: `calc(100%/${nodeCount})`,
+              textAlign: 'center',
+              color: 'gray',
+              backgroundColor: stackFrameColour(base),
+            }}
+          >
+            {/* 
                 Stack Number Rendering:
                 - This JSX code renders corresponding numbers under the stack visualisation in 1D arrays, e.g., QuickSort.
                 - The feature is currently disabled. To re-enable:
@@ -280,24 +281,24 @@ function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
                   2. Uncomment the `displayStackNumber` function in this file.
                 */}
 
-              {/* {(() => {
+            {/* {(() => {
               if (displayStackNumber(val, index, stack[i])) {
                 return <p style={{ fontSize: '13px' }}>{index}</p>;
               }
               return '';
             })()} */}
-              {extra.map((extraColor) => (
-                <div
-                  className={styles.stackSubElement}
-                  style={{
-                    width: '100%',
-                    textAlign: 'center',
-                    backgroundColor: stackFrameColour(extraColor),
-                  }}
-                />
-              ))}
-            </div>
-          )
+            {extra.map((extraColor) => (
+              <div
+                className={styles.stackSubElement}
+                style={{
+                  width: '100%',
+                  textAlign: 'center',
+                  backgroundColor: stackFrameColour(extraColor),
+                }}
+              />
+            ))}
+          </div>
+        )
         )}
       </div>,
     );
