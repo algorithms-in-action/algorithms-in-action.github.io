@@ -43,6 +43,15 @@ class Tracer {
     this.size = size;
   }
 
+  /**
+   * Change the zoom of the visualizer
+   * @param {*} zoom the new zoom
+   */
+  setZoom(zoom) {
+    this.newZoom = zoom;
+    window.setTimeout(() => {this.newZoom = undefined}, 200)
+  }
+
   reset() {
     this.set();
   }

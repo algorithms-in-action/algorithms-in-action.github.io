@@ -462,12 +462,12 @@ class GraphRenderer extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
-
-    // Change Renderer's zoom on newZoom change
-    if (newZoom != this.zoom && newZoom !== undefined) {
-      this.zoom = newZoom;
-      this.refresh();
-    }
+    //
+    // // Change Renderer's zoom on newZoom change
+    // if (newZoom != this.zoom && newZoom !== undefined) {
+    //   this.zoom = newZoom;
+    //   this.refresh();
+    // }
 
     return (
       <svg
