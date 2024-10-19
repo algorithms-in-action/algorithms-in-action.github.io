@@ -24,3 +24,6 @@ yarn-error.log*
 # Remove Docs
 /docs
 /tests
+
+# Jetbrains
+.idea
