@@ -1,6 +1,13 @@
 import parse from '../../pseudocode/parse';
 
 
+// XXX Best skip NullTable and HashInit function completely - just start
+// animation with initialised table
+// XXX: if dynamic tables are not implemented, both CheckTableFullness
+// and CheckTableFullness should be removed
+// NOTE: code now no longer explicitly keeps track of number of
+// insertions and CheckTableFullness is modified so some bookmarks (eg,
+// 4, 19, 20) no longer exist and controller code will have to change
 const main = `
 
         \\Code{
@@ -26,13 +33,10 @@ const main = `
             HashInsert(T, k)  // Insert key k into table
                 \\In{
                     Check how full the table is \\Ref CheckTableFullness
-                    \\Expl{ One empty slot must always be maintained, to prevent to potential for infinite looping.
-                    Even before this point performance degrades if the table gets too full, say over 80% full.
-                    See Overview for more details.
-                    \\Expl}
-                    Insertions <- Insertions + 1 \\B 4
-                    \\Expl{ To check how full the table is we can maintain a simple
-                        counter.
+                    \\Expl{ One empty slot must always be maintained, to
+prevent infinite loops when searching.
+                    Performance also degrades with fewer empty slots and we may want to reconstruct the table with a larger size.
+                    See Background for more details.
                     \\Expl}
                     \\Note{The following has a choose increment value -- assumes we can make a choice
                     	here between linear probing and double hashing. NOTE TO DEVELOPERS: We are planning to
@@ -49,14 +53,17 @@ const main = `
                     T[i] <- k // unoccupied slot found so we put k in it \\B 9
                     // Done \\B 10
                 \\In}
-            
+
             //=======================================================
 
             HashDelete(T, k)  // Delete key k in table T \\B 11
             \\In{
+                Check how full the table is \\Ref CheckTableFullnessDel
+                \\Expl{ If there are lots of Deleted slots we may want to reconstruct the table to improve performance.
+                \\Expl}
                 i <- hash(k) // Expand Hash in HashInsert for details \\B 16
                 Choose Increment value for stepping through T //Expand ChooseIncrement in HashInsert for details \\B 17
-                while not (T[i] = k or T[i] = Empty or T[i] = "X") // search for k or Empty or Deleted \\B 12
+                while not (T[i] = k or T[i] = Empty or T[i] = Deleted) // search for k or Empty or Deleted \\B 12
                     \\In{
                         i <- (i + Increment) mod TableSize \\B 13
                         \\Expl{ T[i] is not k or Empty so we jump ahead Increment
@@ -66,17 +73,16 @@ const main = `
                     \\In}
                 if T[i] = k \\B 14
                     \\In{
-                        T[i] <- "X" \\B 15
-                        \\Expl{ If T[i] contains the index element, it is deleted from the array.
-                            In this implementation, deletion of said integer occurs by replacing it
-                            with "x" to help with visualisation.
+                        T[i] <- Deleted \\B 15
+                        \\Expl{ If T[i] contains the index element, the slot is flagged as deleted.
+                            We display "X" to indicate Deleted slots.
                         \\Expl}
                     \\In}
                 else \\B 18
                     \\In{
                         // Do nothing
                     \\In}
-            \\In}            
+            \\In}
         \\Code}
 
         \\Code{
@@ -100,13 +106,44 @@ const main = `
 
         \\Code{
             CheckTableFullness
-                if Insertions - Deletions = TableSize - 1 \\B 19
+                if there are too few empty slots \\B 19
+                    \\Expl{ A small number of empty slots leads to poor performance.
+                        To overcome this we must construct a new (possibly
+                        larger) table and insert all the elements of T.
+                        This also gets rid of deleted slots.
+                    \\Expl}
                     \\In{
-                        Stop insertion \\B 19
+                        Create a new empty table T1
+                        \\Expl{ Without deleted elements, it is best for
+                            the table size to approximately double.  If there are many deleted slots
+                            it may be OK to keep the same size.
+                        \\Expl}
+                        Insert each key in T into T1
+                        \\Note{ Animation can stop at this line for each
+                            key (could possibly have an extra level of expansion)
+                        \\Note}
+                        T <- T1
                     \\In}
-                else
+        \\Code}
+        \\Code{
+            CheckTableFullnessDel
+                if there are too many deleted slots \\B 19
+                    \\Expl{ A small number of empty slots leads to poor performance.
+                        To overcome this we must construct a new table, which gets rid of deleted slots.
+                        It may also be worthwhile to reduce the table size.
+                    \\Expl}
                     \\In{
-                        Continue insertion \\B 20
+                        Create a new empty table T1
+                        \\Expl{ If there are many deleted slots
+                            it may be be worthwhile to reduce the table size.
+                        \\Expl}
+                        Insert each key in T into T1
+                        \\Expl{ For better performance we could omit inserting k here and skip the later HashDelete code.
+                        \\Expl}
+                        \\Note{ Animation can stop at this line for each
+                            key (could possibly have an extra level of expansion)
+                        \\Note}
+                        T <- T1
                     \\In}
         \\Code}
 `

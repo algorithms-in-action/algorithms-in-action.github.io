@@ -404,8 +404,10 @@ class GraphTracer extends Tracer {
     const unitAngle = (2 * Math.PI) / this.nodes.length;
     let angle = -Math.PI / 2;
     for (const node of this.nodes) {
-      const x = (Math.cos(angle) * rect.width) / 2;
-      const y = (Math.sin(angle) * rect.height) / 2;
+      // XXX see comment about magic numbers in constructor() in
+      // Graph/GraphRenderer/index.js
+      const x = 650 - 200 + (Math.cos(angle) * rect.width) / 2;
+      const y = -200 - 70 + (Math.sin(angle) * rect.height) / 2;
       node.x = x;
       node.y = y;
       angle += unitAngle;
