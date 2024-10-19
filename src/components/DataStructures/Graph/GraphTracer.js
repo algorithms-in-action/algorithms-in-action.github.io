@@ -52,7 +52,7 @@ class GraphTracer extends Tracer {
     this.istc = false;
   }
 
-  /* 
+  /*
    * Calcluates the maximum individual coordinate from an array of x y coordinates.
   */
   calculateMaximumCoordinate(coordinates) {
@@ -102,7 +102,7 @@ class GraphTracer extends Tracer {
 
     // XXX
     // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
-    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
+    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!!
   }
 
   /**
@@ -784,14 +784,14 @@ class GraphTracer extends Tracer {
 
   setIstc() {
     this.istc = true;
-  } 
+  }
 
   // functions for coloring/decoloring edges and nodes
   // that are not painful to use
   colorEdge(source, target, colorIndex) {
     const edge = this.findEdge(source, target);
     if (!edge) return;  // Exit if edge is not found
-    
+
     if (colorIndex === 1) {
       edge.visitedCount1 = 1;
     } else if (colorIndex === 2) {
@@ -802,22 +802,22 @@ class GraphTracer extends Tracer {
       edge.visitedCount4 = 1;
     }
 }
-  
+
   removeEdgeColor(source, target) {
     const edge = this.findEdge(source, target);
     if (!edge) return;  // Exit if edge is not found
-    
+
     edge.visitedCount1 = 0;
     edge.visitedCount2 = 0;
     edge.visitedCount3 = 0;
     edge.visitedCount4 = 0;
   }
 
-  
+
   colorNode(node, colorIndex) {
     const _node = this.findNode(node);
     if (!_node) return;  // Exit if node is not found
-    
+
     if (colorIndex === 1) {
       _node.visitedCount1 = 1;
     } else if (colorIndex === 2) {
@@ -828,16 +828,25 @@ class GraphTracer extends Tracer {
       _node.visitedCount4 = 1;
     }
   }
-  
+
   removeNodeColor(node) {
     const _node = this.findNode(node);
     if (!_node) return;  // Exit if node is not found
-    
+
     _node.visitedCount1 = 0;
     _node.visitedCount2 = 0;
     _node.visitedCount3 = 0;
     _node.visitedCount4 = 0;
   }
-} 
+  //
+  // /**
+  //  * Change the zoom of the visualizer
+  //  * @param {*} zoom the new zoom
+  //  */
+  // setZoom(zoom) {
+  //   this.newZoom = zoom;
+  //   window.setTimeout(() => {this.newZoom = undefined}, 200)
+  // }
+}
 
 export default GraphTracer;

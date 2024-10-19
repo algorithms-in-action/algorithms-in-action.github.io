@@ -437,9 +437,14 @@ export default {
         IBookmarks.Init,
         (vis, size, array) => {
           // Increase Array2D visualizer render space
-          if (size >= LARGE_SIZE) {
-            vis.array.setSize(3);
-          }
+        if (SIZE === LARGE_SIZE) {
+          vis.array.setSize(3);
+          vis.array.setZoom(0.7);
+          vis.graph.setZoom(1.5);
+        } else {
+          vis.array.setZoom(1);
+          vis.graph.setZoom(1);
+        }
 
           // Initialize the array
           vis.array.set(array,

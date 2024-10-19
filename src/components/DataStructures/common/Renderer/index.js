@@ -107,7 +107,11 @@ class Renderer extends React.Component {
   }
 
   render() {
-    const { className, title, size } = this.props;
+    const { data, className, title, size } = this.props;
+    // Change Renderer's zoom on newZoom change
+    if (data.newZoom != this.zoom && data.newZoom !== undefined) {
+      this.zoom = data.newZoom;
+    }
     const zoomPref = true;
     return (
       <div
