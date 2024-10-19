@@ -3,6 +3,7 @@ export { default as HSParam } from './HSParam';
 export { default as BSTParam } from './BSTParam';
 export { default as QSParam } from './QSParam';
 export { default as msort_arr_td } from './msort_arr_td';
+export { default as StraightRadixSortParam } from './StraightRadixSortParam';
 export { default as msort_lista_td } from './msort_lista_td';
 export { default as Prims_oldParam } from './PRIM_oldParam';
 export { default as PrimsParam } from './PRIMParam';
