@@ -16,8 +16,9 @@
     "test": "react-scripts test",
     "test-uf": "npm test -- ./src/algorithms/controllers/unionFind.test.js",
     "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
-    "test-hashinsert": "npm test -- ./src/algorithms/controllers/HashingInsertion.test.js",
-    "test-hashsearch": "npm test -- ./src/algorithms/controllers/HashingSearch.test.js"
+    "test-hashinsert": "npm test -- ./src/algorithms/controllers/tests/HashingInsertion.test.js",
+    "test-hashsearch": "npm test -- ./src/algorithms/controllers/tests/HashingSearch.test.js",
+    "test-hashdelete": "npm test -- ./src/algorithms/controllers/tests/HashingDeletion.test.js"
   },
   "husky": {
     "hooks": {

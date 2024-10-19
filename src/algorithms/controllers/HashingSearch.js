@@ -56,6 +56,8 @@ export default {
     const TARGET = params.target; // Target value we are searching for
     const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
+    console.log(table);
+    console.log(TARGET);
 
     // Variable for testing
     let found = true;
@@ -102,7 +104,7 @@ export default {
     let explored = 0;
     // Search for the target key, checking each probed position
     while (table[i] !== TARGET && table[i] !== undefined && explored < SIZE) {
-        explored += 1;
+      explored += 1;
 
       // Chunker for not matching
       chunker.add(
@@ -146,18 +148,19 @@ export default {
         },
         [i]
       );
+      found = true; // Set testing variable
+      console.log("lol");
     }
-
     // Chunker for not found
     else {
       chunker.add(
         IBookmarks.NotFound,
         (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill last slot with red
-          found = false; // Set testing variable
         },
         [i]
       );
+      found = false; // Set testing variable
     }
     return found; // Return found or not for testing
   },
