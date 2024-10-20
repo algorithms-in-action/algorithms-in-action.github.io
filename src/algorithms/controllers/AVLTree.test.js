@@ -2,15 +2,6 @@
  * The purpose of the test here is to detect whether the correct result is generated
  * under the legal input, help developers identify potential errors that may arise 
  * from the rotation logic. 
- *
- * @author StaticSound Team
- *        - Hao Chen        (1314613) <hc4@student.unimelb.edu.au>
- *        - Jiayi Sun       (1305340) <jisun5@student.unimelb.edu.au>
- *        - Junhao Zhu      (1261757) <junhaoz3@student.unimelb.edu.au>
- *        - Ziyu Wang       (1243302) <ziyu6@student.unimelb.edu.au>
- *        - Gaoyongle Zhang (1346309) <gaoyonglez@student.edu.au>
- * 
- * @since  10/10/2024
  */
 
 /* eslint-disable no-undef */

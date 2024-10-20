@@ -8,15 +8,6 @@
  * By accessing the visualized AVL tree, it retrieves the complete tree structure. 
  * The input is a node to be searched for, and the algorithm starts from the root, 
  * traversing down to the child nodes to find the target node.
- *
- * @author StaticSound Team
- *        - Hao Chen        (1314613) <hc4@student.unimelb.edu.au>
- *        - Jiayi Sun       (1305340) <jisun5@student.unimelb.edu.au>
- *        - Junhao Zhu      (1261757) <junhaoz3@student.unimelb.edu.au>
- *        - Ziyu Wang       (1243302) <ziyu6@student.unimelb.edu.au>
- *        - Gaoyongle Zhang (1346309) <gaoyonglez@student.edu.au>
- * 
- * @since  08/10/2024
  */
 
 export default {

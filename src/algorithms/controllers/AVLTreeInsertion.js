@@ -14,15 +14,6 @@
  * 5. Check the balance factor of the root node.
  * 6. If unbalanced, perform rotations to balance the tree.
  * 7. Return the root node of the tree.
- *
- * @author StaticSound Team
- *        - Hao Chen        (1314613) <hc4@student.unimelb.edu.au>
- *        - Jiayi Sun       (1305340) <jisun5@student.unimelb.edu.au>
- *        - Junhao Zhu      (1261757) <junhaoz3@student.unimelb.edu.au>
- *        - Ziyu Wang       (1243302) <ziyu6@student.unimelb.edu.au>
- *        - Gaoyongle Zhang (1346309) <gaoyonglez@student.edu.au>
- * 
- * @since  08/10/2024
  */
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
