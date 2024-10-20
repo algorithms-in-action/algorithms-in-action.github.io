@@ -223,10 +223,10 @@ export default {
 
 
     /**
-     * ReInsertion function for inserted key to new table
+     * Function for bulk insertion
      * @param {*} table the table to keep track of the internal and illustrated array
-     * @param {*} key the key to insert
-     * @returns the index the key is assigned
+     * @param {*} keys the keys to insert
+     * @returns the index the last key is assigned
      */
     function hashBulkInsert(table, keys) {
       let lastHash;

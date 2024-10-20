@@ -23,3 +23,4 @@ export { default as kruskal } from './kruskal';
 export { default as HashingInsertion } from './HashingInsertion';
 export { default as HashingSearch } from './HashingSearch';
 export { default as HashingDelete } from './HashingDelete';
+export { default as HashingChainingInsertion} from './HashingChainingInsertion'

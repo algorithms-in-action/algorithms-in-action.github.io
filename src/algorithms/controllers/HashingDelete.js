@@ -23,6 +23,7 @@ const IBookmarks = {
   Found: 14,
   Delete: 15,
   NotFound: 18,
+  Pending: 19,
 }
 
 /**
@@ -54,98 +55,146 @@ export default function HashingDelete(
   // Hashing the key
   let i = hash1(chunker, IBookmarks.ApplyHash, key, SIZE, true); // Target value after being hashed
 
-  // Calculate increment for key
-  let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name, HASH_TYPE.Delete, true);
+  /** This part is for Linear Probing and Double Hashing */
+  if (ALGORITHM_NAME !== 'HashingCH') {
+    // Calculate increment for key
+    let increment = setIncrement(chunker, IBookmarks.ChooseIncrement, key, SIZE, params.name, HASH_TYPE.Delete, true);
 
-  // Chunker for initial slot
-  chunker.add(
-    IBookmarks.WhileNot,
-    (vis, idx) => {
-      if (SIZE === SMALL_SIZE) {
-        vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer only shows for small tables
-      }
-      vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Highlight initial search position
-
-      // Uncoloring the graphs
-      vis.graph.deselect(HASH_GRAPH.Key);
-      vis.graph.deselect(HASH_GRAPH.Value);
-      vis.graph.removeEdgeColor(HASH_GRAPH.Key, HASH_GRAPH.Value);
-      if (ALGORITHM_NAME == "HashingDH") {
-        vis.graph.deselect(HASH_GRAPH.Key2);
-        vis.graph.deselect(HASH_GRAPH.Value2);
-        vis.graph.removeEdgeColor(HASH_GRAPH.Key2, HASH_GRAPH.Value2);
-      }
-    },
-    [i]
-  );
-
-  let explored = 0;
-  // Search for the target key, checking each probed position
-  while (table[i] !== key && table[i] !== undefined && explored < SIZE) {
-    // Chunker for not matching
-    explored += 1;
+    // Chunker for initial slot
     chunker.add(
       IBookmarks.WhileNot,
       (vis, idx) => {
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with red if the slot does not match key
-      },
-      [i]
-    );
-
-    // Move to the next index based on collision handling
-    i = (i + increment) % SIZE;
-
-    // Chunker for probing
-    chunker.add(
-      IBookmarks.MoveThrough,
-      (vis, idx) => {
         if (SIZE === SMALL_SIZE) {
-          vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer is only shown for small tables
+          vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer only shows for small tables
+        }
+        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Highlight initial search position
+
+        // Uncoloring the graphs
+        vis.graph.deselect(HASH_GRAPH.Key);
+        vis.graph.deselect(HASH_GRAPH.Value);
+        vis.graph.removeEdgeColor(HASH_GRAPH.Key, HASH_GRAPH.Value);
+        if (ALGORITHM_NAME == "HashingDH") {
+          vis.graph.deselect(HASH_GRAPH.Key2);
+          vis.graph.deselect(HASH_GRAPH.Value2);
+          vis.graph.removeEdgeColor(HASH_GRAPH.Key2, HASH_GRAPH.Value2);
         }
       },
       [i]
     );
 
-    // Chunker for searching the slots based on increment
+    let explored = 0;
+    // Search for the target key, checking each probed position
+    while (table[i] !== key && table[i] !== undefined && explored < SIZE) {
+      // Chunker for not matching
+      explored += 1;
+      chunker.add(
+        IBookmarks.WhileNot,
+        (vis, idx) => {
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with red if the slot does not match key
+        },
+        [i]
+      );
+
+      // Move to the next index based on collision handling
+      i = (i + increment) % SIZE;
+
+      // Chunker for probing
+      chunker.add(
+        IBookmarks.MoveThrough,
+        (vis, idx) => {
+          if (SIZE === SMALL_SIZE) {
+            vis.array.assignVariable(POINTER_VALUE, POINTER, idx); // Pointer is only shown for small tables
+          }
+        },
+        [i]
+      );
+
+      // Chunker for searching the slots based on increment
+      chunker.add(
+        IBookmarks.WhileNot,
+        (vis, idx) => {
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Fill pending slots with yellow
+        },
+        [i]
+      );
+    }
+
+    // Chunker for found
+    if (table[i] === key) {
+      chunker.add(
+        IBookmarks.Found,
+        (vis, idx) => {
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
+        },
+        [i]
+      );
+      // Replace found element with x
+        table[i] = DELETE_CHAR;
+        chunker.add(
+          IBookmarks.Delete,
+          (vis, val, idx) => {
+            vis.array.updateValueAt(VALUE, idx, val);
+          },
+          [DELETE_CHAR, i]
+        )
+
+        return total - 1; // Decrement total
+    }
+    else {
+      chunker.add(
+        IBookmarks.NotFound,
+        (vis, idx) => {
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with green, indicating that the key is found
+        },
+        [i]
+      )
+
+      return total; // Since the deletion key is not found, nothing is deleted
+    }
+  }
+
+  /** This part is for Chaining */
+  else {
+
     chunker.add(
-      IBookmarks.WhileNot,
+      IBookmarks.Pending,
       (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Fill pending slots with yellow
       },
       [i]
     );
-  }
 
-  // Chunker for found
-  if (table[i] === key) {
-    chunker.add(
-      IBookmarks.Found,
-      (vis, idx) => {
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
-      },
-      [i]
-    );
-    // Replace found element with x
-      table[i] = DELETE_CHAR;
+    if (table[i].includes(key)) {
+      const index = table[i].indexOf(key);
+      if (index > -1) table[i].splice(index, 1); // 2nd parameter means remove one item only
+
       chunker.add(
-        IBookmarks.Delete,
-        (vis, val, idx) => {
-          vis.array.updateValueAt(VALUE, idx, val);
+        IBookmarks.Found,
+        (vis, idx, table) => {
+          // Modify the floating array
+          const popper = document.getElementById('float_box_' + idx);
+          popper.innerHTML = table[idx];
+
+          let firstItemOfChain = table[idx][0];
+          vis.array.updateValueAt(VALUE, idx, firstItemOfChain + '..');
+
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
         },
-        [DELETE_CHAR, i]
-      )
+        [i, table]
+      );
 
       return total - 1; // Decrement total
-  }
-  else {
-    chunker.add(
-      IBookmarks.NotFound,
-      (vis, idx) => {
-        vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with green, indicating that the key is found
-      },
-      [i]
-    )
+    }
+    else {
+      chunker.add(
+        IBookmarks.NotFound,
+        (vis, idx) => {
+          vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with green, indicating that the key is found
+        },
+        [i]
+      )
 
-    return total; // Since the deletion key is not found, nothing is deleted
+      return total; // Since the deletion key is not found, nothing is deleted
+    }
   }
 }
