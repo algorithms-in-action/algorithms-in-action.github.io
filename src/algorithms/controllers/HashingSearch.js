@@ -150,6 +150,7 @@ export default {
           },
           [i]
         );
+        found = true; // Set testing variable
       }
 
       // Chunker for not found
@@ -158,10 +159,10 @@ export default {
           IBookmarks.NotFound,
           (vis, idx) => {
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill last slot with red
-            found = false; // Set testing variable
           },
           [i]
         );
+        found = false; // Set testing variable
       }
       return found; // Return found or not for testing
     }
@@ -188,6 +189,7 @@ export default {
               },
               [i]
             );
+            found = true; // Set testing variable
           }
           if (table[i] === TARGET) {
             chunker.add(
@@ -197,6 +199,7 @@ export default {
               },
               [i]
             );
+            found = true; // Set testing variable
           }
         }
       }
@@ -211,6 +214,7 @@ export default {
           },
           [i]
         );
+        found = false; // Set testing variable
       }
       return found; // Return found or not for testing
     }
