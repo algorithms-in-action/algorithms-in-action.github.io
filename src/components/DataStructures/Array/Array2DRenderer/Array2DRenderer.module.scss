@@ -51,7 +51,7 @@
 
       .variable {
         font-size: 18px;
-        color: var(--array-2d-row-col-value-color);//var(--array-2d-row-col-sorted);
+        color: var(--array-2d-row-col-value-color); //var(--array-2d-row-col-sorted);
       }
 
       &.highlightRow {
@@ -63,7 +63,7 @@
       }
 
       &.selected {
-        background-color: var(--array-2d-row-col-bg-selected);
+        background-color: var(--sky);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -71,7 +71,7 @@
       }
 
       &.selected1 {
-        background-color: var(--array-2d-row-col-bg-selected1);
+        background-color: var(--leaf);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -95,7 +95,7 @@
       }
 
       &.variableGreen {
-        background-color: var(--simple-fill-var-green);
+        background-color: var(--leaf);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -104,7 +104,7 @@
 
       &.variableOrange {
         // more of a yellow, really
-        background-color: var(--simple-fill-var-orange);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col);
@@ -112,7 +112,7 @@
       }
 
       &.variableRed {
-        background-color: var(--simple-fill-var-red);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -121,7 +121,7 @@
 
 
       &.selected4 {
-        background-color: var(--array-2d-row-col-bg-selected4);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -129,7 +129,7 @@
       }
 
       &.selected5 {
-        background-color: var(--array-2d-row-col-bg-selected5);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -139,7 +139,7 @@
 
 
       &.patched {
-        background-color: var(--array-2d-row-col-bg-patched);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col-patched);

@@ -1,3 +1,5 @@
+// This file, along with everythin in ArrayGraphRenderer, seems to be completely unused at the moment
+
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable class-methods-use-this */

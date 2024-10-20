@@ -1,3 +1,18 @@
+// used to display graphs, such as in the case of:
+// A*
+// Breadth First Search
+// Depth First Search
+// Dijkstra's
+// Kruskal
+// Prim
+// Warshall
+// Union Find
+
+// Or tables, such as in the case of:
+// Horspool's
+// Merge Sort List
+// Union find
+
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
@@ -367,7 +382,7 @@ class Array2DTracer extends Tracer {
         return newEl;
       }
     }
-
+    
     if (!this.splitArray.doSplit) {
       const newData = cloneDeepWith(this.data, customizer);
 
