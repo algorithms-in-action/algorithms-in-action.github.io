@@ -246,16 +246,18 @@ function HashingLPParam({ mode, list, value }) {
 
 
         <div>
-          <FormControlLabel
-            control={
-              <BlueRadio
-                checked={expand}
-                onClick={handleExpand}
-              />
-            }
-            label="Expand"
-            className="checkbox"
-          />
+          {HASHSize.smallTable && (
+            <FormControlLabel
+              control={
+                <BlueRadio
+                  checked={expand}
+                  onClick={handleExpand}
+                />
+              }
+              label="Expand"
+              className="checkbox"
+            />
+          )}
         </div>
       </div>
 
