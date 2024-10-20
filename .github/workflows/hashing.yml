@@ -2,12 +2,12 @@ name: Hashing Algorithms CI
 
 on:
   push:
-    branches: [2024-sem2]
+    branches: [2024_sem2]
     paths-ignore:
       - 'doc/**' # Ignore all files and subdirectories under "doc/"
       - 'docs/**' # Ignore all files and subdirectories under "docs/"
   pull_request:
-    branches: [2024-sem2]
+    branches: [2024_sem2]
 
 jobs:
   test:
