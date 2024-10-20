@@ -28,6 +28,9 @@ import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 import PropTypes from 'prop-types';
 
+const ALGOS_USING_FLOAT_BOX = ["HashingCH"]; // Add your algo to this if you want to use the float box
+const ALGOS_WITH_FIRST_COL_AS_HEADERS = ["HashingCH", "HashingLP", "HashingDH"]; // Add your algo to this if your algo has the first column as the headers
+
 let modename;
 export function switchmode(modetype = mode()) {
   switch (modetype) {
@@ -84,6 +87,10 @@ ScrollToHighlight.propTypes = {
   j: PropTypes.number.isRequired,
 }
 
+const handleMouseEnter = (id) => {
+  console.log(id);
+}
+
 class Array2DRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -125,6 +132,9 @@ class Array2DRenderer extends Renderer {
       data_T = data[0].map((col, i) => data.map((row) => row[i]));
     }
     // const isArray1D = this instanceof Array1DRenderer;
+
+    // These are for setting up the floating boxes
+    const firstColIsHeaders = ALGOS_WITH_FIRST_COL_AS_HEADERS.includes(algo);
 
     // XXX sometimes caption (listOfNumbers) is longer than any row...
     function createArray(data, toString, longestRow, currentSub, subArrayNum) {
@@ -168,7 +178,7 @@ class Array2DRenderer extends Renderer {
           style={{
             height: (
               subArrayNum > 1 &&
-              (algo === 'HashingLP' || algo === 'HashingDH')
+              (algo === 'HashingLP' || algo === 'HashingDH' || algo === 'HashingCH')
             ) ? 5 : styles.row.height
           }}
         >
@@ -187,6 +197,7 @@ class Array2DRenderer extends Renderer {
             algo !== 'msort_lista_td' &&
             algo !== 'HashingLP' &&
             algo !== 'HashingDH' &&
+            algo !== 'HashingCH' &&
             longestRow.map((_, i) => {
               if (algo === 'tc') {
                 i += 1;
@@ -241,24 +252,58 @@ class Array2DRenderer extends Renderer {
 
                 return (
                   <td
-                    className={classes(
-                      styles.col,
-                      (i === highlightRow) && styles.highlightRow,
-                      col.selected && styles.selected,
-                      col.patched && styles.patched,
-                      col.sorted && styles.sorted,
-                      col.selected1 && styles.selected1,
-                      col.selected2 && styles.selected2,
-                      col.selected3 && styles.selected3,
-                      varGreen && styles.variableGreen,
-                      varOrange && styles.variableOrange,
-                      varRed && styles.variableRed,
-                    )}
-                    key={j}
+                  className={classes(
+                    styles.col,
+                    (i === highlightRow) && styles.highlightRow,
+                    col.selected && styles.selected,
+                    col.patched && styles.patched,
+                    col.sorted && styles.sorted,
+                    col.selected1 && styles.selected1,
+                    col.selected2 && styles.selected2,
+                    col.selected3 && styles.selected3,
+                    varGreen && styles.variableGreen,
+                    varOrange && styles.variableOrange,
+                    varRed && styles.variableRed,
+                  )}
+                  key={j}
+                  onMouseEnter={(e) => {
+                    let element = e.target.children[1];
+                    if (element && element.innerHTML !== "") {
+                      element.style.display = 'block'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    let element = e.target.children[1];
+                    if (element && element.innerHTML !== "") {
+                      element.style.display = 'none'
+                    }
+                  }}
                   >
-                    <span className={styles.value}>
-                      {toString(col.value)}
-                    </span>
+                    <div
+                      id={'chain_' + (parseInt(j) + parseInt(row.length * currentSub) - (firstColIsHeaders ? currentSub + 1 : 0))}
+                    >
+                      <span className={styles.value}>
+                        {toString(col.value)}
+                      </span>
+                    </div>
+                    {
+                      (i == 1 && ALGOS_USING_FLOAT_BOX.includes(algo) && (!(firstColIsHeaders && j == 0)) && (
+                        <div
+                          id={"float_box_" + (parseInt(j) + parseInt(row.length * currentSub) - (firstColIsHeaders ? currentSub + 1 : 0))}
+                          role="tooltip"
+                          style={{
+                            background: '#333',
+                            color: "#FFFFFF",
+                            fontWeight: "bold",
+                            padding: "4px 8px",
+                            fontSize: "13px",
+                            borderRadius: "4px",
+                            display: "none",
+                          }}
+                        >
+                        </div>
+                      ))
+                    }
                   </td>
                 );
               })
@@ -324,7 +369,8 @@ class Array2DRenderer extends Renderer {
           algo === 'msort_lista_td' ||
           algo === 'BFS' ||
           algo === 'HashingLP' ||
-          algo === 'HashingDH') &&
+          algo === 'HashingDH' ||
+          algo === 'HashingCH') &&
           data.map(
             (row, i) =>
             i === 2 && (
@@ -442,6 +488,7 @@ class Array2DRenderer extends Renderer {
 
       return (
         <div
+          id="popper_boundary"
           className={styles.container}
         >
           <div
@@ -456,7 +503,8 @@ class Array2DRenderer extends Renderer {
             }}
             >
             {(algo === 'HashingLP' ||
-              algo === 'HashingDH' ) &&
+              algo === 'HashingDH' ||
+              algo === 'HashingCH') &&
               kth !== '' &&
               ((kth.fullCheck === undefined) && (kth.reinserting === undefined) ?
                 (
@@ -472,8 +520,14 @@ class Array2DRenderer extends Renderer {
                         Insertions: {kth.insertions}
                       </span>
                     )}
-                    &emsp;&emsp;&emsp;&emsp;
-                    Increment: {kth.increment}
+                    {algo !== 'HashingCH' && (
+                      <span
+                      className={styles.captionHashing}
+                      >
+                        &emsp;&emsp;&emsp;&emsp;
+                        Increment: {kth.increment}
+                      </span>
+                    )}
                   </span>
                 ) : ((kth.fullCheck !== undefined) ? (
                   <span

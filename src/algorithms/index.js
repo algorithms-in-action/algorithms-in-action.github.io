@@ -151,7 +151,7 @@ const allalgs = {
   },
 
   'HashingLP': {
-    name: 'Hashing (Linear probing)',
+    name: 'Hashing (Linear Probing)',
     category: 'Insert/Search',
     param: <Param.HashingLPParam/>,
     instructions: Instructions.HashingInstruction,
@@ -168,7 +168,7 @@ const allalgs = {
   },
 
   'HashingDH': {
-    name: 'Hashing (Double hashing)',
+    name: 'Hashing (Double Hashing)',
     category: 'Insert/Search',
     param: <Param.HashingDHParam/>,
     instructions: Instructions.HashingInstruction,
@@ -180,6 +180,23 @@ const allalgs = {
     },
     controller: {
       insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingCH': {
+    name: 'Hashing (Chaining) Prototype',
+    category: 'Insert/Search',
+    param: <Param.HashingCHParam/>,
+    instructions: Instructions.HashingInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.chaining,
+      search: Pseudocode.chainingSearch,
+    },
+    controller: {
+      insertion: Controller.HashingChainingInsertion,
       search: Controller.HashingSearch,
     },
   },
