@@ -57,7 +57,6 @@ export default {
     const TARGET = params.target; // Target value we are searching for
     const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
-    console.log(table);
 
     // Variable for testing
     let found = true;
@@ -169,36 +168,49 @@ export default {
     /** This part is for Chaining */
     else {
 
-      // chunker.add(
-      //   IBookmarks.Pending,
-      //   (vis, idx) => {
-      //       vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Fill pending slots with yellow
-      //   },
-      //   [i]
-      // );
+      chunker.add(
+        IBookmarks.Pending,
+        (vis, idx) => {
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Fill pending slots with yellow
+        },
+        [i]
+      );
 
-      // // Chunker for found
-      // if (table[i].includes(TARGET)) {
-      //   chunker.add(
-      //     IBookmarks.Found,
-      //     (vis, idx) => {
-      //       vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill the slot with green, indicating that the key is found
-      //     },
-      //     [i]
-      //   );
-      // }
+      // Chunker for found
+      if (table[i] != undefined) {
+        if (Array.isArray(table[i])) {
+          if (table[i].includes(TARGET)) {
+            chunker.add(
+              IBookmarks.Found,
+              (vis, idx) => {
+                vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill the slot with green, indicating that the key is found
+              },
+              [i]
+            );
+          }
+          if (table[i] === TARGET) {
+            chunker.add(
+              IBookmarks.Found,
+              (vis, idx) => {
+                vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill the slot with green, indicating that the key is found
+              },
+              [i]
+            );
+          }
+        }
+      }
 
-      // // Chunker for not found
-      // else {
-      //   chunker.add(
-      //     IBookmarks.NotFound,
-      //     (vis, idx) => {
-      //       vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill last slot with red
-      //       found = false; // Set testing variable
-      //     },
-      //     [i]
-      //   );
-      // }
+      // Chunker for not found
+      else {
+        chunker.add(
+          IBookmarks.NotFound,
+          (vis, idx) => {
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Collision); // Fill last slot with red
+            found = false; // Set testing variable
+          },
+          [i]
+        );
+      }
       return found; // Return found or not for testing
     }
   },

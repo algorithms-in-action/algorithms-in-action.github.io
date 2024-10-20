@@ -185,7 +185,7 @@ const allalgs = {
   },
 
   'HashingCH': {
-    name: 'Hashing (Chaining) Prototype',
+    name: 'Hashing (Chaining)',
     category: 'Insert/Search',
     param: <Param.HashingCHParam/>,
     instructions: Instructions.HashingInstruction,
