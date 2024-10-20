@@ -57,8 +57,6 @@ export default {
     const TARGET = params.target; // Target value we are searching for
     const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
-    console.log(table);
-    console.log(TARGET);
 
     // Variable for testing
     let found = true;
