@@ -66,7 +66,11 @@ const hashingInstructions2 = [
      - x : Insert x into table.
      - x - y: Bulk insert from integers x to y.
      - x - y - z: Bulk insert from integers x to y in steps of z.
-     - -x: Delete x from table.`,
+     - -x: Delete x from table.
+
+    If you wish to input more integers, select the Expand radio button.
+    The table will now expand after reaching 80% capacity`,
+
     `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
     `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
     ],
