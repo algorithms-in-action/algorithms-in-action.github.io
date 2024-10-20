@@ -532,6 +532,8 @@ class Array2DTracer extends Tracer {
    */
   extractArray(row, empty) {
     let extract = [];
+    // currently does not support empty character replacement
+    // to implement later
     if (!this.splitArray.doSplit) {
       if (Array.isArray(row) && row.length) {
         for (const i of row) {
@@ -546,39 +548,56 @@ class Array2DTracer extends Tracer {
       let combined = [];
       if (this.splitArray.hasHeader) {
         for (const array of this.data) {
+          // get the first subarray
           if (!combined.length) {
             combined = array.map((arr) => arr.slice(1));
             continue;
           }
 
+          // append the next subarray
           for (let i = 0; i < combined.length; i++) {
             combined[i] = [...combined[i], ...array[i].slice(1)];
           }
         }
       } else {
         for (const array of this.data) {
+          // get the first subarray
           if (!combined.length) {
             combined = array;
             continue;
           }
 
+          // append the next subarray
           for (let i = 0; i < combined.length; i++) {
             combined[i] = [...combined[i], ...array[i]];
           }
         }
       }
 
+      // extract the value array
       if (Array.isArray(row) && row.length) {
+        // extracting multiple rows
         for (const i of row) {
+          // get the value
           extract.push(combined[i].map((e) => e.value));
         }
       } else {
+        // get the value
         extract = combined[row].map((e) => e.value);
       }
     }
 
+    // change an empty character to undefined
+    // also extract a chaining array for hash chaining
     for (let i = 0; i < extract.length; i++) {
       extract[i] = (extract[i] === empty) ? undefined : extract[i];
+      if (typeof extract[i] === 'string') {
+        if (extract[i].includes("..")) {
+          let popper = document.getElementById('float_box_' + i);
+          let array = popper.innerHTML.split(',').map(Number);
+          extract[i] = array;
+        }
+      }
     }
     return extract;
   }
