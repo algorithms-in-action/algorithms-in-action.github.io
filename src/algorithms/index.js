@@ -154,7 +154,7 @@ const allalgs = {
     name: 'Hashing (Linear Probing)',
     category: 'Insert/Search',
     param: <Param.HashingLPParam/>,
-    instructions: Instructions.HashingInstruction,
+    instructions: Instructions.HashingLPDHInstruction,
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
@@ -171,7 +171,7 @@ const allalgs = {
     name: 'Hashing (Double Hashing)',
     category: 'Insert/Search',
     param: <Param.HashingDHParam/>,
-    instructions: Instructions.HashingInstruction,
+    instructions: Instructions.HashingLPDHInstruction,
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
@@ -188,7 +188,7 @@ const allalgs = {
     name: 'Hashing (Chaining)',
     category: 'Insert/Search',
     param: <Param.HashingCHParam/>,
-    instructions: Instructions.HashingInstruction,
+    instructions: Instructions.HashingCHInstruction,
     explanation: Explanation.HashingExp,
     extraInfo: ExtraInfo.HashingInfo,
     pseudocode: {
