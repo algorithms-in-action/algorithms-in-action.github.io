@@ -152,7 +152,7 @@ export function run_msort() {
 
       chunker.add('left', (vis, c_left) => {
         assignVarToA(vis, 'left', c_left, size);
-        assignVarToA(vis, "size", size, size);
+        // assignVarToA(vis, "size", size, size);
       }, [left]);
 
       do {
@@ -321,9 +321,13 @@ export function run_msort() {
           chunker.add('CopyRest1', (vis, a, b, c_ap1, c_max1, c_left, c_right, c_mid, c_bp, c_rcount) => {
             // future color: should be runAColor & runBColor
             resetArrayA(vis, "nat", a, c_left, c_mid, c_right, c_rcount, runAColor, runCColor);
-            if (isMergeExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeExpanded()) {
+              vis.arrayB.set(b, 'msort_arr_nat');
+              assignVarToB(vis, 'bp', c_bp, size);
+            }
             assignVarToA(vis, 'ap1', c_ap1, size);
             assignVarToA(vis, 'max1', c_max1, size);
+
             // to highlight the solrted elements of B array green / colorC
             for (let i = c_left; i < c_bp; i++) highlightB(vis, i, sortColor);
           }, [A, B, ap1, max1, left, right, mid, bp, runcount]);
@@ -334,15 +338,19 @@ export function run_msort() {
             A[i] = undefined;
             bp = bp + 1;
           }
-          chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rcount) => {
+          chunker.add('CopyRest2', (vis, a, b, c_ap2, c_max2, c_left, c_right, c_mid, c_rcount, c_bp) => {
             // future color: should be runAColor & runBColor
             resetArrayA(vis, "nat", a, c_left, c_mid, c_right, c_rcount, runAColor, runCColor);
-            if (isMergeCopyExpanded()) vis.arrayB.set(b, 'msort_arr_nat');
+            if (isMergeCopyExpanded()) {
+              vis.arrayB.set(b, 'msort_arr_nat');
+              assignVarToB(vis, 'bp', c_bp, size);
+
+            }
             assignVarToA(vis, 'ap2', c_ap2, size);
             assignVarToA(vis, 'max2', c_max2, size);
             // highlight sorted elements green
             for (let i = c_left; i <= c_right; i++) highlightB(vis, i, sortColor);
-          }, [A, B, ap2, max2, left, right, mid, runcount]);
+          }, [A, B, ap2, max2, left, right, mid, runcount, bp]);
 
           // copy merged elements from B to A
           for (let i = left; i <= right; i++) {
@@ -376,6 +384,7 @@ export function run_msort() {
             assignVarToA(vis, 'left', c_left, size);
             assignVarToA(vis, "right", c_right, size);
           }
+          // assignVarToA(vis, "size", size, size);
 
 
         }, [A, left, right, runcount]);
