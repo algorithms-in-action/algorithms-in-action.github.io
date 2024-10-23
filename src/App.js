@@ -94,9 +94,11 @@ function App() {
   };
 
   useEffect(() => {
-    setTheme(getWithExpiry(SYSTEM_THEME_KEY));
+    const theme = getWithExpiry(SYSTEM_THEME_KEY);
+    setTheme(theme);
     setAlgoTheme(getWithExpiry(ALGO_THEME_KEY));
-  });
+    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+  }, []);
 
   return (
     <GlobalProvider>
