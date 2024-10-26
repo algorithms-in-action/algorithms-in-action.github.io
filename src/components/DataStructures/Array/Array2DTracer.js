@@ -56,10 +56,18 @@ class Array2DTracer extends Tracer {
   /**
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
+   * @param {any} kth used to display kth
+   * @param {number} highlightRow used mark the row to highlight
+   * @param {Object} splitArray determine how to split the array
+   * @param {number} splitArray.rowLength determine the length of a split array
+   * @param {string[]} splitArray.rowHeader determine the header of each row of a split array
    */
   set(array2d = [], algo, kth = 1, highlightRow, splitArray) {
+    // set the array2d based of the splitArray values
     if (splitArray === undefined || splitArray.rowLength < 1) {
       this.splitArray = {doSplit: false};
+
+      // set the value of array cells
       this.data = array2d.map((array1d) =>
         [...array1d].map((value, i) => new Element(value, i))
       );
@@ -68,6 +76,7 @@ class Array2DTracer extends Tracer {
       this.splitArray = splitArray;
       this.splitArray.doSplit = true;
 
+      // check if the rows have headers
       if (Array.isArray(splitArray.rowHeader) && splitArray.rowHeader.length) {
         this.splitArray.hasHeader = true;
       } else {
@@ -75,8 +84,10 @@ class Array2DTracer extends Tracer {
       }
       let split = [];
 
+      // splitting the array into multiple arrays of length rowLength
       let step = 0;
       while (step < array2d[0].length) {
+        // one smaller array
         let arr2d = [];
         for (let i = 0; i < array2d.length; i++ ) {
           arr2d.push([
@@ -94,9 +105,12 @@ class Array2DTracer extends Tracer {
         }
 
         step += splitArray.rowLength;
+
+        // push to a main array of multiple split arrays
         split.push(arr2d);
       }
 
+      // set the value of array cells
       for (const item of split) {
         this.data.push(item.map((array1d) =>
           [...array1d].map((value, i) => new Element(value, i))
@@ -161,8 +175,14 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  // a simple fill function based on aia themes
-  // where green=1, yellow=2, and red=3
+  /**
+   * a simple fill function based on aia themes
+   * @param {number} sx the starting row to fill
+   * @param {number} sy the starting row to fill
+   * @param {number} ex the ending row to fill, defaults to sx
+   * @param {number} ey the ending row to fill, defaults to sy
+   * @param {number} c the color value, where green=1, yellow=2, and red=3
+   */
   fill(sx, sy, ex = sx, ey = sy, c = 0) {
     if (!this.splitArray.doSplit) {
       for (let x = sx; x <= ex; x++) {
@@ -172,8 +192,11 @@ class Array2DTracer extends Tracer {
       }
     } else {
       for (let i = 0; i < this.data.length; i++) {
+        // when it is just one cell for each row
         if (sy === ey) {
           let relativeY = sy + (this.splitArray.hasHeader ? 1 : 0);
+
+          // if the relative start position is over the split array length, wrap to next split array
           if (relativeY > this.splitArray.rowLength) {
             sy -= this.splitArray.rowLength;
             ey -= this.splitArray.rowLength;
@@ -192,6 +215,8 @@ class Array2DTracer extends Tracer {
         }
 
 
+        // when there are multiple columns
+        // if the relative start position is over the split array length, wrap to next split array
         let relativeSY = sy + (this.splitArray.hasHeader ? 1 : 0);
         if (relativeSY > this.splitArray.rowLength) {
           sy -= this.splitArray.rowLength;
@@ -199,12 +224,14 @@ class Array2DTracer extends Tracer {
           continue;
         }
 
+
+        // if the relative start position is over the split array length, limit
         let relativeEY = ey + (this.splitArray.hasHeader ? 1 : 0);
         if (relativeEY > this.splitArray.rowLength) {
           relativeEY = this.splitArray.rowLength;
         }
 
-        // out of range
+        // out of range, stop
         if (relativeEY < 0) {
           break;
         }
@@ -226,7 +253,13 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  // unfills the given element (used with fill)
+  /**
+   * unfills the given element (used with fill)
+   * @param {number} sx the starting row to unfill
+   * @param {number} sy the starting row to unfill
+   * @param {number} ex the ending row to unfill, defaults to sx
+   * @param {number} ey the ending row to unfill, defaults to sy
+   */
   unfill(sx, sy, ex = sx, ey = sy) {
     if (!this.splitArray.doSplit) {
       for (let x = sx; x <= ex; x++) {
@@ -353,7 +386,7 @@ class Array2DTracer extends Tracer {
         // add variable to item if not undefined or null
         if (idx !== null && idx !== undefined) {
           // check if idx is in subarray
-          // add i to account for header offset
+          // account for header offset
           let relativeIdx = idx + (this.splitArray.hasHeader ? 1 : 0);
           if (relativeIdx > 0 && relativeIdx <= this.splitArray.rowLength)
             _newData[row][relativeIdx].variables.push(v);
@@ -382,7 +415,7 @@ class Array2DTracer extends Tracer {
         return newEl;
       }
     }
-    
+
     if (!this.splitArray.doSplit) {
       const newData = cloneDeepWith(this.data, customizer);
 

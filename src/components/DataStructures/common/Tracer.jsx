@@ -38,7 +38,10 @@ class Tracer {
   set() {
   }
 
-  // set visualiser size multiplier
+  /**
+   * Set visualiser size (flex value for renderer)
+   * @param {*} size
+   */
   setSize(size) {
     this.size = size;
   }
