@@ -109,7 +109,6 @@ function assert(condition, message) {
     }
 }
 
-
 export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
     let left, right, depth;
     [left, right, depth] = stack_frame;
@@ -125,7 +124,6 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
     a[depth][mid] = { base: STACK_FRAME_COLOR.Current_stackFrame, extra: [] };
     return a;
 }
-
 
 const highlight = (vis, index, isPrimaryColor = true) => {
     if (isPrimaryColor) {
@@ -162,10 +160,6 @@ const unhighlightB = (vis, index, isPrimaryColor = true) => {
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-
-// Just use a single 2D array to represent lists for now.  Could
-// possibly add a 1D array with arrayItemMagnitudes: true and rearrange
-// data at the end to show sortedness XXX
 export function initVisualisers() {
     return {
         llist: {
@@ -181,7 +175,6 @@ export function initVisualisers() {
  * @param {object} chunker
  * @param {array} nodes array of numbers needs to be sorted
  */
-
 export function run_msort() {
 
     return function run(chunker, { nodes }) {
@@ -261,20 +254,17 @@ export function run_msort() {
 
         function MergeSort(L, len, depth) {
 
-
-            //// start mergesort -------------------------------------------------------- 
-            // XXXXX
+            //// start mergesort --------------------------------------------------------
 
             // XXX defined function to display first couple of list elements
             simple_stack.unshift('([' + linkedList[L] + '..],' + len + ')');
 
-            // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
+            // should show animation if doing high level steps for whole array OR if code is expanded to do all recursive steps
 
             chunker.add('Main', (vis, lists, cur_L, cur_len, cur_depth, c_stk) => {
-                vis.llist.addList(lists);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.select(0, lists.length);
-                set_simple_stack(vis.llist, c_stk);
+                // set_simple_stack(vis.llist, c_stk);
 
             }, [linkedList, L, len, depth, simple_stack], depth);
 
@@ -310,6 +300,7 @@ export function run_msort() {
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.select(cur_L);
                     vis.llist.select(cur_R);
+                    vis.llist.splitList(cur_R);
                 }, [linkedList, L, Mid, R, simple_stack], depth);
 
                 console.log("current L1:" + L);
@@ -349,6 +340,11 @@ export function run_msort() {
         for (let i = 0; i < entire_num_array.length; i++) {
             linkedList.push(entire_num_array[i]);
         }
+
+        chunker.add('Main', (vis, lists) => {
+            vis.llist.addList(lists);
+        }, [linkedList]);
+
         const msresult = MergeSort(0, entire_num_array.length - 1, 0);
         // const msresult = 0;
 
