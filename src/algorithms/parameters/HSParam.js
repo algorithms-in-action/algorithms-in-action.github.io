@@ -10,7 +10,7 @@ import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for UR
 import { URLContext } from '../../context/urlState.js';
 import '../../styles/Param.scss';
 
-
+// export const DEFAULT_NODES = genRandNumList(12, 1, 50);
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
 const HEAP_SORT = 'Heap Sort';
 const HEAP_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
@@ -20,13 +20,13 @@ function HeapsortParam({ list }) { // add the parsing parameters for your algori
     // const { alg, mode, param } = useUrlParams();
     // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
     // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
-    const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
+    // const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
     const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
     const [message, setMessage] = useState(null);
     const { setNodes } = useContext(URLContext);
 
     useEffect(() => {
-        setNodes(localNodes); 
+        setNodes(localNodes);
     }, [localNodes]);
 
     return (
