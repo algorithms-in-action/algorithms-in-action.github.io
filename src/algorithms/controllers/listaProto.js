@@ -264,6 +264,7 @@ export function run_msort() {
             chunker.add('Main', (vis, lists, cur_L, cur_len, cur_depth, c_stk) => {
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.select(0, lists.length);
+
                 // set_simple_stack(vis.llist, c_stk);
 
             }, [linkedList, L, len, depth, simple_stack], depth);
@@ -296,19 +297,16 @@ export function run_msort() {
                 }, [linkedList, L, Mid, R, simple_stack], depth);
 
                 chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
-                    set_simple_stack(vis.array, c_stk);
                     vis.llist.assignVariable('L', cur_L);
-                    vis.llist.select(cur_L);
-                    vis.llist.select(cur_R);
+                    vis.llist.deselect(cur_R);
                     vis.llist.splitList(cur_R);
                 }, [linkedList, L, Mid, R, simple_stack], depth);
 
-                console.log("current L1:" + L);
-
                 L = MergeSort(L, Mid, depth + 1);
 
+                R = MergeSort(R, len - Mid, depth + 1);
+
                 chunker.add('sortL', (vis, lists, cur_L, cur_R, cur_Mid, c_stk) => {
-                    set_simple_stack(vis.array, c_stk);
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.assignVariable('R', cur_R);
                     // colour all of L list
@@ -326,6 +324,8 @@ export function run_msort() {
                 return L;
 
             }
+
+            return L;
 
         }
 
