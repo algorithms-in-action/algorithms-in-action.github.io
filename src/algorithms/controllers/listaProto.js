@@ -263,7 +263,8 @@ export function run_msort() {
             // should show animation if doing high level steps for whole array OR if code is expanded to do all recursive steps
 
             chunker.add('Main', (vis, lists, cur_L, cur_len, cur_depth, c_stk) => {
-                console.log(cur_L);
+                vis.llist.clearSelect();
+                vis.llist.clearVariables();
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.select(cur_L, cur_len);
             }, [linkedList, L, R, depth, simple_stack], depth);
@@ -281,7 +282,7 @@ export function run_msort() {
 
                 Mid = Math.floor((R+L) / 2);
 
-                // split L into lists L and R at (after) mid point
+                // split L into lists L and R at (after) mid-point
                 let newR = Mid + 1;
 
                 chunker.add('tail(Mid)<-Null', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
@@ -301,9 +302,13 @@ export function run_msort() {
 
                 L = MergeSort(L, Mid, depth + 1);
                 R = MergeSort(newR, R, depth + 1);
-
-
             }
+            // Merge if length is 2 or less.
+            merge(L,R);
+        }
+
+        function merge(L,R) {
+
         }
 
 

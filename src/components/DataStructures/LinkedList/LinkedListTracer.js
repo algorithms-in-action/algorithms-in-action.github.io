@@ -240,9 +240,10 @@ class LinkedListTracer extends Tracer {
     select(startIndex, endIndex = startIndex) {
         const {listIndex, layerIndex} = this.findNode(startIndex);
         const list = this.findList(listIndex, layerIndex);
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = true;
+
+        for (let node of list.data) {
+            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                node.selected = true;
             }
         }
     }
@@ -251,11 +252,21 @@ class LinkedListTracer extends Tracer {
     deselect(startIndex, endIndex = startIndex) {
         const {listIndex, layerIndex} = this.findNode(startIndex);
         const list = this.findList(listIndex, layerIndex);
-        for (let i = startIndex; i <= endIndex; i++) {
-            if (i >= 0 && i < list.size) {
-                list.data[i].selected = false;
+
+        for (let node of list.data) {
+            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                node.selected = false;
             }
         }
+    }
+
+    // Clears all variables from all nodes in all lists
+    clearSelect() {
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                node.selected = false;
+            });
+        });
     }
 
     // Adds a variable to a specific node in a specific list
