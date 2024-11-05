@@ -252,40 +252,37 @@ export function run_msort() {
                 ;
         }
 
-        function MergeSort(L, len, depth) {
+        function MergeSort(L, R, depth) {
+            console.log(L, "&", R);
 
             //// start mergesort --------------------------------------------------------
 
             // XXX defined function to display first couple of list elements
-            simple_stack.unshift('([' + linkedList[L] + '..],' + len + ')');
+            simple_stack.unshift('([' + linkedList[L] + '..],' + R + ')');
 
             // should show animation if doing high level steps for whole array OR if code is expanded to do all recursive steps
 
             chunker.add('Main', (vis, lists, cur_L, cur_len, cur_depth, c_stk) => {
+                console.log(cur_L);
                 vis.llist.assignVariable('L', cur_L);
-                vis.llist.select(0, lists.length);
-
-                // set_simple_stack(vis.llist, c_stk);
-
-            }, [linkedList, L, len, depth, simple_stack], depth);
+                vis.llist.select(cur_L, cur_len);
+            }, [linkedList, L, R, depth, simple_stack], depth);
 
             chunker.add('len>1', (vis, lists) => {
             }, [linkedList], depth);
 
-            if (len > 1) {
+            // Split if length more than 2.
+            if (R - L > 1) {
                 let Mid = L;
 
                 chunker.add('Mid', (vis, lists, cur_L, cur_Mid, c_stk) => {
-                    // vis.array.set(Lists, 'msort_lista_td');
-                    // set_simple_stack(vis.array, c_stk);
                     vis.llist.assignVariable('Mid', cur_Mid);
                 }, [linkedList, L, Mid, simple_stack], depth);
-                // XXX chunker.add...
 
-                Mid = Math.floor(len / 2);
+                Mid = Math.floor((R+L) / 2);
 
                 // split L into lists L and R at (after) mid point
-                let R = Mid + 1;
+                let newR = Mid + 1;
 
                 chunker.add('tail(Mid)<-Null', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.deselect(0, lists.length);
@@ -294,39 +291,19 @@ export function run_msort() {
                     vis.llist.assignVariable('R', cur_R);
                     vis.llist.select(cur_L);
                     vis.llist.select(cur_R);
-                }, [linkedList, L, Mid, R, simple_stack], depth);
+                }, [linkedList, L, Mid, newR, simple_stack], depth);
 
                 chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.deselect(cur_R);
                     vis.llist.splitList(cur_R);
-                }, [linkedList, L, Mid, R, simple_stack], depth);
+                }, [linkedList, L, Mid, newR, simple_stack], depth);
 
                 L = MergeSort(L, Mid, depth + 1);
+                R = MergeSort(newR, R, depth + 1);
 
-                R = MergeSort(R, len - Mid, depth + 1);
-
-                chunker.add('sortL', (vis, lists, cur_L, cur_R, cur_Mid, c_stk) => {
-                    vis.llist.assignVariable('L', cur_L);
-                    vis.llist.assignVariable('R', cur_R);
-                    // colour all of L list
-
-
-                    for (let i = cur_L; i < cur_R; i++) {
-                        vis.llist.patch(i);
-                    }
-
-                    vis.llist.select(cur_R);
-                    vis.llist.select(cur_R);
-
-                }, [linkedList, L, R, Mid, simple_stack], depth);
-                console.log("L before return:" + L);
-                return L;
 
             }
-
-            return L;
-
         }
 
 

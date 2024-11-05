@@ -34,7 +34,6 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const { lists } = this.state;
         const layers = this.layer(lists);
-        console.log(layers);
 
         return (
             <AnimateSharedLayout>
@@ -65,7 +64,6 @@ class LinkedListRenderer extends Renderer {
                                             >
                                                 {/* Nodes */}
                                                 <div className={classes(styles.value)}>
-                                                    {console.log(node.key)}
                                                     {node.value}
                                                 </div>
 

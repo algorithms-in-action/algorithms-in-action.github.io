@@ -107,9 +107,12 @@ class LinkedListTracer extends Tracer {
         }
     }
 
-    splitList(nodeIndex, listIndex = 0, layerIndex = 0) {
+    splitList(nodeKey) {
+        const {listIndex, layerIndex} = this.findNode(nodeKey);
         const { key, data } = this.findList(listIndex, layerIndex);
         if (key < 0) return;
+
+        let nodeIndex = data.findIndex(node => node.key === nodeKey);
 
         const left = data.slice(0, nodeIndex);
         const right = data.slice(nodeIndex);
@@ -117,7 +120,6 @@ class LinkedListTracer extends Tracer {
 
         // Old list
         this.deleteList(key);
-
         this.addList(left, "nodes", listIndex, layerIndex);
         this.addList(right, "nodes", listIndex + 1, layerIndex);
     }
@@ -128,6 +130,16 @@ class LinkedListTracer extends Tracer {
 
     findList(listIndex, layerIndex) {
         return this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
+    }
+
+    findNode(key) {
+        for (let list of this.lists) {
+            for (let node of list.data) {
+                if (node.key === key) {
+                    return list;
+                }
+            }
+        }
     }
 
     // Visual shift right, no change to index
@@ -142,7 +154,6 @@ class LinkedListTracer extends Tracer {
         if (this.findList(newIndex, 0)) {
             // if stack, place at last open layer.
             if (method === 'stack') {
-                console.log('stacking');
                 let i = 0;
                 while (this.findList(newIndex, i)) {
                     i++;
@@ -156,7 +167,6 @@ class LinkedListTracer extends Tracer {
 
             // if insert, shift all to right.
             else if (method === 'insert') {
-                console.log('inserting');
                 this.moveList(newIndex, 0, newIndex + 1, 'insert');
                 List.layerIndex = 0;
                 List.listIndex = newIndex;
@@ -227,7 +237,8 @@ class LinkedListTracer extends Tracer {
     }
 
     // Selects a node or a range of nodes in a specific list
-    select(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
+    select(startIndex, endIndex = startIndex) {
+        const {listIndex, layerIndex} = this.findNode(startIndex);
         const list = this.findList(listIndex, layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {
@@ -237,7 +248,8 @@ class LinkedListTracer extends Tracer {
     }
 
     // Deselects a node or a range of nodes in a specific list
-    deselect(startIndex, endIndex = startIndex, listIndex = 0, layerIndex = 0) {
+    deselect(startIndex, endIndex = startIndex) {
+        const {listIndex, layerIndex} = this.findNode(startIndex);
         const list = this.findList(listIndex, layerIndex);
         for (let i = startIndex; i <= endIndex; i++) {
             if (i >= 0 && i < list.size) {
@@ -249,9 +261,11 @@ class LinkedListTracer extends Tracer {
     // Adds a variable to a specific node in a specific list
     addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
         const list = this.findList(listIndex, layerIndex);
-        if (list && nodeIndex >= 0 && nodeIndex < list.size) {
-            list.data[nodeIndex].variables.push(variable);
-            this.syncChartTracer();
+        for (let node of list.data) {
+            if (node.key===nodeIndex) {
+                node.variables.push(variable);
+                this.syncChartTracer();
+            }
         }
     }
 
@@ -276,9 +290,10 @@ class LinkedListTracer extends Tracer {
     }
 
     // Assigns a variable to a specific node in a specific list, removing it from all others
-    assignVariable(variable, nodeIndex, listIndex = 0) {
+    assignVariable(variable, nodeIndex) {
+        const {listIndex, layerIndex} = this.findNode(nodeIndex);
         this.removeVariable(variable);
-        this.addVariable(variable, nodeIndex, listIndex);
+        this.addVariable(variable, nodeIndex, listIndex, layerIndex);
     }
 
     // Synchronizes the chart tracer
