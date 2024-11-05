@@ -102,7 +102,7 @@ Merge
 
 \\Code{
 initM
-    if head(L) < head(R)
+    if head(L) < head(R) \\B headhead
     \\In{
         M <- L \\B M<-L
         L <- tail(L) \\B L<-tail(L)

@@ -253,7 +253,6 @@ export function run_msort() {
         }
 
         function MergeSort(L, R, depth) {
-            console.log(L, "&", R);
 
             //// start mergesort --------------------------------------------------------
 
@@ -300,15 +299,39 @@ export function run_msort() {
                     vis.llist.splitList(cur_R);
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
+                chunker.add('sortL', (vis, Lists) => {
+                }, [linkedList], depth);
+
                 L = MergeSort(L, Mid, depth + 1);
+
+
+                chunker.add('sortR', (vis, Lists) => {
+                }, [linkedList], depth);
+
                 R = MergeSort(newR, R, depth + 1);
+
             }
             // Merge if length is 2 or less.
+            console.log(L, R);
             merge(L,R);
+            return L;
         }
 
-        function merge(L,R) {
+        function merge(L,R, depth) {
 
+            // Lines two lists vertically
+            chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
+                let listA = vis.llist.findNode(cur_L);
+                let listB = vis.llist.findNode(cur_R);
+                vis.llist.assignVariable('L', cur_L);
+                vis.llist.assignVariable('R', cur_R);
+                vis.llist.patch(cur_L);
+                vis.llist.patch(cur_R);
+                vis.llist.splitList(cur_R);
+                vis.llist.moveList(listA.listIndex, listA.layerIndex, listB.listIndex, "stack");
+            }, [linkedList, L, R, simple_stack], depth);
+
+            //
         }
 
 

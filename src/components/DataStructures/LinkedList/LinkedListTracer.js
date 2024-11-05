@@ -140,6 +140,7 @@ class LinkedListTracer extends Tracer {
                 }
             }
         }
+        return null;
     }
 
     // Visual shift right, no change to index
@@ -220,11 +221,15 @@ class LinkedListTracer extends Tracer {
         return maxSize;
     }
     // Patches/highlights a node at a specific index in a specific list
-    patch(nodeIndex, listIndex = 0, layerIndex = 0) {
+    patch(startIndex, endIndex = startIndex) {
+        console.log(startIndex);
+        const {listIndex, layerIndex} = this.findNode(startIndex);
         const list = this.findList(listIndex, layerIndex);
-        if (list && nodeIndex >= 0 && nodeIndex < list.size) {
-            list.data[nodeIndex].patched = true;
-            list.data[nodeIndex].selected = false;
+
+        for (let node of list.data) {
+            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                node.patched = true;
+            }
         }
     }
 
