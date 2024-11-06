@@ -1,6 +1,6 @@
 @import "../../common/stylesheet/index";
 
-.LayerContainer {
+.IndexContainer {
   padding-top: 10px;
   display: flex;
   flex-direction: row;
@@ -11,88 +11,98 @@
   /* border*/
 
 
-  .linkedListContainer {
+  .LayerContainer {
     display: flex;
     flex-direction: column;
     /* secondary vertical stack */
-    align-items: center;
+    align-items: start;
     /* Separate layers align at start*/
 
-
-    .nodeContainer {
-      position: relative;
+    .LinkedListContainer {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      /* Horizontal lists for identical indices */
+      align-items: start;
       margin: 15px 10px 15px 10px;
-      /* gap between vertical layers */
+      /* Separate Lists */
 
-
-      .node {
-        background-color: var(--linked-list-node-bg);
-        border: 2px solid var(--linked-list-node-border);
-        height: 30px;
-        width: 30px;
-
+      .nodeContainer {
+        // position: relative;
         display: flex;
-        flex-direction: column;
-        /* Node elements in a column*/
-        align-items: center;
-        justify-content: flex-start;
+        flex-direction: row;
+        align-items: flex-start;
 
-        &.visited {
-          background-color: var(--linked-list-highlighted-bg);
-          border: 2px solid var(--linked-list-highlighted-border);
+        &.invisible {
+          visibility: hidden;
         }
 
-        &.selected {
-          background-color: var(--linked-list-selected-bg);
-          border: 2px solid var(--linked-list-selected-border);
-        }
-
-        .value {
-          padding-top: 6px;
-          font-size: 16px;
-          font-weight: bold;
-          color: var(--linked-list-node-value-color);
-        }
-
-        .label {
-          vertical-align: center;
-          font-size: 20px;
-          font-weight: bold;
-          color: var(--linked-list-caption-color);
-          transform: translateY(5px);
-          /* translate down*/
-
-          display: grid;
-        }
-      }
-
-      .symbol {
-        position: relative;
-        /* or relative based on your layout */
-        vertical-align: center;
-        color: var(--linked-list-node-bg);
-
-        .arrow {
-          height: 40px;
+        .node {
+          background-color: var(--linked-list-node-bg);
+          border: 2px solid var(--linked-list-node-border);
+          height: 30px;
           width: 30px;
 
-          &.up {
-            transform: rotate(-90deg) translateY(-32px) translateX(32px);
+          display: flex;
+          flex-direction: column;
+          /* Node elements in a column*/
+          align-items: center;
+          justify-content: flex-start;
+
+
+          &.visited {
+            background-color: var(--linked-list-highlighted-bg);
+            border: 2px solid var(--linked-list-highlighted-border);
           }
 
-          &.down {
-            transform: rotate(90deg) translateY(32px) translateX(32px);
+          &.selected {
+            background-color: var(--linked-list-selected-bg);
+            border: 2px solid var(--linked-list-selected-border);
           }
 
-          &.diagDown {
-            transform: rotate(45deg) translateY(20px) translateX(20px);
+          .value {
+            padding-top: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--linked-list-node-value-color);
           }
 
-          &.diagUp {
-            transform: rotate(-45deg) translateY(-20px) translateX(20px);
+          .label {
+            vertical-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--linked-list-caption-color);
+            transform: translateY(5px);
+            /* translate down*/
+
+            display: grid;
+          }
+        }
+
+        .symbol {
+          position: relative;
+          /* or relative based on your layout */
+          vertical-align: center;
+          color: var(--linked-list-node-bg);
+
+          .arrow {
+            height: 40px;
+            width: 30px;
+
+            &.up {
+              transform: rotate(-90deg) translateY(-32px) translateX(32px);
+            }
+
+            &.down {
+              transform: rotate(90deg) translateY(32px) translateX(32px);
+            }
+
+            &.diagDown {
+              transform: rotate(45deg) translateY(20px) translateX(20px);
+            }
+
+            &.diagUp {
+              transform: rotate(-45deg) translateY(-20px) translateX(20px);
+            }
           }
         }
       }

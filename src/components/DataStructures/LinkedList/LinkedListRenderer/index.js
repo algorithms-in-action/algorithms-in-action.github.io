@@ -34,22 +34,26 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const { lists } = this.state;
         const layers = this.layer(lists);
+        console.log(layers);
 
         return (
             <AnimateSharedLayout>
-                <motion.div className={styles.LayerContainer}
+                <motion.div className={styles.IndexContainer}
                     drag
                 >
                     {this.renderSymbols()}
 
                     {layers.map((layer, layerIndex) => (
-                        <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
+                        <div className={styles.LayerContainer} key={`layer-${layerIndex}`}>
 
                             {layer.map((list, listIndex) => (
-                                <div className={styles.nodeContainer} key={`list-${listIndex}`}
-                                    style={{ transform: `translate(${list.unitShift * 76}px)` }}>
+                                <div className={styles.LinkedListContainer} key={`linkedList-${listIndex}`}>
 
                                     {list.data.map((node, nodeIndex) => (
+                                        <div className={classes(styles.nodeContainer,
+                                             )}
+                                             key={`list-${listIndex}`}
+                                             style={{transform: `translate(${list.unitShift * 76}px)`}}>
 
                                         <React.Fragment>
                                             <motion.div
@@ -57,10 +61,10 @@ class LinkedListRenderer extends Renderer {
                                                 layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
                                                     node.selected && styles.selected,
-                                                    node.patched && styles.visited
+                                                    node.patched && styles.visited,
                                                 )}
-                                                whileHover={{ scale: 1.2 }}
-                                                transition={{ type: 'spring', stiffness: 100 }}
+                                                whileHover={{scale: 1.2}}
+                                                transition={{type: 'spring', stiffness: 100}}
                                             >
                                                 {/* Nodes */}
                                                 <div className={classes(styles.value)}>
@@ -69,8 +73,9 @@ class LinkedListRenderer extends Renderer {
 
                                                 {/* Labels */}
                                                 {node.variables.map((variable, variableIndex) => (
-                                                    <div className={styles.label} key={`variable-${variableIndex}`}
-                                                        layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
+                                                    <div className={styles.label}
+                                                         key={`variable-${variableIndex}`}
+                                                         layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
                                                     >
                                                         {variable}
                                                     </div>))}
@@ -88,28 +93,19 @@ class LinkedListRenderer extends Renderer {
                                                         node.arrow === 45 && styles.diagDown,
                                                         node.arrow === -45 && styles.diagUp)
                                                     }>
-                                                        <use href="#arrow-symbol" />
+                                                        <use href="#arrow-symbol"/>
                                                     </svg>
-
-                                                    {
-                                                        // upwards and downwards diagonal arrows
-                                                        /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
-                                                        <use href="#downwards-diagonal"/>
-                                                    </svg> */
-                                                    }
-                                                    {
-                                                        // testing for last node
-                                                        // {list.size-nodeIndex>1 && <use href="#arrow-symbol"/>}
-                                                    }
                                                 </div>
                                             </div>
                                         </React.Fragment>
-                                    ))}
-                                </div>))}
-                        </div>))}
-                </motion.div>
-            </AnimateSharedLayout>)
-    }
+                                    </div>
+                                ))}
+                                </div>
+                            ))}
+                            </div>))}
+                        </motion.div>
+                        </AnimateSharedLayout>)
+                    }
 
     render() {
         return this.renderData();
