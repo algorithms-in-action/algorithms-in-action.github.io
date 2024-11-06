@@ -272,7 +272,8 @@ export function run_msort() {
             }, [linkedList], depth);
 
             // Split if length more than 2.
-            if (R - L > 1) {
+            if (R - L) {
+                console.log("merge");
                 let Mid = L;
 
                 chunker.add('Mid', (vis, lists, cur_L, cur_Mid, c_stk) => {
@@ -320,7 +321,7 @@ export function run_msort() {
         function merge(L,R, depth) {
             let listA, listB, headA, headB;
 
-            if (!L-R) {return}
+            if (L===R) {return}
 
             // Lines two lists vertically
             chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
@@ -328,9 +329,6 @@ export function run_msort() {
                 listB = vis.llist.findListbyNode(cur_R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
-                vis.llist.patch(cur_L);
-                vis.llist.patch(cur_R);
-                vis.llist.splitList(cur_R);
                 vis.llist.moveList(listA.listIndex, listA.layerIndex, listB.listIndex, "stack");
             }, [linkedList, L, R, simple_stack], depth);
 
@@ -353,6 +351,7 @@ export function run_msort() {
                 vis.llist.mergeLists(cur_L, cur_R);
                 vis.llist.resetArrows(cur_L);
                 vis.llist.sortList(cur_L);
+                vis.llist.patch(cur_L, cur_R);
             }, [linkedList, L, R, simple_stack], depth);
         }
 
