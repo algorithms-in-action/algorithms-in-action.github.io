@@ -318,11 +318,14 @@ export function run_msort() {
         }
 
         function merge(L,R, depth) {
+            let listA, listB, headA, headB;
+
+            if (!L-R) {return}
 
             // Lines two lists vertically
             chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
-                let listA = vis.llist.findNode(cur_L);
-                let listB = vis.llist.findNode(cur_R);
+                listA = vis.llist.findListbyNode(cur_L);
+                listB = vis.llist.findListbyNode(cur_R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
                 vis.llist.patch(cur_L);
@@ -331,7 +334,26 @@ export function run_msort() {
                 vis.llist.moveList(listA.listIndex, listA.layerIndex, listB.listIndex, "stack");
             }, [linkedList, L, R, simple_stack], depth);
 
-            //
+            // Change pointer iteratively
+            chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
+                listA = vis.llist.findListbyNode(cur_L);
+                listB = vis.llist.findListbyNode(cur_R);
+                headA = listA.data[0];
+                headB = listB.data[0];
+
+                vis.llist.clearVariables();
+
+                // optimise into one line
+                vis.llist.setArrow(headA.value > headB.value ? cur_R : cur_L,
+                    headA.value > headB.value ? -90 : 90);
+            }, [linkedList, L, R, simple_stack], depth);
+
+            // remerge lists
+            chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
+                vis.llist.mergeLists(cur_L, cur_R);
+                vis.llist.resetArrows(cur_L);
+                vis.llist.sortList(cur_L);
+            }, [linkedList, L, R, simple_stack], depth);
         }
 
 

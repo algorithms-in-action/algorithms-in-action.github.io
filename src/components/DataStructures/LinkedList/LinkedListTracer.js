@@ -88,12 +88,11 @@ class LinkedListTracer extends Tracer {
     }
 
     // set angle based on degree of rotation.
-    setArrow(nodeIndex, listIndex, layerIndex, direction) {
-        console.assert(Math.abs(direction) === 45, "Invalid arrow Direction");
+    setArrow(nodeIndex, direction) {
+        console.assert(Math.abs(direction)%45===0, "Invalid arrow Direction");
 
-        const node = this.findList(listIndex, layerIndex).data[nodeIndex];
+        const node = this.findNode(nodeIndex);
         node.arrow = direction;
-
     }
 
     // Swaps two nodes by index within a specific list
@@ -107,9 +106,44 @@ class LinkedListTracer extends Tracer {
         }
     }
 
+    sortList(node1) {
+        const {listIndex, layerIndex, key, data} = this.findListbyNode(node1);
+        const sortedData = [...data].sort((a, b) => a.value - b.value);
+
+        // Delete the original list
+        this.deleteList(key);
+
+        // Add the sorted list back to the same index and layer
+        this.addList(sortedData, "nodes", listIndex, layerIndex);
+    }
+
+    resetArrows(node1) {
+        const list = this.findListbyNode(node1);
+        for (let node of list.data) {
+            this.setArrow(node.key,0);
+        }
+    }
+    mergeLists(node1, node2) {
+        const listA = this.findListbyNode(node1);
+        const listB = this.findListbyNode(node2);
+        if (!listA || !listB) return;
+
+        const { listIndex: listAIndex, layerIndex: layerAIndex, key: keyA, data: dataA } = listA;
+        const { key: keyB, data: dataB } = listB;
+
+        // Combine data from both lists
+        const mergedData = [...dataA, ...dataB];
+
+        // Delete both old lists
+        this.deleteList(keyA);
+        this.deleteList(keyB);
+
+        // Add the new merged list
+        this.addList(mergedData, "nodes", listAIndex, layerAIndex);
+    }
+
     splitList(nodeKey) {
-        const {listIndex, layerIndex} = this.findNode(nodeKey);
-        const { key, data } = this.findList(listIndex, layerIndex);
+        const {listIndex, layerIndex, key, data} = this.findListbyNode(nodeKey);
         if (key < 0) return;
 
         let nodeIndex = data.findIndex(node => node.key === nodeKey);
@@ -131,12 +165,22 @@ class LinkedListTracer extends Tracer {
     findList(listIndex, layerIndex) {
         return this.lists.find(list => list.listIndex === listIndex && list.layerIndex === layerIndex);
     }
+    findListbyNode(key) {
+        for (let list of this.lists) {
+            for (let node of list.data) {
+                if (node.key === key) {
+                    return list;
+                }
+            }
+        }
+        return null;
+    }
 
     findNode(key) {
         for (let list of this.lists) {
             for (let node of list.data) {
                 if (node.key === key) {
-                    return list;
+                    return node;
                 }
             }
         }
@@ -223,8 +267,7 @@ class LinkedListTracer extends Tracer {
     // Patches/highlights a node at a specific index in a specific list
     patch(startIndex, endIndex = startIndex) {
         console.log(startIndex);
-        const {listIndex, layerIndex} = this.findNode(startIndex);
-        const list = this.findList(listIndex, layerIndex);
+        const list = this.findListbyNode(startIndex);
 
         for (let node of list.data) {
             if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
@@ -233,7 +276,7 @@ class LinkedListTracer extends Tracer {
         }
     }
 
-    // Removes patch/highlight from a node
+    // Removes patch/highlight from a node (NEEDS UPDATE)
     depatch(index, listIndex = 0, layerIndex) {
         const list = this.findList(listIndex, layerIndex);
         if (list && index >= 0 && index < list.size) {
@@ -243,8 +286,7 @@ class LinkedListTracer extends Tracer {
 
     // Selects a node or a range of nodes in a specific list
     select(startIndex, endIndex = startIndex) {
-        const {listIndex, layerIndex} = this.findNode(startIndex);
-        const list = this.findList(listIndex, layerIndex);
+        const list = this.findListbyNode(startIndex);
 
         for (let node of list.data) {
             if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
@@ -255,8 +297,7 @@ class LinkedListTracer extends Tracer {
 
     // Deselects a node or a range of nodes in a specific list
     deselect(startIndex, endIndex = startIndex) {
-        const {listIndex, layerIndex} = this.findNode(startIndex);
-        const list = this.findList(listIndex, layerIndex);
+        const list = this.findListbyNode(startIndex);
 
         for (let node of list.data) {
             if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
@@ -307,7 +348,7 @@ class LinkedListTracer extends Tracer {
 
     // Assigns a variable to a specific node in a specific list, removing it from all others
     assignVariable(variable, nodeIndex) {
-        const {listIndex, layerIndex} = this.findNode(nodeIndex);
+        const {listIndex, layerIndex} = this.findListbyNode(nodeIndex);
         this.removeVariable(variable);
         this.addVariable(variable, nodeIndex, listIndex, layerIndex);
     }
