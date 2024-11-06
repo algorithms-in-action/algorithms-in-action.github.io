@@ -295,20 +295,20 @@ export function run_msort() {
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
                 chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
-                    vis.llist.assignVariable('L', cur_L);
-                    vis.llist.deselect(cur_R);
                     vis.llist.splitList(cur_R);
+                    vis.llist.removeVariable('Mid');
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
-                chunker.add('sortL', (vis, Lists) => {
-                }, [linkedList], depth);
-
+                chunker.add('sortL', (vis, Lists, cur_L, cur_R) => {
+                    vis.llist.assignVariable('L', cur_L);
+                },[linkedList, L, Mid], depth);
                 L = MergeSort(L, Mid, depth + 1);
 
 
-                chunker.add('sortR', (vis, Lists) => {
-                }, [linkedList], depth);
-
+                chunker.add('sortR', (vis, Lists, cur_L, cur_R) => {
+                    vis.llist.assignVariable('L', cur_L);
+                    vis.llist.assignVariable('R', cur_R);
+                },[linkedList, newR, R], depth);
                 R = MergeSort(newR, R, depth + 1);
 
             }
@@ -323,12 +323,15 @@ export function run_msort() {
 
             if (L===R) {return}
 
-            // Lines two lists vertically
-            chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
+            chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, c_stk) => {
                 listA = vis.llist.findListbyNode(cur_L);
                 listB = vis.llist.findListbyNode(cur_R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
+            }, [linkedList, L, R, simple_stack], depth);
+
+            // Lines two lists vertically
+            chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
                 vis.llist.moveList(listA.listIndex, listA.layerIndex, listB.listIndex, "stack");
             }, [linkedList, L, R, simple_stack], depth);
 
@@ -341,9 +344,9 @@ export function run_msort() {
 
                 vis.llist.clearVariables();
 
-                // optimise into one line
                 vis.llist.setArrow(headA.value > headB.value ? cur_R : cur_L,
                     headA.value > headB.value ? -90 : 90);
+
             }, [linkedList, L, R, simple_stack], depth);
 
             // remerge lists

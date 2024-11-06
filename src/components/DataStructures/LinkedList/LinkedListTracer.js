@@ -316,8 +316,8 @@ class LinkedListTracer extends Tracer {
     }
 
     // Adds a variable to a specific node in a specific list
-    addVariable(variable, nodeIndex, listIndex = 0, layerIndex = 0) {
-        const list = this.findList(listIndex, layerIndex);
+    addVariable(variable, nodeIndex) {
+        const list = this.findListbyNode(nodeIndex);
         for (let node of list.data) {
             if (node.key===nodeIndex) {
                 node.variables.push(variable);
@@ -350,7 +350,7 @@ class LinkedListTracer extends Tracer {
     assignVariable(variable, nodeIndex) {
         const {listIndex, layerIndex} = this.findListbyNode(nodeIndex);
         this.removeVariable(variable);
-        this.addVariable(variable, nodeIndex, listIndex, layerIndex);
+        this.addVariable(variable, nodeIndex);
     }
 
     // Synchronizes the chart tracer
