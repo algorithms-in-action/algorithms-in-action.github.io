@@ -273,7 +273,6 @@ export function run_msort() {
 
             // Split if length more than 2.
             if (R - L) {
-                console.log("merge");
                 let Mid = L;
 
                 chunker.add('Mid', (vis, lists, cur_L, cur_Mid, c_stk) => {
@@ -312,8 +311,8 @@ export function run_msort() {
                 R = MergeSort(newR, R, depth + 1);
 
             }
-            // Merge if length is 2 or less.
-            console.log(L, R);
+
+            // Merge if length is less than 2.
             merge(L,R);
             return L;
         }
@@ -326,27 +325,22 @@ export function run_msort() {
             chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, c_stk) => {
                 listA = vis.llist.findListbyNode(cur_L);
                 listB = vis.llist.findListbyNode(cur_R);
+                headA = listA.data[0];
+                headB = listB.data[0];
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
             }, [linkedList, L, R, simple_stack], depth);
 
             // Lines two lists vertically
-            chunker.add('headhead', (vis, Lists, cur_L, cur_R, c_stk) => {
-                vis.llist.moveList(listA.listIndex, listA.layerIndex, listB.listIndex, "stack");
-            }, [linkedList, L, R, simple_stack], depth);
+            chunker.add('headhead', (vis) => {
+                vis.llist.moveList(listB.listIndex, listB.layerIndex, listA.listIndex, "stack");
+            },);
 
             // Change pointer iteratively
             chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
-                listA = vis.llist.findListbyNode(cur_L);
-                listB = vis.llist.findListbyNode(cur_R);
-                headA = listA.data[0];
-                headB = listB.data[0];
-
                 vis.llist.clearVariables();
-
                 vis.llist.setArrow(headA.value > headB.value ? cur_R : cur_L,
                     headA.value > headB.value ? -90 : 90);
-
             }, [linkedList, L, R, simple_stack], depth);
 
             // remerge lists

@@ -266,7 +266,6 @@ class LinkedListTracer extends Tracer {
     }
     // Patches/highlights a node at a specific index in a specific list
     patch(startIndex, endIndex = startIndex) {
-        console.log(startIndex);
         const list = this.findListbyNode(startIndex);
 
         for (let node of list.data) {

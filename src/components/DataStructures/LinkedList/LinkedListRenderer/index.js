@@ -43,11 +43,11 @@ class LinkedListRenderer extends Renderer {
                 >
                     {this.renderSymbols()}
 
-                    {layers.map((layer, layerIndex) => (
-                        <div className={styles.LayerContainer} key={`layer-${layerIndex}`}>
+                    {layers.map((layer, listIndex) => (
+                        <div className={styles.LayerContainer} key={`layer-${listIndex}`}>
 
-                            {layer.map((list, listIndex) => (
-                                <div className={styles.LinkedListContainer} key={`linkedList-${listIndex}`}>
+                            {layer.map((list, layerIndex) => (
+                                <div className={styles.LinkedListContainer} key={`linkedList-${layerIndex}`}>
 
                                     {list.data.map((node, nodeIndex) => (
                                         <div className={classes(styles.nodeContainer,
@@ -119,6 +119,8 @@ class LinkedListRenderer extends Renderer {
                 layers[item.listIndex] = [];
             }
             layers[item.listIndex].push(item);
+            layers[item.listIndex].sort((a, b) => a.layerIndex - b.layerIndex);
+
         });
         return layers;
     }
