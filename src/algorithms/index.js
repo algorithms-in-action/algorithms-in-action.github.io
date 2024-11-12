@@ -7,6 +7,7 @@ import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
 import { PROTOTYPE_PARAM } from "./parameters";
+import {jeffPrototype} from "./pseudocode";
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -350,7 +351,7 @@ const allalgs = {
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      sort: Pseudocode.PROTOTYPE,
+      sort: Pseudocode.jeffPrototype,
     },
     controller: {
       sort: Controller.listaProto,

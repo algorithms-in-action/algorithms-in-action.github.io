@@ -303,10 +303,13 @@ class LinkedListTracer extends Tracer {
     }
 
     // Removes patch/highlight from a node (NEEDS UPDATE)
-    depatch(index, listIndex = 0, layerIndex) {
-        const list = this.findList(listIndex, layerIndex);
-        if (list && index >= 0 && index < list.size) {
-            list.data[index].patched = false;
+    depatch(startIndex, endIndex = startIndex) {
+        const list = this.findListbyNode(startIndex);
+
+        for (let node of list.data) {
+            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                node.patched = false;
+            }
         }
     }
 

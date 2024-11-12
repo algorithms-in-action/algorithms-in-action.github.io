@@ -41,7 +41,6 @@ class LinkedListRenderer extends Renderer {
                     drag
                 >
                     {this.renderSymbols()}
-                    {console.log(layers)}
 
                     {layers.map((layer, listIndex) => (
                         <div className={styles.LayerContainer} key={`layer-${listIndex}`}>

@@ -183,108 +183,41 @@ export function run_msort() {
         // ----------------------------------------------------------------------------------------------------------------------------
         // Define 'global' variables
         // ----------------------------------------------------------------------------------------------------------------------------
-
-        const entire_num_array = nodes;
-        let A = nodes;
-        let B = [...entire_num_array].fill(undefined);
-
+            let ListA, listB;
         // ----------------------------------------------------------------------------------------------------------------------------
         // Define helper functions
         // ----------------------------------------------------------------------------------------------------------------------------
-        /**/
-        function assignMaybeNullVar(vis, variable_name, index) {
-            if (index === 'Null') {
-                vis.array.assignVariable(variable_name, 2, undefined);
-                vis.array.assignVariable(variable_name + '=Null', 2, 0);
-            } else
-                vis.array.assignVariable(variable_name, 2, index);
-        }
-
-        function assignVarToA(vis, variable_name, index) {
-            if (index === undefined)
-                vis.array.removeVariable(variable_name);
-            else
-                vis.array.assignVariable(variable_name, index);
-        }
-
-        // might not need this for linked list
-        function assignVarToB(vis, variable_name, index) {
-            if (index === undefined)
-                vis.arrayB.removeVariable(variable_name);
-            else
-                vis.arrayB.assignVariable(variable_name, index);
-        }
 
         // ----------------------------------------------------------------------------------------------------------------------------
         // Define quicksort functions
         // ----------------------------------------------------------------------------------------------------------------------------
-
-        function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) {
-            if (isMergeExpanded()) {
-                vis.array.set(a, 'msort_lista_td');
-                // set_simple_stack(vis.array, c_stk);
-                assignVarToA(vis, 'ap1', cur_ap1);
-                assignVarToA(vis, 'max1', cur_max1);
-                highlight(vis, cur_ap1, true);
-                if (cur_ap2 < a.length) { // XXX 
-                    assignVarToA(vis, 'ap2', cur_ap2);
-                    highlight(vis, cur_ap2, true);
-                } else {
-                    assignVarToA(vis, 'ap2', undefined);
-                }
-                assignVarToA(vis, 'max2', cur_max2);
-                vis.arrayB.set(b, 'msort_lista_td');
-                assignVarToB(vis, 'bp', cur_bp);
-                for (let i = cur_left; i < cur_bp; i++) {
-                    highlightB(vis, i, false);
-                }
-            }
-        }
-
-        // calls vis.array.setList(c_stk) to display simple stack but only
-        // if recursion is expanded (otherwise stack is never displayed)
-        // XXX is this confusing if we run the algorithm a bit with
-        // recursion expanded then collapse recursion? I guess if you are
-        // doing that you have a pretty good understanding anyway?
-        const set_simple_stack = (vis_list, c_stk) => {
-            if (isRecursionExpanded())
-                //vis_list.setList(c_stk);
-                ;
-        }
-
         function MergeSort(L, R, depth) {
 
             //// start mergesort --------------------------------------------------------
 
-            // XXX defined function to display first couple of list elements
-            simple_stack.unshift('([' + linkedList[L] + '..],' + R + ')');
-
             // should show animation if doing high level steps for whole array OR if code is expanded to do all recursive steps
 
-            chunker.add('Main', (vis, lists, cur_L, cur_len, cur_depth, c_stk) => {
+            chunker.add('1', (vis, lists, cur_L, cur_len) => {
                 vis.llist.clearSelect();
                 vis.llist.clearVariables();
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.select(cur_L, cur_len);
-            }, [linkedList, L, R, depth, simple_stack], depth);
+            }, [linkedList, L, R, depth]);
 
-            chunker.add('len>1', (vis, lists) => {
-            }, [linkedList], depth);
-
-            // Split if length more than 2.
+            // Split if length at least 2.
             if (R - L) {
                 let Mid = L;
 
-                chunker.add('Mid', (vis, lists, cur_L, cur_Mid, c_stk) => {
+                chunker.add('2', (vis, lists, cur_L, cur_Mid) => {
                     vis.llist.assignVariable('Mid', cur_Mid);
-                }, [linkedList, L, Mid, simple_stack], depth);
+                }, [linkedList, L, Mid], depth);
 
                 Mid = Math.floor((R+L) / 2);
 
                 // split L into lists L and R at (after) mid-point
                 let newR = Mid + 1;
 
-                chunker.add('tail(Mid)<-Null', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
+                chunker.add('3', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.deselect(0, lists.length);
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.assignVariable('Mid', cur_Mid);
@@ -293,107 +226,122 @@ export function run_msort() {
                     vis.llist.select(cur_R);
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
-                chunker.add('preSortL', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
+                chunker.add('4', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.splitList(cur_R);
                     vis.llist.removeVariable('Mid');
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
-                chunker.add('sortL', (vis, Lists, cur_L, cur_R) => {
+                chunker.add('6', (vis, Lists, cur_L, cur_R) => {
                     vis.llist.assignVariable('L', cur_L);
                 },[linkedList, L, Mid], depth);
                 L = MergeSort(L, Mid, depth + 1);
 
-
-                chunker.add('sortR', (vis, Lists, cur_L, cur_R) => {
+                chunker.add('7', (vis, Lists, cur_L, cur_R) => {
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.assignVariable('R', cur_R);
                 },[linkedList, newR, R], depth);
                 R = MergeSort(newR, R, depth + 1);
-
             }
 
-            // Merge if length is less than 2.
-            merge(L,R, depth);
+            merge(L,R,depth);
+
             return L;
         }
 
         function merge(L,R, depth) {
-            let listA, listB, A = 0, B = 0, prev;
+            if (L === R) {return}
 
-            if (L===R) {return}
-
-            chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, c_stk) => {
-                vis.llist.assignVariable('L', cur_L);
-                vis.llist.assignVariable('R', cur_R);
-            }, [linkedList, L, R, simple_stack], depth);
-
-            // Lines two lists vertically
-            chunker.add('headhead', (vis) => {
-
+            // Set up variables
+            let listA, listB, prev, next;
+            let A = 0, B = 0, iterations = 0;
+            chunker.add('8', (vis, Lists, cur_L, cur_R, depth) => {
                 listA = vis.llist.findListbyNode(L);
                 listB = vis.llist.findListbyNode(R);
+                vis.llist.assignVariable('L', cur_L);
+                vis.llist.assignVariable('R', cur_R);
+                vis.llist.deselect(0, Lists.length);
+                },[linkedList, L, R], depth);
+
+            // Lines two lists vertically
+            chunker.add('10', (vis) => {
+                vis.llist.deselect(R);
                 vis.llist.moveList(listB.listIndex, listB.layerIndex, listA.listIndex, "stack");
             },);
 
-
             // Change pointer iteratively
-            chunker.add('E', (vis, Lists, cur_L, cur_R) => {
-                listA = vis.llist.findListbyNode(cur_L);
-                listB = vis.llist.findListbyNode(cur_R);
-                let iterations = 0;
+            chunker.add('12', (vis, Lists, cur_L, cur_R) => {
 
-                // Iterate through two list
-                while ((A < listA.size || B < listB.size) && iterations<10 && A!=null && B!=null) {
-                    // Iteration tracker to prevent infinite loop
-                    iterations++;
+            while ((A < listA.size || B < listB.size) && iterations < 10) {
+                // Iteration tracker to prevent infinite loop
+                iterations++;
 
-                    // If at end of one list, iterate other list
-                    if (A>= listA.size) {
-                        B = (B < listB.size) ? B+1 : null;
-                        return;
-                    }
-                    else if (B >= listB.size) {
-                        A = (A < listA.size) ? A+1 : null;
-                        return;
-                    }
+                // If at end of one list, iterate other list
+                if (A >= listA.size) {
+                    B = (B < listB.size) ? B + 1 : null;
+                    return;
+                } else if (B >= listB.size) {
+                    A = (A < listA.size) ? A + 1 : null;
+                    return;
+                }
 
-
-                    // Otherwise, compare two nodes
+                // Otherwise, compare two
+                chunker.add('13', (vis, Lists, cur_L, cur_R) => {
                     let nodeA = vis.llist.findNode(L + A), nodeB = vis.llist.findNode(R + B);
-                    console.log(L+A, R+B);
 
-                    chunker.add('E', (vis) => {
-                        vis.llist.clearVariables();
-                    },);
+                    // First comparison: set arrow up or down based on values
+                    if (prev === undefined) {
+                        let startNode = nodeA.value < nodeB.value ? L + A : R + B;
+                        prev = nodeA.value < nodeB.value ? 'up' : 'down';
 
+                        chunker.add('14', (vis) => {
+                            console.log(startNode);
+                            vis.llist.select(startNode);
+                        },);
+                    }
+                    // Subsequent comparison
+                    else {
+                        if (nodeA.value < nodeB.value) {
+                            vis.llist.addNull(L + A);
+                            vis.llist.setArrow(L + A, prev === 'down' ? 0 : 45);
+                            prev = 'down';
+                        } else {
+                            vis.llist.addNull(R + B);
+                            vis.llist.setArrow(R + B, prev === 'up' ? 0 : -45);
+                            prev = 'up';
+                        }
+                    }
 
                     if (nodeA.value < nodeB.value) {
-                        vis.llist.setArrow(L+A, 90);
-                        A < listA.size -1 ? vis.llist.addNull(L+A): null;
-                        B = (B < listB.size) ? B+1 : null;
-                        chunker.add('R<-tail(R)', (vis) => {
+                        A < listA.size - 1 ? vis.llist.addNull(L + A) : null;
+                        B = (B < listB.size) ? B + 1 : null;
+                        chunker.add('15', (vis) => {
+                        },);
+                    } else {
+                        B < listB.size - 1 ? vis.llist.addNull(R + B) : null;
+                        A = (A < listA.size) ? A + 1 : null;
+                        chunker.add('16', (vis) => {
                         },);
                     }
+                }, [linkedList, L, R], depth);
+                console.log(L + A, R + B);
 
-                    else {
-                        vis.llist.setArrow(R+B, -90);
-                        B < listB.size -1 ? vis.llist.addNull(R+B): null;
-                        A = (A < listA.size) ? A+1 : null;
-                        chunker.add('R<-tail(R)', (vis) => {
-                        },);
-                    }
-                }
-            }, [linkedList, L, R], depth);
+                chunker.add('17', (vis) => {
+                    vis.llist.clearVariables();
+                },);
+            }
+            },);
 
             // remerge lists
-            chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
-                vis.llist.mergeLists(cur_L, cur_R);
-                vis.llist.clearNull();
-                vis.llist.resetArrows(cur_L);
-                vis.llist.sortList(cur_L);
-                vis.llist.patch(cur_L, cur_R);
-                vis.llist.clearVariables();
-            }, [linkedList, L, R, simple_stack], depth);
+                chunker.add('17', (vis, Lists, cur_L, cur_R, c_stk) => {
+                    vis.llist.mergeLists(cur_L, cur_R);
+                    vis.llist.clearNull();
+                    vis.llist.resetArrows(cur_L);
+                    vis.llist.sortList(cur_L);
+                    vis.llist.clearVariables();
+                    vis.llist.deselect(0, Lists.length);
+                    vis.llist.depatch(0, Lists.length);
+                }, [linkedList, L, R, simple_stack], depth);
+
         }
 
         function append() {}
@@ -405,15 +353,15 @@ export function run_msort() {
         // XXXXXXXXX
         simple_stack = [];
 
-        for (let i = 0; i < entire_num_array.length; i++) {
-            linkedList.push(entire_num_array[i]);
+        for (let i = 0; i < nodes.length; i++) {
+            linkedList.push(nodes[i]);
         }
 
         chunker.add('Main', (vis, lists) => {
             vis.llist.addList(lists);
         }, [linkedList]);
 
-        const msresult = MergeSort(0, entire_num_array.length - 1, 0);
+        const msresult = MergeSort(0, nodes.length - 1, 0);
         // const msresult = 0;
 
         return msresult;
