@@ -315,6 +315,7 @@ class LinkedListTracer extends Tracer {
 
     // Selects a node or a range of nodes in a specific list
     select(startIndex, endIndex = startIndex) {
+        if (startIndex === null) {return}
         this.lists.forEach(list => {
             list.data.forEach((node) => {
                 if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {

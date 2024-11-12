@@ -165,7 +165,6 @@ export function run_msort() {
                 listB = vis.llist.findListbyNode(R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
-                console.log(Lists.length-1);
                 vis.llist.deselect(0, Lists.length-1);
                 },[linkedList, L, R], depth);
 
@@ -180,7 +179,7 @@ export function run_msort() {
                 vis.llist.select(R);
             },);
             chunker.add('12', (vis) => {
-                let nodeA = vis.llist.findNode(L + A), nodeB = vis.llist.findNode(R + B);
+                let nodeA = vis.llist.findNode(L), nodeB = vis.llist.findNode(R);
                 if (nodeA.value < nodeB.value) {
                     vis.llist.patch(L);
                     vis.llist.deselect(R);
@@ -208,10 +207,13 @@ export function run_msort() {
 
                 // Select possible next nodes
                 chunker.add('14', (vis) => {
-                    console.log(A,B);
+                    console.log(L+A,R+B);
                     // detect if end of list
                     nodeA = A < R-L ? vis.llist.findNode(L + A): null;
                     nodeB = B < end-R ? vis.llist.findNode(R + B): null;
+
+                    console.log(nodeA);
+                    console.log(nodeB);
 
                     vis.llist.select(nodeA ? L+A : null);
                     vis.llist.select(nodeB ? R+B: null);
@@ -219,28 +221,31 @@ export function run_msort() {
 
                 // Find next node
                 chunker.add('15', (vis, Lists) => {
-                    console.log(A,B);
+                    let newM;
 
                     if (!nodeA) {
                         vis.llist.patch(R+B);
+                        newM = R+B;
                         B = (B < end-R) ? B + 1 : null;
                         next = 'down';
                     }
                     else if (!nodeB) {
                         vis.llist.patch(L+A);
+                        newM = L+A;
                         A = (A < R-L) ? A + 1 : null;
                         next = 'up';
                     }
                     else if (nodeA.value < nodeB.value) {
                         vis.llist.patch(L+A);
-                        B = (B < end-R) ? B + 1 : null;
+                        newM = L+A;
+                        A = (A < R-L) ? A + 1 : null;
                         next = 'up';
                     }
                     else {
                         vis.llist.patch(R+B);
-                        A = (A < R-L) ? A + 1 : null;
+                        newM = R+B;
+                        B = (B < end-R) ? B + 1 : null;
                         next = 'down';
-
                     }
                     if (firstNode) {
                         vis.llist.setArrow(M,arrowDirection(prev, next, true));
@@ -250,7 +255,16 @@ export function run_msort() {
                         vis.llist.setArrow(M, arrowDirection(prev, next, false));
                     }
                     vis.llist.deselect(0, Lists.length-1);
+
+                    M = newM;
                 },[linkedList]);
+
+                // Set next M
+                chunker.add('15', (vis) => {
+                    prev = next;
+                    vis.llist.assignVariable('M', M);
+                },);
+
             }
 
             // remerge lists
