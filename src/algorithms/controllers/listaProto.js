@@ -251,11 +251,11 @@ export function run_msort() {
 
                 // Shift list across if necessary
                 chunker.add('15', (vis) => {
-                    if (A-B>1) {
+                    if (A+Ashift-(B+Bshift)>1) {
                         vis.llist.addNull(R+B,-1);
                         Bshift++;
                     }
-                    else if (B-A>1) {
+                    else if (B+Bshift-(A+Ashift)>1) {
                         vis.llist.addNull(L+A,-1);
                         Ashift++;
                     }

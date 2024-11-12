@@ -50,7 +50,7 @@ class LinkedListRenderer extends Renderer {
 
                                     {list.data.map((node, nodeIndex) => (
                                         <div className={classes(styles.nodeContainer,
-                                            node.value===null && styles.invisible)}
+                                            !node.value && styles.invisible)}
                                              key={`list-${listIndex}-node-${node.key}`}
                                              style={{transform: `translate(${list.unitShift * 76}px)`}}>
 
@@ -59,15 +59,17 @@ class LinkedListRenderer extends Renderer {
                                                 key={`node-${node.key}`}
                                                 layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
-                                                    node.value===null && styles.invisible,
                                                     node.selected && styles.selected,
                                                     node.patched && styles.visited,
+                                                    !node.value && styles.invisible,
                                                 )}
                                                 whileHover={{scale: 1.2}}
                                                 transition={{type: 'spring', stiffness: 100}}
                                             >
                                                 {/* Nodes */}
-                                                <div className={classes(styles.value)}>
+                                                <div className={classes(styles.value,                                                     !node.value && styles.invisible,
+                                                    !node.value && styles.invisible,
+                                                )}>
                                                     {node.value}
                                                 </div>
 
