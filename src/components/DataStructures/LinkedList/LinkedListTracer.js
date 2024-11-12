@@ -103,7 +103,6 @@ class LinkedListTracer extends Tracer {
     // set angle based on degree of rotation.
     setArrow(nodeIndex, direction) {
         console.assert(Math.abs(direction)%45===0, "Invalid arrow Direction");
-
         const node = this.findNode(nodeIndex);
         node.arrow = direction;
     }
@@ -297,6 +296,7 @@ class LinkedListTracer extends Tracer {
             list.data.forEach((node) => {
                 if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
                     node.patched = true;
+                    node.selected = false;
                 }
             });
         });
@@ -307,7 +307,7 @@ class LinkedListTracer extends Tracer {
         this.lists.forEach(list => {
             list.data.forEach((node) => {
                 if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
-                    node.selected = false;
+                    node.patched = false;
                 }
             });
         });
