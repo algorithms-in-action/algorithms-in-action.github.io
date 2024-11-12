@@ -293,46 +293,46 @@ class LinkedListTracer extends Tracer {
     }
     // Patches/highlights a node at a specific index in a specific list
     patch(startIndex, endIndex = startIndex) {
-        const list = this.findListbyNode(startIndex);
-
-        for (let node of list.data) {
-            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
-                node.patched = true;
-            }
-        }
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                    node.patched = true;
+                }
+            });
+        });
     }
 
     // Removes patch/highlight from a node (NEEDS UPDATE)
     depatch(startIndex, endIndex = startIndex) {
-        const list = this.findListbyNode(startIndex);
-
-        for (let node of list.data) {
-            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
-                node.patched = false;
-            }
-        }
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                    node.selected = false;
+                }
+            });
+        });
     }
 
     // Selects a node or a range of nodes in a specific list
     select(startIndex, endIndex = startIndex) {
-        const list = this.findListbyNode(startIndex);
-
-        for (let node of list.data) {
-            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
-                node.selected = true;
-            }
-        }
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                    node.selected = true;
+                }
+            });
+        });
     }
 
     // Deselects a node or a range of nodes in a specific list
     deselect(startIndex, endIndex = startIndex) {
-        const list = this.findListbyNode(startIndex);
-
-        for (let node of list.data) {
-            if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
-                node.selected = false;
-            }
-        }
+        this.lists.forEach(list => {
+            list.data.forEach((node) => {
+                if (node.key-startIndex >= 0 && endIndex-node.key >= 0) {
+                    node.selected = false;
+                }
+            });
+        });
     }
 
     // Clears all variables from all nodes in all lists

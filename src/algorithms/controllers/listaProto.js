@@ -218,7 +218,7 @@ export function run_msort() {
                 let newR = Mid + 1;
 
                 chunker.add('3', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
-                    vis.llist.deselect(0, lists.length);
+                    vis.llist.deselect(0, lists.length-1);
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.assignVariable('Mid', cur_Mid);
                     vis.llist.assignVariable('R', cur_R);
@@ -259,7 +259,8 @@ export function run_msort() {
                 listB = vis.llist.findListbyNode(R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
-                vis.llist.deselect(0, Lists.length);
+                console.log(Lists.length-1);
+                vis.llist.deselect(0, Lists.length-1);
                 },[linkedList, L, R], depth);
 
             // Lines two lists vertically
@@ -338,8 +339,8 @@ export function run_msort() {
                     vis.llist.resetArrows(cur_L);
                     vis.llist.sortList(cur_L);
                     vis.llist.clearVariables();
-                    vis.llist.deselect(0, Lists.length);
-                    vis.llist.depatch(0, Lists.length);
+                    vis.llist.deselect(0, Lists.length-1);
+                    vis.llist.depatch(0, Lists.length-1);
                 }, [linkedList, L, R, simple_stack], depth);
 
         }
