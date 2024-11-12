@@ -158,7 +158,7 @@ export function run_msort() {
 
             // Set up variables
             let prev, next, nodeA, nodeB;
-            let A = 0, B = 0, iterations = 0;
+            let A = 0, B = 0, iterations = 0, Ashift = 0, Bshift = 0;
             let firstNode = true, M;
             chunker.add('8', (vis, Lists, cur_L, cur_R, depth) => {
                 listA = vis.llist.findListbyNode(L);
@@ -207,13 +207,9 @@ export function run_msort() {
 
                 // Select possible next nodes
                 chunker.add('14', (vis) => {
-                    console.log(L+A,R+B);
                     // detect if end of list
                     nodeA = A < R-L ? vis.llist.findNode(L + A): null;
                     nodeB = B < end-R ? vis.llist.findNode(R + B): null;
-
-                    console.log(nodeA);
-                    console.log(nodeB);
 
                     vis.llist.select(nodeA ? L+A : null);
                     vis.llist.select(nodeB ? R+B: null);
@@ -247,17 +243,23 @@ export function run_msort() {
                         B = (B < end-R) ? B + 1 : null;
                         next = 'down';
                     }
-                    if (firstNode) {
-                        vis.llist.setArrow(M,arrowDirection(prev, next, true));
-                        firstNode = false;
-                    }
-                    else {
-                        vis.llist.setArrow(M, arrowDirection(prev, next, false));
-                    }
-                    vis.llist.deselect(0, Lists.length-1);
+                    vis.llist.setArrow(M,arrowDirection(A+Ashift,B+Bshift,prev, next, true));
 
+                    vis.llist.deselect(0, Lists.length-1);
                     M = newM;
                 },[linkedList]);
+
+                // Shift list across if necessary
+                chunker.add('15', (vis) => {
+                    if (A-B>1) {
+                        vis.llist.addNull(R+B,-1);
+                        Bshift++;
+                    }
+                    else if (B-A>1) {
+                        vis.llist.addNull(L+A,-1);
+                        Ashift++;
+                    }
+                },);
 
                 // Set next M
                 chunker.add('15', (vis) => {
@@ -283,11 +285,11 @@ export function run_msort() {
         function append() {}
 
         // Calculates angle of next arrow
-        function arrowDirection(prev, next, first) {
+        function arrowDirection(A,B,prev, next) {
             if (prev === next) {
                 return 0;
             }
-            else if (first) {
+            else if (A===B) {
                 if (prev === 'up') {
                     return 90;
                 }

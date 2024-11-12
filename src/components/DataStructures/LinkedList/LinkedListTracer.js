@@ -58,11 +58,11 @@ class LinkedListTracer extends Tracer {
     }
 
     // TO DO Appends a value to a specific list by index
-    addNull(key) {
+    addNull(key, position) {
         const newNode = this.createNode(null);
         const list = this.findListbyNode(key);
         const nodeIndex = list.data.findIndex(node => node.key === key);
-        list.data.splice(nodeIndex +1,0,newNode);
+        list.data.splice(nodeIndex,0,newNode);
     }
 
     clearNull() {
