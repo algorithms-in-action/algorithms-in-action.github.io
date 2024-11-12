@@ -34,7 +34,6 @@ class LinkedListRenderer extends Renderer {
     renderData() {
         const { lists } = this.state;
         const layers = this.layer(lists);
-        console.log(layers);
 
         return (
             <AnimateSharedLayout>
@@ -42,6 +41,7 @@ class LinkedListRenderer extends Renderer {
                     drag
                 >
                     {this.renderSymbols()}
+                    {console.log(layers)}
 
                     {layers.map((layer, listIndex) => (
                         <div className={styles.LayerContainer} key={`layer-${listIndex}`}>
@@ -51,8 +51,8 @@ class LinkedListRenderer extends Renderer {
 
                                     {list.data.map((node, nodeIndex) => (
                                         <div className={classes(styles.nodeContainer,
-                                             )}
-                                             key={`list-${listIndex}`}
+                                            node.value===null && styles.invisible)}
+                                             key={`list-${listIndex}-node-${node.key}`}
                                              style={{transform: `translate(${list.unitShift * 76}px)`}}>
 
                                         <React.Fragment>
@@ -60,6 +60,7 @@ class LinkedListRenderer extends Renderer {
                                                 key={`node-${node.key}`}
                                                 layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
+                                                    node.value===null && styles.invisible,
                                                     node.selected && styles.selected,
                                                     node.patched && styles.visited,
                                                 )}

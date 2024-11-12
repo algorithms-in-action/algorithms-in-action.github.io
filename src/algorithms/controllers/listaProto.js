@@ -313,45 +313,90 @@ export function run_msort() {
             }
 
             // Merge if length is less than 2.
-            merge(L,R);
+            merge(L,R, depth);
             return L;
         }
 
         function merge(L,R, depth) {
-            let listA, listB, headA, headB;
+            let listA, listB, A = 0, B = 0, prev;
 
             if (L===R) {return}
 
             chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, c_stk) => {
-                listA = vis.llist.findListbyNode(cur_L);
-                listB = vis.llist.findListbyNode(cur_R);
-                headA = listA.data[0];
-                headB = listB.data[0];
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
             }, [linkedList, L, R, simple_stack], depth);
 
             // Lines two lists vertically
             chunker.add('headhead', (vis) => {
+
+                listA = vis.llist.findListbyNode(L);
+                listB = vis.llist.findListbyNode(R);
                 vis.llist.moveList(listB.listIndex, listB.layerIndex, listA.listIndex, "stack");
             },);
 
+
             // Change pointer iteratively
-            chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
-                vis.llist.clearVariables();
-                vis.llist.setArrow(headA.value > headB.value ? cur_R : cur_L,
-                    headA.value > headB.value ? -90 : 90);
-            }, [linkedList, L, R, simple_stack], depth);
+            chunker.add('E', (vis, Lists, cur_L, cur_R) => {
+                listA = vis.llist.findListbyNode(cur_L);
+                listB = vis.llist.findListbyNode(cur_R);
+                let iterations = 0;
+
+                // Iterate through two list
+                while ((A < listA.size || B < listB.size) && iterations<10 && A!=null && B!=null) {
+                    // Iteration tracker to prevent infinite loop
+                    iterations++;
+
+                    // If at end of one list, iterate other list
+                    if (A>= listA.size) {
+                        B = (B < listB.size) ? B+1 : null;
+                        return;
+                    }
+                    else if (B >= listB.size) {
+                        A = (A < listA.size) ? A+1 : null;
+                        return;
+                    }
+
+
+                    // Otherwise, compare two nodes
+                    let nodeA = vis.llist.findNode(L + A), nodeB = vis.llist.findNode(R + B);
+                    console.log(L+A, R+B);
+
+                    chunker.add('E', (vis) => {
+                        vis.llist.clearVariables();
+                    },);
+
+
+                    if (nodeA.value < nodeB.value) {
+                        vis.llist.setArrow(L+A, 90);
+                        A < listA.size -1 ? vis.llist.addNull(L+A): null;
+                        B = (B < listB.size) ? B+1 : null;
+                        chunker.add('R<-tail(R)', (vis) => {
+                        },);
+                    }
+
+                    else {
+                        vis.llist.setArrow(R+B, -90);
+                        B < listB.size -1 ? vis.llist.addNull(R+B): null;
+                        A = (A < listA.size) ? A+1 : null;
+                        chunker.add('R<-tail(R)', (vis) => {
+                        },);
+                    }
+                }
+            }, [linkedList, L, R], depth);
 
             // remerge lists
             chunker.add('E', (vis, Lists, cur_L, cur_R, c_stk) => {
                 vis.llist.mergeLists(cur_L, cur_R);
+                vis.llist.clearNull();
                 vis.llist.resetArrows(cur_L);
                 vis.llist.sortList(cur_L);
                 vis.llist.patch(cur_L, cur_R);
+                vis.llist.clearVariables();
             }, [linkedList, L, R, simple_stack], depth);
         }
 
+        function append() {}
 
         // ----------------------------------------------------------------------------------------------------------------------------
         // Perform actual mergesort

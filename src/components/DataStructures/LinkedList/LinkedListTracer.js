@@ -5,6 +5,7 @@
 // eslint-disable-next-line import/no-unresolved
 import Tracer from "../common/Tracer"; // Assume we have a renderer for linked lists
 import LinkedListRenderer from './LinkedListRenderer';
+import {node} from "prop-types";
 
 class LinkedListTracer extends Tracer {
 
@@ -46,7 +47,7 @@ class LinkedListTracer extends Tracer {
     }
 
     createNode(value) {
-        const newNode = { key: this.nodeKey++, value, next: null, patched: false, selected: false, variables: [], arrow: 0 };
+        const newNode = { key: this.nodeKey++, index: this.nodeKey, value, next: null, patched: false, selected: false, variables: [], arrow: 0 };
         return newNode;
     }
 
@@ -57,8 +58,21 @@ class LinkedListTracer extends Tracer {
     }
 
     // TO DO Appends a value to a specific list by index
-    addToList(value, listIndex = 0) {
-        // TO DO
+    addNull(key) {
+        const newNode = this.createNode(null);
+        const list = this.findListbyNode(key);
+        const nodeIndex = list.data.findIndex(node => node.key === key);
+        list.data.splice(nodeIndex +1,0,newNode);
+    }
+
+    clearNull() {
+        this.lists.forEach(list => {
+            for (let i = list.data.length - 1; i >= 0; i--) {
+                if (list.data[i].value === null) {
+                    list.data.splice(i, 1);
+                }
+            }
+        });
     }
 
     // TO DO Removes a node at a specific index from a specific list
@@ -84,7 +98,6 @@ class LinkedListTracer extends Tracer {
             list.data.splice(index, 1);
         }
         list.size--;
-        this.syncChartTracer();
     }
 
     // set angle based on degree of rotation.
@@ -115,6 +128,7 @@ class LinkedListTracer extends Tracer {
 
         // Add the sorted list back to the same index and layer
         this.addList(sortedData, "nodes", listIndex, layerIndex);
+        this.updateIndices(node1);
     }
 
     resetArrows(node1) {
@@ -142,6 +156,14 @@ class LinkedListTracer extends Tracer {
         this.addList(mergedData, "nodes", listAIndex, layerAIndex);
     }
 
+    updateIndices(index) {
+        let newKey = index;
+        const list = this.findListbyNode(index);
+        for (let node of list.data) {
+            node.key = newKey;
+            newKey++;
+        }
+    }
     splitList(nodeKey) {
         const {listIndex, layerIndex, key, data} = this.findListbyNode(nodeKey);
         if (key < 0) return;
@@ -207,7 +229,7 @@ class LinkedListTracer extends Tracer {
                 List.listIndex = newIndex;
 
                 // Stacking may result in empty indices
-                this.updateIndices();
+                this.clearEmptyIndices();
             }
 
             // if insert, shift all to right.
@@ -227,7 +249,7 @@ class LinkedListTracer extends Tracer {
     // Theoretically unproblematic code::
 
     // Shifting indices to account for empty indices
-    updateIndices() {
+    clearEmptyIndices() {
         const maxIndex = this.getMaxIndex();
         let emptyIndex;
         for (let i = 0; i <= maxIndex; i++) {
@@ -252,6 +274,11 @@ class LinkedListTracer extends Tracer {
             }
         }
         return maxIndex;
+    }
+
+    getSize(list) {
+
+        return
     }
 
     getMaxSize() {

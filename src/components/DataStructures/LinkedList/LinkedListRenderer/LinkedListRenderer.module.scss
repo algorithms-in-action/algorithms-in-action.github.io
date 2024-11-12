@@ -15,14 +15,14 @@
     display: flex;
     flex-direction: column;
     /* secondary vertical stack */
-    align-items: start;
+    align-items: flex-start;
     /* Separate layers align at start*/
 
     .LinkedListContainer {
       display: flex;
       flex-direction: row;
       /* Horizontal lists for identical indices */
-      align-items: start;
+      align-items: flex-start;
       margin: 15px 10px 15px 10px;
       /* Separate Lists */
 
@@ -48,6 +48,9 @@
           align-items: center;
           justify-content: flex-start;
 
+          &.invisible {
+            visibility: hidden;
+          }
 
           &.visited {
             background-color: var(--linked-list-highlighted-bg);
