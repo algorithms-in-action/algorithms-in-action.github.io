@@ -102,7 +102,7 @@ export function run_msort() {
 
             // should show animation if doing high level steps for whole array OR if code is expanded to do all recursive steps
 
-            chunker.add('1', (vis, lists, cur_L, cur_len) => {
+            chunker.add('len>1', (vis, lists, cur_L, cur_len) => {
                 vis.llist.clearSelect();
                 vis.llist.clearVariables();
                 vis.llist.assignVariable('L', cur_L);
@@ -113,7 +113,9 @@ export function run_msort() {
             if (R - L) {
                 let Mid = L;
 
-                chunker.add('2', (vis, lists, cur_L, cur_Mid) => {
+                // BOOKMARK split
+                // BOOKMARK scan
+                chunker.add('Mid', (vis, lists, cur_L, cur_Mid) => {
                     vis.llist.assignVariable('Mid', cur_Mid);
                 }, [linkedList, L, Mid], depth);
 
@@ -122,7 +124,8 @@ export function run_msort() {
                 // split L into lists L and R at (after) mid-point
                 let newR = Mid + 1;
 
-                chunker.add('3', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
+                // BOOKMARK Mid
+                chunker.add('Mid&R', (vis, lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.deselect(0, lists.length-1);
                     vis.llist.assignVariable('L', cur_L);
                     vis.llist.assignVariable('Mid', cur_Mid);
@@ -131,18 +134,20 @@ export function run_msort() {
                     vis.llist.select(cur_R);
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
-                chunker.add('4', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
+                // BOOKMARK tail(Mid) <- Null
+                chunker.add('tail(Mid)<-Null', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
                     vis.llist.splitList(cur_R);
-                    vis.llist.removeVariable('Mid');
                 }, [linkedList, L, Mid, newR, simple_stack], depth);
 
-                chunker.add('6', (vis, Lists, cur_L, cur_R) => {
-                    vis.llist.assignVariable('L', cur_L);
+                chunker.add('sortL', (vis, Lists, cur_L, cur_R) => {
+                    vis.llist.removeVariable('Mid');
+                    vis.llist.removeVariable('R', cur_R);
+                    vis.llist.assignVariable('L', cur_L);                    vis.llist.select(cur_R);
+                    vis.llist.deselect(cur_R);
                 },[linkedList, L, Mid], depth);
                 L = MergeSort(L, Mid, newR, depth + 1);
 
-                chunker.add('7', (vis, Lists, cur_L, cur_R) => {
-                    vis.llist.assignVariable('L', cur_L);
+                chunker.add('sortR', (vis, Lists, cur_L, cur_R) => {
                     vis.llist.assignVariable('R', cur_R);
                 },[linkedList, newR, R], depth);
                 R = MergeSort(newR, R, end, depth + 1);
@@ -161,25 +166,19 @@ export function run_msort() {
             let prev, next, nodeA, nodeB;
             let A = 0, B = 0, iterations = 0, Ashift = 0, Bshift = 0;
             let firstNode = true, M;
-            chunker.add('8', (vis, Lists, cur_L, cur_R, depth) => {
+            chunker.add('head', (vis, Lists, cur_L, cur_R, depth) => {
                 listA = vis.llist.findListbyNode(L);
                 listB = vis.llist.findListbyNode(R);
                 vis.llist.assignVariable('L', cur_L);
                 vis.llist.assignVariable('R', cur_R);
                 vis.llist.deselect(0, Lists.length-1);
-                },[linkedList, L, R], depth);
-
-            // Lines two lists vertically
-            chunker.add('10', (vis) => {
-                vis.llist.moveList(listB.listIndex, listB.layerIndex, listA.listIndex, "stack");
-            },);
-
-            // Find first Node
-            chunker.add('11', (vis) => {
                 vis.llist.select(L);
                 vis.llist.select(R);
-            },);
-            chunker.add('12', (vis) => {
+                vis.llist.moveList(listB.listIndex, listB.layerIndex, listA.listIndex, "stack");
+            },[linkedList, L, R], depth);
+
+
+            chunker.add('M<-L', (vis) => {
                 let nodeA = vis.llist.findNode(L), nodeB = vis.llist.findNode(R);
                 if (nodeA.value < nodeB.value) {
                     vis.llist.patch(L);
@@ -207,7 +206,7 @@ export function run_msort() {
                 iterations++;
 
                 // Select possible next nodes
-                chunker.add('14', (vis) => {
+                chunker.add('E', (vis) => {
                     // detect if end of list
                     nodeA = A < R-L ? vis.llist.findNode(L + A): null;
                     nodeB = B < end-R ? vis.llist.findNode(R + B): null;
@@ -217,7 +216,7 @@ export function run_msort() {
                 },);
 
                 // Find next node
-                chunker.add('15', (vis, Lists) => {
+                chunker.add('whileNotNull', (vis, Lists) => {
                     let newM;
 
                     if (!nodeA) {
@@ -251,7 +250,7 @@ export function run_msort() {
                 },[linkedList]);
 
                 // Shift list across if necessary
-                chunker.add('15', (vis) => {
+                chunker.add('findSmaller', (vis) => {
                     if (A+Ashift-(B+Bshift)>1) {
                         vis.llist.addNull(R+B,-1);
                         Bshift++;
@@ -263,7 +262,7 @@ export function run_msort() {
                 },);
 
                 // Set next M
-                chunker.add('15', (vis) => {
+                chunker.add('popL', (vis) => {
                     prev = next;
                     vis.llist.assignVariable('M', M);
                 },);
@@ -271,7 +270,7 @@ export function run_msort() {
             }
 
             // remerge lists
-                chunker.add('17', (vis, Lists, cur_L, cur_R, c_stk) => {
+                chunker.add('returnM', (vis, Lists, cur_L, cur_R, c_stk) => {
                     vis.llist.mergeLists(cur_L, cur_R);
                     vis.llist.clearNull();
                     vis.llist.resetArrows(cur_L);
@@ -282,8 +281,6 @@ export function run_msort() {
                 }, [linkedList, L, R, simple_stack], depth);
 
         }
-
-        function append() {}
 
         // Calculates angle of next arrow
         function arrowDirection(A,B,prev, next) {

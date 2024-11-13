@@ -4,7 +4,7 @@ export default parse(`
 \\Code{
 Main
 // Sort list(head) in ascending order
-MergeSort(L,R) \\B Main 
+MergeSort(L, Len) \\B Main 
 split \\Ref section1
 merge \\B 8
 1 \\B 9

@@ -38,7 +38,7 @@ Mergesort(L, len) \\B Main
 \\Code{
 split
     Mid <- mid point of L \\Ref scan
-    R <- tail(Mid)    // R starts after Mid
+    R <- tail(Mid)    // R starts after Mid \\B Mid&R
     tail(Mid) <- Null // truncate L after Mid \\B tail(Mid)<-Null
 \\Code}
 
@@ -102,10 +102,10 @@ Merge
 
 \\Code{
 initM
-    if head(L) < head(R) \\B headhead
+    if head(L) < head(R) \\B head
     \\In{
         M <- L \\B M<-L
-        L <- tail(L) \\B L<-tail(L)
+        L <- tail(L) \\B M<-L
         \\Expl{ M will contain the first element of L so we skip L to
           its next element.
         \\Expl}
@@ -113,7 +113,7 @@ initM
     else
     \\In{
         M <- R \\B M<-R
-        R <- tail(R) \\B R<-tail(R)
+        R <- tail(R) \\B M<-R
         \\Expl{ M will contain the first element of R so we skip R to
           its next element.
         \\Expl}
@@ -138,10 +138,10 @@ CopySmaller
 
 \\Code{
 CopyRest
-    if L == Null
+    if L == Null \\B lNull
     \\In{
         tail(E) <- R // append extra R elements to M \\B appendR
-    \\In}
+    \\In} \\B rNull
     else
     \\In{
         tail(E) <- L // append extra L elements to M \\B appendL

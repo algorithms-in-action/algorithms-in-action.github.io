@@ -102,6 +102,7 @@ class LinkedListTracer extends Tracer {
 
     // set angle based on degree of rotation.
     setArrow(nodeIndex, direction) {
+        console.log(nodeIndex);
         console.assert(Math.abs(direction)%45===0, "Invalid arrow Direction");
         const node = this.findNode(nodeIndex);
         node.arrow = direction;

@@ -351,7 +351,7 @@ const allalgs = {
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      sort: Pseudocode.jeffPrototype,
+      sort: Pseudocode.PROTOTYPE,
     },
     controller: {
       sort: Controller.listaProto,
