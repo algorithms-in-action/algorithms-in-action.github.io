@@ -138,7 +138,8 @@ export function run_msort() {
                 chunker.add('sortL', (vis, Lists, cur_L, cur_R) => {
                     vis.llist.removeVariable('Mid');
                     vis.llist.removeVariable('R', cur_R);
-                    vis.llist.assignVariable('L', cur_L);                    vis.llist.select(cur_R);
+                    vis.llist.assignVariable('L', cur_L);
+                    vis.llist.select(cur_R);
                     vis.llist.deselect(cur_R);
                 },[linkedList, L, Mid], depth);
                 L = MergeSort(L, Mid, newR, depth + 1);
@@ -247,12 +248,16 @@ export function run_msort() {
 
                 // Shift list across if necessary
                 chunker.add('findSmaller', (vis) => {
+                    console.log(A+Ashift,(B+Bshift));
                     if (A+Ashift-(B+Bshift)>1) {
                         vis.llist.addNull(R+B,-1);
+                        console.log('Bshift');
                         Bshift++;
                     }
                     else if (B+Bshift-(A+Ashift)>1) {
                         vis.llist.addNull(L+A,-1);
+                        console.log('aShift');
+
                         Ashift++;
                     }
                 },);

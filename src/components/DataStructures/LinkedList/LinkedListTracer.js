@@ -71,6 +71,7 @@ class LinkedListTracer extends Tracer {
         const newNode = this.createNode(null);
         const list = this.findListbyNode(key);
         const nodeIndex = list.data.findIndex(node => node.key === key);
+        if (nodeIndex===list.size-1) {return}
         list.data.splice(nodeIndex,0,newNode);
     }
 
