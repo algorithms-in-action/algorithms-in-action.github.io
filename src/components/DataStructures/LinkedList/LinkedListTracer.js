@@ -67,7 +67,7 @@ class LinkedListTracer extends Tracer {
     }
 
     addNull(key) {
-        if (key === undefined || key>this.totalLength()) {return}
+        if (key === undefined || key>=this.totalLength()) {return}
         const newNode = this.createNode(null);
         const list = this.findListbyNode(key);
         const nodeIndex = list.data.findIndex(node => node.key === key);
