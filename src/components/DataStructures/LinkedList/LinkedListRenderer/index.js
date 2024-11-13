@@ -46,7 +46,10 @@ class LinkedListRenderer extends Renderer {
                         <div className={styles.LayerContainer} key={`layer-${listIndex}`}>
 
                             {layer.map((list, layerIndex) => (
-                                <div className={styles.LinkedListContainer} key={`linkedList-${layerIndex}`}>
+                                <motion.div className={styles.LinkedListContainer} key={`linkedList-${layerIndex}`}
+                                            layoutId={`linkedList-${listIndex},${layerIndex}`}
+                                            transition={{type: 'spring', bounce: 0.2}}
+                                >
 
                                     {list.data.map((node, nodeIndex) => (
                                         <div className={classes(styles.nodeContainer,
@@ -64,7 +67,7 @@ class LinkedListRenderer extends Renderer {
                                                     !node.value && styles.invisible,
                                                 )}
                                                 whileHover={{scale: 1.2}}
-                                                transition={{type: 'spring', stiffness: 100}}
+                                                transition={{type: 'spring', bounce: 0.2}}
                                             >
                                                 {/* Nodes */}
                                                 <div className={classes(styles.value,                                                     !node.value && styles.invisible,
@@ -101,7 +104,7 @@ class LinkedListRenderer extends Renderer {
                                         </React.Fragment>
                                     </div>
                                 ))}
-                                </div>
+                                </motion.div>
                             ))}
                             </div>))}
                         </motion.div>
