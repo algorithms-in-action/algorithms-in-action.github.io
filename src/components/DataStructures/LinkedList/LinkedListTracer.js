@@ -52,6 +52,14 @@ class LinkedListTracer extends Tracer {
         return newNode;
     }
 
+    totalLength() {
+        let totalLength = 0;
+        for (let list of this.lists) {
+            totalLength += list.size;
+        }
+        return totalLength;
+    }
+
     // Appends a value to a specific linked list
     appendToList(newNode, list) {
         list.data.push(newNode);
@@ -59,7 +67,7 @@ class LinkedListTracer extends Tracer {
     }
 
     addNull(key) {
-        if (!key || key>this.lists.length) {return}
+        if (key === undefined || key>this.totalLength()) {return}
         const newNode = this.createNode(null);
         const list = this.findListbyNode(key);
         const nodeIndex = list.data.findIndex(node => node.key === key);
@@ -103,7 +111,6 @@ class LinkedListTracer extends Tracer {
 
     // set angle based on degree of rotation.
     setArrow(nodeIndex, direction) {
-        console.log(nodeIndex);
         console.assert(Math.abs(direction)%45===0, "Invalid arrow Direction");
         const node = this.findNode(nodeIndex);
         node.arrow = direction;
