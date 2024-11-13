@@ -44,8 +44,6 @@ const STACK_FRAME_COLOR = {
 };
 
 let linkedList = [];
-let index;
-let tail;
 let simple_stack;
 
 
@@ -60,8 +58,6 @@ function assert(condition, message) {
         throw new Error(message || 'Assertion failed');
     }
 }
-
-
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -303,9 +299,7 @@ export function run_msort() {
         // Perform actual mergesort
         // ----------------------------------------------------------------------------------------------------------------------------
 
-        // XXXXXXXXX
-        simple_stack = [];
-
+        linkedList = [];
         for (let i = 0; i < nodes.length; i++) {
             linkedList.push(nodes[i]);
         }
@@ -315,7 +309,9 @@ export function run_msort() {
         }, [linkedList]);
 
         const msresult = MergeSort(0, nodes.length - 1, nodes.length-1,0);
-        // const msresult = 0;
+
+        chunker.add('returnL', (vis) => {
+        },);
 
         return msresult;
     }

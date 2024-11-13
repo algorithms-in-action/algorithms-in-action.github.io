@@ -18,4 +18,4 @@ export { default as ASTARParam } from './ASTParam';
 export { default as BFSParam } from './BFSParam';
 export { default as DFSParam } from './DFSParam';
 export { default as DFSrecParam } from './DFSrecParam';
-export { default as PROTOTYPE_PARAM } from './PrototypeParam';
+export { default as msort_linkedlist } from './msort_linkedlist';

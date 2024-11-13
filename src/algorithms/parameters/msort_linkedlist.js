@@ -7,7 +7,7 @@ const DEFAULT_LIST = genRandNumList(10, 1, 100);
 const PROTOTYPE_TEXT = 'Linked List Prototype';
 const EXAMPLE_TEXT = 'PARAMETER/example';
 
-function PrototypeParam() {
+function msort_linkedlist() {
 
     const [message, setMessage] = useState(null);
     const [values, setValues] = useState(DEFAULT_LIST);
@@ -16,7 +16,7 @@ function PrototypeParam() {
         <>
             <div className="form">
                     <ListParam
-                    name='Linked List Prototype'
+                    name='msort_linkedlist'
                     buttonName="Sort"
                     mode="sort"
                     formClassName="formLeft"
@@ -34,4 +34,4 @@ function PrototypeParam() {
     );
 }
 
-export default PrototypeParam;
+export default msort_linkedlist;

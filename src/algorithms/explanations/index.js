@@ -3,6 +3,7 @@ export { default as BSTExp } from './BSTExp.md';
 export { default as QSExp } from './QSExp.md';
 export { default as msort_arr_td } from './msort_arr_td.md';
 export { default as msort_lista_td } from './msort_lista_td.md';
+export { default as msort_linkedlist } from './msort_linkedlist.md';
 export { default as Prims_oldExp } from './PRIM_oldExp.md';
 export { default as PrimsExp } from './PRIMExp.md';
 export { default as KruskalExp } from './KRUSKALExp.md';
@@ -17,5 +18,4 @@ export { default as ASTARExp } from './ASTExp.md';
 export { default as BFSExp } from './BFSExp.md';
 export { default as DFSExp } from './DFSExp.md';
 export { default as DFSrecExp } from './DFSrecExp.md';
-export { default as PROTOTYPE } from './PROTOTYPE.md';
 

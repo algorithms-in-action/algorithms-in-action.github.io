@@ -4,6 +4,7 @@ export { default as heapSort } from './heapSort';
 export { default as quickSort } from './quickSort';
 export { default as msort_arr_td } from './msort_arr_td';
 export { default as msort_lista_td } from './msort_lista_td';
+export { default as msort_linkedlist } from './msort_linkedlist';
 export { default as transitiveClosure } from './transitiveClosure';
 export { default as prim_old } from './prim_old';
 export { default as prim } from './prim';
@@ -20,6 +21,4 @@ export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
-export { default as PROTOTYPE } from './PROTOTYPE';
-export { default as jeffPrototype } from './JEFFPROTOTYPE';
 

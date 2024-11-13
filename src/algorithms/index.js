@@ -6,8 +6,6 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
-import { PROTOTYPE_PARAM } from "./parameters";
-import {jeffPrototype} from "./pseudocode";
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -118,6 +116,21 @@ const allalgs = {
     },
     controller: {
       sort: Controller.msort_lista_td,
+    },
+  },
+  'msort_linkedlist': {
+    noDeploy: false,
+    name: 'Merge Sort (Linked Lists)',
+    category: 'Sort',
+    explanation: Explanation.msort_linkedlist,
+    param: <Param.msort_linkedlist/>,
+    instructions: Instructions.msort_lista_td,
+    extraInfo: ExtraInfo.msort_lista_td,
+    pseudocode: {
+      sort: Pseudocode.msort_linkedlist,
+    },
+    controller: {
+      sort: Controller.msort_linkedlist,
     },
   },
 
@@ -338,23 +351,6 @@ const allalgs = {
     },
     controller: {
       search: Controller.horspoolStringSearch,
-    },
-  },
-
-  // When changing name, make sure this name matches with prototype name.
-  'Linked List Prototype': {
-    noDeploy: false,
-    name: 'prototype (doesn\'t need to match/',
-    category: 'Insert/Sort',
-    explanation: Explanation.PROTOTYPE,
-    param: <Param.PROTOTYPE_PARAM />,
-    instructions: Instructions.PROTOTYPEINSTRUCTION,
-    extraInfo: ExtraInfo.PROTOTYPE,
-    pseudocode: {
-      sort: Pseudocode.PROTOTYPE,
-    },
-    controller: {
-      sort: Controller.listaProto,
     },
   },
 };
