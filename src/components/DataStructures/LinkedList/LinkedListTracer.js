@@ -5,7 +5,6 @@
 // eslint-disable-next-line import/no-unresolved
 import Tracer from "../common/Tracer"; // Assume we have a renderer for linked lists
 import LinkedListRenderer from './LinkedListRenderer';
-import {node} from "prop-types";
 
 class LinkedListTracer extends Tracer {
 
@@ -48,8 +47,7 @@ class LinkedListTracer extends Tracer {
     }
 
     createNode(value) {
-        const newNode = { key: this.nodeKey++, index: this.nodeKey, value, next: null, patched: false, selected: false, variables: [], arrow: 0 };
-        return newNode;
+        return { key: this.nodeKey++, index: this.nodeKey, value, next: null, patched: false, selected: false, variables: [], arrow: 0 };
     }
 
     totalLength() {
@@ -285,11 +283,6 @@ class LinkedListTracer extends Tracer {
         return maxIndex;
     }
 
-    getSize(list) {
-
-        return
-    }
-
     getMaxSize() {
         let maxSize = 0;
 
@@ -388,7 +381,6 @@ class LinkedListTracer extends Tracer {
 
     // Assigns a variable to a specific node in a specific list, removing it from all others
     assignVariable(variable, nodeIndex) {
-        const {listIndex, layerIndex} = this.findListbyNode(nodeIndex);
         this.removeVariable(variable);
         this.addVariable(variable, nodeIndex);
     }
