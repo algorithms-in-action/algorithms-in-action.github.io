@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Tracer support for moving arrows in 5 directions">
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
     </list>
@@ -34,12 +34,12 @@
     &quot;assignee&quot;: &quot;jiafeilin1&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/jiafeilin1/ITprojectTeam2.git&quot;,
-    &quot;accountId&quot;: &quot;110a167a-08af-4a12-bab1-3ebea60bce8d&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/jiafeilin1/ITprojectTeam2.git",
+    "accountId": "8a70aea5-6357-4415-acc6-72d4b0bbefa5"
   }
-}</component>
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -57,28 +57,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.App.js.executor": "Run",
-    "Node.js.BFS.js.executor": "Run",
-    "Node.js.Prototype.js.executor": "Run",
-    "Node.js.heapSort.js.executor": "Debug",
-    "Node.js.quickSort_shared.js.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "ListPackageUpdate",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/carli/Downloads/index (2).js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.App.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.BFS.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Prototype.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.heapSort.js.executor&quot;: &quot;Debug&quot;,
+    &quot;Node.js.quickSort_shared.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ListPackageUpdate&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/carli/Downloads/index (2).js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\carli\WebstormProjects\ITprojectTeam2\src\components\DataStructures\LinkedList" />
@@ -89,7 +89,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-WS-242.20224.342" />
       </set>
     </attachedChunks>
   </component>
@@ -113,6 +113,7 @@
       <workItem from="1727654844546" duration="10811000" />
       <workItem from="1727666934294" duration="12026000" />
       <workItem from="1727681905135" duration="15401000" />
+      <workItem from="1731457411769" duration="593000" />
     </task>
     <task id="LOCAL-00001" summary="Empty Prototype Set up">
       <option name="closed" value="true" />
@@ -226,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727791997341</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js">
+      <option name="closed" value="true" />
+      <created>1731420180683</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1731420180683</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,6 +270,7 @@
     <MESSAGE value="'fix': Issue with update indices and stacking" />
     <MESSAGE value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
     <MESSAGE value="'feat': Tracer support for moving arrows in 5 directions" />
-    <option name="LAST_COMMIT_MESSAGE" value="'feat': Tracer support for moving arrows in 5 directions" />
+    <MESSAGE value="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js" />
   </component>
 </project>

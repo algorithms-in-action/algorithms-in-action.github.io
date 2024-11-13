@@ -204,7 +204,7 @@ class ListTracer extends Tracer {
     // Split two lists
     splitList(listIndex, splitIndex) {
         console.log('splitList called with listIndex:', listIndex, 'splitIndex:', splitIndex);
-        console.log('Original list: ', lists);
+        console.log('Original list: ', this.lists);
         if (this.lists[listIndex] && splitIndex >= 0 && splitIndex < this.lists[listIndex].objects.length) {
             const originalList = this.lists[listIndex].objects;
             const leftPart = originalList.slice(0, splitIndex);
@@ -223,7 +223,7 @@ class ListTracer extends Tracer {
 
             // Add the new list
             this.lists[listIndex+1] = rightPart;
-            console.log('After split, lists: ', lists);
+            console.log('After split, lists: ', this.lists);
         } else {
             console.warn('Invalid listIndex or splitIndex. Cannot split.');
         }
