@@ -44,6 +44,7 @@ class LinkedListTracer extends Tracer {
             this.moveList(listIndex, layerIndex, listIndex + 1, 'insert');
         }
         this.lists.push(list);
+        this.syncChartTracer();
     }
 
     createNode(value) {
@@ -57,8 +58,8 @@ class LinkedListTracer extends Tracer {
         list.size++;
     }
 
-    // TO DO Appends a value to a specific list by index
-    addNull(key, position) {
+    addNull(key) {
+        if (!key || key>this.lists.length) {return}
         const newNode = this.createNode(null);
         const list = this.findListbyNode(key);
         const nodeIndex = list.data.findIndex(node => node.key === key);
@@ -386,10 +387,9 @@ class LinkedListTracer extends Tracer {
 
     // Synchronizes the chart tracer
     syncChartTracer() {
-        if (this.chartTracer) {
-            this.chartTracer.data = this.lists.map(list => list.data); // Sync all lists with the tracer
-        }
-    }
+        const temp = this.data;
+        this.data = null;  // Clear data briefly
+        this.data = temp;     }
 
     // Returns a string representation of all linked lists
     stringTheContent() {
