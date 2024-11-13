@@ -6,6 +6,7 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
+import {msort_linkedlist} from "./parameters";
 
 /*
  This file lists all the algorithms in the program, and imports
