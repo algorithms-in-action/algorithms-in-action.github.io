@@ -77,7 +77,6 @@ class LinkedListRenderer extends Renderer {
                                                 {node.variables.map((variable, variableIndex) => (
                                                     <div className={styles.label}
                                                          key={`variable-${variableIndex}`}
-                                                         layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
                                                     >
                                                         {variable}
                                                     </div>))}
