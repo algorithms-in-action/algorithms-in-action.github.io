@@ -186,6 +186,88 @@ class ListTracer extends Tracer {
             console.warn('List at index', listIndex, 'does not exist. Cannot clear labels.');
         }
     }
+
+    // Merge two lists together
+    mergeLists(listIndex1, listIndex2) {
+        console.log('mergeLists called with listIndex1:', listIndex1, 'listIndex2:', listIndex2);
+        if (this.lists[listIndex1] && this.lists[listIndex2]) {
+            console.log('Before merge, list 1:', this.lists[listIndex1].objects, 'list 2:',
+                this.lists[listIndex2].objects);
+            this.lists[listIndex1].objects = this.lists[listIndex1].objects.concat(this.lists[listIndex2].objects);
+            this.lists[listIndex2] = null; // Clear the second list
+            console.log('After merge, list:', this.lists[listIndex1].objects);
+        } else {
+            console.warn('One or both lists do not exist. Cannot merge.');
+        }
+    }
+
+    // Split two lists
+    splitList(listIndex, splitIndex) {
+        console.log('splitList called with listIndex:', listIndex, 'splitIndex:', splitIndex);
+        console.log('Original list: ', this.lists);
+        if (this.lists[listIndex] && splitIndex >= 0 && splitIndex < this.lists[listIndex].objects.length) {
+            const originalList = this.lists[listIndex].objects;
+            const leftPart = originalList.slice(0, splitIndex);
+            const rightPart = originalList.slice(splitIndex);
+            console.log('After split, left part:', leftPart, 'right part:', rightPart);
+
+            // Update original list
+            this.lists[listIndex].objects = leftPart;
+
+            // Move the following lists
+            this.addList(this.nextListIndex);
+            for (let i = this.nextListIndex; i > listIndex; i--) {
+                this.lists[i].objects = this.lists[i-1].objects;
+            }
+            this.nextListIndex++;
+
+            // Add the new list
+            this.lists[listIndex+1] = rightPart;
+            console.log('After split, lists: ', this.lists);
+        } else {
+            console.warn('Invalid listIndex or splitIndex. Cannot split.');
+        }
+    }
+
+    // Sort a list by its values
+    sortList(listIndex) {
+        console.log('sortList called with listIndex:', listIndex);
+        if (this.lists[listIndex]) {
+            console.log('Before sort, list objects:', this.lists[listIndex].objects);
+            this.lists[listIndex].objects.sort((a, b) => a.value - b.value);
+            console.log('After sort, list objects:', this.lists[listIndex].objects);
+        } else {
+            console.warn('List at index', listIndex, 'does not exist. Cannot sort.');
+        }
+    }
+
+    // Highlight values
+    patch(listIndex, startIndex, endIndex = startIndex) {
+        console.log('patch called with listIndex:', listIndex, 'startIndex:', startIndex, 'endIndex:', endIndex);
+        if (this.lists[listIndex]) {
+            for (let i = startIndex; i <= endIndex && i < this.lists[listIndex].objects.length; i++) {
+                this.lists[listIndex].objects[i].patched = true;
+            }
+            console.log('Patched nodes from', startIndex, 'to', endIndex);
+        } else {
+            console.warn('List at index', listIndex, 'does not exist. Cannot patch.');
+        }
+    }
+
+    // Unhighlight values
+    depatch(listIndex, startIndex, endIndex = startIndex) {
+        console.log('depatch called with listIndex:', listIndex, 'startIndex:', startIndex, 'endIndex:', endIndex);
+        if (this.lists[listIndex]) {
+            for (let i = startIndex; i <= endIndex && i < this.lists[listIndex].objects.length; i++) {
+                this.lists[listIndex].objects[i].patched = false;
+            }
+            console.log('Depatched nodes from', startIndex, 'to', endIndex);
+        } else {
+            console.warn('List at index', listIndex, 'does not exist. Cannot depatch.');
+        }
+    }
+
+
 }
 
 export default ListTracer;
