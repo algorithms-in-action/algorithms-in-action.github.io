@@ -85,7 +85,7 @@ class Renderer extends React.Component {
   }
 
   toString(value) {
-    switch (typeof(value)) {
+    switch (typeof (value)) {
       case 'number':
         return [Number.POSITIVE_INFINITY, Number.MAX_SAFE_INTEGER, 0x7fffffff].includes(value) ? '∞' :
           [Number.NEGATIVE_INFINITY, Number.MIN_SAFE_INTEGER, -0x80000000].includes(value) ? '-∞' :
@@ -116,7 +116,7 @@ class Renderer extends React.Component {
         onWheel={zoomPref ? this.handleWheel : null}
       >
         <Ellipsis className={styles.title}>{title}</Ellipsis>
-        { this.renderData() }
+        {this.renderData()}
       </div>
     );
   }

@@ -6,6 +6,9 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
+import { PROTOTYPE_PARAM } from "./parameters";
+import {jeffPrototype} from "./pseudocode";
+
 /*
  This file lists all the algorithms in the program, and imports
  them from the relevant file. Follow the example below for how to
@@ -138,7 +141,7 @@ const allalgs = {
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam/>,
+    param: <Param.TTFTreeParam />,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
     extraInfo: ExtraInfo.TTFInfo,
@@ -181,10 +184,10 @@ const allalgs = {
     },
   },
   'BFS': {
-    
+
     name: 'Breadth First Search',
     category: 'Graph',
-    param: <Param.BFSParam/>,
+    param: <Param.BFSParam />,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,
@@ -209,8 +212,8 @@ const allalgs = {
       find: Controller.dijkstra,
 
     },
-  }, 
-   'aStar': {
+  },
+  'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
     param: <Param.ASTARParam />,
@@ -224,7 +227,7 @@ const allalgs = {
       find: Controller.AStar,
 
     },
-  }, 
+  },
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',
@@ -348,10 +351,10 @@ const allalgs = {
     instructions: Instructions.PROTOTYPEINSTRUCTION,
     extraInfo: ExtraInfo.PROTOTYPE,
     pseudocode: {
-      sort: Pseudocode.jeffPrototype,
+      sort: Pseudocode.PROTOTYPE,
     },
     controller: {
-      sort: Controller.PROTOTYPE,
+      sort: Controller.listaProto,
     },
   },
 };

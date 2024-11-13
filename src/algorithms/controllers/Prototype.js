@@ -48,49 +48,50 @@ export default {
 
         // Initialise
         chunker.add(
-            1,
+            "Main",
             (vis, list) => {
-                vis.list.addList(list);},
+                vis.list.addList(list);
+            },
             [nodes]
         );
 
         // Split List into two sections
-        for (let i= 0; i <= 2; i++) {
-            chunker.add(
-                2,
-                (vis) => {
-                    vis.list.splitList(vis.list.findList(0, 0).size / 2, 0, 0);
-                },
-            );
-        }
 
         chunker.add(
-            3,
+            "Main",
             (vis) => {
-                vis.list.moveList(1,0,0, 'stack');
-            },
-        );
-
-        chunker.add(
-            4,
-            (vis) => {
+                vis.list.splitList(vis.list.findList(0, 0).size / 2, 0, 0);
                 vis.list.select(0);
-                vis.list.select(0,0,0,1);
+            },
+        );
+        chunker.add(
+            "Main",
+            (vis) => {
+                vis.list.splitList(vis.list.findList(0, 0).size / 2, 0, 0);
             },
         );
 
         chunker.add(
-            5,
+            "Main",
             (vis) => {
-                vis.list.setArrow(0,0,0,90);
+                vis.list.splitList(vis.list.findList(0, 0).size / 2, 0, 0);
+            },
+        );
+        chunker.add(
+            "Main",
+            (vis) => {
+                vis.list.moveList(1, 0, 0, 'stack');
+                vis.list.clearVariables();
             },
         );
 
         chunker.add(
-            6,
+            "Main",
             (vis) => {
-                vis.list.patch(0,0,0);
+                vis.list.shiftRight(1, 0, 1);
             },
         );
+
+
     }
 };

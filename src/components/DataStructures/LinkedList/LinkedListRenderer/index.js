@@ -17,101 +17,97 @@ class LinkedListRenderer extends Renderer {
     // Define the symbols
     renderSymbols() {
         return (
-            <svg style={{display: 'none'}}>
+            <svg style={{ display: 'none' }}>
                 <symbol id="null-marker" viewBox="0 0 100 100">
-                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20"/>
-                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20"/>
+                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="20" />
+                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="20" />
                 </symbol>
 
                 <symbol id="arrow-symbol" viewBox="0 0 100 100">
-                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2"/>
-                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none"/>
+                    <line x1="30" y1="50" x2="70" y2="50" stroke="white" strokeWidth="2" />
+                    <polyline points="60,40 70,50 60,60" stroke="white" strokeWidth="2" fill="none" />
                 </symbol>
             </svg>
         );
     }
 
     renderData() {
-        const {lists} = this.state;
+        const { lists } = this.state;
         const layers = this.layer(lists);
-        console.log(layers);
 
         return (
             <AnimateSharedLayout>
-                <motion.div className={styles.LayerContainer}
-                            drag
+                <motion.div className={styles.IndexContainer}
+                    drag
                 >
-                {this.renderSymbols()}
+                    {this.renderSymbols()}
 
-                {layers.map((layer, layerIndex) => (
-                    <div className={styles.linkedListContainer} key={`layer-${layerIndex}`}>
+                    {layers.map((layer, listIndex) => (
+                        <div className={styles.LayerContainer} key={`layer-${listIndex}`}>
 
-                        {layer.map((list, listIndex) => (
-                            <div className={styles.nodeContainer} key={`list-${listIndex}`}
-                                style={{transform: `translate(${list.unitShift*76}px)`}}>
+                            {layer.map((list, layerIndex) => (
+                                <div className={styles.LinkedListContainer} key={`linkedList-${layerIndex}`}>
 
-                                {list.data.map((node, nodeIndex) => (
+                                    {list.data.map((node, nodeIndex) => (
+                                        <div className={classes(styles.nodeContainer,
+                                            !node.value && styles.invisible)}
+                                             key={`list-${listIndex}-node-${node.key}`}
+                                             style={{transform: `translate(${list.unitShift * 76}px)`}}>
 
-                                    <React.Fragment>
+                                        <React.Fragment>
                                             <motion.div
                                                 key={`node-${node.key}`}
                                                 layoutId={`node-${node.key}`}
                                                 className={classes(styles.node,
                                                     node.selected && styles.selected,
-                                                    node.patched && styles.visited
+                                                    node.patched && styles.visited,
+                                                    !node.value && styles.invisible,
                                                 )}
                                                 whileHover={{scale: 1.2}}
                                                 transition={{type: 'spring', stiffness: 100}}
                                             >
                                                 {/* Nodes */}
-                                                <div className={classes(styles.value)}>
-                                                    {console.log(node.key)}
+                                                <div className={classes(styles.value,                                                     !node.value && styles.invisible,
+                                                    !node.value && styles.invisible,
+                                                )}>
                                                     {node.value}
                                                 </div>
 
                                                 {/* Labels */}
                                                 {node.variables.map((variable, variableIndex) => (
-                                                    <div className={styles.label} key={`variable-${variableIndex}`}
-                                                            layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
-                                                        >
-                                                            {variable}
+                                                    <div className={styles.label}
+                                                         key={`variable-${variableIndex}`}
+                                                         layoutId={`variable-${listIndex}-${nodeIndex}-${variableIndex}`}
+                                                    >
+                                                        {variable}
                                                     </div>))}
                                             </motion.div>
 
-                                        {/* Arrows */}
-                                        <div className={styles.symbol}>
-                                            <div
-                                                className={styles.arrow}
-                                                layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
-                                            >
-                                                <svg className={classes(styles.arrow,
-                                                node.arrow===90 && styles.down,
-                                                node.arrow===-90 && styles.up,
-                                                node.arrow===45 && styles.diagDown,
-                                                node.arrow===-45 && styles.diagUp)
-                                                }>
-                                                    <use href="#arrow-symbol"/>
-                                                </svg>
-
-                                                {
-                                                    // upwards and downwards diagonal arrows
-                                                    /*<svg className={classes(styles.symbol,styles.diagonal)} width="40" height="40">
-                                                    <use href="#downwards-diagonal"/>
-                                                </svg> */
-                                                }
-                                                {
-                                                    // testing for last node
-                                                    // {list.size-nodeIndex>1 && <use href="#arrow-symbol"/>}
-                                                }
+                                            {/* Arrows */}
+                                            <div className={styles.symbol}>
+                                                <div
+                                                    className={styles.arrow}
+                                                    layoutId={`list-${listIndex}-arrow-${nodeIndex}`}
+                                                >
+                                                    <svg className={classes(styles.arrow,
+                                                        node.arrow === 90 && styles.down,
+                                                        node.arrow === -90 && styles.up,
+                                                        node.arrow === 45 && styles.diagDown,
+                                                        node.arrow === -45 && styles.diagUp)
+                                                    }>
+                                                        <use href="#arrow-symbol"/>
+                                                    </svg>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </React.Fragment>
+                                        </React.Fragment>
+                                    </div>
                                 ))}
+                                </div>
+                            ))}
                             </div>))}
-                    </div>))}
-            </motion.div>
-        </AnimateSharedLayout>)
-    }
+                        </motion.div>
+                        </AnimateSharedLayout>)
+                    }
 
     render() {
         return this.renderData();
@@ -125,10 +121,12 @@ class LinkedListRenderer extends Renderer {
                 layers[item.listIndex] = [];
             }
             layers[item.listIndex].push(item);
+            layers[item.listIndex].sort((a, b) => a.layerIndex - b.layerIndex);
+
         });
         return layers;
     }
+
 }
 
 export default LinkedListRenderer;
-
