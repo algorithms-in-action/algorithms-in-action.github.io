@@ -248,16 +248,12 @@ export function run_msort() {
 
                 // Shift list across if necessary
                 chunker.add('findSmaller', (vis) => {
-                    console.log(A+Ashift,(B+Bshift));
                     if (A+Ashift-(B+Bshift)>1) {
                         vis.llist.addNull(R+B,-1);
-                        console.log('Bshift');
                         Bshift++;
                     }
                     else if (B+Bshift-(A+Ashift)>1) {
                         vis.llist.addNull(L+A,-1);
-                        console.log('aShift');
-
                         Ashift++;
                     }
                 },);
