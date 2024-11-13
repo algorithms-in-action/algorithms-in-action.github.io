@@ -148,6 +148,7 @@ export function run_msort() {
                 R = MergeSort(newR, R, end, depth + 1);
             }
 
+            if (end===linkedList.length-1) {end++}
             merge(L,R, end, depth);
 
             return L;
