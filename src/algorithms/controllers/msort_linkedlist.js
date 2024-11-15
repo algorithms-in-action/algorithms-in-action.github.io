@@ -332,6 +332,12 @@ export function run_msort() {
         if (linkedList.length === 0) {
             return [];
         }
+        for (let i = 0; i < linkedList.length; i++) {
+            if (typeof linkedList[i] != "number") {
+                console.log("Invalid input! Please enter numbers only")
+                return null;
+            }
+        }
 
         chunker.add('Main', (vis, lists) => {
             vis.llist.addList(lists);

@@ -7,6 +7,7 @@
 
 /* eslint-disable no-undef */
 
+import { NULL } from 'sass';
 import msort_linkedlist from './msort_linkedlist';
 
 // Simple stub for the chunker
@@ -44,5 +45,11 @@ describe('msort_linkedlist', () => {
     });
     it('sorts all identical list', () => {
         expect(msort_linkedlist.run(chunker, { nodes: [1, 1, 1, 1, 1, 1, 1] })).toEqual([1, 1, 1, 1, 1, 1, 1]);
+    });
+    it('exits with invalid inputs', () => {
+        expect(msort_linkedlist.run(chunker, { nodes: ['a', 'b', 'b', '1', '2', '3', true, [1, false], null] })).toEqual(null);
+    });
+    it('handles decimals', () => {
+        expect(msort_linkedlist.run(chunker, { nodes: [2.1, 1.1, 2.3, 1.3, 1.2, 2.2] })).toEqual([1.1, 1.2, 1.3, 2.1, 2.2, 2.3]);
     });
 });
