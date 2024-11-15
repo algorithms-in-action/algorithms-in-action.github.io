@@ -16,6 +16,7 @@
     "test": "react-scripts test",
     "test-uf": "npm test -- ./src/algorithms/controllers/unionFind.test.js",
     "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
+    "test_avl": "npm test -- ./src/algorithms/controllers/AVLTree.test.js",
     "test-url": "npm test -- ./src/algorithms/parameters/helpers/urlHelpers.test.js"
   },
   "husky": {

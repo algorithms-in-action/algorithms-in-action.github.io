@@ -129,10 +129,21 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-stroke: #4f4f4f;
 	--graph-node-id-fill: #6a6a6a;
 	--graph-node-weight-fill: #6a6a6a;
+	--graph-node-height-fill: #ff005d;
+	--graph-node-AVL_TID-fill: #579505;
+	--graph-node-circle-fill-selected: #2289ff;
+	--graph-node-circle-stroke-selected: #2289ff;
 	--graph-node-id-fill-selected: #FFFFFF;
 	--graph-node-circle-fill-sorted: #aeaeae;
 	--graph-node-id-fill-sorted: #FFFFFF;
 	--graph-node-id-fill-visited: #FFFFFF;
+
+	// Graph RGB;
+	--graph-node-circle-fill-rgb1: #00b966;
+	--graph-node-circle-fill-rgb2: #002db4;
+	--graph-node-circle-fill-rgb3: #b500ac;
+	--graph-node-circle-fill-rgb4: #fd0505;
+	--graph-node-circle-fill-rgb5: #c3c000;
 
 	// colors for easy graph functions:
 
@@ -369,7 +380,58 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	//graph colours
+	--graph-node-circle-fill-selected: #83d489;
+	--graph-node-circle-stroke-selected: #83d489;
+	--graph-node-circle-fill-visited: #e85c49;
+	--graph-node-circle-fill-visited0: #2289ff;
+	--graph-node-circle-stroke-visited0: #2289ff;
+	--graph-node-circle-stroke-visited: #e85c49;
+	--graph-node-circle-fill-visited1: #11cc77;
+	--graph-node-circle-stroke-visited1: #11cc77;
+	--graph-node-circle-fill-visited2: #f58b2f;
+	--graph-node-circle-stroke-visited2: #f58b2f;
+	--graph-node-circle-fill-visited3: #FF0000;
+	--graph-node-circle-stroke-visited3: #FF0000;
+	--graph-node-circle-fill-visited4: #2289ff;
+	--graph-node-circle-stroke-visited4: #2289ff;
+
+	--graph-edge-line-stroke-selected: #ee0970;
+	--graph-edge-weight-fill-selected: #ee0970;
+	--graph-edge-line-stroke-visited: #2289ff;
+	--graph-edge-line-stroke-visited1: #11cc77;
+	--graph-edge-line-stroke-visited2: #f58b2f;
+	--graph-edge-line-stroke-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-line-stroke-visited4: #2289ff;
+	--graph-edge-weight-fill-visited: #2289ff;
+	--graph-edge-weight-fill-visited1: #11cc77;
+	--graph-edge-weight-fill-visited2: #f58b2f;
+	--graph-edge-weight-fill-visited3: #FF0000;        /* YouTube Red */
+  --graph-edge-weight-fill-visited4: #2289ff;
+
+	/* YouTube Red */
+	--graph-select_color-fill: #ff0000;
+
+	--graph-arrow-fill-selected: #ee0970;
+	--graph-arrow-fill-visited: #2289ff;
+	--graph-arrow-fill-visited1: #11cc77;
+	--graph-arrow-fill-visited2: #f58b2f;
+	--graph-arrow-fill-visited3: #FF0000;
+  --graph-arrow-fill-visited4: #2289ff;
+
+	--array-1d-row-col-bg-selected: #e85c49;
+	--array-1d-row-col-bg-patched: #83d489;
+	--array-1d-row-col-variable: #e85c49;
+
+	--array-2d-row-col-bg-selected: #2289ff;
+	--array-2d-row-col-bg-selected1: #11cc77;
+	--array-2d-row-col-bg-selected2: #8ac0ff;
+	--array-2d-row-col-bg-selected3: #8fdbb9;
+	--array-2d-row-col-bg-selected4:  #FF0000;
+	--array-2d-row-col-bg-selected5: #f58b2f;
+	--array-2d-row-col-bg-patched: #f58b2f;
+	--array-2d-row-col-sorted: #FFFFFF;
+
+  //graph colours
 	--leaf: #83d489;
 	--peach: #e85c49;
 	--apple: #FF0000;

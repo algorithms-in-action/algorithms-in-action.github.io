@@ -13,6 +13,7 @@ export { default as QSM3Param } from './QSM3Param';
 export { default as HSSParam } from './HSSParam';
 export { default as UFParam } from './UFParam';
 export { default as TTFTreeParam } from './TTFTreeParam';
+export { default as AVLTreeParam } from './AVLTreeParam';
 export { default as DIJKParam } from './DIJKParam';
 export { default as ASTARParam } from './ASTParam';
 export { default as BFSParam } from './BFSParam';
