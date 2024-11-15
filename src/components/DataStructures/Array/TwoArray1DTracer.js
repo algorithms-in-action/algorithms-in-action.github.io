@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-/* draw two arrays in the same box (currently unused) */
+/* draw two arrays in the same box */
 
 import Array2DTracer from './Array2DTracer';
 import Array1DRenderer from './Array1DRenderer/index';

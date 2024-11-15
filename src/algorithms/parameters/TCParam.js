@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 // import MatrixParam from './helpers/MatrixParam';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const DEFAULT_SIZE = 4; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = null; // disable
@@ -30,7 +28,7 @@ const GRAPH_EGS = [ // XXX think up better examples?
           edges: '1-2,2-1,2-3,3-4,4-5,5-3'
         }];
 
-function TransitiveClosureParam({ mode, size, min, max}) {
+function TransitiveClosureParam() {
   const [message, setMessage] = useState(null);
 
   return (
@@ -39,13 +37,13 @@ function TransitiveClosureParam({ mode, size, min, max}) {
       <EuclideanMatrixParams
         name="transitiveClosure"
         mode="tc"
-        defaultSize={size || DEFAULT_SIZE}
+        defaultSize={DEFAULT_SIZE}
         defaultStart={DEFAULT_START}
         defaultEnd={DEFAULT_END}
         defaultWeight = {DEFAULT_WEIGHT}
         defaultHeur = {DEFAULT_HEUR}
-        min={min || 1}
-        max={max || 49}
+        min={1}
+        max={49}
         graphEgs={GRAPH_EGS}
         ALGORITHM_NAME={TRANSITIVE_CLOSURE}
         EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
@@ -61,15 +59,4 @@ function TransitiveClosureParam({ mode, size, min, max}) {
   );
 }
 
-// Define the prop types for URL Params
-TransitiveClosureParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
-  min: PropTypes.string.isRequired,
-  max: PropTypes.string.isRequired,
-};
-
-export default withAlgorithmParams(TransitiveClosureParam); // Export with the wrapper for URL Params
-
-
+export default TransitiveClosureParam;

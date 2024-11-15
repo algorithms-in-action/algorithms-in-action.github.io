@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
-import { URLContext } from '../../context/urlState';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
@@ -11,8 +10,6 @@ import {
   successParamMsg,
   errorParamMsg,
 } from './helpers/ParamHelper';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 // import useParam from '../../context/useParam';
 
@@ -29,17 +26,11 @@ const INSERTION_EXAMPLE = 'Please follow the example provided: 1,2,3,4. Values s
 const SEARCH_EXAMPLE = 'Please follow the example provided: 16.';
 const NO_TREE_ERROR = 'Please build a tree before running search.';
 
-function TTFTreeParam({ mode, list, value }) {
+function TTFTreeParam() {
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
-  const [nodes, setLocalNodes] = useState(list || DEFAULT_NODES);
-  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const [nodes, setNodes] = useState(DEFAULT_NODES);
 
-  useEffect(() => {
-    setNodes(nodes);
-    setSearchValue(localValue);
-  }, [nodes, localValue])
 
   const handleInsertion = (e) => {
     e.preventDefault();
@@ -61,7 +52,6 @@ function TTFTreeParam({ mode, list, value }) {
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
-    setLocalValue(inputValue);
 
     if (singleNumberValidCheck(inputValue)) {
       const target = parseInt(inputValue, 10);
@@ -98,7 +88,7 @@ function TTFTreeParam({ mode, list, value }) {
           formClassName="formLeft"
           DEFAULT_VAL={nodes}
           handleSubmit={handleInsertion}
-          SET_VAL={setLocalNodes}
+          SET_VAL={setNodes}
           REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
@@ -112,7 +102,7 @@ function TTFTreeParam({ mode, list, value }) {
           mode="search"
           formClassName="formRight"
           handleSubmit={handleSearch}
-          DEFAULT_VAL={value || localValue}
+          DEFAULT_VAL={DEFAULT_TARGET}
           ALGORITHM_NAME={SEARCH}
           EXAMPLE={SEARCH_EXAMPLE}
           setMessage={setMessage}
@@ -124,15 +114,7 @@ function TTFTreeParam({ mode, list, value }) {
   );
 }
 
-// Define the prop types for URL Params
-TTFTreeParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
-export default withAlgorithmParams(TTFTreeParam); // Export with the wrapper for URL Params
+export default TTFTreeParam;
 
 function validateListInput(input) {
   const inputArr = input.split(',');

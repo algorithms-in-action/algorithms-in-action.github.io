@@ -89,17 +89,7 @@ class GraphRenderer extends Renderer {
   handleMouseMove(e) {
     // XXX would be nice to avoid selecting text with reverse video
     // as we move the mouse around!
-    // XXX really shouldn't depend on this.props.title - moving away
-    // from this but still have a hack for Warshalls
-    if (this.selectedNode && this.props.title === 'Transitive Closure') {
-      // XXX Old stuff so Warshall's remains as it was
-      // Allow mouse movement
-      const { x, y } = this.computeCoords(e);
-      const node = this.props.data.findNode(this.selectedNode.id);
-      node.x = x;
-      node.y = y;
-      this.refresh();
-    } else if (this.selectedNode && this.props.data.moveNode) {
+    if (this.selectedNode && this.props.data.moveNode) {
       // Allow mouse to move nodes (for Euclidean graphs) if
       // this.props.data.moveNode function is defined
       const { x, y } = this.computeCoords(e);

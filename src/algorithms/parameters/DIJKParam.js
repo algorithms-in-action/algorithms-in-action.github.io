@@ -2,9 +2,6 @@
 import React, { useState } from 'react';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
-
 
 const DEFAULT_START = 5; // XXX null should disable
 // const DEFAULT_END = null; // disable end nodes display/input
@@ -30,28 +27,22 @@ const GRAPH_EGS = [ // XXX think up better examples?
 const DIJK = 'Dijkstra\'s';
 const DIJK_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
 const DIJK_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
-function DijkstraParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
+function DijkstraParam() {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-    { name: 'URL Input Graph',
-      size: size || GRAPH_EGS[0].size,
-      coords: xyCoords || GRAPH_EGS[0].coords,
-      edges: edgeWeights || GRAPH_EGS[0].edges
-    }
-    ]
+
   return (
     <>
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="dijkstra"
         mode="find"
-        defaultSize={size || DEFAULT_SIZE}
-        defaultStart={start || DEFAULT_START}
-        defaultEnd={end || DEFAULT_END}
-        defaultHeur = {heuristic || DEFAULT_HEUR}
-        graphEgs={graph_egs || GRAPH_EGS}
-        min={min || 1}
-        max={max || 49}
+        defaultSize={DEFAULT_SIZE}
+        defaultStart={DEFAULT_START}
+        defaultEnd={DEFAULT_END}
+        defaultHeur = {DEFAULT_HEUR}
+        graphEgs={GRAPH_EGS}
+        min={1}
+        max={49}
         symmetric
         ALGORITHM_NAME={DIJK}
         EXAMPLE={DIJK_EXAMPLE}
@@ -65,20 +56,4 @@ function DijkstraParam({ mode, xyCoords, edgeWeights, size, start, end, heuristi
   );
 }
 
-DijkstraParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  heuristic: PropTypes.string.isRequired,
-  xyCoords: PropTypes.string.isRequired,
-  edgeWeights: PropTypes.string.isRequired,
-  min: PropTypes.string.isRequired,
-  max: PropTypes.string.isRequired,
-};
-
-export default withAlgorithmParams(DijkstraParam); // Export with the wrapper for URL Params
-
-
-
+export default DijkstraParam;

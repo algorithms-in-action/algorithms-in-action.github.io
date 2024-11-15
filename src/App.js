@@ -2,17 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
 import Header from './components/top/Header';
-import AlgorithmMenu from './components/AlgorithmMenu';
 import { ReactComponent as Circle } from './assets/icons/circle.svg';
 import { ReactComponent as Direction } from './assets/icons/direction.svg';
 import { GlobalProvider } from './context/GlobalState';
-import LeftPanel from './components/left-panel';
 import RightPanel from './components/right-panel';
+import LeftPanel from './components/left-panel';
 import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 import Settings from './components/top/Settings';
 import {
-  resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
+  resizeWindow, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
 } from './BorderResize';
 import {
   setTheme,
@@ -24,29 +23,35 @@ import {
   SYSTEM_THEME_KEY,
 } from './components/top/helper';
 
+
 const DEFAULT_FONT_INCREMENT = 0;
-const LEFT_FONT_SIZE = 15;
+const LEFT_FONT_SIZE = 13;
 const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
 function App() {
   useEffect(() => {
-    window.addEventListener('resize', resizeWindow);
-    return () => {
-      window.removeEventListener('resize', resizeWindow);
-    };
-  }, []);
+    window.addEventListener('resize', (event) => {
+      resizeWindow(event);
+    });
+    // eslint-disable-next-line no-unused-vars
+    return (_) => { window.removeEventListener('resize', resizeWindow); };
+  });
 
+  // add mouseout event listener to 'document' when App first mount
   useEffect(() => {
     const mouseOutCallback = (e) => {
+      // e = e || window.event;
       const from = e.relatedTarget || e.toElement;
       if (!from || from.nodeName === 'HTML') {
+        // End dragging when mouse out of html
         endDrag();
       }
     };
 
-    document.addEventListener('mouseout', mouseOutCallback);
+    addEvent(document, 'mouseout', mouseOutCallback);
 
+    // do not forget to remove event listener when the App component unmount
     return () => {
       document.removeEventListener('mouseout', mouseOutCallback);
     };
@@ -63,6 +68,7 @@ function App() {
     setFontSizeIncrease(fontSizeIncrease + val);
   };
 
+
   const initAlgoColor = () => {
     const algoTheme = getWithExpiry(ALGO_THEME_KEY);
     if (algoTheme === null) {
@@ -78,12 +84,14 @@ function App() {
     setAlgoTheme(id);
   };
 
+
   const initSystemColor = () => {
     const theme = getWithExpiry(SYSTEM_THEME_KEY);
     if (theme === null) {
       setTheme(getSystemColorMode());
       return getSystemColorMode();
     }
+
     return theme;
   };
 
@@ -94,15 +102,14 @@ function App() {
   };
 
   useEffect(() => {
-    const theme = getWithExpiry(SYSTEM_THEME_KEY);
-    setTheme(theme);
+    setTheme(getWithExpiry(SYSTEM_THEME_KEY));
     setAlgoTheme(getWithExpiry(ALGO_THEME_KEY));
-    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-  }, []);
+  });
 
   return (
+
     <GlobalProvider>
-      {isSettingVisible ? (
+      { isSettingVisible ? (
         <Settings
           onFontIncrease={onFontIncrease}
           onSetting={onSetting}
@@ -120,13 +127,8 @@ function App() {
         tabIndex="-1"
         onMouseMove={(event) => onDrag(event)}
       >
-        <div id="header" className="header-container">
-          <div className="header-left">
-            <AlgorithmMenu />
-          </div>
-          <div className="header-right">
-            <Header onSetting={onSetting} />
-          </div>
+        <div id="header">
+          <Header onSetting={onSetting} />
         </div>
         <div id="leftcol">
           <LeftPanel
@@ -134,17 +136,17 @@ function App() {
             fontSizeIncrement={fontSizeIncrease}
           />
         </div>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <div
           id="leftdragbar"
           tabIndex="-1"
           aria-label="Move left drag bar"
-          onDoubleClick={collapseLeftDrag}
-          onMouseDown={startLeftDrag}
+          onClick={collapseLeftDrag}
           role="button"
           className="dragbar"
         >
           <div id="draghandle" className="handle">
-            <Direction id="leftdraghandle" />
+            <Direction id="leftdraghandle"/>
           </div>
         </div>
         <div id="tabpages">
@@ -196,5 +198,6 @@ function App() {
     </GlobalProvider>
   );
 }
+
 
 export default App;
