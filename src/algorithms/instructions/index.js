@@ -122,6 +122,7 @@ export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
 export const TTFInstruction = bstInstructions;
+export const AVLInstruction = bstInstructions;
 export const DIJKInstruction = graphInstructions;
 export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;

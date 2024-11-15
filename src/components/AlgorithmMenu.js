@@ -6,10 +6,10 @@ const baseUrl = window.location.origin;
 
 const algorithms = {
   Sort: {
-    'Heapsort': `${baseUrl}/?alg=heapSort&mode=sort`,
-    'Quicksort': `${baseUrl}/?alg=quickSort&mode=sort`,
+    Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
+    Quicksort: `${baseUrl}/?alg=quickSort&mode=sort`,
     'Quicksort (Median of 3)': `${baseUrl}/?alg=quickSortM3&mode=sort`,
-    'Merge Sort': `${baseUrl}/?alg=msort_arr_td&mode=sort`
+    'Merge Sort': `${baseUrl}/?alg=msort_arr_td&mode=sort`,
   },
   Graph: {
     'Depth First Search': `${baseUrl}/?alg=DFSrec&mode=find`,
@@ -20,19 +20,20 @@ const algorithms = {
     "Prim's (min. spanning tree)": `${baseUrl}/?alg=prim&mode=find`,
     "Prim's (simpler code)": `${baseUrl}/?alg=prim_old&mode=find`,
     "Kruskal's (min. spanning tree)": `${baseUrl}/?alg=kruskal&mode=find`,
-    "Warshall's (transitive closure)": `${baseUrl}/?alg=transitiveClosure&mode=tc`
+    "Warshall's (transitive closure)": `${baseUrl}/?alg=transitiveClosure&mode=tc`,
   },
   Set: {
-    'Union Find': `${baseUrl}/?alg=unionFind&mode=find`
+    'Union Find': `${baseUrl}/?alg=unionFind&mode=find`,
   },
   'Insert/Search': {
     'Binary Search Tree': `${baseUrl}/?alg=binarySearchTree&mode=search`,
-    '2-3-4 Tree': `${baseUrl}/?alg=TTFTree&mode=search`
+    '2-3-4 Tree': `${baseUrl}/?alg=TTFTree&mode=search`,
+    'AVL Tree': `${baseUrl}/?alg=AVLTree&mode=search`, //TODO: Need to update URL implementation and sharing code to include menu changes
   },
   StringSearch: {
     'Brute Force': `${baseUrl}/?alg=bruteForceStringSearch&mode=search`,
-    "Horspool's": `${baseUrl}/?alg=horspoolStringSearch&mode=search`
-  }
+    "Horspool's": `${baseUrl}/?alg=horspoolStringSearch&mode=search`,
+  },
 };
 
 function AlgorithmMenu() {
@@ -55,7 +56,9 @@ function AlgorithmMenu() {
               {activeCategory === category && (
                 <div className="subcategory">
                   {Object.entries(algs).map(([alg, url]) => (
-                    <a key={alg} href={url || '#'}>{alg}</a>
+                    <a key={alg} href={url || '#'}>
+                      {alg}
+                    </a>
                   ))}
                 </div>
               )}

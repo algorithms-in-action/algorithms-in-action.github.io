@@ -136,7 +136,7 @@ const allalgs = {
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam/>,
+    param: <Param.TTFTreeParam />,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
     extraInfo: ExtraInfo.TTFInfo,
@@ -149,7 +149,22 @@ const allalgs = {
       search: Controller.TTFTreeSearch,
     },
   },
-
+  'AVLTree': {
+    name: 'AVL Tree',
+    category: 'Insert/Search',
+    param: <Param.AVLTreeParam />,
+    instructions: Instructions.AVLInstruction,
+    explanation: Explanation.AVLExp,
+    extraInfo: ExtraInfo.AVLInfo,
+    pseudocode: {
+      insertion: Pseudocode.AVLTreeInsertion,
+      search: Pseudocode.AVLTreeSearch,
+    },
+    controller: {
+      insertion: Controller.AVLTreeInsertion,
+      search: Controller.AVLTreeSearch,
+    },
+  },
   'DFSrec': {
     name: 'Depth First Search',
     category: 'Graph',
@@ -181,7 +196,7 @@ const allalgs = {
   'BFS': {
     name: 'Breadth First Search',
     category: 'Graph',
-    param: <Param.BFSParam/>,
+    param: <Param.BFSParam />,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,

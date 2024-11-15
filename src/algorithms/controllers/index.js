@@ -12,6 +12,8 @@ export { default as unionFindUnion } from './unionFindUnion';
 export { default as unionFindFind } from './unionFindFind';
 export { default as TTFTreeInsertion } from './TTFTreeInsertion';
 export { default as TTFTreeSearch } from './TTFTreeSearch';
+export { default as AVLTreeInsertion } from './AVLTreeInsertion';
+export { default as AVLTreeSearch } from './AVLTreeSearch';
 export { default as dijkstra } from './dijkstra';
 export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
