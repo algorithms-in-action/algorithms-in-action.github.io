@@ -24,3 +24,7 @@ yarn-error.log*
 # Remove Docs
 /docs
 /tests
+
+# IDEs
+/.idea
+/.vscode
