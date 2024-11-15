@@ -1,3 +1,18 @@
+// used to display graphs, such as in the case of:
+// A*
+// Breadth First Search
+// Depth First Search
+// Dijkstra's
+// Kruskal
+// Prim
+// Warshall
+// Union Find
+
+// Or tables, such as in the case of:
+// Horspool's
+// Merge Sort List
+// Union find
+
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
@@ -167,7 +182,7 @@ class Array2DTracer extends Tracer {
 
     // add variable to item if not undefined or null
     if (idx !== null && idx !== undefined)
-       newData[row][idx].variables.push(v);
+      newData[row][idx].variables.push(v);
 
     // update this.data
     this.data = newData;

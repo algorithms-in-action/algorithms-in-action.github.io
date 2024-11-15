@@ -6,7 +6,7 @@ import * as ExtraInfo from './extra-info';
 import * as Controller from './controllers';
 import * as Pseudocode from './pseudocode';
 import * as Instructions from './instructions';
-import {msort_linkedlist} from "./parameters";
+import { msort_linkedlist } from "./parameters";
 
 /*
  This file lists all the algorithms in the program, and imports
@@ -23,9 +23,6 @@ import {msort_linkedlist} from "./parameters";
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
- XXX we could export and use allalgs in key places in the system,
- eg src/context/actions.js so we can still access them via the URL, but
- not have them appear in the index.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -124,7 +121,7 @@ const allalgs = {
     name: 'Merge Sort (Linked Lists)',
     category: 'Sort',
     explanation: Explanation.msort_linkedlist,
-    param: <Param.msort_linkedlist/>,
+    param: <Param.msort_linkedlist />,
     instructions: Instructions.msort_lista_td,
     extraInfo: ExtraInfo.msort_lista_td,
     pseudocode: {
@@ -366,7 +363,13 @@ const algorithms =
  * Get the first mode of an algorithm
  * @param {string} key algorithm's name
  */
-const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+
+/**
+ * Get the category of an algorithm
+ * @param {string} key algorithm's name
+ */
+export const getCategory = (key) => algorithms[key].category;
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {

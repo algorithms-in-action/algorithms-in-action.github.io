@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+
+import { URLContext } from '../../context/urlState';
 
 // const DEFAULT_STRING = 'cddaadddabdda';
 // const DEFAULT_PATTERN = 'dddac';
@@ -10,10 +14,17 @@ const DEFAULT_PATTERN = 'ddac';
 const HSS_SEARCH = 'Horspool String Search';
 const HSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
-function HSSParam() {
+function HSSParam({ mode, string, pattern }) {
   const [message, setMessage] = useState(null);
-  const [string, setString] = useState(DEFAULT_STRING);
-  const [pattern, setPattern] = useState(DEFAULT_PATTERN);
+  const [string_, setString] = useState(string || DEFAULT_STRING);
+  const [pattern_, setPattern] = useState(pattern || DEFAULT_PATTERN);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+
+  useEffect(() => {
+    setNodes(string_);
+    setSearchValue(pattern_)
+  }, [string_, pattern_]);
+
   return (
     <>
       <div className="form">
@@ -22,8 +33,8 @@ function HSSParam() {
           buttonName="Search"
           mode="search"
           formClassName="formLeft"
-          DEFAULT_STRING={string}
-          DEFAULT_PATTERN={pattern}
+          DEFAULT_STRING={string_}
+          DEFAULT_PATTERN={pattern_}
           SET_STRING={setString}
           SET_PATTERN={setPattern}
           ALGORITHM_NAME={HSS_SEARCH}
@@ -37,4 +48,12 @@ function HSSParam() {
   );
 }
 
-export default HSSParam;
+// Define the prop types for URL Params
+HSSParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  string: PropTypes.string.isRequired,
+  pattern: PropTypes.string.isRequired
+};
+
+export default withAlgorithmParams(HSSParam); // Export with the wrapper for URL Params
