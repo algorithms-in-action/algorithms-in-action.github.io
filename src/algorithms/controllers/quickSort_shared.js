@@ -77,7 +77,7 @@ RIGHT_P_      if an loc is only in the right pivot quicksort
 */
 
 const QS_BOOKMARKS = {
-  SHARED_quicksort_left_to_right: 1,
+  SHARED_bquicksort_left_to_right: 1,
   SHARED_if_left_less_right: 2,
   SHARED_quicksort_left_to_i_minus_1: 3,
   SHARED_quicksort_i_plus_1_to_right: 4,

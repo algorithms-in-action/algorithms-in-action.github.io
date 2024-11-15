@@ -182,8 +182,6 @@ function ControlPanel() {
           <ProgressBar
             current={currentChunk}
             max={chunkerLength}
-            state={algorithm}
-            dispatch={dispatch}
           />
         </div>
 

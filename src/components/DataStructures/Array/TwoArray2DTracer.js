@@ -1,5 +1,3 @@
-// Only seems to be used for Horspool's algorithm
-
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
@@ -43,34 +41,36 @@ class TwoArray2DTracer extends Tracer {
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
    */
-  set(array2d = [], array2d1 = [], algo) {
+  set(array2d = [],array2d1=[], algo) {
     this.data = array2d.map(array1d => [...array1d].map(value => new Element(value)));
     this.data1 = array2d1.map(array1d => [...array1d].map(value => new Element(value)));
     this.algo = algo;
     super.set();
   }
 
-  getposition(x, y) {
+  getposition(x,y){
     let longestRow = this.data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     let len = longestRow.length;
-    var xx = x;
-    var pos = 0;
-    if (x >= len) { xx = x - len; pos = 1; }
-    return [pos, xx, y];
+    var xx=x;
+    var pos=0;
+    if (x>=len){xx=x-len;pos=1;}
+    return [pos,xx,y];
   }
 
   patch(x, y, v = this.data[x][y].value) {
-    let rr = this.getposition(x, y);
-    var pos = rr[0];
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
     var xx = rr[2];//x is actually the vertical one
     var yy = rr[1];
-    if (pos === 0) {
-      if (!this.data[xx][yy]) { this.data[xx][yy] = new Element(); }
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
       this.data[xx][yy].value = v;
       this.data[xx][yy].patched = true;
     }
-    else {
-      if (!this.data1[xx][yy]) { this.data1[xx][yy] = new Element(); }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
       this.data1[xx][yy].value = v;
       this.data1[xx][yy].patched = true;
     }
@@ -78,46 +78,52 @@ class TwoArray2DTracer extends Tracer {
   }
 
   depatch(x, y) {
-    let rr = this.getposition(x, y);
-    var pos = rr[0];
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
     var xx = rr[2];//x is actually the vertical one
     var yy = rr[1];
-    if (pos === 0) {
-      if (!this.data[xx][yy]) { this.data[xx][yy] = new Element(); }
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
 
       this.data[xx][yy].patched = false;
     }
-    else {
-      if (!this.data1[xx][yy]) { this.data1[xx][yy] = new Element(); }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
 
       this.data1[xx][yy].patched = false;
     }
   }
   select(x, y) {
-    let rr = this.getposition(x, y);
-    var pos = rr[0];
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
     var xx = rr[2];//x is actually the vertical one
     var yy = rr[1];
-    if (pos === 0) {
-      if (!this.data[xx][yy]) { this.data[xx][yy] = new Element(); }
+    if (pos===0)
+    {
+      if (!this.data[xx][yy]) {this.data[xx][yy] = new Element();}
       this.data[xx][yy].selected = true;
     }
-    else {
-      if (!this.data1[xx][yy]) { this.data1[xx][yy] = new Element(); }
+    else
+    {
+      if (!this.data1[xx][yy]) {this.data1[xx][yy] = new Element();}
       this.data1[xx][yy].selected = true;
     }
 
   }
 
   deselect(x, y) {
-    let rr = this.getposition(x, y);
-    var pos = rr[0];
+    let rr=this.getposition(x,y);
+    var pos=rr[0];
     var xx = rr[2];//x is actually the vertical one
     var yy = rr[1];
-    if (pos === 0) {
+    if (pos===0)
+    {
       this.data[xx][yy].selected = false;
     }
-    else {
+    else
+    {
       this.data1[xx][yy].selected = false;
     }
 

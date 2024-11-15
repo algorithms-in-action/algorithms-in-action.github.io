@@ -1,9 +1,3 @@
-// used to display one array in the form of a single bar chart, such as 
-// Binary Search Tree
-// Heap Sort
-// Merge Sort
-// Quick Sort
-
 /* eslint-disable class-methods-use-this */
 /* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */

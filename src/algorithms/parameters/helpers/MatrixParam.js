@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
 import {
@@ -20,7 +20,6 @@ import '../../../styles/Matrix.scss';
 import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { ReactComponent as AddIcon } from '../../../assets/icons/add.svg';
 import { ReactComponent as MinusIcon } from '../../../assets/icons/minus.svg';
-import { URLContext } from '../../../context/urlState.js';
 
 import ControlButton from '../../../components/common/ControlButton';
 
@@ -68,16 +67,12 @@ function MatrixParam({
 
   const [originalData, setOriginalData] = useState(data);
   const [buttonMessage, setButtonMessage] = useState('Restart');
-  const { setGraphSize, setGraphMin, setGraphMax } = useContext(URLContext);
 
   // reset the Table when the size changes
   useEffect(() => {
     const newData = makeWeights(size, min, max, symmetric, unweighted);
     setData(newData);
     setOriginalData(newData);
-    setGraphSize(size); 
-    setGraphMin(min);
-    setGraphMax(max);
   }, [size, min, max, symmetric, unweighted]);
 
   useEffect(() => {

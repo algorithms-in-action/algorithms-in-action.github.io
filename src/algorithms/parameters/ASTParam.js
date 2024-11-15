@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 // Note: 'A* Algorithm' currently used in EuclideanMatrixParams.js -
 // change both or neither!
@@ -32,15 +30,8 @@ const GRAPH_EGS = [ // XXX think up better examples?
           edges:
 '1-2-10,1-4-4,2-3-6,3-4-10,3-5-5,4-7-3,5-6-7,6-7-8,7-8-2,7-9,8-9-3,9-10-5,9-11-7, 10-11-7,11-13-4,12-13-8,12-14-6,13-14-7,13-15-7,14-16-6,15-16-2,15-17-5,16-17-2'
         }];
-function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max } ) {
+function ASTParam() {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-      { name: 'URL Input Graph',
-        size: size || GRAPH_EGS[0].size,
-        coords: xyCoords || GRAPH_EGS[0].coords,
-        edges: edgeWeights || GRAPH_EGS[0].edges
-      }
-      ]
 
   return (
     <>
@@ -48,14 +39,14 @@ function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, m
       <EuclideanMatrixParams
         name="aStar"
         mode="find"
-        defaultSize={ size || DEFAULT_SIZE }
-        defaultStart={ start || DEFAULT_START }
-        defaultEnd={ end || DEFAULT_END }
-        heuristic = { heuristic || DEFAULT_HEUR }
-        min={ min || 1 }
-        max={ max || 49 }
+        defaultSize={DEFAULT_SIZE}
+        defaultStart={DEFAULT_START}
+        defaultEnd={DEFAULT_END}
+        heuristic = {DEFAULT_HEUR}
+        min={1}
+        max={49}
         symmetric
-        graphEgs={ graph_egs || GRAPH_EGS }
+        graphEgs={GRAPH_EGS}
         ALGORITHM_NAME={ASTAR}
         EXAMPLE={ASTAR_EXAMPLE}
         EXAMPLE2={ASTAR_EXAMPLE2}
@@ -69,32 +60,4 @@ function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, m
   );
 }
 
-// Define the prop types for URL Params
-ASTParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  heuristic: PropTypes.string.isRequired,
-  xyCoords: PropTypes.string.isRequired,
-  edgeWeights: PropTypes.string.isRequired,
-  min: PropTypes.string.isRequired,
-  max: PropTypes.string.isRequired,
-};
-// ASTParam.propTypes = {
-//   alg: PropTypes.string.isRequired,
-//   mode: PropTypes.string.isRequired,
-//   size: PropTypes.number.isRequired,
-//   start: PropTypes.arrayOf(PropTypes.number),
-//   end: PropTypes.arrayOf(PropTypes.number),
-//   heuristic: PropTypes.number.isRequired,
-//   xyCoords: PropTypes.string,
-//   edgeWeights: PropTypes.string,
-//   min: PropTypes.number,
-//   max: PropTypes.number
-// };
-
-export default withAlgorithmParams(ASTParam); // Export with the wrapper for URL Params
-
-
+export default ASTParam;

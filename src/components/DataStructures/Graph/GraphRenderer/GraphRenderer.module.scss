@@ -14,7 +14,7 @@
       stroke-width: 1;
     }
 
-    .rect {
+    .rect{
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
@@ -37,15 +37,13 @@
 
     &.selected {
       .circle {
-        fill: var(--sky);
-        stroke: var(--sky);
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
       }
-
       .rect {
-        fill: var(--sky);
-        stroke: var(--sky);
+        fill: var(--graph-node-circle-fill-selected);
+        stroke: var(--graph-node-circle-stroke-selected);
       }
-
       .id {
         fill: var(--graph-node-id-fill-selected);
       }
@@ -56,12 +54,10 @@
         fill: var(--graph-node-circle-fill-visited0);
         stroke: var(--graph-node-circle-stroke-visited0);
       }
-
       .rect {
         fill: var(--graph-node-circle-fill-visited0);
         stroke: var(--graph-node-circle-stroke-visited0);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
@@ -69,15 +65,13 @@
 
     &.visited {
       .circle {
-        fill: var(--apple);
-        stroke: var(--apple);
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
       }
-
       .rect {
-        fill: var(--apple);
-        stroke: var(--apple);
+        fill: var(--graph-node-circle-fill-visited);
+        stroke: var(--graph-node-circle-stroke-visited);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
@@ -86,9 +80,8 @@
     &.sorted {
       .circle {
         fill: var(--graph-node-circle-fill-sorted);
-
+        
       }
-
       .id {
         fill: var(--graph-node-id-fill-sorted);
       }
@@ -96,10 +89,9 @@
 
     &.visited1 {
       .circle {
-        fill: var(--leaf);
-        stroke: var(--leaf);
+        fill: var(--graph-node-circle-fill-visited1);
+        stroke: var(--graph-node-circle-stroke-visited1);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
@@ -107,36 +99,33 @@
 
     &.visited2 {
       .circle {
-        fill: var(--peach);
-        stroke: var(--peach);
+        fill: var(--graph-node-circle-fill-visited2);
+        stroke: var(--graph-node-circle-stroke-visited2);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    }
+    } 
 
     &.visited3 {
       .circle {
-        fill: var(--apple);
-        stroke: var(--apple);
+        fill: var(--graph-node-circle-fill-visited3);
+        stroke: var(--graph-node-circle-stroke-visited3);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    }
+    } 
 
     &.visited4 {
       .circle {
-        fill: var(--sky);
-        stroke: var(--sky);
+        fill: var(--graph-node-circle-fill-visited4);
+        stroke: var(--graph-node-circle-stroke-visited4);
       }
-
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    }
+    } 
   }
 
   .edge {
@@ -168,7 +157,7 @@
 
     &.selected {
       .line {
-        stroke: var(--sky);
+        stroke: var(--graph-edge-line-stroke-selected);
 
         &.directed {
           marker-end: url(#markerArrowSelected);
@@ -176,7 +165,7 @@
       }
 
       .weight {
-        fill: var(--sky);
+        fill: var(--graph-edge-weight-fill-selected);
       }
     }
 
@@ -188,7 +177,7 @@
 
     &.visited {
       .line {
-        stroke: var(--leaf);
+        stroke: var(--graph-edge-line-stroke-visited);
 
         &.directed {
           marker-end: url(#markerArrowVisited);
@@ -196,13 +185,13 @@
       }
 
       .weight {
-        fill: var(--leaf);
+        fill: var(--graph-edge-weight-fill-visited);
       }
     }
 
     &.visited1 {
       .line {
-        stroke: var(--leaf);
+        stroke: var(--graph-edge-line-stroke-visited1);
 
         &.directed {
           marker-end: url(#markerArrowVisited1);
@@ -210,13 +199,13 @@
       }
 
       .weight {
-        fill: var(--leaf);
+        fill: var(--graph-edge-weight-fill-visited1);
       }
     }
 
     &.visited2 {
       .line {
-        stroke: var(--peach);
+        stroke: var(--graph-edge-line-stroke-visited2);
 
         &.directed {
           marker-end: url(#markerArrowVisited2);
@@ -224,13 +213,13 @@
       }
 
       .weight {
-        fill: var(--peach);
+        fill: var(--graph-edge-weight-fill-visited2);
       }
-    }
+    } 
 
     &.visited3 {
       .line {
-        stroke: var(--apple);
+        stroke: var(--graph-edge-line-stroke-visited3);
 
         &.directed {
           marker-end: url(#markerArrowVisited3);
@@ -238,13 +227,13 @@
       }
 
       .weight {
-        fill: var(--apple);
+        fill: var(--graph-edge-weight-fill-visited3);
       }
-    }
+    } 
 
     &.visited4 {
       .line {
-        stroke: var(--sky);
+        stroke: var(--graph-edge-line-stroke-visited4);
 
         &.directed {
           marker-end: url(#markerArrowVisited4);
@@ -252,9 +241,9 @@
       }
 
       .weight {
-        fill: var(--sky);
+        fill: var(--graph-edge-weight-fill-visited4);
       }
-    }
+    } 
 
   }
 
@@ -262,27 +251,26 @@
     fill: var(--graph-arrow-fill);
 
     &.selected {
-      fill: var(--sky);
+      fill: var(--graph-arrow-fill-selected);
     }
 
     &.visited {
-      fill: var(--leaf);
+      fill: var(--graph-arrow-fill-visited);
     }
 
     &.visited1 {
-      fill: var(--leaf);
+      fill: var(--graph-arrow-fill-visited1);
     }
 
     &.visited2 {
-      fill: var(--peach);
-    }
+      fill: var(--graph-arrow-fill-visited2);
+    } 
 
     &.visited3 {
-      fill: var(---apple);
+      fill: var(--graph-arrow-fill-visited3);
     }
-
     &.visited4 {
-      fill: var(--sky);
+      fill: var(--graph-arrow-fill-visited4);
     }
   }
 

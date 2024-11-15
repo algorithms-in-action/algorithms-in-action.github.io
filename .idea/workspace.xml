@@ -1,40 +1,276 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/helpers/urlHelpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/helpers/urlHelpers.js" afterDir="false" />
+    <list default="true" id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/List/ListTracer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="LinkedListRenderer" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jiafeilin1&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/jiafeilin1/ITprojectTeam2.git",
+    "accountId": "8a70aea5-6357-4415-acc6-72d4b0bbefa5"
+  }
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2lpNwMEtCXH3aoSNxw3UXU0mWtn" />
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2kPwA5yhlSlEMwlSZb8OXnUkl7X" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.App.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.BFS.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.Prototype.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.heapSort.js.executor&quot;: &quot;Debug&quot;,
+    &quot;Node.js.quickSort_shared.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ListPackageUpdate&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/carli/Downloads/index (2).js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\carli\WebstormProjects\ITprojectTeam2\src\components\DataStructures\LinkedList" />
+      <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List" />
+      <recent name="C:\Users\jeffr\WebstormProjects\ITprojectTeam2\src\components\DataStructures\List\ListTracer" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-WS-242.20224.342" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="" />
-      <created>1725873310585</created>
+      <changelist id="a2bdebf7-16c4-4b9a-9957-b7fe9bcf7a61" name="Changes" comment="" />
+      <created>1723198372582</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1725873310585</updated>
+      <updated>1723198372582</updated>
+      <workItem from="1723198373819" duration="1850000" />
+      <workItem from="1723203408388" duration="945000" />
+      <workItem from="1723726224319" duration="1780000" />
+      <workItem from="1723957466768" duration="758000" />
+      <workItem from="1723977229097" duration="4517000" />
+      <workItem from="1724037366078" duration="9880000" />
+      <workItem from="1724577427107" duration="11050000" />
+      <workItem from="1725063617753" duration="5788000" />
+      <workItem from="1727495974535" duration="26728000" />
+      <workItem from="1727654844546" duration="10811000" />
+      <workItem from="1727666934294" duration="12026000" />
+      <workItem from="1727681905135" duration="15401000" />
+      <workItem from="1731457411769" duration="593000" />
     </task>
+    <task id="LOCAL-00001" summary="Empty Prototype Set up">
+      <option name="closed" value="true" />
+      <created>1723982052560</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723982052560</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Resolved error with parameter files. Blocker currently at data structure.">
+      <option name="closed" value="true" />
+      <created>1724819539706</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1724819539706</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Deleting useless documents">
+      <option name="closed" value="true" />
+      <created>1725758267977</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725758267977</updated>
+    </task>
+    <task id="LOCAL-00004" summary="'fix': issues around linked list initiation in tracer and renderer">
+      <option name="closed" value="true" />
+      <created>1727515923081</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727515923081</updated>
+    </task>
+    <task id="LOCAL-00005" summary="'feat': Rendering of multi list with animation and label">
+      <option name="closed" value="true" />
+      <created>1727536811936</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1727536811936</updated>
+    </task>
+    <task id="LOCAL-00006" summary="'fix': class separation of labels and nodes">
+      <option name="closed" value="true" />
+      <created>1727658638985</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727658638985</updated>
+    </task>
+    <task id="LOCAL-00007" summary="'feat': Splitting lists and renderer support">
+      <option name="closed" value="true" />
+      <created>1727662676533</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1727662676533</updated>
+    </task>
+    <task id="LOCAL-00008" summary="'feat': Renderer Vertical layering + list split">
+      <option name="closed" value="true" />
+      <created>1727670649610</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1727670649610</updated>
+    </task>
+    <task id="LOCAL-00009" summary="'fix': Split function working as intended now">
+      <option name="closed" value="true" />
+      <created>1727679281891</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1727679281891</updated>
+    </task>
+    <task id="LOCAL-00010" summary="'fix': Labels rendering messing up positioning of nodes">
+      <option name="closed" value="true" />
+      <created>1727681093294</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1727681093294</updated>
+    </task>
+    <task id="LOCAL-00011" summary="'feat': shift right for list, fix for empty index counts">
+      <option name="closed" value="true" />
+      <created>1727687986316</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1727687986316</updated>
+    </task>
+    <task id="LOCAL-00012" summary="'fix': Issue with update indices and stacking">
+      <option name="closed" value="true" />
+      <created>1727694804330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1727694804330</updated>
+    </task>
+    <task id="LOCAL-00013" summary="'feat': Arrows not displacing nodes and inclusion of all arrow directions">
+      <option name="closed" value="true" />
+      <created>1727790927984</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1727790927984</updated>
+    </task>
+    <task id="LOCAL-00014" summary="'feat': Tracer support for moving arrows in 5 directions">
+      <option name="closed" value="true" />
+      <created>1727791997341</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1727791997341</updated>
+    </task>
+    <task id="LOCAL-00015" summary="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js">
+      <option name="closed" value="true" />
+      <created>1731420180683</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1731420180683</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Empty Prototype Set up" />
+    <MESSAGE value="Pseudocode finished with bookmarks added to controller" />
+    <MESSAGE value="Linked List Data Structure and List Data Structure Added" />
+    <MESSAGE value="Resolved error with parameter files. Blocker currently at data structure." />
+    <MESSAGE value="Deleting useless documents" />
+    <MESSAGE value="'fix': issues around linked list initiation in tracer and renderer" />
+    <MESSAGE value="'feat': Rendering of multi list with animation and label" />
+    <MESSAGE value="'fix': class separation of labels and nodes" />
+    <MESSAGE value="'feat': Splitting lists and renderer support" />
+    <MESSAGE value="'feat': Vertical layering + list split" />
+    <MESSAGE value="'feat': Renderer Vertical layering + list split" />
+    <MESSAGE value="'fix': Split function working as intended now" />
+    <MESSAGE value="'fix': Labels rendering messing up positioning of nodes" />
+    <MESSAGE value="'feat': shift right for list, fix for empty index counts" />
+    <MESSAGE value="'fix': Issue with update indices and stacking" />
+    <MESSAGE value="'feat': Arrows not displacing nodes and inclusion of all arrow directions" />
+    <MESSAGE value="'feat': Tracer support for moving arrows in 5 directions" />
+    <MESSAGE value="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="'feat': Updated ListTracer.js to have the functionality of LinkedListTracer.js" />
   </component>
 </project>

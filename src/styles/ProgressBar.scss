@@ -170,7 +170,7 @@
 
 
 $progHeight: 32px;
-$progWidth: 320px;
+$progWidth: 160px;
 
 .mux-lpi {
   height: $progHeight;
@@ -178,28 +178,10 @@ $progWidth: 320px;
   overflow: hidden;
   position: relative;
   transform: translateZ(0);
-  background-color: var(--mid-control-progress-bg);
   transition: opacity 250ms linear;
-  width: $progWidth;
+  width: 100%;
   @include border-radius(16px); // makes the border curvy
-  margin: 0 0 0 12px;
-}
-
-.mux-lpi-inner {
-  height: 100%;
-  width: $progWidth - $progHeight;
-  transform: translateZ(0);
-  left: calc(#{$progHeight}/2);
-  position: absolute;
-  background-color: none;
-}
-
-.mux-lpi-padding {
-  height: 100%;
-  width: calc(#{$progHeight}/2);
-  left: 0;
-  position: absolute;
-  background-color: var(--mid-control-progress-active);
+  margin: 0 12px;
 }
 
 $textWidth: 50px;
@@ -210,10 +192,10 @@ $border: 4px;
   position: absolute;
   z-index: 100;
   top: $border;
-  left: 0;
-  width: 100%;
+  left: $border;
+  width: $progWidth - ($border + $border);
   height: $progHeight - ($border + $border);
-  background-color: 'blue';
+  background-color: 'blue'; 
   @include border-radius(24px);
   display: flex;
   justify-content: center;
@@ -228,32 +210,6 @@ $border: 4px;
     width: 80%;
     color: var(--mid-control-progress-font);
     text-transform: uppercase;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-}
-
-.progressThumb {
-  position: absolute;
-  z-index: 50;
-  top: 0;
-  left: calc(-#{$progHeight}/2);
-  width: $progHeight;
-  height: $progHeight;
-  background-color: var(--mid-control-progress-active);
-  @include border-radius(16px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 250ms ease;
-
-  .innerThumb {
-    z-index: 51;
-    width: $progHeight - ($border + $border);
-    height: $progHeight - ($border + $border);
-    background-color: var(--mid-control-progress-thumb);
-    @include border-radius(14px);
   }
 }
 

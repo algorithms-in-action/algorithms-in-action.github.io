@@ -1,0 +1,142 @@
+@import "../../common/stylesheet/index";
+
+.IndexContainer {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+  /* primary horizontal stack  */
+  justify-content: center;
+  /* Main axis centered horizontally */
+  margin: 10px 30px 10px 10px;
+  /* border*/
+
+
+  .LayerContainer {
+    display: flex;
+    flex-direction: column;
+    /* secondary vertical stack */
+    align-items: flex-start;
+    /* Separate layers align at start*/
+
+    .LinkedListContainer {
+      display: flex;
+      flex-direction: row;
+      /* Horizontal lists for identical indices */
+      align-items: flex-start;
+      margin: 15px 10px 15px 10px;
+      /* Separate Lists */
+
+      .nodeContainer {
+        // position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        &.invisible {
+          visibility: hidden;
+        }
+
+        .node {
+          background-color: var(--linked-list-node-bg);
+          border: 2px solid var(--linked-list-node-border);
+          height: 30px;
+          width: 30px;
+
+          display: flex;
+          flex-direction: column;
+          /* Node elements in a column*/
+          align-items: center;
+          justify-content: flex-start;
+
+          &.invisible {
+            visibility: hidden;
+            opacity: 0;
+          }
+
+          &.visited {
+            background-color: var(--linked-list-highlighted-bg);
+            border: 2px solid var(--linked-list-highlighted-border);
+          }
+
+          &.selected {
+            background-color: var(--linked-list-selected-bg);
+            border: 2px solid var(--linked-list-selected-border);
+          }
+
+          .value {
+            padding-top: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--linked-list-node-value-color);
+          }
+
+          .label {
+            vertical-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--linked-list-caption-color);
+            transform: translateY(5px);
+            /* translate down*/
+
+            display: grid;
+          }
+        }
+
+        .symbol {
+          position: relative;
+          /* or relative based on your layout */
+          vertical-align: center;
+          color: var(--linked-list-node-bg);
+
+          .arrow {
+            height: 40px;
+            width: 30px;
+
+            &.up {
+              transform: rotate(-90deg) translateY(-32px) translateX(32px);
+            }
+
+            &.down {
+              transform: rotate(90deg) translateY(32px) translateX(32px);
+            }
+
+            &.diagDown {
+              transform: rotate(45deg) translateY(20px) translateX(20px);
+            }
+
+            &.diagUp {
+              transform: rotate(-45deg) translateY(-20px) translateX(20px);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Sample color variable definitions (to be included in your variables file or inline)
+:root {
+  --linked-list-node-bg: #ffffff;
+  --linked-list-node-border: #cccccc;
+  --linked-list-node-value-color: #333333;
+
+  --linked-list-head-bg: #d1e7dd;
+  --linked-list-head-border: #0f5132;
+  --linked-list-head-value-color: #0f5132;
+
+  --linked-list-tail-bg: #f8d7da;
+  --linked-list-tail-border: #842029;
+  --linked-list-tail-value-color: #842029;
+
+  --linked-list-selected-bg: #cfe2ff;
+  --linked-list-selected-border: #084298;
+  --linked-list-selected-value-color: #084298;
+
+  --linked-list-highlighted-bg: #fff3cd;
+  --linked-list-highlighted-border: #856404;
+  --linked-list-highlighted-value-color: #856404;
+
+  --linked-list-arrow-color: #6c757d;
+
+  --linked-list-caption-color: #6c757d;
+}

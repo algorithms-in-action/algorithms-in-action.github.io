@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 const DEFAULT_SIZE = 5;
 const DFSrec = 'DFSrec\'s';
@@ -31,15 +29,8 @@ const GRAPH_EGS = [ // XXX think up better examples?
 '1-2-10,1-4-4,2-3-6,3-4-10,3-5-5,4-7-3,5-6-7,6-7-8,7-8-2,7-9,8-9-3,9-10-5,9-11-7, 10-11-7,11-13-4,12-13-8,12-14-6,13-14-7,13-15-7,14-16-6,15-16-2,15-17-5,16-17-2'
         }];
 
-function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
+function DFSrecParam() {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-    { name: 'URL Input Graph',
-      size: size || GRAPH_EGS[0].size,
-      coords: xyCoords || GRAPH_EGS[0].coords,
-      edges: edgeWeights || GRAPH_EGS[0].edges
-    }
-    ]
 
   return (
     <>
@@ -47,13 +38,13 @@ function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic,
       <EuclideanMatrixParams
         name="DFSrec"
         mode="find"
-        defaultSize={size || DEFAULT_SIZE}
-        defaultStart={start || DEFAULT_START}
-        defaultHeur = {heuristic || DEFAULT_HEUR}
-        defaultEnd={end || DEFAULT_END}
-        min={min || 1}
-        max={max || 49}
-        graphEgs={graph_egs || GRAPH_EGS}
+        defaultSize={DEFAULT_SIZE}
+        defaultStart={DEFAULT_START}
+        defaultHeur = {DEFAULT_HEUR}
+        defaultEnd={DEFAULT_END}
+        min={1}
+        max={49}
+        graphEgs={GRAPH_EGS}
         symmetric
         ALGORITHM_NAME={DFSrec}
         EXAMPLE={DFSrec_EXAMPLE}
@@ -66,23 +57,6 @@ function DFSrecParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic,
       {message}
     </>
   );
-}    
+}
 
-
-// Define the prop types for URL Params
-DFSrecParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  size: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  heuristic: PropTypes.string.isRequired,
-  xyCoords: PropTypes.string.isRequired,
-  edgeWeights: PropTypes.string.isRequired,
-  min: PropTypes.string.isRequired,
-  max: PropTypes.string.isRequired,
-};
-
-export default withAlgorithmParams(DFSrecParam); // Export with the wrapper for URL Params
-
-
+export default DFSrecParam;

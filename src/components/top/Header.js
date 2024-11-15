@@ -9,7 +9,7 @@ function Header({ onSetting }) {
 
   // goes back to main page
   const handleLogoClick = () => {
-    history.push('/mainmenu');
+    history.push('/');
   };
 
   // goes to about page
