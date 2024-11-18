@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/InsertSearchAlgorithms.scss'; 
+import '../../styles/InsertSearchAlgorithms.scss';
 
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
@@ -7,6 +7,9 @@ const baseUrl = window.location.origin;
 const insertSearchAlgorithms = [
   { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
   { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
+  { name: 'Hashing (Linear Probing)', url: `${baseUrl}/?alg=HashingLP&mode=insertion` },
+  { name: 'Hashing (Double Hashing)', url: `${baseUrl}/?alg=HashingDH&mode=insertion` },
+  { name: 'Hashing (Chaining)', url: `${baseUrl}/?alg=HashingCH&mode=insertion` },
 ];
 
 const InsertSearchAlgorithms = () => {
