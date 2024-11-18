@@ -138,7 +138,7 @@ export default {
       total++; // Increment total
 
       // Get initial hash index for current key
-      let i = hash1(chunker, IBookmarks.Hash1, key, table.length);
+      let i = hash1(chunker, IBookmarks.Hash1, key, table.length, true);
 
       // Calculate increment for current key
       let increment = setIncrement(
@@ -147,7 +147,8 @@ export default {
         key,
         table.length,
         ALGORITHM_NAME,
-        HASH_TYPE.Insert
+        HASH_TYPE.Insert,
+        true
       );
 
       // Chunker for first pending slot
