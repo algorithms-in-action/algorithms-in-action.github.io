@@ -1,7 +1,0 @@
-{
-  "recommendations": [
-    "davidanson.vscode-markdownlint",
-    "dbaeumer.vscode-eslint",
-    "gruntfuggly.todo-tree"
-  ]
-}

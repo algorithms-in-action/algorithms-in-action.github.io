@@ -86,6 +86,20 @@ const allalgs = {
       sort: Controller.quickSortM3,
     },
   },
+  'radixSortMSD': {
+    name: 'MSD Radix Sort',
+    category: 'Sort',
+    explanation: Explanation.MSDRadixSortExp,
+    param: <Param.MSDRadixSortParam />,
+    instructions: Instructions.RadixSortInstruction,
+    extraInfo: ExtraInfo.MSDRadixSortInfo,
+    pseudocode: {
+      sort: Pseudocode.MSDRadixSort,
+    },
+    controller: {
+      sort: Controller.MSDRadixSort,
+    },
+  },
   'msort_arr_td': {
     name: 'Merge Sort',
     noDeploy: false,
@@ -136,7 +150,7 @@ const allalgs = {
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',
-    param: <Param.TTFTreeParam/>,
+    param: <Param.TTFTreeParam />,
     instructions: Instructions.TTFInstruction,
     explanation: Explanation.TTFExp,
     extraInfo: ExtraInfo.TTFInfo,
@@ -201,6 +215,22 @@ const allalgs = {
     },
   },
 
+  'AVLTree': {
+    name: 'AVL Tree',
+    category: 'Insert/Search',
+    param: <Param.AVLTreeParam />,
+    instructions: Instructions.AVLInstruction,
+    explanation: Explanation.AVLExp,
+    extraInfo: ExtraInfo.AVLInfo,
+    pseudocode: {
+      insertion: Pseudocode.AVLTreeInsertion,
+      search: Pseudocode.AVLTreeSearch,
+    },
+    controller: {
+      insertion: Controller.AVLTreeInsertion,
+      search: Controller.AVLTreeSearch,
+    },
+  },
   'DFSrec': {
     name: 'Depth First Search',
     category: 'Graph',
@@ -232,7 +262,7 @@ const allalgs = {
   'BFS': {
     name: 'Breadth First Search',
     category: 'Graph',
-    param: <Param.BFSParam/>,
+    param: <Param.BFSParam />,
     instructions: Instructions.BFSInstruction,
     explanation: Explanation.BFSExp,
     extraInfo: ExtraInfo.BFSInfo,

@@ -1,4 +1,3 @@
-import DEFAULT_NODES from '../../../algorithms/parameters/HSParam.js';
 import React, { useState, useEffect, useMemo } from 'react';
 import algorithms from '../../../algorithms';
 
@@ -18,21 +17,31 @@ import algorithms from '../../../algorithms';
 // const DEFAULT_MIN = '1'
 // const DEFAULT_MAX = '10'
 
-const DEFAULT_ALGORITHM = 'heapSort';
-const DEFAULT_MODE = 'sort';
-const DEFAULT_LIST = '';
-const DEFAULT_VALUE = '';
-const DEFAULT_XY_COORDS = '';
-const DEFAULT_EDGE_WEIGHTS = '';
-const DEFAULT_SIZE = '';
-const DEFAULT_START = '';
-const DEFAULT_END = '';
-const DEFAULT_STRING = '';
-const DEFAULT_PATTERN = '';
-const DEFAULT_UNION = '';
-const DEFAULT_HEURISTIC = '';
-const DEFAULT_MIN = '';
-const DEFAULT_MAX = '';
+// List of valid parameter names
+const VALID_PARAM_NAMES = [
+    'alg', 'mode', 'list', 'value', 'xyCoords', 'edgeWeights',
+    'size', 'start', 'end', 'string', 'pattern', 'union',
+    'heuristic', 'min', 'max'
+];
+
+// Default values for each parameter
+const DEFAULT_VALUES = {
+    alg: 'heapSort',
+    mode: 'sort',
+    list: '',
+    value: '',
+    xyCoords: '',
+    edgeWeights: '',
+    size: '',
+    start: '',
+    end: '',
+    string: '',
+    pattern: '',
+    union: '',
+    heuristic: '',
+    min: '',
+    max: ''
+};
 
 
 export function useUrlParams() {
@@ -50,37 +59,28 @@ export function useUrlParams() {
     }, []);
 
     const urlParams = useMemo(() => new URLSearchParams(search), [search]);
-    const alg = urlParams.get('alg') || DEFAULT_ALGORITHM;  // Default algorithm
-    const mode = urlParams.get('mode') || DEFAULT_MODE;    // Default mode
+    const params = {};
 
-    // Helper function to handle both missing and 'null' values
-    const getParamOrDefault = (param, defaultValue) => {
-        return param === null || param === "null" ? defaultValue : param;
-    };
+    // Filter and parse valid URL parameters
+    VALID_PARAM_NAMES.forEach((name) => {
+        const value = urlParams.get(name);
+        params[name] = value !== null ? value : DEFAULT_VALUES[name];
+    });
 
-    // Parse individual parameters directly from URL
-    const list = getParamOrDefault(urlParams.get('list'), DEFAULT_LIST);
-    const value = getParamOrDefault(urlParams.get('value'), DEFAULT_VALUE);
-    const xyCoords = getParamOrDefault(urlParams.get('xyCoords'), DEFAULT_XY_COORDS);
-    const edgeWeights = getParamOrDefault(urlParams.get('edgeWeights'), DEFAULT_EDGE_WEIGHTS);
-    const size = getParamOrDefault(urlParams.get('size'), DEFAULT_SIZE);
-    const start = getParamOrDefault(urlParams.get('start'), DEFAULT_START);
-    const end = getParamOrDefault(urlParams.get('end'), DEFAULT_END);
-    const string = urlParams.get('string') || DEFAULT_STRING
-    const pattern = urlParams.get('pattern') || DEFAULT_PATTERN;
-    const union = getParamOrDefault(urlParams.get('union'), DEFAULT_UNION);
-    const heuristic = getParamOrDefault(urlParams.get('heuristic'), DEFAULT_HEURISTIC);
-    const min = getParamOrDefault(urlParams.get('min'), DEFAULT_MIN);
-    const max = getParamOrDefault(urlParams.get('max'), DEFAULT_MAX);
+    // Log a warning if there are any invalid parameters in the URL
+    urlParams.forEach((_, key) => {
+        if (!VALID_PARAM_NAMES.includes(key)) {
+            console.warn(`Invalid URL parameter ignored: ${key}`);
+        }
+    });
 
+    // console.log("Raw URL alg:", urlParams.get('alg'));
+    // console.log("Raw URL mode:", urlParams.get('mode'));
+    // console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max });
 
-    console.log("Raw URL alg:", urlParams.get('alg'));
-    console.log("Raw URL mode:", urlParams.get('mode'));
-    console.log("Parsed URL Params:", { list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max });
-
-    return { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max };
-
+    return params;
 }
+
 
 
 function extractValue(paramString, key) {
@@ -96,6 +96,10 @@ export const withAlgorithmParams = (WrappedComponent) => {
 
         if (!alg || !(alg in algorithms)) {
             return <div>Invalid algorithm specified</div>;
+        }
+
+        if (!mode || !(mode in algorithms[alg].pseudocode)) {
+            return <div>Invalid mode specified</div>;
         }
 
         return <WrappedComponent

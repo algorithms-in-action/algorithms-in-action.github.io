@@ -13,9 +13,12 @@
 /* eslint-disable prefer-template */
 /* eslint-disable-next-line max-classes-per-file */
 /* eslint-disable import/no-unresolved */
+import { node } from 'prop-types';
+import AVLTreeInsertion from '../../../algorithms/controllers/AVLTreeInsertion';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
+//import GraphRender from './GraphRenderer/GraphRenderer.module.scss';
 
 export class Element {
   constructor() {
@@ -47,9 +50,25 @@ class GraphTracer extends Tracer {
     this.isDirected = true;
     this.isWeighted = false;
     this.callLayout = { method: this.layoutCircle, args: [] };
+
+    //textures
     this.text = null;
+    this.functionInsertText = null;
+    this.functionName = null;
+    this.functionNode = null;
+    this.functionBalance = null;
+
+    //rectangle
+    this.rectangleNode = null;
+    this.rectangle = null; // [x_r, y_u, x_l, y_d, text]
+
+    this.tagInfo = null;
     this.logTracer = null;
     this.istc = false;
+    this.radius = null;
+
+    this.pauseLayout = false;
+    this.prebHeight = 0;  // restore the previous height of the node
   }
 
   /*
@@ -58,12 +77,10 @@ class GraphTracer extends Tracer {
   calculateMaximumCoordinate(coordinates) {
     let max = 0;
     for (let i = 0; i < coordinates.length; i++) {
-      if(coordinates[i][0] > max)
-      {
+      if (coordinates[i][0] > max) {
         max = coordinates[i][0];
       }
-      else if(coordinates[i][1] > max)
-      {
+      else if (coordinates[i][1] > max) {
         max = coordinates[i][1];
       }
     }
@@ -73,25 +90,21 @@ class GraphTracer extends Tracer {
   /*
    * Sets the node radius dependant on the maximum node coordinate from an array of coordinates.
   */
-// XXX
-// Better for node radius to also depend on number of nodes (and
-// perhaps the shortest edge length).  We want the coordinate
-// values to be up to 50 generally so we can have reasonable
-// precision with Euclidean distance.  Currently things are
-// way too small with larger coordinate values and the scaling
-// and font size control is a mystery to me...
-  setNodeRadius(coordinates = [])
-  {
-    if(coordinates.length === 0)
-    {
+  // XXX
+  // Better for node radius to also depend on number of nodes (and
+  // perhaps the shortest edge length).  We want the coordinate
+  // values to be up to 50 generally so we can have reasonable
+  // precision with Euclidean distance.  Currently things are
+  // way too small with larger coordinate values and the scaling
+  // and font size control is a mystery to me...
+  setNodeRadius(coordinates = []) {
+    if (coordinates.length === 0) {
       this.dimensions.nodeRadius = this.dimensions.defaultNodeRadius;
     }
 
     const maxCoord = this.calculateMaximumCoordinate(coordinates);
-    for(let i = 0; i <= 10; ++i)
-    {
-      if(maxCoord < (i + 1) * 10)
-      {
+    for (let i = 0; i <= 10; ++i) {
+      if (maxCoord < (i + 1) * 10) {
         const radiusIncrease = (i - 1) * 6
         // XXX makes graph nodes rather fat compared with tree nodes
         // with default values so I've deleted it for now
@@ -116,26 +129,23 @@ class GraphTracer extends Tracer {
     this.setNodeRadius(coordinates);
 
     // Set layout to null if nodes are to be displayed by coordinates.
-    if(coordinates.length > 0)
-    {
+    if (coordinates.length > 0) {
       this.callLayout = null;
     }
     this.nodes = [];
     this.edges = [];
     for (let i = 0; i < array2d.length; i++) {
       const nodeValue = values[i] ? values[i] : i;
-      if(coordinates.length === 0)
-      {
+      if (coordinates.length === 0) {
         this.addNode(i, nodeValue);
       }
-      else
-      {
+      else {
         // Do not change this value unless you also change axis scales
         // and also check handleMouseMove
         const scaleSize = 30;
         const x = coordinates[i][0] * scaleSize;
         const y = -coordinates[i][1] * scaleSize;
-        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
+        this.addNode(i, nodeValue, undefined, x, y);
       }
 
       for (let j = 0; j < array2d.length; j++) {
@@ -163,6 +173,7 @@ class GraphTracer extends Tracer {
       node.selectedCount = 0;
     });
     this.text = null;
+    //this.AVLtext = null;
   }
 
   isEmpty() {
@@ -280,13 +291,17 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+    x = 0, y = 0, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    isPointer = 0, pointerText = '',
+    height = undefined, AVL_TID = undefined) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    this.nodes.push({
+      id, value, shape, color, weight, x, y, Select_Circle_Count,
+      visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText, height, AVL_TID
+    });
     this.layout();
   }
 
@@ -302,9 +317,9 @@ class GraphTracer extends Tracer {
     this.findNode(id).PatternLen = len;
   }
 
-  updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
+  updateNode(id, value, height, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { value, weight, x, y, visitedCount, selectedCount };
+    const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
@@ -390,8 +405,7 @@ class GraphTracer extends Tracer {
   }
 
   layout() {
-    if(this.callLayout === null)
-    {
+    if (this.callLayout === null || this.pauseLayout) {
       return;
     }
     const { method, args } = this.callLayout;
@@ -667,6 +681,19 @@ class GraphTracer extends Tracer {
     }
   }
 
+  resetVisitAndSelect(target, source) {
+    const edge = this.findEdge(source, target);
+    const node = this.findNode(target);
+    if (edge) {
+      edge.visitedCount = 0;
+      edge.selectedCount = 0;
+    }
+    if (node) {
+      node.visitedCount = 0;
+      node.selectedCount = 0;
+    }
+  }
+
   select(target, source) {
     this.selectOrDeselect(true, target, source);
   }
@@ -777,9 +804,19 @@ class GraphTracer extends Tracer {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
+  setSelect_Circle_Count(id) {
+    this.findNode(id).Select_Circle_Count++;
+  }
+
+  clearSelect_Circle_Count() {
+    this.nodes.forEach(node => {
+      node.Select_Circle_Count = 0;
+    });
+  }
+
   setText(text) {
     this.text = text;
-    this.text.push({ text });
+    // this.text.push({ text });
   }
 
   setIstc() {
@@ -801,7 +838,7 @@ class GraphTracer extends Tracer {
     } else if (colorIndex === 4) {
       edge.visitedCount4 = 1;
     }
-}
+  }
 
   removeEdgeColor(source, target) {
     const edge = this.findEdge(source, target);
@@ -812,7 +849,6 @@ class GraphTracer extends Tracer {
     edge.visitedCount3 = 0;
     edge.visitedCount4 = 0;
   }
-
 
   colorNode(node, colorIndex) {
     const _node = this.findNode(node);
@@ -838,15 +874,326 @@ class GraphTracer extends Tracer {
     _node.visitedCount3 = 0;
     _node.visitedCount4 = 0;
   }
-  //
-  // /**
-  //  * Change the zoom of the visualizer
-  //  * @param {*} zoom the new zoom
-  //  */
-  // setZoom(zoom) {
-  //   this.newZoom = zoom;
-  //   window.setTimeout(() => {this.newZoom = undefined}, 200)
-  // }
+
+
+  /**
+   * AVl tree Graph Tracer functions
+   * the following functions are used in AVL tree to trace the graph
+  **/
+
+  //Find all the child nodes of the given node in the tree.
+  Children_Balance() {
+    // Traversal of the entire tree, counting number of leaves.
+    let maxDepth = 0;
+    let marked = {};
+    let root = Number(this.functionNode);
+    let nodeDepth = {};
+    this.rectangleNode = [];
+
+    //create the tree, marking the depth of each node
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(this.root, 0);
+
+    //find the children of the given node
+    let mark = {};
+    const recursive = (id) => {
+      mark[id] = true;
+
+      this.rectangleNode.push(id);
+
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (mark[linkedNodeId]) continue;
+        if (nodeDepth[linkedNodeId] < nodeDepth[root]) continue;
+        recursive(linkedNodeId);
+      }
+    };
+    recursive(root);
+  }
+
+
+  /* set_Rectangle_size(x_r, y_u, x_l, y_d)
+    * maximum limit of the rectangle;
+    * x_r: x right
+    * y_u: y up
+    * x_l: x left
+    * y_d: y down
+    * text: text to be displayed on the rectangle
+  */
+  setRect(x_r, y_u, x_l, y_d) {
+    if (this.rectangle == null) {
+      this.rectangle = [x_r, y_u, x_l, y_d, ''];
+    } else {
+      if (x_r < this.rectangle[0]) {
+        this.rectangle[0] = x_r;
+      }
+      if (y_u < this.rectangle[1]) {
+        this.rectangle[1] = y_u;
+      }
+      if (x_l > this.rectangle[2]) {
+        this.rectangle[2] = x_l;
+      }
+      if (y_d > this.rectangle[3]) {
+        this.rectangle[3] = y_d;
+      }
+      if (this.functionName == `Rotaiton: `) {
+        this.rectangle[4] = this.functionInsertText;
+      }
+    }
+  }
+
+  //clculate && update the size of the rectangle
+  rectangle_size() {
+    // this.clearRect();
+    // this.setRect();
+    if (this.rectangleNode != null) {
+      for (const id of this.rectangleNode) {
+        const node = this.findNode(id);
+        if (node != null && node.x != null && node.y != null) {
+          this.setRect(node.x, node.y, node.x, node.y);
+          //this.clearRect();
+        }
+      }
+    }
+  }
+
+  /*
+    * used in AVLtree
+    * dynamicllay update the size of the node.
+  */
+  dynamic_node() {
+
+    let max_height = 0;
+    //let node_count = this.nodes.length;
+    for (const node of this.nodes) {
+      if (node.height > max_height) {
+        max_height = node.height;
+      }
+    }
+    if (max_height > 3) {
+      let radius = 37 - (max_height - 3) * 8;
+      if (radius < 10) radius = 10;
+      this.radius = radius;
+    } else {
+      this.radius = null;
+    }
+  }
+
+  /*
+    * clear the parameter in rectangle
+  */
+  clearRect() {
+    this.rectangle = null;
+  }
+
+  clearRectNode() {
+    this.rectangleNode = null;
+  }
+
+  /**
+   * udpate the height of the node
+   * @param {int} id the node id
+   * @param {int} height the height of the node
+   */
+  updateHeight(id, height) {
+    this.findNode(id).height = height;
+  }
+
+  /**
+   * udpate the AVL_TID of the node
+   * @param {int} id
+   * @param {String} AVL_TID
+   */
+  updateTID(id, AVL_TID) {
+    this.findNode(id).height = AVL_TID;
+  }
+
+  /**
+   * clear the AVL_TID of all nodes
+   */
+  clearTID() {
+    this.nodes.forEach(node => {
+      node.AVL_TID = undefined;
+    });
+  }
+
+  ////////////////////////AVL tree layout/////////////////////
+  layoutAVL(root = 0, sorted = false) {
+
+    //reflash the Node
+    this.dynamic_node();
+
+    this.root = root;
+    this.callLayout = { method: this.layoutBST, args: arguments };
+    const rect = this.getRect();
+    // If there is a sole node, it centers it.
+    const middleX = (rect.left + rect.right) / 2;
+    const middleY = (rect.top + rect.bottom) / 2;
+    if (this.nodes.length === 1) {
+      const [node] = this.nodes;
+      node.x = middleX;
+      node.y = middleY;
+      return;
+    }
+
+    // Traversal of the entire tree, counting number of nodes.
+    let maxDepth = 0;
+    const nodeDepth = {};
+    let marked = {};
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      if (maxDepth < depth) maxDepth = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(root, 0);
+
+    // Calculates node's x and y.
+    // adjust hGap to some function of node number later//
+    const hGap = rect.width - 150;
+    const vGap = rect.height / maxDepth;
+    marked = {};
+    const recursivePosition = (node, h, v) => {
+      marked[node.id] = true;
+      // 120 magic number to center root node//
+      node.x = rect.left + h * hGap + 120;
+      node.y = rect.top + v * vGap;
+      /* used to debug, delete in merge
+      console.log(node.x + " " +  node.y + " "  + node.id );
+      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
+      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
+      */
+      const linkedNodes = this.findLinkedNodes(node.id, false);
+      if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
+      for (const linkedNode of linkedNodes) {
+        if (marked[linkedNode.id]) continue;
+        if (linkedNode.id > node.id) {
+          if (node.id > this.root) {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
+          }
+        } else if (linkedNode.id < node.id) {
+          if (node.id < this.root) {
+            recursivePosition(linkedNode, h - 1 / (v * v + 1), v + 1);
+          } else {
+            recursivePosition(linkedNode, h - 1 / (2 * v + 1), v + 1);
+          }
+        }
+      }
+    };
+    const rootNode = this.findNode(root);
+    recursivePosition(rootNode, 0, 0);
+  }
+
+  /**
+   * display text on the AVL tree (for the rotation, key)
+   * @param {String} functionInsertText
+   */
+  setFunctionInsertText(functionInsertText) {
+    this.functionInsertText = functionInsertText;
+  }
+
+  /**
+   * display the node id in avl function
+   * @param {int} functionNode  the node id
+   */
+  setFunctionNode(functionNode) {
+    this.functionNode = functionNode;
+  }
+
+  /**
+   * set the balance factor of the node
+   * @param {int} functionBalance the balance factor of the node
+   */
+  setFunctionBalance(functionBalance) {
+
+    if (functionBalance != null && (functionBalance > 1 || functionBalance < -1)) {
+      this.Children_Balance();
+      this.rectangle_size();
+    } else {
+      this.clearRect();
+      this.clearRectNode();
+    }
+    this.functionBalance = functionBalance;
+  }
+
+  /**
+   * dispaly the function name on the AVL tree
+   * @param {String} name the name of the function
+   */
+  setFunctionName(name) {
+    this.functionName = name;
+  }
+
+  /**
+   * if the tree is performing the rotation, display the null tree
+   * and display null tree since the tree is empty
+   * @param {String} text the tag of the node
+   */
+  setTagInfo(text) {
+    this.tagInfo = text;
+    if (text.length > 3) {
+      this.tagInfo += 'are null';
+    }
+    else if (text !== '') {
+      this.tagInfo += 'is null';
+    }
+  }
+
+  /**
+   * if roataion is performed, pause the layout
+   * @param {boolean} b pause the layout
+   */
+  setPauseLayout(b = true) {
+    (b ? this.pauseLayout = true : this.pauseLayout = false)
+  }
+
+  /**
+   * input the node id and set the x and y coordinates of this node
+   * @param {node} n find the node with the id n
+   * @param {float} x new x coordinate of the node
+   * @param {float} y new y coordinate of the node
+   */
+  setNodePosition(n, x, y) {
+    let node = this.findNode(n);
+    //console.log(node);
+    node.x = x;
+    node.y = y;
+
+    // refresh rectangle size
+    //this.clearRect();
+    this.rectangle_size();
+  }
+
+  /**
+   * return the previous height of the tree in insertion
+   * @param {int} prebHeight the previous height of the tree
+   */
+  storePrevHeight(prebHeight) {
+    this.prebHeight = prebHeight;
+  }
+
+  /**
+   * return the previous height of the tree in insertion
+   * @returns {int} the previous height of the tree
+   */
+  getPrevHeight() {
+    return this.prebHeight;
+  }
 }
 
 export default GraphTracer;
