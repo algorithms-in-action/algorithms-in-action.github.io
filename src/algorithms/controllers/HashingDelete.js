@@ -10,7 +10,8 @@ import {
   VALUE,
   DELETE_CHAR,
   HASH_TYPE,
-  newCycle
+  newCycle,
+  EMPTY_CHAR
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -46,7 +47,7 @@ export default function HashingDelete(
     (vis, target) => {
 
       vis.array.showKth({key: target, insertions: vis.array.getKth().insertions, type: HASH_TYPE.Delete}); // Show stats
-      
+
       newCycle(vis, SIZE, key, ALGORITHM_NAME); // New delete cycle
     },
     [key]
@@ -176,7 +177,8 @@ export default function HashingDelete(
           popper.innerHTML = table[idx];
 
           let firstItemOfChain = table[idx][0];
-          vis.array.updateValueAt(VALUE, idx, firstItemOfChain + '..');
+          if (firstItemOfChain != undefined) vis.array.updateValueAt(VALUE, idx, firstItemOfChain + '..');
+          else vis.array.updateValueAt(VALUE, idx, EMPTY_CHAR);
 
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
         },
