@@ -157,7 +157,7 @@ export default {
         (vis, idx) => {
 
           // Pointer only appear for small table
-          if (table.length <= PRIMES[POINTER_CUT_OFF]) {
+          if (table.length < PRIMES[POINTER_CUT_OFF]) {
             vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
           }
 
@@ -196,7 +196,7 @@ export default {
           (vis, idx) => {
 
             // Pointer only appears for small tables
-            if (table.length <= PRIMES[POINTER_CUT_OFF]) {
+            if (table.length < PRIMES[POINTER_CUT_OFF]) {
               vis.array.assignVariable(POINTER_VALUE, POINTER, idx);
             }
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Pending); // Filling the pending slot with yellow
@@ -425,14 +425,14 @@ export default {
         IBookmarks.Init,
         (vis, size, array) => {
           // Increase Array2D visualizer render space
-        if (SIZE === LARGE_SIZE) {
-          vis.array.setSize(3);
-          vis.array.setZoom(0.7);
-          vis.graph.setZoom(1.5);
-        } else {
-          vis.array.setZoom(1);
-          vis.graph.setZoom(1);
-        }
+          if (SIZE === LARGE_SIZE) {
+            vis.array.setSize(3);
+            vis.array.setZoom(0.7);
+            vis.graph.setZoom(1.5);
+          } else {
+            vis.array.setZoom(1);
+            vis.graph.setZoom(1);
+          }
 
           // Initialize the array
           vis.array.set(array,

@@ -39,7 +39,7 @@ export default function HashingDelete(
 
   // Assigning parameter values to local variables
   const ALGORITHM_NAME = params.name;
-  const SIZE = params.hashSize; // Hash Modulo being used in the table
+  const SIZE = table.length; // Hash Modulo being used in the table
 
   // Chunker for intial state of visualizers
   chunker.add(

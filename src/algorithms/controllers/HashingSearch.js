@@ -12,7 +12,8 @@ import {
   HASH_TYPE,
   PRIMES,
   POINTER_CUT_OFF,
-  newCycle
+  newCycle,
+  findTableSize
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -55,8 +56,8 @@ export default {
     // Assigning parameter values to local variables
     const ALGORITHM_NAME = params.name;
     const TARGET = params.target; // Target value we are searching for
-    const SIZE = params.hashSize; // Hash Modulo being used in the table
     let table = params.visualisers.array.instance.extractArray(1, EMPTY_CHAR); // The table with inserted values
+    const SIZE = findTableSize(table); // Hash Modulo being used in the table
 
     // Variable for testing
     let found = true;

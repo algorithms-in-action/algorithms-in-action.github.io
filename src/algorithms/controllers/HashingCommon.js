@@ -45,6 +45,16 @@ export const PRIMES = [
   11, 23, 47, 97
 ];
 
+// find the table size from the table extracted from the visualizer
+export function findTableSize(table) {
+  for (let i = 0; i < PRIMES.length; i++) {
+    if (table.length - PRIMES[i] < SPLIT_SIZE) {
+      return PRIMES[i];
+    }
+  }
+  return 0;
+}
+
 // which table size in PRIMES array to allow pointer
 export const POINTER_CUT_OFF = 1;
 
