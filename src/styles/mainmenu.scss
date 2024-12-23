@@ -19,6 +19,11 @@
   justify-content: space-between; // 这会将内容分散到顶部和底部
 }
 
+// XXX Maybe should be .main-content??? - thats what is used in
+// src/components/mainmenu/index.js
+// Things are currently pretty awful for main menu formatting and if the
+// browser font size is larger than the default things just vanish off
+// the page, not to mention all the magic numbers in translating bits XXX
 .main-contents {
   width: 83.33%; 
   height: 100vh;

@@ -11,6 +11,11 @@ import StringSearchAlgorithms from './StringSearchAlgorithms';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
+// XXX should include category plus visibility flag so algorithms are
+// just listed in one place (here) and filtered appropriately rather
+// than have multiple algorithm lists (here plus SortingAlgorithms.js
+// plus InsertSearchAlgorithms.js etc), as was done previously...
+// XXX also fix display code (see XXX elsewhere)
 const allAlgorithms = [
     { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
     { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` },
@@ -25,6 +30,7 @@ const allAlgorithms = [
     { name: "Warshall's (transitive closure)", url: `${baseUrl}/?alg=transitiveClosure&mode=tc` },
     { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
     { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
+    { name: 'AVL Tree', url: `${baseUrl}/?alg=AVLTree&mode=search` },
     { name: 'Union Find', url: `${baseUrl}/?alg=unionFind&mode=find` },
     { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
     { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
@@ -68,13 +74,13 @@ const Mainmenu = () => {
       <div className="sidebar">
         <img src={logo} alt="Logo" className="logo" />
         <h1 className="title">
-          <span className="algorithm">Algorithm</span>
+          <span className="algorithm">Algorithms</span>
           <span className="in-action">In Action</span>
         </h1>
         <div className="search-container">
           <input
             type="text"
-            placeholder="Search Algorithms"
+            placeholder="Search for algorithm"
             value={searchTerm}
             onChange={handleSearch}
             className="search-bar"
