@@ -134,6 +134,37 @@ function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
+// prepend graph from URL if defined
+export function addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START) {
+  let graph_egs = [...GRAPH_EGS];
+  // XXX using size causes weirdness - BFSParam() somehow gets
+  // re-evaluated when we cycle around to the URL graph and size and/or
+  // other things get out of whack - maybe something gets triggered,
+  // maybe because the identifier size is overloaded in different ways -
+  // someone who know JS better than me might be able to figure it out.
+  // So, we avoid using the size parameter and use number of xyCoords
+  // (if defined) or GRAPH_EGS[0].size otherwise.
+  let size1 = GRAPH_EGS[0].size;
+  // if coords+weights non-empty we must have info from the URL so we add an
+  // extra graph to the start of the list
+  if (xyCoords && edgeWeights) {
+    size1 = xyCoords.split(",").length;
+    const urlGraph =  {
+      name: 'URL Graph',
+          size: size1,
+          coords: xyCoords,
+          edges: edgeWeights
+    };
+    graph_egs.unshift({...urlGraph});
+  } else {
+    start = DEFAULT_START
+  }
+  if (start > size1)
+    start = size1;
+  // XXX should pass in end node(s) and check they are in range???
+  return [start, size1, graph_egs];
+}
+
 // https://dev-aia.vercel.app/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // http://localhost:3000/?alg=heapSort&mode=sort&list=1,3,5,2,8
 // http://localhost:3000/?alg=aStar&mode=find&size=4&start=1&end=4&min=1&max=30&xyCoords=1-1,2-2,3-1,4-2&edgeWeights=1-2-1,1-3-2,1-4-3,2-3-1,2-4-2&heuristic=Euclidean

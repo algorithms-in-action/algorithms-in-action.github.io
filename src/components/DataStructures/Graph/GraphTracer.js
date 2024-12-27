@@ -145,7 +145,7 @@ class GraphTracer extends Tracer {
         const scaleSize = 30;
         const x = coordinates[i][0] * scaleSize;
         const y = -coordinates[i][1] * scaleSize;
-        this.addNode(i, nodeValue, undefined, x, y);
+        this.addNode(i, nodeValue, undefined, undefined, undefined, x, y);
       }
 
       for (let j = 0; j < array2d.length; j++) {

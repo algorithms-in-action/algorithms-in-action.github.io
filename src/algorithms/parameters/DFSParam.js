@@ -4,7 +4,7 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
 
 const DEFAULT_SIZE = 5;
 const DFS = 'DFS\'s';
@@ -33,26 +33,21 @@ const GRAPH_EGS = [ // XXX think up better examples?
 
 function DFSParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-    { name: 'URL Input Graph',
-      size: size || GRAPH_EGS[0].size,
-      coords: xyCoords || GRAPH_EGS[0].coords,
-      edges: edgeWeights || GRAPH_EGS[0].edges
-    }
-    ]
+  let [start1, size1, graph_egs] =
+         addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START);
   return (
     <>
       {/* Matrix input */}
       <EuclideanMatrixParams
         name="DFS"
         mode= "find"
-        defaultSize={ size || DEFAULT_SIZE }
-        defaultStart={start || DEFAULT_START }
-        defaultHeur = {heuristic || DEFAULT_HEUR }
+        defaultSize={ size1 }
+        defaultStart={ start1 }
         defaultEnd={ end || DEFAULT_END }
+        defaultHeur = {DEFAULT_HEUR }
         min={ min || 1 }
         max={ max || 49 }
-        graphEgs={graph_egs || GRAPH_EGS}
+        graphEgs={graph_egs}
         symmetric
         ALGORITHM_NAME={DFS}
         EXAMPLE={DFS_EXAMPLE}

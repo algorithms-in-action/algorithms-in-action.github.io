@@ -4,7 +4,7 @@ import MatrixParam from './helpers/MatrixParam';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
 
 // Note: 'A* Algorithm' currently used in EuclideanMatrixParams.js -
 // change both or neither!
@@ -34,13 +34,8 @@ const GRAPH_EGS = [ // XXX think up better examples?
         }];
 function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max } ) {
   const [message, setMessage] = useState(null);
-  const graph_egs = [
-      { name: 'URL Input Graph',
-        size: size || GRAPH_EGS[0].size,
-        coords: xyCoords || GRAPH_EGS[0].coords,
-        edges: edgeWeights || GRAPH_EGS[0].edges
-      }
-      ]
+  let [start1, size1, graph_egs] =
+         addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START);
 
   return (
     <>
@@ -48,14 +43,14 @@ function ASTParam( { mode, xyCoords, edgeWeights, size, start, end, heuristic, m
       <EuclideanMatrixParams
         name="aStar"
         mode="find"
-        defaultSize={ size || DEFAULT_SIZE }
-        defaultStart={ start || DEFAULT_START }
+        defaultSize={ size1 }
+        defaultStart={ start1 }
         defaultEnd={ end || DEFAULT_END }
         heuristic = { heuristic || DEFAULT_HEUR }
         min={ min || 1 }
         max={ max || 49 }
         symmetric
-        graphEgs={ graph_egs || GRAPH_EGS }
+        graphEgs={ graph_egs }
         ALGORITHM_NAME={ASTAR}
         EXAMPLE={ASTAR_EXAMPLE}
         EXAMPLE2={ASTAR_EXAMPLE2}
