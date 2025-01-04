@@ -1147,10 +1147,10 @@ class GraphTracer extends Tracer {
   setTagInfo(text) {
     this.tagInfo = text;
     if (text.length > 3) {
-      this.tagInfo += 'are null';
+      this.tagInfo += 'are Empty'; // not used
     }
     else if (text !== '') {
-      this.tagInfo += 'is null';
+      this.tagInfo += 'is Empty';
     }
   }
 
