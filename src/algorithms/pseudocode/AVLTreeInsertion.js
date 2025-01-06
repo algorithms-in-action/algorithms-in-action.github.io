@@ -3,11 +3,12 @@ import parse from '../../pseudocode/parse';
 export default parse(`
     
 \\Note{  REAL specification of AVL tree insertion and search
-XXX draft
+XXX Note: has undergone significant restructure and bookmarks have not been
+renamed according to new structure
 \\Note}
 
 \\Note{  modified from BST - best check actual running BST Real code for
-search and use that
+search and use that  XXX still needs unification with BST
 
 Terminology (might change???)
 For BST we confound t.key and t->key, eg, we have c <- c.left.  Its not
@@ -20,6 +21,7 @@ left(t) = *(t->left) (or Empty)   ?????
 right() similarly
 root(t).key, root(t).height, etc
 left(t).height, etc ???
+XXX maybe use height(t), key(t), left(t), right(t)
 \\Note}
 
 \\Overview{  A binary tree is either is either empty (Empty) or else it

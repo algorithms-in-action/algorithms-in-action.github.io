@@ -60,6 +60,44 @@ export default {
             }
         }
 
+        /**
+        * compute node positions during rotation
+        * given x-y coordinates of the root and the child, compute the
+        * intermediate position after step 1 or step 2
+        * coords represented as record with fields rX, rY, cX, cY (root X&Y,
+        * child X&Y)
+        * We keep the edge the same length and rotate it around the point 40%
+        * along the edge from the root.  If initially the y coordinate of the
+        * root is 1 and the child is zero, after step 1 the root is at 2/3
+        * and the child is at 1/2 and after step 2 the root is at 1/3 and the
+        * child is at 1.  The x coordinates are computed so as to keep the length
+        * of the edge same (magic numbers derived from maths).
+        * returns record with new coordinates
+        */
+        function rotateStep(pos0, step) {
+
+        let {rX, rY, cX, cY} = pos0;
+	let deltaX = rX - cX;
+	let deltaY = rY - cY;
+        // edge length = sqrt(deltaX**2 + deltaY**2)
+	let deltaX1; // deltaX for new position
+	let pos1 = {rX:0, rY:0, cX:0, cY:0};
+        if (step == 1) {
+            pos1.rY = (2*rY + cY) / 3;
+            pos1.cY = (rY + cY) / 2;
+            deltaX1 = Math.sqrt((35/36)*deltaY**2 + deltaX**2);
+        } else { // assume step == 2
+            pos1.rY = (rY + 2*cY) / 3;
+            pos1.cY = rY;
+            deltaX1 = Math.sqrt((5/9)*deltaY**2 + deltaX**2);
+        }
+	if (rX > cX)  // reverse direction of deltaX
+            deltaX1 = -deltaX1;
+        pos1.rX = (0.6*rX + 0.4*cX) - 0.4*deltaX1;
+        pos1.cX = (0.6*rX + 0.4*cX) + 0.6*deltaX1;
+        return pos1;
+        }
+
         // We apply the following char notations in our rotation code.
         // It helps code reusability and readability.
         // tNum / charNotation
@@ -116,17 +154,11 @@ export default {
                     let rootNode = vis.graph.findNode(tt6);
                     let leafNode = vis.graph.findNode(tt2);
                     // store the previous height of the root node
-                    vis.graph.storePrevHeight(rootNode.y);
-                    // calculate the new position of the nodes
-                    let newY = (rootNode.y + leafNode.y) / 2;
-                    let moveX = 0;
-                    // avoid overlapping
-                    if ((rootNode.x - leafNode.x) < nodeSize) {
-                        moveX = nodeSize - (rootNode.x - leafNode.x);
-                    }
-                    // set the new position of the nodes
-                    vis.graph.setNodePosition(tt6, rootNode.x + moveX, newY);
-                    vis.graph.setNodePosition(tt2, leafNode.x - moveX, newY);
+                    let pos0 = {rX:rootNode.x, rY:rootNode.y, cX:leafNode.x, cY:leafNode.y};
+                    vis.graph.setRotPos(pos0);
+                    let pos = rotateStep(pos0, 1); // compute new position
+                    vis.graph.setNodePosition(tt6, pos.rX, pos.rY);
+                    vis.graph.setNodePosition(tt2, pos.cX, pos.cY);
                 },
                 [A.key, R.key],
                 depth
@@ -144,14 +176,14 @@ export default {
                     }
 
                     // -- following code is for visualising the rotation step by step --
-                    let rootNode = vis.graph.findNode(tt6);
+                    let rootNode = vis.graph.findNode(tt2);
                     let leafNode = vis.graph.findNode(tt2);
                     // freeze the layout to avoid the nodes moving automatically
                     vis.graph.setPauseLayout(true);
-                    let move = (rootNode.x - leafNode.x) / 5;
-                    // set the new position of the nodes
-                    vis.graph.setNodePosition(tt2, leafNode.x + move, vis.graph.getPrevHeight());
-                    vis.graph.setNodePosition(tt6, rootNode.x - move, rootNode.y + (rootNode.y - leafNode.y) * 0.5);
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos = rotateStep(pos0, 2); // compute new position
+                    vis.graph.setNodePosition(tt6, pos.rX, pos.rY);
+                    vis.graph.setNodePosition(tt2, pos.cX, pos.cY);
                 },
                 [R.key, A.key, D ? D.key : false],
                 depth
@@ -274,19 +306,14 @@ export default {
 
                     // -- following code is for visualising the rotation step by step --
                     // find the position of the nodes in the graph
-                    let rootNode = vis.graph.findNode(tt6);
-                    let leafNode = vis.graph.findNode(tt2);
+                    let rootNode = vis.graph.findNode(tt2);
+                    let leafNode = vis.graph.findNode(tt6);
                     // store the previous height of the root node
-                    vis.graph.storePrevHeight(leafNode.y);
-                    let newY = (rootNode.y + leafNode.y) / 2;
-                    let moveX = 0;
-                    // avoid overlapping
-                    if ((rootNode.x - leafNode.x) < nodeSize) {
-                        moveX = nodeSize - (rootNode.x - leafNode.x);
-                    }
-                    // set the new position of the nodes
-                    vis.graph.setNodePosition(tt6, rootNode.x + moveX, newY);
-                    vis.graph.setNodePosition(tt2, leafNode.x - moveX, newY);
+                    let pos0 = {rX:rootNode.x, rY:rootNode.y, cX:leafNode.x, cY:leafNode.y};
+                    vis.graph.setRotPos(pos0);
+                    let pos = rotateStep(pos0, 1); // compute new position
+                    vis.graph.setNodePosition(tt2, pos.rX, pos.rY);
+                    vis.graph.setNodePosition(tt6, pos.cX, pos.cY);
                 },
                 [A.key, R.key],
                 depth
@@ -304,15 +331,13 @@ export default {
                     }
 
                     // -- following code is for visualising the rotation step by step --
-                    // find the position of the nodes in the graph
-                    let rootNode = vis.graph.findNode(tt6);
-                    let leafNode = vis.graph.findNode(tt2);
                     // freeze the layout to avoid the nodes moving automatically
                     vis.graph.setPauseLayout(true);
-                    let move = (leafNode.x - rootNode.x) / 5;
                     // set the new position of the nodes
-                    vis.graph.setNodePosition(tt6, rootNode.x + move, vis.graph.getPrevHeight());
-                    vis.graph.setNodePosition(tt2, leafNode.x - move, leafNode.y - (rootNode.y - leafNode.y) * 0.5);
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos = rotateStep(pos0, 2); // compute new position
+                    vis.graph.setNodePosition(tt2, pos.rX, pos.rY);
+                    vis.graph.setNodePosition(tt6, pos.cX, pos.cY);
                 },
                 [R.key, A.key, D ? D.key : false],
                 depth
