@@ -1,8 +1,9 @@
 # AVL Trees
 
-AVL trees are **self-balancing** binary search trees.  
+An AVL tree is **self-balancing** binary search tree.
+
 Because the AVL tree is always balanced, search will be *O(log n)*,
- no matter what the order of the input data. 
+no matter what the order of the input data. 
 
 ### Binary Search Trees
 
@@ -23,21 +24,21 @@ for each
 
 ### AVL tree balancing
 
-The AVL tree preserves the balance of the tree by checking after every insertion to detect
+The AVL tree preserves the balance of the tree by (1) checking after every insertion to detect
 when the tree has become unbalanced
-and performing one or more rotation operations to restore balance when necessary.
+and (2) performing one or more rotation operations to restore balance when necessary.
 Unbalanced is defined as a difference of more than `1` between the heights of the left and right subtrees.
 
-(Here **maybe insert small pictures, thumbnails?** to show -- unbalanced at gp of new node, 
+(Here **MAYBE insert small pictures, thumbnails?** to show -- unbalanced at gp of new node, 
 and also balanced at gp but unblanaced at ggp.)
 
-A (temporarily) unbalanced tree takes on one of two configurations, *zig-zag* or *zig-zig*, and the 
-sequence of rotations depends on the configuration around the node where the unbalance is detected. 
+A temporarily unbalanced AVL tree takes on one of two configurations, *zig-zag* or *zig-zig*. The 
+sequence of rotations depends on the configuration around the node where the imbalance is detected. 
 
 ### Zig-zig case
 
-In the *zig-zig* case, the child and grandchild nodes of the unbalanced are either both 
-left subtrees or both right subtrees. 
+The *zig-zig* configuration has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
+either (1) both left subtrees or (2) both right subtrees. 
 
 
 ## The left-left case
@@ -46,9 +47,11 @@ If the new key was added to the left child of the left child (the
 *left-left* case), the balance can be
 restored with a single _**Right Rotation**_ operation.
 
-**This is not quite correct, as I think unbalance can occur at the great-great grandparent
-without occuring at the parent**
+Note that the imbalance may be located further up the tree than the immediate grandparent of the newly inserted node:
 
+**Insert very small diagrams showing (a) imbalance of the grandparent-parent and (b) imbalance of the great grandparent** 
+*Note that all diagrams should hae nodes in BST order, and where the subtrees are not necessarily single nodes, represent them as subtree-triangles* 
+*Have arrow showing which node is not in blanace*
 
 
 , as explained in the diagram
@@ -59,7 +62,7 @@ the root to the 1 (where the new node was added), restoring the balance
 cause the AVL tree balance condition to be violated).  Right rotation is
 done by calling rightRotate(t6), where t6 is the tree rooted at 6.
 
-![](images/AVL/AVL-left-left.jpg) Picture courtesy of Greek for Geeks
+![](images/AVL/AVL-left-left.jpg) This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
   
 
 
