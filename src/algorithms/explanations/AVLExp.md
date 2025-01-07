@@ -62,7 +62,7 @@ the root to the 1 (where the new node was added), restoring the balance
 cause the AVL tree balance condition to be violated).  Right rotation is
 done by calling rightRotate(t6), where t6 is the tree rooted at 6.
 
-![](images/AVL/AVL-left-left.jpg) This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
+![Alt text if image doesn't open: AVL-left-left](images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
   
 
 
