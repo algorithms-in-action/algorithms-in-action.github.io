@@ -1,4 +1,4 @@
-# AVL Tree
+# AVL Trees
 
 An AVL tree is **self-balancing** binary search tree.
 
