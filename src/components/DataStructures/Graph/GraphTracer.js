@@ -72,7 +72,7 @@ class GraphTracer extends Tracer {
     this.rotPos = {};
   }
 
-  /* 
+  /*
    * Calcluates the maximum individual coordinate from an array of x y coordinates.
   */
   calculateMaximumCoordinate(coordinates) {
@@ -116,7 +116,7 @@ class GraphTracer extends Tracer {
 
     // XXX
     // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
-    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
+    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!!
   }
 
   /**
@@ -922,13 +922,13 @@ class GraphTracer extends Tracer {
   }
 
 
-  /* set_Rectangle_size(x_r, y_u, x_l, y_d) 
+  /* set_Rectangle_size(x_r, y_u, x_l, y_d)
     * maximum limit of the rectangle;
     * x_r: x right
     * y_u: y up
     * x_l: x left
     * y_d: y down
-    * text: text to be displayed on the rectangle 
+    * text: text to be displayed on the rectangle
   */
   setRect(x_r, y_u, x_l, y_d) {
     if (this.rectangle == null) {
@@ -1011,8 +1011,8 @@ class GraphTracer extends Tracer {
 
   /**
    * udpate the AVL_TID of the node
-   * @param {int} id 
-   * @param {String} AVL_TID 
+   * @param {int} id
+   * @param {String} AVL_TID
    */
   updateTID(id, AVL_TID) {
     this.findNode(id).height = AVL_TID;
@@ -1102,7 +1102,7 @@ class GraphTracer extends Tracer {
 
   /**
    * display text on the AVL tree (for the rotation, key)
-   * @param {String} functionInsertText 
+   * @param {String} functionInsertText
    */
   setFunctionInsertText(functionInsertText) {
     this.functionInsertText = functionInsertText;
@@ -1194,6 +1194,5 @@ class GraphTracer extends Tracer {
     return this.rotPos;
   }
 }
-
 
 export default GraphTracer;

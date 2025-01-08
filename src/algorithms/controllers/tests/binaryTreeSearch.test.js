@@ -4,7 +4,7 @@
 */
 
 /* eslint-disable no-undef */
-import binaryTreeSearch from './binaryTreeSearch';
+import binaryTreeSearch from '../binaryTreeSearch';
 // Simple stub for the chunker
 const chunker = {
   add: () => {},

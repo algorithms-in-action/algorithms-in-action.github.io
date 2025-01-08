@@ -5,7 +5,7 @@
 
 /* eslint-disable no-undef */
 
-import prim from './prim';
+import prim from '../prim';
 
 // Simple stub for the chunker
 const chunker = {

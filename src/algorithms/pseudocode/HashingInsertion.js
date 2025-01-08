@@ -8,6 +8,7 @@ import parse from '../../pseudocode/parse';
 // NOTE: code now no longer explicitly keeps track of number of
 // insertions and CheckTableFullness is modified so some bookmarks (eg,
 // 4, 19, 20) no longer exist and controller code will have to change
+
 const main = `
 
         \\Code{
@@ -53,7 +54,7 @@ prevent infinite loops when searching.
                     T[i] <- k // unoccupied slot found so we put k in it \\B 9
                     // Done \\B 10
                 \\In}
-            
+
             //=======================================================
 
             HashDelete(T, k)  // Delete key k in table T \\B 11
@@ -82,7 +83,7 @@ prevent infinite loops when searching.
                     \\In{
                         // Do nothing
                     \\In}
-            \\In}            
+            \\In}
         \\Code}
 
         \\Code{
@@ -181,5 +182,86 @@ export const doubleHashingIncrement = `
                 \\Expl}
         \\Code}
 `
+
+let chainingInsert = `
+    \\Code{
+        NullTable
+            i <- 0
+            while i<TableSize \\B 2
+            \\In{
+                T[i] <- Empty     // Table must start with all slots empty
+                i <- i+1
+            \\In}
+    \\Code}
+
+    \\Code{
+        Main
+        HashInit(T)    // TableSize is prime \\B 1
+            \\In{
+                Initialize Hash Table Slots to Empty   \\Ref NullTable
+                Insertions <- 0    // Keep track of how full table is \\B 3
+            \\In}
+
+        //=======================================================
+
+        HashInsert(T, k)  // Insert key k into table T
+            \\In{
+            Check how full the table is \\B 4
+            \\Expl{ This is not really required, but if the number of insertions
+                is getting large compared to the table size it may be worth expanding the
+                table - see the Background.
+            \\Expl}
+            i <- hash(k) \\Ref Hash1
+            insert k into list T[i] \\Ref InsertList
+            // Done \\B 10
+            \\In}
+
+        //=======================================================
+
+        HashDelete(T, k) \\B 11
+            \\In{
+            i <- hash(k) // Expand Hash in HashInsert for more details \\B 16
+            delete k from list T[i] \\Ref DeleteList
+            \\In}
+    \\Code}
+
+    \\Code{
+    InsertList
+        l <- new list node with head k and tail T[i] \\B 7
+        \\Expl{ Here we simply insert k at the start of the list T[i]. We
+        could check for duplicates but it is not necessary and would require
+        scanning the list.
+        \\Expl}
+        T[i] <- l \\B 9
+    \\Code}
+
+    \\Code{
+    DeleteList
+        l <- T[i]  // l scans through the list T[i] \\B 19
+        prevptr <- pointer to T[i] // follows one step behind l
+        \\Expl{ prevptr is a pointer to a pointer. It trails one step behind
+            l as we scan through the list so the previous node (or T[i]) can
+            be modified when k is found.
+        \\Expl}
+        while not (l = Empty or head(l) = k) // 'Empty' is the empty list
+            \\In{
+            l <- tail(l)  // skip to next list element
+            prevptr <- pointer to tail(l)
+            \\In}
+        if l = Empty // reached the end of the list without finding k \\B 14
+            \\In{
+            // do nothing
+            \\In}
+        else \\B 18
+            \\In{
+            *prevptr <- tail(l) // previous node now points to tail(l)
+            \\Expl{ The list now skips over the node containing k. The
+                memory for this node can be reclaimed.
+            \\Expl}
+            \\In}
+    \\Code}
+`
+
 export const doubleHashing = parse(main + hash1 + '\n' + doubleHashingIncrement);
 export const linearProbing = parse(main + hash1 + '\n' + linearProbingIncrement);
+export const chaining = parse(chainingInsert + '\n' + hash1);

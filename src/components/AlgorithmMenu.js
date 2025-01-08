@@ -32,6 +32,9 @@ const algorithms = {
     'Binary Search Tree': `${baseUrl}/?alg=binarySearchTree&mode=search`,
     'AVL Tree': `${baseUrl}/?alg=AVLTree&mode=search`, //Done?: update URL stuff to include menu changes
     '2-3-4 Tree': `${baseUrl}/?alg=TTFTree&mode=search`,
+    'Hashing (Linear Probing)': `${baseUrl}/?alg=HashingLP&mode=insertion`,
+    'Hashing (Double Hashing)': `${baseUrl}/?alg=HashingDH&mode=insertion`,
+    'Hashing (Chaining)': `${baseUrl}/?alg=HashingCH&mode=insertion`,
   },
   StringSearch: {
     'Brute Force': `${baseUrl}/?alg=bruteForceStringSearch&mode=search`,

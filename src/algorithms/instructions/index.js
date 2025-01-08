@@ -13,9 +13,10 @@ const KEY_UF_UNION = 'UNION';
 const KEY_UF_FIND = 'FIND';
 const KEY_UF_PC_ON = 'ON';
 const KEY_UF_PC_OFF = 'OFF';
+const KEY_INSDEL = 'INSERT/DELETE';
 
 export const KEY_WORDS = [
-  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD,
+  KEY_CODE, KEY_INSERT, KEY_PLAY, KEY_SEARCH, KEY_SORT, KEY_LOAD, KEY_INSDEL
 ];
 
 const bstInstructions = [
@@ -50,6 +51,75 @@ const stringInstructions = [{
     `Click on ${KEY_PLAY} to watch the algorithm run.`,
   ],
 }];
+
+const hashingInstructions1 = [
+  {
+    title: 'Insert/Delete Mode',
+    content: [
+    `Click on ${KEY_CODE} on the right panel.`,
+    `Select small or larger table via the radio buttons.`,
+    `Enter a comma separated list of integers into the Insert parameter.
+    There should be less than 11 integers if it is a small table, and less than 97 if it is a large table.
+
+    **Valid inputs**:
+
+     - x : Insert x into table.
+     - x - y: Bulk insert from integers x to y.
+     - x - y - z: Bulk insert from integers x to y in steps of z.
+     - -x: Delete x from table.
+
+    Only for small table, if you wish to input more integers, select the Expand radio button.
+    The table will now expand after reaching 80% capacity until it reaches 97 slots, after which it will
+    stop at one slot left`,
+
+    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
+    ],
+  },
+  {
+    title: 'Search Mode',
+    content: [
+    'Make sure table has inserted values before searching.',
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter an Integer in the Search parameter.',
+    `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
+    ],
+  },
+];
+
+const hashingInstructions2 = [
+  {
+    title: 'Insert/Delete Mode',
+    content: [
+    `Click on ${KEY_CODE} on the right panel.`,
+    `Select small or larger table via the radio buttons.`,
+    `Enter a comma separated list of integers into the Insert parameter.
+
+    **Valid inputs**:
+
+     - x : Insert x into table.
+     - x - y: Bulk insert from integers x to y.
+     - x - y - z: Bulk insert from integers x to y in steps of z.
+     - -x: Delete x from table.
+
+    You can hover over a slot to see the chain when you see a .. in the slot`,
+
+    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
+    ],
+  },
+  {
+    title: 'Search Mode',
+    content: [
+    'Make sure table has inserted values before searching.',
+    `Click on ${KEY_CODE} on the right panel.`,
+    'Enter an Integer in the Search parameter.',
+    `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
+    ],
+  },
+];
 
 const sortInstructions = [{
   title: 'Sorting Numbers',
@@ -129,3 +199,5 @@ export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
 export const DFSInstruction = graphInstructions;
 export const DFSrecInstruction = graphInstructions;
+export const HashingLPDHInstruction = hashingInstructions1;
+export const HashingCHInstruction = hashingInstructions2;

@@ -21,3 +21,6 @@ export { default as ASTARParam } from './ASTParam';
 export { default as BFSParam } from './BFSParam';
 export { default as DFSParam } from './DFSParam';
 export { default as DFSrecParam } from './DFSrecParam';
+export { default as HashingLPParam } from './HashingLPParam';
+export { default as HashingDHParam } from './HashingDHParam';
+export { default as HashingCHParam } from './HashingCHParam';

@@ -31,7 +31,7 @@ import * as Instructions from './instructions';
 // Also: the key for the algorithm MUST be the same as the "name"
 // of the top level Param block returned by the parameter function.
 // Eg, parameters/msort_arr_td.js has
-// 
+//
 // function MergesortParam() {
 // ...
 // return (
@@ -177,6 +177,58 @@ const allalgs = {
       search: Controller.TTFTreeSearch,
     },
   },
+
+  'HashingLP': {
+    name: 'Hashing (Linear Probing)',
+    category: 'Insert/Search',
+    param: <Param.HashingLPParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.linearProbing,
+      search: Pseudocode.linearSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingDH': {
+    name: 'Hashing (Double Hashing)',
+    category: 'Insert/Search',
+    param: <Param.HashingDHParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.doubleHashing,
+      search: Pseudocode.doubleSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingCH': {
+    name: 'Hashing (Chaining)',
+    category: 'Insert/Search',
+    param: <Param.HashingCHParam/>,
+    instructions: Instructions.HashingCHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.chaining,
+      search: Pseudocode.chainingSearch,
+    },
+    controller: {
+      insertion: Controller.HashingChainingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
   'AVLTree': {
     name: 'AVL Tree',
     category: 'Insert/Search',
@@ -249,7 +301,7 @@ const allalgs = {
       find: Controller.dijkstra,
 
     },
-  }, 
+  },
    'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
@@ -264,7 +316,7 @@ const allalgs = {
       find: Controller.AStar,
 
     },
-  }, 
+  },
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',

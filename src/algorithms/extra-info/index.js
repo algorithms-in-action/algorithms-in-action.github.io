@@ -20,3 +20,5 @@ export { default as ASTARInfo } from './ASTInfo.md';
 export { default as BFSInfo } from './BFSInfo.md';
 export { default as DFSInfo } from './DFSInfo.md';
 export { default as DFSrecInfo } from './DFSrecInfo.md';
+export { default as HashingInfo } from './HashingInfo.md';
+

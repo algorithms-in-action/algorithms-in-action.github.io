@@ -18,6 +18,10 @@
     "test-srs": "npm test -- ./src/algorithms/controllers/straightRadixSort.test.js",
     "test-uf": "npm test -- ./src/algorithms/controllers/unionFind.test.js",
     "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
+    "test-hashinsert": "npm test -- ./src/algorithms/controllers/tests/HashingInsertion.test.js",
+    "test-hashsearch": "npm test -- ./src/algorithms/controllers/tests/HashingSearch.test.js",
+    "test-hashdelete": "npm test -- ./src/algorithms/controllers/tests/HashingDeletion.test.js",
+    "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
     "test-avl": "npm test -- ./src/algorithms/controllers/AVLTree.test.js",
     "test-url": "npm test -- ./src/algorithms/parameters/helpers/urlHelpers.test.js"
   },
@@ -63,6 +67,7 @@
     "@mui/lab": "latest",
     "@mui/material": "^5.14.4",
     "@mui/styles": "^5.14.4",
+    "@popperjs/core": "^2.11.8",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^8.0.1",
