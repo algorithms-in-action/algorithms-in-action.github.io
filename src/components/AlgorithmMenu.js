@@ -4,12 +4,15 @@ import '../styles/AlgorithmMenu.scss';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
+// XXX construct this from master list of algorithms!
 const algorithms = {
   Sort: {
     Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
     Quicksort: `${baseUrl}/?alg=quickSort&mode=sort`,
     'Quicksort (Median of 3)': `${baseUrl}/?alg=quickSortM3&mode=sort`,
     'Merge Sort': `${baseUrl}/?alg=msort_arr_td&mode=sort`,
+    'Radix Sort (MSD/Exchange)': `${baseUrl}/?alg=radixSortMSD&mode=sort`,
+    'Radix Sort (LSD/Straight)': `${baseUrl}/?alg=radixSortStraight&mode=sort`,
   },
   Graph: {
     'Depth First Search': `${baseUrl}/?alg=DFSrec&mode=find`,
@@ -27,8 +30,8 @@ const algorithms = {
   },
   'Insert/Search': {
     'Binary Search Tree': `${baseUrl}/?alg=binarySearchTree&mode=search`,
+    'AVL Tree': `${baseUrl}/?alg=AVLTree&mode=search`, //Done?: update URL stuff to include menu changes
     '2-3-4 Tree': `${baseUrl}/?alg=TTFTree&mode=search`,
-    'AVL Tree': `${baseUrl}/?alg=AVLTree&mode=search`, //TODO: Need to update URL implementation and sharing code to include menu changes
   },
   StringSearch: {
     'Brute Force': `${baseUrl}/?alg=bruteForceStringSearch&mode=search`,

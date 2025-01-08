@@ -10,7 +10,9 @@ AVLT_Search(t, k)  // return subtree whose root has key k; or NotFound  \\B AVL_
     while t not Empty   \\B while t not Empty
     \\In{
         n = root(t)  \\B n = root(t)
-        \\Note{ Avoids confounding pointers and nodes
+        \\Note{ Avoids confounding pointers and nodes  XXX not worth it???
+            could use key(t), left(t), right(t) below; make as similar to
+            AVLTree code as possible
         \\Note}
         if n.key = k    \\B if n.key = k
         \\In{

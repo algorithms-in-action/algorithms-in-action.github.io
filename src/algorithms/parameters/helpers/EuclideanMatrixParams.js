@@ -216,8 +216,11 @@ function EuclideanMatrixParams({
   let coordsEgs = graphEgsCoords(graphEgs);
   let edgesEgs = graphEgsEdges(graphEgs);
   let namesEgs = graphEgsNames(graphEgs);
+  // currSize is synchonous version of size (latter may get out of date
+  // and cause array bounds errors potentially)
+  const currSize = graphEgs[0].size;
   // Now use Example graph 0 passed in rather than random initially
-  const [size, setSize] = useState(graphEgs[0].size);
+  const [size, setSize] = useState(currSize);
 
   // Button toggles Euclidean/Manhattan/As Input for weights
   const WEIGHTCALCMAX = 3; // number of weight calculation options
@@ -234,9 +237,9 @@ function EuclideanMatrixParams({
   const heurCalcName = ['Euclidean', 'Manhattan'];
   const [heurCalc, setHeurCalc] = useState(H_EUCLIDEAN);
 
-  // (size) affects number of columns.
-  const columns1 = useMemo(() => makeColumnCoords(size), [size]);
-  const columns2 = useMemo(() => makeColumnArray(size), [size]);
+  // (currSize) affects number of columns.
+  const columns1 = useMemo(() => makeColumnCoords(currSize), [currSize]);
+  const columns2 = useMemo(() => makeColumnArray(currSize), [currSize]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
 
@@ -436,7 +439,7 @@ function EuclideanMatrixParams({
   // components/DataStructures/Graph/GraphRenderer/index.js) so
   // coordinates here can be updated
   const moveNode = (nodeID, x, y) => {
-    console.log(['moveNode', nodeID, x, y]);
+    // console.log(['moveNode', nodeID, x, y]);
     const newData1 = data1.map((row, index) => {
       if (index === nodeID) {
         return {

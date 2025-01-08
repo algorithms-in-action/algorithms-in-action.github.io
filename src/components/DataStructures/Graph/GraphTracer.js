@@ -67,8 +67,9 @@ class GraphTracer extends Tracer {
     this.istc = false;
     this.radius = null;
 
+    // used in AVL trees
     this.pauseLayout = false;
-    this.prebHeight = 0;  // restore the previous height of the node
+    this.rotPos = {};
   }
 
   /* 
@@ -1147,10 +1148,10 @@ class GraphTracer extends Tracer {
   setTagInfo(text) {
     this.tagInfo = text;
     if (text.length > 3) {
-      this.tagInfo += 'are null';
+      this.tagInfo += 'are Empty'; // not used
     }
     else if (text !== '') {
-      this.tagInfo += 'is null';
+      this.tagInfo += 'is Empty';
     }
   }
 
@@ -1180,19 +1181,17 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * return the previous height of the tree in insertion
-   * @param {int} prebHeight the previous height of the tree
+   * save position of root and child pre-rotation (AVL trees)
    */
-  storePrevHeight(prebHeight) {
-    this.prebHeight = prebHeight;
+  setRotPos(pos) {
+    this.rotPos = pos;
   }
 
   /**
-   * return the previous height of the tree in insertion
-   * @returns {int} the previous height of the tree
+   * return position of root and child pre-rotation (AVL trees)
    */
-  getPrevHeight() {
-    return this.prebHeight;
+  getRotPos() {
+    return this.rotPos;
   }
 }
 

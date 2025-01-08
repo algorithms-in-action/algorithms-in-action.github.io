@@ -3,11 +3,12 @@ import parse from '../../pseudocode/parse';
 export default parse(`
     
 \\Note{  REAL specification of AVL tree insertion and search
-XXX draft
+XXX Note: has undergone significant restructure and bookmarks have not been
+renamed according to new structure
 \\Note}
 
 \\Note{  modified from BST - best check actual running BST Real code for
-search and use that
+search and use that  XXX still needs unification with BST
 
 Terminology (might change???)
 For BST we confound t.key and t->key, eg, we have c <- c.left.  Its not
@@ -20,6 +21,7 @@ left(t) = *(t->left) (or Empty)   ?????
 right() similarly
 root(t).key, root(t).height, etc
 left(t).height, etc ???
+XXX maybe use height(t), key(t), left(t), right(t)
 \\Note}
 
 \\Overview{  A binary tree is either is either empty (Empty) or else it
@@ -109,15 +111,16 @@ Main
   back up is sufficient - there is only one path back up to the root.
   The "current" node should certainly be highlighted in some way also.
 \\Note}
-AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
+AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
   \\In{
     if t = Empty \\B if t = Empty
     \\In{
+\\Note{ simplified this
       //Both subtrees are Empty and the height is 1
       create new node n containing k \\B create new node
-      return (pointer to) n // return a single-node tree \\B return n
-      \\Expl{  The returned tree has just
-              one node, with key k, empty sub-trees and height 1.
+\\Note}
+      return new node containing k \\B return n
+      \\Expl{ Return a single-node tree with key k (the height is 1).
               This is the base case of the recursion.
       \\Expl}
     \\In}
@@ -138,83 +141,24 @@ AVLT_Insert(t, k) \\B AVLT_Insert(t, k)
     \\In}
     else \\B else k = root(t).key
     \\In{
-        return t // key k is already in the tree \\B return t, no change
-        \\Expl{  The key is already in the tree, so no change is needed.
+        return t // ignore duplicate key \\B return t, no change
+        \\Expl{  Key k is already in the tree and here we ignore duplicate keys.
         \\Expl}
     \\In}
-    Update the height of t \\Ref updateHeight
-    \\Expl{ The height of t may have increased by one
+    Update the height of t \\B root(t).height = 1 + max(left(t).height, right(t).height)
+    \\Expl{
+        The tree height is one more than the maximum height of its children. It may
+        have increased by one due to the insertion.
     \\Expl}
-    Determine the balance of t \\Ref getBalance
-    \\Expl{ For AVL trees, we must ensure the height of the two subtrees
-      varies by at most one.
-    \\Expl}
-    Perform rotations to restore balance, if needed \\Ref rotateIfNeeded
-    \\Expl{ Rotations are local tree operations that increase the
-      height/depth of one subtree but decrease that of another, used to
-      make the tree more balanced.
+    Re-balance (if needed) and return t \\Ref rotateIfNeeded
+    \\Expl{ If the tree has become unbalanced, it can be made balanced by
+      performing one or two "rotation" operations.
+      Rotations are local tree operations that decrease the
+      height/depth of one subtree but may increase that of another.
       See Background (click at the top of the right panel)
       for diagrams etc explaining rotations.
     \\Expl}
-    return t \\B return t
-    \\Expl{
-      Tree t must be sufficiently balanced (-1 <= balance <= 1) so no
-      rotations are needed:)
-    \\Expl}
   \\In}
-  // Done \\B done
-//============================================================================
-\\Note{ Might be best to expand these inline rather than having extra
-functions. Functions are always visible, which is distracting when things
-are collapsed and they are relatively short.  However, we would end up
-with two copies of each, and rather long code if we expand everyting.
-The variable names here are linked to the diagrams, which may be easier for
-functions but may also be confusing.
-\\Note}
-rightRotate(t6) \\B rightRotate(t6)
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-  \\In{
-    t2 <- left(t6) \\B t2 = left(t6)
-    t4 <- right(t2) \\B t4 = right(t2)
-    t2.right <- t6 \\B t2.right = t6
-    t6.left <- t4 \\B t6.left = t4
-    \\Note{ Animation here should be as smooth an intuitive as possible.
-      Ideally node 4 should get detached from 2 but remain in place then
-      get re-attached to 6. We could possibly move 7 down to the level of 4
-      at the first step and delay moving 1 up until the end. Best highlight
-      the edge between 6 and 2. If extra steps are required for animation
-      we can stay on the same line of code for more than one step if
-      needed. Similarly for left rotation.
-    \\Note}
-    recompute heights of t6 and t2 \\B recompute heights of t6 and t2
-    \\Expl{ t6.height <- max(t4.height, t7.height) + 1;
-      t2.height <- max(t6.height, t1.height) + 1;
-    \\Expl}
-    \\Note{ Best not expand this? Should be clear enough and we are a bit
-      fast and loose with nodes versus pointers here
-    \\Note}
-    return (pointer to) t2 // new root \\B return t2
-  \\In} 
-//============================================================================
-leftRotate(t2) \\B leftRotate(t2)
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-  \\In{
-    t6 <- right(t2) \\B t6 = right(t2)
-    t4 <- left(t6) \\B t4 = left(t6)
-    t6.left <- t2 \\B t6.left = t2
-    t2.right <- t4 \\B t2.right = t4
-    recompute heights of t2 and t6 \\B recompute heights of t2 and t6
-    \\Expl{ t2.height <- max(t1.height, t4.height) + 1;
-      t6.height <- max(t2.height, t7.height) + 1;
-    \\Expl}
-    return (pointer to) t6 // new root \\B return t6
-  \\In} 
 \\Code}
 
 \\Code{
@@ -251,127 +195,125 @@ The right subtree is replaced by the result of this recursive call
 \\Code}
 
 \\Code{
-updateHeight
-root(t).height <- 1 + max(left(t).height, right(t).height) \\B root(t).height = 1 + max(left(t).height, right(t).height)
-\\Note{
-t.height <- ...?? (fast and loose with nodes vs pointers)
-\\Note}
-\\Expl{
-The tree height is one more than the maximum height of its children.
-\\Expl}
-\\Code}
-
-\\Code{
-getBalance
-balance = left(t).height - right(t).height \\B balance = left(t).height - right(t).height
-\\Expl{
-The balance is just the different between the height of the children.
-A positive balance means the left child is higher; negative means the
-righ child is higher. A balance from -1 to 1 is ok, otherwise we need to
-adjust the tree to make it more balanced.
-\\Expl}
-\\Code}
-
-\\Code{
 rotateIfNeeded
-if balance > 1 && k < left(t).key // left-left case \\B if balance > 1 && k < left(t).key
+switch balanceCase(t) of \\B switch balanceCase of
+\\Expl{ If the "balance" of t  (left(t).height - right(t).height) is between -1
+and 1, inclusive, we just
+return t. Otherwise we must determine which sub-sub-tree the new element was
+inserted into and use "rotation" operations to raise up that subtree and
+restore balance.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
+\\Expl}
+case Balanced:// sufficiently balanced \\B case Balanced
 \\Expl{
-  Key k was inserted into the left-left subtree and made t unbalanced.
+  Tree t is sufficiently balanced (-1 <= balance <= 1) so no
+  rotations are needed:)
+\\Expl}
+\\In{
+    return t \\B return t
+\\In}
+case Left-Left:// Left-Left insertion, unbalanced \\B perform right rotation to re-balance t
+\\Expl{
+  Key k was inserted into the left-left subtree and made t unbalanced
+  (balance > 1 and k < left(t).key).
   We must re-balance the tree with a "right rotation" that lifts up this
-  subtree.
+  subtree.  See Background (click at the top of the right panel)
+  for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  Perform "Left-Left Case" rotation \\Ref left-left_case_rotate
+    return rightRotate(t) \\B return rightRotate(t)
 \\In}
-if balance < -1 && k > right(t).key // right-right case \\B if balance < -1 && k > right(t).key
+case Right-Right:// Right-Right insertion, unbalanced \\B perform left rotation to re-balance t
 \\Expl{
-  Key k was inserted into the right-right subtree and made t unbalanced.
+  Key k was inserted into the right-right subtree and made t unbalanced
+  (balance < -1 and k > right(t).key).
   We must re-balance the tree with a "left rotation" that lifts up this
-  subtree.
+  subtree.  See Background (click at the top of the right panel)
+  for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-    Perform "Right-Right Case" rotation \\Ref right-right_case_rotate
-\\In}
-if balance > 1 && k > left(t).key // left-right case (double rotation) \\B if balance > 1 && k > left(t).key
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-\\In{
-  Perform "Left-Right Case" rotation \\Ref left-right_case_rotate
-\\In}
-if balance < -1 && k < right(t).key // right-left case (double rotation) \\B if balance < -1 && k < right(t).key
-\\Expl{
-See Background (click at the top of the right panel)
-for diagrams etc explaining rotations.
-\\Expl}
-\\In{
-  Perform "Right-Left Case" rotation \\Ref right-left_case_rotate
-\\In}
-\\Code}
-
-\\Code{
-left-left_case_rotate
-  // Perform "right rotation" to re-balance t \\B perform right rotation to re-balance t
-  \\Expl{
-    See Background (click at the top of the right panel)
-    for diagrams etc explaining rotations.
-  \\Expl}
-  \\Note{
-    Animation should stop at the comment above then jump to the
-    rightRotate code then stop at return *after* rightRotate then go
-    back to the insert call???; May be better to inline it
-  \\Note} 
-  return rightRotate(t) \\B return rightRotate(t)
-\\Code}
-
-\\Code{
-right-right_case_rotate
-  // Perform "left rotation" to re-balance t \\B perform left rotation to re-balance t
-  \\Expl{
-    See Background (click at the top of the right panel)
-    for diagrams etc explaining rotations.
-  \\Expl}
-  \\Note{
-    See notes in left-left case
-  \\Note} 
   return leftRotate(t) \\B return leftRotate(t)
-\\Code}
-
-\\Code{
-left-right_case_rotate
-  // Perform "left rotation" on the left subtree \\B perform left rotation on the left subtree
-  \\Note{
-    Animation should stop at the comment above then jump to the
-    leftRotate code???; May be better to inline it
-    XXX should we play fast and loose with node vs pointer here and use
-    t.left <- leftRotate(t.left) or have left(t) <- ... ???
-  \\Note} 
-  perform leftRotate(left(t)); \\B left(t) <- leftRotate(left(t));
+\\In}
+case Left-Right:// Left-Right insertion, unbalanced \\B perform left rotation on the left subtree
+\\Expl{
+  Key k was inserted into the left-right subtree and made t unbalanced
+  (balance > 1 && k > left(t).key).
+  Balance can be restored by performing a "left rotation" on left(t) (this
+  lifts up the subtree) followed by a right rotation of t (in case the first
+  rotation made the left-left subtree too deep).
+  See Background (click at the top of the right panel)
+  for diagrams etc explaining rotations.
+\\Expl}
+\\In{
+  perform leftRotate(left(t)); // raise Left-Right subtree \\B left(t) <- leftRotate(left(t));
   \\Expl{
-    The result returned is the new t.left.
+    The result returned is the new left(t).
   \\Expl}
-  // Return "right rotation" on t \\B return right rotation on t
-  \\Note{
-    Animation should stop at the comment above then jump to the
-    rightRotate code then stop at return *after* rightRotate then go
-    back to the insert call???; May be better to inline it
-  \\Note} 
   return rightRotate(t) \\B return rightRotate(t) after leftRotate
-\\Code}
-
-\\Code{
-right-left_case_rotate
-  // Perform "right rotation" on the right subtree \\B perform right rotation on the right subtree
-  \\Note{
-    See notes for left-right case
-  \\Note} 
-  perform rightRotate(right(t)); \\B right(t) <- rightRotate(right(t));
+\\In}
+case Right-Left:// Right-Left insertion, unbalanced \\B perform right rotation on the right subtree
+\\Expl{
+  Key k was inserted into the right-left subtree and made t unbalanced
+  (balance < -1 && k < right(t).key).
+  Balance can be restored by performing a "right rotation" on right(t) (this
+  lifts up the subtree) followed by a left rotation of t (in case the first
+  rotation made the right-right subtree too deep).
+  See Background (click at the top of the right panel)
+  for diagrams etc explaining rotations.
+\\Expl}
+\\In{
+  perform rightRotate(right(t)); // raise Right-Left subtree \\B right(t) <- rightRotate(right(t));
   \\Expl{
-    The result returned is the new t.right.
+    The result returned is the new right(t).
   \\Expl}
-  // Return "left rotation" on t \\B return left rotation on t
   return leftRotate(t) \\B return leftRotate(t) after rightRotate
+\\In}
+// ==== rotation functions ====
+leftRotate(t2) \\B leftRotate(t2)
+\\Expl{
+The edge between t2 and its right child is "rotated" to the left
+(counter-clockwise), and the right child becomes the new root.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
+\\Expl}
+  \\In{
+    t6 <- right(t2) \\B t6 = right(t2)
+    t4 <- left(t6) // may be Empty \\B t4 = left(t6)
+    t6.left <- t2 \\B t6.left = t2
+    t2.right <- t4 // may be Empty \\B t2.right = t4
+    recompute heights of t2 and t6 \\B recompute heights of t2 and t6
+    \\Expl{ The height of each tree is one more than its sub-tree heights.
+        t2 will decrease in height by one. t6 may increase in height by one.
+    \\Expl}
+    return (pointer to) t6 // new root \\B return t6
+  \\In} 
+rightRotate(t6) // inverse of leftRotate \\B rightRotate(t6)
+\\Expl{
+The edge between t6 and its left child is "rotated" to the right
+(clockwise), and the left child becomes the new root.
+See Background (click at the top of the right panel)
+for diagrams etc explaining rotations.
+\\Expl}
+  \\In{
+    t2 <- left(t6) \\B t2 = left(t6)
+    t4 <- right(t2) // may be Empty \\B t4 = right(t2)
+    t2.right <- t6 \\B t2.right = t6
+    t6.left <- t4 // may be Empty \\B t6.left = t4
+    \\Note{ Animation here should be as smooth an intuitive as possible.
+      Ideally node 4 should get detached from 2 but remain in place then
+      get re-attached to 6. We could possibly move 7 down to the level of 4
+      at the first step and delay moving 1 up until the end. Best highlight
+      the edge between 6 and 2. If extra steps are required for animation
+      we can stay on the same line of code for more than one step if
+      needed. Similarly for left rotation.
+    \\Note}
+    recompute heights of t6 and t2 \\B recompute heights of t6 and t2
+    \\Expl{ The height of each tree is one more than its sub-tree heights.
+        t6 will decrease in height by one. t2 may increase in height by one.
+    \\Expl}
+    return (pointer to) t2 // new root \\B return t2
+  \\In} 
 \\Code}
 
 \\Note{  This is an implementation in C (from geeksforgeeks, with very

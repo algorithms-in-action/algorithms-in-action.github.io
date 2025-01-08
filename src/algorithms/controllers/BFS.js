@@ -111,7 +111,6 @@ export default {
     );
 
     const bfs = (s) => {
-
       const Nodes = [s];      
         // Seen[s] <- True B8
         visited[s] = true;
