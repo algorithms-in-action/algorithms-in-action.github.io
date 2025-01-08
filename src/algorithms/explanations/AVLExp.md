@@ -53,9 +53,11 @@ Note that the imbalance may be located further up the tree than the immediate gr
 *Note that all diagrams should hae nodes in BST order, and where the subtrees are not necessarily single nodes, represent them as subtree-triangles* 
 *Have arrow showing which node is not in blanace*
 
+In the diagrams below, t6 is the node where the imbalance is noted,    
+XXXX To Here 7:30 Wedn
 
-, as explained in the diagram
-below. The 6 and 4 nodes and the edge between them rotate clockwise, and
+
+, as explained in the diagram The 6 and 4 nodes and the edge between them rotate clockwise, and
 the 5 node changes parents from 4 to 6. This reduces the distance from
 the root to the 1 (where the new node was added), restoring the balance
 (the distance to the node rooted at 7 is increased but this does not
@@ -65,8 +67,11 @@ done by calling rightRotate(t6), where t6 is the tree rooted at 6.
 ![Alt text if image doesn't open: AVL-left-left](images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
   
 
+![Alt text if image doesn't open: AVL-left-left](Linda Stern/GitHub/algorithms-in-action.github.io/src/algorithms/explanationsimag/images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
+  
+Test comment
 
-
+[This shouldn't be seen if the comment signal is correct]: #)
 
 
 ```
