@@ -4,12 +4,14 @@ import '../styles/AlgorithmMenu.scss';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
+// XXX construct this from master list of algorithms!
 const algorithms = {
   Sort: {
     Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
     Quicksort: `${baseUrl}/?alg=quickSort&mode=sort`,
     'Quicksort (Median of 3)': `${baseUrl}/?alg=quickSortM3&mode=sort`,
     'Merge Sort': `${baseUrl}/?alg=msort_arr_td&mode=sort`,
+    'Radix Sort (MSD/Exchange)': `${baseUrl}/?alg=radixSortMSD&mode=sort`,
   },
   Graph: {
     'Depth First Search': `${baseUrl}/?alg=DFSrec&mode=find`,

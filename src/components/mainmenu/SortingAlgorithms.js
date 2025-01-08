@@ -7,7 +7,8 @@ const sortingAlgorithms = [
   { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
   { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
   { name: 'Quicksort (Median of 3)', url: `${baseUrl}/?alg=quickSortM3&mode=sort` },
-  { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` }
+  { name: 'Merge Sort (top-down)', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` },
+  { name: 'Radix Sort (MSD/Exchange)', url: `${baseUrl}/?alg=radixSortMSD&mode=sort` },
 ];
 
 const SortingAlgorithms = () => {

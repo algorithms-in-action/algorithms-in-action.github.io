@@ -11,10 +11,11 @@ import StringSearchAlgorithms from './StringSearchAlgorithms';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
-// XXX should include category plus visibility flag so algorithms are
-// just listed in one place (here) and filtered appropriately rather
-// than have multiple algorithm lists (here plus SortingAlgorithms.js
-// plus InsertSearchAlgorithms.js etc), as was done previously...
+// XXX should have algorithms just listed in one place
+// (eg src/algorithms/index.js)
+// and filtered appropriately rather
+// than have multiple algorithm lists (here, above, SortingAlgorithms.js,
+// InsertSearchAlgorithms.js etc), as was done previously...
 // XXX also fix display code (see XXX elsewhere)
 const allAlgorithms = [
     { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
@@ -35,7 +36,8 @@ const allAlgorithms = [
     { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
     { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
     { name: 'Quicksort (Median of 3)', url: `${baseUrl}/?alg=quickSortM3&mode=sort` },
-    { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` } // don't include list mergesort?
+    { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` }, // don't include list mergesort?
+    { name: 'Radix Sort (MSD/Exchange)', url: `${baseUrl}/?alg=radixSortMSD&mode=sort` },
   ];
 
 // const allAlgorithms = [
