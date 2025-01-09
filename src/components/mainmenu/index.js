@@ -16,7 +16,8 @@ const baseUrl = window.location.origin;
 // and filtered appropriately rather
 // than have multiple algorithm lists (here, above, SortingAlgorithms.js,
 // InsertSearchAlgorithms.js etc), as was done previously...
-// XXX also fix display code (see XXX elsewhere)
+// XXX also fix display code (see XXX elsewhere) - currently ugly and
+// broken; best just use something simple!
 const allAlgorithms = [
     { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
     { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` },
