@@ -9,7 +9,7 @@ no matter what the order of the input data.
 
 A **binary tree** is either is either empty (`Empty`) or else it
         it has a root node and two subtrees (which are binary trees).
-        The root node `t` has a key, `t.key`. Ordinarily it would also
+        The root node `t` has a key `t.key`. Ordinarily it would also
         hold other data (`t.data`), which the user would like to find by
         searching for the key.  Since this attribute has no impact on 
         how insertion and search take place, we disregard it here. 
@@ -43,7 +43,7 @@ either (1) both left subtrees or (2) both right subtrees.
 
 ## The left-left case
 
-If the new key was added to the left child of the left child (the
+If the new key was added to the left child of a left child (the
 *left-left* case), the balance can be
 restored with a single _**Right Rotation**_ operation.
 
@@ -53,9 +53,14 @@ Note that the imbalance may be located further up the tree than the immediate gr
 *Note that all diagrams should hae nodes in BST order, and where the subtrees are not necessarily single nodes, represent them as subtree-triangles* 
 *Have arrow showing which node is not in blanace*
 
-In the diagrams below, t6 is the node where the imbalance is noted,    
-XXXX To Here 7:30 Wedn
+In the diagrams below, t6 is the node where the imbalance is noted.    
 
+As shown in the diagram below, t6 is the node at which the imbalance has been noted, and t2 is its left child. The clockwise rotation to restore balance makes t2 the parent of t6, while t6 is the *right* child of t2.  Additionally, since t2 already had t4 as its right child, t4 is moved to become the left child of t6.  Note that the BST invariant is preserved: t4, is bigger than t2, and is also smaller than t6.  The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is now 
+
+**I think there is something wrong with this diagram and the explanation**
+**unless t4 is empty, then the tree was already unbalance before 1 was added??**
+
+ 
 
 , as explained in the diagram The 6 and 4 nodes and the edge between them rotate clockwise, and
 the 5 node changes parents from 4 to 6. This reduces the distance from
@@ -73,14 +78,22 @@ Test comment
 
 [This shouldn't be seen if the comment signal is correct]: #)
 
+**Check whether the numbering here is still the same in the animation**
+**Note I have added a link to the parent of t6 -- check, since the pointer to the left child of this anonymous node needs to be changed, have we given it a number?** 
+
+**Lee - is t4 empty in this case?  If not, then the tree would already have been unbalanced  previously, when t4 was added??**
 
 ```
-      6                           2
+     	/                            /
+      t6                          t2
      / \     Right Rotation      / \
-    2   7    - - - - - - - >    1   6
+    t2   7    - - - - - - - >    1  t6
    / \       < - - - - - - -       / \
-  1   4       Left Rotation       4   7
+  1   t4       Left Rotation      t4   7
 ```
+
+**9 Jan 4PM I haven't gone beyond this**
+
 
 ## The right-right case
 
@@ -109,7 +122,7 @@ making the tree unbalanced) are moved closer to the root.
 Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
 the root of 3, 5 and 7 are changed by one, affecting the overall balance.
 
-## right-left case (double rotation):
+## The right-left case (double rotation):
 
 If the new key was added to the left child of the right child (the
 right-left case) and the resulting tree is too unbalanced, it is a mirror
