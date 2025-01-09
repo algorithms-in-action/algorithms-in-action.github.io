@@ -441,3 +441,77 @@ export const shuffleArray = (array) => {
   }
   return array;
 };
+
+/**
+ * Check if the input string are comma-separated numbers, pairs and triples
+ * @param {*} allowPosInteger is a toggle, if true it allows positive integers
+ * @param {*} allowNegInteger is a toggle, if true it allows negative integers
+ * @param {*} input the input string
+ * @returns whether the check is true
+ */
+export const commaSeparatedPairTripleCheck = (allowPosInteger, allowNegInteger, input) => {
+  const regex_pos_num = /^[0-9]+(-[0-9]+){0,2}$/g;
+  const regex_all_num = /^[0-9]+(-[0-9]+){0,2}$|^-[0-9]+$/g;
+  const regex_no_num = /^[0-9]+(-[0-9]+){1,2}$/g;
+  let array = input.split(",");
+  for (let item of array) {
+    if (!item.match(allowPosInteger ? (allowNegInteger ? regex_all_num : regex_pos_num) : regex_no_num)) return false;
+  }
+  return true;
+}
+
+/**
+ * return an array of number according to the range specified
+ * @param {*} str the string of range, e.g."2-7-4", "2-5"
+ * @param {*} mode "Array" or "Count", return array of inputs or count of inputs, respectively (delete "Count" returns -1 and "Array return array of that negative number") 
+ * @returns the array of number in that range
+ */
+export const translateInput = (str, mode) => {
+  let arr = str.split("-");
+  switch (mode) {
+    case "Count": 
+      if (arr.length == 1) return 1;
+      else if (arr.length == 2) {
+        if (arr[0] === "") return 0;
+        else return arrayRange(Number(arr[0]), Number(arr[1]), 1).length;
+      }
+      else if (arr.length == 3) return arrayRange(Number(arr[0]), Number(arr[1]), Number(arr[2])).length;
+      break;
+    case "Array": 
+      if (arr.length == 1) return arr.map(Number);
+      else if (arr.length == 2) {
+        if (arr[0] === "") return [str].map(Number);
+        else return arrayRange(Number(arr[0]), Number(arr[1]), 1);
+      }
+      else if (arr.length == 3) return arrayRange(Number(arr[0]), Number(arr[1]), Number(arr[2]));
+      break;
+  }
+}
+
+/**
+ * return an array of number according to the range specified
+ * @param {*} start start point(inclusive)
+ * @param {*} stop end point(inclusive)
+ * @param {*} step the step
+ * @returns an array of number
+ */
+const arrayRange = (start, stop, step) => 
+  Array.from(
+  { length: (stop - start) / step + 1 },
+  (value, index) => start + index * step
+  );
+
+/**
+ * Check if all ranges in array of inputs are valid (e.g for a-b, a must < b)
+ * @param {*} values the array of inputs
+ * @returns whether the check is true or not
+ */
+export const checkAllRangesValid = (values) => {
+  for (let item of values) {
+    let rangesItems = item.split("-").map(Number);
+    if ((rangesItems.length == 2 || rangesItems.length == 3) && rangesItems[0] > rangesItems[1]) {
+      return false;
+    }
+  }
+  return true;
+}

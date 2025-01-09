@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
+
 
 const DEFAULT_SIZE = 5; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = null; // XXX null should disable
@@ -29,8 +32,10 @@ const GRAPH_EGS = [ // XXX think up better examples?
 '1-2-10,1-4-4,2-3-6,3-4-10,3-5-5,4-7-3,5-6-7,6-7-8,7-8-2,7-9,8-9-3,9-10-5,9-11-7, 10-11-7,11-13-4,12-13-8,12-14-6,13-14-7,13-15-7,14-16-6,15-16-2,15-17-5,16-17-2'
         }];
 
-function KRUSKALParam() {
+function KRUSKALParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
   const [message, setMessage] = useState(null);
+  let [start1, size1, graph_egs] =
+         addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START);
 
   return (
     <>
@@ -38,9 +43,9 @@ function KRUSKALParam() {
       <EuclideanMatrixParams
         name="kruskal"
         mode="find"
-        defaultSize={DEFAULT_SIZE}
-        defaultStart={DEFAULT_START}
-        defaultEnd={DEFAULT_END}
+        defaultSize={ size1 }
+        defaultStart={ start1 }
+        defaultEnd={end || DEFAULT_END}
         defaultHeur = {DEFAULT_HEUR}
         // XXX
         // min&max for weights originally, then used for X&Y coordinates
@@ -51,10 +56,10 @@ function KRUSKALParam() {
         // - means precision is reasonably but both Manhattan and
         // Euclidean distances are at most two digits. Using something
         // smaller for now due to display size being a mystery...
-        min={1}
+        min={min || 1}
         // max={9}
-        max={49}
-        graphEgs={GRAPH_EGS}
+        max={max || 49}
+        graphEgs={graph_egs}
         symmetric
         ALGORITHM_NAME={KRUSKAL}
         EXAMPLE={KRUSKAL_EXAMPLE}
@@ -68,4 +73,19 @@ function KRUSKALParam() {
   );
 }
 
-export default KRUSKALParam;
+// Define the prop types for URL Params
+KRUSKALParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  heuristic: PropTypes.string.isRequired,
+  xyCoords: PropTypes.string.isRequired,
+  edgeWeights: PropTypes.string.isRequired,
+  min: PropTypes.string.isRequired,
+  max: PropTypes.string.isRequired,
+};
+
+export default withAlgorithmParams(KRUSKALParam); // Export with the wrapper for URL Params
+

@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 // import MatrixParam from './helpers/MatrixParam';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
+
 
 const DEFAULT_SIZE = 4; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = null; // disable
@@ -28,8 +31,10 @@ const GRAPH_EGS = [ // XXX think up better examples?
           edges: '1-2,2-1,2-3,3-4,4-5,5-3'
         }];
 
-function TransitiveClosureParam() {
+function TransitiveClosureParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
   const [message, setMessage] = useState(null);
+  let [start1, size1, graph_egs] =
+         addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START);
 
   return (
     <>
@@ -37,14 +42,14 @@ function TransitiveClosureParam() {
       <EuclideanMatrixParams
         name="transitiveClosure"
         mode="tc"
-        defaultSize={DEFAULT_SIZE}
-        defaultStart={DEFAULT_START}
+        defaultSize={ size1 }
+        defaultStart={ start1 }
         defaultEnd={DEFAULT_END}
         defaultWeight = {DEFAULT_WEIGHT}
         defaultHeur = {DEFAULT_HEUR}
-        min={1}
-        max={49}
-        graphEgs={GRAPH_EGS}
+        min={min || 1}
+        max={max || 49}
+        graphEgs={ graph_egs }
         ALGORITHM_NAME={TRANSITIVE_CLOSURE}
         EXAMPLE={TRANSITIVE_CLOSURE_EXAMPLE}
         setMessage={setMessage}
@@ -59,4 +64,20 @@ function TransitiveClosureParam() {
   );
 }
 
-export default TransitiveClosureParam;
+// Define the prop types for URL Params
+TransitiveClosureParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  heuristic: PropTypes.string.isRequired,
+  xyCoords: PropTypes.string.isRequired,
+  edgeWeights: PropTypes.string.isRequired,
+  min: PropTypes.string.isRequired,
+  max: PropTypes.string.isRequired,
+};
+
+export default withAlgorithmParams(TransitiveClosureParam); // Export with the wrapper for URL Params
+
+

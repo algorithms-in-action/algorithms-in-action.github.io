@@ -22,9 +22,6 @@ import * as Instructions from './instructions';
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
- XXX we could export and use allalgs in key places in the system,
- eg src/context/actions.js so we can still access them via the URL, but
- not have them appear in the index.
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -34,7 +31,7 @@ import * as Instructions from './instructions';
 // Also: the key for the algorithm MUST be the same as the "name"
 // of the top level Param block returned by the parameter function.
 // Eg, parameters/msort_arr_td.js has
-// 
+//
 // function MergesortParam() {
 // ...
 // return (
@@ -89,6 +86,34 @@ const allalgs = {
       sort: Controller.quickSortM3,
     },
   },
+  'radixSortMSD': {
+    name: 'MSD Radix Sort',
+    category: 'Sort',
+    explanation: Explanation.MSDRadixSortExp,
+    param: <Param.MSDRadixSortParam />,
+    instructions: Instructions.RadixSortInstruction,
+    extraInfo: ExtraInfo.MSDRadixSortInfo,
+    pseudocode: {
+      sort: Pseudocode.MSDRadixSort,
+    },
+    controller: {
+      sort: Controller.MSDRadixSort,
+    },
+  },
+  'radixSortStraight': {
+    name: 'Straight Radix Sort',
+    category: 'Sort',
+    explanation: Explanation.StraightRadixSortExp,
+    param: <Param.StraightRadixSortParam />,
+    instructions: Instructions.RadixSortInstruction,
+    extraInfo: ExtraInfo.StraightRadixSortInfo,
+    pseudocode: {
+      sort: Pseudocode.straightRadixSort,
+    },
+    controller: {
+      sort: Controller.straightRadixSort,
+    },
+  },
   'msort_arr_td': {
     name: 'Merge Sort (top down)',
     noDeploy: false,
@@ -137,7 +162,6 @@ const allalgs = {
     },
   },
 
-
   'msort_lista_td': {
     name: 'Merge Sort (lists)',
     category: 'Sort',
@@ -152,8 +176,6 @@ const allalgs = {
       sort: Controller.msort_lista_td,
     },
   },
-
-
 
   'binarySearchTree': {
     noDeploy: false,
@@ -189,6 +211,73 @@ const allalgs = {
     },
   },
 
+  'HashingLP': {
+    name: 'Hashing (Linear Probing)',
+    category: 'Insert/Search',
+    param: <Param.HashingLPParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.linearProbing,
+      search: Pseudocode.linearSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingDH': {
+    name: 'Hashing (Double Hashing)',
+    category: 'Insert/Search',
+    param: <Param.HashingDHParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.doubleHashing,
+      search: Pseudocode.doubleSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingCH': {
+    name: 'Hashing (Chaining)',
+    category: 'Insert/Search',
+    param: <Param.HashingCHParam/>,
+    instructions: Instructions.HashingCHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.chaining,
+      search: Pseudocode.chainingSearch,
+    },
+    controller: {
+      insertion: Controller.HashingChainingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'AVLTree': {
+    name: 'AVL Tree',
+    category: 'Insert/Search',
+    param: <Param.AVLTreeParam />,
+    instructions: Instructions.AVLInstruction,
+    explanation: Explanation.AVLExp,
+    extraInfo: ExtraInfo.AVLInfo,
+    pseudocode: {
+      insertion: Pseudocode.AVLTreeInsertion,
+      search: Pseudocode.AVLTreeSearch,
+    },
+    controller: {
+      insertion: Controller.AVLTreeInsertion,
+      search: Controller.AVLTreeSearch,
+    },
+  },
   'DFSrec': {
     name: 'Depth First Search',
     category: 'Graph',
@@ -218,7 +307,6 @@ const allalgs = {
     },
   },
   'BFS': {
-
     name: 'Breadth First Search',
     category: 'Graph',
     param: <Param.BFSParam />,
@@ -387,7 +475,13 @@ const algorithms =
  * Get the first mode of an algorithm
  * @param {string} key algorithm's name
  */
-const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0];
+
+/**
+ * Get the category of an algorithm
+ * @param {string} key algorithm's name
+ */
+export const getCategory = (key) => algorithms[key].category;
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = () => {

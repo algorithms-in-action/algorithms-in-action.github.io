@@ -3,18 +3,95 @@
 
 // --graph-node-fill: orange;
 
+/*
+@keyframes colorChange {
+
+  /*  
+  Animation for changing the color of the node
+  
+  0% {
+    fill: var(--stable_color);
+  }
+
+  50% {
+    fill: var(--breath_color);
+  }
+
+  100% {
+    fill: var(--stable_color);
+  }
+}
+  */
+
+
+// AVL tree selction color
+.select_rect {
+  //fill: var(--graph-node-circle-fill);
+  fill: none;
+  stroke: var(--graph-select_color-fill);
+  stroke-width: 5;
+
+}
+
+.select_color {
+  fill: var(--graph-select_color-fill);
+}
+
 .graph {
   flex: 1;
+
   align-self: stretch;
+  --stable_color: var(--graph-node-circle-fill);
+  --breath_color: var(--graph-node-circle-fill);
+
+  //AVL tree parameters
+  --circle-radius: 37px;
+  --text-fontsize: calc(var(--circle-radius)/37*35);
+  --height-Yposition: calc(var(--circle-radius)/37*-50);
+  --stroke-width: calc(var(--circle-radius)/37*7);
+
 
   .node {
+
     .circle {
       fill: var(--graph-node-circle-fill);
+      //--breath_color: --graph-node-circle-fill-rgb1;
+      //animation: colorChange 3s infinite; // anmation
+
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
+
+      r: var(--circle-radius);
+      //transform: scale(0.5);
+      /* Shrinks the size by 50% */
+      //transform-origin: center;
     }
 
-    .rect{
+    .select_circle_t {
+      --stroke-color: var(--graph-node-circle-fill-selected);
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--stroke-color);
+
+      r: var(--circle-radius);
+      stroke-width: 5;
+
+      //shadow display
+      filter: drop-shadow(0 0 5px var(--stroke-color));
+    }
+
+    .select_circle_f {
+      --stroke-color: var(--graph-select_color-fill);
+      fill: var(--graph-node-circle-fill);
+      stroke: var(--stroke-color);
+
+      r: var(--circle-radius);
+      stroke-width: 5;
+
+      //shadow display
+      filter: drop-shadow(0 0 5px var(--stroke-color));
+    }
+
+    .rect {
       fill: var(--graph-node-circle-fill);
       stroke: var(--graph-node-circle-stroke);
       stroke-width: 1;
@@ -24,7 +101,7 @@
       fill: var(--graph-node-id-fill);
       dominant-baseline: central;
       text-anchor: middle;
-      font-size: 35px; // font size for labels inside nodes
+      font-size: var(--text-fontsize); // font size for labels inside nodes
     }
 
     .weight {
@@ -35,18 +112,56 @@
       text-anchor: left;
     }
 
+    .height {
+      //--breath_color: var(--graph-node-height-fill);
+      //animation: colorChange 1.5s 3; // anmation
+
+      fill: var(--graph-node-id-fill);
+
+      // font-weight: bold;
+      // font-size: 15px;
+      // alignment-baseline: central;
+      dominant-baseline: central;
+      text-anchor: middle;
+      font-size: var(--text-fontsize); // font size for labels inside nodes
+      transform: translateY(var(--height-Yposition));
+      // text-anchor: left;
+    }
+
+    .AVL_TID {
+      fill: var(--graph-node-AVL_TID-fill);
+      //--breath_color: var(--graph-node-AVL_TID-fill);
+      //animation: colorChange 1.5s infinite; // anmation
+      // font-weight: bold;
+      // font-size: 15px;
+      // alignment-baseline: central;
+      dominant-baseline: central;
+      text-anchor: middle;
+      font-size: 40px; // font size for labels inside nodes
+      // transform: translateY(-40px);
+      transform: translate(+50px, -35px);
+      // text-anchor: left;
+    }
+
     &.selected {
       .circle {
-        fill: var(--graph-node-circle-fill-selected);
-        stroke: var(--graph-node-circle-stroke-selected);
+        fill: var(--sky);
+        stroke: var(--sky);
       }
+
       .rect {
-        fill: var(--graph-node-circle-fill-selected);
-        stroke: var(--graph-node-circle-stroke-selected);
+        fill: var(--sky);
+        stroke: var(--sky);
       }
+
       .id {
         fill: var(--graph-node-id-fill-selected);
       }
+
+      .height {
+        fill: var(--graph-node-circle-fill-selected);
+      }
+
     }
 
     &.visited0 {
@@ -54,34 +169,49 @@
         fill: var(--graph-node-circle-fill-visited0);
         stroke: var(--graph-node-circle-stroke-visited0);
       }
+
       .rect {
         fill: var(--graph-node-circle-fill-visited0);
         stroke: var(--graph-node-circle-stroke-visited0);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited0);
+      }
+
     }
 
     &.visited {
       .circle {
-        fill: var(--graph-node-circle-fill-visited);
-        stroke: var(--graph-node-circle-stroke-visited);
+        fill: var(--apple);
+        stroke: var(--apple);
       }
+
       .rect {
-        fill: var(--graph-node-circle-fill-visited);
-        stroke: var(--graph-node-circle-stroke-visited);
+        fill: var(--apple);
+        stroke: var(--apple);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited);
+      }
+
     }
 
     &.sorted {
       .circle {
         fill: var(--graph-node-circle-fill-sorted);
-        
+
       }
+
       .id {
         fill: var(--graph-node-id-fill-sorted);
       }
@@ -89,43 +219,65 @@
 
     &.visited1 {
       .circle {
-        fill: var(--graph-node-circle-fill-visited1);
-        stroke: var(--graph-node-circle-stroke-visited1);
+        fill: var(--leaf);
+        stroke: var(--leaf);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited1);
+      }
+
     }
 
     &.visited2 {
       .circle {
-        fill: var(--graph-node-circle-fill-visited2);
-        stroke: var(--graph-node-circle-stroke-visited2);
+        fill: var(--peach);
+        stroke: var(--peach);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    } 
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited2);
+      }
+    }
 
     &.visited3 {
       .circle {
-        fill: var(--graph-node-circle-fill-visited3);
-        stroke: var(--graph-node-circle-stroke-visited3);
+        fill: var(--apple);
+        stroke: var(--apple);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    } 
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited3);
+      }
+    }
 
     &.visited4 {
       .circle {
-        fill: var(--graph-node-circle-fill-visited4);
-        stroke: var(--graph-node-circle-stroke-visited4);
+        fill: var(--sky);
+        stroke: var(--sky);
       }
+
       .id {
         fill: var(--graph-node-id-fill-visited);
       }
-    } 
+
+      .height {
+        fill: var(--graph-node-circle-fill-visited4);
+      }
+
+    }
   }
 
   .edge {
@@ -136,8 +288,9 @@
       // want to highlight edges and change their color to we want
       // reasonable thick edges; this is a compromise (maybe we could
       // add an interface to adjust it for different algorithms XXX)
-      stroke-width: 7; // width of edges in graphs
+      stroke-width: var(--stroke-width); // width of edges in graphs
       fill: none;
+
 
       &.directed {
         marker-end: url(#markerArrow);
@@ -157,7 +310,7 @@
 
     &.selected {
       .line {
-        stroke: var(--graph-edge-line-stroke-selected);
+        stroke: var(--sky);
 
         &.directed {
           marker-end: url(#markerArrowSelected);
@@ -165,7 +318,7 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-selected);
+        fill: var(--sky);
       }
     }
 
@@ -177,7 +330,7 @@
 
     &.visited {
       .line {
-        stroke: var(--graph-edge-line-stroke-visited);
+        stroke: var(--leaf);
 
         &.directed {
           marker-end: url(#markerArrowVisited);
@@ -185,13 +338,13 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-visited);
+        fill: var(--leaf);
       }
     }
 
     &.visited1 {
       .line {
-        stroke: var(--graph-edge-line-stroke-visited1);
+        stroke: var(--leaf);
 
         &.directed {
           marker-end: url(#markerArrowVisited1);
@@ -199,13 +352,13 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-visited1);
+        fill: var(--leaf);
       }
     }
 
     &.visited2 {
       .line {
-        stroke: var(--graph-edge-line-stroke-visited2);
+        stroke: var(--peach);
 
         &.directed {
           marker-end: url(#markerArrowVisited2);
@@ -213,13 +366,13 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-visited2);
+        fill: var(--peach);
       }
-    } 
+    }
 
     &.visited3 {
       .line {
-        stroke: var(--graph-edge-line-stroke-visited3);
+        stroke: var(--apple);
 
         &.directed {
           marker-end: url(#markerArrowVisited3);
@@ -227,13 +380,13 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-visited3);
+        fill: var(--apple);
       }
-    } 
+    }
 
     &.visited4 {
       .line {
-        stroke: var(--graph-edge-line-stroke-visited4);
+        stroke: var(--sky);
 
         &.directed {
           marker-end: url(#markerArrowVisited4);
@@ -241,9 +394,9 @@
       }
 
       .weight {
-        fill: var(--graph-edge-weight-fill-visited4);
+        fill: var(--sky);
       }
-    } 
+    }
 
   }
 
@@ -251,36 +404,35 @@
     fill: var(--graph-arrow-fill);
 
     &.selected {
-      fill: var(--graph-arrow-fill-selected);
+      fill: var(--sky);
     }
 
     &.visited {
-      fill: var(--graph-arrow-fill-visited);
+      fill: var(--leaf);
     }
 
     &.visited1 {
-      fill: var(--graph-arrow-fill-visited1);
+      fill: var(--leaf);
     }
 
     &.visited2 {
-      fill: var(--graph-arrow-fill-visited2);
-    } 
+      fill: var(--peach);
+    }
 
     &.visited3 {
-      fill: var(--graph-arrow-fill-visited3);
+      fill: var(---apple);
     }
+
     &.visited4 {
-      fill: var(--graph-arrow-fill-visited4);
+      fill: var(--sky);
     }
   }
-
 
   // X, Y axis
   .axis {
     stroke: var(--axis);
     stroke-width: 1;
     fill: none;
-
   }
 
   .axisLabel {
@@ -289,4 +441,16 @@
     font-weight: 1;
   }
 
+  .text {
+    fill: var(--array-2d-row-col-value-color); // to support light and dark mode
+    dominant-baseline: central;
+    text-anchor: middle;
+    font-size: 35px;
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+  }
+
+  .pseudocode_function {
+    fill: var(--right-code-function-font);
+    dominant-baseline: central;
+  }
 }

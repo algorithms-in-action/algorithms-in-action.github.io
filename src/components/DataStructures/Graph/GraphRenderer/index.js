@@ -89,7 +89,17 @@ class GraphRenderer extends Renderer {
   handleMouseMove(e) {
     // XXX would be nice to avoid selecting text with reverse video
     // as we move the mouse around!
-    if (this.selectedNode && this.props.data.moveNode) {
+    // XXX really shouldn't depend on this.props.title - moving away
+    // from this but still have a hack for Warshalls
+    if (this.selectedNode && this.props.title === 'Transitive Closure') {
+      // XXX Old stuff so Warshall's remains as it was
+      // Allow mouse movement
+      const { x, y } = this.computeCoords(e);
+      const node = this.props.data.findNode(this.selectedNode.id);
+      node.x = x;
+      node.y = y;
+      this.refresh();
+    } else if (this.selectedNode && this.props.data.moveNode) {
       // Allow mouse to move nodes (for Euclidean graphs) if
       // this.props.data.moveNode function is defined
       const { x, y } = this.computeCoords(e);
@@ -102,6 +112,10 @@ class GraphRenderer extends Renderer {
         node.x = x;
         node.y = y;
         this.refresh();
+
+        //refresh AVL tree Rectangle
+        this.props.data.clearRect();
+        this.props.data.rectangle_size();
       }
     } else if (this.selectedNode) {
       // Ignore mouse movement if no moveNode function is defined
@@ -435,7 +449,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo, newZoom } =
       this.props.data;
     const {
       baseWidth,
@@ -458,6 +472,12 @@ class GraphRenderer extends Renderer {
       rootX = root.x;
       rootY = root.y;
     }
+    //
+    // // Change Renderer's zoom on newZoom change
+    // if (newZoom != this.zoom && newZoom !== undefined) {
+    //   this.zoom = newZoom;
+    //   this.refresh();
+    // }
 
     return (
       <svg
@@ -559,165 +579,315 @@ class GraphRenderer extends Renderer {
         {/* X axis and Y axis */}
         {this.renderAxis(this.computeMax(nodes))}
 
-        {edges
-          .sort(
-            (a, b) =>
-              a.visitedCount -
-              b.visitedCount +
-              a.visitedCount1 -
-              b.visitedCount1
-          )
-          .map((edge) => {
+        {/* Dynamically adjust the node size */}
+        <g
+          className={classes(styles.graph)}
+          style={radius != null ? { '--circle-radius': `${radius}px` } : { '--circle-radius': `${nodeRadius}px` }}
+        >
+
+          {/* Circle radius */}
+          {edges
+            .sort(
+              (a, b) =>
+                a.visitedCount -
+                b.visitedCount +
+                a.visitedCount1 -
+                b.visitedCount1
+            )
+            .map((edge) => {
+              const {
+                source,
+                target,
+                weight,
+                visitedCount,
+                selectedCount,
+                visitedCount0,
+                visitedCount1,
+                visitedCount2,
+                visitedCount3,
+                visitedCount4,
+              } = edge;
+              const sourceNode = this.props.data.findNode(source);
+              const targetNode = this.props.data.findNode(target);
+              if (!sourceNode || !targetNode) return undefined;
+              const { x: sx, y: sy } = sourceNode;
+              let { x: ex, y: ey } = targetNode;
+              const mx = (sx + ex) / 2;
+              const my = (sy + ey) / 2;
+              const dx = ex - sx;
+              const dy = ey - sy;
+              if (isDirected) {
+                let length = Math.sqrt(dx * dx + dy * dy);
+                if (length !== 0) {
+                  ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
+                  ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
+                }
+
+                {/* dynamic change the edge length */ }
+                if (radius != null) {
+                  ex = (sx + (dx / length) * (length - radius - arrowGap));
+                  ey = (sy + (dy / length) * (length - radius - arrowGap));
+                }
+              }
+              let pathSvg = null;
+              if (this.props.data.isInterConnected(source, target)) {
+                const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
+                pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
+              } else {
+                pathSvg = `M${sx},${sy} L${ex},${ey}`;
+              }
+              // console.log(sx,sy,ex,ey,cx,cy);
+              return (
+                <g
+                  className={classes(
+                    styles.edge,
+                    targetNode.sorted && styles.sorted,
+                    selectedCount && styles.selected,
+                    !selectedCount && visitedCount && styles.visited,
+                    visitedCount0 && styles.visited,
+                    visitedCount1 && styles.visited1,
+                    visitedCount2 && styles.visited2,
+                    visitedCount3 && styles.visited3,
+                    visitedCount4 && styles.visited4
+                  )}
+                  key={`${source}-${target}`}
+                >
+                  <path
+                    d={pathSvg}
+                    className={classes(
+                      styles.line,
+                      isDirected && styles.directed
+                    )}
+                  />
+                  {isWeighted && (
+                    <g transform={`translate(${mx},${my})`}>
+                      <text
+                        className={styles.weight}
+                        transform="rotate(0)"
+                        y={-edgeWeightGap}
+                      >
+                        {this.toString(weight)}
+                      </text>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+
+          {/* Select rectangle */}
+          <g>
+            {rectangle != null && (
+              <>
+                <text className={classes(styles.select_color)}
+
+                  fontSize={50} // font size
+                  x={rectangle[0] - 30} // font position
+                  y={rectangle[1] - 90}
+                >
+                  {rectangle[4]}
+                </text>
+                <rect
+                  className={classes(
+                    styles.select_rect,
+                    styles && styles.backgroundStyle
+                  )}
+                  x={rectangle[0] - 50} // x position
+                  y={rectangle[1] - 70} // y position
+                  width={rectangle[2] - rectangle[0] + 100} // width of the rectangle
+                  height={rectangle[3] - rectangle[1] + 120} // height of the rectangle
+                />
+
+              </>
+            )}
+          </g>
+
+          {/* node graph */}
+          {nodes.map((node) => {
             const {
-              source,
-              target,
+              x,
+              y,
               weight,
-              visitedCount,
-              selectedCount,
+              height,
+              Select_Circle_Count,
+              AVL_TID,
               visitedCount0,
+              visitedCount,
               visitedCount1,
               visitedCount2,
               visitedCount3,
               visitedCount4,
-            } = edge;
-            const sourceNode = this.props.data.findNode(source);
-            const targetNode = this.props.data.findNode(target);
-            if (!sourceNode || !targetNode) return undefined;
-            const { x: sx, y: sy } = sourceNode;
-            let { x: ex, y: ey } = targetNode;
-            const mx = (sx + ex) / 2;
-            const my = (sy + ey) / 2;
-            const dx = ex - sx;
-            const dy = ey - sy;
-            if (isDirected) {
-              const length = Math.sqrt(dx * dx + dy * dy);
-              if (length !== 0) {
-                ex = sx + (dx / length) * (length - nodeRadius - arrowGap);
-                ey = sy + (dy / length) * (length - nodeRadius - arrowGap);
-              }
-            }
-            let pathSvg = null;
-            if (this.props.data.isInterConnected(source, target)) {
-              const { cx, cy } = calculateControlCord(sx, sy, ex, ey);
-              pathSvg = `M${sx},${sy} Q${cx},${cy},${ex},${ey}`;
-            } else {
-              pathSvg = `M${sx},${sy} L${ex},${ey}`;
-            }
-            // console.log(sx,sy,ex,ey,cx,cy);
+              selectedCount,
+              value,
+              key,
+              style,
+              sorted,
+              isPointer,
+              pointerText,
+            } = node;
+            // only when selectedCount is 1, then highlight the node
+            const selectNode = selectedCount === 1;
+            const visitedNode0 = visitedCount0 === 1;
+            const visitedNode = visitedCount === 1;
+            const visitedNode1 = visitedCount1 === 1;
+            const visitedNode2 = visitedCount2 === 1;
+            const visitedNode3 = visitedCount3 === 1;
+            const visitedNode4 = visitedCount4 === 1;
             return (
-              <g
+              <motion.g
+                animate={{ x, y }}
+                initial={false}
+                transition={{ duration: 1 }}
                 className={classes(
-                  styles.edge,
-                  targetNode.sorted && styles.sorted,
-                  selectedCount && styles.selected,
-                  !selectedCount && visitedCount && styles.visited,
-                  visitedCount0 && styles.visited,
-                  visitedCount1 && styles.visited1,
-                  visitedCount2 && styles.visited2,
-                  visitedCount3 && styles.visited3,
-                  visitedCount4 && styles.visited4
+                  styles.node,
+                  selectNode && styles.selected,
+                  sorted && styles.sorted,
+
+                  visitedNode0 && styles.visited0,
+                  visitedNode && styles.visited,
+                  visitedNode1 && styles.visited1,
+                  visitedNode2 && styles.visited2,
+                  visitedNode3 && styles.visited3,
+                  visitedNode4 && styles.visited4
                 )}
-                key={`${source}-${target}`}
+                key={key}
               >
-                <path
-                  d={pathSvg}
-                  className={classes(
-                    styles.line,
-                    isDirected && styles.directed
-                  )}
-                />
-                {isWeighted && (
-                  <g transform={`translate(${mx},${my})`}>
-                    <text
-                      className={styles.weight}
-                      transform="rotate(0)"
-                      y={-edgeWeightGap}
-                    >
-                      {this.toString(weight)}
-                    </text>
-                  </g>
+                {Select_Circle_Count > 0 && (
+                  functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+                    <circle
+                      className={classes(
+                        styles.select_circle_f,
+                        style && style.backgroundStyle
+                      )}
+                      r={nodeRadius}
+                    />
+                  ) : (
+                    <circle
+                      className={classes(
+                        styles.select_circle_t,
+                        style && style.backgroundStyle
+                      )}
+                      r={nodeRadius}
+                    />
+                  )
                 )}
-              </g>
+
+                <circle
+                  className={classes(
+                    styles.circle,
+                    style && style.backgroundStyle
+                  )}
+                  r={nodeRadius}
+                />
+
+                <text className={classes(styles.id, style && style.textStyle)}>
+                  {value}
+                </text>
+                {isWeighted && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(weight)}
+                  </text>
+                )}
+
+                {/* AVL Tree height */}
+                <text className={styles.height}>
+                  {/* AVL Tree TID ? */}
+                  {height != null && height.toString().includes('t') ? (
+                    <tspan className={styles.AVL_TID}>
+                      {height}
+                    </tspan>
+                  ) : (
+                    <tspan>
+                      {height != null ? height : ''}
+                    </tspan>
+                  )}
+                </text>
+
+                {isPointer && (
+                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                    {this.toString(pointerText)}
+                  </text>
+                )}
+              </motion.g>
             );
           })}
-        {/* node graph */}
-        {nodes.map((node) => {
-          const {
-            x,
-            y,
-            weight,
-            visitedCount0,
-            visitedCount,
-            visitedCount1,
-            visitedCount2,
-            visitedCount3,
-            visitedCount4,
-            selectedCount,
-            value,
-            key,
-            style,
-            sorted,
-            isPointer,
-            pointerText,
-          } = node;
-          // only when selectedCount is 1, then highlight the node
-          const selectNode = selectedCount === 1;
-          const visitedNode0 = visitedCount0 === 1;
-          const visitedNode = visitedCount === 1;
-          const visitedNode1 = visitedCount1 === 1;
-          const visitedNode2 = visitedCount2 === 1;
-          const visitedNode3 = visitedCount3 === 1;
-          const visitedNode4 = visitedCount4 === 1;
-          return (
-            <motion.g
-              animate={{ x, y }}
-              initial={false}
-              transition={{ duration: 1 }}
-              className={classes(
-                styles.node,
-                selectNode && styles.selected,
-                sorted && styles.sorted,
-                visitedNode0 && styles.visited0,
-                visitedNode && styles.visited,
-                visitedNode1 && styles.visited1,
-                visitedNode2 && styles.visited2,
-                visitedNode3 && styles.visited3,
-                visitedNode4 && styles.visited4
-              )}
-              key={key}
-            >
-              <circle
-                className={classes(
-                  styles.circle,
-                  style && style.backgroundStyle
+        </g>
+
+        {/* Text */}
+        <g>
+
+          {/* Text */}
+          <text className={classes(styles.select_color)}
+            textAnchor="middle"
+            fontSize={50} // font size
+            x={- 80}
+            y={- 350}
+          >
+            {text}
+          </text>
+
+          {/* Function Name */}
+          <text className={classes(styles.text)}
+            x={+ 530}
+            y={- 250}
+            textAnchor="middle">
+            <tspan className={styles.pseudocode_function}>
+              {this.props.data.functionName}
+            </tspan>
+            {functionInsertText}
+          </text>
+
+          {/* Function Node */}
+          <text className={classes(styles.text)}
+            x={+400}
+            y={-200}
+            textAnchor="middle">
+            {functionNode != null && (
+              <tspan className={styles.pseudocode_function}>
+                {"Node["}
+              </tspan>
+            )}
+            {functionNode}
+
+            {functionNode != null && (
+              <tspan className={styles.pseudocode_function}>
+                {"] : "}
+              </tspan>
+            )}
+          </text>
+
+          {/* Function Balance */}
+          <text className={classes(styles.text)}
+            x={+650}
+            y={-200}
+            textAnchor="middle">
+
+            {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
+              <tspan className={classes(styles.select_color)} style={{ fontWeight: 'bold' }} >
+                {"Balance: "}
+                {functionBalance}
+              </tspan>
+            ) : (
+              <tspan>
+                {functionBalance != null && (
+                  <tspan className={styles.pseudocode_function}>
+                    {"Balance: "}
+                  </tspan>
                 )}
-                r={nodeRadius}
-              />
-              <text className={classes(styles.id, style && style.textStyle)}>
-                {value}
-              </text>
-              {isWeighted && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(weight)}
-                </text>
-              )}
-              {isPointer && (
-                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                  {this.toString(pointerText)}
-                </text>
-              )}
-            </motion.g>
-          );
-        })}
-        <text
-          style={{ fill: '#ff0000' }}
-          textAnchor="middle"
-          x={rootX}
-          y={rootY - 20}
-        >
-          {text}
-        </text>
-      </svg>
+                {functionBalance}
+              </tspan>
+            )}
+          </text>
+
+          {/* AVL Tree ID */}
+          <text className={classes(styles.text)}
+            x={+ 530}
+            y={- 150}
+            textAnchor="middle">
+            {tagInfo}
+          </text>
+        </g>
+
+      </svg >
     );
   }
 }

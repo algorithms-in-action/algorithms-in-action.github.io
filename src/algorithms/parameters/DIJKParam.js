@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
+import PropTypes from 'prop-types'; // Import this for URL Param
+import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
 
 const DEFAULT_START = 5; // XXX null should disable
 // const DEFAULT_END = null; // disable end nodes display/input
@@ -27,8 +29,10 @@ const GRAPH_EGS = [ // XXX think up better examples?
 const DIJK = 'Dijkstra\'s';
 const DIJK_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
 const DIJK_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
-function DijkstraParam() {
+function DijkstraParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, min, max }) {
   const [message, setMessage] = useState(null);
+  let [start1, size1, graph_egs] =
+         addURLGraph(GRAPH_EGS, xyCoords, edgeWeights, start, DEFAULT_START);
 
   return (
     <>
@@ -36,13 +40,13 @@ function DijkstraParam() {
       <EuclideanMatrixParams
         name="dijkstra"
         mode="find"
-        defaultSize={DEFAULT_SIZE}
-        defaultStart={DEFAULT_START}
-        defaultEnd={DEFAULT_END}
+        defaultSize={ size1 }
+        defaultStart={ start1 }
+        defaultEnd={end || DEFAULT_END}
         defaultHeur = {DEFAULT_HEUR}
-        graphEgs={GRAPH_EGS}
-        min={1}
-        max={49}
+        graphEgs={graph_egs}
+        min={min || 1}
+        max={max || 49}
         symmetric
         ALGORITHM_NAME={DIJK}
         EXAMPLE={DIJK_EXAMPLE}
@@ -56,4 +60,20 @@ function DijkstraParam() {
   );
 }
 
-export default DijkstraParam;
+DijkstraParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  heuristic: PropTypes.string.isRequired,
+  xyCoords: PropTypes.string.isRequired,
+  edgeWeights: PropTypes.string.isRequired,
+  min: PropTypes.string.isRequired,
+  max: PropTypes.string.isRequired,
+};
+
+export default withAlgorithmParams(DijkstraParam); // Export with the wrapper for URL Params
+
+
+

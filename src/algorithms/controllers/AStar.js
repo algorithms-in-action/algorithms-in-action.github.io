@@ -166,7 +166,7 @@ export default {
       5,
       (vis, v) => {
         vis.array.set(v, algNameStr);
-        vis.array.getRendererClass().zoom = 8;
+        vis.array.setZoom(0.8);
       },
       [[nodes, heuristics, minCosts, parents, finalCosts], 0]
     );

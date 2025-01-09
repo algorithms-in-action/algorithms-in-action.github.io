@@ -151,8 +151,10 @@ class Array1DRenderer extends Array2DRenderer {
               >
                 {longestRow.map((_, i) => {
                   // if the graph instance is heapsort, then the array index starts from 1
-
                   i += 1;
+                  if (algo !== "straightRadixSort") {
+                    i += 1;
+                  }
 
                   return (
                     <div className={classes(styles.col, styles.index)} key={i}>

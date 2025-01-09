@@ -7,12 +7,13 @@
 // below, otherwise hooks into what happens when blocks are expanded or
 // contracted are not enabled.
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
-  'transitiveClosure', 'heapSort', 'msort_lista_td', "msort_arr_bup", "msort_arr_nat"];
+  'transitiveClosure', 'heapSort', 'msort_lista_td', 'msort_arr_bup',
+   'msort_arr_nat', 'radixSortStraight'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and
-// src/context/actions.js 
-import { GlobalActions } from '../../context/actions';
+// src/context/actions.js
+// import { GlobalActions } from '../../context/actions';
 
 // not sure if finding the running algorithm needs such complex code, but this
 // seems to work...
@@ -54,7 +55,7 @@ export function areExpanded(blocks) {
 export function onCollapseChange(chunker) {
   const algorithm = getGlobalAlgorithm();
   const alg_name = algorithm.id.name;
+  console.log(alg_name);
   if (!importsThis.includes(alg_name)) return;
   chunker.refresh();
 }
-

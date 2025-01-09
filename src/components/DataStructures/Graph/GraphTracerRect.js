@@ -183,7 +183,6 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
@@ -192,17 +191,17 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  addResult(text,id) {
+  addResult(text, id) {
     this.findNode(id).Result = text;
   }
-  addStringLen(len,id){
+  addStringLen(len, id) {
     this.findNode(id).StringLen = len;
   }
-  addPatternLen(len,id){
+  addPatternLen(len, id) {
     this.findNode(id).PatternLen = len;
   }
-  addAlgorithm(name,id){
-    this.findNode(id).algorithmName =name;
+  addAlgorithm(name, id) {
+    this.findNode(id).algorithmName = name;
   }
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
@@ -211,6 +210,9 @@ class GraphTracer extends Tracer {
       if (update[key] === undefined) delete update[key];
     });
     Object.assign(node, update);
+  }
+  updateHeight(id, height) {
+    this.findNode(id).height = height;
   }
 
   removeNode(id) {
@@ -547,7 +549,7 @@ class GraphTracer extends Tracer {
 
   setText(text) {
     this.text = text;
-    this.text.push({text});
+    this.text.push({ text });
   }
 }
 

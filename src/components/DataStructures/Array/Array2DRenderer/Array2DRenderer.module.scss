@@ -54,8 +54,16 @@
         color: var(--array-2d-row-col-value-color); //var(--array-2d-row-col-sorted);
       }
 
+      &.highlightRow {
+        background-color: var(--graph-node-circle-fill);
+
+        span {
+          color: var(--array-2d-row-col);
+        }
+      }
+
       &.selected {
-        background-color: var(--array-2d-row-col-bg-selected);
+        background-color: var(--sky);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -63,7 +71,7 @@
       }
 
       &.selected1 {
-        background-color: var(--array-2d-row-col-bg-selected1);
+        background-color: var(--leaf);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -87,7 +95,7 @@
       }
 
       &.variableGreen {
-        background-color: var(--simple-fill-var-green);
+        background-color: var(--leaf);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -96,7 +104,7 @@
 
       &.variableOrange {
         // more of a yellow, really
-        background-color: var(--simple-fill-var-orange);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col);
@@ -104,7 +112,7 @@
       }
 
       &.variableRed {
-        background-color: var(--simple-fill-var-red);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -113,7 +121,7 @@
 
 
       &.selected4 {
-        background-color: var(--array-2d-row-col-bg-selected4);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -121,7 +129,7 @@
       }
 
       &.selected5 {
-        background-color: var(--array-2d-row-col-bg-selected5);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -131,7 +139,7 @@
 
 
       &.patched {
-        background-color: var(--array-2d-row-col-bg-patched);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col-patched);
@@ -167,9 +175,36 @@
       &.faded {
         opacity: 0.2
       }
-
     }
   }
+}
+
+.array_body {
+  margin: 0;
+  padding: 0;
+}
+
+.array2d_container {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  overflow: auto;
+  height: 100%;
+}
+
+.captionHashing {
+  text-align: center;
+  color: var(--array-2d-row-col-value-color);
 }
 
 .captionDFS {

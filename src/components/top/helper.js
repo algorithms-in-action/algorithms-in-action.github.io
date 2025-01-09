@@ -72,29 +72,37 @@ export const ALGO_THEME_KEY = 'algo-theme';
 export const ALGO_THEME_1 = 'default';
 const ALGO_THEME_2 = 'green';
 const ALGO_THEME_3 = 'red';
+const ALGO_THEME_4 = 'grey';
 
-// Color Scheme
+// Color Scheme as shown in the settings tab (changing this will not change the colours of the algorithm)
 export const allColBtn = [
   {
     id: ALGO_THEME_1,
     primary: 'positive1',
     secondary: 'negative1',
-    third:'hint1',
-    fourth:'back-up1',
+    third: 'hint1',
+    fourth: 'back-up1',
   },
   {
     id: ALGO_THEME_2,
     primary: 'positive2',
     secondary: 'negative2',
-    third:'hint2',
-    fourth:'back-up2',
+    third: 'hint2',
+    fourth: 'back-up2',
   },
   {
     id: ALGO_THEME_3,
     primary: 'cyan',
     secondary: 'purple',
-    third:'green',
-    fourth:'yellow',
+    third: 'green',
+    fourth: 'yellow',
+  },
+  {
+    id: ALGO_THEME_4,
+    primary: 'white',
+    secondary: 'grey',
+    third: 'dark-grey',
+    fourth: 'black',
   },
 ];
 
@@ -107,15 +115,15 @@ export const allSystemCol = [
     id: SYSTEM_THEME_1,
     primary: 'white',
     secondary: 'white',
-    third:'white',
-    fourth:'white',
+    third: 'white',
+    fourth: 'white',
   },
   {
     id: SYSTEM_THEME_2,
     primary: 'black',
     secondary: 'black',
-    third:'black',
-    fourth:'black',
+    third: 'black',
+    fourth: 'black',
   },
 ];
 
@@ -154,6 +162,7 @@ export function getWithExpiry(key) {
 const EXPIRE_SEC = (86400) * 1000; // 1 day
 // const EXPIRE_SEC = 5 * 1000; // 5 sec
 
+// handles setting the system theme (light or dark)
 export function setTheme(theme) {
   if (theme === SYSTEM_THEME_1) {
     setWithExpiry(SYSTEM_THEME_KEY, SYSTEM_THEME_1, EXPIRE_SEC);
@@ -183,5 +192,8 @@ export function setAlgoTheme(theme) {
   } else if (theme === ALGO_THEME_3) {
     setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_3, EXPIRE_SEC);
     document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_3);
+  } else if (theme === ALGO_THEME_4) {
+    setWithExpiry(ALGO_THEME_KEY, ALGO_THEME_4, EXPIRE_SEC);
+    document.documentElement.setAttribute(ALGO_THEME_KEY, ALGO_THEME_4);
   }
 }

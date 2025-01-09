@@ -347,6 +347,7 @@ export default {
   },
 
   run(chunker, { nodes }) {
+
     if (nodes === null || nodes.length === 0) return;
     let { node: tree, id: newID } = this.createNodeAndIncrement(null);
 
