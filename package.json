@@ -21,7 +21,6 @@
     "test-hashinsert": "npm test -- ./src/algorithms/controllers/tests/HashingInsertion.test.js",
     "test-hashsearch": "npm test -- ./src/algorithms/controllers/tests/HashingSearch.test.js",
     "test-hashdelete": "npm test -- ./src/algorithms/controllers/tests/HashingDeletion.test.js",
-    "test-234t": "npm test -- ./src/algorithms/controllers/TTFTree.test.js",
     "test-avl": "npm test -- ./src/algorithms/controllers/AVLTree.test.js",
     "test-url": "npm test -- ./src/algorithms/parameters/helpers/urlHelpers.test.js"
   },
@@ -59,8 +58,6 @@
     ]
   },
   "dependencies": {
-    "nth-check": ">=2.0.1",
-    "postcss": ">=8.4.31",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
@@ -70,12 +67,13 @@
     "@popperjs/core": "^2.11.8",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^12.1.2",
-    "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
     "chai": "^5.1.1",
     "denque": "^2.0.1",
     "framer-motion": "^4.0.0",
     "lodash": "^4.17.21",
+    "nth-check": ">=2.0.1",
+    "postcss": ">=8.4.31",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -93,6 +91,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/react-hooks": "^8.0.1",
     "electron": "^31.4.0",
     "enzyme": "^3.11.0",
     "eslint-config-react-app": "^7.0.1",

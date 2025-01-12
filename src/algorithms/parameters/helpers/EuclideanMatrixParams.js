@@ -395,7 +395,8 @@ function EuclideanMatrixParams({
   // Update start node
   // useEffect() triggers handleSearch() to update animation
   const updateStartNode = (newStart) => {
-    if (newStart < 1 || newStart > size) return;
+    // use modulo size to wrap around in range 1..size
+    newStart = (newStart + size - 1) % size + 1;
     setMessage(null);
     setStartNode(newStart);
     // handleSearch();
