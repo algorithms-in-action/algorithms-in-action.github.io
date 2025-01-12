@@ -1,17 +1,26 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { URLContext } from '../../context/urlState';
 import { genRandNumList } from './helpers/ParamHelper';
 import ListParam from './helpers/ListParam';
+import PropTypes from 'prop-types';
+import { withAlgorithmParams } from './helpers/urlHelpers';
 import '../../styles/Param.scss';
 
 const DEFAULT_NODES = genRandNumList(10, 1, 100);
-const STRAIGHT_RADIX_SORT = 'Straight Radix Sort';
-const STRAIGHT_RADIX_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const DEFAULT_MODE = 'sort';
+const Straight_RADIX_SORT = 'Straight Radix Sort';
+const MSDRS_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 
-function StraightRadixSortParam() {
+function StraightRadixSortParam({ mode, list }) {
     const [message, setMessage] = useState(null);
-    const [nodes, setNodes] = useState(DEFAULT_NODES);
+    const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
+    const { setNodes } = useContext(URLContext);
+
+    useEffect(() => {
+        setNodes(localNodes);
+    }, [localNodes]);
 
     return (
         <>
@@ -19,12 +28,12 @@ function StraightRadixSortParam() {
                 <ListParam
                     name="radixSortStraight"
                     buttonName="Sort"
-                    mode="sort"
+                    mode={mode || DEFAULT_MODE}
                     formClassName="formLeft"
-                    DEFAULT_VAL={nodes}
-                    SET_VAL={setNodes}
-                    ALGORITHM_NAME={STRAIGHT_RADIX_SORT}
-                    EXAMPLE={STRAIGHT_RADIX_SORT_EXAMPLE}
+                    DEFAULT_VAL={localNodes}
+                    SET_VAL={setLocalNodes}
+                    ALGORITHM_NAME={Straight_RADIX_SORT}
+                    EXAMPLE={MSDRS_SORT_EXAMPLE}
                     setMessage={setMessage}
                 />
             </div>
@@ -35,4 +44,10 @@ function StraightRadixSortParam() {
     );
 }
 
-export default StraightRadixSortParam;
+StraightRadixSortParam.propTypes = {
+    alg: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    list: PropTypes.string.isRequired,
+}
+
+export default withAlgorithmParams(StraightRadixSortParam);

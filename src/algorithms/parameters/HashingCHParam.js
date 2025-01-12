@@ -1,3 +1,8 @@
+import PropTypes from 'prop-types';
+import { withAlgorithmParams } from './helpers/urlHelpers'
+
+import { URLContext } from '../../context/urlState.js';
+
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
@@ -17,8 +22,8 @@ import {
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
-// Algotiyhm information and magic phrases
-const ALGORITHM_NAME = 'Hashing (linear probing)';
+// Algorithm information and magic phrases
+const ALGORITHM_NAME = 'Hashing (chaining)';
 const HASHING_INSERT = 'Hashing Insertion';
 const HASHING_SEARCH = 'Hashing Search';
 const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
@@ -31,6 +36,8 @@ const UNCHECKED = {
     smallTable: false,
     largeTable: false
 };
+
+const DEFAULT_EXPAND = false;
 
 // Styling of radio buttons
 const BlueRadio = withStyles({
@@ -54,15 +61,23 @@ const ERROR_INVALID_RANGES = 'If you had entered ranges, please input valid rang
  * Chaining input component
  * @returns the component
  */
-function HashingCHParam() {
+function HashingCHParam({ mode, list, value }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
-  const [array, setArray] = useState(DEFAULT_ARRAY);
-  const [search, setSearch] = useState(DEFAULT_SEARCH);
+  const [array, setLocalArray] = useState(list || DEFAULT_ARRAY);
+  const [search, setLocalSearch] = useState(DEFAULT_SEARCH);
   const [HASHSize, setHashSize] = useState({
     smallTable: true,
     largeTable: false,
   });
+  const [expand, setExpand] = useState(DEFAULT_EXPAND);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+
+  useEffect(() => {
+    setNodes(array);
+    setSearchValue(search);
+  }, [array, search])
+
 
     /**
    * Handle changes to input
@@ -70,6 +85,14 @@ function HashingCHParam() {
    */
   const handleChange = (e) => {
     setHashSize({ ...UNCHECKED, [e.target.name]: true })
+  }
+
+  /**
+   * Handle expand
+   * @param {*} e the input box component
+   */
+  const handleExpand = (e) => {
+    setExpand(!expand)
   }
 
   /**
@@ -94,7 +117,7 @@ function HashingCHParam() {
           mode: 'insertion',
           hashSize: hashSize,
           values,
-          expand: false
+          expand: expand
         });
         setMessage(successParamMsg(ALGORITHM_NAME));
       }
@@ -141,6 +164,14 @@ function HashingCHParam() {
     [HASHSize],
   );
 
+  // Use effect to detect changes in expand radio box choice
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [expand],
+  );
+
 
   return (
     <>
@@ -151,7 +182,7 @@ function HashingCHParam() {
           mode="insertion"
           formClassName="formLeft"
           DEFAULT_VAL = {array}
-          SET_VAL = {setArray}
+          SET_VAL = {setLocalArray}
           REFRESH_FUNCTION={
             (() => {
               if (HASHSize.smallTable) {
@@ -174,8 +205,8 @@ function HashingCHParam() {
           buttonName="SEARCH"
           mode="search"
           formClassName="formRight"
-          DEFAULT_VAL = {DEFAULT_SEARCH}
-          SET_VAL = {setSearch}
+          DEFAULT_VAL = {value || DEFAULT_SEARCH}
+          SET_VAL = {setLocalSearch}
           ALGORITHM_NAME = {HASHING_SEARCH}
           handleSubmit={handleSearch}
           setMessage={setMessage}
@@ -212,6 +243,22 @@ function HashingCHParam() {
             className="checkbox"
           />
         </div>
+
+
+        <div>
+          {HASHSize.smallTable && (
+            <FormControlLabel
+              control={
+                <BlueRadio
+                  checked={expand}
+                  onClick={handleExpand}
+                />
+              }
+              label="Expand"
+              className="checkbox"
+            />
+          )}
+        </div>
       </div>
 
       {/* render success/error message */}
@@ -220,4 +267,11 @@ function HashingCHParam() {
   );
 }
 
-export default HashingCHParam;
+// Define the prop types for URL Params
+HashingCHParam.propTypes = {
+    alg: PropTypes.string.isRequired, // keep alg for all algorithms
+    mode: PropTypes.string.isRequired, //keep mode for all algorithms
+    list: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired
+ };
+export default withAlgorithmParams(HashingCHParam);

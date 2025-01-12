@@ -1,6 +1,6 @@
 # Algorithms in Action
 
-![license](https://img.shields.io/badge/license-MIT-Green) ![node](https://img.shields.io/badge/node-v18.17.1-blue) ![npm](https://img.shields.io/badge/npm-v9.6.7-blue)
+![license](https://img.shields.io/badge/license-MIT-Green) ![node](https://img.shields.io/badge/node-v22.13.0-blue) ![npm](https://img.shields.io/badge/npm-10.9.2-blue)
 
 Welcome to Algorithms In Action!
 
