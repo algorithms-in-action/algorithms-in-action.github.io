@@ -203,7 +203,8 @@ export default {
               + rightarrow + "Expanding table..."});
           },
           [total]
-        )
+        );
+        [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1)
       }
 /*
       if (limit()) {
@@ -222,6 +223,7 @@ export default {
 */
       // Chunker for when the table is not full
       // Proceed time:)
+/*
       else {
         chunker.add(
           IBookmarks.CheckTableFull,
@@ -232,6 +234,7 @@ export default {
           [total]
         )
       }
+*/
 
       insertions++; // Increment insertions
       total++; // Increment total
