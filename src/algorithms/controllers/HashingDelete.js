@@ -11,7 +11,8 @@ import {
   DELETE_CHAR,
   HASH_TYPE,
   newCycle,
-  EMPTY_CHAR
+  EMPTY_CHAR,
+  EMPTY_CHAR_CH
 } from './HashingCommon';
 
 // Bookmarks to link chunker with pseudocode
@@ -24,7 +25,8 @@ const IBookmarks = {
   Found: 14,
   Delete: 15,
   NotFound: 18,
-  Pending: 19,
+  Pending: 20,
+  CheckFull: 21,
 }
 
 /**
@@ -157,6 +159,7 @@ export default function HashingDelete(
   /** This part is for Chaining */
   else {
 
+/*
     chunker.add(
       IBookmarks.Pending,
       (vis, idx) => {
@@ -164,6 +167,7 @@ export default function HashingDelete(
       },
       [i]
     );
+*/
 
     if (table[i].includes(key)) {
       const index = table[i].indexOf(key);
@@ -176,9 +180,15 @@ export default function HashingDelete(
           const popper = document.getElementById('float_box_' + idx);
           popper.innerHTML = table[idx];
 
-          let firstItemOfChain = table[idx][0];
-          if (firstItemOfChain != undefined) vis.array.updateValueAt(VALUE, idx, firstItemOfChain + '..');
-          else vis.array.updateValueAt(VALUE, idx, EMPTY_CHAR);
+          let chainLength = table[idx].length;
+          // let firstItemOfChain = table[idx][0];
+          // if (firstItemOfChain === undefined)
+          if (chainLength === 0)
+            vis.array.updateValueAt(VALUE, idx, EMPTY_CHAR_CH);
+          else if (chainLength === 1)
+            vis.array.updateValueAt(VALUE, idx, '[' + table[idx][0] + ']');
+          else
+            vis.array.updateValueAt(VALUE, idx, '[' + table[idx][0] + '..');
 
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Found); // Fill the slot with green, indicating that the key is found
         },
@@ -189,7 +199,8 @@ export default function HashingDelete(
     }
     else {
       chunker.add(
-        IBookmarks.NotFound,
+        // IBookmarks.NotFound, // delete code no longer expanded
+        IBookmarks.Found,
         (vis, idx) => {
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.NotFound); // Fill the slot with green, indicating that the key is found
         },

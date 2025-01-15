@@ -246,7 +246,8 @@ function HashingCHParam({ mode, list, value }) {
 
 
         <div>
-          {HASHSize.smallTable && (
+          {false // turn off expansion option for chaining for now
+              && HASHSize.smallTable && (
             <FormControlLabel
               control={
                 <BlueRadio

@@ -255,7 +255,7 @@ function HashingDHParam({ mode, list, value }) {
                   onClick={handleExpand}
                 />
               }
-              label="Expand"
+              label="Dynamic size"
               className="checkbox"
             />
           )}

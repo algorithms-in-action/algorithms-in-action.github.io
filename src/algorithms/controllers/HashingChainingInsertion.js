@@ -5,6 +5,7 @@ import {
   hash1,
   HASH_GRAPH,
   EMPTY_CHAR,
+  EMPTY_CHAR_CH,
   Colors,
   INDEX,
   POINTER,
@@ -25,7 +26,7 @@ import { createPopper } from '@popperjs/core';
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
   Init: 1,
-  EmptyArray: 2,
+  EmptyArray: 1, // XXX delete init code
   InitInsertion: 3,
   NewInsertion: 4,
   Hash1: 5,
@@ -34,6 +35,10 @@ const IBookmarks = {
   Done: 10,
   BulkInsert: 1,
 }
+
+// text to display after key in table to indicate there are more keys
+// XXX MUST be the same in function extractArray in Array2DTracer.js
+const ETC = "..";
 
 export default {
   explanation: HashingExp,
@@ -66,7 +71,7 @@ export default {
 
     // Initialize arrays
     let indexArr = Array.from({ length: SIZE }, (_, i) => i);
-    let valueArr = Array(SIZE).fill(EMPTY_CHAR);
+    let valueArr = Array(SIZE).fill(EMPTY_CHAR_CH);
     let nullArr = Array(SIZE).fill('');
 
     // For return
@@ -128,7 +133,7 @@ export default {
     )
 
       // Internally assign the key to the index
-      table[i].push(key);
+      table[i].unshift(key);
 
       // Chunker for placing the key
       chunker.add(
@@ -155,10 +160,21 @@ export default {
               } 
 
             let slotCurValue = vis.array.getValueAt(VALUE, idx);
+            if (slotCurValue === EMPTY_CHAR_CH)
+              // Update value of that index when the slot is empty
+              vis.array.updateValueAt(VALUE, idx, '[' + val + ']');
+            else
+              // / Update value of that index when the slot is not empty
+              vis.array.updateValueAt(VALUE, idx, '[' + val + '..');
+            vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert);
+
+/*
+            let slotCurValue = vis.array.getValueAt(VALUE, idx);
             if (slotCurValue === EMPTY_CHAR) vis.array.updateValueAt(VALUE, idx, val); // Update value of that index when the slot is empty
-            else vis.array.updateValueAt(VALUE, idx, slotCurValue + (table[idx].length == 2 ? ".." : "")); // Update value of that index when the slot is not empty
+            else vis.array.updateValueAt(VALUE, idx, slotCurValue + (table[idx].length == 2 ? ETC : "")); // Update value of that index when the slot is not empty
             vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
             vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
+*/
         },
         [key, i, insertions, table]
       )
@@ -185,7 +201,7 @@ export default {
         // hashed value
         let i = hash1(null, null, key, table.length, false);
 
-        table[i].push(key);
+        table[i].unshift(key);
         inserts[key] = i;
         lastHash = i;
       }
@@ -217,9 +233,13 @@ export default {
               } 
 
             let slotCurValue = vis.array.getValueAt(VALUE, inserts[key]);
-            console.log(typeof(slotCurValue));
-            if (slotCurValue === EMPTY_CHAR) vis.array.updateValueAt(VALUE, inserts[key], key); // Update value of that index when the slot is empty
-            else vis.array.updateValueAt(VALUE, inserts[key], slotCurValue + ((table[inserts[key]].length >= 2 && typeof(slotCurValue) == 'number') ? ".." : "")); // Update value of that index when the slot is not empty
+            console.log(typeof(slotCurValue), key, slotCurValue, table[inserts[key]]);
+            if (slotCurValue === EMPTY_CHAR_CH)
+              // Update value of that index when the slot is empty
+              vis.array.updateValueAt(VALUE, inserts[key], '[' + key + ']');
+            else
+              // / Update value of that index when the slot is not empty
+              vis.array.updateValueAt(VALUE, inserts[key], '[' + key + '..');
             vis.array.fill(INDEX, inserts[key], undefined, undefined, Colors.Insert);
           }
           vis.array.showKth({key: vis.array.getKth().key, type: HASH_TYPE.BulkInsert, insertions: insertions});
@@ -265,11 +285,12 @@ export default {
             INDEX,
             {
               rowLength: size > SMALL_SIZE ? SPLIT_SIZE : SMALL_SIZE,
-              rowHeader: ['Index', 'Value', '']
+              rowHeader: ['Index', 'Chain', '']
             }
           );
 
-          vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+          // vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+          vis.array.hideArrayAtIndex([POINTER]); // Hide pointer row intially
 
           vis.graph.weighted(true);
 
@@ -296,8 +317,9 @@ export default {
       );
 
       // Chunker to initialize empty array visually
+/*
       chunker.add(
-        IBookmarks.EmptyArray,
+        IBookmarks.Init,
         (vis) => {
           // Show the value row
           vis.array.hideArrayAtIndex(POINTER);
@@ -306,7 +328,7 @@ export default {
 
       // Chunker for intializing insertion stat
       chunker.add(
-        IBookmarks.InitInsertion,
+        IBookmarks.EmptyArray,
         (vis, insertions) => {
           vis.array.showKth({
               key: "",
@@ -318,6 +340,7 @@ export default {
         },
         [insertions]
       )
+*/
 
       // Magic numbers for length of splitting a postive integer string by "-", the index of "", and the number to delete when a negative integer is split by "-"
       const POS_INTEGER_SPLIT_LENGTH = 1;

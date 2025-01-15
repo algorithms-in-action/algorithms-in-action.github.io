@@ -1,3 +1,8 @@
+// XXX could probably do with a restructure!
+// Dynamic table size was first implemented in a rather inflexible way wrt what gets
+// animated etc.  The code has been hacked around to "fix" this but it could do with
+// a re-think or at least a clean up!
+
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import { HashingExp } from '../explanations';
@@ -27,8 +32,8 @@ import HashingDelete from './HashingDelete';
 // Bookmarks to link chunker with pseudocode
 const IBookmarks = {
   Init: 1,
-  EmptyArray: 2,
-  InitInsertion: 3,
+  EmptyArray: 1, // XXX delete init code
+  InitInsertion: 1, // XXX delete init code
   // IncrementInsertions: 4,
   Hash1: 5,
   ChooseIncrement: 6,
@@ -38,6 +43,9 @@ const IBookmarks = {
   Done: 10,
   BulkInsert: 1,
   CheckTableFull: 19,
+  NewTable: 30,
+  ReinsertKey: 32,
+  CheckTableFullDel: 20,
 }
 
 /**
@@ -96,6 +104,56 @@ export default {
     let insertions = 0;
     let total = 0;
 
+    // expand table to allow insertion of given number of elements
+    // XXX need to handle bulk inserts
+    function expandAndReinsert(table, nElements) {
+          let prevTable = table.filter(n => n !== undefined); // XXX deleted elements?
+          if (params.expand && (table.length < LARGE_SIZE)) { // XXX
+            [table, indexArr, valueArr, nullArr] = expandTable(table);
+            // Expand table, re-init visuals, insert old keys
+// XXX should continue with current key...
+            chunker.add(
+              IBookmarks.NewTable,
+              (vis, size, array) => {
+                // Increase Array2D visualizer render space
+                if (SIZE === LARGE_SIZE) {
+                  vis.array.setSize(3);
+                  vis.array.setZoom(0.7);
+                  vis.graph.setZoom(1.5);
+                } else {
+                  vis.array.setZoom(1);
+                  vis.graph.setZoom(1);
+                }
+      
+                // Initialize the array
+                vis.array.set(array,
+                  params.name,
+                  '',
+                  INDEX,
+                  {
+                    rowLength: size > SMALL_SIZE ? SPLIT_SIZE : SMALL_SIZE,
+                    rowHeader: ['Index', 'Value', '']
+                  }
+                );
+      
+                // vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+                vis.array.hideArrayAtIndex([POINTER]); // Hide pointer row intially
+      
+              },
+              [table.length, table.length <= PRIMES[POINTER_CUT_OFF] ?
+                [indexArr, valueArr, nullArr] :
+                [indexArr, valueArr]
+              ]
+            );
+            while (prevTable.length > 0) {
+              let key = prevTable[0];
+              prevTable.shift();
+              hashReinsert(table, key, prevTable);
+            }
+          }
+          return [table, indexArr, valueArr, nullArr];
+        }
+
     /**
      * Insertion function for each key
      * @param {*} table the table to keep track of the internal and illustrated array
@@ -105,30 +163,71 @@ export default {
      * @returns the index the key is assigned
      */
     function hashInsert(table, key) {
+      chunker.add(
+        IBookmarks.InitInsertion,
+        (vis, target) => {
+
+          vis.array.showKth({key: target, insertions: vis.array.getKth().insertions, type: HASH_TYPE.Insert}); // Show stats
+
+          newCycle(vis, SIZE, key, ALGORITHM_NAME); // New delete cycle
+        },
+        [key]
+      );
+
       // Chunker for when table is full
       const limit = () => {
-        if (params.expand && table.length < LARGE_SIZE) return total + 1 === Math.round(table.length * 0.8);
+        if (params.expand && table.length < LARGE_SIZE)
+          return total + 1 === Math.round(table.length * 0.8);
         return total === table.length - 1;
       }
+      let rightarrow = "\u{2192}";
+      // Quit time:( too full and can't expand
+      if (total === table.length - 1 && !(params.expand && table.length < LARGE_SIZE)) {
+        chunker.add(
+          IBookmarks.CheckTableFull,
+          (vis, total) => {
+            vis.array.showKth({fullCheck: "Table is too full " + total + "/" + table.length
+              + rightarrow + "Stopping..."});
+          },
+          [total]
+        )
+        return [true, null, null, null, null];
+      // Expand time:| Full-ish (load factor will hit 80%) but can expand
+      // XXX should avoid magic number etc
+      // XXX adjust for chaining some time
+      } else if (params.expand && table.length < LARGE_SIZE && total + 1 >= Math.round(table.length * 0.8)) {
+        chunker.add(
+          IBookmarks.CheckTableFull,
+          (vis, total) => {
+            vis.array.showKth({fullCheck: "Table is rather full " + total + "/" + table.length
+              + rightarrow + "Expanding table..."});
+          },
+          [total]
+        )
+      }
+/*
       if (limit()) {
         chunker.add(
           IBookmarks.CheckTableFull,
           (vis, total) => {
-            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is full, "
-              + ((params.expand) ? "expanding table..." : "stopping...")});
+            vis.array.showKth({fullCheck: "Table is too full " + total + "/" + table.length + " \u{2192} " // rightarrow
+              + ((params.expand) ? "Expanding table..." : "Stopping...")});
           },
           [total]
         )
+//XXX expand table here; return whatever is needed to carry on
+        [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1);
         return FULL_SIGNAL;
       }
-
+*/
       // Chunker for when the table is not full
+      // Proceed time:)
       else {
         chunker.add(
           IBookmarks.CheckTableFull,
           (vis, total) => {
             newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
-            vis.array.showKth({fullCheck: "Table is filled " + total + "/" + table.length + " -> Table is not full, continuing..."});
+            vis.array.showKth({fullCheck: "Table has enough space " + total + "/" + table.length });
           },
           [total]
         )
@@ -218,8 +317,10 @@ export default {
         [key, i, insertions]
       )
 
+//XXX return whatever is needed to carry on
+      return [false, table, indexArr, valueArr, nullArr];
       // Return the insertion index
-      return i;
+      // return i;
     }
 
 
@@ -293,8 +394,6 @@ export default {
     }
 
 
-    const REINSERT_CAPTION_LEN = 5;
-
     /**
      * ReInsertion function for inserted key to new table
      * @param {*} table the table to keep track of the internal and illustrated array
@@ -302,9 +401,13 @@ export default {
      * @param {*} prevTable rrray of emaining keys from old table to be inserted
      * @returns the index the key is assigned
      */
+    // XXX should refactor code...
+    // We want to at lest have the option of not showing all the details by
+    // collapsing some pseudocode; currently just comment out all but one chunk
     function hashReinsert(table, key, prevTable) {
+/*
       chunker.add(
-        IBookmarks.CheckTableFull,
+        IBookmarks.ReinsertKey,
         (vis, prevTable) => {
           newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
           vis.array.showKth({
@@ -315,6 +418,7 @@ export default {
         },
         [prevTable]
       )
+*/
 
 
       // Get initial hash index for current key
@@ -337,6 +441,7 @@ export default {
         false
       );
 
+/*
         // Chunker for first pending slot
       chunker.add(
         IBookmarks.CheckTableFull,
@@ -361,12 +466,14 @@ export default {
         },
         [i]
       )
+*/
 
       // Internal code for probing, while loop indicates finding an empty slot for insertion
       while (table[i] !== undefined && table[i] !== key && table[i] !== DELETE_CHAR) {
         let prevI = i;
         i = (i + increment) % table.length; // This is to ensure the index never goes over table size
 
+/*
         // Chunker for collision
         chunker.add(
           IBookmarks.CheckTableFull,
@@ -389,19 +496,33 @@ export default {
           },
           [i]
         )
+*/
       }
 
       // Internally assign the key to the index
       table[i] = key;
 
+      const REINSERT_CAPTION_LEN = 5;
+
       // Chunker for placing the key
       chunker.add(
-        IBookmarks.CheckTableFull,
-        (vis, val, idx) => {
+        IBookmarks.ReinsertKey,
+        (vis, val, idx, prevTable) => {
+          newCycle(vis, table.length, val, ALGORITHM_NAME); // New insert cycle
+          vis.graph.updateNode(HASH_GRAPH.Value, idx); // add hash value
+          vis.graph.select(HASH_GRAPH.Value);
+          let rest = (prevTable.length > 0 ?
+                       `${prevTable.slice(0, REINSERT_CAPTION_LEN)}` +
+                            ((prevTable.length > REINSERT_CAPTION_LEN) ? `,...` : ``)
+                     : 'None');
+          vis.array.showKth({
+            reinserting: key,
+            toReinsert: rest
+          });
           vis.array.updateValueAt(VALUE, idx, val); // Update value of that index
           vis.array.fill(INDEX, idx, undefined, undefined, Colors.Insert); // Fill it green, indicating successful insertion
         },
-        [key, i, insertions]
+        [key, i, prevTable]
       )
 
       // Return the insertion index
@@ -417,8 +538,10 @@ export default {
     // Last input index
     let lastInput = 0;
 
-    // main loop allowing table extension
+/*
+    // main loop allowing table extension (moved after some init chunks)
     do {
+*/
       prevIdx = null;
 
       chunker.add(
@@ -445,7 +568,8 @@ export default {
             }
           );
 
-          vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+          // vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+          vis.array.hideArrayAtIndex([POINTER]); // Hide pointer row intially
 
           vis.graph.weighted(true);
 
@@ -468,6 +592,7 @@ export default {
         ]
       );
 
+/*
       // Chunker to initialize empty array visually
       chunker.add(
         IBookmarks.EmptyArray,
@@ -476,15 +601,26 @@ export default {
           vis.array.hideArrayAtIndex(POINTER);
         },
       );
+*/
 
       // Chunker for intializing insertion stat
       chunker.add(
         IBookmarks.InitInsertion,
         (vis, insertions) => {
+          /* 
           vis.array.showKth(
             (params.expand && (lastInput !== 0)) ? {
               fullCheck: "Expanding Table"
             } : {
+              key: "",
+              type: EMPTY_CHAR,
+              insertions: insertions,
+              increment: "",
+            }
+          );
+          */
+          vis.array.showKth(
+            {
               key: "",
               type: EMPTY_CHAR,
               insertions: insertions,
@@ -500,6 +636,11 @@ export default {
       const EMPTY_DELETE_SPLIT_INDEX = 0;
       const NUMBER_DELETE_SPLIT_INDEX = 1;
 
+    // main loop allowing table extension
+    // Now not needed - table expansion code has been expanded...
+    // do {
+
+/*
       if (params.expand && (lastInput !== 0)) {
         while (prevTable.length > 0) {
           let key = prevTable[0];
@@ -507,6 +648,7 @@ export default {
           hashReinsert(table, key, prevTable);
         }
       }
+*/
 
       for (let i = lastInput; i < inputs.length; i++) {
         let item = inputs[i];
@@ -515,7 +657,11 @@ export default {
         let split_arr = item.split("-");
         if (split_arr.length == POS_INTEGER_SPLIT_LENGTH) { // When the input is a positive integer -> normal insert
           for (const key of translateInput(item, "Array")) {
-            prevIdx = hashInsert(table, key, false);
+            let quitFlag;
+            [quitFlag, table, indexArr, valueArr, nullArr] = hashInsert(table, key);
+            // prevIdx = hashInsert(table, key);
+            if (quitFlag)
+              return table;
           }
         }
         else {
@@ -549,12 +695,56 @@ export default {
         // when table is full or almost full
         if (prevIdx === FULL_SIGNAL) {
           lastInput = i;
+          [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1);
+/*
           prevTable = table.filter(n => n !== undefined);
-          if (params.expand && (table.length < LARGE_SIZE)) [table, indexArr, valueArr, nullArr] = expandTable(table);
-          break;
+          if (params.expand && (table.length < LARGE_SIZE)) {
+            [table, indexArr, valueArr, nullArr] = expandTable(table);
+            // Expand table, re-init visuals, insert old keys
+// XXX should continue with current key...
+            chunker.add(
+              IBookmarks.NewTable,
+              (vis, size, array) => {
+                // Increase Array2D visualizer render space
+                if (SIZE === LARGE_SIZE) {
+                  vis.array.setSize(3);
+                  vis.array.setZoom(0.7);
+                  vis.graph.setZoom(1.5);
+                } else {
+                  vis.array.setZoom(1);
+                  vis.graph.setZoom(1);
+                }
+      
+                // Initialize the array
+                vis.array.set(array,
+                  params.name,
+                  '',
+                  INDEX,
+                  {
+                    rowLength: size > SMALL_SIZE ? SPLIT_SIZE : SMALL_SIZE,
+                    rowHeader: ['Index', 'Value', '']
+                  }
+                );
+      
+                // vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
+                vis.array.hideArrayAtIndex([POINTER]); // Hide pointer row intially
+      
+              },
+              [table.length, table.length <= PRIMES[POINTER_CUT_OFF] ?
+                [indexArr, valueArr, nullArr] :
+                [indexArr, valueArr]
+              ]
+            );
+            while (prevTable.length > 0) {
+              let key = prevTable[0];
+              prevTable.shift();
+              hashReinsert(table, key, prevTable);
+            }
+          }
+*/
         }
       }
-    } while (params.expand && (prevIdx === FULL_SIGNAL) && (table.length < LARGE_SIZE));
+    // } while (params.expand && (prevIdx === FULL_SIGNAL) && (table.length < LARGE_SIZE));
 
     // Chunker for resetting visualizers in case of new insertion cycle
     chunker.add(

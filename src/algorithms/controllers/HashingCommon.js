@@ -13,7 +13,8 @@ export const FULL_SIGNAL = -1;
 
 // Magic character used between all 3 files
 export const POINTER_VALUE = 'i'
-export const EMPTY_CHAR = '-';
+export const EMPTY_CHAR = '-';      // for empty slots
+export const EMPTY_CHAR_CH = '[]';  // for empty slots with chaining
 export const DELETE_CHAR = 'X';
 
 // Color indexes
