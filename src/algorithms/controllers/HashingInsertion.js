@@ -310,6 +310,7 @@ export default {
       let inserts = {};
       let bulkInsertions = 0;
       let prevTable = [...table];
+//XXX replace by expandAndReinsert
       const limit = () => {
         if (params.expand && table.length < LARGE_SIZE) return total + 1 === Math.round(table.length * 0.8);
         return total === table.length - 1;
@@ -648,7 +649,7 @@ export default {
             // Preparation for bulk insertion
             chunker.add(
               IBookmarks.BulkInsert,
-              (vis, insertions, prevIdx) => {
+              (vis, insertions, prevIdx, table) => {
                 vis.array.unfill(INDEX, 0, undefined, table.length - 1); // Reset any coloring of slots
                 vis.array.showKth({key: item, type: HASH_TYPE.BulkInsert, insertions: insertions, increment: ""});
                 if (table.length <= PRIMES[POINTER_CUT_OFF])
@@ -661,13 +662,14 @@ export default {
                   vis.graph.updateNode(HASH_GRAPH.Value2, ' ');
                 }
               },
-              [insertions, prevIdx]
+              [insertions, prevIdx, table]
             )
             prevIdx = hashBulkInsert(table, translateInput(item, "Array"));
           }
         }
 
         // when table is full or almost full
+//XXX get rid of this when we add expandAndReinsert to bulkInsert
         if (prevIdx === FULL_SIGNAL) {
           lastInput = i;
           [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1);

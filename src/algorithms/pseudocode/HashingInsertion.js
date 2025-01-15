@@ -149,12 +149,12 @@ const main = `
             InsertAll
             For each key k1 in OldT \\B 31
             \\In{
-              // We call HashInsert recursively!
+              HashInsert(T, k1) // recursive! \\B 32
               \\Expl{ There will never be multiple levels of
                 recursion because the new table will be large enough
                 to easily accomodate all the keys that were in T.
+                We don't animate the details of these insertions.
               \\Expl}
-              HashInsert(T, k1) \\B 32
               \\Note{ Animation can stop at this line for each
                 key
               \\Note}
