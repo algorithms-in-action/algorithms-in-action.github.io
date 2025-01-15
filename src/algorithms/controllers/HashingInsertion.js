@@ -199,42 +199,14 @@ export default {
         chunker.add(
           IBookmarks.CheckTableFull,
           (vis, total) => {
-            vis.array.showKth({fullCheck: "Table is rather full " + total + "/" + table.length
+            vis.array.showKth({fullCheck: "Table is quite full " + total + "/" + table.length
               + rightarrow + "Expanding table..."});
           },
           [total]
         );
         [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1)
       }
-/*
-      if (limit()) {
-        chunker.add(
-          IBookmarks.CheckTableFull,
-          (vis, total) => {
-            vis.array.showKth({fullCheck: "Table is too full " + total + "/" + table.length + " \u{2192} " // rightarrow
-              + ((params.expand) ? "Expanding table..." : "Stopping...")});
-          },
-          [total]
-        )
-//XXX expand table here; return whatever is needed to carry on
-        [table, indexArr, valueArr, nullArr] = expandAndReinsert(table, 1);
-        return FULL_SIGNAL;
-      }
-*/
-      // Chunker for when the table is not full
-      // Proceed time:)
-/*
-      else {
-        chunker.add(
-          IBookmarks.CheckTableFull,
-          (vis, total) => {
-            newCycle(vis, table.length, key, ALGORITHM_NAME); // New insert cycle
-            vis.array.showKth({fullCheck: "Table has enough space " + total + "/" + table.length });
-          },
-          [total]
-        )
-      }
-*/
+      // Proceed time:) - Enough space (now) to insert element
 
       insertions++; // Increment insertions
       total++; // Increment total
