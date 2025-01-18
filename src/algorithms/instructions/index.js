@@ -52,28 +52,34 @@ const stringInstructions = [{
   ],
 }];
 
-const hashingInstructions1 = [
+// Now covers chaining as well as LP/DH
+const hashingInstructions = [
   {
     title: 'Insert/Delete Mode',
     content: [
-    `Click on ${KEY_CODE} on the right panel.`,
-    `Select small or larger table via the radio buttons.`,
-    `Enter a comma separated list of integers into the Insert parameter.
-    There should be less than 11 integers if it is a small table, and less than 97 if it is a large table.
+    `Click on ${KEY_CODE} on the right panel. Some code lines can be
+expanded for more detail and explanations are available.`,
+    `Select small or larger table via the radio buttons and, if small is
+selected you can enable the dynamic size option. These buttons are below
+the ${KEY_INSDEL} box; you may need to drag the "..." up to make them
+visible`,
+    `Enter or edit the list of integers to insert/delete.
 
     **Valid inputs**:
 
      - x : Insert x into table.
-     - x - y: Bulk insert from integers x to y.
-     - x - y - z: Bulk insert from integers x to y in steps of z.
+     - x - y: Bulk insert of integers from x to y.
+     - x - y - z: Bulk insert of integers from x to y in steps of z.
      - -x: Delete x from table.
 
-    Only for small table, if you wish to input more integers, select the Expand radio button.
-    The table will now expand after reaching 80% capacity until it reaches 97 slots, after which it will
-    stop at one slot left`,
+    Bulk insert is not animated to the same degree as single inserts; it
+allows you to pre-fill some of the table quickly.`,
 
-    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
+    `Click on ${KEY_INSDEL} (or hit return after data input) to enter Insert mode and load the algorithm.`,
+    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be
+adjusted using the speed slider. You can also pause, single step forwards and
+backwards and use the progress bar slider.`,
+    'For hashing with chaining, when a chain is not displayed completely it can be revealed by hovering the mouse over the table slot.'
     ],
   },
   {
@@ -88,38 +94,6 @@ const hashingInstructions1 = [
   },
 ];
 
-const hashingInstructions2 = [
-  {
-    title: 'Insert/Delete Mode',
-    content: [
-    `Click on ${KEY_CODE} on the right panel.`,
-    `Select small or larger table via the radio buttons.`,
-    `Enter a comma separated list of integers into the Insert parameter.
-
-    **Valid inputs**:
-
-     - x : Insert x into table.
-     - x - y: Bulk insert from integers x to y.
-     - x - y - z: Bulk insert from integers x to y in steps of z.
-     - -x: Delete x from table.
-
-    You can hover over a slot to see the chain when you see a .. in the slot`,
-
-    `Click on ${KEY_INSERT} to enter Insert mode and load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
-    ],
-  },
-  {
-    title: 'Search Mode',
-    content: [
-    'Make sure table has inserted values before searching.',
-    `Click on ${KEY_CODE} on the right panel.`,
-    'Enter an Integer in the Search parameter.',
-    `Click on ${KEY_SEARCH} to enter Search mode and load the algorithm.`,
-    `Click on ${KEY_PLAY} to watch the algorithm run. The speed may be adjusted using the speed slider.`,
-    ],
-  },
-];
 
 const sortInstructions = [{
   title: 'Sorting Numbers',
@@ -205,5 +179,5 @@ export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
 export const DFSInstruction = graphInstructions;
 export const DFSrecInstruction = graphInstructions;
-export const HashingLPDHInstruction = hashingInstructions1;
-export const HashingCHInstruction = hashingInstructions2;
+export const HashingLPDHInstruction = hashingInstructions;
+export const HashingCHInstruction = hashingInstructions;

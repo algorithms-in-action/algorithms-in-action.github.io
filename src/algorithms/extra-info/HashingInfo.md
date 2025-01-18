@@ -14,7 +14,7 @@ a:hover{
 
 -----
 
-### For a comprehensive explanation of Hashing algorithm:
+### Further explanation of hashing
 
 Geeks for Geeks Hashing introductory video:
 
@@ -32,13 +32,15 @@ Geeks for Geeks Hashing Links:
 * [**Hashing**][G4GHashing]
 * [**Linear Probing**][G4GLP]
 * [**Double Hashing**][G4GDH]
+* [**Chaining**][G4GCH]
 
-### Real-life appliation of Hashing
+### Real-life application of Hashing
 
 Geeks for Geeks: [**Hashing Applications**][G4GApplication]
 
-[G4GHashing]: "https://www.geeksforgeeks.org/hashing-data-structure/"
-[G4GLP]: "https://www.geeksforgeeks.org/implementing-hash-table-open-addressing-linear-probing-cpp/"
-[G4GDH]: "https://www.geeksforgeeks.org/double-hashing/"
-[G4GApplication]: "https://www.geeksforgeeks.org/applications-of-hashing/"
+[G4GHashing]: https://www.geeksforgeeks.org/hashing-data-structure/
+[G4GLP]: https://www.geeksforgeeks.org/implementing-hash-table-open-addressing-linear-probing-cpp/
+[G4GDH]: https://www.geeksforgeeks.org/double-hashing/
+[G4GCH]: https://www.geeksforgeeks.org/separate-chaining-collision-handling-technique-in-hashing/
+[G4GApplication]: https://www.geeksforgeeks.org/applications-of-hashing/
 

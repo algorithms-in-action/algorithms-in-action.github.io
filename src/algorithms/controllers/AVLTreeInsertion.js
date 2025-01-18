@@ -802,6 +802,10 @@ export default {
                 vis.graph.setFunctionName('Tree is Empty');
                 vis.graph.setFunctionInsertText(``);
                 vis.array.patch(0);
+                // make a bit more room for tree
+                vis.graph.setSize(2.5);
+                vis.graph.setZoom(0.8);
+                vis.array.setZoom(0.9);
             },
             [nodes],
             1

@@ -34,7 +34,8 @@ const main = `
                       also degrades greatly with fewer empty slots.
                       This can be overcome by reconstructing the
                       whole table so there are no longer any Deleted slots and
-                      the table size may also increase. See the Background.
+                      the table size may also increase. The is done if
+                      the "Dynamic size" option (below "SEARCH") is enabled.
                     \\Expl}
                     \\Note{The following has a choose increment value -- assumes we can make a choice
                     	here between linear probing and double hashing. NOTE TO DEVELOPERS: We are planning to
@@ -122,14 +123,16 @@ const main = `
 
         \\Code{
             CheckTableFullness
-                if there are too few empty slots \\B 19
+                if there are too few empty slots // and "Dynamic size" is enabled \\B 19
                     \\Expl{ A small number of empty slots leads to poor performance.
-                        To overcome this we can construct a new (possibly
-                        larger) table and insert all the elements of T.
-                        This also gets rid of deleted slots.
-                        Here we approximately double the table size (up
-                        to a maximum of 97) when there are fewer
-                        than 20% of slots that are Empty.
+                        If fewer than 20% of slots that are Empty and
+                        the "Dynamic size" option is enabled
+                        we reconstruct the table.
+                        Usually we approximately double the table size (up
+                        to a maximum of 97).  If most non-empty slots
+                        are Deleted we retain the same size.
+                        For bulk insertions we calculate the new size assuming
+                        there will be no duplicate elements.
                     \\Expl}
                     \\In{
                         OldT = T;  // save T so we can extract the keys
@@ -238,7 +241,7 @@ let chainingInsert = `
             Check how full the table is \\B 4
             \\Expl{ This is not really required, but if the number of insertions
                 is getting large compared to the table size it may be worth expanding the
-                table - see the Background.
+                table (not currently implemented).
             \\Expl}
             i <- hash(k) \\Ref Hash1
             insert k into list T[i] \\Ref InsertList

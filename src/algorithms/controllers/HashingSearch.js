@@ -75,7 +75,7 @@ export default {
     );
 
     // Hashing the key
-    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE, true); // Target value after being hashed
+    let i = hash1(chunker, IBookmarks.ApplyHash, TARGET, SIZE, true, HASH_TYPE.Search); // Target value after being hashed
 
     /** This part is for Linear Probing and Double Hashing */
     if (ALGORITHM_NAME !== 'HashingCH') {

@@ -320,7 +320,11 @@ class GraphTracer extends Tracer {
 
   updateNode(id, value, height, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
+    // XXX default height should probably not be here - added for AVL
+    // trees most likey and messes with other things, eg hashing
+    // AVL trees seem fine without it
+    // const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
+    const update = { value, height, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });

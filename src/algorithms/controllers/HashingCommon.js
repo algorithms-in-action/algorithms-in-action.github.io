@@ -68,18 +68,26 @@ export const POINTER_CUT_OFF = 1;
  * @param {*} toggleAnimate whether animation is carried out or not
  * @returns the hashed value
  */
-export function hash1(chunker, bookmark, key, tableSize, toggleAnimate) {
+export function hash1(chunker, bookmark, key, tableSize, toggleAnimate, type) {
   let hashed = (key * PRIME) % tableSize; // Hash the key
 
   if (toggleAnimate) {
     // Update the graph
     chunker.add(
       bookmark,
-      (vis, val) => {
+      (vis, val, key) => {
         vis.graph.updateNode(HASH_GRAPH.Value, val);
         vis.graph.select(HASH_GRAPH.Value);
+        vis.graph.updateNode(HASH_GRAPH.Key, key);
+          let kth = vis.array.getKth();
+          vis.array.showKth({
+            key: key,
+            type,
+            insertions: kth.insertions,
+            increment: ' '
+          });
       },
-      [hashed]
+      [hashed, key, type]
     )
   }
 
@@ -104,6 +112,7 @@ export function hash2(chunker, bookmark, key, tableSize, toggleAnimate) {
     chunker.add(
       bookmark,
       (vis, val) => {
+        vis.graph.updateNode(HASH_GRAPH.Key2, key);
         vis.graph.updateNode(HASH_GRAPH.Value2, val);
         vis.graph.select(HASH_GRAPH.Value2);
       },

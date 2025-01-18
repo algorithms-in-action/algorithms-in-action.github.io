@@ -56,7 +56,7 @@ export default function HashingDelete(
   );
 
   // Hashing the key
-  let i = hash1(chunker, IBookmarks.ApplyHash, key, SIZE, true); // Target value after being hashed
+  let i = hash1(chunker, IBookmarks.ApplyHash, key, SIZE, true, HASH_TYPE.Delete); // Target value after being hashed
 
   /** This part is for Linear Probing and Double Hashing */
   if (ALGORITHM_NAME !== 'HashingCH') {
@@ -85,7 +85,7 @@ export default function HashingDelete(
       [i]
     );
 
-    let explored = 0;
+    let explored = 0; // XXX shouldn't need this
     // Search for the target key, checking each probed position
     while (table[i] !== key && table[i] !== undefined && explored < SIZE) {
       // Chunker for not matching
