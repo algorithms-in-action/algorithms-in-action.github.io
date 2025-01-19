@@ -150,8 +150,8 @@ class Array1DRenderer extends Array2DRenderer {
                 style={{ display: 'flex', justifyContent: 'space-between' }}
               >
                 {longestRow.map((_, i) => {
-                  // if the graph instance is heapsort, then the array index starts from 1
-                  i += 1;
+                  // the array index starts from 1 in most algorithms
+                  // 0 for straightRadixSort (wanted for count array)
                   if (algo !== "straightRadixSort") {
                     i += 1;
                   }

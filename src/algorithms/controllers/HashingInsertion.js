@@ -1,7 +1,7 @@
-// XXX could probably do with a restructure!
-// Dynamic table size was first implemented in a rather inflexible way wrt what gets
-// animated etc.  The code has been hacked around to "fix" this but it could do with
-// a re-think or at least a clean up!
+// XXX could probably do with a restructure; certainly a clean up!
+// Dynamic table size was first implemented in a rather inflexible way wrt what
+// gets animated etc.  The code has been hacked a lot to "fix" this and a
+// bunch of other things...
 
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
