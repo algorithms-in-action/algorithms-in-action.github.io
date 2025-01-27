@@ -32,7 +32,7 @@ MergeAll
         \\Expl{ We compute mid to get the longest sequence where A[left] <=
             A[left+1] <= ... <= A[mid].
         \\Expl}
-        find the second run, A[mid+1..right] it could be empty \\Ref SecondRun
+        find the second run, A[mid+1..right] (possibly empty) \\Ref SecondRun
         \\Expl{ We compute right to get the longest sequence where A[mid+1] <=
             A[mid+2] <= ... <= A[right].  If mid = size this will be empty.
         \\Expl}
