@@ -13,6 +13,11 @@ class MaskTracer extends Tracer {
     this.binaryData = 0;
     this.maskData = 0;
     this.highlight = [];
+    this.addBase4 = false;
+  }
+
+  setAddBase4(b) {
+    this.addBase4 = b;
   }
 
   setMaxBits(bits) {

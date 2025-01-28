@@ -272,6 +272,7 @@ export default {
 
         chunker.add(SRS_BOOKMARKS.radix_sort,
             (vis, array) => {
+                vis.mask.setAddBase4(true); // add Base 4 display
                 setArray(vis.array, array);
 
                 if (isCountExpanded()) {

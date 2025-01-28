@@ -2,9 +2,11 @@ import React, { useCallback } from 'react';
 import styles from './BinaryRenderer.module.scss';
 import PropTypes from 'prop-types';
 
-const BinaryRenderer = ({ header, data, maxBits, highlight }) => {
+// renders integers as binary (by default), or other base, with optional
+// highlighting of some digits
+const BinaryRenderer = ({ header, data, maxBits, highlight, base = 2 }) => {
   const binary = useCallback(() => {
-    let binaryString = data.toString(2);
+    let binaryString = data.toString(base);
     if (binaryString.length < maxBits) {
       binaryString = binaryString.padStart(maxBits, '0');
     }
@@ -38,6 +40,7 @@ BinaryRenderer.propTypes = ({
   data: PropTypes.number.isRequired,
   maxBits: PropTypes.number,
   highlight: PropTypes.array,
+  base: PropTypes.number,
 });
 
 export default BinaryRenderer;
