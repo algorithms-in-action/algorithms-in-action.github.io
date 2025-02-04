@@ -208,7 +208,6 @@ export default {
         vis.array.setStack(
           deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
         );
-console.log(cur_real_stack, cur_finished_stack_frames);
 
         // XXX This is getting very messy - (un)highlighting depends a
         // lot on where we are and we have a bunch of tricky testing of
