@@ -205,7 +205,7 @@ class Array1DRenderer extends Array2DRenderer {
               )}
             </div>
             <div>
-              {// Quicksort stuff
+              {// Quicksort + MSD radix sort stuff
                 stack && stack.length > 0 ? (
                   this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
                   stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
@@ -258,6 +258,9 @@ function stackFrameColour(color_index) {
     'var(--i-section)',    // 4
     'var(--j-section)',    // 5
     'var(--p-section)',    // 6
+    'var(--in-progress-sectionR)', // 7
+    'var(--current-sectionR)',     // 8
+    'var(--finished-sectionR)',    // 9
   ][color_index]
 }
 

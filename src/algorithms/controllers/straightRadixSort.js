@@ -319,7 +319,7 @@ export function initVisualisers() {
     if (isCountExpanded()) {
         return {
             mask: {
-                instance: new MaskTracer('mask', null, 'Mask'),
+                instance: new MaskTracer('mask', null, 'Key + Mask'),
                 order: 0,
             },
             array: {
@@ -338,7 +338,7 @@ export function initVisualisers() {
     } else {
         return {
             mask: {
-                instance: new MaskTracer('mask', null, 'Mask'),
+                instance: new MaskTracer('mask', null, 'Key + Mask'),
                 order: 0,
             },
             array: {

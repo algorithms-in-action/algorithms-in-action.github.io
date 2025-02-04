@@ -19,7 +19,7 @@ Rexsort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
     \\Expl}
     \\Note{ implementation should scan data
     \\Note}
-    RexsortRecursive(A, 1, n, mask) \\B 200
+    RexsortRecursive(A, 1, n, mask) \\B 201
     \\Expl{  We need left and right indices because the code is recursive
         and both may be different for recursive calls. For each call, all
         elements in the array segment must have the same pattern
@@ -27,9 +27,10 @@ Rexsort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
     \\Expl}
 \\In}
 //======================================================================
-RexsortRecursive(A, left, right, mask) // Sort array A[left]..A[right] using bits up to mask
+RexsortRecursive(A, left, right, mask) // Sort A[left]..A[right] \\B 200
 \\Expl{
-Only the mask bit and smaller bits are used for sorting; higher bits
+Sort A[left]..A[right];
+only the mask bit and less significant bits are used for sorting. Higher bits
 should be the same for all data in the array segment.
 \\Expl}
     if (left < right and mask > 0) \\B 300
@@ -57,19 +58,19 @@ should be the same for all data in the array segment.
 
 \\Code{
 MSDRadixSortLeft
-// *Recursively* sort first part: \\B 400
-RexsortRecursive(A, left, i-1, mask-1) \\B 401
+// *Recursively* sort smaller elements: \\B 400
+RexsortRecursive(A, left, i-1, mask/2) \\B 401
 \\Code}
 
 \\Code{
 MSDRadixSortRight
-// *Recursively* sort first part: \\B 500
-RexsortRecursive(A, i, right, mask-1) \\B 501
+// *Recursively* sort larger elements: \\B 500
+RexsortRecursive(A, i, right, mask/2) \\B 501
 \\Code}
 
 \\Code{
 Partition
-Set index i at left the of array segment and j at the right    \\Ref InitCounters
+i,j <- left,right \\B 301
 \\Expl{ i scans from left to right stopping at "large" elements
 (with "1" as the mask bit) and j scans from right to left
 stopping at "small" elements (with "0" as the mask bit).
@@ -83,15 +84,15 @@ while i < j \\B 303
 \\In{
     Repeatedly increment i until i >= j or A[i] has 1 as the mask bit \\B 304
     \\Expl{ Scan right looking for a "large" element that is out of
-        place. Bitwise "and" between A[i] and mask can be used to
+        place (mask bit is one). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
     \\Expl}
     Repeatedly decrement j until j <= i or A[j] has 0 as the mask bit \\B 305
     \\Expl{ Scan left looking for a "small" element that is out of
-        place. Bitwise "and" between A[i] and mask can be used to
+        place (mask bit is zero). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
     \\Expl}
-    if j > i \\B 309
+    if i < j \\B 309
     \\Expl{ If the indices cross, we exit the loop.
     \\Expl}
     \\In{
@@ -101,16 +102,6 @@ while i < j \\B 303
         \\Expl}
     \\In}
 \\In}
-\\Code}
-
-\\Code{
-InitCounters
-i <- left \\B 301
-\\Expl{ The i pointer scans left to right, so it is set to left
-\\Expl}
-j <- right \\B 302
-\\Expl{ The j pointer scans right to left, so it is set to right
-\\Expl}
 \\Code}
 
 `);
