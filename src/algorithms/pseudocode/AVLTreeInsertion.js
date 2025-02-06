@@ -222,7 +222,7 @@ case Left-Left:// Left-Left insertion, unbalanced \\B perform right rotation to 
   for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-    return rightRotate(t) \\B return rightRotate(t)
+    return rightRotate(t) // raise Left-Left subtree to balance \\B return rightRotate(t)
 \\In}
 case Right-Right:// Right-Right insertion, unbalanced \\B perform left rotation to re-balance t
 \\Expl{
@@ -233,7 +233,7 @@ case Right-Right:// Right-Right insertion, unbalanced \\B perform left rotation 
   for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  return leftRotate(t) \\B return leftRotate(t)
+  return leftRotate(t) // raise Right-Right subtree to balance \\B return leftRotate(t)
 \\In}
 case Left-Right:// Left-Right insertion, unbalanced \\B perform left rotation on the left subtree
 \\Expl{
@@ -248,9 +248,10 @@ case Left-Right:// Left-Right insertion, unbalanced \\B perform left rotation on
 \\In{
   perform leftRotate(left(t)); // raise Left-Right subtree \\B left(t) <- leftRotate(left(t));
   \\Expl{
-    The result returned is the new left(t).
+    The result returned is the new left(t). This lowers the Left-Left
+    subtree.
   \\Expl}
-  return rightRotate(t) \\B return rightRotate(t) after leftRotate
+  return rightRotate(t) // raise Left-Left subtree to balance \\B return rightRotate(t) after leftRotate
 \\In}
 case Right-Left:// Right-Left insertion, unbalanced \\B perform right rotation on the right subtree
 \\Expl{
@@ -265,12 +266,13 @@ case Right-Left:// Right-Left insertion, unbalanced \\B perform right rotation o
 \\In{
   perform rightRotate(right(t)); // raise Right-Left subtree \\B right(t) <- rightRotate(right(t));
   \\Expl{
-    The result returned is the new right(t).
+    The result returned is the new right(t). This lowers the Right-Right
+    subtree.
   \\Expl}
-  return leftRotate(t) \\B return leftRotate(t) after rightRotate
+  return leftRotate(t) // raise Right-Right subtree to balance \\B return leftRotate(t) after rightRotate
 \\In}
 // ==== rotation functions ====
-leftRotate(t2) \\B leftRotate(t2)
+leftRotate(t2) // raises Right-Right + lowers Left-Left subtrees \\B leftRotate(t2)
 \\Expl{
 The edge between t2 and its right child is "rotated" to the left
 (counter-clockwise), and the right child becomes the new root.
