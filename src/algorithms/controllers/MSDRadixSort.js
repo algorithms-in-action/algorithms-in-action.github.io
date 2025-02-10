@@ -3,6 +3,7 @@ import MaskTracer from '../../components/DataStructures/Mask/MaskTracer'
 import {
   areExpanded,
 } from './collapseChunkPlugin';
+import { createPopper } from '@popperjs/core';
 
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
@@ -239,10 +240,11 @@ export default {
         } else {
           if (prev_j !== undefined && prev_j !== cur_i)
             unhighlight(vis, prev_j);
-          if (cur_j !== undefined) // might have fallen off array
+          if (cur_j !== undefined) { // might have fallen off array
             highlight(vis, cur_j);
-          if (arr && cur_j)
+            // XXX probably best avoid updateBinary at swap
             updateBinary(vis, arr[cur_j])
+          }
         }
         if (left < A.length)
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
@@ -348,12 +350,19 @@ depth, arr, mask)
           [arr[n1], arr[n2]] = [arr[n2], arr[n1]]
 
           chunker.add(bookmark,
-            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth) => {
+            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, A) => {
 
               vis.array.swapElements(_n1, _n2);
-              refreshStack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, false, undefined, arr, mask)
+              refreshStack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, false, undefined, A, mask)
+              // XXX redo poppers: swapping the elements keeps the
+              // contents of the poppers correct but the position needs
+              // to change (the documentation suggests update()
+              // should work and it does partially but it also screws up
+              // sometimes)
+              // vis.array.poppers[_n1].update();
+              // vis.array.poppers[_n2].update();
             },
-            [n1, n2, real_stack, finished_stack_frames, i, j, depth],
+            [n1, n2, real_stack, finished_stack_frames, i, j, depth, arr],
           depth);
         }
 
@@ -463,6 +472,28 @@ depth, arr, mask)
             vis.mask.setMaxBits(mask + 1)
             updateMask(vis, mask)
             updateBinary(vis, A[maxIndex])
+            let floatingBoxes = new Array(n); // List of all popper instances
+            for (let idx = 0; idx < A.length; idx++) {
+                const popper = document.getElementById('float_box_' + idx);
+                const slot = document.getElementById('chain_' + idx);
+                // vis.array.setPopper(idx, createPopper(slot, popper, {
+                floatingBoxes[idx] = createPopper(slot, popper, {
+                    placement: "right-start",
+                    strategy: "fixed",
+                    modifiers: [
+                        {
+                            name: 'preventOverflow',
+                            options: {
+                              // popper_boundary not defined for 1D
+                              // array - maybe it should be??
+                              // boundary: document.getElementById('popper_boundary'),
+                            },
+                        },
+                    ]
+                });
+                popper.innerHTML = A[idx].toString(2).padStart(mask + 1, "0");
+              }
+            vis.array.setPoppers(floatingBoxes);
           },
           [maxIndex, mask, A],
           0

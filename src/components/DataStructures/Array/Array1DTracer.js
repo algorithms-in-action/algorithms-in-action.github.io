@@ -20,6 +20,7 @@ class Array1DTracer extends Array2DTracer {
   init() {
     super.init();
     this.chartTracer = null;
+    this.poppers = [];
   }
 
   set(array1d = [], algo) {
@@ -140,6 +141,23 @@ class Array1DTracer extends Array2DTracer {
   setStackDepth(depth) {
     this.stackDepth = depth;
   }
+
+  // XXX move to super
+  // XXX should kill existing poppers
+  setPoppers(poppers) {
+    this.poppers = poppers;
+  }
+
+  setPopper(i, popper) {
+    this.poppers[i] = popper;
+  }
+
+// NQR and not currently used
+/*
+  setPopperHTML(i, HTML) {
+    this.poppers[i].innerHTML = HTML;
+  }
+*/
 
   // default is to compute largestColumnValue but we can set it
   // explicitly so we can make two arrays look the same when moving

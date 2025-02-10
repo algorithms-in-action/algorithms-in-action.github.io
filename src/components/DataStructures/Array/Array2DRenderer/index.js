@@ -28,8 +28,10 @@ import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 import PropTypes from 'prop-types';
 
-const ALGOS_USING_FLOAT_BOX = ["HashingCH"]; // Add your algo to this if you want to use the float box
-const ALGOS_WITH_FIRST_COL_AS_HEADERS = ["HashingCH", "HashingLP", "HashingDH"]; // Add your algo to this if your algo has the first column as the headers
+// Add your algo to this if you want to use the float box/popper
+const ALGOS_USING_FLOAT_BOX = ["HashingCH"];
+// Add your algo to this if your algo has the first column as the headers
+const ALGOS_WITH_FIRST_COL_AS_HEADERS = ["HashingCH", "HashingLP", "HashingDH"];
 
 let modename;
 export function switchmode(modetype = mode()) {

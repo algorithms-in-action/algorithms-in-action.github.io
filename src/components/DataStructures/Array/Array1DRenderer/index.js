@@ -26,6 +26,8 @@ import Array2DRenderer from '../Array2DRenderer/index';
 import styles from './Array1DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
+// Add your algo to this if you want to use the float box/popper
+const ALGOS_USING_FLOAT_BOX = ["MSDRadixSort"];
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -110,35 +112,71 @@ class Array1DRenderer extends Array2DRenderer {
                   justifyContent: 'center',
                 }}
               >
-                {row.map((col) => (
-                  <motion.div
-                    layout
-                    transition={{ duration: 0.6 }}
-                    style={{
-                      height: `${this.toString(scaleY(col.value))}vh`,
-                      display: 'flex',
-                    }}
-                    /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
-                    className={classes(
-                      styles.col,
-                      col.faded && styles.faded,
-                      col.selected && styles.selected,
-                      col.patched && styles.patched,
-                      col.sorted && styles.sorted,
-                      col.style && col.style.backgroundStyle,
-                    )}
+                {row.map((col, j) => (
+                  <td className={classes(styles.col, styles.index)}
                     key={col.key}
-                  >
-                    <motion.span
-                      layout="position"
-                      className={classes(
-                        styles.value,
-                        col.style && col.style.textStyle,
-                      )}
-                    >
-                      {this.toString(col.value)}
-                    </motion.span>
-                  </motion.div>
+                    onMouseEnter={(e) => {
+                      let element = e.target.children[1];
+                      if (element && element.innerHTML !== "") {
+                        element.style.display = 'block'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      let element = e.target.children[1];
+                      if (element && element.innerHTML !== "") {
+                        element.style.display = 'none'
+                      }
+                    }}
+                   >
+                     <div
+                        id={'chain_' + parseInt(j)}
+                      >
+                        <motion.div
+                          layout
+                          transition={{ duration: 0.6 }}
+                          style={{
+                            height: `${this.toString(scaleY(col.value))}vh`,
+                            display: 'flex',
+                          }}
+                          /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
+                          className={classes(
+                            styles.col,
+                            col.faded && styles.faded,
+                            col.selected && styles.selected,
+                            col.patched && styles.patched,
+                            col.sorted && styles.sorted,
+                            col.style && col.style.backgroundStyle,
+                          )}
+                        >
+                          <motion.span
+                            layout="position"
+                            className={classes(
+                              styles.value,
+                              col.style && col.style.textStyle,
+                            )}
+                          >
+                            {this.toString(col.value)}
+                          </motion.span>
+                        { (ALGOS_USING_FLOAT_BOX.includes(algo) && (
+                            <div
+                              id={"float_box_" + parseInt(j)}
+                              role="tooltip"
+                              style={{
+                                background: '#333',
+                                color: "#FFFFFF",
+                                fontWeight: "bold",
+                                padding: "4px 8px",
+                                fontSize: "13px",
+                                borderRadius: "4px",
+                                display: "none",
+                              }}
+                            >
+                            </div>
+                          ))
+                        }
+                      </motion.div>
+                    </div>
+                  </td>
                 ))}
               </div>
             ))}
@@ -215,7 +253,7 @@ class Array1DRenderer extends Array2DRenderer {
             </div>
           </motion.div>
         </tbody>
-        { // XXX I've given up trying to avoid this warning:(
+        { // XXX I've given up trying to avoid this warning...
           // "Whitespace text nodes cannot appear as a child of <table>. Make
           // sure you don't have any extra whitespace between tags on each
           // line of your source code."  Similariy div inside tbody.
