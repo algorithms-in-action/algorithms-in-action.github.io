@@ -27,6 +27,7 @@ import styles from './Array1DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 // Add your algo to this if you want to use the float box/popper
+// XXX add straight radix sort some time?
 const ALGOS_USING_FLOAT_BOX = ["MSDRadixSort"];
 
 let modename;

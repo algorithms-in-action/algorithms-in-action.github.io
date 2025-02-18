@@ -155,6 +155,7 @@ export default {
                             },
                         ]
                     });
+                    // vis.array.setPopper(idx, floatingBoxes[idx]);
                 }
                 popper.innerHTML = table[idx];
               } 
@@ -218,7 +219,7 @@ export default {
                     const slot = document.getElementById('chain_' + inserts[key]);
                     floatingBoxes[inserts[key]] = createPopper(slot, popper, {
                         placement: "right-start",
-                        strategy: "fixed",
+                        strategy: "absolute",
                         modifiers: [
                             {
                                 name: 'preventOverflow',
@@ -255,6 +256,7 @@ export default {
     let prevIdx;
 
     let floatingBoxes = new Array(SIZE); // List of all popper instances
+    floatingBoxes.fill(null);
 
     // Init hash table with dynamic array in each slot
     let table = new Array(SIZE);
@@ -291,6 +293,16 @@ export default {
 
           // vis.array.hideArrayAtIndex([VALUE, POINTER]); // Hide value and pointer row intially
           vis.array.hideArrayAtIndex([POINTER]); // Hide pointer row intially
+          // destroy existing poppers, replace with null
+          floatingBoxes.forEach((p) => {
+            if (p !== null) {
+              console.log('destroy', p.state);
+              p.state.elements.popper.innerHTML = ""; // reset HTML
+              p.destroy();                            // remove popper
+              return null;                            // array el. = null
+            }
+          });
+          // vis.array.setPoppers(floatingBoxes); // init with no poppers
 
           vis.graph.weighted(true);
 
@@ -310,9 +322,10 @@ export default {
               break;
           }
         },
-        [table.length, table.length <= PRIMES[POINTER_CUT_OFF] ?
-          [indexArr, valueArr, nullArr] :
-          [indexArr, valueArr]
+        [table.length,
+          table.length <= PRIMES[POINTER_CUT_OFF] ?
+            [indexArr, valueArr, nullArr] :
+            [indexArr, valueArr]
         ]
       );
 

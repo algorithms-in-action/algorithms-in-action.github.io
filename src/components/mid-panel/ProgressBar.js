@@ -17,7 +17,7 @@ class ProgressBar extends React.Component {
     this.current;
     this.viewable;
     this.next;
-    this.prev;
+    this.backTo;
 
     this.inner;
   }
@@ -33,7 +33,7 @@ class ProgressBar extends React.Component {
     let chunkNum;
 
     // how far around mouse on X to look for viewable chunk
-    let searchRadius = 10;
+    let searchRadius = 60;
     let rect = this.inner.getBoundingClientRect();
     let width = rect.right - rect.left;
 
@@ -79,7 +79,7 @@ class ProgressBar extends React.Component {
         this.next({stopAt: chunkNum, playing: false});
       }
       if (chunkNum < this.current && chunkNum !== this.max - 1) {
-        this.prev({stopAt: chunkNum, playing: false});
+        this.backTo({stopAt: chunkNum, playing: false});
       }
     }
   }
@@ -109,8 +109,8 @@ class ProgressBar extends React.Component {
       state.chunker.viewable :
       null;
 
-    this.prev = (playing) => {
-      dispatch(GlobalActions.PREV_LINE, playing);
+    this.backTo = (playing) => {
+      dispatch(GlobalActions.BACK_TO_LINE, playing);
     };
 
     this.next = (playing) => {

@@ -53,6 +53,10 @@ class Array2DTracer extends Tracer {
     return Array2DRenderer;
   }
 
+  init() {
+    super.init();
+  }
+
   /**
    * @param {array} array2d
    * @param {string} algo used to mark if it is a specific algorithm
