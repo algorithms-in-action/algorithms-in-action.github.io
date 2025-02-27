@@ -1,139 +1,113 @@
 # AVL Trees
 
-An AVL tree is **self-balancing** binary search tree.
+An AVL tree is **self-balancing** **binary search tree**.
 
-Because the AVL tree is always balanced, search will be *O(log n)*,
-no matter what the order of the input data. 
+Unlike the basic binary search tree, which can exhibit *O(n)* worst case behavior for certain inputs, the AVL tree is always balanced, so search will be *O(log n)*
+regardless of the order of the input data. 
 
-### Binary Search Trees
+### The Binary Search Tree Invariant
 
-A **binary tree** is either is either empty (`Empty`) or else it
-        it has a root node and two subtrees (which are binary trees).
-        The root node `t` has a key `t.key`. Ordinarily it would also
-        hold other data (`t.data`), which the user would like to find by
-        searching for the key.  Since this attribute has no impact on 
-        how insertion and search take place, we disregard it here. 
-        Note that a newly inserted node will always appear as a leaf
-        in the tree. 
+A **binary tree (BST)** is either is either empty (`Empty`) or else it
+it has a root node and two subtrees (which are binary trees, and can also be empty).
+The root node `t` has a key `t.key`. Ordinarily every node would also
+hold other data (`t.data`), which the user would like to find by
+searching for the key, `e.g.` search for Student ID Number (key) to find street address (data).  
+
+Since the `data` attribute has no impact on 
+how insertion and search take place, we disregard it in this animation.
+	
+
+Note that a newly inserted node will always appear as a leaf
+in the tree. 
 		
-In a **binary search tree (BST)** the BST invariant is always maintained:\
+In a binary search tree the **BST invariant** is always maintained:\
 for each 
-        subtree t, with root key t.key, the left subtree, t.left, 
-        contains no node with key greater than k, and the right subtree,
-        t.right, contains no node with key smaller than k.
+subtree `t`, with root key `t.key`, the left subtree, `t.left`, 
+contains no node with key greater than `t.key`, and the right subtree,
+`t.right`, contains no node with key smaller than `t.key`.
 
-### AVL tree balancing
+### AVL tree balancing 
+
+An AVL tree is **balanced** when the difference in heights of the left and right subtrees is no greater than `1`. 
+
+
 
 The AVL tree preserves the balance of the tree by (1) checking after every insertion to detect
 when the tree has become unbalanced
-and (2) performing one or more rotation operations to restore balance when necessary.
-Unbalanced is defined as a difference of more than `1` between the heights of the left and right subtrees.
+and (2) performing one or more **rotation operations** to restore balance when necessary.
+The imbalance may be located at
+any node along the search path from the root of the tree to the newly inserted node, possibly the grandparent of the newly inserted node, or 
+possibly 
+considerably closer to the root of the tree.
 
-(Here **MAYBE insert small pictures, thumbnails?** to show -- unbalanced at gp of new node, 
-and also balanced at gp but unblanaced at ggp.)
 
-A temporarily unbalanced AVL tree takes on one of two configurations, *zig-zag* or *zig-zig*. The 
+
+### Imbalance configurations 
+
+When a new node is inserted in an AVL tree, the tree may become *temporarily* unbalanced. 
+A temporarily unbalanced AVL tree takes on one of two **configurations**, *zig-zag* or *zig-zig*. The 
 sequence of rotations depends on the configuration around the node where the imbalance is detected. 
 
-### Zig-zig case
 
-The *zig-zig* configuration has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
-either (1) both left subtrees or (2) both right subtrees. 
+The **zig-zig** configuration has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
+either (1) both left subtrees or (2) both right subtrees. The **zig-zag** configuration also has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
+either (1) a left subtree and a right subtree or (2) a right subtrees and a left subtree.
 
 
-## The left-left case
-
-If the new key was added to the left child of a left child (the
-*left-left* case), the balance can be
-restored with a single _**Right Rotation**_ operation.
-
-Note that the imbalance may be located further up the tree than the immediate grandparent of the newly inserted node:
-
-**Insert very small diagrams showing (a) imbalance of the grandparent-parent and (b) imbalance of the great grandparent** 
-*Note that all diagrams should hae nodes in BST order, and where the subtrees are not necessarily single nodes, represent them as subtree-triangles* 
-*Have arrow showing which node is not in blanace*
-
-In the diagrams below, t6 is the node where the imbalance is noted.    
-
-As shown in the diagram below, t6 is the node at which the imbalance has been noted, and t2 is its left child. The clockwise rotation to restore balance makes t2 the parent of t6, while t6 is the *right* child of t2.  Additionally, since t2 already had t4 as its right child, t4 is moved to become the left child of t6.  Note that the BST invariant is preserved: t4, is bigger than t2, and is also smaller than t6.  The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is now 
-
-**I think there is something wrong with this diagram and the explanation**
-**unless t4 is empty, then the tree was already unbalance before 1 was added??**
 
  
 
-, as explained in the diagram The 6 and 4 nodes and the edge between them rotate clockwise, and
-the 5 node changes parents from 4 to 6. This reduces the distance from
-the root to the 1 (where the new node was added), restoring the balance
-(the distance to the node rooted at 7 is increased but this does not
-cause the AVL tree balance condition to be violated).  Right rotation is
-done by calling rightRotate(t6), where t6 is the tree rooted at 6.
+Balance will be restored, using one or two **rotation**
+operations (see below).
 
-![Alt text if image doesn't open: AVL-left-left](images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
-  
-
-![Alt text if image doesn't open: AVL-left-left](Linda Stern/GitHub/algorithms-in-action.github.io/src/algorithms/explanationsimag/images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
-  
-Test comment
-
-[This shouldn't be seen if the comment signal is correct]: #)
-
-**Check whether the numbering here is still the same in the animation**
-**Note I have added a link to the parent of t6 -- check, since the pointer to the left child of this anonymous node needs to be changed, have we given it a number?** 
-
-**Lee - is t4 empty in this case?  If not, then the tree would already have been unbalanced  previously, when t4 was added??**
-
-```
-     	/                            /
-      t6                          t2
-     / \     Right Rotation      / \
-    t2   7    - - - - - - - >    1  t6
-   / \       < - - - - - - -       / \
-  1   t4       Left Rotation      t4   7
-```
-
-**9 Jan 4PM I haven't gone beyond this**
+### Insertion and rotation
 
 
-## The right-right case
 
-The right-right case is the exact opposite. If the tree on the right in
-the diagram above is too unbalanced due to insertion into the subtree
-rooted at 7, we can call rightRotate(t2) to lift that subtree and lower
-the 1 subtree.
 
-## The left-right case (double rotation)
 
-If the new key was added to the right child of the left child (the
-left-right case) and the resulting tree is too unbalanced, the balance can be
-restored with a left rotation at node 2 followed by a right rotation at
-node 6.
-```
-      6      Rotate           6       Rotate           4
-     / \    left at 2        / \     right at 6      /   \
-    2   7   - - - - - >     4   7    - - - - - >    2     6
-   / \                     / \                     / \   / \
-  1   4                   2   5                   1   3 5   7
-     / \                 / \
-    3   5               1   3
-```
-Nodes in the subtree rooted at 4 (where the extra element was added,
-making the tree unbalanced) are moved closer to the root.
-Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
-the root of 3, 5 and 7 are changed by one, affecting the overall balance.
+**Insertion of a new item** into any binary tree requires (1) first the search to find the correct place to insert, then (2) the actual insertion. 
 
-## The right-left case (double rotation):
+In the **recursive implementation** shown in *AIA*, the first stage, determining  
+the insertion point takes place
+during the *"wind up"* stage of the algorithm, where successive recursive *calls to `insert`* are made and accumulate on the machine stack.  Search does not
+affect the balance of the tree.  During the second stage, however, an imbalance may be introduced into the tree when the new node is actually inserted. The imbalance may be close to the new node, or may be 
+considerably farther up the tree toward the root, along the search path.  Therefore, during each successive *return* from the call to `insert`
+ in the "unwind" stage of the algorithm, the height of the node is updated and the tree is checked for balance.  
 
-If the new key was added to the left child of the right child (the
-right-left case) and the resulting tree is too unbalanced, it is a mirror
-image of the left-right case:
+When an imbalance is detected, `i.e.` whenever the heights of the subtrees rooted at this node vary by more than `1`, 
+a rotation 
+or rotations are performed in order to bring the tree back into balance.  **Rotation** is a **local operation**, involving only 6 pointer reassignments,
+yet it affects the balance of the tree overall.  
 
-```
-      2      Rotate           2       Rotate           4
-     / \    right at 6       / \     left at 2       /   \
-    1   6   - - - - - >     1   4    - - - - - >    2     6
-       / \                     / \                 / \   / \
-      4   7                   3   6               1   3 5   7
-     / \                         / \
-    3   5                       5   7
-```
+Details of the **rotation**, **single** and **double** rotation are found in the AIA tab `More` for this algorithm.  
+
+ 
+
+
+
+_**Suggested exercises in AIA**_
+
+To **zig-zig and zig-zag configurations** and **rotation corrections** in AIA: 
+
+-For a left-left zig-zig configuration, enter 50, 40, then with the code expanded enter 30, step by step, to see the temporary left-left zig-zig imbalance, followed by a single rotation.\
+-For right-right zig-zig and single rotation, enter 30, 40, then slowly 50.\
+-For left-right zig-zag and double rotation, enter 50, 30, then slowly 40.\
+-For right-left zig-zag and double rotation enter 30, 50, then slowly 40.
+
+In the above exercises the imbalance takes place near the newly inserted node. To see how an imbalance can quite remote, and how this is handled:
+
+
+For imbalance further up the tree from the newly inserted node:  
+-Input 60,40,80,20,50,70,90,15,25,45,55,10.  Insert 60..55 quickly (use the speed bar and collapse the pseudocode), then expand the pseudocode and proceed step by step as 10 is inserted.
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
