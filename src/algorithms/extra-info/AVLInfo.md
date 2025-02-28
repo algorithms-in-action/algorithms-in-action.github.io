@@ -21,23 +21,44 @@ a:hover{
 Geeks for Geeks Link:
 <a href="https://www.w3schools.com/dsa/dsa_data_avltrees.php" target="_blank">AVL Tree</a>
 
+---------------------------------------------------------------
+
+
 Insert detailed information about rotations here.
 
-Rework the following original:
-
 # Rotation in AVL trees
+
+When examining any particular subtree of an AVL tree in AIA, the node we use the following **node numbering scheme** which preserves the binary search invariant, that is, node t1 (with value 1) is always to the left of node t2 (value 2), node t2 is always to the left of node t3 (value 3), node t4 is (value 4) always to the right of node t3.  Importantly, note also that some of these nodes **may be empty**, and are shown for completeness.
+
+**Lee -- We should talk about whether this numbering makes things more difficult for a student to understand, or easier.**  
+
+A full and completely balanced tree, rooted at node would thus be:
+//Comment: need to have empty spaces at the left of this diagram for it to render correctly.
+
+
+        
+            t4  
+           /  \   
+         t2   t6   
+        / \   / \                  
+      t1  t3 t5  t7              
+
+The above tree would still be balanced, according to the AVL criterion for balance, if certain nodes or combinations of nodes are empty, for example, t1 or t3 or t5 , or various combinations, such as t1 & t3, or t3 & t5, and so on. The combination t1&t2&t3 would not be allowed, however, as then the tree rooted at t4 would have a left subtree of height 0, and a right subtree with height 2.
+
+
+Trees with t1 or t3 or t5 empty, or various combinations, such as t1 & t3, or t3 & t5, and so on, empty would still be balanced, according to the AVL criterion of having a difference in height between two subtrees of no more than 1. 
+
 
 
 In the diagrams below, t6 is the node where the imbalance is noted.    
 
-As shown in the diagram below, t6 is the node at which the imbalance has been noted, and t2 is its left child. The clockwise rotation to restore balance makes t2 the parent of t6, while t6 is the *right* child of t2.  Additionally, since t2 already had t4 as its right child, t4 is moved to become the left child of t6.  Note that the BST invariant is preserved: t4, is bigger than t2, and is also smaller than t6.  The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is now 
+As shown in the diagram below, t6 is the node at which the imbalance has been noted, and t2 is its left child. The clockwise rotation to restore balance makes t2 the parent of t6, while t6 is the *right* child of t2.  Additionally, since t2 already had t4 as its right child, t4 is moved to become the left child of t6.  Note that theBST invariant is preserved: t4, is bigger than t2, and is also smaller than t6.  The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is no
 
 
 
 
 
-
-, as explained in the diagram The 6 and 4 nodes and the edge between them rotate clockwise, and
+, as explained in the diagram The 6 and 4 nodes and the edge between them rotate cloc kwise, and
 the 5 node changes parents from 4 to 6. This reduces the distance from
 the root to the 1 (where the new node was added), restoring the balance
 (the distance to the node rooted at 7 is increased but this does not
