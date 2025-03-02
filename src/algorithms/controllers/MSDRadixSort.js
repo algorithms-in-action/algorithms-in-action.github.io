@@ -1,9 +1,22 @@
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import MaskTracer from '../../components/DataStructures/Mask/MaskTracer'
+import reRenderMask from '../../components/DataStructures/Mask/MaskRenderer/maskReRender.js'
 import {
   areExpanded,
 } from './collapseChunkPlugin';
 import { createPopper } from '@popperjs/core';
+
+// XXXXXXXXXXXXXXXXXX idea for clickable stuff: wrap HTML for binary in
+// something like float_box_NN get at it using query then assign to
+// innerHTML
+
+// Attempt at getting a hook into the global dispatcher so we can click
+// on a value in the array and get the binary updated in the Mask
+// display. Gave up:(
+// import { GlobalContext } from '../../context/GlobalState';
+// import { GlobalActions } from '../../context/actions';
+// import React, { useContext } from 'react';
+// const { dispatch } = useContext(GlobalContext); // put this somewhere??
 
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
@@ -109,7 +122,10 @@ const updateMask = (vis, value) => {
 }
 
 const updateBinary = (vis, value) => {
-  vis.mask.setBinary(value)
+console.log('updateBinary', vis, value);
+  vis.mask.setBinary(value);
+  // dispatch(GlobalActions.NOOP);
+  // vis.mask.render();
 }
 
 // Helper function to determine the number of bits needed
@@ -147,6 +163,8 @@ export default {
     run(chunker, { nodes }) {
       let A = [...nodes]
       let n = A.length
+
+
 
       // ----------------------------------------------------------------------------------------------------------------------------
       // Define 'global' variables
@@ -318,7 +336,49 @@ export default {
       let j;  // the recursive calls; XX best rename - "i" too generic
       let prev_i;  // for unhighlighting
       let prev_j;  // for unhighlighting
+      let popperInner = new Array(n); // XXX popper instances (rename)
       let floatingBoxes = new Array(n); // XXX popper instances (rename)
+      let clickableBoxes = new Array(n); // XXX popper instances (rename)
+
+class ClickForBinary extends EventTarget {
+  constructor(initialValue = 0) {
+    super();
+    this.value = initialValue;
+  }
+
+  showBinary() {
+    this.dispatchEvent(new CustomEvent("showBinary", { detail: this.value }));
+  }
+}
+
+/*
+const initialValue = 0;
+const counter = new ClickForBinary(initialValue);
+document.querySelector("#currentValue").innerText = initialValue;
+
+counter.addEventListener("showBinary", (event) => {
+  document.querySelector("#currentValue").innerText = event.detail;
+});
+
+document.querySelector("#inc").addEventListener("click", () => {
+  counter.showBinary();
+});
+*/
+
+
+
+// XXX
+      // given n, if floatingBoxes[n] is not null, call forceUpdate() on
+      // it after a while, otherwise wait for a bit and try again
+      const updateWhenDefined = (n) => {
+       if (floatingBoxes[n] === null) {
+console.log(n, 'waiting...');
+          setTimeout(() => updateWhenDefined(n), 200);
+        } else {
+console.log(n, 'updating...');
+          setTimeout(() => floatingBoxes[n].forceUpdate(), 700);
+        }
+      }
 
       const partition = (arr, left, right, mask, depth) => {
         i = left
@@ -353,8 +413,10 @@ cur_i, cur_j, cur_depth, A) => {
               // The solution we use here is to schedule a forceUpdate()
               // after a bit of a delay - seems to work ok on some
               // devices at least...
-              setTimeout( () => floatingBoxes[_n1].forceUpdate(), 900);
-              setTimeout( () => floatingBoxes[_n2].forceUpdate(), 900);
+              // updateWhenDefined(_n1);
+              // updateWhenDefined(_n2);
+              // setTimeout( () => floatingBoxes[_n1].forceUpdate(), 900);
+              // setTimeout( () => floatingBoxes[_n2].forceUpdate(), 900);
             },
             [n1, n2, real_stack, finished_stack_frames, i, j, depth,
 arr],
@@ -443,6 +505,8 @@ arr],
       // make things more complicated, its all asynchronous, so we put
       // delays in to (hopefully) stop it screwing up.
       floatingBoxes.fill(null);
+      popperInner.fill(null);
+      clickableBoxes.fill(null);
 
       // Initialise the array on start
       chunker.add(MSD_BOOKMARKS.start,
@@ -451,15 +515,19 @@ arr],
             vis.array.setSize(5);  // more space for array
             vis.array.setZoom(0.90);
             // destroy existing poppers, replace with null
-            floatingBoxes.forEach((p) => {
+            for (let idx = 0; idx < A.length; idx++) {
+              popperInner[idx] = document.getElementById('float_box_' + idx);
+console.log(idx, popperInner[idx]);
+              // popperInner[idx].innerHTML = "";
+              let p = floatingBoxes[idx];
               if (p !== null) {
 console.log('popper gone');
                 p.state.elements.popper.innerHTML = ""; // reset HTML
-                p.forceUpdate();
+                // p.forceUpdate();
                 p.destroy();                            // remove popper
-                return null;                            // array el. = null
+                floatingBoxes[idx] = null;
               }
-            });       
+            }       
         },
         [nodes],
         0
@@ -476,18 +544,28 @@ console.log('popper gone');
             updateMask(vis, mask)
             updateBinary(vis, A[maxIndex])
             // set up poppers
-            // A bit of a nightmare due to asynchronous programming. If
+            // A major due to asynchronous programming. If
             // we have stepped backwards the poppers have been reset and
             // destroyed but if we immediately create new poppers some
             // of the old state persists. If we wait a while then create
             // them it seems to work on some devices at least...
+            // Problem seems to be that document.getElementById uses the
+            // old state rather than waiting for chunk 0 to re-init
+            // everything (and in the old state some of the float_box_NN
+            // elements have been swapped around).
 // XXX do popper.innerHTML =  immediately; use setTimeout for createPopper
 // XXX have array for the popper.innerHTML stuff?, 
-            setTimeout( () => {
+            // setTimeout( () => {
               for (let idx = 0; idx < A.length; idx++) {
-                const popper = document.getElementById('float_box_' + idx);
+/*
+                setTimeout( () => {
+                popperInner[idx] = document.getElementById('float_box_' + idx);
+console.log(1, idx, popperInner[idx]);
+                // popperInner[idx].onclick(() => updateBinary(vis, A[idx]))
+                popperInner[idx].innerHTML = A[idx].toString(2).padStart(mask + 1, "0");
+                // popperInner[idx].innerHTML = "";
                 const slot = document.getElementById('chain_' + idx);
-                floatingBoxes[idx] =  createPopper(slot, popper, {
+                floatingBoxes[idx] =  createPopper(slot, popperInner[idx], {
                     placement: "right-start",
                     strategy: "fixed",
                     modifiers: [
@@ -502,9 +580,27 @@ console.log('popper gone');
                         },
                     ]
                 });
-                popper.innerHTML = A[idx].toString(2).padStart(mask + 1, "0");
+                }, 1000);
+*/
+clickableBoxes[idx] = new ClickForBinary(A[idx]);
+console.log(1, idx, clickableBoxes[idx]);
+// document.querySelector("#currentValue").innerText = initialValue;
+
+clickableBoxes[idx].addEventListener("showBinary", (event) => {
+  console.log('clock!', event, A[idx]);
+});
+
+document.querySelector("#chain_"+idx).addEventListener("click", () => {
+// document.getElementById("float_box_0").addEventListener("click", () => {
+  console.log('click!', event, A[idx]);
+  updateBinary(vis, A[idx]);
+  let data = vis.mask.getMaskData();
+  console.log(data);
+  reRenderMask(data);
+  // clickableBoxes[0].showBinary();
+});
               }
-            }, 1000);
+
 /*
 console.log(floatingBoxes);
             setTimeout( () => {
@@ -531,6 +627,11 @@ console.log(floatingBoxes);
           }
           vis.array.clearVariables();
           vis.array.setStack(deriveStack(real_stack, finished_stack_frames));
+                setTimeout( () => {
+              for (let idx = 0; idx < A.length; idx++) {
+                popperInner[idx].innerHTML = "";
+              }
+                }, 2000);
         }, [],
         0
       );

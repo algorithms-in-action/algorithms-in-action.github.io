@@ -48,14 +48,14 @@ export function areExpanded(blocks) {
 // Not so efficient - runs through all the chunks from the start. XXX
 // However, it seems to work fine and is pretty general.
 // Added a shortcut for algorithms that never change display
-// depending on what blocks are collapsedi, which requires algorithms
+// depending on what blocks are collapsed, which requires algorithms
 // that use this code to be explicitly listed at the start of this file
-// (could invert the selection and list tose that don't need it, to be
+// (could invert the selection and list those that don't need it, to be
 // more robust).
 export function onCollapseChange(chunker) {
   const algorithm = getGlobalAlgorithm();
   const alg_name = algorithm.id.name;
-  console.log(alg_name);
+  // console.log(alg_name);
   if (!importsThis.includes(alg_name)) return;
   chunker.refresh();
 }

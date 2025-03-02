@@ -1,7 +1,7 @@
 import React from 'react';
 import Renderer from '../../common/Renderer';
 import styles from './MaskRenderer.module.scss';
-import BinaryRenderer from '../BinaryRenderer';
+import BinaryRenderer, {unboxedDigits} from '../BinaryRenderer';
 
 class MaskRenderer extends Renderer {
   constructor(props) {
@@ -20,9 +20,9 @@ class MaskRenderer extends Renderer {
     const { binaryData, maskData, maxBits, highlight, addBase4 } = this.props.data;
     let extra = <div/>;
     if (addBase4) {
-       console.log([highlight,highlight.map((b) => Math.trunc(parseInt(b)/2))]);
         extra =
             <BinaryRenderer
+              id={"MaskBase4"}
               header={"Base 4"}
               data={binaryData}
               maxBits={maxBits/2}
@@ -33,6 +33,7 @@ class MaskRenderer extends Renderer {
     return (
       <div className={styles.container}>
         <BinaryRenderer
+          id={"MaskDecimal"}
           header={"Decimal"}
           data={binaryData}
           highlight={[]}
@@ -40,12 +41,14 @@ class MaskRenderer extends Renderer {
         />
         {extra}
         <BinaryRenderer
+          id={"MaskBinary"}
           header={"Binary"}
           data={binaryData}
           maxBits={maxBits}
           highlight={highlight}
         />
         <BinaryRenderer
+          id={"MaskMask"}
           header={"Mask"}
           data={maskData}
           maxBits={maxBits}

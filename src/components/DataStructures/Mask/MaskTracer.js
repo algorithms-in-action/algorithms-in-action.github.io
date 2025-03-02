@@ -16,6 +16,13 @@ class MaskTracer extends Tracer {
     this.addBase4 = false;
   }
 
+  // XXX extract all data so we can use it for mouse click update
+  // (must be a better way to hook into things...?)
+  getMaskData() {
+    return {binaryData:this.binaryData, maskData:this.maskData,
+      maxBits:this.maxBits, highlight:this.highlight, addBase4:this.addBase4};
+  }
+
   setAddBase4(b) {
     this.addBase4 = b;
   }

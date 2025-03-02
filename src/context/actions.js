@@ -433,7 +433,6 @@ export const GlobalActions = {
       stopAt = playing.stopAt;
       playing = playing.playing;
     } // XXX else error
-console.log(stopAt, playing, state);
     const result = state.chunker.goBackTo(stopAt); // changes state
     return {
       ...state,
