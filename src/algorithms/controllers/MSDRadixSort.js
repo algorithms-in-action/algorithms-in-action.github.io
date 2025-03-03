@@ -318,7 +318,11 @@ export default {
       let j;  // the recursive calls; XX best rename - "i" too generic
       let prev_i;  // for unhighlighting
       let prev_j;  // for unhighlighting
+      // search for POPPERS: below for more detailed comments
       let floatingBoxes = new Array(n); // XXX popper instances (rename)
+      let DELAY_POPPER_CREATE = 600;
+      let DELAY_POPPER_RESET = 700;
+      let DELAY_POPPER_SWAP = 700;
 
       const partition = (arr, left, right, mask, depth) => {
         i = left
@@ -353,8 +357,8 @@ cur_i, cur_j, cur_depth, A) => {
               // The solution we use here is to schedule a forceUpdate()
               // after a bit of a delay - seems to work ok on some
               // devices at least...
-              setTimeout( () => floatingBoxes[_n1].forceUpdate(), 900);
-              setTimeout( () => floatingBoxes[_n2].forceUpdate(), 900);
+              setTimeout( () => floatingBoxes[_n1].forceUpdate(), DELAY_POPPER_SWAP);
+              setTimeout( () => floatingBoxes[_n2].forceUpdate(), DELAY_POPPER_SWAP);
             },
             [n1, n2, real_stack, finished_stack_frames, i, j, depth,
 arr],
@@ -433,90 +437,94 @@ arr],
         finished_stack_frames.push(real_stack.pop());
       }
 
-      // XXX probably should rename to something like poppers
-      // Handling is rather tricky. We have the global array of poppers
-      // which is initially all null. When the second chunk is executed,
-      // poppers are created and when later chunks are executed things
-      // can move around. When we step backwards, we go back and execute
-      // from the first chunk, so the first chunk cleans up and destroys
-      // all the existing poppers and later chunks re-create them. To
-      // make things more complicated, its all asynchronous, so we put
-      // delays in to (hopefully) stop it screwing up.
+      // XXX probably should rename floatingBoxes to something like poppers.
+      // POPPERS:
+      // Handling is rather tricky. We have the global array of poppers,
+      // which display the binary version of the data when the mouse is
+      // over the data.  They are derived from the HTML displayed (the
+      // array renderer puts wrappers around array elements). However,
+      // the display of HTML is asynchronous, making things a bit of a
+      // nightmare, to put it mildly. When the algorithm is initially
+      // loaded/run, the array is filled with nulls. When the first
+      // chunk is executed for the first time, a popper is created for
+      // each data item and put in the array. A carefully crafted delay
+      // (using setTimeout) is inserted before popper creation to allow
+      // the HTML array contents to be rendered first.  When array
+      // elements are swapped, the wrappers that the poppers rely on are
+      // swapped with them so the poppers automatically follow the data
+      // around... almost. They need to update their location (so the
+      // popper appears next to the current location of the data, not
+      // where the data used to be or some other random point); we use
+      // forceUpdate(), which also needs to be inside a setTimeout to
+      // allow rendering to take place first.  Just to add to the
+      // complexity, if the execution steps backwards, all the chunks
+      // are re-executed, starting from the first one.  The first chunk
+      // therefore checks if poppers have already been created and, if
+      // so, calls forceUpdate() (inside setTimeout of course) for each
+      // popper so it gets the right screen location.
+      // XXX It would probably be nicer to allow users to click on a
+      // data element and have that displayed with the mask etc.  This
+      // was implemented in the BROKEN-radix-click4binary branch but it
+      // somehow breaks react - no further stepping through the
+      // animation is possible after a click:(
       floatingBoxes.fill(null);
 
-      // Initialise the array on start
-      chunker.add(MSD_BOOKMARKS.start,
-        (vis, array) => {
-            vis.array.set(array, 'MSDRadixSort')
-            vis.array.setSize(5);  // more space for array
-            vis.array.setZoom(0.90);
-            // destroy existing poppers, replace with null
-            floatingBoxes.forEach((p) => {
-              if (p !== null) {
-console.log('popper gone');
-                p.state.elements.popper.innerHTML = ""; // reset HTML
-                p.forceUpdate();
-                p.destroy();                            // remove popper
-                return null;                            // array el. = null
-              }
-            });       
-        },
-        [nodes],
-        0
-      )
-
+      // We don't display maxIndex yet but use it for creating poppers
+      // with the desired number of bits.  We want to create the poppers
+      // in the first chunk so there is a bit of a delay before anything
+      // else happens. 
       maxIndex = A.indexOf(Math.max(...A))
       const mask = getMaximumBit(A);
 
-      // Highlight the index
+      // Initialise the array on start
+      chunker.add(MSD_BOOKMARKS.start,
+        (vis, array, mask) => {
+            vis.array.set(array, 'MSDRadixSort')
+            vis.array.setSize(5);  // more space for array
+            vis.array.setZoom(0.90);
+            // set up poppers
+            // A bit of a nightmare due to asynchronous programming. The
+            // first time this is called we create the poppers (after a
+            // delay); subsequently we just update them (after a delay).
+            // XXX could just use one setTimeout for all the poppers
+            for (let idx = 0; idx < array.length; idx++) {
+              if (floatingBoxes[idx] === null) {
+                setTimeout( () => {
+                  const popper = document.getElementById('float_box_' + idx);
+                  const slot = document.getElementById('chain_' + idx);
+                  floatingBoxes[idx] =  createPopper(slot, popper, {
+                      placement: "right-start",
+                      strategy: "fixed",
+                      modifiers: [
+                          {
+                              removeOnDestroy: true, // doesn't work well?
+                              name: 'preventOverflow',
+                              options: {
+                                // XXX popper_boundary not defined for 1D
+                                // array - maybe it should be??
+                                boundary: document.getElementById('popper_boundary'),
+                              },
+                          },
+                      ]
+                  });
+                  popper.innerHTML = array[idx].toString(2).padStart(mask + 1, "0");
+                }, DELAY_POPPER_CREATE);
+              } else {
+                setTimeout( () => floatingBoxes[idx].forceUpdate(), DELAY_POPPER_RESET);
+              }
+            }
+        },
+        [A, mask],
+        0
+      )
+
+      // Highlight the index of the max element + init mask
       chunker.add(MSD_BOOKMARKS.get_mask,
           (vis, maxIndex, mask, A) => {
             highlight(vis, maxIndex)
             vis.mask.setMaxBits(mask + 1)
             updateMask(vis, mask)
             updateBinary(vis, A[maxIndex])
-            // set up poppers
-            // A bit of a nightmare due to asynchronous programming. If
-            // we have stepped backwards the poppers have been reset and
-            // destroyed but if we immediately create new poppers some
-            // of the old state persists. If we wait a while then create
-            // them it seems to work on some devices at least...
-// XXX do popper.innerHTML =  immediately; use setTimeout for createPopper
-// XXX have array for the popper.innerHTML stuff?, 
-            setTimeout( () => {
-              for (let idx = 0; idx < A.length; idx++) {
-                const popper = document.getElementById('float_box_' + idx);
-                const slot = document.getElementById('chain_' + idx);
-                floatingBoxes[idx] =  createPopper(slot, popper, {
-                    placement: "right-start",
-                    strategy: "fixed",
-                    modifiers: [
-                        {
-                            removeOnDestroy: true, // doesn't work well?
-                            name: 'preventOverflow',
-                            options: {
-                              // XXX popper_boundary not defined for 1D
-                              // array - maybe it should be??
-                              boundary: document.getElementById('popper_boundary'),
-                            },
-                        },
-                    ]
-                });
-                popper.innerHTML = A[idx].toString(2).padStart(mask + 1, "0");
-              }
-            }, 1000);
-/*
-console.log(floatingBoxes);
-            setTimeout( () => {
-console.log(floatingBoxes);
-              floatingBoxes.forEach((p) => {
-                if (p !== null) {
-                  p.setOptions({placement: "right-start"});
-                  p.forceUpdate()
-                }
-              })
-            }, 2000);
-*/
           },
           [maxIndex, mask, A],
           0
