@@ -2,8 +2,13 @@
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import MaskTracer from '../../components/DataStructures/Mask/MaskTracer';
 import { areExpanded } from './collapseChunkPlugin';
+import { createPopper } from '@popperjs/core';
 
-const BITS = 2;
+// radix must be a power of two; we use radix 4 here but code should work
+// with another radix except vis.mask.setAddBase4() would need to be
+// generalised and that call deleted if radix = 2
+const RADIX_BITS = 2;
+const RADIX = 1 << RADIX_BITS;
 
 const SRS_BOOKMARKS = {
     radix_sort: 1,
@@ -84,9 +89,31 @@ export default {
     run(chunker, { nodes }) {
         let A = [...nodes];
         const n = A.length;
+        // Stuff for poppers, copied from MSDRadixSort.js - search for
+        // POPPERS: in that code for more details, though it's done
+        // slightly differently here:
+        // The first time the first chunk is called, poppers are created
+        // (after a delay - see MSDRadixSort.js).  Subsequent times the
+        // first chunk is called we reset the innerHTML so the contents
+        // is correct (it may have changed during execution).
+        // Similarly, when the temp array is copied back to A we update
+        // the innerHTML.
+        let floatingBoxes = new Array(n); // XXX popper instances (rename)
+        let DELAY_POPPER_CREATE = 700;
+        let DELAY_POPPER_RESET = 800;
+        let DELAY_POPPER_UPDATE = 800;
 
-        const countingSort = (A, k, n, bits) => {
-            const count = Array.apply(null, Array(1 << bits)).map(() => 0);
+        let bits; // number of bits used (depends on max data value)
+
+        // poppers show binary plus whatever radix we use
+        // XXX if radix === 2, best avoid duplication
+        const popperContent = (n) => {
+            return n.toString(2).padStart(bits, "0") + "<br>"
+                + n.toString(RADIX).padStart(bits/RADIX_BITS, "0");
+        }
+
+        const countingSort = (A, k, n, radixBits) => {
+            const count = Array.apply(null, Array(1 << radixBits)).map(() => 0);
             let lastBit = -1;
 
             chunker.add(SRS_BOOKMARKS.zero_counts,
@@ -118,7 +145,7 @@ export default {
                     [i, lastBit, count]
                 );
 
-                const bit = bitsAtIndex(A[i], k, bits);
+                const bit = bitsAtIndex(A[i], k, radixBits);
                 count[bit]++;
 
                 chunker.add(SRS_BOOKMARKS.add_to_count,
@@ -216,7 +243,7 @@ export default {
                     },
                     [num, i, bit, count, sortedA]
                 );
-                bit = bitsAtIndex(num, k, bits);
+                bit = bitsAtIndex(num, k, radixBits);
                 count[bit]--;
                 chunker.add(SRS_BOOKMARKS.dec_count,
                     (vis, num, i, bit, count, sortedA) => {
@@ -242,62 +269,101 @@ export default {
             }
 
             chunker.add(SRS_BOOKMARKS.copy,
-                (vis, array, n, countLength) => {
+                (vis, array, n, countLength, bits) => {
                     setArray(vis.array, array);
 
                     if (isCountExpanded()) {
                         setArray(vis.tempArray, Array.apply(null, Array(n)).map(() => undefined));
                         setArray(vis.countArray, Array.apply(null, Array(countLength)).map(() => undefined));
                     }
+                    // update contents of all poppers
+                    setTimeout( () => {
+                      for (let idx = 0; idx < array.length; idx++) {
+                        const popper = document.getElementById('float_box_' + idx);
+                        popper.innerHTML = popperContent(array[idx]);
+                      }
+                    }, DELAY_POPPER_UPDATE);
                 },
-                [sortedA, n, count.length]
+                [sortedA, n, count.length, bits]
             );
 
             return sortedA;
         };
 
         let maxNumber = Math.max(...A);
-        let maxBit = -1;
+        let savedMax = maxNumber;
+        let maxBit = 0;
 
         while (maxNumber > 0) {
             maxNumber = Math.floor(maxNumber / 2);
             maxBit++;
         }
 
-        let bits = 1;
-
-        while (bits < maxBit) {
-            bits *= 2;
-        }
+        bits = maxBit + maxBit % RADIX_BITS; // bits is multiple of radix
+        floatingBoxes.fill(null); // poppers: see MSDRadixSort.js
 
         chunker.add(SRS_BOOKMARKS.radix_sort,
-            (vis, array) => {
+            (vis, array, bits) => {
+                // XXX assumes radix 4
                 vis.mask.setAddBase4(true); // add Base 4 display
                 setArray(vis.array, array);
 
                 if (isCountExpanded()) {
-                    setArray(vis.countArray, Array.apply(null, Array(1 << BITS)).map(() => undefined));
+                    setArray(vis.countArray, Array.apply(null, Array(1 << RADIX_BITS)).map(() => undefined));
                     setArray(vis.tempArray, Array.apply(null, Array(n)).map(() => undefined));
                 }
+                // create poppers or reset poppers if they already exist
+                for (let idx = 0; idx < array.length; idx++) {
+                  if (floatingBoxes[idx] === null) {
+                    setTimeout( () => {
+                      const popper = document.getElementById('float_box_' + idx);
+                      const slot = document.getElementById('chain_' + idx);
+                      floatingBoxes[idx] =  createPopper(slot, popper, {
+                          placement: "right-start",
+                          strategy: "fixed",
+                          modifiers: [
+                              {
+                                  removeOnDestroy: true, // doesn't work well?
+                                  name: 'preventOverflow',
+                                  options: {
+                                    // XXX popper_boundary not defined for 1D
+                                    // array - maybe it should be??
+                                    boundary: document.getElementById('popper_boundary'),
+                                  },
+                              },
+                          ]
+                      });
+                      popper.innerHTML = popperContent(array[idx]);
+                    }, DELAY_POPPER_CREATE);
+                  } else {
+                    setTimeout( () => {
+                      const popper = document.getElementById('float_box_' + idx);
+                      popper.innerHTML = popperContent(array[idx]);
+                      floatingBoxes[idx].forceUpdate();
+                    }, DELAY_POPPER_RESET)
+                  }
+                }
             },
-            [nodes]
+            [nodes, bits]
         );
 
         chunker.add(SRS_BOOKMARKS.max_number,
-            (vis, bits) => {
+            (vis, bits, max) => {
+                // XXX could highlight max in array also?
                 vis.mask.setMaxBits(bits);
+                updateBinary(vis, max);
             },
-            [bits]
+            [bits, savedMax]
         );
 
-        for (let k = 0; k < bits / BITS; k++) {
+        for (let k = 0; k < bits / RADIX_BITS; k++) {
             chunker.add(SRS_BOOKMARKS.counting_sort_for_loop,
                 vis => {
-                    updateMask(vis, k, BITS);
+                    updateMask(vis, k, RADIX_BITS);
                 }
             );
 
-            A = countingSort(A, k, n, BITS);
+            A = countingSort(A, k, n, RADIX_BITS);
 
             // chunker.add(SRS_BOOKMARKS.counting_sort);
         }

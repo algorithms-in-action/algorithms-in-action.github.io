@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { withAlgorithmParams } from './helpers/urlHelpers';
 import '../../styles/Param.scss';
 
-const DEFAULT_NODES = genRandNumList(10, 1, 100);
+const DEFAULT_NODES = genRandNumList(10, 1, 63); // limit bits by default
 const DEFAULT_MODE = 'sort';
 const MSD_RADIX_SORT = 'MSD Radix Sort';
 const MSDRS_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';

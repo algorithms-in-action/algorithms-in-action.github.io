@@ -6,7 +6,7 @@ const KEY_BACK = 'BACK';
 const KEY_FORWARD = 'FORWARD';
 const KEY_SEARCH = 'SEARCH';
 const KEY_PROGRESS = 'PROGRESS';
-const KEY_SORT = 'SORT';
+const KEY_SORT = 'RESET/SORT'; // XXX change more algs to RESET
 const KEY_LOAD = 'START';
 const KEY_FIND = 'FIND STRING';
 const KEY_UF_UNION = 'UNION';
@@ -98,10 +98,19 @@ allows you to pre-fill some of the table quickly.`,
 const sortInstructions = [{
   title: 'Sorting Numbers',
   content: [
-    `Click on ${KEY_CODE} on the right panel`,
-    'Enter a list of numbers in the sort parameter.',
-    `Click on ${KEY_SORT} or hit return to load the data.`,
-      PLAY_INSTRUCTIONS,
+    `Click on ${KEY_CODE} on the right panel to show the code.`,
+    PLAY_INSTRUCTIONS,
+    `The list of numbers to be sorted can be edited; click on ${KEY_SORT} or hit return to load the new data.`,
+  ],
+}];
+
+const radixSortInstructions = [{
+  title: 'Sorting Numbers',
+  content: [
+    `Click on ${KEY_CODE} on the right panel to show the code.`,
+    PLAY_INSTRUCTIONS,
+    `The list of numbers to be sorted can be edited; click on ${KEY_SORT} or hit return to load the new data.`,
+     'Hover the mouse over an element of array A to display the value in binary (and base 4 for straight radix sort).',
   ],
 }];
 
@@ -161,7 +170,7 @@ export const QSInstruction = sortInstructions;
 export const msort_arr_td = sortInstructions;
 export const msort_arr_bup = sortInstructions;
 export const msort_arr_nat = sortInstructions;
-export const RadixSortInstruction = sortInstructions;
+export const RadixSortInstruction = radixSortInstructions;
 export const msort_lista_td = sortInstructions;
 export const TCInstruction = graphInstructionsTC;
 export const Prims_oldInstruction = graphInstructions;
