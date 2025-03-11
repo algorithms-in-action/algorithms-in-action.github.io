@@ -40,6 +40,12 @@ export class Element {
     this.value = value;
     this.patched = 0;
     this.selected = 0;
+    // XXX should we have these also???
+    this.selected1 = false;
+    this.selected2 = false;
+    this.selected3 = false;
+    this.selected4 = false;
+    this.selected5 = false;
     this.sorted = false;
     this.key = key;
     this.variables = [];
@@ -147,32 +153,37 @@ class Array2DTracer extends Tracer {
     this.data[x][y].sorted = true;
   }
 
+  // FFS, why use *strings* that are single digits???
+  // XXX and using integers for selected??? what does it mean for
+  // something to be selected more than once???
+  // But selected1, selected2 etc used Booleans????
   select(sx, sy, ex = sx, ey = sy, c = '0') {
+    c = Number(c); // XXX support string and integers for now
     // Color blue
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         switch (c) {
-          case '0':
+          case 0:
             this.data[x][y].selected++;
             break;
-          case '1':
+          case 1:
             this.data[x][y].selected1 = true;
             break;
-          case '2':
+          case 2:
             this.data[x][y].selected2 = true;
             break;
-          case '3':
+          case 3:
             this.data[x][y].selected3 = true;
             break;
-          case '4':
+          case 4:
             this.data[x][y].selected4 = true;
             break;
-          case '5':
+          case 5:
             this.data[x][y].selected5 = true;
             break;
 
           default:
-            this.data[x][y].selected = true;
+            this.data[x][y].selected = true;  // XXX Bool or int?????
             break;
         }
       }
@@ -483,7 +494,8 @@ class Array2DTracer extends Tracer {
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
-        this.data[x][y].selected = false;
+        // XXX Boolean/integer/(un)defined???
+        this.data[x][y].selected = 0;
         this.data[x][y].selected1 = false;
         this.data[x][y].selected2 = false;
         this.data[x][y].selected3 = false;

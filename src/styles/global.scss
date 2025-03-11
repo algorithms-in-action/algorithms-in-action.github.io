@@ -156,7 +156,7 @@ $yellowLine: #FFDE3C;
 	//tree: selected child nodes in a tree
 	//graph: selected graph node
 	//table: found table elements
-	--peach: #f58b2f;
+	--peach: #ffa500;
 	// typically used for: 
 	//array: unsorted array elements, 
 	//tree: selected parent nodes in a tree
@@ -338,7 +338,7 @@ $yellowLine: #FFDE3C;
 
 	--leaf: #83d489;
 	--peach: #f58b2f;
-	--apple: #FF0000;
+	--apple: #DC0707;
 	--sky: #2289ff;
 
 	--graph-node-circle-fill: #5c5c5c;
@@ -379,6 +379,7 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-arrow-fill: #505050;
 }
 
+// Default colours
 [algo-theme="default"] {
 	--graph-node-circle-fill-selected: #83d489;
 	--graph-node-circle-stroke-selected: #83d489;
@@ -431,10 +432,16 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #FFFFFF;
 
-  //graph colours
+  // named colours (not intended just for graphs):
+  // XXX The idea (not implemented properly) was algorithm code could
+  // use color names such as these and in the default scheme things
+  // would be rendered intuitively, but in others they would look
+  // different (a leaf is green by default but it can be other colors)
 	--leaf: #83d489;
-	--peach: #e85c49;
-	--apple: #FF0000;
+	// --apple: #a83c49;
+        // --apple: #FF0000;
+        --apple: #DC0707;
+        --peach: #ffa500;
 	--sky: #2289ff;
 
 	//pseudocode colours
@@ -461,8 +468,8 @@ $yellowLine: #FFDE3C;
 	--right-code-function-font: #3a7ae9;
 }
 
-// Override Algorithm Theme Colors [Green]
-//Notice: 2021-s2 teams haven't actually designed/altered the colors in this color scheme.
+// Override Algorithm Theme Colors [red]
+//XXX: 2021-s2 teams haven't actually designed/altered the colors in this color scheme.
 [algo-theme="red"] {
 	--leaf: #469847;
 	--peach: #f1f513;

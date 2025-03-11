@@ -16,36 +16,55 @@ export function isMergeExpanded() {
     return areExpanded(['MergeCopy', 'Merge']); // MergeCopy contains Merge
 }
 
-// Highlights Array A either red or green
-// future color: Can add more colours in future
+// Highlights Array A with color
 export function highlight(vis, index, color) {
+    vis.array.selectColor(index, color);
+/*
     if (color == 'red') {
+        vis.array.selectColor(index, '1');
         vis.array.select(index);
     }
+    if (color == 'blue') {
+        vis.array.selectColor(index, '0');
+    }
     if (color == 'green') {
+        vis.array.selectColor(index, '0');
         vis.array.patch(index);
     }
+*/
 }
 
-// Same as highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
-export function highlightB(vis, index, color) {
-    if (isMergeCopyExpanded()) {
-        if (color == 'red') {
-            vis.arrayB.select(index);
-        }
-        if (color == 'green') {
-            vis.arrayB.patch(index);
-        }
-    }
-}
-
-// unhighlights arrayA
+// unhighlights arrayA (XXX color not used)
 export function unhighlight(vis, index, color) {
+    vis.array.deselect(index);
+/*
     if (color == 'red') {
+        vis.array.deselect(index);
+    }
+    if (color == 'blue') {
         vis.array.deselect(index);
     }
     if (color == 'green') {
         vis.array.depatch(index);
+    }
+*/
+}
+
+// Like highlight() but checks isMergeExpanded()/arrayB is displayed, otherwise does nothing
+export function highlightB(vis, index, color) {
+    if (isMergeCopyExpanded()) {
+        vis.arrayB.selectColor(index, color);
+/*
+        if (color == 'red') {
+            vis.arrayB.select(index);
+        }
+        if (color == 'blue') {
+            vis.arrayB.selectColor(index, 1);
+        }
+        if (color == 'green') {
+            vis.arrayB.patch(index);
+        }
+*/
     }
 }
 

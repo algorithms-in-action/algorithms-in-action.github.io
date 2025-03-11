@@ -72,6 +72,8 @@ const ScrollToHighlight = ({col, j, toString}) => {
         col.selected1 && styles.selected1,
         col.selected2 && styles.selected2,
         col.selected3 && styles.selected3,
+        col.selected4 && styles.selected4,
+        col.selected5 && styles.selected5,
         styles.variableOrange,
       )}
       key={j}
@@ -263,6 +265,8 @@ class Array2DRenderer extends Renderer {
                     col.selected1 && styles.selected1,
                     col.selected2 && styles.selected2,
                     col.selected3 && styles.selected3,
+                    col.selected4 && styles.selected4,
+                    col.selected5 && styles.selected5,
                     varGreen && styles.variableGreen,
                     varOrange && styles.variableOrange,
                     varRed && styles.variableRed,

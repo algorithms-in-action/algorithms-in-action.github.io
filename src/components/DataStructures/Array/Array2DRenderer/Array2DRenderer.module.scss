@@ -79,7 +79,7 @@
       }
 
       &.selected2 {
-        background-color: var(--array-2d-row-col-bg-selected2);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -87,7 +87,7 @@
       }
 
       &.selected3 {
-        background-color: var(--array-2d-row-col-bg-selected3);
+        background-color: var(--peach);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -121,7 +121,7 @@
 
 
       &.selected4 {
-        background-color: var(--apple);
+        background-color: var(--array-2d-row-col-bg-selected4);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -129,7 +129,7 @@
       }
 
       &.selected5 {
-        background-color: var(--peach);
+        background-color: var(--array-2d-row-col-bg-selected5);
 
         span {
           color: var(--array-2d-row-col-selected);

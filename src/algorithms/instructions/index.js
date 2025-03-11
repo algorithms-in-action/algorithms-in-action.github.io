@@ -64,7 +64,7 @@ expanded for more detail and explanations are available.`,
     `Select small or larger table via the radio buttons and, if small is
 selected you can enable the dynamic size option. These buttons are below
 the ${KEY_INSDEL} box; you may need to drag the "..." up to make them
-visible`,
+visible.`,
     `Enter or edit the list of integers to insert/delete.
 
     **Valid inputs**:
@@ -158,7 +158,7 @@ const unionFindInstructions = [{
     `Open the right ${KEY_CODE} panel to view the algorithm code as it runs.`,
     `Use the panel in the lower centre of the screen to control the algorithm visualisation:`,
     `Select nodes to union by entering a list of union operations in the left input box and click ${KEY_UF_UNION}.`,
-    `Click ${KEY_UF_PC_ON} or ${KEY_UF_PC_OFF} to toggle path compression.`,
+    `Click ${KEY_UF_PC_ON} or ${KEY_UF_PC_OFF} to toggle path compression (below the data input; you may need to drag the "..." up to make this visible).`,
       PLAY_INSTRUCTIONS,
     `Enter a node in the right input box and click ${KEY_UF_FIND} and then ${KEY_PLAY} to search for the node's set representative.`,
   ]

@@ -66,18 +66,10 @@
 
             .variable {
                 font-size: 18px;
-                color: var(--peach);
+                color: var(--apple);
             }
 
             &.selected {
-                background-color: var(--peach);
-
-                span {
-                    color: var(--array-2d-row-col-selected);
-                }
-            }
-
-            &.selected1 {
                 background-color: var(--sky);
 
                 span {
@@ -85,8 +77,16 @@
                 }
             }
 
+            &.selected1 {
+                background-color: var(--leaf);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
             &.selected2 {
-                background-color: var(--array-2d-row-col-bg-selected2);
+                background-color: var(--apple);
 
                 span {
                     color: var(--array-2d-row-col-selected);
@@ -94,14 +94,6 @@
             }
 
             &.selected3 {
-                background-color: var(--array-2d-row-col-bg-selected3);
-
-                span {
-                    color: var(--array-2d-row-col-selected);
-                }
-            }
-
-            &.selected4 {
                 background-color: var(--peach);
 
                 span {
@@ -109,8 +101,16 @@
                 }
             }
 
+            &.selected4 {
+                background-color: var(--array-2d-row-col-bg-selected4);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
             &.selected5 {
-                background-color: var(--apple);
+                background-color: var(--array-2d-row-col-bg-selected5);
 
                 span {
                     color: var(--array-2d-row-col-selected);

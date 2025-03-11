@@ -1,13 +1,21 @@
 // Merge sort for arrays, top down
 // Adapted code from Quicksort...
 // XXX Could do with a good clean up!
-// Lots of crud, mostly abandonned attempt at QS-style stack display.
+// Lots of crud, mostly abandoned attempt at QS-style stack display.
 // Uses simple stack display like DFSrec; stack vanishes inside
 // merge+copy because screen real-estate is limited and details of merge
 // are independent of stack details anyway (may cause some surprise
 // though)
 
 import { msort_arr_td } from '../explanations';
+import {colors} from '../../components/DataStructures/colors';
+
+// Should be consistent with BUP/Nat merge sort
+// XXX (could make code more similar and use shared code here)
+const apColor = colors.apple;
+const runAColor = colors.peach;
+const runBColor = colors.sky;
+const sortColor = colors.leaf;
 
 const run = run_msort();
 
@@ -113,36 +121,22 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
 }
 
 
-const highlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.select(index);
-  } else {
-    vis.array.patch(index);
-  }
+const highlight = (vis, index, color) => {
+  vis.array.selectColor(index, color);
 };
 
-const highlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.select(index);
-  } else {
-    vis.arrayB.patch(index);
-  }
+const highlightB = (vis, index, color) => {
+  vis.arrayB.selectColor(index, color);
 };
 
+// XXX third arg unused
 const unhighlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.deselect(index);
-  } else {
-    vis.array.depatch(index);
-  }
+  vis.array.deselect(index);
 };
 
+// XXX third arg unused
 const unhighlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.deselect(index);
-  } else {
-    vis.arrayB.depatch(index);
-  }
+  vis.arrayB.deselect(index);
 };
 
 
@@ -333,15 +327,26 @@ export function run_msort() {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) {
+      // re-does a fair bit of work - could make more like BUP/Nat
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_arr_td');
         // set_simple_stack(vis.array, c_stk);
         assignVarToA(vis, 'ap1', cur_ap1);
         assignVarToA(vis, 'max1', cur_max1);
-        highlight(vis, cur_ap1, true);
+        for (let i = cur_left; i <= cur_max1; i++) {
+          if (i === cur_ap1)
+            highlight(vis, i, apColor);
+          else
+            highlight(vis, i, runAColor);
+        }
+        for (let i = cur_max1+1; i <= cur_max2; i++) {
+          if (i === cur_ap2)
+            highlight(vis, i, apColor);
+          else
+            highlight(vis, i, runBColor);
+        }
         if (cur_ap2 < a.length) { // XXX 
           assignVarToA(vis, 'ap2', cur_ap2);
-          highlight(vis, cur_ap2, true);
         } else {
           assignVarToA(vis, 'ap2', undefined);
         }
@@ -349,7 +354,7 @@ export function run_msort() {
         vis.arrayB.set(b, 'msort_arr_td');
         assignVarToB(vis, 'bp', cur_bp);
         for (let i = cur_left; i < cur_bp; i++) {
-          highlightB(vis, i, false);
+          highlightB(vis, i, sortColor);
         }
       }
     }
@@ -392,7 +397,7 @@ export function run_msort() {
         assignVarToA(vis, 'left', cur_left);
         assignVarToA(vis, 'right', cur_right);
         for (let i = cur_left; i <= cur_right; i++) {
-          highlight(vis, i, true)
+          highlight(vis, i, runAColor)
         }
         // XXX give up on QS-like stack for now
         // refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_left, cur_right, 2, cur_depth);
@@ -413,6 +418,7 @@ export function run_msort() {
         chunker.add('mid', (vis, a, cur_left, cur_mid, cur_right) => {
           for (let i = cur_mid + 1; i <= cur_right; i++) {
             unhighlight(vis, i, true)
+            highlight(vis, i, runBColor)
           }
           assignVarToA(vis, 'mid', cur_mid);
         }, [A, left, mid, right], depth);
@@ -424,9 +430,9 @@ export function run_msort() {
           assignVarToA(vis, 'left', undefined);
           assignVarToA(vis, 'right', undefined);
           assignVarToA(vis, 'mid', undefined);
-          for (let i = cur_mid + 1; i <= right; i++) {
+          // for (let i = cur_mid + 1; i <= right; i++) {
             // highlight(vis, i, true)
-          }
+          // }
         }, [A, left, mid, right], depth);
 
         MergeSort(left, mid, depth + 1);
@@ -443,10 +449,10 @@ export function run_msort() {
           assignVarToA(vis, 'right', cur_right);
           for (let i = cur_left; i <= cur_mid; i++) {
             // unhighlight(vis, i, true);
-            highlight(vis, i, false)
+            highlight(vis, i, runAColor)
           }
           for (let i = cur_mid + 1; i <= cur_right; i++) {
-            highlight(vis, i, true);
+            highlight(vis, i, runBColor);
           }
         }, [A, left, mid, right, simple_stack], depth);
 
@@ -459,9 +465,9 @@ export function run_msort() {
           assignVarToA(vis, 'left', undefined);
           assignVarToA(vis, 'mid', undefined);
           assignVarToA(vis, 'right', undefined);
-          for (let i = cur_mid + 1; i <= cur_right; i++) {
+          // for (let i = cur_mid + 1; i <= cur_right; i++) {
             // highlight(vis, i, true)
-          }
+          // }
         }, [A, left, mid, right], depth);
 
         MergeSort(mid + 1, right, depth + 1);
@@ -474,10 +480,14 @@ export function run_msort() {
           assignVarToA(vis, 'left', cur_left);
           assignVarToA(vis, 'mid', cur_mid);
           assignVarToA(vis, 'right', cur_right);
-          // for (let i = cur_mid+1; i <= cur_right; i++) {
-          // unhighlight(vis, i, true);
-          // unhighlight(vis, i, false)
-          // }
+          for (let i = cur_left; i <= cur_mid; i++) {
+            // unhighlight(vis, i, true);
+            highlight(vis, i, runAColor)
+          }
+          for (let i = cur_mid+1; i <= cur_right; i++) {
+            // unhighlight(vis, i, true);
+            highlight(vis, i, runBColor)
+          }
         }, [A, left, mid, right, simple_stack], depth);
 
         // XXX should we shorten psuedocode? eg, (ap1,max1) <- (left,mid)
@@ -493,13 +503,10 @@ export function run_msort() {
           // the stack and array B can sometimes overlap:(
           // vis.array.set(a, 'msort_arr_td');
           set_simple_stack(vis.array, undefined);
-          for (let i = cur_mid + 1; i <= cur_right; i++) {
-            unhighlight(vis, i, false)
-          }
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
             assignVarToA(vis, 'ap1', cur_left);
-            highlight(vis, cur_left, true);
+            highlight(vis, cur_left, apColor);
           }
         }, [A, left, mid, right], depth);
         chunker.add('max1', (vis, a, cur_left, cur_mid, cur_right) => {
@@ -511,7 +518,7 @@ export function run_msort() {
         chunker.add('ap2', (vis, a, cur_left, cur_mid, cur_right) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap2', cur_mid + 1);
-            highlight(vis, cur_mid + 1, true);
+            highlight(vis, cur_mid + 1, apColor);
           }
         }, [A, left, mid, right], depth);
         chunker.add('max2', (vis, a, cur_left, cur_mid, cur_right) => {
@@ -537,12 +544,9 @@ export function run_msort() {
 
           if (!(ap1 <= max1 && ap2 <= max2)) break;
 
-          chunker.add('findSmaller', (vis, a, b, cur_ap1, cur_ap2,
-            cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-            renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left);
-          }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
-
+          chunker.add('findSmaller', () => {
+             // no animation 
+          }, [], depth);
           if (A[ap1] < A[ap2]) {
             B[bp] = A[ap1];
             A[ap1] = undefined;
@@ -551,7 +555,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, sortColor);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
             ap1 = ap1 + 1;
@@ -560,7 +564,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, sortColor);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
             bp = bp + 1;
@@ -577,7 +581,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, sortColor);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
             ap2 = ap2 + 1;
@@ -586,7 +590,7 @@ export function run_msort() {
               renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
                 cur_max1, cur_max2, cur_stk, cur_left);
               if (isMergeExpanded()) {
-                highlightB(vis, cur_bp, false);
+                highlightB(vis, cur_bp, sortColor);
               }
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
             bp = bp + 1;
@@ -617,7 +621,7 @@ export function run_msort() {
             assignVarToA(vis, 'max2', cur_max2);
             vis.arrayB.set(b, 'msort_arr_td');
             for (let i = cur_left; i <= cur_bp - 1; i++) {
-              highlightB(vis, i, false);
+              highlightB(vis, i, sortColor);
             }
             if (cur_bp < a.length) {
               assignVarToB(vis, 'bp', cur_bp);
@@ -640,7 +644,7 @@ export function run_msort() {
             // set_simple_stack(vis.array, c_stk);
             vis.arrayB.set(b, 'msort_arr_td');
             for (let i = cur_left; i <= cur_right; i++) {
-              highlightB(vis, i, false);
+              highlightB(vis, i, sortColor);
             }
           }
           if (isMergeExpanded()) {
@@ -668,7 +672,7 @@ export function run_msort() {
           vis.array.set(a, 'msort_arr_td');
           set_simple_stack(vis.array, c_stk);
           for (let i = cur_left; i <= cur_right; i++) {
-            highlight(vis, i, false);
+            highlight(vis, i, sortColor);
           }
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap1', undefined);
@@ -693,7 +697,7 @@ export function run_msort() {
         chunker.add('Done', (vis, a, cur_left, cur_right) => {
           if (cur_left === cur_right) {
             unhighlight(vis, cur_left, true);
-            highlight(vis, cur_left, false)
+            highlight(vis, cur_left, sortColor) // XXX check color
           }
           // finished_stack_frames.push(real_stack.pop());
         }, [A, left, right], depth);

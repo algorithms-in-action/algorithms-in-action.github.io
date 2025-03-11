@@ -1,3 +1,4 @@
+// XXX move to ./common ???
 // Attempt at making colors for different data structure components less
 // crazy.  We have intuitive names for a selection of colors and in the
 // default colour scheme these are rendered as expected (apple = red,
@@ -28,6 +29,6 @@ export const colors = {
   apple: 2,  // (in default scheme) red
   peach: 3,  // (in default scheme) orange
   // XXX add stone (grey), ink (black), darker/lighter versions of other
-  // colors,...
+  // colors, plum?, ...
 };
 

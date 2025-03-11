@@ -143,6 +143,11 @@
       // text-anchor: left;
     }
 
+    // XXX best change this so it's consistent with "selected" in array colors!
+    // Use selected:sky, selected1:leaf, selected2:apple, selected3:peach
+    // Need to fix controller code etc accordingly (eg
+    // graphSearchColours.js) as this change will result in different
+    // colors.
     &.selected {
       .circle {
         fill: var(--sky);
@@ -185,6 +190,11 @@
 
     }
 
+    // XXX best change this so it's consistent with "select" in array colors!
+    // Use visited:sky, visited1:leaf, visited2:apple, visited3:peach
+    // Need to fix controller code etc accordingly (eg
+    // graphSearchColours.js) as this change will result in different
+    // colors.
     &.visited {
       .circle {
         fill: var(--apple);
@@ -308,6 +318,11 @@
       font-size: 35px;
     }
 
+    // XXX best change this so it's consistent with "select" in array colors!
+    // Use visited:sky, visited1:leaf, visited2:apple, visited3:peach
+    // Need to fix controller code accordingly (eg
+    // graphSearchColours.js) as this change will result in different
+    // colors.
     &.selected {
       .line {
         stroke: var(--sky);
@@ -407,6 +422,11 @@
       fill: var(--sky);
     }
 
+    // XXX best change this so it's consistent with "select" in array colors!
+    // Use visited:sky, visited1:leaf, visited2:apple, visited3:peach
+    // Need to fix controller code accordingly (eg
+    // graphSearchColours.js) as this change will result in different
+    // colors.
     &.visited {
       fill: var(--leaf);
     }

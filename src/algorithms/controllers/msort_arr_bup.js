@@ -3,6 +3,7 @@
 
 import { msort_arr_bup } from '../explanations';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+import {colors} from '../../components/DataStructures/colors';
 
 
 import {
@@ -23,11 +24,11 @@ import {
 
 const run = run_msort();
 
-const apColor = "green";   // replace with red
-const runAColor = "red";   // replace with orange
-const runBColor = "green"; // replace with blue
-const runCColor = "red";  // replace all instances of runCColor with runBColor
-const sortColor = "green";
+const apColor = colors.apple;
+const runAColor = colors.peach;
+const runBColor = colors.sky;
+const runCColor = colors.sky;  // replace all instances of runCColor with runBColor
+const sortColor = colors.leaf;
 
 
 export default {
@@ -174,6 +175,7 @@ export function run_msort() {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined, size); // ap1 replaces left
             assignVarToA(vis, 'ap1', c_ap1, size);
+            highlight(vis, c_ap1, apColor);
             assignVarToA(vis, 'mid', c_mid, size);
             assignVarToA(vis, 'right', c_right, size);
           }
@@ -187,6 +189,7 @@ export function run_msort() {
         chunker.add('ap2', (vis, c_ap2) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap2', c_ap2, size);
+            highlight(vis, c_ap2, apColor);
           }
         }, [ap2]);
         chunker.add('max2', (vis, c_max2, c) => {
@@ -204,16 +207,15 @@ export function run_msort() {
         // while (ap1 <= max1 && ap2 <= max2)
         /* eslint-disable no-constant-condition */
         while (true) {
-          if (!(ap1 <= max1 && ap2 <= max2)) break;
-
           chunker.add('MergeWhile', (vis, c_ap1, c_max1, c_ap2, c_max2) => {
             highlightAPointers(vis, c_ap1, c_max1, c_ap2, c_max2, apColor);
           }, [ap1, max1, ap2, max2]);
+          if (!(ap1 <= max1 && ap2 <= max2)) break;
 
+          chunker.add('findSmaller', () => {
+            // no animation 
+          }, []);
           if (A[ap1] < A[ap2]) {
-            chunker.add('findSmaller', () => {
-              // no animation 
-            }, []);
             B[bp] = A[ap1];
             A[ap1] = undefined;
             chunker.add('copyap1', (vis, a, b, c_ap1, c_max1, c_ap2, c_max2, c_bp, c_left, c_right, c_mid, c_rlength) => {
@@ -238,9 +240,9 @@ export function run_msort() {
           }
 
           else {
-            chunker.add('findSmallerB', () => {
+            // chunker.add('findSmallerB', () => {
               // no animation
-            }, []);
+            // }, []);
             B[bp] = A[ap2];
             A[ap2] = undefined;
             chunker.add('copyap2', (vis, a, b, c_ap1, c_ap2, c_bp, c_max1, c_max2, c_left, c_right, c_mid, c_rlength) => {
