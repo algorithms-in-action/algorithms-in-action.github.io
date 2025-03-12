@@ -144,10 +144,15 @@ export function run_msort() {
         // highlight2Runlength(vis, left_2, mid_2, right_2, runAColor, runBColor);
       }, [A, left, runlength]);
 
-      while ((left + runlength) <= size) {
+      // while ((left + runlength) < size) - want to show this chunk
+      // before loop exit
+      /* eslint-disable no-constant-condition */
+      while (true) {
         chunker.add('MergeAllWhile', () => {
           //no animation
         }, []);
+        if ((left + runlength) >= size)
+          break;
 
         let mid = left + runlength - 1;
         let right = Math.min(mid + runlength, (size - 1));

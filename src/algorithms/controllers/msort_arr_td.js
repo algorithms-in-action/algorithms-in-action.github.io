@@ -10,7 +10,7 @@
 import { msort_arr_td } from '../explanations';
 import {colors} from '../../components/DataStructures/colors';
 
-// Should be consistent with BUP/Nat merge sort
+// Animation should be consistent with BUP/Nat merge sort
 // XXX (could make code more similar and use shared code here)
 const apColor = colors.apple;
 const runAColor = colors.peach;
@@ -619,6 +619,12 @@ export function run_msort() {
             if (cur_ap2 < a.length)
               assignVarToA(vis, 'ap2', cur_ap2);
             assignVarToA(vis, 'max2', cur_max2);
+            for (let i = cur_left; i <= cur_max1; i++) {
+              highlight(vis, i, runAColor);
+            }
+            for (let i = cur_max1 + 1; i <= cur_max2; i++) {
+              highlight(vis, i, runBColor);
+            }
             vis.arrayB.set(b, 'msort_arr_td');
             for (let i = cur_left; i <= cur_bp - 1; i++) {
               highlightB(vis, i, sortColor);

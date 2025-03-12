@@ -30,6 +30,8 @@ MergeAll
     \\Expl{ Unless size is a power of two there can be times when the
         number of runs is odd and we have a "leftover" run at the end
         (with length <= runlength), that will be merged in a later iteration.
+        If left is not displayed it is one past the right end of the
+        array.
     \\Expl}
     \\In{
         mid <- left + runlength - 1 // first run is A[left..mid] \\B mid
