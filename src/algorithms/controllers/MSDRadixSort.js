@@ -226,19 +226,19 @@ export default {
           // init, before partition
           highlight(vis, cur_i)
           highlight(vis, cur_j)
-        } else if (cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
+        } else if (isRecursionExpanded() && cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
           // just before first recursive call
           unhighlight(vis, prev_i)
           if (prev_j >= 0) // might have fallen off array
             unhighlight(vis, prev_j)
         } else if (checkingLeft) {
-          if (prev_i !== undefined && prev_i !== cur_j)
+          if (isRecursionExpanded() && prev_i !== undefined && prev_i !== cur_j)
             unhighlight(vis, prev_i)
           highlight(vis, cur_i)
           if (arr && cur_i !== undefined)
             updateBinary(vis, arr[cur_i])
         } else {
-          if (prev_j !== undefined && prev_j !== cur_i)
+          if (isRecursionExpanded() && prev_j !== undefined && prev_j !== cur_i)
             unhighlight(vis, prev_j);
           if (cur_j !== undefined) { // might have fallen off array
             highlight(vis, cur_j);
