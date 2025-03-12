@@ -1,58 +1,176 @@
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useContext, useEffect } from 'react';
-import { genRandNumList } from './helpers/ParamHelper';
+// Adapted from Quicksort - could rename a few things
 
-import ListParam from './helpers/ListParam.js';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useContext } from 'react';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import { withStyles } from '@mui/styles';
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import ListParam from './helpers/ListParam';
+import '../../styles/Param.scss';
+
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
-import { URLContext } from '../../context/urlState.js';
-import '../../styles/Param.scss';
-
-// export const DEFAULT_NODES = genRandNumList(12, 1, 50);
-const DEFAULT_NODES = genRandNumList(10, 1, 100);
-const HEAP_SORT = 'Heap Sort';
-const HEAP_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+import { URLContext } from '../../context/urlState';
 
 
-function HeapsortParam({ list }) { // add the parsing parameters for your algorithm: alg, mode, ...params
-    // const { alg, mode, param } = useUrlParams();
-    // const {list, value, xyCoords, edgeWeights, start, end, string, pattern, union} = parseParam(param);
-    // const { alg, mode, list } = withAlgorithmParams(HeapsortParam);
-    // const DEFAULT_NODES = genRandNumList.bind(null, 12, 1, 50); // Define the default list of nodes
-    const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
-    const [message, setMessage] = useState(null);
-    const { setNodes } = useContext(URLContext);
+const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
+const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
+const MERGE_SORT = 'Heap Sort';
+const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const UNCHECKED = {
+  random: false,
+  sortedAsc: false,
+  // bestCase: false,
+  sortedDesc: false
+};
 
-    useEffect(() => {
-        setNodes(localNodes);
-    }, [localNodes]);
+const BlueRadio = withStyles({
+  root: {
+    color: '#2289ff',
+    '&$checked': {
+      color: '#027aff',
+    },
+  },
+  checked: {},
+  // eslint-disable-next-line react/jsx-props-no-spreading
+})((props) => <Radio {...props} />)
 
-    return (
-        <>
-            <div className="form">
-                <ListParam
-                    name="heapSort"
-                    buttonName="Sort"
-                    mode="sort"
-                    formClassName="formLeft"
-                    DEFAULT_VAL={localNodes}
-                    SET_VAL={setLocalNodes}
-                    ALGORITHM_NAME={HEAP_SORT}
-                    EXAMPLE={HEAP_SORT_EXAMPLE}
-                    setMessage={setMessage}
-                />
-            </div>
-            {message}
-        </>
-    );
+function MergesortParam({ list }) {
+  const [message, setMessage] = useState(null)
+
+  const [array, setArray] = useState(list || DEFAULT_ARR)
+  const { setNodes } = useContext(URLContext)
+
+  const [QSCase, setQSCase] = useState({
+    random: true,
+    sortedAsc: false,
+    // bestCase: false,
+    sortedDesc: false
+  });
+
+  useEffect(() => {
+    setNodes(array);
+  }, [array]);
+
+  // XXX best case definitely not needed; could skip choice of cases
+  // function for choosing the type of input
+  const handleChange = (e) => {
+    switch (e.target.name) {
+      case 'sortedAsc':
+        setArray([...array].sort(function (a, b) {
+          return (+a) - (+b)
+        }));
+        break;
+      case 'sortedDesc':
+        setArray([...array].sort(function (a, b) {
+          return (+b) - (+a)
+        }));
+        break;
+      case 'random':
+        setArray(DEFAULT_ARRAY_GENERATOR());
+        break;
+      case 'bestCase':
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
+        break;
+      default:
+        break;
+    }
+
+    setQSCase({ ...UNCHECKED, [e.target.name]: true })
+
+  }
+
+  useEffect(
+    () => {
+      document.getElementById('startBtnGrp').click();
+    },
+    [QSCase],
+  );
+
+  return (
+    <>
+      <div className="form">
+        <ListParam
+          name="heapSort"
+          buttonName="Reset"
+          mode="sort"
+          formClassName="formLeft"
+          DEFAULT_VAL={array}
+          SET_VAL={setArray}
+          REFRESH_FUNCTION={
+            (() => {
+              if (QSCase.sortedAsc) {
+                return () => {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
+                    return (+a) - (+b)
+                  }));
+                }
+              }
+              else if (QSCase.sortedDesc) {
+                return () => {
+                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
+                    return (+b) - (+a)
+                  }));
+                }
+              }
+              else if (QSCase.bestCase) {
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
+              }
+            })()
+          }
+          ALGORITHM_NAME={MERGE_SORT}
+          EXAMPLE={MERGE_SORT_EXAMPLE}
+          setMessage={setMessage}
+        />
+      </div>
+      <span className="generalText">Choose input format: &nbsp;&nbsp;</span>
+      {/* create a checkbox for Random array elements */}
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={QSCase.random}
+            onChange={handleChange}
+            name="random"
+          />
+        }
+        label="Random"
+        className="checkbox"
+      />
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={QSCase.sortedAsc}
+            onChange={handleChange}
+            name="sortedAsc"
+          />
+        }
+        label="Sorted (ascending)"
+        className="checkbox"
+      />
+      <FormControlLabel
+        control={
+          <BlueRadio
+            checked={QSCase.sortedDesc}
+            onChange={handleChange}
+            name="sortedDesc"
+          />
+        }
+        label="Sorted (descending)"
+        className="checkbox"
+      />
+      {/* render success/error message */}
+      {message}
+    </>
+  )
 }
 
 // Define the prop types for URL Params
-HeapsortParam.propTypes = {
-    mode: PropTypes.string,
-    list: PropTypes.string
+MergesortParam.propTypes = {
+  alg: PropTypes.string.isRequired,
+  mode: PropTypes.string.isRequired,
+  list: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(HeapsortParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params

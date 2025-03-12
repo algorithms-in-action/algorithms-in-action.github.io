@@ -101,6 +101,7 @@ const sortInstructions = [{
     `Click on ${KEY_CODE} on the right panel to show the code.`,
     PLAY_INSTRUCTIONS,
     `The list of numbers to be sorted can be edited; click on ${KEY_SORT} or hit return to load the new data.`,
+    `The order of the input data can be changed with the radio buttons (below the data input; you may need to drag the "..." up to make this visible)`,
   ],
 }];
 
@@ -109,8 +110,9 @@ const radixSortInstructions = [{
   content: [
     `Click on ${KEY_CODE} on the right panel to show the code.`,
     PLAY_INSTRUCTIONS,
-    `The list of numbers to be sorted can be edited; click on ${KEY_SORT} or hit return to load the new data.`,
      'Hover the mouse over an element of array A to display the value in binary (and base 4 for straight radix sort).',
+    `The list of numbers to be sorted can be edited; click on ${KEY_SORT} or hit return to load the new data.`,
+    `The order of the input data can be changed with the radio buttons (below the data input; you may need to drag the "..." up to make this visible)`,
   ],
 }];
 
@@ -120,7 +122,7 @@ const graphInstructions = [
     content: [
       `Click on ${KEY_CODE} at the top of the right-hand panel`,
       PLAY_INSTRUCTIONS,
-      `The graph can be chosen (see below; default Graph 1 is shown initially)`,
+      `The graph can be chosen (see below; default Graph 1 is shown initially unless the graph is specified via the URL)`,
       `Other algorithm parameters can be chosen below the
 ${KEY_PROGRESS} bar; this will reset the animation to the start`,
       `Screen layout can be altered (depending on your browser/platform): the right and bottom panels can be enlarged or shrunk by dragging the ellipsis ("..."), and you can zoom in/out and drag elements in the animation panel`,
@@ -139,18 +141,15 @@ by dragging the "..." up temporarily`,
       `Edge weights (for weighted graph algorithms) can be toggled between Euclidean, Manhattan and as defined explicitly in the input.`,
     ]
   },
+  {
+    title: `Note for transitive closure algorithm`,
+    content: [`Each node is considered reachable from itself so the leading diagonal of the edge matrix contains all ones and cannot be edited.`]
+  },
 ];
 
-const graphInstructionsTC = [{
-  title: ' ',
-  content: [
-    `Click on ${KEY_CODE} on the right panel`,
-    'Enter a graph in the edge matrix',
-    `Click on ${KEY_LOAD} or hit return to load the data.`,
-      PLAY_INSTRUCTIONS,
-    'All nodes are SELF-REACHABLE => All diagonal elements are ones and NOT allowed to be edited.',
-  ],
-}];
+// XXX best just add TC note for this case
+const graphInstructionsTC =
+    graphInstructions;
 
 const unionFindInstructions = [{
   title: ' ',

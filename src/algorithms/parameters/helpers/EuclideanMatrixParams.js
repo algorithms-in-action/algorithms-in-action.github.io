@@ -11,7 +11,7 @@
 // and edges/weights via text boxes, plus having predefined example
 // graphs, allowing user-defined weights as well as Euclidean/Manhattan
 // weights based on X-Y coordinates, etc. Also start node and end nodes
-// (latter is optional - start nodes should be also). Old input method still
+// (both optional - use null to disable). Old input method still
 // supported if you scroll down - could delete eventually but doesn't do
 // much harm if its off-screen, though it hides error messages.
 // NOTE: There are (at least) three different representations for
@@ -763,7 +763,6 @@ function EuclideanMatrixParams({
           </button>
         </div>);
 
-/* // not used
   let startButton = '';
   if (defaultStart !== null)
     startButton =
@@ -777,7 +776,6 @@ function EuclideanMatrixParams({
           </button>
           
         </div>);
-*/
  
   let weightButton = '';
   if (!unweighted)
@@ -812,16 +810,7 @@ function EuclideanMatrixParams({
             </div>
             {weightButton}
             {heurButton}
-            <div className="sLineButtonContainer">
-              <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
-                −
-              </button>
-              <span className='size'>Start: {startNode}</span>
-              <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
-                +
-              </button>
-
-            </div>
+            {startButton}
             {endButton}
           </div>
           {endNodeDiv}

@@ -13,7 +13,7 @@ import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for UR
 import { URLContext } from '../../context/urlState';
 
 
-const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 50);
+const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
 const QUICK_SORT = 'Quick Sort';
 const QUICK_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
