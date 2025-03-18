@@ -27,7 +27,14 @@ in increasing node number order whereas for recursive DFS the order is
 reversed. Why is this done?
 
 The "frontier" nodes for iterative DFS are fairly easy to determine
-from the animation - they are the nodes in the stack that have not
+from the data structures - they are the nodes in the stack that have not
 yet been finalised.  How does this compare with the animation of the
 recursive version?
+
+The (implicit) stack shown only includes values for **n** and **p**.
+In an actual implemenetation the other argument, **G**, would also
+generally be on the stack.  What additional value(s) would also be on
+the stack?
+
+Given a graph with **N** nodes, what is the maximum height of the stack?
 

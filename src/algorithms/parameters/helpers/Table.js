@@ -33,7 +33,6 @@ function Table({
     algo,
   }); 
 
-
   // add the header in left side of table
   let counter = 0;
   const incrementCounter = () => { counter += 1; };

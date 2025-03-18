@@ -5,7 +5,7 @@
 /* eslint-disable react/prop-types */
 
 // Support for graphs with Euclidean (X-Y) coordinates defined for each
-// node. In flux currently. Student version used tables only for input of
+// node. Older student version used tables only for input of
 // graphs - lots of screen real-estate.  Also a bunch of other problems
 // and annoyances/limitations.  Now supports input of X-Y cordinates
 // and edges/weights via text boxes, plus having predefined example
@@ -238,8 +238,8 @@ function EuclideanMatrixParams({
   const [heurCalc, setHeurCalc] = useState(H_EUCLIDEAN);
 
   // (currSize) affects number of columns.
-  const columns1 = useMemo(() => makeColumnCoords(currSize), [currSize]);
-  const columns2 = useMemo(() => makeColumnArray(currSize), [currSize]);
+  const columns1 = useMemo(() => makeColumnCoords(size), [size]);
+  const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
 
