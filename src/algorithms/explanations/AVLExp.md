@@ -1,5 +1,7 @@
 # AVL Trees
 
+
+
 An AVL tree is **self-balancing** **binary search tree**.
 
 Unlike the basic binary search tree, which can exhibit *O(n)* worst case behavior for certain inputs, the AVL tree is always balanced, so search will be *O(log n)*
@@ -7,88 +9,96 @@ regardless of the order of the input data.
 
 ### The Binary Search Tree Invariant
 
-A **binary tree (BST)** is either is either empty (`Empty`) or else it
+A **binary tree (BST)** is either is either empty (Empty) or else it
 it has a root node and two subtrees (which are binary trees, and can also be empty).
-The root node `t` has a key `t.key`. Ordinarily every node would also
-hold other data (`t.data`), which the user would like to find by
-searching for the key, `e.g.` search for Student ID Number (key) to find street address (data).  
-
-Since the `data` attribute has no impact on 
+The root node t has a key t.key. Ordinarily every node would also
+hold other data (t.data), which the user would like to find by
+searching for the key, *e.g.* search for Student ID Number (key) to find street address (data).  Since the 
+data attribute has no impact on 
 how insertion and search take place, we disregard it in this animation.
-	
 
-Note that a newly inserted node will always appear as a leaf
+
+Note that a newly inserted node 
+will always appear as a leaf
 in the tree. 
+
 		
-In a binary search tree the **BST invariant** is always maintained:\
+In any binary search tree, the **BST invariant** is always maintained; that is,
 for each 
-subtree `t`, with root key `t.key`, the left subtree, `t.left`, 
-contains no node with key greater than `t.key`, and the right subtree,
-`t.right`, contains no node with key smaller than `t.key`.
-
-### AVL tree balancing 
-
-An AVL tree is **balanced** when the difference in heights of the left and right subtrees is no greater than `1`. 
+subtree t, with root key t.key, the left subtree, t.left, 
+contains no node with key greater than t.key, and the right subtree,
+t.right, contains no node with key smaller than t.key.
 
 
 
-The AVL tree preserves the balance of the tree by (1) checking after every insertion to detect
-when the tree has become unbalanced
-and (2) performing one or more **rotation operations** to restore balance when necessary.
-The imbalance may be located at
-any node along the search path from the root of the tree to the newly inserted node, possibly the grandparent of the newly inserted node, or 
-possibly 
-considerably closer to the root of the tree.
+### Insertion and Tree Balancing 
+
+
+**Insertion of a new item** into any binary tree (*e.g.* a BST or an AVL tree) requires 
+(1) first the search to find the correct place to insert, then (2) the actual insertion. 
+
+In the **recursive implementation** of the AVL shown in *AIA*, the first stage, 
+determining the insertion point, takes place
+during the recursive *calls* to the insert function, which accumulate on the machine stack.  
+
+
+The last recursive call *returns* when the new node has been inserted into the tree. 
+
+In the AVL tree, the height of the subtree rooted at each node is stored in the 
+node.During *each* successive *return* from the call to insert,
+the **height of the   is updated** and the **tree is checked for balance**.
+When a new node is inserted in an AVL tree, the tree may become *temporarily* unbalanced, that is 
+the difference in  heights of the left and right subtrees of *any* node is greater than 1.
 
 
 
-### Imbalance configurations 
+If the tree has become unbalanced, 
+balance will be restored using one or two **rotation**
+operations, which reduce the height of the unbalanced subtree, while still maintaining the BST invariant.
 
-When a new node is inserted in an AVL tree, the tree may become *temporarily* unbalanced. 
-A temporarily unbalanced AVL tree takes on one of two **configurations**, *zig-zag* or *zig-zig*. The 
-sequence of rotations depends on the configuration around the node where the imbalance is detected. 
+### Imbalance configurations and rotations
 
+The exact sequence of rotations depends on the configuration around the 
+node where the imbalance has been detected.
 
-The **zig-zig** configuration has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
-either (1) both left subtrees or (2) both right subtrees. The **zig-zag** configuration also has two mirror-image cases: the child and grandchild nodes or subtrees of the unbalanced node are 
-either (1) a left subtree and a right subtree or (2) a right subtrees and a left subtree.
+There are four possible configurations at the node where an imbalance has been detected:
+(1) *left-left*, where the  where the child and grandchild nodes or subtrees of the unbalanced node are 
+either both left subtrees, and (2) its mirror image and *right-right*, where the child and grandchild are both right 
+subtrees; (3) *left-right*, where there is a left child, with a right subtree as the grandchild, and (4) its mirror image 
+*right-left*, where the the right child of the unbalanced node has a left (grand)child.   
 
-
-
- 
-
-Balance will be restored, using one or two **rotation**
-operations (see below).
-
-### Insertion and rotation
-
-
+The *left-left* imbalance is restored by a single rotation around the edge between the node
+where the imbalance is detected and its (left) child.  Try inserting items 30, 20, then 10 into an AVL tree in *AIA*.  You
+will see that the rotation restores balance, and at the same time maintains the binary search invariant.  Similarly for
+the *right-right* configuration; try inserting 10, 20, then 30 into the *AIA* AVL tree.        
 
 
 
-**Insertion of a new item** into any binary tree requires (1) first the search to find the correct place to insert, then (2) the actual insertion. 
 
-In the **recursive implementation** shown in *AIA*, the first stage, determining  
-the insertion point takes place
-during the *"wind up"* stage of the algorithm, where successive recursive *calls to `insert`* are made and accumulate on the machine stack.  Search does not
-affect the balance of the tree.  During the second stage, however, an imbalance may be introduced into the tree when the new node is actually inserted. The imbalance may be close to the new node, or may be 
-considerably farther up the tree toward the root, along the search path.  Therefore, during each successive *return* from the call to `insert`
- in the "unwind" stage of the algorithm, the height of the node is updated and the tree is checked for balance.  
+If you try a larger tree
+XXX Lee -- we should come up with a sample tree here, to show imbalance up the tree from the new insert
+XXX Lee -- we can put URLs here, as you suggested. Should we do that for the really simple ones above?
 
-When an imbalance is detected, `i.e.` whenever the heights of the subtrees rooted at this node vary by more than `1`, 
-a rotation 
-or rotations are performed in order to bring the tree back into balance.  **Rotation** is a **local operation**, involving only 6 pointer reassignments,
-yet it affects the balance of the tree overall.  
+As you can see, while 
+**rotation** is a **local operation**, involving only 6 pointer reassignments,
+it can affect the balance of the tree overall.  
 
-Details of the **rotation**, **single** and **double** rotation are found in the AIA tab `More` for this algorithm.  
-
- 
+The *left-right* and *right-left* configurations require a double rotation.  For the *left-right* configuration,
+first a left rotation at the edge between the child and grandchild of the node, and then a right rotation
+at the edge between the node and its now left child (previously grandchild).  The *right-left* configuration requires
+first a right rotation between the child and grandchild, then a left rotation around the node and its (new) right child. 
+You can see how these work by inserting 30,10, then 20 into AIA (*left-right*) and 10, 30, 20 (*right-left*).
 
 
 
-_**Suggested exercises in AIA**_
 
-To **zig-zig and zig-zag configurations** and **rotation corrections** in AIA: 
+XXX Lee -- put these exercises here? or integrated into the text, as I've done for left-left above?
+Only one place, not both
+
+_**Suggested exercises in AIA**_  
+XXX Lee - I haven't reviewed these recently, waiting for us to agree on desired  format first.
+XXX In any case, will be rewritten to obliterate zig-zag and friend
+
 
 -For a left-left zig-zig configuration, enter 50, 40, then with the code expanded enter 30, step by step, to see the temporary left-left zig-zig imbalance, followed by a single rotation.\
 -For right-right zig-zig and single rotation, enter 30, 40, then slowly 50.\

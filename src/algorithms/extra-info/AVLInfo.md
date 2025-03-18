@@ -21,19 +21,22 @@ a:hover{
 Geeks for Geeks Link:
 <a href="https://www.w3schools.com/dsa/dsa_data_avltrees.php" target="_blank">AVL Tree</a>
 
----------------------------------------------------------------
-
-
 Insert detailed information about rotations here.
+
+Rework the following original:
 
 # Rotation in AVL trees
 
-When examining any particular subtree of an AVL tree in AIA, the node we use the following **node numbering scheme** which preserves the binary search invariant, that is, node t1 (with value 1) is always to the left of node t2 (value 2), node t2 is always to the left of node t3 (value 3), node t4 is (value 4) always to the right of node t3.  Importantly, note also that some of these nodes **may be empty**, and are shown for completeness.
+### Node numbering convention
 
-**Lee -- We should talk about whether this numbering makes things more difficult for a student to understand, or easier.**  
+When examining any particular subtree of an AVL tree in *AIA*, we use the following **node numbering scheme** in *AIA*. The nodes are
+labelled `tX`, where `X` is a numeric value, and the binary search invariant is , that is, node t1 (with value 1) is always to the left of node t2 (value 2), node t2 is always to the left of node t3 (value 3), node t4 is (value 4) always to the right of node t3.  Importantly, note also that some of these nodes **may be empty**, and are shown in the diagrams here for completeness.  Note also that generally nodes in *AIA* are identified only by their value; we introduce the numbers tX only when showing rotation.  
+
+  
 
 A full and completely balanced tree, rooted at node would thus be:
-//Comment: need to have empty spaces at the left of this diagram for it to render correctly.
+
+[Comment: need to have empty spaces at the left of this diagram for it to render correctly.]: #)
 
 
         
@@ -43,67 +46,77 @@ A full and completely balanced tree, rooted at node would thus be:
         / \   / \                  
       t1  t3 t5  t7              
 
-The above tree would still be balanced, according to the AVL criterion for balance, if certain nodes or combinations of nodes are empty, for example, t1 or t3 or t5 , or various combinations, such as t1 & t3, or t3 & t5, and so on. The combination t1&t2&t3 would not be allowed, however, as then the tree rooted at t4 would have a left subtree of height 0, and a right subtree with height 2.
+Even if *some* nodes or combinations of nodes were empty, the above tree would still be balanced according to AVL criteria. For example, t1 or t3, or both could be removed, but note that removal of t1 and t2 and t3 would leave the tree unbalanced.
+
+## Correcting the temporarily unbalanced tree
+
+Adding a new node may increase the height of some nodes that are closer to the root along the search path.  We show here 
+how a rotation operation, which consists of only a few local pointer reassignments, used to restore the balance of the AVL tree. Importantly,
+although the rotation operation is local, it restores the balance at all the preceding nodes in the search path.
 
 
-Trees with t1 or t3 or t5 empty, or various combinations, such as t1 & t3, or t3 & t5, and so on, empty would still be balanced, according to the AVL criterion of having a difference in height between two subtrees of no more than 1. 
+In the simplest terms, an edge rotation in a tree is exactly what you would imaging, looking at it visually, and preserves the BST invariant:
+
+Right rotation:
+
+FIX THIS!!
+      
+      t6                       t2                                t2                                     t6
+     /      Right Rotation      \               and              \            Left Rotation            / 
+   t2     - - - - - - - >       t6                                t6         - - - - - - - >         t2  
+
+ Complications arise with how to handle child nodes.  For example, in the Right Rotation above, what if t2 already has 
+ a right child, making it not so simple to assign t6 as its right child?  Similarly, how do we leave the rotated node 
+ linked to the rest of the tree, if the ancestor of t6 is now t2?
+ 
+ When a new node temporarily unbalances an AVL, the tree can be in one of two configurations, each of which has a mirror image. 
+ The _*left-left*_ case and _*right-right*_ case are mirror images corrected by a single rotation, while the *left-right* and *right-left*
+ case are mirror images corrected by a double rotation.
+ 
+ ## Left-left and Right-right cases (single rotation)
+
+ 
+Below we show a temporarily unbalanced AVL tree, where t6 has been identified as the node where 
+an imbalance is first noted and (as above for Right Rotation) t2 is its left child. Note that some of the nodes may be 
+`empty`.   
+
+First we look at the *left-left* case, where the newly added node is inserted into the subtree rooted at `t1`. The tree is unbalanced at `t6`,
+since its left subtree now has a height of 3, while its right subtree has a height of 1.
 
 
 
-In the diagrams below, t6 is the node where the imbalance is noted.    
+To restore balance in this *left-left* case,  we perform a *Right Rotation* around the node where the imbalance is detected, `t6` in this case.
+ Node t2 is made the parent of t6, while t6 is now the *right* child of t2.  Additionally, since t2 already had t4 as its right child, but now needs to 
+t4 is moved to become the *left* child of t6, which nicely preserves the BST invariant.   This subtree is now rooted at t2, instead of t6, and is 
+therefore linked into the rest of the tree from this new root.
+ The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is now:   
 
-As shown in the diagram below, t6 is the node at which the imbalance has been noted, and t2 is its left child. The clockwise rotation to restore balance makes t2 the parent of t6, while t6 is the *right* child of t2.  Additionally, since t2 already had t4 as its right child, t4 is moved to become the left child of t6.  Note that theBST invariant is preserved: t4, is bigger than t2, and is also smaller than t6.  The rotation reduces the distance from the root to t1 (where the new node was added), so the tree is no
-
-
-
-
-
-, as explained in the diagram The 6 and 4 nodes and the edge between them rotate cloc kwise, and
-the 5 node changes parents from 4 to 6. This reduces the distance from
-the root to the 1 (where the new node was added), restoring the balance
-(the distance to the node rooted at 7 is increased but this does not
-cause the AVL tree balance condition to be violated).  Right rotation is
-done by calling rightRotate(t6), where t6 is the tree rooted at 6.
-
-![Alt text if image doesn't open: AVL-left-left](images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
-  
-
-![Alt text if image doesn't open: AVL-left-left](Linda Stern/GitHub/algorithms-in-action.github.io/src/algorithms/explanationsimag/images/AVL/AVL-left-left.jpg){width=120,height=50} This picture is from Greek for Geeks, and is only a placeholder to show proof of concept inserting diagrams, and to check things like size and cropping.
-  
-Test comment
-
-[This shouldn't be seen if the comment signal is correct]: #)
-
-**Check whether the numbering here is still the same in the animation**
-**Note I have added a link to the parent of t6 -- check, since the pointer to the left child of this anonymous node needs to be changed, have we given it a number?** 
-
-**Lee - is t4 empty in this case?  If not, then the tree would already have been unbalanced  previously, when t4 was added??**
-
-```
-     	/                            /
-      t6                          t2
-     / \     Right Rotation      / \
-    t2   7    - - - - - - - >    1  t6
-   / \       < - - - - - - -       / \
-  1   t4       Left Rotation      t4   7
-```
-
-**9 Jan 4PM I haven't gone beyond this**
+       /                                   /   
+      t6                                 t2
+     / \             Right Rotation      / \
+    t2  t7          - - - - - - - >    t1  t6
+   / \             < - - - - - - -         / \
+  t1   t4            Left Rotation       t4  t7
 
 
-## The right-right case
+Conversely, for the *right-right* case, looking at t7 as the direct parent of the new node, and t2 as the point at which the
+imbalance is first noted: t7 is the right child of right child `t6`, and we would perform a *Left Rotation*, and shown in the
+same diagram, going from right to left, and implemented as function `leftRotate` in AIA. 
 
-The right-right case is the exact opposite. If the tree on the right in
-the diagram above is too unbalanced due to insertion into the subtree
-rooted at 7, we can call rightRotate(t2) to lift that subtree and lower
-the 1 subtree.
 
-## The left-right case (double rotation)
 
-If the new key was added to the right child of the left child (the
-left-right case) and the resulting tree is too unbalanced, the balance can be
-restored with a left rotation at node 2 followed by a right rotation at
-node 6.
+## The left-right  and right-left cases (double rotation)
+
+*I think these diagrams are not consistent with the diagrams in the left-left/right-right section above*
+*Think about it!*
+
+Again, these two cases, left-right and right-left, are symmetrical.
+
+The diagram below illustrates a *left-right* situation, where insertion of a new node into the subtree rooted in node t4 introduces an imbalance into the tree
+that is first noted at node t6. The insertion has been into the *right* subtree (rooted at t4) of a *left* subtree (t2) of `t6`, the node at
+which the dimbalance was first detected.  This situation is corrected by a left rotation at node t2, followed by a right rotation at node t6`, shortening the distance between the new node and the root and rebalancing the tree.  Note that the first rotation turns the left-right configuration to a left-left situation, and the second rotation simply follows as in an outright left-left imbalance.  
+
+
 ```
       6      Rotate           6       Rotate           4
      / \    left at 2        / \     right at 6      /   \
@@ -122,7 +135,7 @@ the root of 3, 5 and 7 are changed by one, affecting the overall balance.
 
 If the new key was added to the left child of the right child (the
 right-left case) and the resulting tree is too unbalanced, it is a mirror
-image of the left-right case:
+image of the left-right case.  Insertion into the subtree rooted at `t4`, which is the left child of `t6`, while `t6` is the right child of `t2`, where the imbalance is first detected:
 
 ```
       2      Rotate           2       Rotate           4
