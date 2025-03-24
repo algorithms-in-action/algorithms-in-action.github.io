@@ -121,7 +121,7 @@ export function run_msort() {
     }, [A, B, runlength]);
 
     chunker.add('runlength', (vis, c_rlength) => {
-      assignVarToA(vis, "runlength", c_rlength - 1, size);
+      // assignVarToA(vis, "runlength", c_rlength - 1, size);
       set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
       highlightAllRunlengths(vis, c_rlength, runAColor, runBColor, size);
     }, [runlength]);
@@ -131,7 +131,7 @@ export function run_msort() {
       let left = 0;
 
       chunker.add('MainWhile', (vis) => {
-        assignVarToA(vis, "size", size, size);
+        // assignVarToA(vis, "size", size, size);
       }, []);
 
       chunker.add('left', (vis, a, c_left, c_rlength) => {
@@ -357,9 +357,9 @@ export function run_msort() {
         assignVarToA(vis, 'left', undefined, size);
         set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
 
-        if (c_rlength < size) {
-          assignVarToA(vis, "runlength", c_rlength - 1, size);
-        }
+        // if (c_rlength < size) {
+          // assignVarToA(vis, "runlength", c_rlength - 1, size);
+        // }
 
 
       }, [runlength]);

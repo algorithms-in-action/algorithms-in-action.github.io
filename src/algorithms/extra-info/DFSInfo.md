@@ -20,14 +20,7 @@ Geeks for Geeks Link: [**Iterative Depth First Search**][G4GLink]
 
 ## Exercises/Exploration
 
-In AIA, the coding of various graph algorithms is designed to show
-their similarity. Iterative DFS, breadth first search, Dijkstra's
-shortest path algorithm, heuristic search and Prim's minimal spanning
-tree algorithm all have *identical* top-level pseudocode - check it out!
-Can you re-write the code for this and/or for other algorithms to make
-it as simple as possible, rather than emphasising similarity?
-
-For Graph2 can you find a combination of start and end nodes so the path
+For Graph 2 can you find a combination of start and end nodes so the path
 found includes all nodes in the graph?
 
 Experiment with the iterative and recursive versions of DFS. Can you
@@ -52,4 +45,10 @@ How can you code iterative DFS so it uses less stack space in the worst
 case?  Hint: consider what information is on the (implicit) stack for
 recursive DFS and how that is coded.
 
+In AIA, the coding of various graph algorithms is designed to show
+their similarity. Iterative DFS, breadth first search, Dijkstra's
+shortest path algorithm, heuristic search and Prim's minimal spanning
+tree algorithm all have *identical* top-level pseudocode - check it out!
+Can you re-write the code for this and/or for other algorithms to make
+it as simple as possible, rather than emphasising similarity?
 

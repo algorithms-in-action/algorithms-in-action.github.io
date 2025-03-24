@@ -34,6 +34,13 @@ forest for the whole graph.  One coding sometimes used is to add an outer
 loop that calls Prims() for each node in the graph, ignoring nodes that
 have already been visited.  Can you think of a different way of coding it?
 
+In AIA, the coding of various graph algorithms is designed to show
+their similarity. Iterative DFS, breadth first search, Dijkstra's
+shortest path algorithm, heuristic search and Prim's minimal spanning
+tree algorithm all have *identical* top-level pseudocode - check it out!
+Can you re-write the code for this and/or for other algorithms to make
+it as simple as possible, rather than emphasising similarity?
+
 Compare and contrast how Prim's algorithm and Kruskal's algorithm operate
 to compute minimum spanning trees.
 
