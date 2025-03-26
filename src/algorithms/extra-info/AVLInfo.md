@@ -1,22 +1,35 @@
 <style>
 a:link {
-    color: #90ee90;
+    color: #1e28f0;
 }
 a:visited{
-    color: #ffaeb9;
+    color: #3c1478;
 }
 a:hover{
-    color: #B22222;
+    color: #1e288c;
 }
 </style>
 
 ## Extra Info
 
------
+W3Schools Link: [**AVL Trees**][G4GLink]
 
-<!-- Geeks for Geeks Link: [**AVL Tree**][G4GLink] -->
+[G4GLink]: https://www.w3schools.com/dsa/dsa_data_avltrees.php
 
-<!-- [G4GLink]: https://www.w3schools.com/dsa/dsa_data_avltrees.php -->
+## Exercises/Exploration
 
-Geeks for Geeks Link:
-<a href="https://www.w3schools.com/dsa/dsa_data_avltrees.php" target="_blank">AVL Tree</a>
+With insertion of three distinct keys there are six orders in which the
+keys may appear.  How many different AVL trees are there with three
+given distinct keys? Explore how insertion takes place for the six
+different orders.
+
+In the background it says that unbalance can only be caused by insertion
+into a grandchild of a node.  Why can't it be caused by just adding a
+new child to a node?
+
+In the worst case for simple binary trees, every node except one has a
+single chlild. Find some worst case AVL trees.
+
+The AIA insertion code is recursive.  What possible ways are there to
+write a non-recursive version?
+
