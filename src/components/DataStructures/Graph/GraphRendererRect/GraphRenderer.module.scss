@@ -41,8 +41,12 @@
 
     &.selected {
       .circle {
-        fill: var(--sky);
-        stroke: var(--sky);
+        // fill: var(--sky);
+        // stroke: var(--sky);
+        // hacked so match in graph search is leaf, not sky
+        // XXX should fix up properly
+        fill: var(--leaf);
+        stroke: var(--leaf);
       }
 
       .rect {
