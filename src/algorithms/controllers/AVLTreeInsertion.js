@@ -678,6 +678,7 @@ export default {
                     (vis, r, b, rr, rrr) => {
                         // show the rotation type and the node to be rotated
                         vis.graph.setFunctionName(`balanceCase: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`RR`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
@@ -714,6 +715,7 @@ export default {
                     (vis, r, b, rl, rlr) => {
                         // show the rotation type and the node to be rotated
                         vis.graph.setFunctionName(`balanceCase: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`LR`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
@@ -751,6 +753,7 @@ export default {
                     (vis, r, b, rr, rrl) => {
                         // show the rotation type and the node to be rotated
                         vis.graph.setFunctionName(`balanceCase: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`RL`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
