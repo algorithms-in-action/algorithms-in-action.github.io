@@ -3,12 +3,19 @@ import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import MaskTracer from '../../components/DataStructures/Mask/MaskTracer';
 import { areExpanded } from './collapseChunkPlugin';
 import { createPopper } from '@popperjs/core';
+import {colors} from '../../components/DataStructures/colors';
 
 // radix must be a power of two; we use radix 4 here but code should work
 // with another radix except vis.mask.setAddBase4() would need to be
-// generalised and that call deleted if radix = 2
+// generalised and that call deleted if radix = 2, plus digitColor
+// would need generalising
 const RADIX_BITS = 2;
 const RADIX = 1 << RADIX_BITS;
+
+const highlightColor = colors.apple; // various highlights
+const changedColor = colors.wood; // for cumulative sums
+// colors for the 4 digits
+const digitColor = [colors.peach, colors.leaf, colors.sky, colors.plum];
 
 const SRS_BOOKMARKS = {
     radix_sort: 1,
@@ -37,19 +44,28 @@ const isCountExpanded = () => {
 
 const highlight = (array, index, isPrimaryColor = true) => {
     if (isPrimaryColor) {
-        array.select(index);
+        array.selectColor(index, highlightColor);
     } else {
-        array.patch(index);
+        array.selectColor(index, changedColor);
     }
 };
 
-const unhighlight = (array, index, isPrimaryColor = true) => {
-    if (isPrimaryColor) {
-        array.deselect(index);
-    } else {
-        array.depatch(index);
+// color all digits in array according to digit value
+const colorDigits = (A, visA, digit, n) => {
+    for (let i = 0; i < n; i++) {
+        if (A[i] !== undefined) {
+            visA.deselect(i);
+            visA.selectColor(i, digitColor[bitsAtIndex(A[i], digit, RADIX_BITS)]);
+        }
     }
-};
+}
+
+// color all counts in array according to index
+const colorCounts = (visA, n) => {
+    for (let i = 0; i < n; i++) {
+        visA.selectColor(i, digitColor[i]);
+    }
+}
 
 const updateMask = (vis, index, bits) => {
     const mask = ((1 << bits) - 1) << (index * bits);
@@ -120,6 +136,7 @@ export default {
                 (vis, count) => {
                     if (isCountExpanded()) {
                         setArray(vis.countArray, count);
+                        colorCounts(vis.countArray, RADIX);
                     }
                 },
                 [count]
@@ -127,35 +144,30 @@ export default {
 
             for (let i = 0; i < n; i++) {
                 chunker.add(SRS_BOOKMARKS.add_count_for_loop,
-                    (vis, i, lastBit, count) => {
+                    (vis, i, lastBit, count, A, n, k) => {
                         if (isCountExpanded()) {
                             setArray(vis.countArray, count);
+                            colorCounts(vis.countArray, RADIX);
                         }
-                        if (i !== 0) {
-                            unhighlight(vis.array, i - 1);
-                        }
-
-                        if (lastBit !== -1 && isCountExpanded()) {
-                            unhighlight(vis.countArray, lastBit);
-                        }
-
+                        colorDigits(A, vis.array, k, n);
                         highlight(vis.array, i);
                         updateBinary(vis, A[i]);
                     },
-                    [i, lastBit, count]
+                    [i, lastBit, count, A, n, k]
                 );
 
                 const bit = bitsAtIndex(A[i], k, radixBits);
                 count[bit]++;
 
                 chunker.add(SRS_BOOKMARKS.add_to_count,
-                    (vis, count) => {
+                    (vis, i, count, A, n, k) => {
                         if (isCountExpanded()) {
                             setArray(vis.countArray, count);
-                            highlight(vis.countArray, bit);
+                            colorCounts(vis.countArray, RADIX);
                         }
+                        colorDigits(A, vis.array, k, n);
                     },
-                    [count]
+                    [i, count, A, n, k]
                 );
 
                 lastBit = bit;
@@ -176,19 +188,13 @@ export default {
 
             for (let i = 1; i < count.length; i++) {
                 chunker.add(SRS_BOOKMARKS.cum_sum_for_loop,
-                    (vis, i, n, lastBit) => {
+                    (vis, i, A, n, lastBit) => {
                         if (isCountExpanded()) {
-                            if (i === 1) {
-                                unhighlight(vis.array, n - 1);
-                            } else
-                                unhighlight(vis.countArray, i-1, false);
-                            if (i === 1 && isCountExpanded()) {
-                                unhighlight(vis.countArray, lastBit);
-                            }
+                            colorCounts(vis.countArray, RADIX);
                             highlight(vis.countArray, i);
                         }
                     },
-                    [i, n, lastBit]
+                    [i, A, n, lastBit]
                 );
 
                 count[i] += count[i - 1];
@@ -197,7 +203,7 @@ export default {
                     (vis, count, i) => {
                         if (isCountExpanded()) {
                             setArray(vis.countArray, count);
-                            highlight(vis.countArray, i, false);
+                            colorCounts(vis.countArray, RADIX);
                         }
                     },
                     [count, i]
@@ -224,54 +230,60 @@ export default {
             for (let i = n - 1; i >= 0; i--) {
                 const num = A[i];
                 chunker.add(SRS_BOOKMARKS.populate_for_loop,
-                    (vis, num, i, bit, count, sortedA) => {
+                    (vis, num, i, bit, count, A, sortedA, k, n) => {
                         if (i === n - 1) {
                             if (isCountExpanded()) {
-                                unhighlight(vis.countArray, count.length - 1, false);
+                                // unhighlight(vis.countArray, count.length - 1, false);
                             }
                         } else {
-                            unhighlight(vis.array, i + 1);
+                            colorDigits(A, vis.array, k, n);
                             if (isCountExpanded()) {
                                 setArray(vis.countArray, count);
+                                colorCounts(vis.countArray, RADIX);
                                 setArray(vis.tempArray, sortedA);
-                                unhighlight(vis.countArray, bit);
-                                unhighlight(vis.tempArray, count[bit]);
+                                colorDigits(sortedA, vis.tempArray, k, n);
                             }
                         }
                         updateBinary(vis, num);
-                        highlight(vis.array, i);
+                        // highlight(vis.array, i);
                     },
-                    [num, i, bit, count, sortedA]
+                    [num, i, bit, count, A, sortedA, k, n]
                 );
                 bit = bitsAtIndex(num, k, radixBits);
                 count[bit]--;
                 chunker.add(SRS_BOOKMARKS.dec_count,
-                    (vis, num, i, bit, count, sortedA) => {
+                    (vis, num, i, bit, count, A, sortedA, k, n) => {
 
                         if (isCountExpanded()) {
                             setArray(vis.countArray, count);
-                            highlight(vis.countArray, bit);
+                            colorCounts(vis.countArray, RADIX);
+                            // highlight(vis.countArray, bit);
                         }
+                        colorDigits(A, vis.array, k, n);
                     },
-                    [num, i, bit, count, sortedA]
+                    [num, i, bit, count, A, sortedA, k, n]
                 );
                 sortedA[count[bit]] = num;
+                A[i] = undefined; // blank out array element
                 chunker.add(SRS_BOOKMARKS.insert_into_array,
-                    (vis, num, i, bit, count, sortedA) => {
+                    (vis, num, i, bit, count, A, sortedA, k, n) => {
 
+                        setArray(vis.array, A);
+                        colorDigits(A, vis.array, k, n);
                         if (isCountExpanded()) {
                             setArray(vis.tempArray, sortedA);
-                            highlight(vis.tempArray, count[bit]);
+                            colorDigits(sortedA, vis.tempArray, k, n);
+                            // highlight(vis.tempArray, count[bit]);
                         }
                     },
-                    [num, i, bit, count, sortedA]
+                    [num, i, bit, count, A, sortedA, k, n]
                 );
             }
 
             chunker.add(SRS_BOOKMARKS.copy,
-                (vis, array, n, countLength, bits) => {
+                (vis, array, n, countLength, k) => {
                     setArray(vis.array, array);
-
+                    colorDigits(array, vis.array, k, n);
                     if (isCountExpanded()) {
                         setArray(vis.tempArray, Array.apply(null, Array(n)).map(() => undefined));
                         setArray(vis.countArray, Array.apply(null, Array(countLength)).map(() => undefined));
@@ -284,7 +296,7 @@ export default {
                       }
                     }, DELAY_POPPER_UPDATE);
                 },
-                [sortedA, n, count.length, bits]
+                [sortedA, n, count.length, k]
             );
 
             return sortedA;
@@ -310,6 +322,7 @@ export default {
 
                 if (isCountExpanded()) {
                     setArray(vis.countArray, Array.apply(null, Array(1 << RADIX_BITS)).map(() => undefined));
+                    colorCounts(vis.countArray, RADIX);
                     setArray(vis.tempArray, Array.apply(null, Array(n)).map(() => undefined));
                 }
                 // create poppers or reset poppers if they already exist
@@ -358,9 +371,14 @@ export default {
 
         for (let k = 0; k < bits / RADIX_BITS; k++) {
             chunker.add(SRS_BOOKMARKS.counting_sort_for_loop,
-                vis => {
+                (vis, A, k) => {
                     updateMask(vis, k, RADIX_BITS);
+                    for (let i = 0; i < n; i++) {
+                        vis.array.deselect(i);
+                        vis.array.selectColor(i, digitColor[bitsAtIndex(A[i], k, RADIX_BITS)]);
                 }
+                },
+                [A, k]
             );
 
             A = countingSort(A, k, n, RADIX_BITS);

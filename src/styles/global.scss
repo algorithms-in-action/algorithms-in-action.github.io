@@ -175,6 +175,12 @@ $yellowLine: #FFDE3C;
 	//tree: arrows from parent nodes to parent nodes in a tree
 	//graph: available graph edges
 	//table: selected table elements
+	--plum: #8c32ab;
+        // used as 4th color in radix exchange sort,...
+	--wood:  #d35400;
+        // (currently) spare color
+        --stone: #aeaeae;
+        // same as sorted for various data structures
 
 
 
@@ -340,6 +346,8 @@ $yellowLine: #FFDE3C;
 	--peach: #f58b2f;
 	--apple: #DC0707;
 	--sky: #2289ff;
+	--plum: #82b807;
+	--wood: #b9770e;
 
 	--graph-node-circle-fill: #5c5c5c;
 	--graph-node-circle-stroke: #373737;
@@ -443,6 +451,8 @@ $yellowLine: #FFDE3C;
         --apple: #DC0707;
         --peach: #ffa500;
 	--sky: #2289ff;
+	--plum: #8c32ab;
+	--wood: #9a7d0a;
 
 	//pseudocode colours
 	--right-code-keyword-font: #bf16b4;
@@ -459,6 +469,8 @@ $yellowLine: #FFDE3C;
 	--peach: #f2c988;
 	--apple: #ec0a70;
 	--sky: #258bff;
+	--plum: #d364a4;
+	--wood: #f5cba7;
 
 
 	//pseudocode colours
@@ -475,6 +487,8 @@ $yellowLine: #FFDE3C;
 	--peach: #f1f513;
 	--apple: #9f2fe4;
 	--sky: #0d9eae;
+	--plum: #d8c104;
+	--wood: #914626;
 
 	//pseudocode colours
 	--right-code-keyword-font: #bf16b4;
@@ -489,6 +503,8 @@ $yellowLine: #FFDE3C;
 	--peach: #e0e0e0;
 	--apple: #000000;
 	--sky: #3e3e3e;
+	--plum: #8e8e8e;
+	--wood: #a2a2a2;
 
 	//pseudocode colours
 	--right-code-keyword-font: #646464;

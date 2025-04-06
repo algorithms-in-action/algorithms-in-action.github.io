@@ -25,9 +25,9 @@ Radixsort(A, n) // Sort array A[0]..A[n-1] in ascending order. \\B 1
 \\Expl}
 
     Find maximum number of "digits" used in the data \\B 2
-    \\Expl{  This depends on the radix (base) we use to view the data.
+    \\Expl{ This depends on the radix (base) we use to view the data.
       Here we use radix 4 for illustration (the digits are 0-3 and use
-      two bits; we show the binary representation of the keys and the
+      two bits; we show the bsae 4 and binary representation of the keys and the
       mask used to extract the current digit).
       We could use radix 10 (decimal digits), radix 2
       (binary) or anything else.  Radix 256 (one byte) is a
@@ -54,7 +54,8 @@ Radixsort(A, n) // Sort array A[0]..A[n-1] in ascending order. \\B 1
 Countingsort
 Array Count <- counts of each kth digit value   \\Ref CountNums
 \\Expl{  We count the number of occurrences of each digit value (here 0-3
-  or binary 00-11) in the kth digits of the data.
+  or binary 00-11) in the kth digits of the data.  Consistent colors are
+  used for the different digit values in this and other arrays).
 \\Expl}
 Cumulatively sum digit value counts    \\Ref CumSum
 \\Expl{ For each digit value, we compute the count for that digit value
@@ -62,10 +63,10 @@ Cumulatively sum digit value counts    \\Ref CumSum
   last occurrence of each digit value will appear in the sorted array
   (the counts are one greater than the index because we start at index 0).
 \\Expl}
-Array B <- sorted numbers    \\Ref Populate
+Array B <- numbers sorted on digit k    \\Ref Populate
 \\Expl{  We copy the data to temporary array B, using the digit
   value counts to determine where each element is copied to, so the result
-  is sorted on this digit.
+  is sorted on this digit. We scan right to left to make the sorting stable.
 \\Expl}
 Copy B back to A \\B 10
 \\Expl{ Array A is now sorted on digit k and all less significant digits
@@ -80,7 +81,8 @@ initialise array Count to all zeros \\B 16
 for num in A \\B 13
 \\In{
     digit <- kth digit value in num \\B 17
-    \\Expl{ The digit is the two highlighted bits in the binary representation.
+    \\Expl{ The digit is highlighted in the base 4 display (and the two
+      bits in the binary representation).
       To extract the kth digit we can use div and mod operations.
       If the radix is a power of two we can use bit-wise operations
       (right shift and bit-wise and) instead.
@@ -114,7 +116,8 @@ for each num in A in reverse order \\B 8
 \\Expl}
 \\In{
     digit <- kth digit value in num \\B 19
-    \\Expl{ The digit is the two highlighted bits in the binary representation.
+    \\Expl{ The digit is highlighted in the base 4 representation (and
+      the two bits in the binary representation).
       To extract the kth digit we can use div and mod operations.
       If the radix is a power of two we can use bit-wise operations
       (right shift and bit-wise and) instead.

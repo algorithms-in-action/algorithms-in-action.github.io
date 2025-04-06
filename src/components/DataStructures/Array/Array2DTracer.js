@@ -181,6 +181,9 @@ class Array2DTracer extends Tracer {
           case 5:
             this.data[x][y].selected5 = true;
             break;
+          case 6: // see src/components/DataStructures/colors.js
+            this.data[x][y].sorted = true;
+            break;
 
           default:
             this.data[x][y].selected = true;  // XXX Bool or int?????
@@ -501,6 +504,7 @@ class Array2DTracer extends Tracer {
         this.data[x][y].selected3 = false;
         this.data[x][y].selected4 = false;
         this.data[x][y].selected5 = false;
+        this.data[x][y].sorted = false;
         this.data[x][y].style = undefined;
       }
     }

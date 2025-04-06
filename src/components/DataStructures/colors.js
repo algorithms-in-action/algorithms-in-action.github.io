@@ -16,10 +16,13 @@
 // consistent colour for "sorted" things across different algorithms,
 // that can be done on top of colors, eg, define color_sorted to be a
 // particular named color.
+// We include color 6 (stone/grey), which is mapped to sorted in the
+// low level color selection code - there is no selected6
+// See src/components/DataStructures/Array/Array2DTracer.js
 // Numbers (etc) are mapped back to color names in files such as
 // src/components/DataStructures/Array/Array1DRenderer/Array1DRenderer.module.scss
 // There is also a mapping from JS to HTML in files such as
-// src/components/DataStructures/Array/Array1DTracer.js
+// src/components/DataStructures/Array/Array2DRenderer/index.js
 // The colors are defined in
 // src/styles/global.scss
 
@@ -28,7 +31,11 @@ export const colors = {
   leaf: 1,   // (in default scheme) green
   apple: 2,  // (in default scheme) red
   peach: 3,  // (in default scheme) orange
-  // XXX add stone (grey), ink (black), darker/lighter versions of other
-  // colors, plum?, ...
+  plum: 4,  // (in default scheme) purple
+  wood: 5,  // (in default scheme) brown
+  stone: 6  // (in default scheme) grey (see note above)
+  // current code for arrays has "selected", "selected1",... "selected5"
+  // plus "sorted", "patched",...
+  // XXX add ink (black), darker/lighter versions of other colors, ...
 };
 
