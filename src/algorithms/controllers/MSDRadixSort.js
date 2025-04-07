@@ -1,9 +1,17 @@
+// Some color code could be cleaned up
+// Could share some code with straight radix sort and quicksort
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import MaskTracer from '../../components/DataStructures/Mask/MaskTracer'
 import {
   areExpanded,
 } from './collapseChunkPlugin';
 import { createPopper } from '@popperjs/core';
+import {colors} from '../../components/DataStructures/colors';
+
+const partLColor = colors.peach;
+const partRColor = colors.sky;
+const sortedColor = colors.stone;
+const highlightColor = colors.apple; // for i,j in partition,...
 
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
@@ -85,20 +93,12 @@ const isRecursionExpanded = () => {
   return areExpanded(['MSDRadixSortLeft']) || areExpanded(['MSDRadixSortRight']);
 }
 
-const highlight = (vis, index, isPrimaryColor = true) => {
-    if (isPrimaryColor) {
-        vis.array.select(index);
-    } else {
-        vis.array.patch(index);
-    }
-};
+const highlight = (vis, index) => {
+    vis.array.selectColor(index, highlightColor);
+};  
 
-const unhighlight = (vis, index, isPrimaryColor = true) => {
-    if (isPrimaryColor) {
-        vis.array.deselect(index);
-    } else {
-        vis.array.depatch(index);
-    }
+const unhighlight = (vis, index) => {
+    vis.array.deselect(index);
 };
 
 const updateMask = (vis, value) => {
@@ -194,6 +194,8 @@ export default {
         assert(vis.array);
         assert(cur_real_stack && cur_finished_stack_frames);
 
+        // conditions for i,j display moved elsewhere
+/*
         if (!isPartitionExpanded()) {
           // j should not show up in vis if partition is collapsed
           cur_j = undefined;
@@ -205,6 +207,7 @@ export default {
           cur_i = undefined;
           cur_i_too_high = undefined;
         }
+*/
 
         vis.array.setStackDepth(cur_real_stack.length);
         vis.array.setStack(
@@ -226,21 +229,29 @@ export default {
           // init, before partition
           highlight(vis, cur_i)
           highlight(vis, cur_j)
-        } else if (isRecursionExpanded() && cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
+        } else if (cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
           // just before first recursive call
-          unhighlight(vis, prev_i)
-          if (prev_j >= 0) // might have fallen off array
-            unhighlight(vis, prev_j)
+          if (i <= right)
+            vis.array.selectColor(prev_i, partRColor)
+          if (prev_j >= left) // might have fallen off array
+            vis.array.selectColor(prev_j, partLColor)
+          for (let k = cur_i; k <= right; k++)
+            vis.array.deselect(k);
         } else if (checkingLeft) {
-          if (isRecursionExpanded() && prev_i !== undefined && prev_i !== cur_j)
-            unhighlight(vis, prev_i)
-          highlight(vis, cur_i)
+          if (prev_i !== undefined && prev_i !== cur_j)
+            for (let k = prev_i; k < cur_i && k <= right; k++)
+              vis.array.selectColor(k, partLColor)
+            if (cur_i <  cur_j)
+              highlight(vis, cur_i)
+            else if (cur_i <= right)
+              vis.array.selectColor(cur_i, partRColor)
           if (arr && cur_i !== undefined)
             updateBinary(vis, arr[cur_i])
         } else {
-          if (isRecursionExpanded() && prev_j !== undefined && prev_j !== cur_i)
-            unhighlight(vis, prev_j);
-          if (cur_j !== undefined) { // might have fallen off array
+          if (prev_j !== undefined && prev_j !== cur_i)
+            for (let k = prev_j; k >= cur_j && k >= cur_i; k--)
+              vis.array.selectColor(k, partRColor)
+          if (cur_j !== undefined && cur_j > cur_i) { // might have fallen off array
             highlight(vis, cur_j);
             // XXX probably best avoid updateBinary at swap
             updateBinary(vis, arr[cur_j])
@@ -250,10 +261,14 @@ export default {
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
         if (right >= 0)
           assignVariable(vis, VIS_VARIABLE_STRINGS.right, right);
-        assignVariable(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
-        assignVariable(vis, VIS_VARIABLE_STRINGS.i_gt_n, cur_i_too_high);
-        assignVariable(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
-        assignVariable(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
+        if (isPartitionExpanded() || isRecursionExpanded()) {
+          assignVariable(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.i_gt_n, cur_i_too_high);
+	}
+        if (isPartitionExpanded()) {
+          assignVariable(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
+        }
       };
 
 
@@ -345,6 +360,8 @@ cur_i, cur_j, cur_depth, A) => {
 
               vis.array.swapElements(_n1, _n2);
               refreshStack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, false, undefined, A, mask)
+              vis.array.selectColor(_n1, partLColor);
+              vis.array.selectColor(_n2, partRColor);
               // redo poppers: swapping the elements keeps the
               // contents of the poppers correct but the position needs
               // to change. The documentation suggests update()
@@ -410,7 +427,18 @@ arr],
         // Base case: If the array has 1 or fewer elements or mask is less than 0, stop
         partitionChunker(MSD_BOOKMARKS.rec_function, undefined, undefined, undefined, undefined, left, right, depth, arr, mask)
         maxIndex = undefined; // defined only for top level call
-        chunker.add(MSD_BOOKMARKS.base_case, (vis) => {}, [], depth)
+        chunker.add(MSD_BOOKMARKS.base_case, (vis, l, r) => {
+           if (left < right && mask >= 0)
+               // need to sort -> remove color
+               for (let k = left; k <= right && k < n; k++) {
+                   vis.array.deselect(k);
+               }
+           else
+               // done -> sortedColor
+               for (let k = left; k <= right && k < n; k++) {
+                   vis.array.selectColor(k, sortedColor);
+               }
+        }, [left, right], depth)
 
         if (left < right && mask >= 0) {
           // partition leaves final i and j highlighted, sets prev_i,
@@ -534,8 +562,8 @@ arr],
       chunker.add(MSD_BOOKMARKS.done,
         vis => {
           vis.array.setStackDepth(0)
-          for (let i = 0; i < n; i++) {
-            vis.array.sorted(i);
+          for (let k = 0; k < n; k++) {
+            vis.array.sorted(k);
           }
           vis.array.clearVariables();
           vis.array.setStack(deriveStack(real_stack, finished_stack_frames));

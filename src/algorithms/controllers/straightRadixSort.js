@@ -12,9 +12,10 @@ import {colors} from '../../components/DataStructures/colors';
 const RADIX_BITS = 2;
 const RADIX = 1 << RADIX_BITS;
 
+// color handling code has some legacy stuff that could be cleaned up
 const highlightColor = colors.apple; // various highlights
-const changedColor = colors.wood; // for cumulative sums
-// colors for the 4 digits
+const changedColor = colors.wood; // was for cumulative sums
+// colors for the 4 digits XXX assumes radix 4 (or less)
 const digitColor = [colors.peach, colors.leaf, colors.sky, colors.plum];
 
 const SRS_BOOKMARKS = {
@@ -42,12 +43,8 @@ const isCountExpanded = () => {
     return areExpanded(["Countingsort"]);
 };
 
-const highlight = (array, index, isPrimaryColor = true) => {
-    if (isPrimaryColor) {
-        array.selectColor(index, highlightColor);
-    } else {
-        array.selectColor(index, changedColor);
-    }
+const highlight = (array, index) => {
+    array.selectColor(index, highlightColor);
 };
 
 // color all digits in array according to digit value
@@ -231,11 +228,7 @@ export default {
                 const num = A[i];
                 chunker.add(SRS_BOOKMARKS.populate_for_loop,
                     (vis, num, i, bit, count, A, sortedA, k, n) => {
-                        if (i === n - 1) {
-                            if (isCountExpanded()) {
-                                // unhighlight(vis.countArray, count.length - 1, false);
-                            }
-                        } else {
+                        if (i !== n - 1) {
                             colorDigits(A, vis.array, k, n);
                             if (isCountExpanded()) {
                                 setArray(vis.countArray, count);

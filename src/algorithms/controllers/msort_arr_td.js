@@ -16,6 +16,7 @@ const apColor = colors.apple;
 const runAColor = colors.peach;
 const runBColor = colors.sky;
 const sortColor = colors.leaf;
+const doneColor = colors.stone;
 
 const run = run_msort();
 
@@ -748,6 +749,11 @@ export function run_msort() {
     // },
     // [entire_num_array.length - 1],
     // 0);
+    chunker.add('Done', (vis) => {
+      for (let i = 0; i < entire_num_array.length; i++) {
+        highlight(vis, i, doneColor);
+      }
+    }, [], 0);
 
     return msresult;
   }

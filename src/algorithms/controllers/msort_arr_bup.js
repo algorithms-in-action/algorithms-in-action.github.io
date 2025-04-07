@@ -29,6 +29,7 @@ const runAColor = colors.peach;
 const runBColor = colors.sky;
 const runCColor = colors.sky;  // replace all instances of runCColor with runBColor
 const sortColor = colors.leaf;
+const doneColor = colors.stone;
 
 
 export default {
@@ -367,7 +368,7 @@ export function run_msort() {
 
     chunker.add('Done', (vis) => {
       for (let i = 0; i < size; i++) {
-        highlight(vis, i, sortColor);
+        highlight(vis, i, doneColor);
       }
 
       set_simple_stack(vis.array, ["DONE"]);
