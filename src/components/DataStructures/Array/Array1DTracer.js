@@ -47,9 +47,13 @@ class Array1DTracer extends Array2DTracer {
     super.select(0, sx, 0, ex);
   }
 
-  selectColor(sx, c = '0') {
-    super.deselect(0, sx, 0, sx);
-    super.select(0, sx, 0, sx, c);
+  // revised way of getting colors
+  selectColor(sx, c) {
+    if (c !== undefined) {
+      super.deselect(0, sx, 0, sx);
+      super.nopatch(0, sx);
+      super.select(0, sx, 0, sx, c);
+    }
   }
 
   styledSelect(style, sx, ex = sx) {

@@ -37,7 +37,8 @@ const VIS_VARIABLE_STRINGS = {
   i_gt_n: 'i==n+1',
   j_eq_0: 'j==0',
   left: 'left',
-  right: 'right'
+  right: 'right',
+  right_eq_0: 'right==0'
 };
 
 const MSD_BOOKMARKS = {
@@ -172,6 +173,9 @@ export default {
         chunker.add(bookmark, refreshStack, args_array, depth)
       }
 
+      // we use a global flag in case we scan through the whole partition 
+      // and stop at the end without finding the mask bit we are looking
+      // for
       const refreshStack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, checkingLeft, maxIndex, arr, mask) => {
         // If we fall off the start/end of the array we just use the
         // first/last element and give the actual value of j/i
@@ -194,21 +198,6 @@ export default {
         assert(vis.array);
         assert(cur_real_stack && cur_finished_stack_frames);
 
-        // conditions for i,j display moved elsewhere
-/*
-        if (!isPartitionExpanded()) {
-          // j should not show up in vis if partition is collapsed
-          cur_j = undefined;
-          cur_j_too_low = undefined;
-        }
-
-        if (!isPartitionExpanded() && !isRecursionExpanded()) {
-          // i should not show up in vis if partition + recursion is collapsed
-          cur_i = undefined;
-          cur_i_too_high = undefined;
-        }
-*/
-
         vis.array.setStackDepth(cur_real_stack.length);
         vis.array.setStack(
           deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
@@ -225,11 +214,7 @@ export default {
           unhighlight(vis, maxIndex)
           updateBinary(vis, 0)
 	}
-        if (cur_i == left && cur_j === right && prev_i === undefined) {
-          // init, before partition
-          highlight(vis, cur_i)
-          highlight(vis, cur_j)
-        } else if (cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
+        if (cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
           // just before first recursive call
           if (i <= right)
             vis.array.selectColor(prev_i, partRColor)
@@ -238,29 +223,38 @@ export default {
           for (let k = cur_i; k <= right; k++)
             vis.array.deselect(k);
         } else if (checkingLeft) {
-          if (prev_i !== undefined && prev_i !== cur_j)
-            for (let k = prev_i; k < cur_i && k <= right; k++)
+          // note i can fall off RHS of array...
+          if (prev_i !== undefined && prev_i !== cur_j) {
+            let real_i = cur_i;
+            if (cur_i === undefined)
+              real_i = right + 1;
+            for (let k = prev_i; k < real_i && k <= right; k++)
               vis.array.selectColor(k, partLColor)
-            if (cur_i <  cur_j)
-              highlight(vis, cur_i)
-            else if (cur_i <= right)
+            if (cur_i !== undefined && cur_i <= right && (arr[cur_i] >> mask & 1) === 1)
               vis.array.selectColor(cur_i, partRColor)
+          }
           if (arr && cur_i !== undefined)
             updateBinary(vis, arr[cur_i])
         } else {
+          // note j can fall off LHS of array...
           if (prev_j !== undefined && prev_j !== cur_i)
             for (let k = prev_j; k >= cur_j && k >= cur_i; k--)
               vis.array.selectColor(k, partRColor)
-          if (cur_j !== undefined && cur_j > cur_i) { // might have fallen off array
-            highlight(vis, cur_j);
+          if (prev_j !== undefined && cur_j !== undefined && cur_j > cur_i) {
+            vis.array.selectColor(cur_j, partLColor);
             // XXX probably best avoid updateBinary at swap
             updateBinary(vis, arr[cur_j])
           }
         }
-        if (left < A.length)
+        if (left < A.length) // shouldn't happen with initial mask choice
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
-        if (right >= 0)
+        if (right >= 0) {
           assignVariable(vis, VIS_VARIABLE_STRINGS.right, right);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.right_eq_0, undefined);
+        } else {
+          assignVariable(vis, VIS_VARIABLE_STRINGS.right, undefined);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.right_eq_0, 0);
+        }
         if (isPartitionExpanded() || isRecursionExpanded()) {
           assignVariable(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
           assignVariable(vis, VIS_VARIABLE_STRINGS.i_gt_n, cur_i_too_high);
@@ -384,19 +378,19 @@ arr],
 
         partitionChunkerWrapper(MSD_BOOKMARKS.set_i)
         // partitionChunkerWrapper(MSD_BOOKMARKS.set_j)
-        while (i <= j) {
+        while (i < j) {
           prev_i = i; // save prev value for unhighlighting
           prev_j = j;
           // Build the left group until it reaches the mask (find the big element)
           leftCheck = true
-          while (i <= right && ((arr[i] >> mask & 1)) === 0) {
+          while (i <= j && (arr[i] >> mask & 1) === 0) {
             // partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
             i++
           }
           partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
           // Build the right group until it fails the mask (find the small element)
           leftCheck = false
-          while (j >= left && ((arr[j] >> mask & 1)) === 1) {
+          while (j > i && (arr[j] >> mask & 1) === 1) {
             // partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
             j--
           }

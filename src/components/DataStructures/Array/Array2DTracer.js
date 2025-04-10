@@ -147,6 +147,10 @@ class Array2DTracer extends Tracer {
     this.data[x][y].value = v;
   }
 
+  nopatch(x, y) {
+    this.data[x][y].patched = 0;
+  }
+
   // used to highlight sorted elements
   sorted(x, y) {
     if (!this.data[x][y]) this.data[x][y] = new Element();

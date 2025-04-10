@@ -24,6 +24,7 @@ class MaskRenderer extends Renderer {
         extra =
             <BinaryRenderer
               header={"Base 4"}
+              emphasise={true}
               data={binaryData}
               maxBits={maxBits/2}
               highlight={highlight.map((b) => Math.trunc(parseInt(b)/2))}
@@ -41,6 +42,7 @@ class MaskRenderer extends Renderer {
         {extra}
         <BinaryRenderer
           header={"Binary"}
+          emphasise={!addBase4}
           data={binaryData}
           maxBits={maxBits}
           highlight={highlight}

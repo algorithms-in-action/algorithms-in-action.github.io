@@ -353,13 +353,14 @@ export default {
             [nodes, bits]
         );
 
+        let maxIndex = A.indexOf(savedMax);
         chunker.add(SRS_BOOKMARKS.max_number,
-            (vis, bits, max) => {
-                // XXX could highlight max in array also?
+            (vis, bits, max, maxI) => {
                 vis.mask.setMaxBits(bits);
                 updateBinary(vis, max);
+                vis.array.selectColor(maxI, highlightColor);
             },
-            [bits, savedMax]
+            [bits, savedMax, maxIndex]
         );
 
         for (let k = 0; k < bits / RADIX_BITS; k++) {

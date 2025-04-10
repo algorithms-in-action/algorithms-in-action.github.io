@@ -82,15 +82,17 @@ while i < j \\B 303
         if we use "break" or similar to exit from this loop.
 \\Expl}
 \\In{
-    Repeatedly increment i until i >= j or A[i] has 1 as the mask bit \\B 304
+    Increment i until the mask bit of A[i] = 1 or i >= j \\B 304
     \\Expl{ Scan right looking for a "large" element that is out of
         place (mask bit is one). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
+        Note we do the tests before incrementing i.
     \\Expl}
-    Repeatedly decrement j until j <= i or A[j] has 0 as the mask bit \\B 305
+    Decrement j until the mask bit of A[j] = 0 or j <= i \\B 305
     \\Expl{ Scan left looking for a "small" element that is out of
         place (mask bit is zero). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
+        Note we do the tests before decrementing j.
     \\Expl}
     if i < j \\B 309
     \\Expl{ If the indices cross, we exit the loop.

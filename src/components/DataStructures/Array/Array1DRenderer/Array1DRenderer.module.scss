@@ -185,9 +185,9 @@
 
             .stackSubElement {
                 transition-duration: 0.1s;
-                --j-section: rgb(58, 177, 167);
-                --i-section: rgb(28, 185, 41);
-                --p-section: rgb(176, 25, 187); // pink pivot
+                --j-section: var(--sky);
+                --p-section: var(--leaf);
+                --i-section: var(--peach);
             }
         }
 

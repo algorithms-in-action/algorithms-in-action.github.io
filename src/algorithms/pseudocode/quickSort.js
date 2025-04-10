@@ -80,7 +80,7 @@ Set index i at left the of array segment and j at the right    \\Ref init_iAndj
 stopping at "small" elements (less than or equal to the pivot).
 \\Expl}
 while i < j \\B 6
-\\Expl{  When the indices cross, all the large elements at the left of
+\\Expl{  When the indices meet/cross, all the large elements at the left of
         the array segment have been swapped with small elements from the
         right of the array segment. The coding here can be simplified 
         if we use "break" or similar to exit from this loop.
@@ -91,12 +91,14 @@ while i < j \\B 6
             performance when there are many equal elements and because 
             the pivot is in A[right] this also acts as a sentinel, so 
             we don't increment beyond the right of the array segment.
+            Note we increment i before the tests.
     \\Expl}
-    Repeatedly decrement j until A[j] <= pivot or j < i \\B 8
+    Repeatedly decrement j until A[j] <= pivot or j <= i \\B 8
     \\Expl{  Stopping at elements equal to the pivot results in better
             performance when there are many equal elements. If the 
             indices cross we exit the outer loop; this also stops us 
             decrementing beyond the left of the array segment.
+            Note we decrement j before the tests.
     \\Expl}
     if j > i \\B 9
     \\Expl{  If the indices cross, we exit the loop.
