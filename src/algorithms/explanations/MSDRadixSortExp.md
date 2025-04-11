@@ -34,14 +34,16 @@ mask bit are put at the right (similar to partition in quicksort).
 indices for the sub-arrays boundaries and and the mask shifted one bit
 position to the right.
 
-### 3. Partitioning Based on Current Bit
-* The indices ```i``` and ```j```, are set at the left and right of the array segment.
-* These indices move towards each other, adjusting positions based on the
-mask bit of each key:
+### 3. Partitioning Based on Current Mask Bit
+* The indices ```i``` and ```j```, are set at the left and right of the
+  array segment, respectively.
+* These indices scan towards each other, adjusting positions based on the mask bit of each key:
     * Increment ```i``` until an element with a 1 as the mask bit is reached
     * Decrement ```j``` until an element with a 0 as the mask bit is reached
 
-* If the two indices have not met/crossed, perform a swap to ensure that 0s are placed on the left and 1s on the right.
+* If the two indices have met/crossed, stop. Otherwise, swap the
+  elements (so the 0 element is on the left and the 1 element is on the
+  right) and continue scanning as described above.
 
 ## Complexity
 ### Time Complexity

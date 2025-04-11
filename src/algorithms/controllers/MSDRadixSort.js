@@ -34,8 +34,10 @@ const STACK_FRAME_COLOR = {
 const VIS_VARIABLE_STRINGS = {
   i_left_index: 'i',
   j_right_index: 'j',
+  i_eq_0: 'i==0',
   i_gt_n: 'i==n+1',
   j_eq_0: 'j==0',
+  j_gt_n: 'j==n+1',
   left: 'left',
   right: 'right',
   right_eq_0: 'right==0'
@@ -159,7 +161,6 @@ export default {
       // where mid is undefined until after partition
       const finished_stack_frames = [];
       const real_stack = [];
-      let leftCheck = false
 
       // ----------------------------------------------------------------------------------------------------------------------------
       // Define helper functions
@@ -169,83 +170,81 @@ export default {
       // This function is the only way information is cached and incremented properly in the while loop
       const partitionChunker = (bookmark, i, j, prev_i, prev_j, left, right, depth, arr, mask) => {
         assert(bookmark !== undefined); // helps catch bugs early, and trace them in stack
-        const args_array = [real_stack, finished_stack_frames, i, j, prev_i, prev_j, left, right, depth, leftCheck, maxIndex, arr, mask]
+        const args_array = [real_stack, finished_stack_frames, i, j, prev_i, prev_j, left, right, depth, bookmark, maxIndex, arr, mask]
         chunker.add(bookmark, refreshStack, args_array, depth)
       }
 
-      // we use a global flag in case we scan through the whole partition 
-      // and stop at the end without finding the mask bit we are looking
-      // for
-      const refreshStack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, checkingLeft, maxIndex, arr, mask) => {
+      const refreshStack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, whereAreWe, maxIndex, arr, mask) => {
         // If we fall off the start/end of the array we just use the
         // first/last element and give the actual value of j/i
+        let cur_i_too_low;
         let cur_i_too_high;
         let cur_j_too_low;
+        let cur_j_too_high;
         let tmp_j = cur_j; // used to determine context later
         if (cur_i === A.length) {
           cur_i = undefined;
           cur_i_too_high = A.length - 1;
-        } else {
-          cur_i_too_high = undefined;
+        } else if (cur_i === -1) {
+          cur_i = undefined;
+          cur_i_too_low = 0;
         }
-        if (cur_j === -1) {
+        if (cur_j === A.length) {
+          cur_j = undefined;
+          cur_j_too_high = A.length - 1;
+        } else if (cur_j === -1) {
           cur_j = undefined;
           cur_j_too_low = 0;
-        } else {
-          cur_j_too_low = undefined;
         }
 
         assert(vis.array);
         assert(cur_real_stack && cur_finished_stack_frames);
 
+        // This was getting very messy - colors depends a
+        // lot on where we are and we had a bunch of tricky testing of
+        // various vars to determine that.  Now we use whereAreWe
+        // (current bookmark) simplify some things at least.
+        // XXX prev_i and prev_j are no longer used so could be deleted
+        // as parameters and elsewhere
+
+        // Show the binary representation for the current index
+        // plus color appropriate element(s)
+        updateMask(vis, mask) // needed at call/return of recursive function
+        if (whereAreWe === MSD_BOOKMARKS.rec_function) {
+          // top level call to recursive fn
+          unhighlight(vis, maxIndex)
+          updateBinary(vis, 0)
+	}
+        if (whereAreWe === MSD_BOOKMARKS.pre_sort_left) {
+          // just before first recursive call
+          for (let k = cur_i; k <= right; k++)
+            vis.array.deselect(k);
+        } else if (whereAreWe === MSD_BOOKMARKS.partition_left) {
+          // note i can fall off RHS of array...
+          if (cur_i !== undefined && cur_i <= right ) {
+            updateBinary(vis, arr[cur_i]);
+            if ((arr[cur_i] >> mask & 1) === 1)
+              vis.array.selectColor(cur_i, partRColor)
+            else {
+              vis.array.selectColor(cur_i, partLColor);
+            }
+          }
+        } else if (whereAreWe === MSD_BOOKMARKS.partition_right) {
+          // note j can fall off LHS of array...
+          if (cur_j !== undefined && cur_j >= left ) {
+            updateBinary(vis, arr[cur_j]);
+            if ((arr[cur_j] >> mask & 1) === 0)
+              vis.array.selectColor(cur_j, partLColor)
+            else {
+              vis.array.selectColor(cur_j, partRColor);
+            }
+          }
+        }
+
         vis.array.setStackDepth(cur_real_stack.length);
         vis.array.setStack(
           deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
         );
-
-        // XXX This is getting very messy - (un)highlighting depends a
-        // lot on where we are and we have a bunch of tricky testing of
-        // various vars to determine that.  Could pass in bookmark to
-        // simplify some things at least??
-        // Show the binary representation for the current index
-        // plus (un)highlight appropriate element(s)
-        updateMask(vis, mask) // only needed for start of recursive function
-        if (maxIndex !== undefined) { // top level call to recursive fn
-          unhighlight(vis, maxIndex)
-          updateBinary(vis, 0)
-	}
-        if (cur_i !== undefined && tmp_j === undefined && prev_i !== undefined) {
-          // just before first recursive call
-          if (i <= right)
-            vis.array.selectColor(prev_i, partRColor)
-          if (prev_j >= left) // might have fallen off array
-            vis.array.selectColor(prev_j, partLColor)
-          for (let k = cur_i; k <= right; k++)
-            vis.array.deselect(k);
-        } else if (checkingLeft) {
-          // note i can fall off RHS of array...
-          if (prev_i !== undefined && prev_i !== cur_j) {
-            let real_i = cur_i;
-            if (cur_i === undefined)
-              real_i = right + 1;
-            for (let k = prev_i; k < real_i && k <= right; k++)
-              vis.array.selectColor(k, partLColor)
-            if (cur_i !== undefined && cur_i <= right && (arr[cur_i] >> mask & 1) === 1)
-              vis.array.selectColor(cur_i, partRColor)
-          }
-          if (arr && cur_i !== undefined)
-            updateBinary(vis, arr[cur_i])
-        } else {
-          // note j can fall off LHS of array...
-          if (prev_j !== undefined && prev_j !== cur_i)
-            for (let k = prev_j; k >= cur_j && k >= cur_i; k--)
-              vis.array.selectColor(k, partRColor)
-          if (prev_j !== undefined && cur_j !== undefined && cur_j > cur_i) {
-            vis.array.selectColor(cur_j, partLColor);
-            // XXX probably best avoid updateBinary at swap
-            updateBinary(vis, arr[cur_j])
-          }
-        }
         if (left < A.length) // shouldn't happen with initial mask choice
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
         if (right >= 0) {
@@ -257,11 +256,13 @@ export default {
         }
         if (isPartitionExpanded() || isRecursionExpanded()) {
           assignVariable(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.i_eq_0, cur_i_too_low);
           assignVariable(vis, VIS_VARIABLE_STRINGS.i_gt_n, cur_i_too_high);
 	}
         if (isPartitionExpanded()) {
           assignVariable(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
           assignVariable(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
+          assignVariable(vis, VIS_VARIABLE_STRINGS.j_gt_n, cur_j_too_high);
         }
       };
 
@@ -334,8 +335,8 @@ export default {
       let DELAY_POPPER_SWAP = 700;
 
       const partition = (arr, left, right, mask, depth) => {
-        i = left
-        j = right
+        i = left-1
+        j = right+1
 
         const partitionChunkerWrapper = (bookmark) => {
           partitionChunker(bookmark, i, j, prev_i, prev_j, left, right, depth, arr, mask)
@@ -354,8 +355,6 @@ cur_i, cur_j, cur_depth, A) => {
 
               vis.array.swapElements(_n1, _n2);
               refreshStack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, false, undefined, A, mask)
-              vis.array.selectColor(_n1, partLColor);
-              vis.array.selectColor(_n2, partRColor);
               // redo poppers: swapping the elements keeps the
               // contents of the poppers correct but the position needs
               // to change. The documentation suggests update()
@@ -376,25 +375,25 @@ arr],
           depth);
         }
 
-        partitionChunkerWrapper(MSD_BOOKMARKS.set_i)
+        partitionChunkerWrapper(MSD_BOOKMARKS.set_i);
         // partitionChunkerWrapper(MSD_BOOKMARKS.set_j)
         while (i < j) {
           prev_i = i; // save prev value for unhighlighting
           prev_j = j;
           // Build the left group until it reaches the mask (find the big element)
-          leftCheck = true
-          while (i <= j && (arr[i] >> mask & 1) === 0) {
-            // partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
-            i++
-          }
+          i++;
           partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
-          // Build the right group until it fails the mask (find the small element)
-          leftCheck = false
-          while (j > i && (arr[j] >> mask & 1) === 1) {
-            // partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
-            j--
+          while (i < j && (arr[i] >> mask & 1) === 0) {
+            i++
+            partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
           }
+          // Build the right group until it fails the mask (find the small element)
+          j--;
           partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
+          while (j > i && (arr[j] >> mask & 1) === 1) {
+            j--
+            partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
+          }
 
           // Swap if the bigger element is not in the right place
           if (i < j) {

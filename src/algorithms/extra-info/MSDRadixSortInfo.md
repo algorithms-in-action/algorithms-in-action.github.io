@@ -20,4 +20,8 @@ Sort)
 
 [G4GLink]: https://www.geeksforgeeks.org/msd-most-significant-digit-radix-sort/
 
+## Exercises/Exploration
 
+The coding of partition used in AIA is based on the coding in quicksort.
+Compare and contrast the two.  What other approaches to coding partition
+could be used?

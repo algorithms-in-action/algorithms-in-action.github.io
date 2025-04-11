@@ -70,13 +70,15 @@ RexsortRecursive(A, i, right, mask/2) \\B 501
 
 \\Code{
 Partition
-i,j <- left,right \\B 301
+i,j <- left-1,right+1 \\B 301
 \\Expl{ i scans from left to right stopping at "large" elements
 (with "1" as the mask bit) and j scans from right to left
 stopping at "small" elements (with "0" as the mask bit).
+The scanning does a pre-increment of i (and pre-decrement of j) before
+testing the array element.
 \\Expl}
 while i < j \\B 303
-\\Expl{ When the indices cross, all the large elements at the left of
+\\Expl{ When the indices meet/cross, all the large elements at the left of
         the array segment have been swapped with small elements from the
         right of the array segment. The coding here can be simplified
         if we use "break" or similar to exit from this loop.
@@ -86,16 +88,16 @@ while i < j \\B 303
     \\Expl{ Scan right looking for a "large" element that is out of
         place (mask bit is one). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
-        Note we do the tests before incrementing i.
+        Note we do the tests after incrementing i at each step.
     \\Expl}
     Decrement j until the mask bit of A[j] = 0 or j <= i \\B 305
     \\Expl{ Scan left looking for a "small" element that is out of
         place (mask bit is zero). Bitwise "and" between A[i] and mask can be used to
         extract the desired bit.
-        Note we do the tests before decrementing j.
+        Note we do the tests after decrementing j at each step.
     \\Expl}
     if i < j \\B 309
-    \\Expl{ If the indices cross, we exit the loop.
+    \\Expl{ If the indices meet/cross, we exit the loop.
     \\Expl}
     \\In{
         swap(A[i], A[j]) \\B 310
