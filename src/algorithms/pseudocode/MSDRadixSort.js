@@ -76,7 +76,7 @@ i,j <- left,right \\B 301
 stopping at "small" elements (with "0" as the mask bit).
 \\Expl}
 while i < j \\B 303
-\\Expl{ When the indices cross, all the large elements at the left of
+\\Expl{ When the indices meet/cross, all the large elements at the left of
         the array segment have been swapped with small elements from the
         right of the array segment. The coding here can be simplified
         if we use "break" or similar to exit from this loop.
@@ -95,13 +95,14 @@ while i < j \\B 303
         Note we do the tests before decrementing j.
     \\Expl}
     if i < j \\B 309
-    \\Expl{ If the indices cross, we exit the loop.
+    \\Expl{ If the indices meet/cross, we exit the loop.
     \\Expl}
     \\In{
         swap(A[i], A[j]) \\B 310
         \\Expl{ Swap the larger element (A[i]) with the smaller
                 element (A[j]).
         \\Expl}
+        Increment i and decrement j \\B inc_dec
     \\In}
 \\In}
 \\Code}

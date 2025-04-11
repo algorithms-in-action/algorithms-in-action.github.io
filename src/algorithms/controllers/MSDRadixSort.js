@@ -54,6 +54,7 @@ const MSD_BOOKMARKS = {
   partition_right: 305,
   swap_condition: 309,
   swap: 310,
+  inc_dec: 'inc_dec',
   pre_sort_left: 400,
   sort_left: 401,
   pre_sort_right: 500,
@@ -159,7 +160,13 @@ export default {
       // where mid is undefined until after partition
       const finished_stack_frames = [];
       const real_stack = [];
-      let leftCheck = false
+      // refreshStack does lots of work with highlighting etc but is
+      // called from other functions which are called from other
+      // function and somewhere along the line one of the functions is
+      // chunker.add. Often the arguments are not given explicitly -
+      // it's a mess. We assign the current bookmark to whereAreWe for
+      // now, to be used in refreshStack.  Maybe worth a re-write XXX.
+      let whereAreWe;
 
       // ----------------------------------------------------------------------------------------------------------------------------
       // Define helper functions
@@ -169,14 +176,12 @@ export default {
       // This function is the only way information is cached and incremented properly in the while loop
       const partitionChunker = (bookmark, i, j, prev_i, prev_j, left, right, depth, arr, mask) => {
         assert(bookmark !== undefined); // helps catch bugs early, and trace them in stack
-        const args_array = [real_stack, finished_stack_frames, i, j, prev_i, prev_j, left, right, depth, leftCheck, maxIndex, arr, mask]
+        const args_array = [real_stack, finished_stack_frames, i, j, prev_i, prev_j, left, right, depth, whereAreWe, maxIndex, arr, mask]
         chunker.add(bookmark, refreshStack, args_array, depth)
       }
 
-      // we use a global flag in case we scan through the whole partition 
-      // and stop at the end without finding the mask bit we are looking
-      // for
-      const refreshStack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, checkingLeft, maxIndex, arr, mask) => {
+      // see comment above on whereAreWe
+      const refreshStack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, prev_i, prev_j, left, right, cur_depth, whereAreWe, maxIndex, arr, mask) => {
         // If we fall off the start/end of the array we just use the
         // first/last element and give the actual value of j/i
         let cur_i_too_high;
@@ -198,17 +203,13 @@ export default {
         assert(vis.array);
         assert(cur_real_stack && cur_finished_stack_frames);
 
-        vis.array.setStackDepth(cur_real_stack.length);
-        vis.array.setStack(
-          deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
-        );
+        // XXX This was getting very messy - colors depends a
+        // lot on where we are and we had a bunch of tricky testing of
+        // various vars to determine that.  Now we use whereAreWe to
+        // simplify some things at least.
 
-        // XXX This is getting very messy - (un)highlighting depends a
-        // lot on where we are and we have a bunch of tricky testing of
-        // various vars to determine that.  Could pass in bookmark to
-        // simplify some things at least??
         // Show the binary representation for the current index
-        // plus (un)highlight appropriate element(s)
+        // plus color appropriate element(s)
         updateMask(vis, mask) // only needed for start of recursive function
         if (maxIndex !== undefined) { // top level call to recursive fn
           unhighlight(vis, maxIndex)
@@ -222,8 +223,18 @@ export default {
             vis.array.selectColor(prev_j, partLColor)
           for (let k = cur_i; k <= right; k++)
             vis.array.deselect(k);
-        } else if (checkingLeft) {
+        } else if (whereAreWe === MSD_BOOKMARKS.partition_left) {
           // note i can fall off RHS of array...
+          if (cur_i !== undefined && cur_i <= right ) {
+            updateBinary(vis, arr[cur_i]);
+            if ((arr[cur_i] >> mask & 1) === 1)
+              vis.array.selectColor(cur_i, partRColor)
+            else {
+              vis.array.selectColor(cur_i, partLColor);
+              cur_i++; // show incremented i  XXX fix i_too_high
+            }
+          }
+/*
           if (prev_i !== undefined && prev_i !== cur_j) {
             let real_i = cur_i;
             if (cur_i === undefined)
@@ -235,7 +246,8 @@ export default {
           }
           if (arr && cur_i !== undefined)
             updateBinary(vis, arr[cur_i])
-        } else {
+*/
+        } else if (whereAreWe === MSD_BOOKMARKS.partition_right) {
           // note j can fall off LHS of array...
           if (prev_j !== undefined && prev_j !== cur_i)
             for (let k = prev_j; k >= cur_j && k >= cur_i; k--)
@@ -246,6 +258,11 @@ export default {
             updateBinary(vis, arr[cur_j])
           }
         }
+
+        vis.array.setStackDepth(cur_real_stack.length);
+        vis.array.setStack(
+          deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
+        );
         if (left < A.length) // shouldn't happen with initial mask choice
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
         if (right >= 0) {
@@ -382,16 +399,18 @@ arr],
           prev_i = i; // save prev value for unhighlighting
           prev_j = j;
           // Build the left group until it reaches the mask (find the big element)
-          leftCheck = true
+          // leftCheck = true
+          whereAreWe = MSD_BOOKMARKS.partition_left;
           while (i <= j && (arr[i] >> mask & 1) === 0) {
-            // partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
+            partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
             i++
           }
           partitionChunkerWrapper(MSD_BOOKMARKS.partition_left)
           // Build the right group until it fails the mask (find the small element)
-          leftCheck = false
+          // leftCheck = false
+          whereAreWe = MSD_BOOKMARKS.partition_right;
           while (j > i && (arr[j] >> mask & 1) === 1) {
-            // partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
+            partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
             j--
           }
           partitionChunkerWrapper(MSD_BOOKMARKS.partition_right)
@@ -400,6 +419,9 @@ arr],
           if (i < j) {
             partitionChunkerWrapper(MSD_BOOKMARKS.swap_condition)
             swapAction(MSD_BOOKMARKS.swap, i, j)
+            i++;
+            j--;
+            partitionChunkerWrapper(MSD_BOOKMARKS.inc_dec)
           } else {
             // about to return i from partition.  We update the "mid" of
             // the partition on the stack here so it is displayed at the
