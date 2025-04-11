@@ -41,15 +41,16 @@ mask bit of each key:
     * Increment ```i``` until an element with a 1 as the mask bit is reached
     * Decrement ```j``` until an element with a 0 as the mask bit is reached
 
-* If the two guards have not crossed, perform a swap to ensure that 0s are placed on the left and 1s on the right.
+* If the two indices have not met/crossed, perform a swap to ensure that 0s are placed on the left and 1s on the right.
 
 ## Complexity
 ### Time Complexity
-* Partitioning takes```O(n)```, where ```n``` is the number elements in the
+* Partitioning takes ```O(n)```, where ```n``` is the number elements in the
 array.
-* If we *assume the number of bits is limited* the overall time complexity is: ```O(n)``` 
+* If we *assume the maximum number of digits is fixed* the overall time complexity is: ```O(n)``` 
 * Note that the best comparison-based sorting algorithms have ```O(n log n)```
   complexity, but the number of bits is typically related to ```log n```
+  (otherwise there must be many duplicate keys)
   so radix sorts are not necessarily better.
 
 ### Space Complexity

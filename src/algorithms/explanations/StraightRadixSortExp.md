@@ -5,7 +5,7 @@
 ## Introduction
 Unlike most sorting algorithms, which are based on *comparison* of whole
 keys, radix sorting is based on examining individual "digits" in the
-keys. For integers (used here) this could be decimal digits (base 10), bits (base 2) or and other
+keys. For integers (used here) this could be decimal digits (base 10), bits (base 2) or any other
 base. Using bytes (base 256) has efficiency advantages but here we use base 4
 (digits 0-3) for illustration.
 Straight Radix Sort (also known as Least Significant Digit Radix Sort)
@@ -23,13 +23,17 @@ The ```Radixsort``` function begins by determining the maximum number of digits,
 in the data. This number defines how many iterations the algorithm will go through, 
 starting from the least significant (right-most) digit moving toward the most
 significant (left-most). Here we use base 4 digits (0-3 or two bits)
-and show values in binary.
+and show values in decimal, base 4 (the most helpful in understanding
+the algorithm) and binary.
 
 ### 2. Outer Loop
 For each digit (scanning right to left), *Counting Sort* is performed on that
 digit. This leave the array sorted.
 
 ### 3. Counting Sort
+
+Counting sort has four parts:
+
 * Counting occurrences of each digit (00, 01, 10 and 11 in binary)
     * For each key in the array, the digit at the current position is extracted.
     * The algorithm counts how many times each digit occurs.
@@ -47,10 +51,11 @@ the keys sorted on the current digit, is copied back to the original array ```A`
 
 ## Complexity
 ### Time Complexity
-* Each iteration uses ```Countingsort```, which requires ```O(n)```, where n is the number of elements.
-* If we *assume the number of digits is limited* the overall time complexity is: ```O(n)```
+* Each iteration uses ```Countingsort```, which takes ```O(n)``` time, where n is the number of elements.
+* If we *assume the maximum number of digits is fixed* the overall time complexity is: ```O(n)```
 * Note that the best comparison-based sorting algorithms have ```O(n log n)```
   complexity, but the number of digits is typically related to ```log n```
+  (otherwise there must be many duplicate keys)
   so radix sorts are not necessarily better.
 
 ### Space Complexity
