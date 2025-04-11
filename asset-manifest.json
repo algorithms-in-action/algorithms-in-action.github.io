@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.c1d4108d.js",
+    "main.js": "/static/js/main.7d14b8c8.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -26,7 +26,7 @@
     "static/media/BFSExp.md": "/static/media/BFSExp.49ba85dcc51b42ef481c.md",
     "static/media/TTFExp.md": "/static/media/TTFExp.1bb9ea16b637522be0c7.md",
     "static/media/HashingExp.md": "/static/media/HashingExp.71209864bde977aaa222.md",
-    "static/media/MSDRadixSortExp.md": "/static/media/MSDRadixSortExp.ad72a598bb7bfa7355e6.md",
+    "static/media/MSDRadixSortExp.md": "/static/media/MSDRadixSortExp.fed1ca0ce7ae110ac8b3.md",
     "static/media/UFExp.md": "/static/media/UFExp.4e12391c09ba5551366d.md",
     "static/media/PRIM_oldExp.md": "/static/media/PRIM_oldExp.5f7835c100e05e1812d6.md",
     "static/media/msort_arr_bup.md": "/static/media/msort_arr_bup.03f48185fa6d011c456d.md",
@@ -49,11 +49,13 @@
     "index.html": "/index.html",
     "static/media/HashingInfo.md": "/static/media/HashingInfo.d3215243c560b640b218.md",
     "static/media/cancel.svg": "/static/media/cancel.da5c42223be72e07b42078ba244d26c0.svg",
+    "static/media/QSM3Info.md": "/static/media/QSM3Info.3b8f877202d846e407d1.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.ba2468c0769ac08edf01.md",
     "static/media/pause.svg": "/static/media/pause.17441c19b10854106f8c646bb56ff885.svg",
     "static/media/arrow.svg": "/static/media/arrow.b799034555e959db988fd2c275c31132.svg",
     "static/media/refresh.svg": "/static/media/refresh.3d70a4330b2dc0307f405872ce8fad16.svg",
     "static/media/DIJKInfo.md": "/static/media/DIJKInfo.91c3805512538231b9cc.md",
+    "static/media/QSInfo.md": "/static/media/QSInfo.054857c407d53718ad18.md",
     "static/media/minus.svg": "/static/media/minus.ed1583fbcf9f7716ded65c897a7eee27.svg",
     "static/media/AVLInfo.md": "/static/media/AVLInfo.b145c090dacce3b3e646.md",
     "static/media/play.svg": "/static/media/play.1b4fe47788d6c47edda8dd6009008246.svg",
@@ -61,26 +63,24 @@
     "static/media/BFSInfo.md": "/static/media/BFSInfo.ce31e742a53f1959ffbb.md",
     "static/media/github.svg": "/static/media/github.49399358d07c8205d0b8838330c45630.svg",
     "static/media/add.svg": "/static/media/add.89fe7bf62d0e27a62c00c4b5016bbdc4.svg",
+    "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.aaf763d7b78deab83b7b.md",
     "static/media/UFInfo.md": "/static/media/UFInfo.77b519a0e4aa2cb94d0a.md",
     "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.64dca5a0cef6b3bff041.md",
-    "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.1e821c4a5d390ed1771a.md",
     "static/media/HSSInfo.md": "/static/media/HSSInfo.a1baa89224cb47dba851.md",
     "static/media/PRIM_oldInfo.md": "/static/media/PRIM_oldInfo.51d714f4f8994e41e93d.md",
     "static/media/BFSSInfo.md": "/static/media/BFSSInfo.ef247f8493df96c5e83a.md",
     "static/media/BSTInfo.md": "/static/media/BSTInfo.7ba11aaeb8f09dc017e5.md",
     "static/media/TCInfo.md": "/static/media/TCInfo.6eb03334bc8db61df29d.md",
-    "static/media/QSM3Info.md": "/static/media/QSM3Info.6007072b9ae04b1a5835.md",
     "static/media/direction.svg": "/static/media/direction.7feb3d2336d3133d67764adc61842c0d.svg",
     "static/media/HSInfo.md": "/static/media/HSInfo.339acb96f5865f5b4743.md",
-    "static/media/QSInfo.md": "/static/media/QSInfo.a60ad72f646da2d80118.md",
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.c1d4108d.js.map": "/static/js/main.c1d4108d.js.map"
+    "main.7d14b8c8.js.map": "/static/js/main.7d14b8c8.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.c1d4108d.js"
+    "static/js/main.7d14b8c8.js"
   ]
 }
