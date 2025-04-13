@@ -161,7 +161,7 @@ class GraphRenderer extends Renderer {
     max,
     center,
     stepSize = 30,
-    stepHeight = 15, // size of scale mark tick on axes
+    stepHeight = 25, // size of scale mark tick on axes
     increment = 1
   ) {
     const scales = [];
@@ -253,12 +253,13 @@ class GraphRenderer extends Renderer {
 
   /*
    * Calculate value increment of axis coordinate labels.
+   * XXX best adjust various sizes and zoom for extra small/large maxCoord
    */
   calculateIncrement(axisScale, stepSize = 30) {
     const maxCoord = (axisScale /= stepSize); // The maximum coordinate each axis displays.
-    if (maxCoord <= 20) {
+    if (maxCoord <= 10) {
       return 1;
-    } else if (maxCoord <= 50) {
+    } else if (maxCoord <= 90) {
       return 5;
     }
     const maxIncrement = 10;
