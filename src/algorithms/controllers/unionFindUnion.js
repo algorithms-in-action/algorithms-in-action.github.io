@@ -1,3 +1,6 @@
+// XXX maybe get rid of some of the animation steps where there are
+// multiple steps for a single line of code (generally using the last
+// step is sufficient)
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
