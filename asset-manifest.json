@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.15739087.js",
+    "main.js": "/static/js/main.039b54e5.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -23,11 +23,11 @@
     "static/media/logo.svg": "/static/media/logo.3fc6bd69ad667882e3e5bb9e6ca2110b.svg",
     "static/media/DFSrecExp.md": "/static/media/DFSrecExp.9999e085479711a83eaa.md",
     "static/media/StraightRadixSortExp.md": "/static/media/StraightRadixSortExp.de431ebf118424f915e7.md",
+    "static/media/UFExp.md": "/static/media/UFExp.08e1cfd121041adc9ea9.md",
     "static/media/BFSExp.md": "/static/media/BFSExp.49ba85dcc51b42ef481c.md",
     "static/media/TTFExp.md": "/static/media/TTFExp.1bb9ea16b637522be0c7.md",
     "static/media/HashingExp.md": "/static/media/HashingExp.71209864bde977aaa222.md",
     "static/media/MSDRadixSortExp.md": "/static/media/MSDRadixSortExp.fed1ca0ce7ae110ac8b3.md",
-    "static/media/UFExp.md": "/static/media/UFExp.4e12391c09ba5551366d.md",
     "static/media/PRIM_oldExp.md": "/static/media/PRIM_oldExp.5f7835c100e05e1812d6.md",
     "static/media/msort_arr_bup.md": "/static/media/msort_arr_bup.03f48185fa6d011c456d.md",
     "static/media/ASTInfo.md": "/static/media/ASTInfo.d307db15fb73fc440707.md",
@@ -40,6 +40,7 @@
     "static/media/QSM3Exp.md": "/static/media/QSM3Exp.abb6cec5a03cd1b85038.md",
     "static/media/PRIMInfo.md": "/static/media/PRIMInfo.112841726d0197d637e7.md",
     "static/media/BFSSExp.md": "/static/media/BFSSExp.59f0e4e68726bf2415a7.md",
+    "static/media/UFInfo.md": "/static/media/UFInfo.0feb0f96d457730da1cc.md",
     "static/media/QSExp.md": "/static/media/QSExp.2119492358dfc4810a4b.md",
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
     "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.30558bc602631ede938e.md",
@@ -64,7 +65,6 @@
     "static/media/github.svg": "/static/media/github.49399358d07c8205d0b8838330c45630.svg",
     "static/media/add.svg": "/static/media/add.89fe7bf62d0e27a62c00c4b5016bbdc4.svg",
     "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.aaf763d7b78deab83b7b.md",
-    "static/media/UFInfo.md": "/static/media/UFInfo.77b519a0e4aa2cb94d0a.md",
     "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.64dca5a0cef6b3bff041.md",
     "static/media/HSSInfo.md": "/static/media/HSSInfo.a1baa89224cb47dba851.md",
     "static/media/PRIM_oldInfo.md": "/static/media/PRIM_oldInfo.51d714f4f8994e41e93d.md",
@@ -77,10 +77,10 @@
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.15739087.js.map": "/static/js/main.15739087.js.map"
+    "main.039b54e5.js.map": "/static/js/main.039b54e5.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.15739087.js"
+    "static/js/main.039b54e5.js"
   ]
 }
