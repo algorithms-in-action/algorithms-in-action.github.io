@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.039b54e5.js",
+    "main.js": "/static/js/main.8e9d5d99.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -40,6 +40,7 @@
     "static/media/QSM3Exp.md": "/static/media/QSM3Exp.abb6cec5a03cd1b85038.md",
     "static/media/PRIMInfo.md": "/static/media/PRIMInfo.112841726d0197d637e7.md",
     "static/media/BFSSExp.md": "/static/media/BFSSExp.59f0e4e68726bf2415a7.md",
+    "static/media/QSM3Info.md": "/static/media/QSM3Info.e958d8c651b93feb6f5d.md",
     "static/media/UFInfo.md": "/static/media/UFInfo.0feb0f96d457730da1cc.md",
     "static/media/QSExp.md": "/static/media/QSExp.2119492358dfc4810a4b.md",
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
@@ -49,8 +50,8 @@
     "static/media/HSExp.md": "/static/media/HSExp.0f5a8e782455216c027e.md",
     "index.html": "/index.html",
     "static/media/HashingInfo.md": "/static/media/HashingInfo.d3215243c560b640b218.md",
+    "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.19091e4c8468638fe366.md",
     "static/media/cancel.svg": "/static/media/cancel.da5c42223be72e07b42078ba244d26c0.svg",
-    "static/media/QSM3Info.md": "/static/media/QSM3Info.3b8f877202d846e407d1.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.ba2468c0769ac08edf01.md",
     "static/media/pause.svg": "/static/media/pause.17441c19b10854106f8c646bb56ff885.svg",
     "static/media/arrow.svg": "/static/media/arrow.b799034555e959db988fd2c275c31132.svg",
@@ -59,13 +60,12 @@
     "static/media/QSInfo.md": "/static/media/QSInfo.054857c407d53718ad18.md",
     "static/media/minus.svg": "/static/media/minus.ed1583fbcf9f7716ded65c897a7eee27.svg",
     "static/media/AVLInfo.md": "/static/media/AVLInfo.b145c090dacce3b3e646.md",
+    "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.6f75cd04449a58cc6bec.md",
     "static/media/play.svg": "/static/media/play.1b4fe47788d6c47edda8dd6009008246.svg",
     "static/media/DFSrecInfo.md": "/static/media/DFSrecInfo.27791abb933aff2aa06d.md",
     "static/media/BFSInfo.md": "/static/media/BFSInfo.ce31e742a53f1959ffbb.md",
     "static/media/github.svg": "/static/media/github.49399358d07c8205d0b8838330c45630.svg",
     "static/media/add.svg": "/static/media/add.89fe7bf62d0e27a62c00c4b5016bbdc4.svg",
-    "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.aaf763d7b78deab83b7b.md",
-    "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.64dca5a0cef6b3bff041.md",
     "static/media/HSSInfo.md": "/static/media/HSSInfo.a1baa89224cb47dba851.md",
     "static/media/PRIM_oldInfo.md": "/static/media/PRIM_oldInfo.51d714f4f8994e41e93d.md",
     "static/media/BFSSInfo.md": "/static/media/BFSSInfo.ef247f8493df96c5e83a.md",
@@ -77,10 +77,10 @@
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.039b54e5.js.map": "/static/js/main.039b54e5.js.map"
+    "main.8e9d5d99.js.map": "/static/js/main.8e9d5d99.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.039b54e5.js"
+    "static/js/main.8e9d5d99.js"
   ]
 }
