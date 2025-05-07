@@ -18,14 +18,14 @@ it is ignored, otherwise it is selected to combine the two trees into one.
 
 The forest representation is designed so the checking and combining is
 an instance of the "union-find" problem, for which there are efficient
-algorithms (we don't give details in this animation but present them
-elsewhere). As well as the set of selected edges (which is returned
-at the end), there is a set of sets of nodes that are connected by
-selected edges (the inner sets are the sets of nodes in each tree of
-the forest).  Selecting a new edge combines two trees and this is a
-union operation. Checking if two nodes are in the same tree can be done
-by using the find operation for each node, returning a representative
-node for each tree, and seeing if they are the same.
+algorithms (we don't give details in this animation but present them as a
+separate animation).  Each tree is represented as a set of nodes (thus,
+the forest is represented by a set of sets).  Initially, the inner sets
+are singletons, one for each node in the graph.  Checking if two nodes
+are in the same tree is done by calling the *find* operation for each
+of the two nodes, returning a representative node for each tree, and
+seeing if they are the same.  Adding a new edge, connecting two trees
+in the forest, is done with a *union* operation on the two sets.
 
 Here we number all nodes for simplicity so we can use arrays for the graph
 representation, sets of integers for union-find, etc.  For consistency

@@ -37,4 +37,7 @@ use the existing code to find the second one by re-numbering the graph nodes?
 For Graph1 with the other weight options, can you convince yourself that
 there is a single minimum spanning tree?
 
-
+The animation shows a sorted list of edges, used to select edges in
+order of increasing weight/cost. What is the disadvantage of using a
+sorted list? What are some alternatives that could be used and how do
+they compare?

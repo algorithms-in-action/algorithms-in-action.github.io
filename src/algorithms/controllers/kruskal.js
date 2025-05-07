@@ -1,5 +1,5 @@
-// Prim's MST algorithm; code copied+modified from Dijkstra's shortest
-// path algorithm animation (might some junk code left over)
+// Kruskal's MST algorithm; code copied+modified from Prim's?
+// (might some junk code left over)
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import {colors} from './graphSearchColours';
@@ -134,8 +134,8 @@ export default {
     }
     edges.sort((a, b) => a.weight - b.weight);
 
-    nodes.push('i'); // initialize the display
-    findD.push('find(i)');
+    nodes.push('n'); // initialize the display
+    findD.push('find(n)');
     selectedD.push('Selected');
     costD.push('Cost');
     edgesD.push('Edges');
