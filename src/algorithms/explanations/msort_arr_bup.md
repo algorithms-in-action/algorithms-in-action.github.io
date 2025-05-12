@@ -35,5 +35,5 @@ fit into main memories. Historically, when data was primarily stored on
 magnetic tape, versions of bottom up merge sort were absolutely essential.
 There are recursive "top down" versions of merge sort, shown elsewhere.
 There is also a "natural" merge sort which utilises already sorted runs,
-also shown elsewhere
+also shown elsewhere.
 
