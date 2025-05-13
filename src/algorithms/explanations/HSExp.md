@@ -15,9 +15,26 @@ Heap is a special tree-based data structure. A binary tree is said to follow a h
 * It is a complete binary tree.
 * All nodes in the tree follow the property that they are greater than their children i.e. the largest element is at the root and both its children and smaller than the root and so on. Such a heap is called a max-heap. If instead, all nodes are smaller than their children, it is called a min-heap
 
+## Sorting with the heap
+
+Once the heap has been formed, sorting is straightforward.  For a max-heap repeatedly swap the root (largest item) with the last item in the array, and reform the heap.   
+
 ## Complexity
 
-Space complexity is O(1) in all cases.  Worst case and average case time
+Time complexity:
+```
+ Average Case     O(n log n) 
+ Worst Case       O(n logn) 
+ Best Case        O(n)         
+ ```
+       Note: Best case, when all elements are equal is O(n), although many sources
+       list best case as O(n log n) 
+
+Space complexity is always O(1), that is, no extra space is needed.
+
+[ Previous Background treatment of complexity: Space complexity is O(1) in all cases.  Worst case and average case time
 complexity is O(n log n). The best case time complexity is O(n), when
 all elements are equal (despite many sources listing the best case as
-O(n log n)).
+O(n log n)).]: #
+
+
