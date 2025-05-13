@@ -609,7 +609,7 @@ export default {
                 chunker.add('perform right rotation to re-balance t',
                     (vis, r, b, rl, rll) => {
                         // show the rotation type and the node to be rotated
-                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`LL`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
@@ -642,7 +642,7 @@ export default {
                 chunker.add('perform left rotation to re-balance t',
                     (vis, r, b, rr, rrr) => {
                         // show the rotation type and the node to be rotated
-                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`RR`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
@@ -676,7 +676,7 @@ export default {
                 chunker.add('perform left rotation on the left subtree',
                     (vis, r, b, rl, rlr) => {
                         // show the rotation type and the node to be rotated
-                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`LR`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
@@ -711,7 +711,7 @@ export default {
                 chunker.add('perform right rotation on the right subtree',
                     (vis, r, b, rr, rrl) => {
                         // show the rotation type and the node to be rotated
-                        vis.graph.setFunctionName(`Rotaiton: `);
+                        vis.graph.setFunctionName(`Rotation: `);
                         vis.graph.setFunctionInsertText(`RL`);
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
