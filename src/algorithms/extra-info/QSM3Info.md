@@ -40,7 +40,7 @@ of three partitioning but are worst cases for the simple version of
 quicksort.
 
 Can you construct a worst case input for median of three quicksort for
-the number 1 to 12?  For example, the first call to partition takes
+the numbers 1 to 12?  For example, the first call to partition takes
 the median of 3, 2 and 1, the second takes the median of 5, 4 and 3,
 the next has 7, 6 and 5 etc.
 
