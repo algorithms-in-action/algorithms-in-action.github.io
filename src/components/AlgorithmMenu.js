@@ -5,6 +5,7 @@ import '../styles/AlgorithmMenu.scss';
 const baseUrl = window.location.origin;
 
 // XXX construct this from master list of algorithms!
+// or use this as master list
 const algorithms = {
   Sort: {
     Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
@@ -23,7 +24,7 @@ const algorithms = {
     "Dijkstra's (shortest path)": `${baseUrl}/?alg=dijkstra&mode=find`,
     'A* (heuristic search)': `${baseUrl}/?alg=aStar&mode=find`,
     "Prim's (min. spanning tree)": `${baseUrl}/?alg=prim&mode=find`,
-    "Prim's (simpler code)": `${baseUrl}/?alg=prim_old&mode=find`,
+    // "Prim's (simpler code)": `${baseUrl}/?alg=prim_old&mode=find`,
     "Kruskal's (min. spanning tree)": `${baseUrl}/?alg=kruskal&mode=find`,
     "Warshall's (transitive closure)": `${baseUrl}/?alg=transitiveClosure&mode=tc`,
   },

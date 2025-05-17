@@ -11,13 +11,14 @@ import StringSearchAlgorithms from './StringSearchAlgorithms';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
-// XXX should have algorithms just listed in one place
+// XXX should have algorithms just listed in one place!
 // (eg src/algorithms/index.js)
 // and filtered appropriately rather
 // than have multiple algorithm lists (here, above, SortingAlgorithms.js,
 // InsertSearchAlgorithms.js etc), as was done previously...
 // XXX also fix display code (see XXX elsewhere) - currently ugly and
 // broken; best just use something simple!
+// This version is used just(?) for the main menu search function
 const allAlgorithms = [
     { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
     { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` },
@@ -27,12 +28,16 @@ const allAlgorithms = [
     { name: "Dijkstra's (shortest path)", url: `${baseUrl}/?alg=dijkstra&mode=find` },
     { name: 'A* (heuristic search)', url: `${baseUrl}/?alg=aStar&mode=find` },
     { name: "Prim's (min. spanning tree)", url: `${baseUrl}/?alg=prim&mode=find` },
+    // prim_old not included in menus
     { name: "Prim's (simpler code)", url: `${baseUrl}/?alg=prim_old&mode=find` },
     { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/?alg=kruskal&mode=find` },
     { name: "Warshall's (transitive closure)", url: `${baseUrl}/?alg=transitiveClosure&mode=tc` },
     { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
     { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
     { name: 'AVL Tree', url: `${baseUrl}/?alg=AVLTree&mode=search` },
+    { name: 'Hashing (Linear Probing)', url: `${baseUrl}/?alg=HashingLP&mode=search` },
+    { name: 'Hashing (Double Hashing)', url: `${baseUrl}/?alg=HashingDH&mode=search` },
+    { name: 'Hashing (Chaining)', url: `${baseUrl}/?alg=HashingCH&mode=search` },
     { name: 'Union Find', url: `${baseUrl}/?alg=unionFind&mode=find` },
     { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
     { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
@@ -40,7 +45,8 @@ const allAlgorithms = [
     { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` },
     { name: 'Merge Sort (Bottom-up)', url: `${baseUrl}/?alg=msort_arr_bup&mode=sort` },
     { name: 'Merge Sort (Natural)', url: `${baseUrl}/?alg=msort_arr_nat&mode=sort` },
-    // XXX don't include list-array mergesort? msort_lista_td
+    // msort_lista_td not included in menus
+    { name: 'Merge Sort (list rep. as array)', url: `${baseUrl}/?alg=msort_lista_td&mode=sort` },
     { name: 'Radix Sort (MSD/Exchange)', url: `${baseUrl}/?alg=radixSortMSD&mode=sort` },
     { name: 'Radix Sort (LSD/Straight)', url: `${baseUrl}/?alg=radixSortStraigh&mode=sort` },
   ];
@@ -75,6 +81,7 @@ const Mainmenu = () => {
 
     const filteredAlgorithms = allAlgorithms.filter(algorithm =>
     algorithm.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // XXX nice to add keyword search also
   );
   return (
     <div className="mainmenu-container">

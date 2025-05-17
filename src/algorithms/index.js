@@ -22,6 +22,12 @@ import * as Instructions from './instructions';
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
+XXX This has now been totally ****ed up, with multiple lists of
+algorithms elsewhere (see components/mainmenu/index.js
+components/mainmenu/GraphAlgorithms.js components/AlgorithmMenu.js) as
+well as this file, algorithms/index.js. There should be *one* master
+list (eg, this one, possibly with extra info for each algorithm) and the
+other lists should be generated from the master list!
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -332,7 +338,6 @@ const allalgs = {
     },
     controller: {
       find: Controller.dijkstra,
-
     },
   },
   'aStar': {
@@ -347,7 +352,6 @@ const allalgs = {
     },
     controller: {
       find: Controller.AStar,
-
     },
   },
   'prim': {
@@ -365,8 +369,10 @@ const allalgs = {
       find: Controller.prim,
     },
   },
+  // Prim's (simpler code) is superseeded + could do with some work;
+  // it's included here so it can be run but it's not included in menus
   'prim_old': {
-    noDeploy: false,
+    noDeploy: true,
     name: 'Prim\'s (simpler code)',
     category: 'Graph',
     explanation: Explanation.Prims_oldExp,
