@@ -11,15 +11,22 @@
 // arrays (may include some quicksort remnants also).
 // XXX Needs major clean up of code to remove junk, refactor, etc before
 // being used for anything else
-// XXX Not all  steps are animated
-// XXX should be more consistent with mergesort for arrays with colours
-// etc
-// XXX Colours are very limited - colour support is a mystery to me and
-// there are major inconsistencies between colours specification for
-// graph nodes/edges, 1D arrays and 2D arrays (there is a student group
-// that will hopefully look into this and improve things)
+// XXX Not all steps are animated
+// XXX should be consistent with mergesort for arrays wrt colours
+// At line if head(L) <= head(R) we can use apple highlight for head of
+// both lists, like ap1, ap2 in mergesort
+// etc (current work...)
 
 import { msort_lista_td } from '../explanations';
+import {colors} from '../../components/DataStructures/colors';
+
+// Animation should be consistent with array versions
+// XXX (could make code more similar and use shared code here)
+const apColor = colors.apple;
+const runAColor = colors.peach;
+const runBColor = colors.sky;
+const sortColor = colors.leaf;
+const doneColor = colors.stone;
 
 const run = run_msort();
 
@@ -126,39 +133,23 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
   return a;
 }
 
-
-const highlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.select(index);
-  } else {
-    vis.array.patch(index);
-  }
+const highlight = (vis, index, color) => {
+  vis.array.selectColor(index, color);
 };
 
-const highlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.select(index);
-  } else {
-    vis.arrayB.patch(index);
-  }
+const highlightB = (vis, index, color) => {
+  vis.arrayB.selectColor(index, color);
 };
 
+// XXX third arg unused
 const unhighlight = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.array.deselect(index);
-  } else {
-    vis.array.depatch(index);
-  }
+  vis.array.deselect(index);
 };
 
+// XXX third arg unused
 const unhighlightB = (vis, index, isPrimaryColor = true) => {
-  if (isPrimaryColor) {
-    vis.arrayB.deselect(index);
-  } else {
-    vis.arrayB.depatch(index);
-  }
+  vis.arrayB.deselect(index);
 };
-
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -225,6 +216,7 @@ export function run_msort() {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
+    // XXX unused currently
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) { 
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_lista_td');
@@ -271,11 +263,11 @@ export function run_msort() {
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
         vis.array.assignVariable('L', 2, cur_L);
-        // colour all of R list
+        // colour all of list
         let Tails = Lists[2];
         for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
-          vis.array.select(1, i, 1, i, '0');
-          vis.array.select(2, i, 2, i, '0');
+          vis.array.select(1, i, 1, i, runAColor);
+          vis.array.select(2, i, 2, i, runAColor);
         }
         // if (cur_depth === 0) {
            // }
@@ -318,10 +310,18 @@ cur_R, c_stk) => {
           vis.array.assignVariable('L', 2, cur_L);
           vis.array.assignVariable('Mid', 2, cur_Mid);
           vis.array.assignVariable('R', 2, cur_R);
-          vis.array.select(1, cur_L, 1, cur_L, '0');
-          vis.array.select(2, cur_L, 2, cur_L, '0');
-          vis.array.select(1, cur_R, 1, cur_R, '0');
-          vis.array.select(2, cur_R, 2, cur_R, '0');
+          // colour all of L list
+          let Tails = Lists[2];
+          for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, runAColor);
+            vis.array.select(2, i, 2, i, runAColor);
+          }
+          // colour all of R list
+          Tails = Lists[2];
+          for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, runBColor);
+            vis.array.select(2, i, 2, i, runBColor);
+          }
           }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
         // dummy chunk for before recursive call - we need this so there
@@ -331,8 +331,8 @@ cur_R, c_stk) => {
           vis.array.set(Lists, 'msort_lista_td');
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, cur_L);
-          vis.array.select(1, cur_L, 1, cur_L, '0');
-          vis.array.select(2, cur_L, 2, cur_L, '0');
+          vis.array.select(1, cur_L, 1, cur_L, runAColor);
+          vis.array.select(2, cur_L, 2, cur_L, runAColor);
           }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
 
@@ -349,11 +349,17 @@ cur_R, c_stk) => {
           // colour all of L list
           let Tails = Lists[2];
           for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
-            vis.array.select(1, i, 1, i, '1');
-            vis.array.select(2, i, 2, i, '1');
+            vis.array.select(1, i, 1, i, runAColor);
+            vis.array.select(2, i, 2, i, runAColor);
           }
-          vis.array.select(1, cur_R, 1, cur_R, '0');
-          vis.array.select(2, cur_R, 2, cur_R, '0');
+          // colour all of R list
+          Tails = Lists[2];
+          for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, runBColor);
+            vis.array.select(2, i, 2, i, runBColor);
+          }
+          vis.array.select(1, cur_R, 1, cur_R, runBColor);
+          vis.array.select(2, cur_R, 2, cur_R, runBColor);
           // for (let i = cur_left; i <= cur_mid; i++) {
             // unhighlight(vis, i, true);
             // highlight(vis, i, false)
@@ -369,8 +375,8 @@ cur_R, c_stk) => {
           set_simple_stack(vis.array, c_stk);
           // vis.array.assignVariable('L', 2, undefined);
           vis.array.assignVariable('R', 2, cur_R);
-          vis.array.select(1, cur_R, 1, cur_R, '0');
-          vis.array.select(2, cur_R, 2, cur_R, '0');
+          vis.array.select(1, cur_R, 1, cur_R, runBColor);
+          vis.array.select(2, cur_R, 2, cur_R, runBColor);
           // colour all of R list
           // let Tails = Lists[2];
           // for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
@@ -389,13 +395,17 @@ c_stk) => {
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, cur_L);
           vis.array.assignVariable('R', 2, cur_R);
-          vis.array.select(1, cur_L, 1, cur_L, '0');
-          vis.array.select(2, cur_L, 2, cur_L, '0');
-          // colour all of R list
+          // colour all of L list
           let Tails = Lists[2];
+          for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+            vis.array.select(1, i, 1, i, runAColor);
+            vis.array.select(2, i, 2, i, runAColor);
+          }
+          // colour all of R list
+          Tails = Lists[2];
           for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
-            vis.array.select(1, i, 1, i, '1');
-            vis.array.select(2, i, 2, i, '1');
+            vis.array.select(1, i, 1, i, runBColor);
+            vis.array.select(2, i, 2, i, runBColor);
           }
 
           // for (let i = cur_mid+1; i <= cur_right; i++) {
@@ -406,6 +416,12 @@ c_stk) => {
 
           // Merge L and R
           let M; // result
+          chunker.add('compareHeads', (vis, Lists, cur_L, cur_R, c_stk) => {
+            vis.array.deselect(1, cur_L);
+            vis.array.select(1, cur_L, 1, cur_L, apColor);
+            vis.array.deselect(1, cur_R);
+            vis.array.select(1, cur_R, 1, cur_R, apColor);
+            }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
           if (Heads[L] <= Heads[R]) {
               M = L;
               L = Tails[L];
@@ -422,16 +438,19 @@ c_stk) => {
             assignMaybeNullVar(vis, 'R', cur_R);
             vis.array.assignVariable('M', 2, cur_M);
             vis.array.assignVariable('E', 2, cur_E);
-            if (cur_L !== 'Null') {
-              vis.array.select(1, cur_L, 1, cur_L, '0');
-              vis.array.select(2, cur_L, 2, cur_L, '0');
+            let Tails = Lists[2];
+            // colour all of L list
+            for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+              vis.array.select(1, i, 1, i, runAColor);
+              vis.array.select(2, i, 2, i, runAColor);
             }
-            if (cur_R !== 'Null') {
-              vis.array.select(1, cur_R, 1, cur_R, '0');
-              vis.array.select(2, cur_R, 2, cur_R, '0');
+            // colour all of R list
+            for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+              vis.array.select(1, i, 1, i, runBColor);
+              vis.array.select(2, i, 2, i, runBColor);
             }
-            vis.array.select(1, cur_M, 1, cur_M, '1');
-            vis.array.select(2, cur_M, 2, cur_M, '1');
+            vis.array.select(1, cur_M, 1, cur_M, sortColor);
+            vis.array.select(2, cur_M, 2, cur_M, sortColor);
             }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
           while (L !== 'Null' && R !== 'Null') {
             chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
@@ -441,27 +460,35 @@ c_stk) => {
               assignMaybeNullVar(vis, 'R', cur_R);
               vis.array.assignVariable('M', 2, cur_M);
               assignMaybeNullVar(vis, 'E', cur_E);
-              if (cur_L !== 'Null') {
-                vis.array.select(1, cur_L, 1, cur_L, '0');
-                vis.array.select(2, cur_L, 2, cur_L, '0');
+              let Tails = Lists[2];
+              // colour all of L list
+              for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+                vis.array.select(1, i, 1, i, runAColor);
+                vis.array.select(2, i, 2, i, runAColor);
               }
-              if (cur_R !== 'Null') {
-                vis.array.select(1, cur_R, 1, cur_R, '0');
-                vis.array.select(2, cur_R, 2, cur_R, '0');
+              // colour all of R list
+              for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+                vis.array.select(1, i, 1, i, runBColor);
+                vis.array.select(2, i, 2, i, runBColor);
               }
               // colour all of M list, up to + including cur_E
               // (we don't color up to Null because the tail of E hasn't
               // been smashed)
-              let Tails = Lists[2];
               for (let i = cur_M; i !== cur_E; i = Tails[i]) {
-                vis.array.select(1, i, 1, i, '1');
-                vis.array.select(2, i, 2, i, '1');
+                vis.array.select(1, i, 1, i, sortColor);
+                vis.array.select(2, i, 2, i, sortColor);
               }
               if (cur_E !== 'Null') {
-                vis.array.select(1, cur_E, 1, cur_E, '1');
-                vis.array.select(2, cur_E, 2, cur_E, '1');
+                vis.array.select(1, cur_E, 1, cur_E, sortColor);
+                vis.array.select(2, cur_E, 2, cur_E, sortColor);
               }
             }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
+            chunker.add('findSmaller', (vis, Lists, cur_L, cur_R, c_stk) => {
+              vis.array.deselect(1, cur_L);
+              vis.array.select(1, cur_L, 1, cur_L, apColor);
+              vis.array.deselect(1, cur_R);
+              vis.array.select(1, cur_R, 1, cur_R, apColor);
+              }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
             if (Heads[L] <= Heads[R]) {
               Tails[E] = L;
               E = L;
@@ -473,25 +500,27 @@ c_stk) => {
                 assignMaybeNullVar(vis, 'R', cur_R);
                 vis.array.assignVariable('M', 2, cur_M);
                 assignMaybeNullVar(vis, 'E', cur_E);
-                if (cur_L !== 'Null') {
-                  vis.array.select(1, cur_L, 1, cur_L, '0');
-                  vis.array.select(2, cur_L, 2, cur_L, '0');
+                let Tails = Lists[2];
+                // colour all of L list
+                for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, runAColor);
+                  vis.array.select(2, i, 2, i, runAColor);
                 }
-                if (cur_R !== 'Null') {
-                  vis.array.select(1, cur_R, 1, cur_R, '0');
-                  vis.array.select(2, cur_R, 2, cur_R, '0');
+                // colour all of R list
+                for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, runBColor);
+                  vis.array.select(2, i, 2, i, runBColor);
                 }
                 // colour all of M list, up to + including cur_E
                 // (we don't color up to Null because the tail of E hasn't
                 // been smashed)
-                let Tails = Lists[2];
                 for (let i = cur_M; i !== cur_E; i = Tails[i]) {
-                  vis.array.select(1, i, 1, i, '1');
-                  vis.array.select(2, i, 2, i, '1');
+                  vis.array.select(1, i, 1, i, sortColor);
+                  vis.array.select(2, i, 2, i, sortColor);
                 }
                 if (cur_E !== 'Null') {
-                  vis.array.select(1, cur_E, 1, cur_E, '1');
-                  vis.array.select(2, cur_E, 2, cur_E, '1');
+                  vis.array.select(1, cur_E, 1, cur_E, sortColor);
+                  vis.array.select(2, cur_E, 2, cur_E, sortColor);
                 }
               }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
             } else {
@@ -505,25 +534,27 @@ c_stk) => {
                 assignMaybeNullVar(vis, 'R', cur_R);
                 vis.array.assignVariable('M', 2, cur_M);
                 assignMaybeNullVar(vis, 'E', cur_E);
-                if (cur_L !== 'Null') {
-                  vis.array.select(1, cur_L, 1, cur_L, '0');
-                  vis.array.select(2, cur_L, 2, cur_L, '0');
+                let Tails = Lists[2];
+                // colour all of L list
+                for (let i = cur_L; i !== 'Null'; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, runAColor);
+                  vis.array.select(2, i, 2, i, runAColor);
                 }
-                if (cur_R !== 'Null') {
-                  vis.array.select(1, cur_R, 1, cur_R, '0');
-                  vis.array.select(2, cur_R, 2, cur_R, '0');
+                // colour all of R list
+                for (let i = cur_R; i !== 'Null'; i = Tails[i]) {
+                  vis.array.select(1, i, 1, i, runBColor);
+                  vis.array.select(2, i, 2, i, runBColor);
                 }
                 // colour all of M list, up to + including cur_E
                 // (we don't color up to Null because the tail of E hasn't
                 // been smashed)
-                let Tails = Lists[2];
                 for (let i = cur_M; i !== cur_E; i = Tails[i]) {
-                  vis.array.select(1, i, 1, i, '1');
-                  vis.array.select(2, i, 2, i, '1');
+                  vis.array.select(1, i, 1, i, sortColor);
+                  vis.array.select(2, i, 2, i, sortColor);
                 }
                 if (cur_E !== 'Null') {
-                  vis.array.select(1, cur_E, 1, cur_E, '1');
-                  vis.array.select(2, cur_E, 2, cur_E, '1');
+                  vis.array.select(1, cur_E, 1, cur_E, sortColor);
+                  vis.array.select(2, cur_E, 2, cur_E, sortColor);
                 }
               }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
             }
@@ -538,8 +569,8 @@ c_stk) => {
               // colour all of M list
               let Tails = Lists[2];
               for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
-                vis.array.select(1, i, 1, i, '1');
-                vis.array.select(2, i, 2, i, '1');
+                vis.array.select(1, i, 1, i, sortColor);
+                vis.array.select(2, i, 2, i, sortColor);
               }
             }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
           } else {
@@ -551,8 +582,8 @@ c_stk) => {
               // colour all of M list
               let Tails = Lists[2];
               for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
-                vis.array.select(1, i, 1, i, '1');
-                vis.array.select(2, i, 2, i, '1');
+                vis.array.select(1, i, 1, i, sortColor);
+                vis.array.select(2, i, 2, i, sortColor);
               }
             }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
           }
@@ -566,8 +597,8 @@ c_stk) => {
             // colour all of M list
             let Tails = Lists[2];
             for (let i = cur_M; i !== 'Null'; i = Tails[i]) {
-              vis.array.select(1, i, 1, i, '1');
-              vis.array.select(2, i, 2, i, '1');
+              vis.array.select(1, i, 1, i, sortColor);
+              vis.array.select(2, i, 2, i, sortColor);
             }
             }, [[Indices, Heads, Tails], L, M, simple_stack], depth);
 
@@ -818,6 +849,13 @@ cur_right, c_stk) => {
     Tails[entire_num_array.length-1] = 'Null';
     const msresult = MergeSort(1, entire_num_array.length - 1, 0);
     // const msresult = 0;
+    let lastLine = (entire_num_array.length > 1 ? 'returnM': 'returnL');
+    chunker.add(lastLine, (vis, a) => {
+      for (let i = 1; i < entire_num_array.length; i++) {
+        vis.array.select(1, i, 1, i, doneColor);
+        vis.array.select(2, i, 2, i, doneColor);
+      }
+      }, [A], 1);
 
     return msresult;
   }
