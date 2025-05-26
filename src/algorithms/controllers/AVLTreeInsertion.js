@@ -63,9 +63,10 @@ export default {
         /**
         * compute node positions during rotation
         * given x-y coordinates of the root and the child, compute the
-        * intermediate position after step 1 or step 2
+        * intermediate position after step 1, step 2, ...
         * coords represented as record with fields rX, rY, cX, cY (root X&Y,
         * child X&Y)
+        * Steps 1&2:
         * We keep the edge the same length and rotate it around the point 40%
         * along the edge from the root.  If initially the y coordinate of the
         * root is 1 and the child is zero, after step 1 the root is at 2/3
@@ -73,6 +74,11 @@ export default {
         * child is at 1.  The x coordinates are computed so as to keep the length
         * of the edge same (magic numbers derived from maths).
         * returns record with new coordinates
+        * Further steps:
+        * Not coded here but in the next steps the (new) root is moved
+        * more towards the center and the (new) child (and it's child?)
+        * is moved down.
+        * 
         */
         function rotateStep(pos0, step) {
 
@@ -82,14 +88,16 @@ export default {
         // edge length = sqrt(deltaX**2 + deltaY**2)
 	let deltaX1; // deltaX for new position
 	let pos1 = {rX:0, rY:0, cX:0, cY:0};
-        if (step == 1) {
+        if (step === 1) {
             pos1.rY = (2*rY + cY) / 3;
             pos1.cY = (rY + cY) / 2;
             deltaX1 = Math.sqrt((35/36)*deltaY**2 + deltaX**2);
-        } else { // assume step == 2
+        } else if (step === 2) {
             pos1.rY = (rY + 2*cY) / 3;
             pos1.cY = rY;
             deltaX1 = Math.sqrt((5/9)*deltaY**2 + deltaX**2);
+        } else {
+            console.log('Invalid rotateStep step ', step);
         }
 	if (rX > cX)  // reverse direction of deltaX
             deltaX1 = -deltaX1;
@@ -100,13 +108,16 @@ export default {
 
         // We apply the following char notations in our rotation code.
         // It helps code reusability and readability.
+        // XXX might be good to change some of these (RR+RL added
+        // later); note that P is not necessarilty the *global* root, R
+        // can stand for root and right.
         // tNum / charNotation
         //
         //       P/G (Global root /Parent)     P/G
         //        |                             |
         //       6/R                           2/R
         //      /   \     Right Rotation      /   \
-        //     2/A   7    - - - - - - - >    1     6/A
+        //     2/A   7/RR - - - - - - - >    1/RL  6/A
         //    /   \       < - - - - - - -         /   \
         //   1    4/D      Left Rotation        4/D    7
 
@@ -176,8 +187,6 @@ export default {
                     }
 
                     // -- following code is for visualising the rotation step by step --
-                    let rootNode = vis.graph.findNode(tt2);
-                    let leafNode = vis.graph.findNode(tt2);
                     // freeze the layout to avoid the nodes moving automatically
                     vis.graph.setPauseLayout(true);
                     let pos0 = vis.graph.getRotPos(); // original position
@@ -192,7 +201,6 @@ export default {
             // let t2's right child point to t6
             chunker.add('t2.right = t6',
                 (vis, t6, t2, t4, p, rotate) => {
-                    // highlight the edge between t2 and t6
                     if (rotate) vis.graph.visit(t2, p);
 
                     vis.graph.removeEdge(t6, t2);
@@ -206,24 +214,42 @@ export default {
                     vis.graph.addEdge(t2, t6);
 
                     if (t4 !== null) vis.graph.removeEdge(t6, t4);
+                    // set the new position of the node(s)
+                    // - just move (new) root node towards center more.
+                    // New child and grandchild moved in next chunk -
+                    // could do them here also but less confusing as is?
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos2 = rotateStep(pos0, 2); // previous position
+                    vis.graph.setNodePosition(t2, (pos0.rX + 3*pos0.cX)/4, pos2.cY);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, rotateVis],
                 depth
             );
 
+            let RR = (R.right? R.right.key: null);
             // if t4 is not null, let t6's left child point to t4
             // if (D) { // we now animate this step even if t4 is null
-                chunker.add('t6.left = t4',
-                    (vis, r, d) => {
-                        if (d !== null) vis.graph.addEdge(r, d);
-                    },
-                    [R.key, D ? D.key : null],
-                    depth
-                )
-            // }
+            chunker.add('t6.left = t4',
+                (vis, t6, t6r, t2, t4, p, rotate) => {
+                    // vis.graph.setMoveRatio(9/10);
+                    if (t4 !== null) vis.graph.addEdge(t6, t4);
+                    // set the new position of the nodes
+                    // - just move (new) child node down more
+                    // plus it's child also (if it has one)
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos2 = rotateStep(pos0, 2); // position after step 2
+                    let deltaY = (pos2.rY - pos0.rY) / 3;
+                    vis.graph.setNodePosition(t6, pos2.rX, pos2.rY + deltaY);
+                    if (t6r !== null) {
+                        vis.graph.moveNodePosition(t6r, 0, deltaY);
+                    }
+                },
+                [R.key, RR, A.key, D ? D.key : null, parentNode ? parentNode.key : null, rotateVis],
+                depth
+            )
 
             // perform the rotation in our objects
-            const temp = root.left;
+            const temp = root.left; // XXX temp = A ???
             root.left = temp.right;
             temp.right = root;
             updateHeight(root);
@@ -252,15 +278,20 @@ export default {
 
             // finalise the rotation
             chunker.add('return t2',
-                (vis, p, t2, t6) => {
+                (vis, g, p, t2, t6) => {
                     // vis.graph.clearTID();
+                    console.log(g, p, t2, t6);
                     vis.graph.updateTID(t2, 't2');
                     if (p !== null) {
                         vis.graph.removeEdge(p, t6);
                         vis.graph.addEdge(p, t2);
                     }
+                    vis.graph.setMoveRatio(3/6);
+                    vis.graph.setPauseLayout(false);
+                    vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                 },
-                [parentNode ? parentNode.key : null, A.key, R.key],
+                [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
             );
 
@@ -360,20 +391,38 @@ export default {
                     vis.graph.addEdge(t6, t2);
                     // remove edge after layout to perform the middle step
                     if (t4 !== null) vis.graph.removeEdge(t2, t4);
+                    // set the new position of the nodes
+                    // - just move (new) root node towards center more.
+                    // New child and grandchild moved in next chunk -
+                    // could do them here also but less confusing as is?
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos2 = rotateStep(pos0, 2); // previous position
+                    vis.graph.setNodePosition(t6, (pos0.rX + 3*pos0.cX)/4, pos2.cY);
                 },
                 [R.key, A.key, D ? D.key : null, parentNode ? parentNode.key : null, rotateVis],
                 depth
             );
 
+            let RL = (R.left? R.left.key: null);
             // if t4 is not null, let t2's right child point to t4
             // if (D) { // we now animate this step even if t4 is null
-                chunker.add('t2.right = t4',
-                    // reconnect the edge between t2 and t4
-                    (vis, r, d) => {
-                        if (d !== null) vis.graph.addEdge(r, d);
-                    },
-                    [R.key, D ? D.key : null],
-                    depth
+            chunker.add('t2.right = t4',
+                // reconnect the edge between t2 and t4
+                (vis, t2, t2l, t6, t4, p, rotate) => {
+                    if (t4 !== null) vis.graph.addEdge(t2, t4);
+                    // set the new position of the nodes
+                    // - just move (new) child node down more
+                    // plus it's child also (if it has one)
+                    let pos0 = vis.graph.getRotPos(); // original position
+                    let pos2 = rotateStep(pos0, 2); // position after step 2
+                    let deltaY = (pos2.rY - pos0.rY) / 3;
+                    vis.graph.setNodePosition(t2, pos2.rX, pos2.rY + deltaY);
+                    if (t2l !== null) {
+                        vis.graph.moveNodePosition(t2l, 0, deltaY);
+                    }
+                },
+                [R.key, RL, A.key, D ? D.key : null, parentNode ?  parentNode.key : null, rotateVis],
+                depth
                 )
             // }
 
@@ -407,15 +456,19 @@ export default {
 
             // finalise the rotation
             chunker.add('return t6',
-                (vis, p, t6, t2) => {
+                (vis, g, p, t6, t2) => {
                     // vis.graph.clearTID();
                     vis.graph.updateTID(t6, 't6');
                     if (p !== null) {
                         vis.graph.removeEdge(p, t2);
                         vis.graph.addEdge(p, t6);
                     }
+                    vis.graph.setMoveRatio(3/6);
+                    vis.graph.setPauseLayout(false);
+                    vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                 },
-                [parentNode ? parentNode.key : null, A.key, R.key],
+                [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
             );
             return temp; // new root node after the rotation
@@ -442,6 +495,7 @@ export default {
                     vis.graph.updateHeight(r.key, r.height);
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root.left], depth);
 
             // chunker.add('return right rotation on t', (vis) => { }, [], depth);
@@ -471,9 +525,9 @@ export default {
                     vis.graph.updateHeight(r.key, r.height);
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root.right], depth);
 
-            // chunker.add('return left rotation on t', (vis) => { }, [], depth);
 
             // perform left rotation on the root node
             return RRCR(root, parentNode, depth, true);
@@ -548,7 +602,7 @@ export default {
                 );
 */
 
-                // update the chilld of the parent node
+                // update the child of the parent node
                 if (parentNode !== null) {
                     if (key < parentNode.key) {
                         parentNode.left = root;
@@ -664,6 +718,7 @@ export default {
                 // clear the function information after the rotation
                 // and tidy up the nodes' position
                 chunker.add('return rightRotate(t)', (vis, g, r) => {
+                    vis.graph.setMoveRatio(1);
                     vis.graph.updateHeight(r.key, r.height);
                     vis.graph.setFunctionNode(null);
                     vis.graph.clearSelect_Circle_Count();
@@ -700,6 +755,7 @@ export default {
                 // clear the function information after the rotation
                 // and tidy up the nodes' position
                 chunker.add('return leftRotate(t)', (vis, g, r) => {
+                    vis.graph.setMoveRatio(1);
                     vis.graph.updateHeight(r.key, r.height);
                     // vis.graph.clearTID();
                     vis.graph.setFunctionNode(null);
@@ -736,6 +792,7 @@ export default {
                 // clear the function information after the rotation
                 chunker.add('return rightRotate(t) after leftRotate',
                     (vis, g, r) => {
+                        vis.graph.setMoveRatio(1);
                         vis.graph.updateHeight(r.key, r.height);
                         // vis.graph.clearTID();
                         vis.graph.setFunctionNode(null);
@@ -775,6 +832,7 @@ export default {
                 // clear the function information after the rotation
                 chunker.add('return leftRotate(t) after rightRotate',
                     (vis, g, r) => {
+                        vis.graph.setMoveRatio(1);
                         vis.graph.updateHeight(r.key, r.height);
                         // vis.graph.clearTID();
                         vis.graph.setFunctionNode(null);
@@ -804,6 +862,8 @@ export default {
                 vis.graph.isWeighted = true;
                 vis.graph.setFunctionName('Tree is Empty');
                 vis.graph.setFunctionInsertText(``);
+                vis.graph.setPauseLayout(false);
+                vis.graph.setMoveRatio(1);
                 vis.array.patch(0);
                 // make a bit more room for tree
                 vis.graph.setSize(2.5);

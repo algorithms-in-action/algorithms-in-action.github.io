@@ -20,6 +20,8 @@ import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 //import GraphRender from './GraphRenderer/GraphRenderer.module.scss';
 
+let defaultXY = 0; // default coordinates for new node
+
 export class Element {
   constructor() {
     this.variables = [];
@@ -70,6 +72,7 @@ class GraphTracer extends Tracer {
     // used in AVL trees
     this.pauseLayout = false;
     this.rotPos = {};
+    this.moveRatio = 1;
   }
 
   /*
@@ -292,7 +295,7 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    x = defaultXY, y = defaultXY, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '',
     height = undefined, AVL_TID = undefined) {
     if (this.findNode(id)) return;
@@ -587,18 +590,13 @@ class GraphTracer extends Tracer {
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;
-    const vGap = rect.height / maxDepth;
+    const vGap = rect.height / (maxDepth === 0? 1: maxDepth);
     marked = {};
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       // 120 magic number to center root node//
       node.x = rect.left + h * hGap + 120;
       node.y = rect.top + v * vGap;
-      /* used to debug, delete in merge
-      console.log(node.x + " " +  node.y + " "  + node.id );
-      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
-      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
-      */
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -1032,13 +1030,15 @@ class GraphTracer extends Tracer {
   }
 
   ////////////////////////AVL tree layout/////////////////////
+  // Copied from BST version - probably should have just generalised it
+  // or at least re-factor the code
   layoutAVL(root = 0, sorted = false) {
 
     //reflash the Node
     this.dynamic_node();
 
     this.root = root;
-    this.callLayout = { method: this.layoutBST, args: arguments };
+    this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();
     // If there is a sole node, it centers it.
     const middleX = (rect.left + rect.right) / 2;
@@ -1069,18 +1069,24 @@ class GraphTracer extends Tracer {
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;
-    const vGap = rect.height / maxDepth;
+    const vGap = rect.height / (maxDepth === 0? 1: maxDepth);
     marked = {};
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
+      // compute desired x,y coordinates for node
       // 120 magic number to center root node//
-      node.x = rect.left + h * hGap + 120;
-      node.y = rect.top + v * vGap;
-      /* used to debug, delete in merge
-      console.log(node.x + " " +  node.y + " "  + node.id );
-      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
-      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
-      */
+      let node_x = rect.left + h * hGap + 120;
+      let node_y = rect.top + v * vGap;
+      // if current coordinates computed we might just move node part of the way
+      // towards it's desired position, depending on moveRatio
+      // x,y = defaultXY for new nodes (generally)
+      if (node.x === defaultXY && node.y === defaultXY) {
+        node.x = node_x;
+        node.y = node_y;
+      } else {
+        node.x = node.x * (1 - this.moveRatio) + node_x * this.moveRatio;
+        node.y = node.y * (1 - this.moveRatio) + node_y * this.moveRatio;
+      }
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -1160,11 +1166,23 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * if roataion is performed, pause the layout
+   * if AVL rotation is performed, we pause the layout
    * @param {boolean} b pause the layout
    */
   setPauseLayout(b = true) {
-    (b ? this.pauseLayout = true : this.pauseLayout = false)
+    this.pauseLayout = b;
+  }
+
+  /**
+   * for AVL tree re-render after rotation we gradually move nodes,
+   * giving some weight to their current position
+   * @param {float} b ratio of actual move to ideal/eventual move
+   */
+  setMoveRatio(r = 1) {
+    if (r < 0 || r > 1)
+      console.log('Ignoring dubious setMoveRatio ', r);
+    else
+      this.moveRatio = r;
   }
 
   /**
@@ -1175,12 +1193,18 @@ class GraphTracer extends Tracer {
    */
   setNodePosition(n, x, y) {
     let node = this.findNode(n);
-    //console.log(node);
     node.x = x;
     node.y = y;
-
     // refresh rectangle size
-    //this.clearRect();
+    this.rectangle_size();
+  }
+
+  // as above but use deltas, not absoloute positions
+  moveNodePosition(n, dx, dy) {
+    let node = this.findNode(n);
+    node.x += dx;
+    node.y += dy;
+    // refresh rectangle size
     this.rectangle_size();
   }
 
