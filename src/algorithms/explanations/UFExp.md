@@ -32,7 +32,7 @@ Extra information is maintained for each subset so Union can reduce the
 height and when Find traverses a path from a node to the root, we take
 the opportunity to reduce the length of the path for future calls to Find
 (the tree height is reduced and the "width" is increased by having more
-children for some nodes).
+children for some nodes - see below).
 
 Interestingly, the extra information used to reduce the height is only
 approximate and the method used to reduce path lengths is not as thorough
@@ -43,3 +43,18 @@ large the set is, Find has takes very close to constant time on average
 (the inverse of the Ackerman function to be precise).  In this animation
 we allow path compression to be disabled so you can experiment to see
 how much this aspect of the algorithm reduces tree height.
+
+## Path compression in Find
+
+The method of path compression used here is that whenever we are at a
+node, searching upwards to find the root of the tree, we change the parent
+of the node to be the (previous) grandparent.
+
+## Union by rank
+
+When two trees are joined in a Union operation, we want to minimise the
+height of the resulting tree.  This can be done by making the shorter
+tree a subtree of the taller tree. Here we maintain the *rank* of each
+tree, which is an approximation (an upper bound) on the height. Each
+tree starts with rank 1 and when two trees of equal rank are joined, the
+rank of the resulting tree is incremented.

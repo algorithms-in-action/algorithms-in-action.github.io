@@ -54,6 +54,14 @@
         color: var(--array-2d-row-col-value-color); //var(--array-2d-row-col-sorted);
       }
 
+      &.highlightRow {
+        background-color: var(--graph-node-circle-fill);
+
+        span {
+          color: var(--array-2d-row-col);
+        }
+      }
+
       &.selected {
         background-color: var(--sky);
 
@@ -71,7 +79,7 @@
       }
 
       &.selected2 {
-        background-color: var(--array-2d-row-col-bg-selected2);
+        background-color: var(--apple);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -79,7 +87,23 @@
       }
 
       &.selected3 {
-        background-color: var(--array-2d-row-col-bg-selected3);
+        background-color: var(--peach);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.selected4 {
+        background-color: var(--plum);
+
+        span {
+          color: var(--array-2d-row-col-selected);
+        }
+      }
+
+      &.selected5 {
+        background-color: var(--wood);
 
         span {
           color: var(--array-2d-row-col-selected);
@@ -111,25 +135,6 @@
         }
       }
 
-
-      &.selected4 {
-        background-color: var(--apple);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-      &.selected5 {
-        background-color: var(--peach);
-
-        span {
-          color: var(--array-2d-row-col-selected);
-        }
-      }
-
-
-
       &.patched {
         background-color: var(--peach);
 
@@ -140,7 +145,7 @@
       }
 
       &.sorted {
-        background-color: var(--array-2d-row-bg-sorted);
+        background-color: var(--stone);
 
         span {
           color: var(--array-2d-row-col-sorted);
@@ -167,9 +172,36 @@
       &.faded {
         opacity: 0.2
       }
-
     }
   }
+}
+
+.array_body {
+  margin: 0;
+  padding: 0;
+}
+
+.array2d_container {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  overflow: auto;
+  height: 100%;
+}
+
+.captionHashing {
+  text-align: center;
+  color: var(--array-2d-row-col-value-color);
 }
 
 .captionDFS {
@@ -202,6 +234,12 @@
 
 // redefined in 1D array
 .captionmsort_arr_td {
+  caption-side: bottom;
+  text-align: right;
+  color: var(--array-2d-row-col-value-color);
+}
+
+.captionmsort_arr_bup {
   caption-side: bottom;
   text-align: right;
   color: var(--array-2d-row-col-value-color);

@@ -16,11 +16,15 @@
 // 
 // One thing that could make the code here more readable is to use
 // meaningful strings for bookmarks rather than numbers.
+// The way colors are done could also be improved - currently moving to
+// a less insane scheme so there is some consistency between colors for
+// array elements and tree/graph nodes.
 
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {areExpanded} from './collapseChunkPlugin';
+import {colors} from '../../components/DataStructures/colors';
 
 // k displayed only if first BuildHeap is expanded
 // Note: This is only needed in the last chunk of BuildHeap. The code
@@ -83,21 +87,21 @@ export default {
     const highlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
         vis.heap.visit(index + 1);
-        vis.array.select(index);
+        vis.array.selectColor(index, colors.apple);
       } else {
         vis.heap.select(index + 1);
-        vis.array.patch(index);
+        vis.array.selectColor(index, colors.sky);
+        // vis.array.patch(index);
       }
     };
 
     const unhighlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
         vis.heap.leave(index + 1);
-        vis.array.deselect(index);
       } else {
         vis.heap.deselect(index + 1);
-        vis.array.depatch(index);
       }
+     vis.array.deselect(index);
     };
 
     const swapAction = (b, n1, n2) => {

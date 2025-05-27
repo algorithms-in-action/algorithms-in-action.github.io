@@ -156,7 +156,7 @@ $yellowLine: #FFDE3C;
 	//tree: selected child nodes in a tree
 	//graph: selected graph node
 	//table: found table elements
-	--peach: #f58b2f;
+	--peach: #ffa500;
 	// typically used for: 
 	//array: unsorted array elements, 
 	//tree: selected parent nodes in a tree
@@ -175,6 +175,12 @@ $yellowLine: #FFDE3C;
 	//tree: arrows from parent nodes to parent nodes in a tree
 	//graph: available graph edges
 	//table: selected table elements
+	--plum: #8c32ab;
+        // used as 4th color in radix exchange sort,...
+	--wood:  #d35400;
+        // (currently) spare color
+        --stone: #aeaeae;
+        // same as sorted for various data structures
 
 
 
@@ -338,8 +344,10 @@ $yellowLine: #FFDE3C;
 
 	--leaf: #83d489;
 	--peach: #f58b2f;
-	--apple: #FF0000;
+	--apple: #DC0707;
 	--sky: #2289ff;
+	--plum: #82b807;
+	--wood: #b9770e;
 
 	--graph-node-circle-fill: #5c5c5c;
 	--graph-node-circle-stroke: #373737;
@@ -379,6 +387,7 @@ $yellowLine: #FFDE3C;
 	--array-graph-edge-arrow-fill: #505050;
 }
 
+// Default colours
 [algo-theme="default"] {
 	--graph-node-circle-fill-selected: #83d489;
 	--graph-node-circle-stroke-selected: #83d489;
@@ -431,11 +440,19 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-patched: #f58b2f;
 	--array-2d-row-col-sorted: #FFFFFF;
 
-  //graph colours
+  // named colours (not intended just for graphs):
+  // XXX The idea (not implemented properly) was algorithm code could
+  // use color names such as these and in the default scheme things
+  // would be rendered intuitively, but in others they would look
+  // different (a leaf is green by default but it can be other colors)
 	--leaf: #83d489;
-	--peach: #e85c49;
-	--apple: #FF0000;
+	// --apple: #a83c49;
+        // --apple: #FF0000;
+        --apple: #DC0707;
+        --peach: #ffa500;
 	--sky: #2289ff;
+	--plum: #8c32ab;
+	--wood: #9a7d0a;
 
 	//pseudocode colours
 	--right-code-keyword-font: #bf16b4;
@@ -452,6 +469,8 @@ $yellowLine: #FFDE3C;
 	--peach: #f2c988;
 	--apple: #ec0a70;
 	--sky: #258bff;
+	--plum: #d364a4;
+	--wood: #f5cba7;
 
 
 	//pseudocode colours
@@ -461,13 +480,15 @@ $yellowLine: #FFDE3C;
 	--right-code-function-font: #3a7ae9;
 }
 
-// Override Algorithm Theme Colors [Green]
-//Notice: 2021-s2 teams haven't actually designed/altered the colors in this color scheme.
+// Override Algorithm Theme Colors [red]
+//XXX: 2021-s2 teams haven't actually designed/altered the colors in this color scheme.
 [algo-theme="red"] {
 	--leaf: #469847;
 	--peach: #f1f513;
 	--apple: #9f2fe4;
 	--sky: #0d9eae;
+	--plum: #d8c104;
+	--wood: #914626;
 
 	//pseudocode colours
 	--right-code-keyword-font: #bf16b4;
@@ -482,6 +503,8 @@ $yellowLine: #FFDE3C;
 	--peach: #e0e0e0;
 	--apple: #000000;
 	--sky: #3e3e3e;
+	--plum: #8e8e8e;
+	--wood: #a2a2a2;
 
 	//pseudocode colours
 	--right-code-keyword-font: #646464;

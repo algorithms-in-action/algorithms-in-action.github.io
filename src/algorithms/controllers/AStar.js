@@ -132,6 +132,7 @@ export default {
         vis.graph.weighted(true);
         vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
+        vis.graph.setSize(0.7); // more room for arrays
       },
       [E, coords]
     );
@@ -155,18 +156,12 @@ export default {
       finalCosts.push(dashStr);
     }
 
-    // XXX would be nice to make the size of the table a bit smaller by
-    // default, and a bit higher up. How to do it is a mystery to me.
-    // vis.array.getRendererClass().zoom can be set but does nothing
-    // but in src/components/DataStructures/Array/Array2DRenderer/index.js
-    // you can change scale(${this.zoom}) to scale(0.8), for example,
-    // but then you can't change the zoom (seems like this.zoom may be
-    // null/undefined by default)
+    // XXX fitting arrays is a bit of a squeeze
     chunker.add(
       5,
       (vis, v) => {
         vis.array.set(v, algNameStr);
-        vis.array.getRendererClass().zoom = 8;
+        vis.array.setZoom(0.95);
       },
       [[nodes, heuristics, minCosts, parents, finalCosts], 0]
     );

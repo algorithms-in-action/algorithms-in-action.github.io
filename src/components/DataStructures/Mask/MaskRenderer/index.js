@@ -14,12 +14,35 @@ class MaskRenderer extends Renderer {
     this.toggleZoom(true);
   }
 
+  // display key in decimal, base 4 (optional) and binary plus
+  // mask in binary; some (non-decimal) digits highlighted
   renderData() {
-    const { binaryData, maskData, maxBits, highlight } = this.props.data;
+    const { binaryData, maskData, maxBits, highlight, addBase4 } = this.props.data;
+    let extra = <div/>;
+    if (addBase4) {
+       console.log([highlight,highlight.map((b) => Math.trunc(parseInt(b)/2))]);
+        extra =
+            <BinaryRenderer
+              header={"Base 4"}
+              emphasise={true}
+              data={binaryData}
+              maxBits={maxBits/2}
+              highlight={highlight.map((b) => Math.trunc(parseInt(b)/2))}
+              base={4}
+            />
+    }
     return (
       <div className={styles.container}>
         <BinaryRenderer
-          header={"Binary Rep"}
+          header={"Decimal"}
+          data={binaryData}
+          highlight={[]}
+          base={10}
+        />
+        {extra}
+        <BinaryRenderer
+          header={"Binary"}
+          emphasise={!addBase4}
           data={binaryData}
           maxBits={maxBits}
           highlight={highlight}

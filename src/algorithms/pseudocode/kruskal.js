@@ -30,13 +30,13 @@ Kruskal(G)  // Compute minimum spanning tree for graph G \\B Kruskal(G)
         \\Expl}
         \\Note{highlight edge + trees for n1, n2?
         \\Note}
-        if n1 and n2 are in different trees \\Ref DifferentTrees
+        if n1 and n2 are in different trees/sets in NodeSets \\Ref DifferentTrees
         \\In{
             Add e to Selected \\B addSelected
             \\Expl{ The counter used to keep track of size(Selected)
                 can be incremented here.
             \\Expl}
-            union(NodeSets, n1, n2) // update NodeSets, combining n1&n2 \\B union
+            union(n1, n2) // update NodeSets, combining n1&n2 \\B union
             \\Expl{ This is a union-find operation that takes the union
                 of the sets containing n1 and n2, respectively, since
                 they are now connected by a selected edge.
@@ -68,10 +68,14 @@ Init
         from the while loop significantly earlier in some cases.
     \\Expl}
     NodeSets <- set of singleton sets with each node in G \\B initNodeSets
-    \\Expl{ NodeSets is a set of sets of nodes that are connected by
-        selected edges (like a forest but without information about
-        which edges are used to connect the nodes of each tree).
-        Initially there are no selected edges so we have singleton sets.
+    \\Expl{ NodeSets represents the structure of the forest: which nodes
+        are connected to each other (but without information about which
+        edges are used). Each tree is represented as a just set of nodes;
+        the forest is a set of sets. A "union find" data structure is
+        used for efficiency.  All nodes in the same set/tree return the
+        same result for the find() function. Initially there are no
+        selected edges so each set/tree contains a single node and
+        find() thus returns a different value for each node.
     \\Expl}
 \\Code}
 
@@ -79,11 +83,11 @@ Init
 DifferentTrees
     \\Note{highlight find(n1), find(n2)?
     \\Note}
-    if find(NodeSets, n1) != find(NodeSets, n2) \\B DifferentTrees
+    if find(n1) != find(n2) \\B DifferentTrees
     \\Expl{ Find is a union-find operation that returns a representative
-        element of a set containing a given element. If the elements
+        element of a set in NodeSets containing a given element. If the elements
         returned for n1 and n2 are not equal, it means they are not
-        in the same set, so they are not connected by selected edges.
+        in the same set/tree, so they are not connected by selected edges.
     \\Expl}
 \\Code}
 

@@ -5,8 +5,8 @@
 
 /* eslint-disable no-undef */
 
-import unionFindUnion from './unionFindUnion';
-import unionFindFind from './unionFindFind';
+import unionFindUnion from '../unionFindUnion';
+import unionFindFind from '../unionFindFind';
 
 // simple stub for the chunker
 const chunker = {

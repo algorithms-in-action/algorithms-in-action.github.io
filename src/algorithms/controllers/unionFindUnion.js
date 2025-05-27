@@ -1,3 +1,6 @@
+// XXX maybe get rid of some of the animation steps where there are
+// multiple steps for a single line of code (generally using the last
+// step is sufficient).
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-param-reassign */
@@ -80,6 +83,7 @@ export default {
         for (const node of N_GRAPH.slice(1)) {
           vis.tree.addSelfLoop(node);
         }
+        vis.tree.setZoom(1.5);
       },
       [[N_ARRAY, parentArr, rankArr]]
     );

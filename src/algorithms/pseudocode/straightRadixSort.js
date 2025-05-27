@@ -20,18 +20,22 @@ would be good for the counts array.
 
 \\Code{
 Main
-Radixsort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
+Radixsort(A, n) // Sort array A[0]..A[n-1] in ascending order. \\B 1
+\\Expl{ Note that all arrays start at index zero.
+\\Expl}
 
-    Find maximum number of "digits" used in the data
-    \\Expl{  This depends on the radix (base) we use to view the data.
+    Find maximum number of "digits" used in the data \\B 2
+    \\Expl{ This depends on the radix (base) we use to view the data.
+      Here we use radix 4 for illustration (the digits are 0-3 and use
+      two bits; we show the bsae 4 and binary representation of the keys and the
+      mask used to extract the current digit).
       We could use radix 10 (decimal digits), radix 2
-      (binary) or anything else.  Here we use radix 4 for illustration
-      (the digits are 0-3 and use two bits). Radix 256 (one byte) is a
-      better choice in practice and we can set the maximum to be the
+      (binary) or anything else.  Radix 256 (one byte) is a
+      good choice in practice and we can set the maximum to be the
       word size rather than scanning all the input data as we do here.
     \\Expl}
 
-    for each digit k up to maximum digit number
+    for each digit k up to maximum digit number \\B 3
     \\Expl{  We scan the digits right to left, from least significant to
       most significant.
     \\Expl}
@@ -47,57 +51,39 @@ Radixsort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
 \\Code}
 
 \\Code{
-MaximumBit
-\\Note{ Skip this
-\\Note}
-maxNumber <- max(A) \\B 2
-maxBit <- 0
-while maxNumber > 0
-\\In{
-    maxNumber <- maxNumber/2
-    maxBit <- maxBit+1
-\\In}
-\\Code}
-
-\\Code{
-RSFor
-\\Note{ Skip this
-\\Note}
-for k <- 0 to maxDigit \\B 3
-\\Code}
-
-\\Code{
 Countingsort
-// Countingsort(A, k, n) \\B 4
-Count number of 1s and 0s in B    \\Ref CountNums
-Array B <- counts or each kth digit value   \\Ref CountNums
-\\Expl{  We count the number of occurrences of each digit value (0-3
-  here) in the kth digits of the data.
+Array Count <- counts of each kth digit value   \\Ref CountNums
+\\Expl{  We count the number of occurrences of each digit value (here 0-3
+  or binary 00-11) in the kth digits of the data.  Consistent colors are
+  used for the different digit values in this and other arrays).
 \\Expl}
 Cumulatively sum digit value counts    \\Ref CumSum
 \\Expl{ For each digit value, we compute the count for that digit value
   plus all smaller digit values. This allows us to determine where the
-  last occurrence of each digit value will appear in the sorted array.
+  last occurrence of each digit value will appear in the sorted array
+  (the counts are one greater than the index because we start at index 0).
 \\Expl}
-Populate temporary array C with sorted numbers    \\Ref Populate
-\\Expl{  We copy the data to temporary array C, using the digit
-  value counts to determine where each element is copied to.
+Array B <- numbers sorted on digit k    \\Ref Populate
+\\Expl{  We copy the data to temporary array B, using the digit
+  value counts to determine where each element is copied to, so the result
+  is sorted on this digit. We scan right to left to make the sorting stable.
 \\Expl}
-Copy C back to A \\B 10
-\\Expl{ Array A is now sorted on digit k and all smaller digits
-  (because the smaller digits were sorted previously and counting
+Copy B back to A \\B 10
+\\Expl{ Array A is now sorted on digit k and all less significant digits
+  (because the less significant digits were sorted previously and counting
   sort is stable).
 \\Expl}
 \\Code}
 
 \\Code{
 CountNums
-// Put counts of each kth digit value in array B \\B 5
-initialise array B to all zeros
-for num in A
+initialise array Count to all zeros \\B 16
+for num in A \\B 13
 \\In{
-    digit <- kth digit value in num
-    \\Expl{ To extract the kth digit we can use div and mod operations.
+    digit <- kth digit value in num \\B 17
+    \\Expl{ The digit is highlighted in the base 4 display (and the two
+      bits in the binary representation).
+      To extract the kth digit we can use div and mod operations.
       If the radix is a power of two we can use bit-wise operations
       (right shift and bit-wise and) instead.
     \\Expl}
@@ -106,42 +92,33 @@ for num in A
       highlighted, and the digit value 0-3 (maybe the latter can be done
       by just highlighting B[digit] instead).
     \\Note}
-    B[digit] <- B[digit]+1
+    Count[digit] <- Count[digit]+1 \\B 12
 \\In}
 \\Code}
 
 \\Code{
-KthBit
-\\Note{ Skip this
-\\Note}
-bit <- (num & (1 << i)) >> i
-\\Code}
-
-\\Code{
 CumSum
-// Cumulatively sum counts \\B 6
-\\Note{ Best remove this comment line and move bookmark
-\\Note}
-for i = 1 to maximum digit value
+for i = 1 to maximum digit value \\B 14
 \\Expl{ We must scan left to right. The count for digit 0 remains
   unchanged.
 \\Expl}
 \\In{
-    B[i] = B[i-1] + B[i]
+    Count[i] = Count[i-1] + Count[i] \\B 15
 \\In}
 \\Code}
 
 \\Code{
 Populate
-// Populate new array C with sorted numbers \\B 7
-for each num in A in reverse order
+for each num in A in reverse order \\B 8
 \\Expl{  We go from right to left so that we preserve the order of numbers
   with the same digit.
   This is CRUCIAL in radix sort as the counting sort MUST be stable.
 \\Expl}
 \\In{
-    digit <- kth digit value in num    \\Ref KthBit
-    \\Expl{ To extract the kth digit value we can use div and mod operations.
+    digit <- kth digit value in num \\B 19
+    \\Expl{ The digit is highlighted in the base 4 representation (and
+      the two bits in the binary representation).
+      To extract the kth digit we can use div and mod operations.
       If the radix is a power of two we can use bit-wise operations
       (right shift and bit-wise and) instead.
     \\Expl}
@@ -150,16 +127,9 @@ for each num in A in reverse order
       highlighted, and the digit value 0-3 (maybe the latter can be done
       by just highlighting B[digit] instead).
     \\Note}
-    B[digit] = B[digit]-1
-    C[B[digit]] = num \\B 9
+    Count[digit] = Count[digit]-1 \\B 18
+    B[Count[digit]] = num \\B 9
 \\In}
-\\Code}
-
-\\Code{
-PopFor
-\\Note{ Skip this?
-\\Note}
-for j <- n-1 downto 0 \\B 8
 \\Code}
 
 `);

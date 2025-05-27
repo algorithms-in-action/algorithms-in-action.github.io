@@ -21,6 +21,9 @@ Geeks for Geeks Link: [**Astar Algorithm**][G4GLink]
 
 ## Exercises/Exploration
 
+Compare heuristic search with Dijkstra's algorithm: can you observe how
+the heuristic helps direct the search towards the end node?
+
 For Graph 1 (or any other graph) what is the longest path (choice of
 start and end nodes) for which the algorithm makes no "mistakes", that
 is, every node removed from the priority queue is on the shortest path?
@@ -43,4 +46,11 @@ well if a different alternative was used.  Hint: consider a graph in the
 shape of a right-angled triangle with edge lengths 10, 10 and 10 root 2
 (around 14.142137) with nodes at the corners and several nodes along
 the hypotenuse.
+
+In AIA, the coding of various graph algorithms is designed to show
+their similarity. Iterative DFS, breadth first search, Dijkstra's
+shortest path algorithm, heuristic search and Prim's minimal spanning
+tree algorithm all have *identical* top-level pseudocode - check it out!
+Can you re-write the code for this and/or for other algorithms to make
+it as simple as possible, rather than emphasising similarity?
 

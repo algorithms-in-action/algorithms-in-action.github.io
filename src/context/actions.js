@@ -412,7 +412,7 @@ export const GlobalActions = {
         } while (!state.chunker.viewable[stopAt])
       }
     }
-    let result1 = { bookmark: "", chunk: state.chunker.currentChunk };
+    // let result1 = { bookmark: "", chunk: state.chunker.currentChunk };
     const result = state.chunker.goBackTo(stopAt); // changes state
 
     // const lineExplan = findBookmark(state.pseudocode, result.bookmark).explanation;
@@ -422,6 +422,23 @@ export const GlobalActions = {
       ...result,
       playing,
       // lineExplanation: lineExplan,
+    };
+  },
+
+  // added to avoid O(N^2) behaviour for progress bar
+  // Goes back to a line in one step
+  BACK_TO_LINE: (state, playing) => {
+    let stopAt;
+    if (typeof playing === 'object') {
+      stopAt = playing.stopAt;
+      playing = playing.playing;
+    } // XXX else error
+console.log(stopAt, playing, state);
+    const result = state.chunker.goBackTo(stopAt); // changes state
+    return {
+      ...state,
+      ...result,
+      playing,
     };
   },
 

@@ -34,4 +34,6 @@ it can also be adapted to sorting large quantities of data that do not
 fit into main memories. Historically, when data was primarily stored on
 magnetic tape, versions of bottom up merge sort were absolutely essential.
 There are recursive "top down" versions of merge sort, shown elsewhere.
+There is also a "natural" merge sort which utilises already sorted runs,
+also shown elsewhere.
 

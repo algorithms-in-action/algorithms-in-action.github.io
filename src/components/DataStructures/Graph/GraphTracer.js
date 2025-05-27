@@ -20,6 +20,8 @@ import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
 //import GraphRender from './GraphRenderer/GraphRenderer.module.scss';
 
+let defaultXY = 0; // default coordinates for new node
+
 export class Element {
   constructor() {
     this.variables = [];
@@ -67,11 +69,13 @@ class GraphTracer extends Tracer {
     this.istc = false;
     this.radius = null;
 
+    // used in AVL trees
     this.pauseLayout = false;
-    this.prebHeight = 0;  // restore the previous height of the node
+    this.rotPos = {};
+    this.moveRatio = 1;
   }
 
-  /* 
+  /*
    * Calcluates the maximum individual coordinate from an array of x y coordinates.
   */
   calculateMaximumCoordinate(coordinates) {
@@ -115,7 +119,7 @@ class GraphTracer extends Tracer {
 
     // XXX
     // SHOULD ALSO SET LABEL SIZE OF NODE HERE !!!
-    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!! 
+    // ALTERNATIVELY LABEL SIZE SHOULD BE CALCULATED ELSEWHERE DEPENDANT ON NODE RADIUS!!!
   }
 
   /**
@@ -291,7 +295,7 @@ class GraphTracer extends Tracer {
   }
 
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
+    x = defaultXY, y = defaultXY, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '',
     height = undefined, AVL_TID = undefined) {
     if (this.findNode(id)) return;
@@ -319,7 +323,11 @@ class GraphTracer extends Tracer {
 
   updateNode(id, value, height, weight, x, y, visitedCount, selectedCount) {
     const node = this.findNode(id);
-    const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
+    // XXX default height should probably not be here - added for AVL
+    // trees most likey and messes with other things, eg hashing
+    // AVL trees seem fine without it
+    // const update = { value, height: 1, weight, x, y, visitedCount, selectedCount };
+    const update = { value, height, weight, x, y, visitedCount, selectedCount };
     Object.keys(update).forEach(key => {
       if (update[key] === undefined) delete update[key];
     });
@@ -582,18 +590,13 @@ class GraphTracer extends Tracer {
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;
-    const vGap = rect.height / maxDepth;
+    const vGap = rect.height / (maxDepth === 0? 1: maxDepth);
     marked = {};
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
       // 120 magic number to center root node//
       node.x = rect.left + h * hGap + 120;
       node.y = rect.top + v * vGap;
-      /* used to debug, delete in merge
-      console.log(node.x + " " +  node.y + " "  + node.id );
-      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
-      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
-      */
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -921,13 +924,13 @@ class GraphTracer extends Tracer {
   }
 
 
-  /* set_Rectangle_size(x_r, y_u, x_l, y_d) 
+  /* set_Rectangle_size(x_r, y_u, x_l, y_d)
     * maximum limit of the rectangle;
     * x_r: x right
     * y_u: y up
     * x_l: x left
     * y_d: y down
-    * text: text to be displayed on the rectangle 
+    * text: text to be displayed on the rectangle
   */
   setRect(x_r, y_u, x_l, y_d) {
     if (this.rectangle == null) {
@@ -1010,8 +1013,8 @@ class GraphTracer extends Tracer {
 
   /**
    * udpate the AVL_TID of the node
-   * @param {int} id 
-   * @param {String} AVL_TID 
+   * @param {int} id
+   * @param {String} AVL_TID
    */
   updateTID(id, AVL_TID) {
     this.findNode(id).height = AVL_TID;
@@ -1027,13 +1030,15 @@ class GraphTracer extends Tracer {
   }
 
   ////////////////////////AVL tree layout/////////////////////
+  // Copied from BST version - probably should have just generalised it
+  // or at least re-factor the code
   layoutAVL(root = 0, sorted = false) {
 
     //reflash the Node
     this.dynamic_node();
 
     this.root = root;
-    this.callLayout = { method: this.layoutBST, args: arguments };
+    this.callLayout = { method: this.layoutAVL, args: arguments };
     const rect = this.getRect();
     // If there is a sole node, it centers it.
     const middleX = (rect.left + rect.right) / 2;
@@ -1064,18 +1069,24 @@ class GraphTracer extends Tracer {
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;
-    const vGap = rect.height / maxDepth;
+    const vGap = rect.height / (maxDepth === 0? 1: maxDepth);
     marked = {};
     const recursivePosition = (node, h, v) => {
       marked[node.id] = true;
+      // compute desired x,y coordinates for node
       // 120 magic number to center root node//
-      node.x = rect.left + h * hGap + 120;
-      node.y = rect.top + v * vGap;
-      /* used to debug, delete in merge
-      console.log(node.x + " " +  node.y + " "  + node.id );
-      console.log(middle_x + " " + h + " " + hGap + " " +node.id);
-      console.log(middle_y + " " + v + " " + vGap + " " +node.id);
-      */
+      let node_x = rect.left + h * hGap + 120;
+      let node_y = rect.top + v * vGap;
+      // if current coordinates computed we might just move node part of the way
+      // towards it's desired position, depending on moveRatio
+      // x,y = defaultXY for new nodes (generally)
+      if (node.x === defaultXY && node.y === defaultXY) {
+        node.x = node_x;
+        node.y = node_y;
+      } else {
+        node.x = node.x * (1 - this.moveRatio) + node_x * this.moveRatio;
+        node.y = node.y * (1 - this.moveRatio) + node_y * this.moveRatio;
+      }
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
@@ -1101,7 +1112,7 @@ class GraphTracer extends Tracer {
 
   /**
    * display text on the AVL tree (for the rotation, key)
-   * @param {String} functionInsertText 
+   * @param {String} functionInsertText
    */
   setFunctionInsertText(functionInsertText) {
     this.functionInsertText = functionInsertText;
@@ -1147,19 +1158,31 @@ class GraphTracer extends Tracer {
   setTagInfo(text) {
     this.tagInfo = text;
     if (text.length > 3) {
-      this.tagInfo += 'are null';
+      this.tagInfo += 'are Empty'; // not used
     }
     else if (text !== '') {
-      this.tagInfo += 'is null';
+      this.tagInfo += 'is Empty';
     }
   }
 
   /**
-   * if roataion is performed, pause the layout
+   * if AVL rotation is performed, we pause the layout
    * @param {boolean} b pause the layout
    */
   setPauseLayout(b = true) {
-    (b ? this.pauseLayout = true : this.pauseLayout = false)
+    this.pauseLayout = b;
+  }
+
+  /**
+   * for AVL tree re-render after rotation we gradually move nodes,
+   * giving some weight to their current position
+   * @param {float} b ratio of actual move to ideal/eventual move
+   */
+  setMoveRatio(r = 1) {
+    if (r < 0 || r > 1)
+      console.log('Ignoring dubious setMoveRatio ', r);
+    else
+      this.moveRatio = r;
   }
 
   /**
@@ -1170,31 +1193,34 @@ class GraphTracer extends Tracer {
    */
   setNodePosition(n, x, y) {
     let node = this.findNode(n);
-    //console.log(node);
     node.x = x;
     node.y = y;
-
     // refresh rectangle size
-    //this.clearRect();
+    this.rectangle_size();
+  }
+
+  // as above but use deltas, not absoloute positions
+  moveNodePosition(n, dx, dy) {
+    let node = this.findNode(n);
+    node.x += dx;
+    node.y += dy;
+    // refresh rectangle size
     this.rectangle_size();
   }
 
   /**
-   * return the previous height of the tree in insertion
-   * @param {int} prebHeight the previous height of the tree
+   * save position of root and child pre-rotation (AVL trees)
    */
-  storePrevHeight(prebHeight) {
-    this.prebHeight = prebHeight;
+  setRotPos(pos) {
+    this.rotPos = pos;
   }
 
   /**
-   * return the previous height of the tree in insertion
-   * @returns {int} the previous height of the tree
+   * return position of root and child pre-rotation (AVL trees)
    */
-  getPrevHeight() {
-    return this.prebHeight;
+  getRotPos() {
+    return this.rotPos;
   }
 }
-
 
 export default GraphTracer;

@@ -5,13 +5,13 @@
 /* eslint-disable react/prop-types */
 
 // Support for graphs with Euclidean (X-Y) coordinates defined for each
-// node. In flux currently. Student version used tables only for input of
+// node. Older student version used tables only for input of
 // graphs - lots of screen real-estate.  Also a bunch of other problems
 // and annoyances/limitations.  Now supports input of X-Y cordinates
 // and edges/weights via text boxes, plus having predefined example
 // graphs, allowing user-defined weights as well as Euclidean/Manhattan
 // weights based on X-Y coordinates, etc. Also start node and end nodes
-// (latter is optional - start nodes should be also). Old input method still
+// (both optional - use null to disable). Old input method still
 // supported if you scroll down - could delete eventually but doesn't do
 // much harm if its off-screen, though it hides error messages.
 // NOTE: There are (at least) three different representations for
@@ -238,8 +238,8 @@ function EuclideanMatrixParams({
   const [heurCalc, setHeurCalc] = useState(H_EUCLIDEAN);
 
   // (currSize) affects number of columns.
-  const columns1 = useMemo(() => makeColumnCoords(currSize), [currSize]);
-  const columns2 = useMemo(() => makeColumnArray(currSize), [currSize]);
+  const columns1 = useMemo(() => makeColumnCoords(size), [size]);
+  const columns2 = useMemo(() => makeColumnArray(size), [size]);
   // window.alert(columns.Header);
   const { dispatch } = useParam();
 
@@ -270,10 +270,18 @@ function EuclideanMatrixParams({
   // and third is weight (if third is missing, weight defaults to 1)
   const [coordsTxt, setCoordsTxt] = useState(graphEgs[0].coords);
   const [edgesTxt, setEdgesTxt] = useState(graphEgs[0].edges);
-  const [startNode, setStartNode] = useState(defaultStart);
+  // Note that with URL input, defaultStart is a string rather than an
+  // integer, so we convert with unary + (otherwise when we compute
+  // start+1 it concatenates strings...)
+  const [startNode, setStartNode] = useState(+defaultStart);
   // XXX not sure if endNodesTxt needs to be in State
   const [endNodesTxt, setEndNodesTxt] = useState(nums2Txt(defaultEnd));
-  const [endNodes, setEndNodes] = useState(Array.isArray(defaultEnd) ? defaultEnd : [defaultEnd]);
+  // A* can have multiple end nodes in general so we use an array.
+  // However, other code assumes a single integer end node so the code
+  // here supports both and multiple end nodes are not yet supported in
+  // A* (XXX might fix this one day) Comment on defaultStart re strings
+  // versus integers also applies
+  const [endNodes, setEndNodes] = useState(Array.isArray(defaultEnd) ?  defaultEnd : [+defaultEnd]);
   // const [graphChoice, setgraphChoice] = useState(GRAPHCHOICERAND);
   const [graphChoice, setgraphChoice] = useState(1);
 
@@ -387,7 +395,8 @@ function EuclideanMatrixParams({
   // Update start node
   // useEffect() triggers handleSearch() to update animation
   const updateStartNode = (newStart) => {
-    if (newStart < 1 || newStart > size) return;
+    // use modulo size to wrap around in range 1..size
+    newStart = (newStart + size - 1) % size + 1;
     setMessage(null);
     setStartNode(newStart);
     // handleSearch();
@@ -398,11 +407,16 @@ function EuclideanMatrixParams({
   // required
   // useEffect() triggers handleSearch() to update animation
   const updateEndNode = (newEnd) => {
-    newEnd = (newEnd + size + 1) % (size + 1);
-    if (newEnd === 0 && ALGORITHM_NAME === 'A* Algorithm')
-      newEnd = size;
+    // use modulo size + 1 to wrap around
+    let newEnd1 = (newEnd + size + 1) % (size + 1);
+    // avoid 0 for A*, which has compulsory end node(s)
+    if (newEnd1 === 0 && ALGORITHM_NAME === 'A* Algorithm')
+      if (newEnd === size+1) // we incremented end
+        newEnd1 = 1;
+      else
+        newEnd1 = size; // we decremented end
     setMessage(null);
-    setEndNodes([newEnd]);
+    setEndNodes([newEnd1]);
     // handleSearch();
   };
 
@@ -736,13 +750,14 @@ function EuclideanMatrixParams({
     //         setMessage={setMessage}
     //       />
     //     </div>);
-    // XXX would be nice to display ' ' instead of '0'
     endButton =
         (<div className="sLineButtonContainer">
           <button className="endBtn" onClick={() => updateEndNode(endNodes[0] - 1)}>
             −
           </button>
-          <span className='size'>End: {endNodes[0]}</span>
+          <span className='size'>End:
+            {endNodes[ 0]=== 0 ? ' _' : endNodes[0]}
+          </span>
           <button className="sizeBtn" onClick={() => updateEndNode(endNodes[0] + 1)}>
             +
           </button>
@@ -795,16 +810,7 @@ function EuclideanMatrixParams({
             </div>
             {weightButton}
             {heurButton}
-            <div className="sLineButtonContainer">
-              <button className="startBtn" onClick={() => updateStartNode(startNode - 1)}>
-                −
-              </button>
-              <span className='size'>Start: {startNode}</span>
-              <button className="sizeBtn" onClick={() => updateStartNode(startNode + 1)}>
-                +
-              </button>
-
-            </div>
+            {startButton}
             {endButton}
           </div>
           {endNodeDiv}
@@ -952,15 +958,18 @@ const graphEgsNames = (graphEgs) => {
 }
 
 // converts [1,2,3] into '1,2,3' etc
+// Used for end nodes, but a bunch of things only support a single end
+// node so we also support single numbers here
 const nums2Txt = (nums) => {
   if (nums === null) return '';
   let txt = ``;
   if (!Array.isArray(nums)) {
-    console.log('Expected an array but received:', nums);
+    console.log('Hoped for an array but received:', nums);
     if (typeof nums === 'number') {
       txt = nums.toString();
     }
-    return txt; // or handle this case appropriately
+    console.log('Sometimes in life you just have to make do with what you are given');
+    return txt; // XXX or handle this case appropriately
   }
   nums.forEach((n) => {
     txt += n + `,`;

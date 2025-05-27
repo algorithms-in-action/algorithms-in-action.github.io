@@ -117,6 +117,7 @@ export default {
         vis.graph.weighted(true);
         vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
+        vis.graph.setSize(0.8); // more room for arrays
       },
       [E, coords]
     );

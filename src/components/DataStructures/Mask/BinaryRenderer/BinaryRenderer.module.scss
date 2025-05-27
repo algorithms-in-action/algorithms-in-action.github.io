@@ -24,6 +24,14 @@
     text-align: center;
 }
 
+// used to ephasise base 4/binary: whatever is the most important thing to
+// look at
+.emphTitle {
+    font-size: 16px;
+    color: var(--apple);
+    text-align: center;
+}
+
 .highlighted {
-    color: red;
+    color: var(--apple);  // XXX not great contrast
 }

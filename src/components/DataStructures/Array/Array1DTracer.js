@@ -47,6 +47,15 @@ class Array1DTracer extends Array2DTracer {
     super.select(0, sx, 0, ex);
   }
 
+  // revised way of getting colors
+  selectColor(sx, c) {
+    if (c !== undefined) {
+      super.deselect(0, sx, 0, sx);
+      super.nopatch(0, sx);
+      super.select(0, sx, 0, sx, c);
+    }
+  }
+
   styledSelect(style, sx, ex = sx) {
     super.styledSelect(style, 0, sx, 0, ex);
   }
@@ -108,6 +117,11 @@ class Array1DTracer extends Array2DTracer {
         const newEl = new Element(val.value, val.key);
         newEl.patched = val.patched;
         newEl.selected = val.selected;
+        newEl.selected1 = val.selected1;
+        newEl.selected2 = val.selected2;
+        newEl.selected3 = val.selected3;
+        newEl.selected4 = val.selected4;
+        newEl.selected5 = val.selected5;
         newEl.sorted = val.sorted;
         newEl.faded = val.faded;
         newEl.variables = val.variables;
@@ -140,6 +154,7 @@ class Array1DTracer extends Array2DTracer {
   setStackDepth(depth) {
     this.stackDepth = depth;
   }
+
 
   // default is to compute largestColumnValue but we can set it
   // explicitly so we can make two arrays look the same when moving

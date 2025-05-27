@@ -4,6 +4,7 @@ import '../../styles/GraphAlgorithms.scss';
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
+// XXX should have *one* list of algorithms and select based on category
 const graphAlgorithms = [
   { name: 'Depth First Search', url: `${baseUrl}/?alg=DFSrec&mode=find` },
   { name: 'DFS (iterative)', url: `${baseUrl}/?alg=DFS&mode=find` },
@@ -11,7 +12,7 @@ const graphAlgorithms = [
   { name: "Dijkstra's (shortest path)", url: `${baseUrl}/?alg=dijkstra&mode=find` },
   { name: 'A* (heuristic search)', url: `${baseUrl}/?alg=aStar&mode=find` },
   { name: "Prim's (min. spanning tree)", url: `${baseUrl}/?alg=prim&mode=find` },
-  { name: "Prim's (simpler code)", url: `${baseUrl}/?alg=prim_old&mode=find` },
+  // { name: "Prim's (simpler code)", url: `${baseUrl}/?alg=prim_old&mode=find` },
   { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/?alg=kruskal&mode=find` },
   { name: "Warshall's (transitive closure)", url: `${baseUrl}/?alg=transitiveClosure&mode=tc` }
 ];

@@ -28,7 +28,7 @@ into a grandchild of a node.  Why can't it be caused by just adding a
 new child to a node?
 
 In the worst case for simple binary trees, every node except one has a
-single chlild. Find some worst case AVL trees.
+single child. Find some worst case AVL trees.
 
 The AIA insertion code is recursive.  What possible ways are there to
 write a non-recursive version?

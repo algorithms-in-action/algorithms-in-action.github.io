@@ -22,6 +22,12 @@ import * as Instructions from './instructions';
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
  and could be re-thought when there are fewer merges going on.
+XXX This has now been totally ****ed up, with multiple lists of
+algorithms elsewhere (see components/mainmenu/index.js
+components/mainmenu/GraphAlgorithms.js components/AlgorithmMenu.js) as
+well as this file, algorithms/index.js. There should be *one* master
+list (eg, this one, possibly with extra info for each algorithm) and the
+other lists should be generated from the master list!
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -31,7 +37,7 @@ import * as Instructions from './instructions';
 // Also: the key for the algorithm MUST be the same as the "name"
 // of the top level Param block returned by the parameter function.
 // Eg, parameters/msort_arr_td.js has
-// 
+//
 // function MergesortParam() {
 // ...
 // return (
@@ -100,8 +106,22 @@ const allalgs = {
       sort: Controller.MSDRadixSort,
     },
   },
+  'radixSortStraight': {
+    name: 'Straight Radix Sort',
+    category: 'Sort',
+    explanation: Explanation.StraightRadixSortExp,
+    param: <Param.StraightRadixSortParam />,
+    instructions: Instructions.RadixSortInstruction,
+    extraInfo: ExtraInfo.StraightRadixSortInfo,
+    pseudocode: {
+      sort: Pseudocode.straightRadixSort,
+    },
+    controller: {
+      sort: Controller.straightRadixSort,
+    },
+  },
   'msort_arr_td': {
-    name: 'Merge Sort',
+    name: 'Merge Sort (top down)',
     noDeploy: false,
     category: 'Sort',
     explanation: Explanation.msort_arr_td,
@@ -115,6 +135,39 @@ const allalgs = {
       sort: Controller.msort_arr_td,
     },
   },
+
+  'msort_arr_bup': {
+    name: 'Merge Sort (bottom up)',             // for bottom up
+    noDeploy: false,
+    category: 'Sort',                           // for bottom up
+    explanation: Explanation.msort_arr_bup,     // for bottom up,  working yet
+    param: <Param.msort_arr_bup />,              // same as top down
+    instructions: Instructions.msort_arr_bup,    // for bottom up same as top down
+    extraInfo: ExtraInfo.msort_arr_bup,          // same as top down
+    pseudocode: {
+      sort: Pseudocode.msort_arr_bup, // same as top down
+    },
+    controller: {
+      sort: Controller.msort_arr_bup,// same as top down
+    },
+  },
+
+  'msort_arr_nat': {
+    name: 'Merge Sort (natural)',
+    noDeploy: false,
+    category: 'Sort',
+    explanation: Explanation.msort_arr_nat,
+    param: <Param.msort_arr_nat />,
+    instructions: Instructions.msort_arr_nat,
+    extraInfo: ExtraInfo.msort_arr_nat,
+    pseudocode: {
+      sort: Pseudocode.msort_arr_nat,
+    },
+    controller: {
+      sort: Controller.msort_arr_nat,
+    },
+  },
+
   'msort_lista_td': {
     name: 'Merge Sort (lists)',
     category: 'Sort',
@@ -163,6 +216,58 @@ const allalgs = {
       search: Controller.TTFTreeSearch,
     },
   },
+
+  'HashingLP': {
+    name: 'Hashing (Linear Probing)',
+    category: 'Insert/Search',
+    param: <Param.HashingLPParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.linearProbing,
+      search: Pseudocode.linearSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingDH': {
+    name: 'Hashing (Double Hashing)',
+    category: 'Insert/Search',
+    param: <Param.HashingDHParam/>,
+    instructions: Instructions.HashingLPDHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.doubleHashing,
+      search: Pseudocode.doubleSearch,
+    },
+    controller: {
+      insertion: Controller.HashingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
+  'HashingCH': {
+    name: 'Hashing (Chaining)',
+    category: 'Insert/Search',
+    param: <Param.HashingCHParam/>,
+    instructions: Instructions.HashingCHInstruction,
+    explanation: Explanation.HashingExp,
+    extraInfo: ExtraInfo.HashingInfo,
+    pseudocode: {
+      insertion: Pseudocode.chaining,
+      search: Pseudocode.chainingSearch,
+    },
+    controller: {
+      insertion: Controller.HashingChainingInsertion,
+      search: Controller.HashingSearch,
+    },
+  },
+
   'AVLTree': {
     name: 'AVL Tree',
     category: 'Insert/Search',
@@ -233,10 +338,9 @@ const allalgs = {
     },
     controller: {
       find: Controller.dijkstra,
-
     },
-  }, 
-   'aStar': {
+  },
+  'aStar': {
     name: 'A* (heuristic search)',
     category: 'Graph',
     param: <Param.ASTARParam />,
@@ -248,9 +352,8 @@ const allalgs = {
     },
     controller: {
       find: Controller.AStar,
-
     },
-  }, 
+  },
   'prim': {
     noDeploy: false,
     name: 'Prim\'s (min. spanning tree)',
@@ -266,8 +369,10 @@ const allalgs = {
       find: Controller.prim,
     },
   },
+  // Prim's (simpler code) is superseeded + could do with some work;
+  // it's included here so it can be run but it's not included in menus
   'prim_old': {
-    noDeploy: false,
+    noDeploy: true,
     name: 'Prim\'s (simpler code)',
     category: 'Graph',
     explanation: Explanation.Prims_oldExp,

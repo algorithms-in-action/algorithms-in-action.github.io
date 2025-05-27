@@ -13,7 +13,7 @@ export default {
         order: 0,
       },
       graph: {
-        instance: new GraphTracerRect('hsp', null, 'Horspool String Search'),
+        instance: new GraphTracerRect('hsp', null, 'Pattern, String'),
         order: 1,
       },
 
@@ -30,6 +30,9 @@ export default {
     // searchString and findString are stored in the same array
     // to get element in findString, add the length of searchString to the index
     chunker.add('1', (vis, n) => {
+      // XXX adjust size+zoom 
+      vis.array.setSize(0.8);
+      vis.graph.setZoom(1.5);
       vis.graph.addNode(0, searchString[0], 'box');
 
       for (let i = 1; i < searchString.length; i++) {
@@ -46,13 +49,16 @@ export default {
         vis.graph.addEdge(j + i, j + i - 1);
       }
       vis.graph.shift(0, n);
+      vis.array.set([shiftTable.slice(0, 13), new Array(13)],
+        [shiftTable.slice(13, 27), new Array(14)],
+        'horspools');
     }, [nodes]);
 
     chunker.add('2', (vis, n) => {
       // initialize shift table
-      vis.array.set([shiftTable.slice(0, 13), new Array(13)],
-        [shiftTable.slice(13, 27), new Array(14)],
-        'horspools');
+      // vis.array.set([shiftTable.slice(0, 13), new Array(13)],
+        // [shiftTable.slice(13, 27), new Array(14)],
+        // 'horspools');
     }, [nodes]);
 
     // incrementally fill inital shifttable
@@ -158,8 +164,10 @@ export default {
         } else if (shift_j === findString.length - 1) {
           // select - character matches
           chunker.add('10', (vis, i, j, n) => {
-            const ResultStr = `Success: pattern found position ${i - j}`;
-            vis.graph.addResult(ResultStr, i);
+            const ResultStr = `Pattern found at position ${i - j}`;
+            // vis.graph.addResult(ResultStr, i); // display mangled
+            vis.graph.addResult(ResultStr, 3); // gnerally fine
+            // XXX best remove i etc display as it can overlap with ResultStr
           }, [shift_i, shift_j, nodes]);
           return;
         } else {
@@ -199,7 +207,9 @@ export default {
         vis.graph.deselect(j, null);
       }
       const ResultStr = 'Pattern not found';
-      vis.graph.addResult(ResultStr, i);
+      // vis.graph.addResult(ResultStr, i); // i not passed in
+      vis.graph.addResult(ResultStr, 3); // generally fine
+      // XXX best remove i etc display as it can overlap with ResultStr
     }, [shift_pre - 1]);
   },
 };

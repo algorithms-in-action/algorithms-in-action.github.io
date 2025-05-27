@@ -4,6 +4,8 @@
 
 import { QSExp } from '../explanations';
 import GraphTracerRect from '../../components/DataStructures/Graph/GraphTracerRect';
+// XXX need to fix up color selection for graphs then use this:
+import {colors} from '../../components/DataStructures/colors';
 
 export default {
   explanation: QSExp,
@@ -85,11 +87,11 @@ export default {
         } else if (shift_j === findString.length - 1) {
           // eslint-disable-next-line no-unused-vars
           chunker.add('5', (vis, i, j, n) => {
-            const ResultStr = `Success: pattern found position ${i}`;
+            const ResultStr = `Pattern found at position ${i}`;
             // method1
-            vis.graph.addResult(ResultStr, i);
+            vis.graph.addResult(ResultStr, 3);
             // method 2：
-            // vis.array.addResult(ResultStr,i);
+            // vis.array.addResult(ResultStr,i); // messed up display
             // method 3：
             // eslint-disable-next-line max-len
             // const array1 = ["The pattern string("+findString+") is placed at postion "+ i +" of Search String ("+searchString+")"];
@@ -106,7 +108,8 @@ export default {
     const i = findString.length;
     chunker.add('6', (vis, i, n) => {
       const ResultStr = 'Pattern not found';
-      vis.graph.addResult(ResultStr, i);
+      vis.graph.addResult(ResultStr, 3);
+      // XXX best remove i,j display
     }, [i, nodes]);
   },
 };

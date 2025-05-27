@@ -37,7 +37,7 @@ export default {
 
     // restoring the visualisers
     chunker.add(
-      `while n != parent[n]`,
+      `Find(n)`,
       (vis, parentArray) => {
         vis.array.set([N_ARRAY, parentArray], 'unionFind');
         vis.tree.setNTree(realNodes, realEdges, nodes, edges);
@@ -231,7 +231,7 @@ export default {
           vis.tree.addEdge(grandparent, n);
           vis.tree.layout();
         },
-        [n, parentArr[parentArr[n]]]
+        [n, parentArr[n]]
       );
 
       chunker.add(

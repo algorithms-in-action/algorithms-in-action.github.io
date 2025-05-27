@@ -28,6 +28,14 @@ import {
   areExpanded,
 } from './collapseChunkPlugin';
 
+import {colors} from '../../components/DataStructures/colors';
+const partLColor = colors.peach;
+const partRColor = colors.sky;
+const pivotColor = colors.leaf;
+const sortedColor = colors.stone;
+const highlightColor = colors.apple; // was for i,j in partition,...
+
+
 export function isPartitionExpanded() {
   return areExpanded(['Partition']);
 }
@@ -85,6 +93,7 @@ const QS_BOOKMARKS = {
   MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1: 5, 
   SHARED_while_i_less_j: 6,
   SHARED_incri_i_until_array_index_i_greater_eq_pivot: 7,
+  SHARED_incri_j_until: 7, // shortened name
   SHARED_decri_j_until: 8, // shortened name
   SHARED_if_j_greater_i: 9,
   SHARED_swap_array_i_j_vals: 10,
@@ -354,12 +363,15 @@ export function run_QS(is_qs_median_of_3) {
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
           chunker.add(bookmark,
-            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames,
+cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
 
               vis.array.swapElements(_n1, _n2);
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+              if (bm == QS_BOOKMARKS.SHARED_swap_pivot_into_position)
+                vis.array.selectColor(_n1, sortedColor);
             },
-            [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth],
+            [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth, bookmark],
           depth);
         }
 
@@ -387,15 +399,33 @@ export function run_QS(is_qs_median_of_3) {
 
           const mid = Math.floor((left + right) / 2);
 
+          // here we color the three potential pivot elements according
+          // to their final positions after swapping, so the colors
+          // stick to the elements and will be in the right order after
+          // swaps.  We duplicate the if-then-elses but just change
+          // vars, not array elements.
+          let finalleft = left;
+          let finalmid = mid;
+          let finalright = right;
+          if (a[finalleft] > a[finalmid]) {
+            [finalleft, finalmid] = [finalmid, finalleft];
+          }
+          if (a[finalmid] > a[finalright]) {
+            [finalmid, finalright] = [finalright, finalmid];
+            if (a[finalleft] > a[finalmid]) {
+              [finalmid, finalleft] = [finalleft, finalmid];
+            }
+          }
+
+
           // assigning the pivot as the midpoint calculated above
-          chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, cur_mid, cur_left, cur_right) => {
-            highlight(vis, cur_mid, false);
-            // highlight seems to increment counter rather than set flag
-            if (cur_left !== cur_mid)
-              highlight(vis, cur_left, false);
-            highlight(vis, cur_right, false);
+          chunker_add_if(QS_BOOKMARKS.MEDIAN3_mid_to_middle_index, (vis, fin_mid, fin_left, fin_right) => {
+            vis.array.selectColor(fin_mid, pivotColor);
+            vis.array.selectColor(fin_left, partLColor);
+            vis.array.selectColor(fin_right, partRColor);
+            // XXX check/fix above for small partitions
           },
-          [mid, left, right]); 
+          [finalmid, finalleft, finalright]); 
 
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_first_if_A_idx_left_greater_A_idx_right); 
           if (a[left] > a[mid]) {
@@ -421,11 +451,11 @@ export function run_QS(is_qs_median_of_3) {
           pivot_index = right-1;
           chunker_add_if(QS_BOOKMARKS.MEDIAN3_set_pivot_to_value_at_array_indx_right_minus_1, 
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-            unhighlight(vis, cur_right, false);
-            unhighlight(vis, cur_right -1, false);
+            // unhighlight(vis, cur_right, false);
+            // unhighlight(vis, cur_right -1, false);
             // unhighlight seems to decrement counter rather than unset flag
-            if (cur_left !== cur_right -1)
-              unhighlight(vis, cur_left, false);
+            // if (cur_left !== cur_right -1)
+              // unhighlight(vis, cur_left, false);
 
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
           },
@@ -439,6 +469,7 @@ export function run_QS(is_qs_median_of_3) {
             QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
+            vis.array.selectColor(cur_pivot_index, pivotColor);
          },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
             //refresh_stack);  
@@ -478,20 +509,37 @@ export function run_QS(is_qs_median_of_3) {
           do {
             i += 1;
   
+            let iColor;
+            if (a[i] < pivot_value())
+              iColor = partLColor;
+            else
+              iColor = partRColor;
             chunker_add_if(
-              QS_BOOKMARKS.SHARED_incri_i_until_array_index_i_greater_eq_pivot,
-              refresh_stack);
+              QS_BOOKMARKS.SHARED_incri_j_until,
+              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+                  refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+                  vis.array.selectColor(cur_i, iColor);
+              });
             
           } while (a[i] < pivot_value());
   
           do {
             j -= 1;
 
+            let jColor;
+            if (i <= j && pivot_value() < a[j])
+              jColor = partRColor;
+            else
+              jColor = partLColor;
             chunker_add_if(
               QS_BOOKMARKS.SHARED_decri_j_until,
-              refresh_stack);
+              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+                  refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+                  if (cur_j >= left) // XXX pass in left?
+                    vis.array.selectColor(cur_j, jColor);
+              });
             
-          } while (i <= j && pivot_value() < a[j]);
+          } while (i < j && pivot_value() < a[j]);
 
 
           chunker_add_if(QS_BOOKMARKS.SHARED_if_j_greater_i);
@@ -507,12 +555,14 @@ export function run_QS(is_qs_median_of_3) {
         swapAction(QS_BOOKMARKS.SHARED_swap_pivot_into_position, i,
           is_qs_median_of_3 ? right-1 : right
         );
-
+        // XXX best make pivot sorted above and delete next chunk?
+/*
         chunker_add_if(
           QS_BOOKMARKS.SHARED_swap_pivot_into_position,
           (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
             vis.array.sorted(cur_pivot_index);
         });
+*/
 
         return [i, a]; // Return [pivot location, array partition_num_array]
       }
@@ -543,15 +593,19 @@ export function run_QS(is_qs_median_of_3) {
         // is a chunk at this recursion level as the first chunk in the
         // collapsed code for the recursive call
         // We no longer want to display 'pivot' or 'j' but want 'i'
+        // (we use pivot_index but keep pivot for deselect)
         let pivot_index = undefined;
         let j = undefined;
         let i = pivot;
         chunker.add(QS_BOOKMARKS.SHARED_pre_left,
-            (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+            (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, old_pivot) => {
             refresh_stack(vis, cur_real_stack,
 cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+           for (let i = cur_left; i <= cur_right; i++)
+             if (i !== old_pivot)
+               vis.array.deselect(i);
          },
-          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
+          [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth, pivot], depth);
 
         QuickSort(a, left, pivot - 1, depth + 1);
 

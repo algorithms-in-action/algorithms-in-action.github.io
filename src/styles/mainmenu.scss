@@ -23,7 +23,8 @@
 // src/components/mainmenu/index.js
 // Things are currently pretty awful for main menu formatting and if the
 // browser font size is larger than the default things just vanish off
-// the page, not to mention all the magic numbers in translating bits XXX
+// the page, not to mention all the magic numbers in translating bits in
+// all the (separate) sccs files XXX
 .main-contents {
   width: 83.33%; 
   height: 100vh;
