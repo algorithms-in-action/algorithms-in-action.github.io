@@ -6,9 +6,9 @@ Quicksort is a divide and conquer algorithm. It first rearranges the input
 array into two smaller sub-arrays: the (relatively) low elements and the
 (relatively) high elements. It then recursively sorts each of the sub-arrays.
 
-### Sorting using Basic Quicksort
+### Sorting using Quicksort
 
-The steps for basic Quicksort, used in this animation are:
+The steps for Quicksort are:
 
 * Pick the rightmost element of the array, called a pivot.
 
@@ -23,11 +23,11 @@ The base case of the recursion is arrays of size one or zero, which are in order
 
 Time complexity:
 <code>
-   Average case     <i>O(nlogn)</i>
+   Average case     <i>O(n log n)</i>
    Worst case       <i>O(n<sup>2</sup>)</i>
-   Best case        <i>O(nlogn)</i>
+   Best case        <i>O(n log n)</i>
 
-Note: Worst case in simple quicksort occurs when a file is already sorted, since the partition is highly asymmetrical. Improvements such as median-of-three quicksort make a significant improvement, although worst case behaviour is still possible.  
+Note: Worst case in quicksort occurs when a file is already sorted, since the partition is highly asymmetrical. Improvements such as median-of-three quicksort make a significant improvement, although worst case behaviour is still possible.  
 </code>
 
 Space complexity is O(1), that is, no extra space is required.
