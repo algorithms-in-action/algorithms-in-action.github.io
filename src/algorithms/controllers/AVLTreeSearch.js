@@ -2,6 +2,9 @@
  * This file contains the AVL Tree Search algorithm,
  * alongside the visualisation code.
  *
+ * XXX needs a bunch more fixes. Best ignore height and balance, highlight
+ * nodes at the right points (done), improve display of t if possible,...
+ *
  * The AVL Tree Search algorithm is used to find a node.
  * 
  * The search algorithm is based on the tree created by the insertion algorithm. 
@@ -41,51 +44,62 @@ export default {
         let current = root;
         let parent = null;
 
-        chunker.add('AVL_Search(t, k)', (vis) => {
-            vis.graph.setFunctionInsertText(" (" + target + ") ");
+        chunker.add('AVL_Search(t, k)', (vis, c, p) => {
+            vis.graph.setZoom(0.55);
+            vis.graph.setFunctionInsertText("(t, " + target + ")");
             vis.graph.setFunctionName("AVL_Search");
-        });
-        chunker.add('while t not Empty');
+            vis.graph.visit(c, p);
+        }, [current, parent]);
+        if (!tree)
+            chunker.add('while t not Empty');
 
         let ptr = tree;
         parent = current;
 
-        while (ptr) {
+        /* eslint-disable no-constant-condition */
+        while (true) {
+            chunker.add('while t not Empty');
 
-            chunker.add('n = root(t)', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+            if (current === undefined || !ptr) // should use null
+                break;
+
             let node = current;
             chunker.add('if n.key = k');
             if (node === target) {
-                chunker.add('if n.key = k', (vis, c, p) => vis.graph.leave(c, p), [node, parent]);
-                chunker.add('return t', (vis, c, p) => vis.graph.select(c, p), [node, parent]);
+                chunker.add('return t', (vis, c, p) => {
+                    vis.graph.leave(c, p);
+                    vis.graph.select(c, p);
+                    vis.graph.setText('Key found');
+                }, [node, parent]);
                 return 'success';
             }
 
             chunker.add('if n.key > k');
             if (target < node) {
-                if (tree[node].left !== undefined) {
-                    // if current node has left child
-                    parent = node;
-                    current = tree[node].left;
-                    ptr = tree[node];
+                parent = node;
+                current = tree[node].left;
+                ptr = tree[node];
+                if (current !== undefined) {
 
-                    chunker.add('t <- n.left');
+                    chunker.add('t <- n.left', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
                 } else {
-                    break;
+                    chunker.add('t <- n.left', (vis) => vis.graph.setText('t = Empty'));
                 }
-            } else if (tree[node].right !== undefined) {
-                // if current node has right child
+            } else {
                 parent = node;
                 current = tree[node].right;
                 ptr = tree[node];
-
-                chunker.add('t <- n.right');
-            } else {
-                break;
+                // if current node has right child
+                if (current !== undefined) {
+                    chunker.add('t <- n.right', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+                } else {
+                    chunker.add('t <- n.right', (vis) => vis.graph.setText('t = Empty'));
+                }
             }
         }
 
-        chunker.add('return NotFound', (vis) => vis.graph.setText('RESULT NOT FOUND'));
+        chunker.add('return NotFound', (vis) => vis.graph.setText('Key not found'));
         return 'fail';
     },
 };
+

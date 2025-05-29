@@ -10,92 +10,16 @@ renamed according to new structure
 \\Note{  modified from BST - best check actual running BST Real code for
 search and use that  XXX still needs unification with BST
 
-Terminology (might change???)
-For BST we confound t.key and t->key, eg, we have c <- c.left.  Its not
-too bad with BST code, but here the code gets more complex, with
-multiple levels of the tree involved using c.left.left is a bit too
-dodgy(?).  So we use:
-
-root(t) = (*t)
-left(t) = *(t->left) (or Empty)   ?????
-right() similarly
-root(t).key, root(t).height, etc
-left(t).height, etc ???
-XXX maybe use height(t), key(t), left(t), right(t)
+Terminology (changed, might change again but this looks OK I reckon)
+XXX should change BST (et al?) so it is consistent
+We brush over the fact that pointers are used and use record notation
+"." where C "->" would be used (implicit dereference of pointer).
+t <- t.left etc is the most dubious looking code if we think of records
+and not pointers.
+Basically t = Empty or, otherwise, t.key, t.left and t.right exist (we
+don't explicitly use t.height in the code but could). Creating a new
+singleton tree is done in a single step.
 \\Note}
-
-\\Overview{  A binary tree is either is either empty (Empty) or else it
-        it has a root node and two subtrees (which are binary trees).
-        The root node t has a key, t.key. Ordinarily it would also
-        hold other data (t.data), which the user would like to find by
-        searching for the key.  Since this attribute has no impact on 
-        how insertion and search take place, we disregard it here. 
-        Note that a newly inserted node will always appear as a leaf
-        in the tree. The BST invariant is always maintained: for each 
-        subtree t, with root key t.key, the left subtree, t.left, 
-        contains no node with key greater than k, and the right subtree,
-        t.right, contains no node with key smaller than k.
-XXX AVL trees balanced, shorten above
-Need to have these rotation explanations here as we can't format
-explanations properly it seems:
-
-## The left-left case
-
-If the new key was added to the left child of the left child (the
-left-left case) and the resulting tree is too unbalanced, the balance can be
-restored with a "Right rotation" operation, as explained in the diagram
-below. The 6 and 4 nodes and the edge between them rotate clockwise, and
-the 5 node changes parents from 4 to 6. This reduces the distance from
-the root to the 1 (where the new node was added), restoring the balance
-(the distance to the node rooted at 7 is increased but this does not
-cause the AVL tree balance condition to be violated).  Right rotation is
-done by calling rightRotate(t6), where t6 is the tree rooted at 6.
-
-'''
-      6                           2
-     / \\    Right Rotation      / \\
-    2   7    - - - - - - - >    1   6
-   / \\      < - - - - - - -       / \\
-  1   4       Left Rotation       4   7
-'''
-
-## The right-right case
-
-The right-right case is the exact opposite. If the tree on the right in
-the diagram above is too unbalanced due to insertion into the subtree
-rooted at 7, we can call rightRotate(t2) to lift that subtree and lower
-the 1 subtree.
-
-## The left-right case (double rotation)
-
-If the new key was added to the right child of the left child (the
-left-right case) and the resulting tree is too unbalanced, the balance can be
-restored with a left rotation at node 2 followed by a right rotation at
-node 6.
-'''
-      6      Rotate           6       Rotate           4
-     / \\    left at 2       / \\     right at 6     /   \\
-    2   7   - - - - - >     4   7    - - - - - >    2     6
-   / \\                    / \\                    / \\  / \\
-  1   4                   2   5                   1   3 5   7
-     / \\                / \\
-    3   5               1   3
-'''
-Nodes in the subtree rooted at 4 (where the extra element was added,
-making the tree unbalanced) are moved closer to the root.
-Trees rooted at 1, 3, 5 and 7 are not affected, except the distances from
-the root of 3, 5 and 7 are changed by one, affecting the overall balance.
-
-## right-left case (double rotation):
-
-If the new key was added to the left child of the right child (the
-right-left case) and the resulting tree is too unbalanced, it is a mirror
-image of the left-right case:
-
-XXX edit diagram above (tree on left won't be consistent with previous
-examples but thats OK I think)
-
-\\Overview}
 
 \\Note{ For both insertion and search, the animation should be as
 consistent
@@ -124,14 +48,14 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
               This is the base case of the recursion.
       \\Expl}
     \\In}
-    if k < root(t).key \\B if k < root(t).key
+    if k < t.key \\B if k < root(t).key
     \\Expl{ The key in the root determines if we insert into the left or
           right subtree.
     \\Expl}
     \\In{
         insert k into the left subtree of t \\Ref insertLeft
     \\In}
-    else if k > root(t).key \\B else if k > root(t).key
+    else if k > t.key \\B else if k > root(t).key
       \\Note{ XXX allow duplicate keys or not???
         Should be possible, but have to carefully review code to make sure its
         correct. What does BST code do?
@@ -169,14 +93,10 @@ recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the left subtree \\B prepare for the left recursive call
-AVLT_Insert(left(t), k) \\B left(t) <- AVLT_Insert(left(t), k)
+t.left <- AVLT_Insert(t.left, k) \\B left(t) <- AVLT_Insert(left(t), k)
 \\Expl{
-The left subtree is replaced by the result of this recursive call
+The (possibly empty) left subtree is replaced by the result of this recursive call.
 \\Expl}
-\\Note{
-XXX should this be left(t) <- AVLT_Insert(left(t), k) or is the
-explanation enough? (same for right)
-\\Note}
 \\Code}
 
 
@@ -188,16 +108,16 @@ recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the right subtree \\B prepare for the right recursive call
-AVLT_Insert(right(t), k) \\B right(t) <- AVLT_Insert(right(t), k)
+t.right <- AVLT_Insert(t.right, k) \\B right(t) <- AVLT_Insert(right(t), k)
 \\Expl{
-The right subtree is replaced by the result of this recursive call
+The (possibly empty) right subtree is replaced by the result of this recursive call.
 \\Expl}
 \\Code}
 
 \\Code{
 rotateIfNeeded
 switch balanceCase(t) of \\B switch balanceCase of
-\\Expl{ If the "balance" of t  (left(t).height - right(t).height) is between -1
+\\Expl{ If the "balance" of t  (t.left.height - t.right.height) is between -1
 and 1, inclusive, we just
 return t. Otherwise we must determine which sub-sub-tree the new element was
 inserted into and use "rotation" operations to raise up that subtree and
@@ -216,7 +136,7 @@ case Balanced:// sufficiently balanced \\B case Balanced
 case Left-Left:// Left-Left insertion, unbalanced \\B perform right rotation to re-balance t
 \\Expl{
   Key k was inserted into the left-left subtree and made t unbalanced
-  (balance > 1 and k < left(t).key).
+  (balance > 1 and k < t.left.key).
   We must re-balance the tree with a "right rotation" that lifts up this
   subtree.  See Background (click at the top of the right panel)
   for diagrams etc explaining rotations.
@@ -227,7 +147,7 @@ case Left-Left:// Left-Left insertion, unbalanced \\B perform right rotation to 
 case Right-Right:// Right-Right insertion, unbalanced \\B perform left rotation to re-balance t
 \\Expl{
   Key k was inserted into the right-right subtree and made t unbalanced
-  (balance < -1 and k > right(t).key).
+  (balance < -1 and k > t.right.key).
   We must re-balance the tree with a "left rotation" that lifts up this
   subtree.  See Background (click at the top of the right panel)
   for diagrams etc explaining rotations.
@@ -238,38 +158,50 @@ case Right-Right:// Right-Right insertion, unbalanced \\B perform left rotation 
 case Left-Right:// Left-Right insertion, unbalanced \\B perform left rotation on the left subtree
 \\Expl{
   Key k was inserted into the left-right subtree and made t unbalanced
-  (balance > 1 && k > left(t).key).
-  Balance can be restored by performing a "left rotation" on left(t) (this
+  (balance > 1 && k > t.left.key).
+  Balance can be restored by performing a "left rotation" on t.left (this
   lifts up the subtree) followed by a right rotation of t (in case the first
   rotation made the left-left subtree too deep).
   See Background (click at the top of the right panel)
   for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  perform leftRotate(left(t)); // raise Left-Right subtree \\B left(t) <- leftRotate(left(t));
+  t.left <- leftRotate(t.left); // raise Left-Right-Right subtree \\B left(t) <- leftRotate(left(t));
   \\Expl{
-    The result returned is the new left(t). This lowers the Left-Left
-    subtree.
+    This also raises the root of the Left-Right subtree.
+    The Left-Right-Left subtree remains at the same level but is now the
+    Left-Left-Right subtree (it is raised in the next step).
   \\Expl}
   return rightRotate(t) // raise Left-Left subtree to balance \\B return rightRotate(t) after leftRotate
+  \\Expl{
+    This raises what was previously the Left-Right-Left subtree, so the
+    whole of the previous Left-Right subtree is now higher (and the
+    Right subtree is lower).
+  \\Expl}
 \\In}
 case Right-Left:// Right-Left insertion, unbalanced \\B perform right rotation on the right subtree
 \\Expl{
   Key k was inserted into the right-left subtree and made t unbalanced
-  (balance < -1 && k < right(t).key).
-  Balance can be restored by performing a "right rotation" on right(t) (this
+  (balance < -1 && k < t.right.key).
+  Balance can be restored by performing a "right rotation" on t.right (this
   lifts up the subtree) followed by a left rotation of t (in case the first
   rotation made the right-right subtree too deep).
   See Background (click at the top of the right panel)
   for diagrams etc explaining rotations.
 \\Expl}
 \\In{
-  perform rightRotate(right(t)); // raise Right-Left subtree \\B right(t) <- rightRotate(right(t));
+  t.right <- rightRotate(t.right); // raise Right-Left-Left subtree \\B right(t) <- rightRotate(right(t));
   \\Expl{
-    The result returned is the new right(t). This lowers the Right-Right
-    subtree.
+    This also raises the root of the Right-Left subtree.
+    The Right-Left-Right subtree remains at the same level but is now the
+    Right-Right-Left subtree (it is raised in the next step).
   \\Expl}
   return leftRotate(t) // raise Right-Right subtree to balance \\B return leftRotate(t) after rightRotate
+  \\Expl{
+    This raises what was previously the Right-Left-Right subtree, so the
+    whole of the previous Right-Left subtree is now higher (and the
+    Left subtree is lower).
+  \\Expl}
 \\In}
 // ==== rotation functions ====
 leftRotate(t2) // raises Right-Right + lowers Left-Left subtrees \\B leftRotate(t2)
@@ -280,8 +212,8 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
   \\In{
-    t6 <- right(t2) \\B t6 = right(t2)
-    t4 <- left(t6) // may be Empty \\B t4 = left(t6)
+    t6 <- t2.right \\B t6 = right(t2)
+    t4 <- t6.left // may be Empty \\B t4 = left(t6)
     t6.left <- t2 \\B t6.left = t2
     t2.right <- t4 // may be Empty \\B t2.right = t4
     recompute heights of t2 and t6 \\B recompute heights of t2 and t6
@@ -298,8 +230,8 @@ See Background (click at the top of the right panel)
 for diagrams etc explaining rotations.
 \\Expl}
   \\In{
-    t2 <- left(t6) \\B t2 = left(t6)
-    t4 <- right(t2) // may be Empty \\B t4 = right(t2)
+    t2 <- t6.left \\B t2 = left(t6)
+    t4 <- t2.right // may be Empty \\B t4 = right(t2)
     t2.right <- t6 \\B t2.right = t6
     t6.left <- t4 // may be Empty \\B t6.left = t4
     \\Note{ Animation here should be as smooth an intuitive as possible.

@@ -2,6 +2,9 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Code{
+\\Note{ XXX Best make some changes to this - should be the same as AVL
+search
+\\Note}
     Main
     BST_Search(t, k)  // return subtree whose root has key k \\B 8
                       // or NotFound, if no such node is present
@@ -14,7 +17,7 @@ export default parse(`
                 \\Expl{  We have found a node with the desired key k.
                 \\Expl}
             \\In}
-            if t.key > k  \\B 4
+            if k < t.key   \\B 4
             \\Expl{  The BST condition is that nodes with keys less than the 
                     current node's key are to be found in the left subtree, and
                     nodes whose keys are greater are to be in the right subtree.
@@ -26,8 +29,8 @@ export default parse(`
             \\In{
                 t <- t.right \\B 6
             \\In}
-        return NotFound \\B 7
         \\In}
+        return NotFound \\B 7
     \\In}
     \\Code}
 `);
