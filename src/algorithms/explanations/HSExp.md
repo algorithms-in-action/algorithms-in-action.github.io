@@ -2,51 +2,55 @@
 
 ---
 
-Heapsort is a general purpose sorting algorithm that has *<verbatim>O(n log n)</verbatim>* behavior on every input. It achieves this by processing the data using a priority queue known as a heap.  
+Heapsort is a general purpose in-place sorting algorithm that has
+*<verbatim>O(n log n)</verbatim>* behavior in the worst case. It achieves
+this by first rearranging the array so it is a *heap* (which has some
+ordering maintained; see below) then converting the heap into a sorted
+array.
 
-### Heap Data Structure
+## The Heap Data Structure
 
-The heap data structure is a priority queue that avoids the worst case behavior of lists and arrays, where unsorted lists or arrays are
-*<verbatim>O(n)</verbatim>* for finding and removing the maximum (or minimum for a min-priority queue) item and sorted lists or arrays are *<verbatim>O(n)</verbatim>* for inserting a new item into the priority queue.  By contrast, heaps exhibit *<verbatim>O(log n)</verbatim>* behavior for both insertion and removal from the priority queue.
+A heap is a complete binary tree represented by an array, with
+the root in *<verbatim>A[1]</verbatim>* and the children of
+*<verbatim>A[i]</verbatim>* being *<verbatim>A[2i]</verbatim>* and
+*<verbatim>A[2i+1]</verbatim>*. Each node is greater than or equal to
+it's children (this is called the *heap condition*), thus the root is
+the maximum (heap sort uses a "max" heap; there are also "min" heaps
+where the ordering is reversed).  Note that there are no pointers etc -
+we can view the array as a tree so as to understand the ordering.
 
-The items in a heap are stored in an array.  For ease of conceptualization, the array can be considered as a binary tree, where array element *<verbatim>A[i]</verbatim>* is a parent node with two children that are array elements *<verbatim>A[2i]</verbatim>* and *<verbatim>A[2i+1]</verbatim>*.     
+## Building a heap "bottom up"
 
-Since there are no gaps in data in the array, the heap tree is complete. 
-In a *max*-heap each node is larger or equal to both of its children. This property means that the root node, or the element *A[i]* is the largest item.   
+The best way to build a heap from an unordered array is to first note that
+all the leaf nodes in the tree view are already heaps (they have no cildren
+so the heap condition is satisfied), and work up the tree (backwards
+through the array) to the root. Each step combines two existing heaps
+plus their parent node to form a new heap (some rearrangement may be
+needed; this is done by the *DownHeap* operation).
 
-PUT IN HERE SOMETHING ABOUT FORMING THE HEAP, I think.
+## Sorting with a heap
 
-### Sorting with the heap
+Sorting proceeds by repeating the following steps:
 
-Once the heap has been formed, sorting is straightforward.  Using a *max*-heap, repeatedly swap the root (largest item) with the last available item in the array and make this array element no longer available for swapping.  At this point, the root no longer contains the largest element, so the heap order must be restored.    
+- swap the largest item (the root) with the last item in the array
+- remove this largest item from further consideration (it is no longer
+  considered part of the heap)
+- reform the remaining data items into heap order by performing
+  *DownHeap* on the new root (note the two children of the root remain
+  heaps)
 
-The heap is restored by checking every "parent node" in the array, to make sure it is larger than either of its "children". Parent nodes are at positions 1 - *n/2* in the array, because the last *n/2* nodes are leaves, *i.e.* have no children.  The parent node is checked to make sure it is larger than either of its two children.  If it is, then no action is necessary. If it isn't, then is it swapped with the largest of its two children. Initially we will be making a mini-heap of three items.  Then 
+## The DownHeap operation
 
-
-CONTINUE HERE 
-
-
-
-
-
-MAYBE PUT SOMETHING in the More information tab about the analysis and why this is O(n).
+*DownHeap* traverses down the tree, swapping the data in the node with
+the maximum child of the node.  It stops as soon as the data in the node
+is greater than or equal to the maximum child (or the node is a leaf).
+The time complexity is *O(log n)*
 
 ## Complexity
 
-Time complexity:
-```
- Average Case     O(n log n) 
- Worst Case       O(n logn) 
- Best Case        O(n)         
- ```
-       Note: Best case, when all elements are equal is O(n), although many sources
-       list best case as O(n log n) 
+The worst case and nearly all other cases have time complexity *O(n log n)*.
+Space complexity is O(1).
 
-Space complexity is always O(1), that is, no extra space is needed.
 
-[ Previous Background treatment of complexity: Space complexity is O(1) in all cases.  Worst case and average case time
-complexity is O(n log n). The best case time complexity is O(n), when
-all elements are equal (despite many sources listing the best case as
-O(n log n)).]: #
 
 
