@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.9fd5190e.js",
+    "main.js": "/static/js/main.4ad55efa.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -15,7 +15,7 @@
     "static/media/ziyi.jpg": "/static/media/ziyi.a6c42d3a231a90c0eb74.jpg",
     "static/media/jiajun.jpg": "/static/media/jiajun.5fddd48aebee4e998e38.jpg",
     "static/media/hantong.jpeg": "/static/media/hantong.63b24722aed30389f96a.jpeg",
-    "static/media/AVLExp.md": "/static/media/AVLExp.96f91d2f513f8bbc6990.md",
+    "static/media/AVLExp.md": "/static/media/AVLExp.2baa9e0ca0cc06ab6f5c.md",
     "static/media/ASTExp.md": "/static/media/ASTExp.df3b37e4ad7a1b85d289.md",
     "static/media/DIJKExp.md": "/static/media/DIJKExp.0be9daff724a8db0894d.md",
     "static/media/PRIMExp.md": "/static/media/PRIMExp.c718ab3d33aeb23e3f44.md",
@@ -77,10 +77,10 @@
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.9fd5190e.js.map": "/static/js/main.9fd5190e.js.map"
+    "main.4ad55efa.js.map": "/static/js/main.4ad55efa.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.9fd5190e.js"
+    "static/js/main.4ad55efa.js"
   ]
 }
