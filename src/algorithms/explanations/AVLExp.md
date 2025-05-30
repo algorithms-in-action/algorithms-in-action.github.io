@@ -11,6 +11,9 @@ this background.
 
 A **binary search tree (BST)** is either empty or else it is a root
 node containing a key and two subtrees, which are binary search trees.
+We refer to these as t.key, t.left and t.right, respectively (typically
+t is represented as *a pointer to* a record and these are the fields
+of the record *pointed to* by t).
 Binary trees are ordered, so keys in the left subtree are smaller (or
 equal to) the key in the root and keys in the right subtree are greater
 (or equal to).  Normally there is additional data in each node as well

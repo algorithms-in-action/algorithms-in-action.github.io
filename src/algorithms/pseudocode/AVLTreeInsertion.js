@@ -43,8 +43,9 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
       //Both subtrees are Empty and the height is 1
       create new node n containing k \\B create new node
 \\Note}
-      return new node containing k \\B return n
-      \\Expl{ Return a single-node tree with key k (the height is 1).
+      return a single-node tree containing k \\B return n
+      \\Expl{ Both subtrees are Empty and its height is 1.
+              New memory will need to be allocated for it.
               This is the base case of the recursion.
       \\Expl}
     \\In}
