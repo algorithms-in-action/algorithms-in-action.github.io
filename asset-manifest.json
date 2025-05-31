@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.6685e4ac.js",
+    "main.js": "/static/js/main.d83da4b8.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -47,6 +47,7 @@
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
     "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.5d3a2b2f4cbce9d9185b.md",
     "static/media/font.svg": "/static/media/font.612d92cd6f10aa35f6d876e135850bfc.svg",
+    "static/media/HSInfo.md": "/static/media/HSInfo.da98de8bdcf43d0f5516.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.d4da675c825c4a5fa0b0.md",
     "static/media/BSTExp.md": "/static/media/BSTExp.6361796a215a2b075205.md",
     "index.html": "/index.html",
@@ -72,15 +73,14 @@
     "static/media/BSTInfo.md": "/static/media/BSTInfo.7ba11aaeb8f09dc017e5.md",
     "static/media/TCInfo.md": "/static/media/TCInfo.6eb03334bc8db61df29d.md",
     "static/media/direction.svg": "/static/media/direction.7feb3d2336d3133d67764adc61842c0d.svg",
-    "static/media/HSInfo.md": "/static/media/HSInfo.339acb96f5865f5b4743.md",
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.6685e4ac.js.map": "/static/js/main.6685e4ac.js.map"
+    "main.d83da4b8.js.map": "/static/js/main.d83da4b8.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.6685e4ac.js"
+    "static/js/main.d83da4b8.js"
   ]
 }
