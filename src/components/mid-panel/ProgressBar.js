@@ -176,7 +176,7 @@ class ProgressBar extends React.Component {
                   // if the user enters a valid input and clicks on LOAD
                   // the progress bar displays the percentage of progress
                   // convert the lines of code to percentge by multiplying the division by 100
-                  `Progress: ${Math.round((current / max) * 100, 2)} %`
+                  `Progress: ${"" + current + "/" + max + "=" + Math.round((current / max) * 100, 2)}%`
                   // if the user does not enter a valid input, initialise the progress bar as not loaded
                 }
               </div>
