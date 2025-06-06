@@ -159,7 +159,10 @@ class ProgressBar extends React.Component {
     setProgress(node.rectPrimary, parseFloat(current / max, 10));
     setBuffer(node.buffer, 1);
     setThumb(node.thumb, parseFloat(current / max, 10));
-
+    // For some weird reason the "current" chunk number overshoots for
+    // the last chunk so we a a fudge here (also, max is one more than the
+    // number of chunks)
+    let curr = (current === max? max - 1: current);
 
     return (
         <div
@@ -173,11 +176,7 @@ class ProgressBar extends React.Component {
             <div className="progressLable" id="progressLabel">
               <div className="innerText">
                 {
-                  // if the user enters a valid input and clicks on LOAD
-                  // the progress bar displays the percentage of progress
-                  // convert the lines of code to percentge by multiplying the division by 100
-                  `Progress: ${"" + current + "/" + max + "=" + Math.round((current / max) * 100, 2)}%`
-                  // if the user does not enter a valid input, initialise the progress bar as not loaded
+                  "Progress:" + curr + "/" + (max-1) + "=" + Math.round((curr / (max-1)) * 100, 2) + "%"
                 }
               </div>
             </div>

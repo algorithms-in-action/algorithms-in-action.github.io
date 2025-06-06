@@ -453,6 +453,10 @@ arr],
           msdRadixSortRecursive(arr, mid, right, mask - 1, depth + 1)
           partitionChunker(MSD_BOOKMARKS.sort_right, undefined, undefined, undefined, undefined, left, right, depth, arr, mask)
 
+        } else {
+          // stop at Done line just for base case
+          // XXX (better to do it always???)
+          chunker.add(MSD_BOOKMARKS.done, (vis) => {}, [], depth);
         }
         // After the recursive call, we need to pop from the real stack to go back up one
         finished_stack_frames.push(real_stack.pop());
@@ -552,7 +556,7 @@ arr],
       )
       msdRadixSortRecursive(A, 0, n-1, mask, 0);
 
-      chunker.add(MSD_BOOKMARKS.done,
+      chunker.add(MSD_BOOKMARKS.top_call,
         vis => {
           vis.array.setStackDepth(0)
           for (let k = 0; k < n; k++) {

@@ -51,9 +51,12 @@ should be the same for all data in the array segment.
         \\Expl}
         Sort Right Part   \\Ref MSDRadixSortRight
         \\Expl{ Sort elements with 1 mask bit: A[i]..A[right]
+            (then return from this RexsortRecursive call).
         \\Expl}
     \\In}
     // Done \\B 5000
+    \\Expl{ We stop at this line for the base case of the recursion.
+    \\Expl}
 \\Code}
 
 \\Code{
