@@ -13,7 +13,7 @@ most) bit of each key and working down to the least significant bit.
 
 ## The algorithm
 
-### 1. Initial Setup:
+### 1. Initial Setup
 * The ```Rexsort``` function sets up the sorting process by determining the
 most significant bit position in the array elements.
 * A *mask* is created that has a 1 in this bit position and 0 elsewhere. The
@@ -21,7 +21,9 @@ mask is used to extract bits from keys during sorting.
 * The recursive sorting function ```RexsortRecursive``` is then called to
 sort the entire array starting with this mask. The mask is shifted to the
 right for recursive calls.
-### 2. Recursive Sorting: 
+### 2. Recursive Sorting 
+This has a very similar structure to the quicksort algorithm.
+
 * The ```RexsortRecursive``` function works on sub-arrays, defined by a left
 and right index, and additionally has the current mask as a parameter.
 * If the sub-array contains no more than one element or the mask is 0, the
