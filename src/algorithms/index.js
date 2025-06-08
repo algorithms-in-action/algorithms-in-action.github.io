@@ -21,13 +21,19 @@ import * as Instructions from './instructions';
  algorithm is deployed. Note that the DEFAULT_ALGORITHM from
  src/context/actions.js had better be deployed!
  XXX Design of noDeploy stuff was done with the aim of minimal code change
- and could be re-thought when there are fewer merges going on.
+ and should be re-thought when there are fewer merges going on.
 XXX This has now been totally ****ed up, with multiple lists of
 algorithms elsewhere (see components/mainmenu/index.js
-components/mainmenu/GraphAlgorithms.js components/AlgorithmMenu.js) as
+components/mainmenu/GraphAlgorithms.js etc components/AlgorithmMenu.js) as
 well as this file, algorithms/index.js. There should be *one* master
 list (eg, this one, possibly with extra info for each algorithm) and the
 other lists should be generated from the master list!
+Currently with noDeploy=true the algorithm can still be found via the
+search function but it then says "Invalid algorithm specified" - see
+algorithms/parameters/helpers/urlHelpers.js (XXX that file could use
+allalgs instead??)
+Now that we can access algorithms via the URL we should be able to use
+this mechanism for acess to "hidden" algorithms
 
  Each imported algorithm is expected to be an object of the form:
  { pseudocode: String, explanation: String, run: Function }
@@ -372,7 +378,7 @@ const allalgs = {
   // Prim's (simpler code) is superseeded + could do with some work;
   // it's included here so it can be run but it's not included in menus
   'prim_old': {
-    noDeploy: true,
+    // noDeploy: true,
     name: 'Prim\'s (simpler code)',
     category: 'Graph',
     explanation: Explanation.Prims_oldExp,

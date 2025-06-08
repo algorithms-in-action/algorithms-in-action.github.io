@@ -22,6 +22,11 @@ Geeks for Geeks Link: [**Quicksort**][G4GLink]
 
 ## Exercises/Exploration
 
+The AIA progress bar allows you to see how many steps there are in the
+animation, which is a *very rough* guide to run-time. Plot the
+number of steps versus the number of data items, for sorted data - what
+does it show?
+
 Look into some of the history of quicksort.  The basic idea is relatively
 simple and was invented long ago. However, it has had a *huge* amount
 of work done on it over the years to refine it in many ways - far more
