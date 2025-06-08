@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.c0a59bfd.css",
-    "main.js": "/static/js/main.511ca727.js",
+    "main.js": "/static/js/main.e5ab0235.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -48,8 +48,10 @@
     "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.5d3a2b2f4cbce9d9185b.md",
     "static/media/font.svg": "/static/media/font.612d92cd6f10aa35f6d876e135850bfc.svg",
     "static/media/HSInfo.md": "/static/media/HSInfo.da98de8bdcf43d0f5516.md",
+    "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.5e87d33d65ac3b8019a9.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.d4da675c825c4a5fa0b0.md",
     "static/media/BSTExp.md": "/static/media/BSTExp.6361796a215a2b075205.md",
+    "static/media/QSInfo.md": "/static/media/QSInfo.9f61948cc26c2f01a095.md",
     "index.html": "/index.html",
     "static/media/HashingInfo.md": "/static/media/HashingInfo.d3215243c560b640b218.md",
     "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.19091e4c8468638fe366.md",
@@ -58,10 +60,8 @@
     "static/media/arrow.svg": "/static/media/arrow.b799034555e959db988fd2c275c31132.svg",
     "static/media/refresh.svg": "/static/media/refresh.3d70a4330b2dc0307f405872ce8fad16.svg",
     "static/media/DIJKInfo.md": "/static/media/DIJKInfo.91c3805512538231b9cc.md",
-    "static/media/QSInfo.md": "/static/media/QSInfo.054857c407d53718ad18.md",
     "static/media/minus.svg": "/static/media/minus.ed1583fbcf9f7716ded65c897a7eee27.svg",
     "static/media/AVLInfo.md": "/static/media/AVLInfo.737e33a0fe4a2c07ced7.md",
-    "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.6f75cd04449a58cc6bec.md",
     "static/media/play.svg": "/static/media/play.1b4fe47788d6c47edda8dd6009008246.svg",
     "static/media/DFSrecInfo.md": "/static/media/DFSrecInfo.27791abb933aff2aa06d.md",
     "static/media/BFSInfo.md": "/static/media/BFSInfo.ce31e742a53f1959ffbb.md",
@@ -77,10 +77,10 @@
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.c0a59bfd.css.map": "/static/css/main.c0a59bfd.css.map",
-    "main.511ca727.js.map": "/static/js/main.511ca727.js.map"
+    "main.e5ab0235.js.map": "/static/js/main.e5ab0235.js.map"
   },
   "entrypoints": [
     "static/css/main.c0a59bfd.css",
-    "static/js/main.511ca727.js"
+    "static/js/main.e5ab0235.js"
   ]
 }
