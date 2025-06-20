@@ -20,8 +20,14 @@ Geeks for Geeks Link: [**Heap Sort**][G4GLink]
 
 [G4GLink]: https://www.geeksforgeeks.org/heap-sort/
 
+## Exercises/Exploration
+
 Many teaching resources say the best case for Heap sort is O(n log n).
 However, there is a case where it is O(n) - can you figure out what it is?
+The AIA progress bar allows you to see how many steps there are in the
+animation, which is a *very rough* guide to run-time. For the best case,
+can you determine a formula for the number of steps taken with 2n data
+items, demonstrating it is O(n)?
 
 Here we have presented the "bottom up" way of creating a heap from an
 unsorted array.  There is also a "top down" method where we start with

@@ -44,6 +44,11 @@ function isDownHeapkExpanded() {
   return areExpanded(['BuildHeap', 'DownHeapk']);
 }
 
+// i, j (in sort) displayed only if second DownHeap is expanded
+function isDownHeap1Expanded() {
+  return areExpanded(['SortHeap', 'DownHeap1']);
+}
+
 export default {
   initVisualisers() {
     return {
@@ -133,7 +138,6 @@ export default {
 
       chunker.add(4, (vis, index1, index2) => {
         vis.array.assignVariable('k', index1);
-        // if (tmp != null) {  // XXX looks dodgy using tmp here?
         if (index2 != null) {
           unhighlight(vis, index2);
           vis.array.removeVariable('j');
@@ -174,7 +178,7 @@ export default {
         // parent is greater than largest child, so it is already a valid heap
         if (A[i] >= A[j]) {
           heap = true;
-          chunker.add(15, (vis, index, lastH) => {
+          chunker.add(15, (vis, index, lastH, cur_k) => {
             unhighlight(vis, index, false);
             // possible last chunk in BuildHeap/DownHeapk
             // remove i, j if !isDownHeapkExpanded
@@ -182,19 +186,21 @@ export default {
               vis.array.removeVariable('i');
               vis.array.removeVariable('j');
             }
-            // remove k+highlighting if !isBuildHeapExpanded
-            if (!isBuildHeapExpanded()) {
+            // remove k+highlighting if !isBuildHeapExpanded & last
+            // chunk of BuildHeap
+            if (!isBuildHeapExpanded() && cur_k === 0) {
               vis.array.removeVariable('k');
-              unhighlight(vis, lastH);
+              if (lastH !== index)
+                unhighlight(vis, lastH);
             }
-          }, [j, lastiHighlight]);
+          }, [j, lastiHighlight, k]);
         } else {
           swap = A[i];
           A[i] = A[j];
           A[j] = swap;
           swapAction(17, i, j);
           lastiHighlight = j;
-          chunker.add(18, (vis, p, c, lastH) => {
+          chunker.add(18, (vis, p, c, lastH, cur_k) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
             // remove i, j if !isDownHeapkExpanded
@@ -202,12 +208,14 @@ export default {
               vis.array.removeVariable('i');
               vis.array.removeVariable('j');
             }
-            // remove k+highlighting if !isDownHeapkExpanded
-            if (!isBuildHeapExpanded()) {
+            // remove k+highlighting if !isDownHeapkExpanded & last
+            // chunk of BuildHeap
+            if (!isBuildHeapExpanded() && cur_k === 0) {
               vis.array.removeVariable('k');
-              unhighlight(vis, lastH);
+              if (lastH !== p)
+                unhighlight(vis, lastH);
             }
-          }, [i, j, lastiHighlight]);
+          }, [i, j, lastiHighlight, k]);
           i = j;
         }
       }
@@ -220,7 +228,7 @@ export default {
         // clear variables & show 'n'
         vis.array.clearVariables();
         vis.array.assignVariable('n', nVal - 1);
-        unhighlight(vis, index); // XXX skip for first loop iteration?
+        unhighlight(vis, index);
       }, [n, i]);
 
       let j;
@@ -286,6 +294,11 @@ export default {
           chunker.add(36, (vis, p, c) => {
             unhighlight(vis, p, false);
             vis.array.assignVariable('i', c);
+            // remove i, j if !isDownHeap1Expanded
+            if (!isDownHeap1Expanded()) {
+              vis.array.removeVariable('i');
+              vis.array.removeVariable('j');
+            }
           }, [i, j]);
           i = j;
         }
@@ -294,10 +307,10 @@ export default {
     chunker.add(37, (vis) => {
       // Put in done state
       vis.array.clearVariables();
-      vis.array.deselect(0);
+      // vis.array.deselect(0);
+      unhighlight(vis, 0, true);
       vis.array.sorted(0);
       vis.heap.sorted(1);
-      unhighlight(vis, 0, true);
     });
     // for test
     return A;
