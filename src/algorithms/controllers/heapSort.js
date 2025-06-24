@@ -26,6 +26,23 @@ import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {areExpanded} from './collapseChunkPlugin';
 import {colors} from '../../components/DataStructures/colors';
 
+// currently colors for graphs (including trees) are still a mess; this
+// is kind of a stub for when they are fixed up.  The code involving
+// (un)highlight() and .sorted() should be fixed at this point also.
+// We define colors for the array (_A) and tree (_T) views; note current and
+// child nodes are swapped at times in downheap. At the start, nothing
+// is selected but it turns out that whenever anything is de-selected it
+// is part of a heap.
+const HSColors = {
+    CURRENT_A: colors.apple,
+    CHILD_A: colors.sky,
+    HEAP_A: colors.leaf,
+    CURRENT_T: 3,  // Red (globalColors.apple)
+    CHILD_T: 4,  // Blue (globalColors.sky)
+    HEAP_T: 1, // Green (globalColors.leaf)
+  }
+
+
 // k displayed only if first BuildHeap is expanded
 // Note: This is only needed in the last chunk of BuildHeap. The code
 // looks like it displays k throughout BuildHeap but when BuildHeap is
@@ -91,22 +108,21 @@ export default {
 
     const highlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
-        vis.heap.visit(index + 1);
+        vis.heap.colorNode(index + 1, HSColors.CURRENT_T);
         vis.array.selectColor(index, colors.apple);
       } else {
-        vis.heap.select(index + 1);
+        vis.heap.colorNode(index + 1, HSColors.CHILD_T);
         vis.array.selectColor(index, colors.sky);
-        // vis.array.patch(index);
       }
     };
 
     const unhighlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
-        vis.heap.leave(index + 1);
+        vis.heap.colorNode(index + 1, HSColors.HEAP_T);
       } else {
-        vis.heap.deselect(index + 1);
+        vis.heap.colorNode(index + 1, HSColors.HEAP_T);
       }
-     vis.array.deselect(index);
+     vis.array.selectColor(index, HSColors.HEAP_T);
     };
 
     const swapAction = (b, n1, n2) => {
@@ -130,20 +146,27 @@ export default {
 
     // build heap
     // start from the last non-leaf node, work backwards to maintain the heap
-    for (let k = Math.floor(n / 2) - 1; k >= 0; k -= 1) {
+    let lastNonLeaf = Math.floor(n / 2) - 1;
+    for (let k = lastNonLeaf; k >= 0; k -= 1) {
 
       let j;
       const tmp = i;
       i = k;
 
-      chunker.add(4, (vis, index1, index2) => {
+      chunker.add(4, (vis, index1, index2, first, max) => {
         vis.array.assignVariable('k', index1);
+        if (index1 === first) { // done the first time we reach here
+          for (let l = index1 + 1; l <= max; l++) { // color leaves
+            vis.heap.colorNode(l + 1, HSColors.HEAP_T);
+            vis.array.selectColor(l, HSColors.HEAP_T);
+          }
+        }
         if (index2 != null) {
           unhighlight(vis, index2);
           vis.array.removeVariable('j');
         }
         highlight(vis, index1);
-      }, [i, tmp]);
+      }, [i, tmp, lastNonLeaf, n - 1]);
 
       chunker.add(6, (vis, index1, index2) => {
         vis.array.assignVariable('i', index1);
@@ -245,6 +268,7 @@ export default {
       chunker.add(22, (vis, index) => {
         unhighlight(vis, index, false);
         vis.array.sorted(index);
+        vis.heap.removeNodeColor(index + 1);
         vis.heap.sorted(index + 1);
 
         vis.array.assignVariable('n', index - 1);
@@ -310,6 +334,7 @@ export default {
       // vis.array.deselect(0);
       unhighlight(vis, 0, true);
       vis.array.sorted(0);
+      vis.heap.removeNodeColor(1);
       vis.heap.sorted(1);
     });
     // for test

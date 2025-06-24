@@ -267,6 +267,10 @@ class GraphTracer extends Tracer {
       value: node1.value,
       key: node1.key,
       visitedCount: node1.visitedCount,
+      visitedCount1: node1.visitedCount1, // currently need this junk for colors
+      visitedCount2: node1.visitedCount2,
+      visitedCount3: node1.visitedCount3,
+      visitedCount4: node1.visitedCount4,
       selectedCount: node1.selectedCount,
     };
     const node2 = this.findNode(nodeId2);
@@ -274,10 +278,18 @@ class GraphTracer extends Tracer {
     node1.value = node2.value;
     node1.key = node2.key;
     node1.visitedCount = node2.visitedCount;
+    node1.visitedCount1 = node2.visitedCount1;
+    node1.visitedCount2 = node2.visitedCount2;
+    node1.visitedCount3 = node2.visitedCount3;
+    node1.visitedCount4 = node2.visitedCount4;
     node1.selectedCount = node2.selectedCount;
     node2.value = temp.value;
     node2.key = temp.key;
     node2.visitedCount = temp.visitedCount;
+    node2.visitedCount1 = temp.visitedCount1;
+    node2.visitedCount2 = temp.visitedCount2;
+    node2.visitedCount3 = temp.visitedCount3;
+    node2.visitedCount4 = temp.visitedCount4;
     node2.selectedCount = temp.selectedCount;
     this.layoutTree(this.root);
   }
@@ -856,6 +868,7 @@ class GraphTracer extends Tracer {
   colorNode(node, colorIndex) {
     const _node = this.findNode(node);
     if (!_node) return;  // Exit if node is not found
+    this.removeNodeColor(node); // could avoid extra this.findNode(node)
 
     if (colorIndex === 1) {
       _node.visitedCount1 = 1;
