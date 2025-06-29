@@ -4,7 +4,7 @@
 
 Heapsort is a general purpose in-place sorting algorithm that has
 *<verbatim>O(n log n)</verbatim>* behavior in the worst case. It
-proceeds by first rearranging the array so it is a *heap* (which has some
+proceeds by first rearranging the input array so it is a *heap* (which has some
 ordering maintained; see below) then converting the heap into a sorted
 array.
 
