@@ -20,6 +20,7 @@ const rl = readline.createInterface({
 
 let algName;
 let algID;
+let algCat = 'Sort'; // XXX Need to input this also
 console.log("What's the name of your new algorithm used in menus etc, eg 2-3-4 Tree? ");
 
 rl.on('line', (line) => {
@@ -43,10 +44,14 @@ let doIt = (algName, algID) => {
     console.log("");
     console.log("To add algorithm named " + algName + " with ID " + algID + ":");
     console.log("Execute the following commands from the AIA repository directory:");
+    console.log("");
+    console.log("git switch +c add_" + algID);
+    console.log("# When stable, do git switch <development branch>; git merge add_" + algID);
     console.log("cp src/algorithms/controllers/heapSort.js src/algorithms/controllers/" + algID + ".js");
     console.log("git add src/algorithms/controllers/" + algID + ".js");
     console.log("cp src/algorithms/pseudocode/heapSort.js src/algorithms/pseudocode/" + algID + ".js");
     console.log("git add src/algorithms/pseudocode/" + algID + ".js");
+    console.log("# The files above will need to be edited during development" + algID + ".js");
     console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/controllers/index.js");
     // XXX + other index.js files, explanations, extra-info, edit instructions
     console.log("");
