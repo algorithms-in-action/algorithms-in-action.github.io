@@ -5,13 +5,13 @@ Action](https://dev-aia.vercel.app/mainmenu) algorithm animation system
 in semester 2, 2025,
 with the clients [Lee Naish](https://lee-naish.github.io/) and Linda
 Stern.  AIA was developed for the purposes of teaching computer science
-algorithms.  It features animation, pseudocode, and textual explanations,
+algorithms.  It features textual explanations, animation and pseudocode,
 run in coordinated fashion. A key feature of AIA, not found in other
-algorithm animations, is that students can view an algorithm at varying
+algorithm animations, is that users can view an algorithm at varying
 levels of detail. Starting with a high level pseudocode description
 of the algorithm, with accompanying high level animation and textual
-explanation, students can expand sections of the pseudocode to expose more
-detail. Animation and explanation are controlled in coordinate fashion,
+explanations, students can expand sections of the pseudocode to expose more
+detail. Animation and explanations are controlled in coordinate fashion,
 becoming correspondingly more detailed as the pseudocode is expanded.
 
 The current implementation is primarily written in JavaScript, using
@@ -19,25 +19,29 @@ the popular Node.js/React framework. It has been coded primarily
 by students over several years and more recently Lee Naish has
 done some coding also.  It is open-source with the code in a [github
 repository](https://github.com/algorithms-in-action/algorithms-in-action.github.io).
-The following projects aim to enhance and extend AIA.  Students
+The following projects aim to enhance and extend AIA. All are open-ended:
+depending on progress through the semester they may be extended.  Students
 participating in these projects will be contributing to a good open-source
 teaching and learning tool while getting valuable software engineering
 experience.  We have had excellent feedback from previous groups who have
 made contributions to AIA.  As clients, we need to have good communication
-with groups.  In developing algorithm animations we don't always have a
+with all groups.  In developing algorithm animations we don't always have a
 precise idea of what will work best at the outset - often it is good to
 see a prototype and then give feedback on how it can be improved. There
 are also some aspects we want control over, such as the details of the
-pseudocode. Finally, we want multiple projects to be merged into a single
+pseudocode, so some changes must only be done with our explicit consent.
+Finally, we want multiple projects to be merged into a single
 AIA version by the end of semester, so the way things are coordinated
-in the github repository throughout the semester is important.
+in the AIA github repository throughout the semester is important.
 
-## 1. Global Issues
+## Project 1: Global Issues
 
 This project addresses several desirable enhancements to AIA that affect
 multiple algorithms. Some are related to making future development of the
 code easier, for example, adding new algorithms modules.  Others concern
-the function of AIA.
+the function of AIA. As well as writing the code for these enhancements,
+they must be documented in the AIA Wiki for the benefit of other
+programmers (including other teams this semester).
 
 ### Simplifying addition of new algorithms
 
@@ -102,11 +106,37 @@ URLS, similarly for the step of the algorithm execution and expansion
 of pseudocode.  It would be desirable to extend the URL mechanism to
 specify more information.
 
-## 2. Binary search tree variants
+## Project 2: Binary search tree variants
 
-XXX
+Currently AIA has an animation of an iterative coding of binary search
+trees and a recursive coding of AVL trees (a form of self-balancing
+binary search tree).  We would like to extend the coverage of BSTs in AIA.
 
-## 3. Linked list merge sort
+### Improving the AVL tree animation
+
+The current AVL tree animation is good (it was devloped by a student
+team in 2024 and has been refined somewhat since) but could be improved
+further.  Specifically, we think the way certain components of the tree
+are highlighted is worth revisiting and the way the animation helps
+users understand the recursion could be improved. It is likely some
+prototyping will be required in order to get the best outcomes.
+
+### Recursive BST animation
+
+We would like a new animation BSTs that uses a recursive coding. The
+relationship with AVL trees should be emphasised - the AVL tree insertion
+algorithm is essentially recursive BST insertion code with a couple of
+steps added at the end. The look of the two animations (including the
+pseudocode) should be as similar as possible.  Also, a good visualisation
+of recursion for a simple algorithm would be beneficial.
+
+### Iterative BST animation
+
+The current iterative BST animation may also require some minor
+modifications to make it look as similar as possible to the other
+BST/AVL algorithms.
+
+## Project 3: Linked list merge sort
 
 Currently AIA has algorithm animations that visualise arrays, various
 forms of trees and graphs but none that visualise linked lists. This
@@ -158,7 +188,7 @@ to the right again.
 
 
 
-## 4. Convex Hull
+## Project 4: Convex Hull
 
 Currently AIA has no geometric algorithm animations. This project will
 add an animation of a two dimensional convex hull algorithm animation (or
@@ -185,6 +215,11 @@ movement between two different edge positions). If this could be
 implemented it would be beneficial and could also be retro-fitted to
 other algorithms.
 
-## 4. Simple sorting algorithms
+## Project 5: Simple sorting algorithms
 
-XXX (lowest priority - CH better???)
+AIA has several sorting algorithm animations but is missing animations
+for the simpler sorting algorithms.  We would like to see new animations
+for both insertion sort and selection sort.  Additionally, if there are
+some ways in which algorithmic complexity could be illustrated better
+to AIA users, that would be of great benefit.
+
