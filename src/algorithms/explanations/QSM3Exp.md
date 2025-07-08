@@ -1,4 +1,4 @@
-# Quicksort (median of three partitioning)
+# Quicksort (*Median of Three* Partitioning)
 
 ---
 
@@ -6,13 +6,15 @@ Quicksort is a divide and conquer algorithm. It first rearranges the input
 array into two smaller sub-arrays: the (relatively) low elements and the
 (relatively) high elements. It then recursively sorts each of the sub-arrays.
 
-
+Quicksort is a good general-purpose sorting algorithm, with average case behavior <i>O(n log n)</i>.  The *Median of Three* variant shown in this module reduces the likelihood that the worst case <i>O(n<sup>2</sup>)</i> behavior of Basic Quicksort will occur.
 
 ## Algorithm overview
 
 The steps for 
-Median of Three Quicksort are the same as the basic
-version, except that the choice of *pivot* element is more complicated.
+*Median of Three Quicksort* are the same as for Basic Quicksort,
+except for the method of choosing the *pivot* element.
+
+
 
 * To pick the *pivot* element, first sort the first, middle and last elements of the array, then swap the
 middle element with the second-rightmost element. Then 
@@ -42,8 +44,11 @@ is swapped into that position and partitioning is complete.
 
 In the best case, partition divides the sub-array in half at each step,
 resulting in <i>O(log n)</i> levels of recursion and <i>O(n log n)</i>
-complexity overall. In the worst case, partition divides the sub-array
-very unevenly at each step.  The pivot element is either the largest or
+complexity overall. While the worst case is still <i>O(n<sup>2</sup>)</i>, as for Basic Quicksort, the *Median of Three* strategy makes it extremely unlikely that partition will divide the sub-array
+unevenly at each step unevenly enough to give this behavior. 
+
+
+The pivot element is either the largest or
 smallest element in the sub-array and one of the resulting partitions
 is always empty, resulting in <i>O(n<sup>2</sup>)</i> complexity.
 This occurs if the input is sorted or reverse-sorted. Refinements such
