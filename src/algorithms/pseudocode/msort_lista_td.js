@@ -38,8 +38,8 @@ Mergesort(L, len) \\B Main
 \\Code{
 split
     Mid <- mid point of L \\Ref scan
-    R <- tail(Mid)    // R starts after Mid
-    tail(Mid) <- Null // truncate L after Mid \\B tail(Mid)<-Null
+    R <- Mid.tail    // R starts after Mid
+    Mid.tail <- Null // truncate L after Mid \\B tail(Mid)<-Null
 \\Code}
 
 \\Code{
@@ -49,7 +49,7 @@ scan
     \\Expl}
     for i = 1 to len/2 - 1 // while not at middle
     \\In{
-        Mid <- tail(Mid) \\B MidNext
+        Mid <- Mid.tail \\B MidNext
         \\Expl{ Skip to next element
         \\Expl}
     \\In}
@@ -81,17 +81,33 @@ MergesortR
 Merge
     Initialise M with minimum of L and R \\Ref initM
     \\Expl{ Set M to the input list with the smallest first element and
-      skip over (delete) that element for that input list.
+      skip over (delete) that element for that input list. At this point,
+      we are only interested in the first element of M, M.head -
+      conceptually it is a single element list.  We could
+      set M.tail to be the empty list, but it will be reset to another
+      value later so this is not necessary.
     \\Expl}
     E <- M // E is the end element of M \\B E
+    \\Expl{ With the normal representation of lists, M
+      will be a pointer to a list cell and E will be a pointer to the same
+      list cell. In the while loop below, the elements of M from its
+      first element up to the element pointed to by E will be the elements
+      of L and R that have been skipped over. The remaining elements of M
+      can conceptually be ignored - we could set E.tail to be the empty
+      list. The value of E.tail is not used in the whie loop and is reset
+      after the while loop.
+    \\Expl}
+    \\Note{ Best color the elements of M up to E differently from the rest
+      (which are elements of L or R as well).
+    \\Note}
     while L != Null && R != Null  \\B whileNotNull
     \\Expl{ Scan through L and R, appending elements to M.  E is always the
-        end element of M, and L and R are the remaining inputs that have
+        (conceptual) end element of M, and L and R are the remaining inputs that have
         not yet been appended.
     \\Expl}
     \\In{
         append the smaller input element to M, advance pointers \\Ref CopySmaller
-        \\Expl{ The smaller of head(L) and head(R) is appended to M.
+        \\Expl{ The smaller of L.head and R.head is appended to M.
         \\Expl}
     \\In}
     append any remaining elements onto M \\Ref CopyRest
@@ -102,10 +118,10 @@ Merge
 
 \\Code{
 initM
-    if head(L) < head(R) \\B compareHeads
+    if L.head < R.head \\B compareHeads
     \\In{
         M <- L \\B M<-L
-        L <- tail(L) \\B L<-tail(L)
+        L <- L.tail \\B L<-tail(L)
         \\Expl{ M will contain the first element of L so we skip L to
           its next element.
         \\Expl}
@@ -113,7 +129,7 @@ initM
     else
     \\In{
         M <- R \\B M<-R
-        R <- tail(R) \\B R<-tail(R)
+        R <- R.tail \\B R<-tail(R)
         \\Expl{ M will contain the first element of R so we skip R to
           its next element.
         \\Expl}
@@ -122,17 +138,17 @@ initM
 
 \\Code{
 CopySmaller
-    if head(L) <= head(R) \\B findSmaller
+    if L.head <= R.head \\B findSmaller
     \\In{
-        tail(E) <- L // append L element to M
+        E.tail <- L  // append L element to M
         E <- L       // E <- end element of M
-        L <- tail(L)     // skip element in L that has been appended \\B popL
+        L <- L.tail  // skip element in L that has been appended \\B popL
     \\In}
     else
     \\In{
-        tail(E) <- R // append R element to M
+        E.tail <- R  // append R element to M
         E <- R       // E <- end element of M
-        R <- tail(R)     // skip element in R that has been appended \\B popR
+        R <- R.tail  // skip element in R that has been appended \\B popR
     \\In}
 \\Code}
 
@@ -140,11 +156,11 @@ CopySmaller
 CopyRest
     if L == Null
     \\In{
-        tail(E) <- R // append extra R elements to M \\B appendR
+        E.tail <- R // append extra R elements to M \\B appendR
     \\In}
     else
     \\In{
-        tail(E) <- L // append extra L elements to M \\B appendL
+        E.tail <- L // append extra L elements to M \\B appendL
     \\In}
 \\Code}
 

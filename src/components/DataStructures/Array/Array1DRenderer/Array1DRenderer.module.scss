@@ -3,8 +3,18 @@
 .array_1d {
     flex-shrink: 0;
 
+    // default caption is at top; some code may use undefined styles for
+    // captions - should fix XXX
+    .top_caption {
+        caption-side: top;
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 18px;
+        // color: var(--array-2d-row-col-value-color);
+        // font-family: Menlo, "Liberation Mono", Courier, monospace;
+    }
+
     .bottom_caption {
-        // added for msort_arr_td
         caption-side: bottom;
         text-align: center;
         margin-top: 15px;
@@ -13,10 +23,11 @@
         font-family: Menlo, "Liberation Mono", Courier, monospace;
     }
 
-    .captionmsort_arr_td {
+    // used for some merge sorts and recursive DFS
+    .simple_stack_caption {
         caption-side: bottom;
         // caption-side: top;
-        text-align: right;
+        text-align: right; // so stack grows to the left
         margin-top: 70px;
         // margin-top: 0px;
     }

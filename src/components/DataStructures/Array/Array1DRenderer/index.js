@@ -91,6 +91,7 @@ class Array1DRenderer extends Array2DRenderer {
     // wrap output in table like 2D array so we can have a caption (for
     // msort_arr_td) XXX fix indentation
     return (
+      <div>
       <table
         className={switchmode(mode())}
         style={{
@@ -258,31 +259,28 @@ class Array1DRenderer extends Array2DRenderer {
             </div>
           </motion.div>
         </tbody>
-        { // XXX I've given up trying to avoid this warning...
-          // "Whitespace text nodes cannot appear as a child of <table>. Make
-          // sure you don't have any extra whitespace between tags on each
-          // line of your source code."  Similariy div inside tbody.
-          algo === 'msort_arr_td' && listOfNumbers && (
+        { algo === 'msort_arr_td' && listOfNumbers && (
             <caption
-              className={styles.captionmsort_arr_td}
+              className={styles.simple_stack_caption}
               kth-tag="msort_arr_td_caption"
-            > Call stack (n,p):&emsp; {listOfNumbers}&emsp;&emsp; </caption>)
+            > Call stack (left,right):&emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
         {
           algo === 'msort_arr_bup' && listOfNumbers && (
             <caption
-              className={styles.captionmsort_arr_bup}
+              className={styles.top_caption}
               kth-tag="msort_arr_bup_caption"
             > &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
         {
           algo === 'msort_arr_nat' && listOfNumbers && (
             <caption
-              className={styles.captionmsort_arr_nat}
+              className={styles.top_caption}
               kth-tag="msort_arr_nat_caption"
             > &emsp; {listOfNumbers}&emsp;&emsp; </caption>)
         }
       </table>
+      </div>
     );
   }
 }

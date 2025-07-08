@@ -837,8 +837,8 @@ cur_right, c_stk) => {
 
     // XXXXXXXXX
     Indices = ['i'];
-    Heads = ['Head(i) (data)'];
-    Tails = ['Tail(i) (next)'];
+    Heads = ['i.head (data)'];
+    Tails = ['i.tail (next)'];
     simple_stack = [];
  
     for (let i = 1; i<entire_num_array.length; i++) {

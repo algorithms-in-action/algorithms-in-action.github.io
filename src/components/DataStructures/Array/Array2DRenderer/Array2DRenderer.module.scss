@@ -232,7 +232,8 @@
   color: var(--array-2d-row-col-value-color);
 }
 
-// redefined in 1D array
+// Following not really used - these algorithms use 1D arrays and styles are
+// defined separately
 .captionmsort_arr_td {
   caption-side: bottom;
   text-align: right;
