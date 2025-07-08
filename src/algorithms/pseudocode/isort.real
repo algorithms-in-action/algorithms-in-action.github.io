@@ -1,0 +1,53 @@
+\Note{
+Insertion sort draft, with some help from ChatGPT. It's not too bad at
+producing pseudocode and comments.  More structuring is needed and care
+is needed (of course) - it gets some things wrong.
+
+Should be able to display array with height bars then a gap then a spot
+for temp element (use single array with extra two(?) elements and fudge
+rendering, eg have " "/null for second last index/value and "tmp"/value
+for last one). Use swapping of elements to get nice tweening. Only use
+this if Insert code is expanded.
+\Note}
+
+\Code{
+Main
+InsertionSort(A, n) // sort A[1]...A[n] in increasing order
+\In{
+    for i <- 2 to n // iterate, starting with second element
+    \Expl{ At each iteration the elements A[1]...A[i-1] are
+        sorted. Initially A[1] (a single element) is sorted.
+    \Expl}
+    \In{
+        Insert element i into the sorted region, elements 1...i-1 \Ref Insert
+        \Expl{ The elements up to A[i-1] are
+            already sorted. This step extends the sorted region to A[i].
+        \Expl}
+    \In}
+\In} 
+\Code} 
+
+\Code{
+Insert
+tmp <- A[i]  // Save the element to be inserted
+Shift sorted elements greater than tmp to the right \Ref ShiftRight
+\Expl{ Sorted elements greater than tmp are moved
+one position to the right. The elements are A[j]...A[i-1]; j is 
+computed here.
+\Expl}
+A[j] <- tmp // Insert element into correct position
+\Code} 
+
+\Code{
+ShiftRight
+j <- i // We scan right to left
+while j > 1 and A[j-1] > tmp // For all elements > tmp
+\Expl{ We stop when we the previous element is less than
+    or equal to tmp, or we reach the end of the array.
+\Expl}
+\In{
+    A[j] <- A[j-1]  // Shift element to the right
+    j <- j - 1      // Continue scan
+\In}
+\Code} 
+

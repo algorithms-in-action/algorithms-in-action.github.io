@@ -1,0 +1,58 @@
+\Note{
+Selection sort draft, with some help from ChatGPT. It's not too bad at
+producing pseudocode and comments.  More structuring is needed and care
+is needed (of course) - it gets some things wrong.
+
+ChatGPT version "write a high level pseudocode description of the
+selection sort algorithm":
+SelectionSort(array A)
+    n ← length of A
+
+    // Repeat for each position in the array (except the last one)
+    for i from 0 to n - 2 do
+        // Assume the smallest element is at position i
+        minIndex ← i
+
+        // Look for a smaller element in the rest of the array
+        for j from i + 1 to n - 1 do
+            if A[j] < A[minIndex] then
+                minIndex ← j
+
+        // Swap the smallest found with the element at position i
+        if minIndex ≠ i then
+            swap A[i] and A[minIndex]
+\Note}
+
+\Code{
+Main
+SelectionSort(A, n) // sort A[1]...A[n] in increasing order
+\In{
+    for i <- 1 to n - 1
+    \Expl{ At each iteration the elements A[1]...A[i-1] are
+        in their final position. They are the smallest i-1 elements, in
+        sorted order. We stop at A[n-1] (at this point A[n] must be the
+        largest element).
+    \Expl}
+    \In{
+        Swap A[i] with the minimum unsorted element \Ref NextEl
+        \Expl{ The elements up to A[i-1] are already sorted, in their
+          final positions. This step extends the sorted region to A[i].
+        \Expl}
+    \In}
+\In} 
+\Code} 
+
+\Code{
+NextEl
+iMin <- i // initially assume A[i] is smallest
+\Expl{ iMin is set to the index of the smallest element of A[i]...A[n].
+  Initially we set it to i then scan the rest of A, updating iMin
+  whenever we find a smaller element.
+\Expl}
+for j <- i + 1 to n // search A[i+1]...A[n] for smaller elements
+    \In{
+    if A[j] < A[iMin] // if we have found a smaller element
+        iMin <- j // update index of smallest
+    \In}
+Swap(A[i], A[iMin]) // Swap smallest into its correct position, A[i]
+\Code} 
