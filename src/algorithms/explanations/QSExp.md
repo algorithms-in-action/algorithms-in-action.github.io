@@ -4,7 +4,15 @@
 
 Quicksort is a divide and conquer algorithm. It first rearranges the input
 array into two smaller sub-arrays: the (relatively) low elements and the
-(relatively) high elements. It then recursively sorts each of the sub-arrays.
+(relatively) high elements. It then recursively sorts each of the sub-arrays. 
+
+Quicksort is a good general-purpose sorting algorithm, with average case
+behavior <i>O(n log n)</i>.  A drawback of the Basic Quicksort shown in
+this AIA module is that has <i>O(n<sup>2</sup>)</i> worst-case behavior
+on sorted or nearly-sorted input, a common input.  A variant that reduces
+the likelihood of this worst case behavior with only a few extra lines
+of code is the *Median of Three* strategy, which is shown in a different
+AIA module.
 
 ## Algorithm overview
 
@@ -13,11 +21,16 @@ The steps for basic Quicksort are:
 * Pick the *pivot* element of the sub-array; here it is the rightmost
  element.
 
-* Partitioning: reorder the sub-array so that only elements with values less than or equal to the pivot come before the pivot, while only elements with values greater than or equal to the pivot come after it. After this partitioning, the pivot is in its final position.
+* Partitioning: reorder the sub-array so that only elements with values
+less than or equal to the pivot come before the pivot, while only elements
+with values greater than or equal to the pivot come after it. After this
+partitioning, the pivot is in its final position.
 
-* Recursively apply the above steps to the sub-array of elements before the pivot and separately to the sub-array of elements after the pivot.
+* Recursively apply the above steps to the sub-array of elements before
+the pivot and separately to the sub-array of elements after the pivot.
 
-The base case of the recursion is sub-arrays of size one or zero, which are in order by definition, so they never need to be sorted.
+The base case of the recursion is sub-arrays of size one or zero, which
+are in order by definition, so they never need to be sorted.
 
 ## Partitioning
 
@@ -32,16 +45,16 @@ is swapped into that position and partitioning is complete.
 
 ## Time complexity
 
-In the best case, partition divides the sub-array in half at each step,
-resulting in <i>O(log n)</i> levels of recursion and <i>O(n log n)</i>
-complexity overall. In the worst case, partition divides the sub-array
-very unevenly at each step.  The pivot element is either the largest or
-smallest element in the sub-array and one of the resulting partitions
-is always empty, resulting in <i>O(n<sup>2</sup>)</i> complexity.
-This occurs if the input is sorted or reverse-sorted. Refinements such
-as median of three partitioning (shown elsewhere) make the worst case
-less likely.  On average, partitioning is reasonably well balanced and
-<i>O(n log n)</i> complexity results.
+In the best case, partition divides the sub-array in half at each
+step, resulting in <i>O(log n)</i> levels of recursion and <i>O(n log
+n)</i> complexity overall. In the worst case, partition divides the
+sub-array very unevenly at each step.  In the worst case, the pivot
+element is either the largest or smallest element in the sub-array
+and one of the resulting partitions is always empty, resulting in
+<i>O(n<sup>2</sup>)</i> complexity.  This occurs if the input is sorted or
+reverse-sorted. Refinements such as median of three partitioning (shown
+elsewhere) make the worst case less likely.  On average, partitioning
+is reasonably well balanced and <i>O(n log n)</i> complexity results.
 
 ## Space complexity
 

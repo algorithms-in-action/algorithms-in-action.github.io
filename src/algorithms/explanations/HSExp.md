@@ -51,7 +51,3 @@ is greater than or equal to the maximum child (or the node is a leaf).
 The time complexity of *DownHeap* is *O(log n)*. Overall for Heapsort
 the worst case and nearly all other cases have time complexity *O(n log n)*.
 Space complexity is O(1).
-
-
-
-
