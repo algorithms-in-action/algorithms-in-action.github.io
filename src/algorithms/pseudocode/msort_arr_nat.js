@@ -28,6 +28,7 @@ MergeAll
     runcount <- 0 // we count the runs (for the outer loop condition) \\B runcount
     left <- 1 \\B left
     do \\B MergeAllWhile
+    \\In{
         find the first run, A[left..mid] \\Ref FirstRun
         \\Expl{ We compute mid to get the longest sequence where A[left] <=
             A[left+1] <= ... <= A[mid].
@@ -47,6 +48,7 @@ MergeAll
         \\In}
         runcount <- runcount + 1 \\B runcount+
         left <- right + 1 // skip to the next pair of runs (if any) \\B left2
+    \\In}
     until left > size
     \\In}
     // all consecutive pairs of runs merged \\B mergeDone
