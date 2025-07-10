@@ -34,13 +34,13 @@ const STACK_FRAME_COLOR = {
 const VIS_VARIABLE_STRINGS = {
   i_left_index: 'i',
   j_right_index: 'j',
-  i_eq_0: 'i==0',
-  i_gt_n: 'i==n+1',
-  j_eq_0: 'j==0',
-  j_gt_n: 'j==n+1',
+  i_eq_0: 'i=0',
+  i_gt_n: 'i=n+1',
+  j_eq_0: 'j=0',
+  j_gt_n: 'j=n+1',
   left: 'left',
   right: 'right',
-  right_eq_0: 'right==0'
+  right_eq_0: 'right=0'
 };
 
 const MSD_BOOKMARKS = {

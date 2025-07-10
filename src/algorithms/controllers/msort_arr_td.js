@@ -346,9 +346,11 @@ export function run_msort() {
           else
             highlight(vis, i, runBColor);
         }
-        if (cur_ap2 < a.length) { // XXX 
+        if (cur_ap2 < a.length) { // can't render beyond array:(
           assignVarToA(vis, 'ap2', cur_ap2);
+          assignVarToA(vis, 'ap2='+(a.length+1), undefined);
         } else {
+          assignVarToA(vis, 'ap2='+(a.length+1), a.length - 1);
           assignVarToA(vis, 'ap2', undefined);
         }
         assignVarToA(vis, 'max2', cur_max2);

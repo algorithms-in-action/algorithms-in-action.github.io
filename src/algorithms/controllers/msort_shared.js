@@ -87,15 +87,20 @@ export function highlight2Runlength(vis, left, mid, right, colorA, colorB) {
 // Assigns label to array A at index, checks if index is greater than size of array
 // if index is greater than size, assign label to last element in array
 export function assignVarToA(vis, variable_name, index, size) {
-    if (index === undefined)
+    if (index === undefined) {
         vis.array.removeVariable(variable_name);
-    else if (index >= size)
-        vis.array.assignVariable(variable_name, size - 1)
-    else
+        // may need to remove out of bounds version also
+        vis.array.removeVariable(variable_name+'>'+size);
+    } else if (index >= size) { // can't render beyond array:(
+        vis.array.assignVariable(variable_name+'>'+size, size - 1)
+        vis.array.removeVariable(variable_name);
+    } else {
         vis.array.assignVariable(variable_name, index);
+        vis.array.removeVariable(variable_name+'>'+size);
+    }
 }
 
-// Same as above function bet also checks if array B is displayed
+// Same as above function but also checks if array B is displayed
 export function assignVarToB(vis, variable_name, index, size) {
     if (isMergeExpanded()) {
         if (index === undefined)

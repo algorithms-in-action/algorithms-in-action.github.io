@@ -53,8 +53,8 @@ export function isRecursionExpanded() {
 const VIS_VARIABLE_STRINGS = {
   i_left_index: 'i',
   j_right_index: 'j',
-  i_eq_0: 'i==0',
-  j_eq_0: 'j==0',
+  i_eq_0: 'i=0',
+  j_eq_0: 'j=0',
   pivot: 'pivot',
 };
 

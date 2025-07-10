@@ -216,7 +216,7 @@ export function run_msort() {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    // XXX unused currently
+    // XXX unused currently (also modified in msort_arr_td.js)
     function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) { 
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_lista_td');

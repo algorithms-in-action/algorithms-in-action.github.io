@@ -149,8 +149,8 @@ export function run_msort() {
       // before loop exit
       /* eslint-disable no-constant-condition */
       while (true) {
-        chunker.add('MergeAllWhile', () => {
-          //no animation
+        chunker.add('MergeAllWhile', (vis) => {
+          assignVarToA(vis, 'right', undefined, size);
         }, []);
         if ((left + runlength) >= size)
           break;
@@ -338,9 +338,8 @@ export function run_msort() {
         chunker.add('left2', (vis, a, c_left, c_right, c_rlength) => {
           vis.array.set(a, 'msort_arr_bup'); //unhighlight array a
           set_simple_stack(vis.array, [`runlength = ${c_rlength}`]);
-
-          if (c_left < size) assignVarToA(vis, 'left', c_left, size);
-          assignVarToA(vis, "right", c_right, size);
+          assignVarToA(vis, 'left', c_left, size);
+          assignVarToA(vis, 'right', c_right, size);
 
         }, [A, left, right, runlength]);
 
@@ -349,7 +348,8 @@ export function run_msort() {
       runlength = 2 * runlength;
 
       chunker.add('mergeDone', (vis, c_rlength) => {
-        assignVarToA(vis, "right", undefined, size);
+        assignVarToA(vis, 'left', undefined, size);
+        // assignVarToA(vis, 'right', undefined, size);
         highlightAllRunlengths(vis, c_rlength, runAColor, runBColor, size);
       }, [runlength])
 

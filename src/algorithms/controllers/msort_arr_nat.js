@@ -158,8 +158,8 @@ export function run_msort() {
       }, [left]);
 
       do {
-        chunker.add('MergeAllWhile', () => {
-          // no animation
+        chunker.add('MergeAllWhile', (vis) => {
+          assignVarToA(vis, 'right', undefined, size);
         }, []);
 
         // finding the first run, A[left..mid]
@@ -184,8 +184,8 @@ export function run_msort() {
         // finding the second run, A[mid+1..right]
         let right = mid + 1;
         chunker.add('right', (vis, c_right) => {
+          assignVarToA(vis, 'right', c_right, size);
           if (right < size) {
-            assignVarToA(vis, 'right', c_right, size);
             highlight(vis, c_right, runBColor);
           }
         }, [right]);
@@ -383,11 +383,9 @@ export function run_msort() {
         chunker.add('left2', (vis, a, c_left, c_right, c_rcount) => {
           vis.array.set(a, 'msort_arr_nat'); // unhighlight array a
           set_simple_stack(vis.array, [`runcount = ${c_rcount}`]);
-          if (c_left < size) {
-            assignVarToA(vis, 'left', c_left, size);
-            assignVarToA(vis, "right", c_right, size);
-          }
-          // assignVarToA(vis, "size", size, size);
+          assignVarToA(vis, 'left', c_left, size);
+          assignVarToA(vis, 'right', c_right, size);
+          // assignVarToA(vis, 'size', size-1, size);
 
 
         }, [A, left, right, runcount]);
@@ -396,6 +394,8 @@ export function run_msort() {
 
       chunker.add('mergeDone', (vis, a) => {
         highlightNaturalRuns(vis, a, runAColor, runBColor);
+        assignVarToA(vis, 'left', undefined, size);
+        assignVarToA(vis, 'right', undefined, size);
       }, [A])
 
     } while (runcount > 1);
