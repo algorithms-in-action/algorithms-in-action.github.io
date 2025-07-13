@@ -14,7 +14,7 @@ A heap is a complete binary tree represented by an array, with
 the root in *<verbatim>A[1]</verbatim>* and the children of
 *<verbatim>A[i]</verbatim>* being *<verbatim>A[2i]</verbatim>* and
 *<verbatim>A[2i+1]</verbatim>*. Each node is greater than or equal to
-it's children (this is called the *heap condition*), thus the root is
+its children (this is called the *heap condition*), thus the root is
 the maximum (heap sort uses a "max" heap; there are also "min" heaps
 where the ordering is reversed).  Note that there are no pointers etc -
 we can view the array as a tree so as to understand the ordering. In
