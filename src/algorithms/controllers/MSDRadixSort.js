@@ -1,5 +1,6 @@
 // Some color code could be cleaned up
 // Could share some code with straight radix sort and quicksort
+// Best make stack as similar as possible; also add to mergesort ideally
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import MaskTracer from '../../components/DataStructures/Mask/MaskTracer'
 import {
@@ -241,10 +242,13 @@ export default {
           }
         }
 
-        vis.array.setStackDepth(cur_real_stack.length);
-        vis.array.setStack(
-          deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
-        );
+        if (isRecursionExpanded()) {
+          vis.array.setStackDepth(cur_real_stack.length);
+          vis.array.setStack(
+            deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
+          );
+        } else
+          vis.array.setStack([]);
         if (left < A.length) // shouldn't happen with initial mask choice
           assignVariable(vis, VIS_VARIABLE_STRINGS.left, left);
         if (right >= 0) {
@@ -563,7 +567,10 @@ arr],
             vis.array.sorted(k);
           }
           vis.array.clearVariables();
-          vis.array.setStack(deriveStack(real_stack, finished_stack_frames));
+          if (isRecursionExpanded()) {
+            vis.array.setStack(deriveStack(real_stack, finished_stack_frames));
+          } else
+            vis.array.setStack([]);
         }, [],
         0
       );

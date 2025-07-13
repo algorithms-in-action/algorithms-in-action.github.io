@@ -2,13 +2,14 @@
 // that (eg show less/more information). There was an accumulation
 // of different versions of this for different algorithms. This is a
 // more generic one that requires some extra some code in algorithm files.
+// There is still another one for transitiveClosure
 // Possibly should be put elsewhere, eg, src/context/
 // NOTE: any algorithm controller file that imports this must be listed
 // below, otherwise hooks into what happens when blocks are expanded or
 // contracted are not enabled.
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
-  'transitiveClosure', 'heapSort', 'msort_lista_td', 'msort_arr_bup',
-   'msort_arr_nat', 'radixSortStraight'];
+  'heapSort', 'msort_lista_td', 'msort_arr_bup',
+   'msort_arr_nat', 'radixSortStraight', 'radixSortMSD'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and
