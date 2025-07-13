@@ -56,6 +56,9 @@ const VIS_VARIABLE_STRINGS = {
   i_eq_0: 'i=0',
   j_eq_0: 'j=0',
   pivot: 'pivot',
+  left: 'left',
+  right: 'right',
+  right_lt_left: 'right<left'
 };
 
 // see stackFrameColour in index.js to find corresponding function mapping to css
@@ -64,9 +67,18 @@ const STACK_FRAME_COLOR = {
   In_progress_stackFrame: 1,
   Current_stackFrame: 2,
   Finished_stackFrame: 3,
-  I_color: 4,
-  J_color: 5,
-  P_color: 6, // pivot
+  // I_color: 4,
+  // J_color: 5,
+  // P_color: 6, // pivot
+  // Disabling stack coloring for i, j, pivot - a bit too busy, doesn't
+  // really add much if anything and NQR at end of partition in some
+  // cases(?) Just set colors to same as Current_stackFrame for now
+  // - best clean up the code and refactor - want radix exchange
+  // sort (currently horrible messy code), quicksort(s) and eventually
+  // top-down merge sort for arrays to look very similar. XXX
+  I_color: 2,
+  J_color: 2,
+  P_color: 2, // pivot
 };
 
 
@@ -203,7 +215,8 @@ export function run_QS(is_qs_median_of_3) {
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) {
+    function derive_stack(cur_real_stack, cur_finished_stack_frames,
+cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) {
       // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
       // for visualise this data
       
@@ -264,9 +277,9 @@ export function run_QS(is_qs_median_of_3) {
       return stack_vis;
     }
 
-    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
+    // Note: refreshes stack and also indices on array
+    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) => {
 
-      // XXX
       // We can't render the -1 index in the array
       // For now we display i==0/j==0 at left of array if appropriate
       let cur_i_too_low;
@@ -282,6 +295,15 @@ export function run_QS(is_qs_median_of_3) {
         cur_j_too_low = 0;
       } else {
         cur_j_too_low = undefined;
+      }
+      // right can fall of the left of array, left can fall off right
+      let cur_right_lt_left;
+      if (cur_right === -1) {
+        cur_right = undefined;
+        cur_right_lt_left = 0;
+      } else if (cur_left === entire_num_array.length) {
+        cur_right_lt_left = cur_right;
+        cur_left = undefined;
       }
 
       assert(vis.array);
@@ -299,16 +321,22 @@ export function run_QS(is_qs_median_of_3) {
         cur_i_too_low = undefined;
       }
 
-      vis.array.setStackDepth(cur_real_stack.length);
-      vis.array.setStack(
-        derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
-      );
+      if (isRecursionExpanded()) {
+        vis.array.setStackDepth(cur_real_stack.length);
+        vis.array.setStack(
+          derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth)
+        );
+      } else
+        vis.array.setStack([]);
 
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_eq_0, cur_i_too_low);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.j_right_index, cur_j);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.j_eq_0, cur_j_too_low);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.left, cur_left);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.right, cur_right);
+      assign_i_j(vis, VIS_VARIABLE_STRINGS.right_lt_left, cur_right_lt_left);
     };
 
 
@@ -363,15 +391,14 @@ export function run_QS(is_qs_median_of_3) {
           [a[n1], a[n2]] = [a[n2], a[n1]]
   
           chunker.add(bookmark,
-            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames,
-cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
+            (vis, _n1, _n2, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, bm) => {
 
               vis.array.swapElements(_n1, _n2);
-              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth);
               if (bm == QS_BOOKMARKS.SHARED_swap_pivot_into_position)
                 vis.array.selectColor(_n1, sortedColor);
             },
-            [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, depth, bookmark],
+            [n1, n2, real_stack, finished_stack_frames, i, j, pivot_index, left, right, depth, bookmark],
           depth);
         }
 
@@ -383,7 +410,8 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
           assert(bookmark !== undefined); // helps catch bugs early, and trace them in stack
 
           if (args_array === undefined) {
-            args_array = [real_stack, finished_stack_frames, i, j, pivot_index, depth]
+            args_array = [real_stack, finished_stack_frames, i, j,
+pivot_index, left, right, depth]
           }
 
           chunker.add(bookmark, f, args_array, depth)
@@ -423,7 +451,6 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
             vis.array.selectColor(fin_mid, pivotColor);
             vis.array.selectColor(fin_left, partLColor);
             vis.array.selectColor(fin_right, partRColor);
-            // XXX check/fix above for small partitions
           },
           [finalmid, finalleft, finalright]); 
 
@@ -457,7 +484,7 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
             // if (cur_left !== cur_right -1)
               // unhighlight(vis, cur_left, false);
 
-            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
+            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) // refresh stack to show pivot_index
           },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
 
@@ -468,7 +495,9 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
           chunker_add_if(
             QS_BOOKMARKS.RIGHT_P_set_pivot_to_value_at_array_indx_right,
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-            refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh stack to show pivot_index
+            refresh_stack(vis, cur_real_stack,
+cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left,
+cur_right, cur_depth) // refresh stack to show pivot_index
             vis.array.selectColor(cur_pivot_index, pivotColor);
          },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth]);
@@ -516,8 +545,10 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
               iColor = partRColor;
             chunker_add_if(
               QS_BOOKMARKS.SHARED_incri_j_until,
-              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-                  refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
+              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) => {
+                  refresh_stack(vis, cur_real_stack,
+cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left,
+cur_right, cur_depth);
                   vis.array.selectColor(cur_i, iColor);
               });
             
@@ -533,9 +564,11 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
               jColor = partLColor;
             chunker_add_if(
               QS_BOOKMARKS.SHARED_decri_j_until,
-              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-                  refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth);
-                  if (cur_j >= left) // XXX pass in left?
+              (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) => {
+                  refresh_stack(vis, cur_real_stack,
+cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left,
+cur_right, cur_depth);
+                  if (cur_j >= cur_left)
                     vis.array.selectColor(cur_j, jColor);
               });
             
@@ -555,14 +588,6 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
         swapAction(QS_BOOKMARKS.SHARED_swap_pivot_into_position, i,
           is_qs_median_of_3 ? right-1 : right
         );
-        // XXX best make pivot sorted above and delete next chunk?
-/*
-        chunker_add_if(
-          QS_BOOKMARKS.SHARED_swap_pivot_into_position,
-          (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-            vis.array.sorted(cur_pivot_index);
-        });
-*/
 
         return [i, a]; // Return [pivot location, array partition_num_array]
       }
@@ -580,6 +605,11 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
       chunker.add(QS_BOOKMARKS.SHARED_if_left_less_right, refresh_stack, [
         real_stack,
         finished_stack_frames,
+        undefined, // i
+        undefined, // j
+        undefined, // pivot
+        left,
+        right,
       ], depth);
 
       if (left < right) {
@@ -600,7 +630,8 @@ cur_i, cur_j, cur_pivot_index, cur_depth, bm) => {
         chunker.add(QS_BOOKMARKS.SHARED_pre_left,
             (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, old_pivot) => {
             refresh_stack(vis, cur_real_stack,
-cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left,
+cur_right, cur_depth) // refresh shows i
            for (let i = cur_left; i <= cur_right; i++)
              if (i !== old_pivot)
                vis.array.deselect(i);
@@ -614,14 +645,16 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
         // this level when the recursive code is collapsed
         chunker.add(QS_BOOKMARKS.SHARED_quicksort_left_to_i_minus_1,
           (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) // refresh shows i
           },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
 
         // dummy chunk before recursive call, as above
         chunker.add(QS_BOOKMARKS.SHARED_pre_right,
           (vis, cur_right, cur_left, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh shows i
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth) // refresh shows i
           },
           [right, left, real_stack, finished_stack_frames, i, j, pivot_index, depth], depth);
 
@@ -632,6 +665,11 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
           chunker.add(QS_BOOKMARKS.SHARED_quicksort_i_plus_1_to_right, refresh_stack, [
             real_stack,
             finished_stack_frames,
+            undefined, // i
+            undefined, // j
+            undefined, // pivot
+            left,
+            right,
           ], depth);
         finished_stack_frames.push(real_stack.pop());
       }
@@ -668,11 +706,13 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
 
     chunker.add(
       QS_BOOKMARKS.SHARED_quicksort_left_to_right,
-      (vis, array) => {
+      (vis, array, cur_left, cur_right) => {
         vis.array.set(array, 'quicksort');
         vis.array.setStack([]); // used for a custom stack visualisation
+        assign_i_j(vis, VIS_VARIABLE_STRINGS.left, cur_left);
+        assign_i_j(vis, VIS_VARIABLE_STRINGS.right, cur_right);
       },
-      [entire_num_array],
+      [entire_num_array, 0, entire_num_array.length - 1],
     0);
 
     const result = QuickSort(entire_num_array, 0, entire_num_array.length - 1, 1);
@@ -683,14 +723,17 @@ cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) // refresh 
     chunker.add(
       QS_BOOKMARKS.SHARED_done_qs,
       (vis, idx) => {
-        vis.array.setStackDepth(0);
         vis.array.fadeOut(idx);
         // fade all elements back in for final sorted state
         for (let i = 0; i < entire_num_array.length; i += 1) {
           vis.array.fadeIn(i);
         }
         vis.array.clearVariables();
-        vis.array.setStack(derive_stack(real_stack, finished_stack_frames));
+        if (isRecursionExpanded()) {
+          vis.array.setStackDepth(0);
+          vis.array.setStack(derive_stack(real_stack, finished_stack_frames));
+        } else
+          vis.array.setStack([]);
       },
       [entire_num_array.length - 1],
     0);
