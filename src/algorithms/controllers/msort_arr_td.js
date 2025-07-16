@@ -5,7 +5,7 @@
 // Uses simple stack display like DFSrec; stack vanishes inside
 // merge+copy because screen real-estate is limited and details of merge
 // are independent of stack details anyway (may cause some surprise
-// though)
+// though) XXX would be nice to add QS/REX style stack display instead
 
 import { msort_arr_td } from '../explanations';
 import {colors} from '../../components/DataStructures/colors';
@@ -268,9 +268,9 @@ export function run_msort() {
 
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
 
-      // XXX
+      // XXX left over from quicksort...
       // We can't render the -1 index in the array
-      // For now we display i==0/j==0 at left of array if appropriate
+      // For now we display i=0/j=0 at left of array if appropriate
       let cur_i_too_low;
       let cur_j_too_low;
       if (cur_i === -1) {

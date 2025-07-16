@@ -98,12 +98,12 @@ for num in A \\B 13
 
 \\Code{
 CumSum
-for i = 1 to maximum digit value \\B 14
+for i <- 1 to maximum digit value \\B 14
 \\Expl{ We must scan left to right. The count for digit 0 remains
   unchanged.
 \\Expl}
 \\In{
-    Count[i] = Count[i-1] + Count[i] \\B 15
+    Count[i] <- Count[i-1] + Count[i] \\B 15
 \\In}
 \\Code}
 
@@ -127,8 +127,8 @@ for each num in A in reverse order \\B 8
       highlighted, and the digit value 0-3 (maybe the latter can be done
       by just highlighting B[digit] instead).
     \\Note}
-    Count[digit] = Count[digit]-1 \\B 18
-    B[Count[digit]] = num \\B 9
+    Count[digit] <- Count[digit] - 1 \\B 18
+    B[Count[digit]] <- num \\B 9
 \\In}
 \\Code}
 

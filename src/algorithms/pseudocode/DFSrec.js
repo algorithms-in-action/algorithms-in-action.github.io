@@ -63,7 +63,7 @@ DFS1(G, n, p) // Search from node n using parent node p. This visits all \\B dfs
         // nodes connected to n, ignoring nodes with parents already
         // assigned (as if these nodes have been removed from G).
 \\In{
-    if Parent[n] == null // Ignore n if Parent[n] has been assigned \\B check_parent
+    if Parent[n] = null // Ignore n if Parent[n] has been assigned \\B check_parent
     \\In{
         Parent[n] <- p \\B assign_parent
         \\Expl{ Node n is now finalised.

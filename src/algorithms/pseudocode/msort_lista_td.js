@@ -47,7 +47,7 @@ scan
     Mid <- L \\B Mid
     \\Expl{ Start at first element of L
     \\Expl}
-    for i = 1 to len/2 - 1 // while not at middle
+    for i <- 1 to len/2 - 1 // while not at middle
     \\In{
         Mid <- Mid.tail \\B MidNext
         \\Expl{ Skip to next element

@@ -31,15 +31,15 @@ export default parse(`
     // Return node t if it contains key k
     if t is a two-node \\B if t is a two-node: Return_if_key_in_node
     \\In{
-        if t.key1 == k return t \\B if t.key1 == k return t
+        if t.key1 = k return t \\B if t.key1 == k return t
     \\In}
     else if t is a three-node \\B if t is a three-node: Return_if_key_in_node
     \\In{
-        if t.key1 == k or t.key2 == k return t \\B if t.key1 == k or t.key2 == k return t
+        if t.key1 = k or t.key2 = k return t \\B if t.key1 == k or t.key2 == k return t
     \\In}
     else // t is a four-node \\B else: Return_if_key_in_node
     \\In{
-        if t.key1 == k or t.key2 == k or t.key3 == k return t \\B if t.key1 == k or t.key2 == k or t.key3 == k return t
+        if t.key1 = k or t.key2 = k or t.key3 = k return t \\B if t.key1 == k or t.key2 == k or t.key3 == k return t
     \\In}
     \\Code}
     

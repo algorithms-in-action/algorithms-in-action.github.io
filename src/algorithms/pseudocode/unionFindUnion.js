@@ -87,12 +87,12 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
 \\In{
     n <- Find(n) \\B n <- Find(n)
     m <- Find(m) \\B m <- Find(m)
-    if n == m // in same subset already - nothing to do \\B if n == m
+    if n = m // in same subset already - nothing to do \\B if n == m
         \\In{
         return \\B return
         \\In}
     swap n and m if needed to ensure m is the "taller" subtree \\Ref Maybe_swap
-    parent[n] = m // add the shorter subtree (n) to the taller one (m) \\B parent[n] = m
+    parent[n] <- m // add the shorter subtree (n) to the taller one (m) \\B parent[n] = m
     \\Expl{ This sometimes increases the height of the resulting tree but
             if we added the taller to the shorter the height would always
             increase.
@@ -147,7 +147,7 @@ still use n
 
 \\Code{
     Adjust_rank
-        if rank[n] == rank[m] \\B if rank[n] == rank[m]
+        if rank[n] = rank[m] \\B if rank[n] == rank[m]
             \\Expl{  If we are adding a strictly shorter subtree to m the height
                     doesn't change, but if the heights were equal the new height
             \\Expl}
@@ -163,7 +163,7 @@ Initialise
     \\Note{ No need to animate this?? We just have this as the initial
         state of the animation.
     \\Note}
-      parent[i] = i and rank[i] = 0 for all elements i in the set \\B parent[i] = i and rank[i] = 0 for all elements i in the set
+      parent[i] <- i and rank[i] <- 0 for all elements i in the set \\B parent[i] = i and rank[i] = 0 for all elements i in the set
     \\Expl{ Initially, each element i is in its own singleton subset. If
             the array has free space, extra elements can be added and
             initialised in the same way.

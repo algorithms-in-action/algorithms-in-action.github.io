@@ -1,15 +1,13 @@
 import parse from '../../pseudocode/parse';
 
 
-// XXX Best skip NullTable and HashInit function completely - just start
+// We now skip NullTable and HashInit function completely - just start
 // animation with initialised table
-// XXX: if dynamic tables are not implemented, both CheckTableFullness
-// and CheckTableFullnessDel should be removed (if they are added the
-// bookmarks withing them should be different, and maybe
-// explanations)
-// NOTE: code now no longer explicitly keeps track of number of
-// insertions and CheckTableFullness is modified so some bookmarks (eg,
-// 4, 19, 20) no longer exist and controller code will have to change
+// If dynamic tables are not implemented, both CheckTableFullness
+// and CheckTableFullnessDel should be removed.
+// Currently dynamic tables are supported for open addressing but not
+// chaining.  The latter still has "Check how full the table is" that
+// doesn't expand but has an explanation. XXX could be added some time.
 
 const main = `
 
@@ -135,7 +133,7 @@ const main = `
                         there will be no duplicate elements.
                     \\Expl}
                     \\In{
-                        OldT = T;  // save T so we can extract the keys
+                        OldT <- T;  // save T so we can extract the keys
                         T <- new empty table \\B 30
                         \\Expl{ Without deleted elements, it is best for
                             the table size to approximately double.  If there are many deleted slots
