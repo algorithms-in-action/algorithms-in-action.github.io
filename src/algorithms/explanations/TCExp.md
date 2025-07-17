@@ -3,7 +3,7 @@
 ---
 
 Warshalls algorithm computes the transitive closure of a directed 
-graph, that is, what nodes can be reached from other nodes.  
+graph, that is, what nodes can be reached from other nodes.
 
 The algorithm starts with an adjacency matrix A for a directed graph G
 with n nodes. In the adjacency matrix, A[i,j] = 1 indicates that 
@@ -14,12 +14,12 @@ i to j, possibly with several intermediate steps between i and j.
 
 The algorithm uses three nested loops that iterate over all the nodes
 but the order of the nesting is crucial for correctness. 
-    
+
 ## The logic is as follows.
-    
+
 We start with the matrix describing direct reachability
 (using a single edge and no intermediate nodes). 
-    
+
 We first compute reachability that may include node 1 as an intermediate node 
 (as well as direct reachability), then compute reachability that may include 
 nodes 1 and/or 2, and so on, up to n. 

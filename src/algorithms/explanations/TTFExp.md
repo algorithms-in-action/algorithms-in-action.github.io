@@ -15,7 +15,7 @@ less than the keys in child2.
 Three-nodes have two keys and three subtrees, named and
 ordered child1, key1, child2, key2, child3.  Four-nodes have three keys
 and four subtrees, named and ordered child1, key1, child2, key2, child3,
-key3, child4.  
+key3, child4.
 
 For simplicity, equal keys have been ignored in this module. One way of handling duplicate
 keys would be to have a linked list of records originating in the node. Alternatively an
@@ -36,7 +36,7 @@ it is simplest to implement the
 encountered as we traverse down the tree. There is a more complicated
 "bottom up" version that waits to split four-nodes until the split is actually needed.  The
 "bottom-up" version can slightly reduce the number of nodes in the
-tree in some cases, potentially improving efficiency.  
+tree in some cases, potentially improving efficiency.
 
 ---
 
