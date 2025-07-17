@@ -58,8 +58,8 @@ MergeAll
 FirstRun
     mid <- left \\B mid
     while mid < size and A[mid] <= A[mid+1] \\B FirstRunWhile
-    \\Expl{ Scan until we find an element that is less than the previous
-        element (or we reach the end).
+    \\Expl{ Scan until we find the end of the run: the next element is less
+        than the current element (or we reach the end).
     \\Expl}
     \\In{
         mid <- mid + 1 \\B mid++
@@ -70,8 +70,8 @@ FirstRun
 SecondRun
     right <- mid + 1 \\B right
     while right < size and A[right] <= A[right+1] \\B SecondRunWhile
-    \\Expl{ Scan until we find an element that is less than the previous
-        element (or we reach the end).
+    \\Expl{ Scan until we find the end of the run: the next element is less
+        than the current element (or we reach the end).
     \\Expl}
     \\In{
         right <- right + 1 \\B right++
