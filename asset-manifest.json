@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.4b42e064.css",
-    "main.js": "/static/js/main.36acb70d.js",
+    "main.js": "/static/js/main.0d6fd256.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -16,18 +16,18 @@
     "static/media/jiajun.jpg": "/static/media/jiajun.5fddd48aebee4e998e38.jpg",
     "static/media/hantong.jpeg": "/static/media/hantong.63b24722aed30389f96a.jpeg",
     "static/media/AVLExp.md": "/static/media/AVLExp.2baa9e0ca0cc06ab6f5c.md",
-    "static/media/ASTExp.md": "/static/media/ASTExp.df3b37e4ad7a1b85d289.md",
+    "static/media/ASTExp.md": "/static/media/ASTExp.265f84fec7d30e4c1433.md",
     "static/media/PRIMExp.md": "/static/media/PRIMExp.c82bf2b32b05d66b0a3f.md",
-    "static/media/DIJKExp.md": "/static/media/DIJKExp.0be9daff724a8db0894d.md",
-    "static/media/DFSExp.md": "/static/media/DFSExp.5bd9fb3329fb341b2716.md",
+    "static/media/DIJKExp.md": "/static/media/DIJKExp.7dea8ad6de2d67d9a505.md",
+    "static/media/DFSExp.md": "/static/media/DFSExp.9b4fb4f5e541d8987853.md",
     "static/media/logo.svg": "/static/media/logo.3fc6bd69ad667882e3e5bb9e6ca2110b.svg",
     "static/media/QSExp.md": "/static/media/QSExp.db34a8565b7305236764.md",
     "static/media/DFSrecExp.md": "/static/media/DFSrecExp.9999e085479711a83eaa.md",
     "static/media/StraightRadixSortExp.md": "/static/media/StraightRadixSortExp.de431ebf118424f915e7.md",
     "static/media/UFExp.md": "/static/media/UFExp.08e1cfd121041adc9ea9.md",
     "static/media/QSM3Exp.md": "/static/media/QSM3Exp.b901ae9efb7fad1fe4bc.md",
-    "static/media/BFSExp.md": "/static/media/BFSExp.49ba85dcc51b42ef481c.md",
-    "static/media/TTFExp.md": "/static/media/TTFExp.1bb9ea16b637522be0c7.md",
+    "static/media/BFSExp.md": "/static/media/BFSExp.54946db5ed39fa1601b1.md",
+    "static/media/TTFExp.md": "/static/media/TTFExp.f1a0022b9be2113fdc71.md",
     "static/media/HashingExp.md": "/static/media/HashingExp.71209864bde977aaa222.md",
     "static/media/MSDRadixSortExp.md": "/static/media/MSDRadixSortExp.c17ea73bb4e26295f359.md",
     "static/media/PRIM_oldExp.md": "/static/media/PRIM_oldExp.5f7835c100e05e1812d6.md",
@@ -35,8 +35,8 @@
     "static/media/msort_arr_bup.md": "/static/media/msort_arr_bup.60139a905e947acc0b70.md",
     "static/media/ASTInfo.md": "/static/media/ASTInfo.d307db15fb73fc440707.md",
     "static/media/KRUSKALExp.md": "/static/media/KRUSKALExp.ccd6fad00857f3adf471.md",
-    "static/media/TCExp.md": "/static/media/TCExp.a2345a1d19210d23f3d6.md",
-    "static/media/HSSExp.md": "/static/media/HSSExp.e0c0025eab0919b68330.md",
+    "static/media/TCExp.md": "/static/media/TCExp.2a4a376ac308ec2c6081.md",
+    "static/media/HSSExp.md": "/static/media/HSSExp.5964320db62490f6ccae.md",
     "static/media/msort_lista_td.md": "/static/media/msort_lista_td.fbd6e0c97015d12f8f62.md",
     "static/media/DFSInfo.md": "/static/media/DFSInfo.17a56c1dd7c525027bf9.md",
     "static/media/msort_arr_td.md": "/static/media/msort_arr_td.d4063776bce8b85c4ae5.md",
@@ -46,8 +46,8 @@
     "static/media/QSM3Info.md": "/static/media/QSM3Info.c82d527bc5e82135217b.md",
     "static/media/UFInfo.md": "/static/media/UFInfo.0feb0f96d457730da1cc.md",
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
-    "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.5d3a2b2f4cbce9d9185b.md",
     "static/media/font.svg": "/static/media/font.612d92cd6f10aa35f6d876e135850bfc.svg",
+    "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.5d3a2b2f4cbce9d9185b.md",
     "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.5e87d33d65ac3b8019a9.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.d4da675c825c4a5fa0b0.md",
     "static/media/BSTExp.md": "/static/media/BSTExp.6361796a215a2b075205.md",
@@ -77,10 +77,10 @@
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.4b42e064.css.map": "/static/css/main.4b42e064.css.map",
-    "main.36acb70d.js.map": "/static/js/main.36acb70d.js.map"
+    "main.0d6fd256.js.map": "/static/js/main.0d6fd256.js.map"
   },
   "entrypoints": [
     "static/css/main.4b42e064.css",
-    "static/js/main.36acb70d.js"
+    "static/js/main.0d6fd256.js"
   ]
 }
