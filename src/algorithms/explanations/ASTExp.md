@@ -32,8 +32,8 @@ As these algorithms execute, we can classify nodes into three sets.
 These are:
 
  
-- "Finalised" nodes, for which the shortest or least costly path back to the start node has already
-been finalised, that is the final parent node has been determined and is recorded;
+- "Finalised" nodes, for which the path back to the start node has
+been finalised, that is, the final parent node has been determined and recorded;
 
 - "Frontier" nodes, that are not finalised but are connected to a finalised node by a single edge; and
 
@@ -46,8 +46,8 @@ The frontier initially contains just the start node. The algorithms repeatedly
 pick a frontier node, finalise the node (its current parent becomes
 its final parent) and update information about the neighbours of the node.
 A\* uses a priority queue for the frontier nodes,
-ordered on the shortest distance to the node found so far *plus* the
-heuristic value of the node.  At each
+ordered on the shortest distance from the start node
+to the node found so far *plus* the heuristic value of the node.  At each
 stage the node with the minimum cost
 is removed for processing, and its neighbors have their information
 updated if a shorter path has now been found.

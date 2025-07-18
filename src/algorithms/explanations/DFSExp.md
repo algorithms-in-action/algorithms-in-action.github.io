@@ -30,10 +30,9 @@ As these algorithms execute, we can classify nodes into three sets.
 These are:
 
  
-- "Finalised" nodes, for which the shortest or least costly path back to the start node has already
-been finalised, that is the final parent node has been determined and is
-recorded (DFS is an exception in that path lengths/costs are ignored and
-finalised nodes can have very long paths to them);
+- "Finalised" nodes, for which the path back to the start node has 
+been finalised, that is, the final parent node has been determined and recorded;
+
 
 - "Frontier" nodes, that are not finalised but are connected to a finalised node by a single edge; and
 

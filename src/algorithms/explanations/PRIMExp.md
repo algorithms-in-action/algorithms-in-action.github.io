@@ -32,9 +32,9 @@ As these algorithms execute, we can classify nodes into three sets.
 These are:
 
  
-- "Finalised" nodes, for which the shortest or least costly path back to the start node has already
-been finalised (see below for further explanation of this),
-that is the final parent node has been determined and is recorded;
+- "Finalised" nodes, for which the path back to the start node has 
+been finalised, that is, the final parent node has been determined and recorded;
+
 
 - "Frontier" nodes, that are not finalised but are connected to a finalised node by a single edge; and
 
@@ -53,14 +53,6 @@ is removed for processing, and its neighbors that have not yet
 been finalised
 have their costs recomputed. Other algorithms use other data structures to keep track 
 of the frontier nodes.
-
-Saying the finalised nodes have "the least costly path" back to the start
-node may be a little misleading: Prim's algorithm uses the length of just
-*the first edge of the path* as the cost. At each step, Prim's algorithm
-chooses the node with the least *incremental* cost increase for the tree
-being constructed. Throughout the execution, if finalised has size *N*,
-it contains the smallest tree with *N* nodes that includes the start node.
-The paths from each node back to the start are generally not the shortest.
 
 In the presentation here, we do not give details of how the priority
 queue is implemented, but just emphasise it is a collection of nodes

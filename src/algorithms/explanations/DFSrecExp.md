@@ -14,7 +14,7 @@ This recursive coding is very simple: the core is a recursive
 function that is called with a node n and a parent p. If the parent of
 n has not yet been decided it assigns p as the parent and recursively
 calls the function on all nodes neighbouring n, with n as the parent,
-until an end node is found or all nodes in the componenent have been
+until an end node is found or all nodes in the component have been
 examined.
 
 Elsewhere we have an iterative version of DFS.
@@ -29,10 +29,10 @@ As these algorithms execute, we can classify nodes into three sets.
 These are:
 
 
-- "Finalised" nodes, for which the shortest or least costly path back to the start node has already
-been finalised, that is the final parent node has been determined and is
-recorded (DFS is an exception in that path lengths/costs are ignored and
-finalised nodes can have very long paths to them);
+- "Finalised" nodes, for which the path back to the start node has 
+been finalised, that is, the final parent node has been determined and
+recorded;
+
 
 - "Frontier" nodes, that are not finalised but are connected to a finalised node by a single edge; and
 
