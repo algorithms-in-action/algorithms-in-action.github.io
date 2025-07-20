@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.4b42e064.css",
-    "main.js": "/static/js/main.0e5052d0.js",
+    "main.js": "/static/js/main.5ec24b4f.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -60,27 +60,27 @@
     "static/media/arrow.svg": "/static/media/arrow.b799034555e959db988fd2c275c31132.svg",
     "static/media/refresh.svg": "/static/media/refresh.3d70a4330b2dc0307f405872ce8fad16.svg",
     "static/media/DIJKInfo.md": "/static/media/DIJKInfo.91c3805512538231b9cc.md",
+    "static/media/AVLInfo.md": "/static/media/AVLInfo.eb7a43fad9870e7eac49.md",
     "static/media/minus.svg": "/static/media/minus.ed1583fbcf9f7716ded65c897a7eee27.svg",
-    "static/media/AVLInfo.md": "/static/media/AVLInfo.737e33a0fe4a2c07ced7.md",
     "static/media/play.svg": "/static/media/play.1b4fe47788d6c47edda8dd6009008246.svg",
     "static/media/DFSrecInfo.md": "/static/media/DFSrecInfo.27791abb933aff2aa06d.md",
     "static/media/BFSInfo.md": "/static/media/BFSInfo.ce31e742a53f1959ffbb.md",
     "static/media/github.svg": "/static/media/github.49399358d07c8205d0b8838330c45630.svg",
+    "static/media/TTFInfo.md": "/static/media/TTFInfo.4dac8b66548c8c4efe96.md",
     "static/media/add.svg": "/static/media/add.89fe7bf62d0e27a62c00c4b5016bbdc4.svg",
+    "static/media/BSTInfo.md": "/static/media/BSTInfo.389b312b09e4742607cc.md",
     "static/media/HSSInfo.md": "/static/media/HSSInfo.a1baa89224cb47dba851.md",
     "static/media/PRIM_oldInfo.md": "/static/media/PRIM_oldInfo.51d714f4f8994e41e93d.md",
     "static/media/BFSSInfo.md": "/static/media/BFSSInfo.ef247f8493df96c5e83a.md",
-    "static/media/BSTInfo.md": "/static/media/BSTInfo.7ba11aaeb8f09dc017e5.md",
     "static/media/TCInfo.md": "/static/media/TCInfo.6eb03334bc8db61df29d.md",
     "static/media/direction.svg": "/static/media/direction.7feb3d2336d3133d67764adc61842c0d.svg",
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
-    "static/media/TTFInfo.md": "/static/media/TTFInfo.73e7fe828efd79e51292.md",
     "main.4b42e064.css.map": "/static/css/main.4b42e064.css.map",
-    "main.0e5052d0.js.map": "/static/js/main.0e5052d0.js.map"
+    "main.5ec24b4f.js.map": "/static/js/main.5ec24b4f.js.map"
   },
   "entrypoints": [
     "static/css/main.4b42e064.css",
-    "static/js/main.0e5052d0.js"
+    "static/js/main.5ec24b4f.js"
   ]
 }
