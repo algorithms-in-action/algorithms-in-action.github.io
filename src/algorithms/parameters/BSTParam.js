@@ -1,3 +1,4 @@
+// XXX radio button behaviour could still be improved
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable max-len */
 /* eslint-disable no-console */
@@ -14,7 +15,7 @@ import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 import {
   singleNumberValidCheck,
-  genRandNumList,
+  genUniqueRandNumList,
   successParamMsg,
   errorParamMsg,
   balanceBSTArray,
@@ -26,7 +27,7 @@ import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for UR
 
 // import useParam from '../../context/useParam';
 
-const DEFAULT_NODES = genRandNumList(10, 1, 100);
+const DEFAULT_NODES = genUniqueRandNumList(10, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
@@ -55,7 +56,7 @@ function BSTParam({ mode, list, value }) {
   const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
   const { setNodes, setSearchValue } = useContext(URLContext);
   const [bstCase, setBSTCase] = useState({
-    random: true,
+    random: false,
     sorted: false,
     balanced: false,
   });
@@ -64,6 +65,11 @@ function BSTParam({ mode, list, value }) {
   useEffect(() => {
     setNodes(localNodes);
     setSearchValue(localValue);
+    // If input nodes are manually edited, we want to uncheck the case.
+    // This also unchecks the case when sorted and balanced are selected
+    // but (for some unknown reason) not when random is selected. This
+    // isn't ideal XXX but is not too bad.
+    setBSTCase(UNCHECKED);
   }, [localNodes, localValue, setNodes, setSearchValue]);
 
   const handleChange = (e) => {
@@ -140,15 +146,9 @@ function BSTParam({ mode, list, value }) {
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={(() => {
-            if (bstCase.balanced) {
-              return balanceBSTArray([...localNodes].sort((a, b) => a - b));
-            } if (bstCase.sorted) {
-              return [...localNodes].sort((a, b) => a - b);
-            }
-            return localNodes;
-          })()}
+          DEFAULT_VAL={localNodes}
           SET_VAL={setlocalNodes}
+          REFRESH_FUNCTION={(() => genUniqueRandNumList(10, 1, 100))}
           ALGORITHM_NAME={INSERTION}
           EXAMPLE={INSERTION_EXAMPLE}
           setMessage={setMessage}
@@ -167,7 +167,7 @@ function BSTParam({ mode, list, value }) {
           setMessage={setMessage}
         />
       </div>
-      <span className="generalText">Choose type of tree: &nbsp;&nbsp;</span>
+      <span className="generalText">Re-order input: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={(
           <BlueRadio

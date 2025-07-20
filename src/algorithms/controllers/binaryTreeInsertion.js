@@ -36,6 +36,10 @@ export default {
       (vis, elements) => {
         vis.array.set(elements);
         // vis.array.select(0); // the index of root element is 0
+        // make a bit more room for tree
+        vis.graph.setSize(2.5);
+        vis.graph.setZoom(0.8);
+        vis.array.setZoom(0.9);
       },
       [nodes],
     );

@@ -10,7 +10,7 @@ export default {
   initVisualisers() {
     return {
       tree: {
-        instance: new NTreeTracer('n-tree', null, 'Tree View'),
+        instance: new NTreeTracer('n-tree', null, '2-3-4 Tree'),
         order: 0,
       },
     };

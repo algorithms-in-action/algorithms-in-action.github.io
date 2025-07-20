@@ -21,7 +21,7 @@ W3Schools Link: [**AVL Trees**][G4GLink]
 With insertion of three distinct keys there are six orders in which the
 keys may appear.  How many different AVL trees are there with three
 given distinct keys? Explore how insertion takes place for the six
-different orders.
+different orders and compare this with simple binary search trees.
 
 In the background it says that unbalance can only be caused by insertion
 into a grandchild of a node.  Why can't it be caused by just adding a
