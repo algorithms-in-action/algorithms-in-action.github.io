@@ -27,6 +27,10 @@ edges are the same length (edit the "SET EDGES/WEIGHTS" box to change
 weights and ensure "Weights" is set to "As input"; run BFS with the
 same graph).
 
+Compare and contrast Dijkstra's algorithm with Prim's algorithm for
+computing minimal spanning trees. If there are no end nodes specified,
+what is the key difference between these two algorithms?
+
 In AIA, the coding of various graph algorithms is designed to show
 their similarity. Iterative DFS, breadth first search, Dijkstra's
 shortest path algorithm, heuristic search and Prim's minimal spanning

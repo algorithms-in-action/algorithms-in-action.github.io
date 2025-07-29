@@ -5,7 +5,8 @@
 The A\* (pronounced "A star" and also known as heuristic search)
 algorithm for graphs can be used to find the shortest (that is, lowest
 weight or cost) path from a single start node to a single end node. It
-uses a "heuristic" function to help guide the search towards the end node.
+uses a "heuristic" function to help guide the search towards the end
+node (see below for how it is computed for this animation).
 The heuristic function estimates the path length from a given node to the
 end node. If the heuristic never over-estimates the path length it is
 said to be "admissible" and A\* is then guaranteed to find a shortest
@@ -78,7 +79,12 @@ the "distance" between the two nodes.  Two measures of
 distance are provided: Euclidean and Manhattan.  Eclidean distance is
 the straight line distance; here we round it up to the next integer.
 Manhattan distance is the difference in x coordinate values plus the
-difference in y coordinate values.  You can choose the way weights are
+difference in y coordinate values.
+The coordinates also allow us to use a very simple heuristic function:
+we simply compute the distance between a node and the end node (in
+general, heuristic functions are based on whatever domain the graph
+nodes represent and finding good heuristics can be very difficult).
+In this animation you can choose the way weights are
 decided, toggle between Euclidean and Manhattan for the heuristic
 function, choose the
 start and end nodes and change the graph choice (see the instructions
