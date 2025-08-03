@@ -100,7 +100,8 @@ let doIt = (algName, algID) => {
     // XXX ...
     console.log("Note: above may change when code for algorithm index generation is modified");
     console.log("");
-    console.log("Make sure the system compiles and existing algorithms run OK.");
+    console.log("Make sure the system compiles and existing algorithms run OK");
+    console.log("and you new algorithm (accessed via the URL) behaves as Heapsort.");
     console.log("This may require checking and re-working some of the steps above.");
     console.log("");
     console.log("git commit -a -m 'Adding new algorithm: " + algID + "'");
