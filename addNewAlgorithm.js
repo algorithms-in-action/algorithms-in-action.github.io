@@ -1,4 +1,4 @@
-// standalone JS - needs Node.js installed; run with node <filename>
+// standalone JS - needs Node.js installed; run with node <thisfile>
 //
 // Idea here is to have a program that helps with creation of a new AIA
 // algorithm module.  Reads in the algorithm name and an ID used internally
@@ -6,6 +6,8 @@
 // (currently copy the heapsort files; they will need to be edited for the
 // new algorithm), plus some snippets of code and indications of where to
 // put them so we can just edit a bunch of files and mostly copy+paste.
+// XXX It would be nice to be able to say what files to copy (not Heapsort)
+// but filenames are not really consistent enough currently.
 
 const readline = require('readline');
 
@@ -20,7 +22,7 @@ const rl = readline.createInterface({
 
 let algName;
 let algID;
-let algCat = 'Sort'; // XXX Need to input this also
+let algCat = 'Sort'; // XXX Best input this also?
 console.log("What's the name of your new algorithm used in menus etc, eg 2-3-4 Tree? ");
 
 rl.on('line', (line) => {
@@ -29,6 +31,7 @@ rl.on('line', (line) => {
     console.log("What's the ID of your new algorithm used in code, eg tree_234?  ");
   } else {
     algID = line.trim();
+    // XXX Best check for alpha first char then alphanumeric + _ only
     doIt(algName, algID);
     process.exit(0);
   }
@@ -39,29 +42,72 @@ rl.on('close', () => {
   process.exit(0);
 });
 
+// let devBranch = "<development branch>"
+let devBranch = "2025_sem2"
 
 let doIt = (algName, algID) => {
     console.log("");
-    console.log("To add algorithm named " + algName + " with ID " + algID + ":");
+    console.log("Guide to adding algorithm named " + algName + " with ID " + algID);
+    console.log("(best save this in a file and keep track of your progress)");
+    console.log("");
     console.log("Execute the following commands from the AIA repository directory:");
     console.log("");
+    console.log("git switch " + devBranch + "; git pull");
     console.log("git switch +c add_" + algID);
-    console.log("# When stable, do git switch <development branch>; git merge add_" + algID);
+    console.log("");
     console.log("cp src/algorithms/controllers/heapSort.js src/algorithms/controllers/" + algID + ".js");
     console.log("git add src/algorithms/controllers/" + algID + ".js");
     console.log("cp src/algorithms/pseudocode/heapSort.js src/algorithms/pseudocode/" + algID + ".js");
     console.log("git add src/algorithms/pseudocode/" + algID + ".js");
-    console.log("# The files above will need to be edited during development" + algID + ".js");
+    console.log("cp src/algorithms/parameters/HSParam.js src/algorithms/parameters/" + algID + ".js");
+    console.log("git add src/algorithms/parameters/" + algID + ".js");
+    console.log("cp src/algorithms/explanations/HSExp.md src/algorithms/explanations/" + algID + ".md");
+    console.log("git add src/algorithms/explanations/" + algID + ".md");
+    console.log("cp src/algorithms/extra-info/HSInfo.md src/algorithms/extra-info/" + algID + ".md");
+    console.log("git add src/algorithms/extra-info/" + algID + ".md");
+    console.log("echo \"export const " + algID + " = sortInstructions;\" >> src/algorithms/instructions/index.js");
+    console.log("The files above (and others) will need to be edited during development");
+    console.log("but best defer that until after you have added the new algorithm");
+    console.log("");
     console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/controllers/index.js");
-    // XXX + other index.js files, explanations, extra-info, edit instructions
+    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/explanations/index.js");
+    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/extra-info/index.js");
+    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/parameters/index.js");
+    console.log("echo \"export { default as " + algID + "} from './" + algID
++ "'\" >> src/algorithms/pseudocode/index.js");
     console.log("");
     console.log("Edit src/algorithms/index.js to add to the allalgs definition; something like:");
     console.log("  '" + algID + "': {");
     console.log("    name: '" + algName + "',");
+    console.log("    noDeploy: false,");
     console.log("    category: 'Sort',");
+    console.log("    explanation: Explanation." + algID + ",");
+    console.log("    param: <Param." + algID + "/>,");
+    console.log("    instructions: Instructions." + algID + ",");
+    console.log("    extraInfo: ExtraInfo." + algID + ",");
+    console.log("    pseudocode: {");
+    console.log("      sort: Pseudocode." + algID + ",");
+    console.log("    },");
+    console.log("    controller: {");
+    console.log("      sort: Controller." + algID + ",");
+    console.log("    },");
     // XXX ...
-    console.log("...},");
-    // XXX ...
+    console.log("XXX Above may change with changes to index generation code");
+    console.log("");
+    console.log("Make sure the system compiles and existing algorithms run OK.");
+    console.log("This may require checking and re-working some of the steps above.");
+    console.log("");
+    console.log("git commit -a -m 'Adding new algorithm: " + algID + "'");
+    console.log("git switch " + devBranch + "; git pull");
+    console.log("");
+    console.log("Cross your fingers and hope nobody else has made conflicting changes.");
+    console.log("If you do the steps above quickly, conflicts are less likely.");
+    console.log("");
+    console.log("git merge add_" + algID);
+    console.log("");
+    console.log("Resolve any conflicts (eg add extra code of yours plus others)");
+    console.log("");
+    console.log("git commit -a; git push");
 }
 
 /*
