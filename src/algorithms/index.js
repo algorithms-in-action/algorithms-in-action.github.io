@@ -143,18 +143,18 @@ const allalgs = {
   },
 
   'msort_arr_bup': {
-    name: 'Merge Sort (bottom up)',             // for bottom up
+    name: 'Merge Sort (bottom up)',
     noDeploy: false,
-    category: 'Sort',                           // for bottom up
-    explanation: Explanation.msort_arr_bup,     // for bottom up,  working yet
-    param: <Param.msort_arr_bup />,              // same as top down
-    instructions: Instructions.msort_arr_bup,    // for bottom up same as top down
-    extraInfo: ExtraInfo.msort_arr_bup,          // same as top down
+    category: 'Sort', 
+    explanation: Explanation.msort_arr_bup,
+    param: <Param.msort_arr_bup />,
+    instructions: Instructions.msort_arr_bup,
+    extraInfo: ExtraInfo.msort_arr_bup,
     pseudocode: {
-      sort: Pseudocode.msort_arr_bup, // same as top down
+      sort: Pseudocode.msort_arr_bup,
     },
     controller: {
-      sort: Controller.msort_arr_bup,// same as top down
+      sort: Controller.msort_arr_bup,
     },
   },
 
@@ -458,11 +458,6 @@ const allalgs = {
     noDeploy: false,
     name: 'Horspool\'s',
     category: 'String Search',
-    /*
-    Todo:
-     1. Add explanation and extra info markdown contents
-     2. Implement controller (check bookmark)
-    */
     explanation: Explanation.HSSExp,
     param: <Param.HSSParam />,
     instructions: Instructions.HSSInstruction,

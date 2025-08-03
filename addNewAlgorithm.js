@@ -1,13 +1,14 @@
-// standalone JS - needs Node.js installed; run with node <thisfile>
+// standalone JS - needs Node.js installed; run with
+// node <thisfile>
 //
 // Idea here is to have a program that helps with creation of a new AIA
 // algorithm module.  Reads in the algorithm name and an ID used internally
 // in code, filenames, etc.  Output unix commands to create all the extra files
 // (currently copy the heapsort files; they will need to be edited for the
 // new algorithm), plus some snippets of code and indications of where to
-// put them so we can just edit a bunch of files and mostly copy+paste.
-// XXX It would be nice to be able to say what files to copy (not Heapsort)
-// but filenames are not really consistent enough currently.
+// put them so we can mostly copy+paste.
+// XXX It would be nice to be able to say what algorithm to copy (not Heapsort)
+// and input algCat but filenames are not really consistent enough currently.
 
 const readline = require('readline');
 
@@ -22,7 +23,7 @@ const rl = readline.createInterface({
 
 let algName;
 let algID;
-let algCat = 'Sort'; // XXX Best input this also?
+let algCat = 'Sort';
 console.log("What's the name of your new algorithm used in menus etc, eg 2-3-4 Tree? ");
 
 rl.on('line', (line) => {
@@ -43,17 +44,21 @@ rl.on('close', () => {
 });
 
 // let devBranch = "<development branch>"
-let devBranch = "2025_sem2"
+let devBranch = "2025_sem2" // XXX
 
 let doIt = (algName, algID) => {
     console.log("");
     console.log("Guide to adding algorithm named " + algName + " with ID " + algID);
     console.log("(best save this in a file and keep track of your progress)");
+    console.log("If you follow these steps exactly (recommended) your new algorithm");
+    console.log("will initially be a copy of Heapsort (you can then edit it as desired).");
+    console.log("It will not appear in algorithm menus but can be accessed via the URL.");
+    console.log("<base URL>/alg=" + algID + "&mode=sort");
     console.log("");
     console.log("Execute the following commands from the AIA repository directory:");
     console.log("");
     console.log("git switch " + devBranch + "; git pull");
-    console.log("git switch +c add_" + algID);
+    console.log("git switch -c add_" + algID);
     console.log("");
     console.log("cp src/algorithms/controllers/heapSort.js src/algorithms/controllers/" + algID + ".js");
     console.log("git add src/algorithms/controllers/" + algID + ".js");
@@ -70,13 +75,13 @@ let doIt = (algName, algID) => {
     console.log("but best defer that until after you have added the new algorithm");
     console.log("");
     console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/controllers/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/explanations/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/extra-info/index.js");
+    console.log("echo \"export { default as " + algID + "} from './" + algID + ".md'\" >> src/algorithms/explanations/index.js");
+    console.log("echo \"export { default as " + algID + "} from './" + algID + ".md'\" >> src/algorithms/extra-info/index.js");
     console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/parameters/index.js");
     console.log("echo \"export { default as " + algID + "} from './" + algID
 + "'\" >> src/algorithms/pseudocode/index.js");
     console.log("");
-    console.log("Edit src/algorithms/index.js to add to the allalgs definition; something like:");
+    console.log("Edit src/algorithms/index.js to add the following to the allalgs definition:");
     console.log("  '" + algID + "': {");
     console.log("    name: '" + algName + "',");
     console.log("    noDeploy: false,");
@@ -91,8 +96,9 @@ let doIt = (algName, algID) => {
     console.log("    controller: {");
     console.log("      sort: Controller." + algID + ",");
     console.log("    },");
+    console.log("  },");
     // XXX ...
-    console.log("XXX Above may change with changes to index generation code");
+    console.log("Note: above may change when code for algorithm index generation is modified");
     console.log("");
     console.log("Make sure the system compiles and existing algorithms run OK.");
     console.log("This may require checking and re-working some of the steps above.");
