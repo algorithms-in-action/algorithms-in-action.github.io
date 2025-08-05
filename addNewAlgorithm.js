@@ -115,6 +115,15 @@ let doIt = (algName, algID) => {
     console.log("Resolve any conflicts (eg add extra code of yours plus others)");
     console.log("");
     console.log("git commit -a; git push");
+    console.log("");
+    console.log("Congratulations! The main repository " + devBranch + " now has your new algorithm.");
+    console.log("You should probably also push your branch to the main repository:");
+    console.log("git switch " + algID + "; git merge " + devBranch);
+    console.log("git git push --set-upstream origin " + algID);
+    console.log("");
+    console.log("If others are working on " + devBranch + ", best merge any changes as soon as possible.");
+    console.log("");
+    console.log("");
 }
 
 /*
