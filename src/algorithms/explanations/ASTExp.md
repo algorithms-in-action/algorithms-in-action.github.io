@@ -19,7 +19,7 @@ algorithms that can be viewed as having a similar structure.
 Others of these algorithms work with weighted graphs
 where the aim is to find the least cost path(s), while BFS and DFS
 ignore edge weights and Prim's
-algorithm finds a minumum spanning tree of the graph (the least cost 
+algorithm finds a minimum spanning tree of the graph (the least cost 
 set of edges that connects all nodes, if the graph is connected).
 
 These graph traversal algorithms can be used for both directed
