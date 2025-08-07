@@ -52,6 +52,16 @@ class Array1DRenderer extends Array2DRenderer {
     this.toggleZoom(true);
 
     this.maxStackDepth = 0;
+    // XXX prototype stuff for insertion sort where we can have
+    // the array to sort then a gap then the tmp variable and do
+    // tweening for the moving of values around. Need to define
+    // setColumnGapAt here and in the controller use the last array
+    // element as tmp and set the previous element as the gap.
+    // Best change the color of the indexAfterGap also so it's the same
+    // as other variables.
+    this.columnGapAt = undefined; // set to a number for a gap in array
+    // this.columnGapAt = 10; // for testing
+    this.indexAfterGap = 'tmp';
   }
 
   // XXX "Warning: Each child in a list should have a unique "key" prop.
@@ -141,7 +151,8 @@ class Array1DRenderer extends Array2DRenderer {
                           }}
                           /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                           className={classes(
-                            styles.col,
+                            (j === this.columnGapAt ? styles.columnGap : styles.col),
+                            // styles.col,
                             col.faded && styles.faded,
                             col.selected && styles.selected,
                             col.selected1 && styles.selected1,
@@ -161,7 +172,8 @@ class Array1DRenderer extends Array2DRenderer {
                               col.style && col.style.textStyle,
                             )}
                           >
-                            {this.toString(col.value)}
+                            {(j == this.columnGapAt ? ' '
+                              : this.toString(col.value))}
                           </motion.span>
                         { (ALGOS_USING_FLOAT_BOX.includes(algo) && (
                             <div
@@ -202,7 +214,12 @@ class Array1DRenderer extends Array2DRenderer {
 
                   return (
                     <div className={classes(styles.col, styles.index)} key={i}>
-                      <span className={styles.value}>{i}</span>
+                      <span className={styles.value}>
+                        {(i-1 == this.columnGapAt ? ' '
+                          : i-1 == this.columnGapAt+1 ?  this.indexAfterGap
+                          : i
+                        )}
+                      </span>
                     </div>
                   );
                 })}
