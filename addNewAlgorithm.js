@@ -122,8 +122,8 @@ let doIt = (algName, algID) => {
     console.log("");
     console.log("Congratulations! The main repository " + devBranch + " now has your new algorithm.");
     console.log("You should probably also push your branch to the main repository:");
-    console.log("git switch " + algID + "; git merge " + devBranch);
-    console.log("git git push --set-upstream origin " + algID);
+    console.log("git switch add_" + algID + "; git merge " + devBranch);
+    console.log("git git push --set-upstream origin add_" + algID);
     console.log("");
     console.log("If others are working on " + devBranch + ", best merge any changes as soon as possible.");
     console.log("");
