@@ -112,7 +112,11 @@ let doIt = (algName, algID) => {
     console.log("");
     console.log("git merge add_" + algID);
     console.log("");
-    console.log("Resolve any conflicts (eg add extra code of yours plus others)");
+    console.log("Resolve any conflicts (eg add extra code of yours plus others).");
+    console.log("Note: here and elsewhere when multiple files are changed, there may");
+    console.log("be spurious compile errors. npm recognises when (some) files are modified");
+    console.log("and incrementally recompiles but appears not to handle importing properly.");
+    console.log("You may need to stop the npm process and resart it with a fresh recompile.");
     console.log("");
     console.log("git commit -a; git push");
     console.log("");
