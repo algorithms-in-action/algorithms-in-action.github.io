@@ -30,3 +30,4 @@ export { linearProbing, doubleHashing, chaining } from './HashingInsertion';
 export { linearSearch, doubleSearch, chainingSearch } from './HashingSearch';
 export { default as isort} from './isort'
 export { default as BSTrec} from './BSTrec'
+export { default as msort_list_td} from './msort_list_td'

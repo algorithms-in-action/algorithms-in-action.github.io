@@ -25,3 +25,4 @@ export { default as DFSrecInfo } from './DFSrecInfo.md';
 export { default as HashingInfo } from './HashingInfo.md';
 export { default as isort} from './isort.md'
 export { default as BSTrec} from './BSTrec.md'
+export { default as msort_list_td} from './msort_list_td.md'

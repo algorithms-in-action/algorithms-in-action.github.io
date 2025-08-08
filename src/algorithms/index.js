@@ -188,9 +188,23 @@ const allalgs = {
       sort: Controller.msort_arr_nat,
     },
   },
-
+  'msort_list_td': {
+    name: 'Merge Sort (for lists)',
+    noDeploy: false,
+    category: 'Sort',
+    explanation: Explanation.msort_list_td,
+    param: <Param.msort_list_td/>,
+    instructions: Instructions.msort_list_td,
+    extraInfo: ExtraInfo.msort_list_td,
+    pseudocode: {
+      sort: Pseudocode.msort_list_td,
+    },
+    controller: {
+      sort: Controller.msort_list_td,
+    },
+  },
   'msort_lista_td': {
-    name: 'Merge Sort (lists)',
+    name: 'Merge Sort (lists as arrays)',
     category: 'Sort',
     explanation: Explanation.msort_lista_td,
     param: <Param.msort_lista_td />,
