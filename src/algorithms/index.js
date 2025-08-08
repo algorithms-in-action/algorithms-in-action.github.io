@@ -221,6 +221,21 @@ const allalgs = {
       search: Controller.binaryTreeSearch,
     },
   },
+  'BSTrec': {
+    name: 'Binary Search Tree (recursive)',
+    noDeploy: false,
+    category: 'Sort',
+    explanation: Explanation.BSTrec,
+    param: <Param.BSTrec/>,
+    instructions: Instructions.BSTrec,
+    extraInfo: ExtraInfo.BSTrec,
+    pseudocode: {
+      sort: Pseudocode.BSTrec,
+    },
+    controller: {
+      sort: Controller.BSTrec,
+    },
+  },
   'TTFTree': {
     name: '2-3-4 Tree',
     category: 'Insert/Search',

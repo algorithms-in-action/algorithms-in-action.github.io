@@ -188,3 +188,4 @@ export const DFSrecInstruction = graphInstructions;
 export const HashingLPDHInstruction = hashingInstructions;
 export const HashingCHInstruction = hashingInstructions;
 export const isort = sortInstructions;
+export const BSTrec = sortInstructions;
