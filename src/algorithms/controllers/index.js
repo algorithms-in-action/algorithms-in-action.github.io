@@ -30,3 +30,4 @@ export { default as HashingInsertion } from './HashingInsertion';
 export { default as HashingSearch } from './HashingSearch';
 export { default as HashingDelete } from './HashingDelete';
 export { default as HashingChainingInsertion} from './HashingChainingInsertion'
+export { default as isort} from './isort'

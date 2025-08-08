@@ -28,3 +28,4 @@ export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
 export { linearProbing, doubleHashing, chaining } from './HashingInsertion';
 export { linearSearch, doubleSearch, chainingSearch } from './HashingSearch';
+export { default as isort} from './isort'

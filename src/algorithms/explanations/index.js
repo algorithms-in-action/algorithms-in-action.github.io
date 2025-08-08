@@ -23,3 +23,4 @@ export { default as BFSExp } from './BFSExp.md';
 export { default as DFSExp } from './DFSExp.md';
 export { default as DFSrecExp } from './DFSrecExp.md';
 export { default as HashingExp } from './HashingExp.md';
+export { default as isort} from './isort.md'
