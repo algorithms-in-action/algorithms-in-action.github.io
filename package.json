@@ -58,6 +58,7 @@
     ]
   },
   "dependencies": {
+    "form-data": ">=4.0.4",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
@@ -90,6 +91,7 @@
     "sass": "^1.50.0"
   },
   "devDependencies": {
+    "form-data": ">=4.0.4",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@testing-library/react-hooks": "^8.0.1",
     "electron": "^31.4.0",
