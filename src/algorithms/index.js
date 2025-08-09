@@ -466,6 +466,19 @@ const allalgs = {
     },
   },
 
+  'gwrap': {
+    name: 'Convex Hull (gift wrapping)',
+    noDeploy: false,
+    category: 'Sort',
+    explanation: Explanation.gwrap,
+    param: <Param.gwrap/>,
+    instructions: Instructions.gwrap,
+    extraInfo: ExtraInfo.gwrap,
+    pseudocode: {
+      sort: Pseudocode.gwrap,
+    },
+  },
+
   'unionFind': {
     name: 'Union Find',
     category: 'Set',

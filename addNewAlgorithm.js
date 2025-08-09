@@ -71,6 +71,7 @@ let doIt = (algName, algID) => {
     console.log("cp src/algorithms/extra-info/HSInfo.md src/algorithms/extra-info/" + algID + ".md");
     console.log("git add src/algorithms/extra-info/" + algID + ".md");
     console.log("echo \"export const " + algID + " = sortInstructions;\" >> src/algorithms/instructions/index.js");
+    console.log("");
     console.log("The files above (and others) will need to be edited during development");
     console.log("but best defer that until after you have added the new algorithm");
     console.log("");
@@ -98,6 +99,7 @@ let doIt = (algName, algID) => {
     console.log("    },");
     console.log("  },");
     // XXX ...
+    console.log("");
     console.log("Note: above may change when code for algorithm index generation is modified");
     console.log("");
     console.log("Make sure the system compiles and existing algorithms run OK");
@@ -117,6 +119,10 @@ let doIt = (algName, algID) => {
     console.log("be spurious compile errors. npm recognises when (some) files are modified");
     console.log("and incrementally recompiles but appears not to handle importing properly.");
     console.log("You may need to stop the npm process and resart it with a fresh recompile.");
+    console.log("");
+    console.log("Also, througout development, those last two commands are your friends.");
+    console.log("If you do them frequently, any changes made by others can be dealt with");
+    console.log("relatively quickly. Several small merges are easier than one big one.");
     console.log("");
     console.log("git commit -a; git push");
     console.log("");

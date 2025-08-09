@@ -190,3 +190,4 @@ export const HashingCHInstruction = hashingInstructions;
 export const isort = sortInstructions;
 export const BSTrec = sortInstructions;
 export const msort_list_td = sortInstructions;
+export const gwrap = sortInstructions;
