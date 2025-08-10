@@ -148,7 +148,8 @@ const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
 
 // This is now used for initialisation in EuclideanMatrixParams so it needs
 // to be outside that function and needs extra parameters passed in
-// XXX returns null if there is an error - SHOULD CHECK RETURN VALUE!
+// XXX Could null if there is an error - BUT SHOULD CHECK RETURN VALUE!
+// Since return value is not currently checked we return [] instead...
 const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage, ALGORITHM_NAME) => {
   const textInput = value.replace(/\s+/g, '');
   // accept pairs and triples; pairs are padded out with default
@@ -172,7 +173,8 @@ const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage, ALGORITHM
     return newData2;
   } else {
     setMessage(errorParamMsg(ALGORITHM_NAME, EDGES_EXAMPLE));
-    return null;
+    // return null;
+    return [];
   }
 };
 
@@ -453,7 +455,6 @@ function EuclideanMatrixParams({
   // components/DataStructures/Graph/GraphRenderer/index.js) so
   // coordinates here can be updated
   const moveNode = (nodeID, x, y) => {
-    // console.log(['moveNode', nodeID, x, y]);
     const newData1 = data1.map((row, index) => {
       if (index === nodeID) {
         return {
@@ -868,10 +869,14 @@ export default EuclideanMatrixParams;
 // check if string is list of pairs/triples etc of numbers
 // XXX could generalise a bit and use for other code, eg Union Find
 function isListofTuples(value, minLen, maxLen) {
-  if (!value) return false;
+  // may want empty list sometimes! - XXX some algorithms should check
+  // Some of the code below assumes at least one tuple so we use an
+  // explicit test here
+  // if (!value) return false;
+  if (!value) return true;
 
   // ensuring only allowable characters
-  if (!/^[0-9,-\s]+$/.test(value)) return false;
+  if (!/^[0-9,-\s]*$/.test(value)) return false;
 
   // splits the string into an array of tuples
   const tuples = value.split(',').map((tuple) => tuple.trim());

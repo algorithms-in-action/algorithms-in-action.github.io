@@ -1,186 +1,98 @@
 import parse from '../../pseudocode/parse';
 
 export default parse(`
-\\Note{  REAL specification of heapsort animation
+
+
+\\Code{
+Main
+ConvexHull(G, n) // XXX \\B start
+    \\Expl{ Given a graph G, find a path from the start node n to an
+            end node.  It is assumed the end node(s) are defined
+            separately; if there are no end nodes, paths to all connected
+            nodes are found. Nodes are numbered 1..nmax. Returns the Parent
+            array, which gives the previous node in the path from s to the
+            node i (if one has been found; Parent[i] = 0 otherwise).
+    \\Expl}
+
+\\In{
+    initialise all parents to null \\B init
+    \\Expl{ We initialise to some special value so we can later check if a
+        parent has been assigned (we display null as an empty cell).
+        The start node is the implicit "frontier" for the top level DFS1
+        call. It is not
+        necessary to understand the frontier.  We mention it just for
+        comparison with the iterative version of DFS and related graph
+        search algorithms.
+    \\Expl}
+    result <- DFS1(G, n, 0) // recursive DFS with zero as parent node \\B top_call
+    return result \\B finish
+    \\Expl{ If there can be several end nodes we may want to
+        return which one is found as well as the Parent array for
+        successful searches (it defines a path from the end node back to
+        the start node).  Here we highlight the path found in
+        the Parent array.
+    \\Expl}
+\\In}
+//======================================================================
+\\Note{
+    Whenever DFS1 is called, we should push (n,p) onto the stack displayed
+    in the animation; pop stack on return.
+\\Note}
+DFS1(G, n, p) // Search from node n using parent node p. This visits all \\B dfs1
+        // nodes connected to n, ignoring nodes with parents already
+        // assigned (as if these nodes have been removed from G).
+\\In{
+    if Parent[n] = null // Ignore n if Parent[n] has been assigned \\B check_parent
+    \\In{
+        Parent[n] <- p \\B assign_parent
+        \\Expl{ Node n is now finalised.
+        \\Expl}
+        if is_end_node(n) \\B check_end
+        \\In{
+            return FOUND // Success! \\B found
+            \\Expl{ If there can be several end nodes we may want to
+                return which one is found as well as the Parent array,
+                which defined the path from the end node back to the start.
+            \\Expl}
+        \\In}
+        // The neighbouring nodes are now part of the (implicit) frontier \\B frontier
+        \\Expl{ It is not necessary to understand the frontier.
+            We mention it just for comparison with the iterative version
+            of DFS and related graph search algorithms. The neighbouring nodes
+            will be checked via a recursive call in the loop below (finalised
+            nodes will be ignored).
+        \\Expl}
+        for each node m neighbouring n // G has edge from n to m \\B neighbours
+        \\Note{ When this is first reached, all neighbouring nodes
+            should change to the "frontier" colour (see iterative DFS)
+            unless they are already finalised (have parent assigned)
+            and whenever this line is reached the n-m edge should be
+            highlighted. For iterative DFS, the m nodes are all pushed onto
+            the stack then the last one is popped off and visited if
+            required. For this recursive version we don't have an
+            explicit stack but have an implicit stack that has a
+            "continuation" that will look at the subsequent m nodes.
         \\Note}
-        
-        \\Code{
-        Main
-        HeapSort(A, n) // Sort array A[1]..A[n] in ascending order. \\B 1
-        \\Expl{  We are not using A[0] (for languages that start array indices at 0).
+        \\Expl{ Any order of considering the nodes is ok.  Here we
+            consider the largest node numbers first, which gives the
+            same traversal order as the iterative coding.
         \\Expl}
         \\In{
-            BuildHeap(A, n)    \\Ref BuildHeap 
-            \\Expl{  First reorder the array elements so they form a (max) heap
-                    (no element is larger than its parent). The root node, A[1],
-                    is therefore the largest element.  
-            \\Expl}
-            SortHeap(A, n)    \\Ref SortHeap 
-            \\Expl{  Convert the heap into a sorted array. The largest element is
-                    put in the correct position A[n] first and we work backwards 
-                    from there, putting the next-largest element in its place, 
-                    etc, shrinking the heap by one element at each step. 
-            \\Expl}
+            search G starting from m, with n as the parent \\Ref RECDFS
         \\In}
-        \\Code}
-        
-        \\Code{
-        BuildHeap
-        // build heap
-        for k <- Index of last non-leaf downto 1    \\Ref BHForLoop 
-        \\Expl{  We use bottom-up heap creation, to build the heap from the bottom
-                up (tree view) and right to left (array view). The leaves are 
-                already heaps of size 1, so nothing needs to be done with them. 
-                Working backwards through the heap, and starting from the last 
-                non-leaf node, we form heaps of up to size 3 (from 2 leaves plus
-                their parent k), then 7 (2 heaps of size 3 and their parent k) 
-                etc, until the whole array is a single heap. 
-        \\Expl}
-        \\In{
-            DownHeap(A, k, n)    \\Ref DownHeapk 
-            \\Expl{  DownHeap is where smaller heaps are combined to form larger
-                    heaps. The children of node k are already heaps, so we need
-                    only be concerned about where A[k] fits in. 
-            \\Expl}
-        \\In}
-        \\Code}
-        
-        \\Code{
-        BHForLoop
-        for k <- n/2 downto 1 \\B 4
-        \\Expl{  Using root index 1, the last non-leaf has index n/2 (rounded down
-                to the nearest integer).
-        \\Expl}
-        \\Code}
-        
-        \\Code{
-        DownHeapk
-        // DownHeap(A, k, n)
-        i <- k \\B 6
-        \\Expl{  Set index i to the root of the subtree that we are now going to 
-                make into a heap. 
-        \\Expl}
-        heap <- False // 'heap' is a flag \\B 7
-        while not (IsLeaf(A[i]) or heap) \\B 8
-        \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
-                We also terminate the loop if the children of A[i] are in the 
-                correct order relative to the parent, since we know that subtrees
-                lower down already meet the heap condition. We use the heap flag
-                to test the heap condition.  
-        \\Expl}
-        \\In{        
-            j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargestk 
-            \\Expl{  Find the larger of the two children of the node.
-            \\Expl}
-            if A[i] >= A[j] \\B 14
-            \\In{
-                heap <- True \\B 15
-                \\Expl{  The heap condition is satisfied (the root is larger 
-                        than both children), so exit from while loop. 
-                \\Expl}
-            \\In}
-            else
-            \\In{
-                Swap(A[i], A[j]) // Swap root element with (larger) child \\B 17
-                i <- j \\B 18
-            \\In}
-        \\In}        
-        \\Code}
-        
-        \\Code{
-        IndexOfLargestk
-        if 2*i < n and A[2*i] < A[2*i+1] \\B 10
-        \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
-                a right child) is A[2*i+1]; set j to the index of the larger child.
-        \\Expl}
-        \\In{
-            j <- 2*i+1 \\B 11
-        \\In}
-        else
-        \\In{
-            j <- 2*i \\B 13
-        \\In}
-        \\Code}
-        
-        \\Code{
-        SortHeap
-        // Sort heap
-        while n > 1 \\B 20
-        \\Expl{  A[1] always has the largest value not yet processed in the 
-                sorting phase. A[n] is the last array element in the heap-ordered
-                array that is not yet sorted. Repeatedly swap these two values, 
-                so that the largest element is now in the last place, decrement n 
-                and re-establish the heap condition for the remaining heap (which
-                now has one less element). Repeat this procedure until n=1, that 
-                is, only one node remains.  
-        \\Expl}
-        \\In{
-            Swap(A[n], A[1]) \\B 21
-            n <- n-1 \\B 22
-            DownHeap(A, 1, n)    \\Ref DownHeap1
-            \\Expl{  Now that the root node has been swapped to the end, A[1] may 
-                    no longer be the largest element in the (reduced size) heap.
-                    Use the DownHeap operation to restore the heap condition. 
-            \\Expl}
-        \\In}
-        // Done \\B 37
-        \\Code}
-        
-        \\Note{  This is very similar to DownHeapk.
-        \\Note}
-        
-        \\Code{
-        DownHeap1
-        // DownHeap(A, 1, n)
-        i <- 1 \\B 24
-        \\Expl{  Set index i to the root of the subtree that we are now going to 
-                examine. 
-        \\Expl}
-        heap <- False // 'heap' is a flag \\B 25
-        while not (IsLeaf(A[i]) or heap) do \\B 26
-        \\Expl{  Traverse down the heap until the current node A[i] is a leaf. 
-                We also terminate the loop if the children of A[i] are in the 
-                correct order relative to the parent, since we know that subtrees
-                lower down already meet the heap condition. We use the heap flag
-                to test the heap condition.  
-        \\Expl}
-        \\In{        
-            j <- IndexOfLargestChild(A, i, n)    \\Ref IndexOfLargest0 
-            \\Expl{  Find the larger of the two children of the node. 
-            \\Expl}
-            if A[i] >= A[j]         // Parent is larger than the largest child \\B 32
-                                                                          
-            \\In{
-                heap <- True \\B 33
-                \\Expl{  The heap condition is satisfied, that is, the root is 
-                        larger than both children, so we exit from the while loop.
-                \\Expl}
-            \\In}
-            else
-            \\In{
-                Swap(A[i], A[j])    // Swap root element with (larger) child \\B 35
-                i <- j \\B 36
-            \\In}
-        \\In}
-        \\Code}
-        
-        \\Note{  Same as IndexOfLargestk (could possible reuse that; it is duplicated 
-                here because it might make linking with animation easier if each code 
-                expansion is used from a single place).
-        \\Note}
-        
-        \\Code{
-        IndexOfLargest0
-        if 2*i < n and A[2*i] < A[2*i+1] \\B 28
-        \\Expl{  The left child of A[i] is A[2*i] and the right child (if there is
-                a right child) is A[2*i+1]; set j to the index of the larger child.
-        \\Expl}
-        \\In{
-            j <- 2*i+1 \\B 29
-        \\In}
-        else
-        \\In{
-            j <- 2*i \\B 31
-        \\In}
-        \\Code}    
+    \\In}
+    return NOTFOUND  // no end node found \\B not_found
+\\In}
+\\Code}
+\\Code{
+RECDFS
+    // *recursively* call DFS1 and return if successful \\B rec_dfs1
+    if DFS1(G, m, n) = FOUND \\B rec_dfs1_done
+    \\In{
+        return FOUND // return if end node found, otherwise continue \\B rec_found
+    \\In}
+\\Code}
+
+
+
 `);

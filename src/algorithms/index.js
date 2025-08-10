@@ -474,8 +474,11 @@ const allalgs = {
     param: <Param.gwrap/>,
     instructions: Instructions.gwrap,
     extraInfo: ExtraInfo.gwrap,
+    controller: { // needed???
+      find: Controller.gwrap,
+    },
     pseudocode: {
-      sort: Pseudocode.gwrap,
+      find: Pseudocode.gwrap,
     },
   },
 
