@@ -15,10 +15,10 @@ a:hover{
 
 -----
 
-Geeks for Geeks Link: [**Convex Hull (Gift wrapping)**][G4GLink]
+Geeks for Geeks Link: [**Convex Hull Algorithms**][G4GLink]
 
 
-[G4GLink]: https://www.geeksforgeeks.org/XXX/
+[G4GLink]: https://www.geeksforgeeks.org/dsa/convex-hull-algorithm/
 
 ## Exercises/Exploration
 
@@ -28,12 +28,18 @@ always contains the maximum/minimum number of points?
 
 The current coding starts by finding the left-most point (minimum x
 coordinate value). If there are multiple such points, the one with the
-minimum y coordinate value is chosen - what could go wrong if this was
-not done?
+minimum y coordinate value is chosen - what could go wrong if an
+arbitrary one of these points was chosen?  Similarly, when choosing the
+next point, there can be multiple points with the same minimal clockwise
+rotation from the current point. The current code picks the one with the
+smallest point/node number; what could happen if another choice was
+made?
 
 Consider the cases early in the scan where the "next" node is to the
-right of the current node. The choice of next node will maximise the
+right of the current node, **p**. The choice of next node will maximise the
 gradient of the line between the current and next nodes. Use this to
-derive a formula to choose between two candidates for the next node. How
-does your formula compare with the formula used in the algorithm? What
+derive a test to choose between nodes **i** and **q** for the next node.
+Does your test make sense in the later parts of the scan where the next
+node is to the left of **p**?
+How does your test compare with the test used in the algorithm? What
 could go wrong if a formula based on gradients was used?

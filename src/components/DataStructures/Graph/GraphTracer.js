@@ -844,6 +844,12 @@ class GraphTracer extends Tracer {
     const edge = this.findEdge(source, target);
     if (!edge) return;  // Exit if edge is not found
 
+    // remove any current color
+    edge.visitedCount1 = 0;
+    edge.visitedCount2 = 0;
+    edge.visitedCount3 = 0;
+    edge.visitedCount4 = 0;
+
     if (colorIndex === 1) {
       edge.visitedCount1 = 1;
     } else if (colorIndex === 2) {
@@ -1200,6 +1206,7 @@ class GraphTracer extends Tracer {
 
   /**
    * input the node id and set the x and y coordinates of this node
+   * Note: the coordinates are pixels, not the numbers on graph axes
    * @param {node} n find the node with the id n
    * @param {float} x new x coordinate of the node
    * @param {float} y new y coordinate of the node
@@ -1210,6 +1217,11 @@ class GraphTracer extends Tracer {
     node.y = y;
     // refresh rectangle size
     this.rectangle_size();
+  }
+
+  getNodePosition(n) {
+    let node = this.findNode(n);
+    return [node.x, node.y];
   }
 
   // as above but use deltas, not absoloute positions

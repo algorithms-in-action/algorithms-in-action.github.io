@@ -1,5 +1,5 @@
 \Note{
-Gift wrapping/Jarvis algm for convex hull, draft
+Gift wrapping/Jarvis algm for convex hull
 
 Includes optional optimisation - ignore initially, maybe fill in later
 and have option selected like path compression in union find algm.
@@ -22,10 +22,9 @@ giftWrap(A, n) // return convex hull of points P[0]...P[n-1] in a plane
     minX <-  point with min. X value
     \Expl{ We could choose any point guaranteed to be on the convex
         hull. Here we use a point with the minimal X coordinate.  We
-        scan through all points to find it.
+        scan through all points to find it. If there are multiple points
+        with the minimal X coordinate we choose one with a minimal Y coordinate.
     \Expl}
-\Note{ XXX mention multiple minumal points??? Maybe not.
-\Note}
 \Note{ Alternative version of line above
     Find point with min. X value (and optionally max X, min Y, max Y also)
     \Expl{ We could choose any point guaranteed to be on the convex
@@ -34,10 +33,12 @@ giftWrap(A, n) // return convex hull of points P[0]...P[n-1] in a plane
         this scan we can optionally find other points guaranteed to be
         on the hull; here we choose points with extreme X or Y
         coordinates.
+        If there are multiple points with the same extreme X or Y coordinates
+        then the other coordinate is used to break the tie.
     \Expl}
     Optionally remove points inside quadrilateral minX, maxY, maxX, minY \Ref RemoveQuad
 \Note}
-    \Expl{ If we know several points that are defintely on the
+    \Expl{ If we know several points that are definitely on the
         hull, any points strictly inside this polygon can be removed
         from consideration. This can speed up the rest of the algorithm.
     \Expl}
@@ -80,7 +81,7 @@ q <- (p + 1) mod n // initialise q to a point other than p
   in the array (or 0 if p is the last point).
 \Expl}
 for i <- point in P
-\Expl{ We loop over all points, in order. We could ignore point p but it
+\Expl{ We loop over all points. We could ignore point p but it
 does no harm. The path p->p->q is considered straight. Geometric
 algorithms often have tricky cases such as this.  Another subtlety is
 the ordering of the points - see the "MORE" tab for details.
@@ -132,7 +133,7 @@ if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0
 
 \Note{
 // Javascript program to find convex hull of a set of points. Refer 
-// https://www.geeksforgeeks.org/orientation-3-ordered-points/
+// https://www.geeksforgeeks.org/dsa/orientation-3-ordered-points/
 // for explanation of orientation()
 
 class Point
@@ -144,19 +145,21 @@ class Point
     }
 }
 
+// constants for collinear/Clockwise/Counterclockwise
+let GoStraight = 0;
+let GoClockwise = 1;
+let GoCounterCW = 2;
+
 // To find orientation of ordered triplet (p, q, r).
     // The function returns following values
-    // 0 --> p, q and r are collinear
-    // 1 --> Clockwise
-    // 2 --> Counterclockwise
+    // GoStraight --> p, q and r are collinear
+    // GoClockwise --> Clockwise
+    // GoCounterCW --> Counterclockwise
 function orientation(p, q, r)
 {
-    let val = (q.y - p.y) * (r.x - q.x) -
-                  (q.x - p.x) * (r.y - q.y);
-       
-        // XXX use defined constants, not magic numbers:(
-        if (val == 0) return 0;  // collinear
-        return (val > 0)? 1: 2; // clock or counterclock wise
+    let val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+    if (val == 0) return GoStraight;
+    return (val > 0)? GoClockwise: GoCounterCW;
 }
 
 // Prints convex hull of a set of n points.
@@ -181,11 +184,11 @@ function convexHull(points, n)
             // interracts with this - potentially the next point code could
             // miss the point chosen here (and choose a colinear one
             // instead), causing a loop.
-            // Here we choose the first min we find (lowest point number).
-            // else if (points[i].x === points[l].x && points[i].y < points[l].y)
-                // l = i;
+            // Here we break ties by picking the min y coordinate value
+            else if (points[i].x === points[l].x && points[i].y < points[l].y)
+                l = i;
        
-        // Start from leftmost point, keep moving 
+        // Start from (lowest) leftmost point, keep moving 
         // clockwise until reach the start point
         // again. This loop runs O(h) times where h is
         // number of points in result or output.
@@ -197,7 +200,7 @@ function convexHull(points, n)
             hull.push(points[p]);
        
             // Search for a point 'q' such that 
-            // orientation(p, q, x) is clockwise 
+            // orientation(p, q, x) is clockwise
             // for all points 'x'. The idea is to keep 
             // track of last visited most clock-
             // wise point in q. If any point 'i' is more 
@@ -208,11 +211,10 @@ function convexHull(points, n)
               
             for (let i = 0; i < n; i++)
             {
-               console.log("check orientation", p, i, q);
-               // If i is more clockwise than 
+               // If i is more clockwise than
                // current q, then update q
                if (orientation(points[p], points[i], points[q])
-                                                   == 1)
+                                                   == GoClockwise)
                    // XXX see comment above re choice of first point in
                    // colinear case
                    // Here, if there are multiple points with minimal
