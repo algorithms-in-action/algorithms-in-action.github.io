@@ -1,16 +1,50 @@
-// Gift wrapping convex hull algorithm (based on DFSrec)
-// but code is simpler and has different structure of course.
-// XXX iterative version ends up with fewer "fontier" edges because if
-// you add the node to the frontier again, the previous edge reverts - that
-// should probably be changed??  Not sure about BFS etc
-// Copied and modified from dijkstra.js (nicer code than DFS)
-// Might be some leftover bit from dijkstra.js that could be cleaned up
-// further.
-// XXX add support for multiple end nodes
+// Gift wrapping convex hull algorithm
+// 
+// XXX Based on DFSrec - may still be some leftover rubbish to delete.
+// 
+// XXX Uses EuclideanMatrixParams; need to make some changes to this:
+// 1) The graphs here (initially at least) have no edges - need to change
+// graph generation and adjust display accordingly. Probably best to
+// have a noEdges option like we have weighted and directed as options.
+// 2) The initial display is too big (and too far left) - other
+// algorithms have an array display also and this affects zoom etc. Need
+// to fix this display without breaking other algorithms (code seems a
+// bit messy).
+// 
+// XXX Not properly linked to pseudocode (need more bookmarks and change
+// the bookmarks in this controller code); also will need to animate a
+// few more things.
+// 
+// XXX Currently the "wrapper" uses an edge to a node that is off the
+// screen, usually. It should be off the screen always - need to work
+// more on node position. If the user zooms out it is currently visible
+// - that should be OK. It would be nice if moving the wrapper was done
+// more smoothly.  Currently tweening only really works for nodes, not
+// edges - if this couls be fixed it would be useful for AVL trees and
+// other algorithms also.  Otherwise, perhaps the wrapper could be moved
+// in two steps at least - the first being close to the next node and
+// the second being at the next node. Or maybe the wrapper edge could
+// look a bit different from the hull edges (not too different) so the
+// wrapper could go through the next node at the first step then the new
+// hull edge could change a bit.
+//
+// XXX Maybe p,q,i should be shown explicitly - currently they are all
+// implicit using edges, colors etc (should at least color node i)
+// 
+// XXX Nice to have an option of removing all points in a quadralateral
+// made up of lef, top, right and bottom points. See union-find for an
+// example of such an option.  Need to fix up pseudocode for this (some
+// work has been done). Probably best not give too many details in code
+// or animation - mode details in explanation and/or MORE tab.
+// 
+// XXX a bunch more other stuff mentioned in code below
+// 
+// XXX Color stuff with graphs is a bit of a mess - this is a Global
+// Issue to be worked in separately - communication about this and how
+// merge conflicts are handed may be needed
+
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import {colorsCH} from './convexHullColours';
-import {colors} from './graphSearchColours'; // XX
 
 export default {
   initVisualisers() {
@@ -22,21 +56,23 @@ export default {
     };
   },
 
+  // XXX don't need startNode, endNodes, edgeValueMatrix
+  // Nest parameter code(?)
   run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes, moveNode}) {
     // String Variables used in displaying algo
-    const algNameStr = 'DFSrec';
-    const nStr = 'n';
-    const mStr = 'm';
 
-    const E = [...edgeValueMatrix];
+    // id for wrapper node - could be anything other than a small
+    // integer; '@' looks a bit like a roll of paper/string...
+    // It's not normally visible but may be found if someone searches
+    const wrapperStr = '@';
+
     const coords = [...coordsMatrix];
     const numVertices = edgeValueMatrix.length;
-    const unassigned = ' '; // unassigned parent
-    const parents = []; // parent of each node; initially unassigned
-    const seen = []; // neighbours of finalised node
-    const nodes = [];  
-    const start = startNode - 1; 
-    const end = endNodes[0] - 1;
+    // const E = [...edgeValueMatrix];
+    // edge matrix is NxN matrix of edge weights, zero meaning no edge
+    // Here we ignore edgeValueMatrix and create our own zero matrix
+    const Zeros = new Array(numVertices).fill(0);
+    const E = new Array(numVertices).fill(Zeros);
 
     // Javascript to find convex hull of a set of coords. Refer 
     // https://www.geeksforgeeks.org/dsa/orientation-3-ordered-coords/
@@ -117,8 +153,8 @@ export default {
             // XXX Graph too big and too far left...
             // vis.graph.setZoom(0.5);
             vis.graph.colorNode(c_p, colorsCH.HULLP_N);
-            vis.graph.addEdge('W', c_p);
-            vis.graph.colorEdge(c_p, 'W', colorsCH.HULL_E);
+            vis.graph.addEdge(wrapperStr, c_p);
+            vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
           },
           [E, coords, p, q], 0
         );
@@ -140,18 +176,19 @@ export default {
             // want q s.t. for no i, p->i->q is clockwise
             q = (p + 1) % n;
               
-            chunker.add('start',
+            chunker.add('initQ',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
                 vis.graph.colorNode(c_q, colorsCH.NEXTQ_N);
               },
               [E, coords, p, q], 0
             );
-            let hullHasQ, hullHasI, hullHasPQ, hullHasQI;
+            let hullHasQ, hullHasI, hullHasPI, hullHasQI;
             hullHasQ = hull.includes(q);
-            hullHasPQ = includesConsecutive(hull, p, q);
+            chunker.add('assignI');
             for (let i = 0; i < n; i++)
             {
               hullHasI = hull.includes(i);
+              hullHasPI = includesConsecutive(hull, p, i);
               hullHasQI = includesConsecutive(hull, i, q);
               let old_q = q;
               // If i is more clockwise than
@@ -162,16 +199,16 @@ export default {
                 // Here, if there are multiple coords with minimal
                 // clockwiseness (if thats a word), we pick the first one
                 // (min point number)
-                chunker.add('start',
+                chunker.add('piqTest',
                   (vis, edgeArray, coordsArray, c_p, c_q, c_i) => {
-                    vis.graph.addEdge(c_p, c_q);
+                    vis.graph.addEdge(c_p, c_i);
                     vis.graph.addEdge(c_q, c_i);
-                    vis.graph.colorEdge(c_p, c_q, colorsCH.CLOCKWISE_E);
+                    vis.graph.colorEdge(c_p, c_i, colorsCH.CLOCKWISE_E);
                     vis.graph.colorEdge(c_q, c_i, colorsCH.CLOCKWISE_E);
                   },
                   [E, coords, p, q, i], 0
                 );
-                chunker.add('start',
+                chunker.add('q<-i',
                   (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_q) => {
                     vis.graph.colorNode(c_i, colorsCH.NEXTQ_N);
                     if (h_q)
@@ -182,38 +219,41 @@ export default {
                   [E, coords, p, q, i, hullHasQ], 0
                 );
                 q = i;
-                // defer recalculation of hullHasQ, hullHasPQ - we want
-                // them to refere to the old version of q for now
+                // defer recalculation of hullHasQ - we want
+                // to refer to the old version of q for now
               } else {
-                chunker.add('start',
+                chunker.add('piqTest',
                   (vis, edgeArray, coordsArray, c_p, c_q, c_i) => {
-                    vis.graph.addEdge(c_p, c_q);
+                    vis.graph.addEdge(c_p, c_i);
                     vis.graph.addEdge(c_q, c_i);
-                    vis.graph.colorEdge(c_p, c_q, colorsCH.ANTICLOCK_E);
+                    vis.graph.colorEdge(c_p, c_i, colorsCH.ANTICLOCK_E);
                     vis.graph.colorEdge(c_q, c_i, colorsCH.ANTICLOCK_E);
                   },
                   [E, coords, p, q, i], 0
                 );
               }
-              chunker.add('start',
-                (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_pq, h_qi) => {
-                  if (h_pq)
-                    vis.graph.colorEdge(c_p, c_q, colorsCH.HULL_E);
+              chunker.add('assignI',
+                (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_pi, h_qi) => {
+                  if (h_pi)
+                    vis.graph.colorEdge(c_p, c_i, colorsCH.HULL_E);
                   else
-                    vis.graph.removeEdge(c_p, c_q);
+                    vis.graph.removeEdge(c_p, c_i);
                   if (h_qi)
                     vis.graph.colorEdge(c_q, c_i, colorsCH.HULL_E);
                   else
                     vis.graph.removeEdge(c_q, c_i);
                 },
-                [E, coords, p, old_q, i, hullHasPQ, hullHasQI], 0
+                [E, coords, p, old_q, i, hullHasPI, hullHasQI], 0
               );
-              // now update hullHasQ, hullHasPQ in case q changed above
+              // now update hullHasQ in case q changed above
               hullHasQ = hull.includes(q);
-              hullHasPQ = includesConsecutive(hull, p, q);
             }
        
-            chunker.add( 'start',
+            // XXX this is more animation of add p to hull...
+            // Should move most of this earlier but have to deal with
+            // initial case when q is undefined and we don't have to
+            // add edge etc
+            chunker.add('p<-q',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
                 // Nice to do this in a couple of steps if possile
                 // Move wrapper close then final position with node
@@ -222,14 +262,17 @@ export default {
                 vis.graph.colorEdge(c_p, c_q, colorsCH.HULL_E);
                 vis.graph.colorNode(c_q, colorsCH.HULLP_N);
                 // redo "wrapping" edge
-                vis.graph.removeEdge(c_p, 'W');
-                vis.graph.addEdge('W', c_q);
-                vis.graph.colorEdge(c_q, 'W', colorsCH.HULL_E);
+                vis.graph.removeEdge(c_p, wrapperStr);
+                vis.graph.addEdge(wrapperStr, c_q);
+                vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
                 let [pX, pY] = vis.graph.getNodePosition(c_p);
                 let [qX, qY] = vis.graph.getNodePosition(c_q);
-                let wX = qX + 5 * (qX - pX); // XXX
-                let wY = qY + 5 * (qY - pY);
-                vis.graph.setNodePosition('W', wX, wY);
+                // XXX wrapper position should be colinear but far away
+                // Currently if p and q are close, wrapper may be too
+                // close; also need to consider case where p=q...?
+                let wX = qX + 50 * (qX - pX);
+                let wY = qY + 50 * (qY - pY);
+                vis.graph.setNodePosition(wrapperStr, wX, wY);
               },
               [E, coords, p, q], 0
             );
@@ -237,14 +280,15 @@ export default {
             // respect to p. Set p as q for next iteration, 
             // so that q is added to result 'hull'
             p = q;
+            chunker.add('whileP');
        
         } while (p != l);  // While we don't come to first 
                            // point
         // console.log("Reached (" + coords[p][X] + ", " + coords[p][Y] + ") again");
-        chunker.add( 'start',
+        chunker.add( 'returnHull',
           (vis, edgeArray, coordsArray, c_p, c_q) => {
-            vis.graph.removeEdge(c_p, 'W');
-            vis.graph.removeNode('W');
+            vis.graph.removeEdge(c_p, wrapperStr);
+            vis.graph.removeNode(wrapperStr);
           },
           [E, coords, p, q], 0
         );
@@ -284,8 +328,8 @@ export default {
         vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
         // vis.graph.edges = []
         // Add special node a long way away for "wrapper"
-        vis.graph.addNode('W', 'W');
-        vis.graph.setNodePosition('W', 10, -900);
+        vis.graph.addNode(wrapperStr, wrapperStr);
+        vis.graph.setNodePosition(wrapperStr, 10, -2000);
       },
       [E, coords], 0
     );
