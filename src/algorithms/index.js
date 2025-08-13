@@ -532,11 +532,7 @@ const allalgs = {
 
 };
 
-const algorithms =
-  // Use next line for a version that includes all the algorithms:
-  // allalgs;
-  // Use next line for the deployed version:
-  Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy));
+const algorithms = allalgs;
 
 /**
  * Get the first mode of an algorithm
@@ -551,13 +547,17 @@ export const getDefaultMode = (key) => Object.keys(algorithms[key].pseudocode)[0
 export const getCategory = (key) => algorithms[key].category;
 
 // This function generates a list of algorithms classed by categories
-const generateAlgorithmCategoryList = () => {
+const generateAlgorithmCategoryList = (deployOnly=false) => {
+    const src = deployOnly
+    ? Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy))
+    : algorithms;
+
   const alCatList = [];
   let categoryNum = 0;
 
   // Get all the categories
   // eslint-disable-next-line no-unused-vars
-  for (const [key, value] of Object.entries(algorithms)) {
+  for (const [key, value] of Object.entries(src)) {
     if (!alCatList.some((al) => al.category === value.category)) {
       alCatList.push({
         category: value.category,
@@ -569,7 +569,7 @@ const generateAlgorithmCategoryList = () => {
   }
 
   // For every category, get all the algorithms
-  for (const [key, value] of Object.entries(algorithms)) {
+  for (const [key, value] of Object.entries(src)) {
     const algo = alCatList.find((al) => al.category === value.category);
     algo.algorithms.push({
       name: value.name,
@@ -582,12 +582,16 @@ const generateAlgorithmCategoryList = () => {
 };
 
 // This function generates a list of algorithms classed by categories
-const generateAlgorithmList = () => {
+const generateAlgorithmList = (deployOnly=false) => {
+  const src = deployOnly
+    ? Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy))
+    : algorithms;
+
   const alList = [];
   let alNum = 0;
 
   // For every category, get all the algorithms
-  for (const [key, value] of Object.entries(algorithms)) {
+  for (const [key, value] of Object.entries(src)) {
     alList.push({
       name: value.name,
       shorthand: key,
@@ -604,3 +608,4 @@ export default algorithms;
 export const AlgorithmCategoryList = generateAlgorithmCategoryList();
 export const AlgorithmList = generateAlgorithmList();
 export const AlgorithmNum = generateAlgorithmList().length;
+export const DeployedAlgorithms = generateAlgorithmCategoryList(true);
