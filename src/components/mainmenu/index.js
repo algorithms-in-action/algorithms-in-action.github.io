@@ -8,69 +8,34 @@ import GraphAlgorithms from './GraphAlgorithms';
 import SetAlgorithms from './SetAlgorithms';
 import StringSearchAlgorithms from './StringSearchAlgorithms';
 
+// Only pull algorithms that have property noDeploy set to false
+import { DeployedAlgorithms } from '../../algorithms';
+
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
-// XXX should have algorithms just listed in one place!
-// (eg src/algorithms/index.js)
-// and filtered appropriately rather
-// than have multiple algorithm lists (here, above, SortingAlgorithms.js,
-// InsertSearchAlgorithms.js etc), as was done previously...
-// XXX also fix display code (see XXX elsewhere) - currently ugly and
-// broken; best just use something simple!
-// This version is used just(?) for the main menu search function
-const allAlgorithms = [
-    { name: 'Brute Force', url: `${baseUrl}/?alg=bruteForceStringSearch&mode=search` },
-    { name: "Horspool's", url: `${baseUrl}/?alg=horspoolStringSearch&mode=search` },
-    { name: 'Depth First Search', url: `${baseUrl}/?alg=DFSrec&mode=find` },
-    { name: 'DFS (iterative)', url: `${baseUrl}/?alg=DFS&mode=find` },
-    { name: 'Breadth First Search', url: `${baseUrl}/?alg=BFS&mode=find` },
-    { name: "Dijkstra's (shortest path)", url: `${baseUrl}/?alg=dijkstra&mode=find` },
-    { name: 'A* (heuristic search)', url: `${baseUrl}/?alg=aStar&mode=find` },
-    { name: "Prim's (min. spanning tree)", url: `${baseUrl}/?alg=prim&mode=find` },
-    // prim_old not included in menus
-    { name: "Prim's (simpler code)", url: `${baseUrl}/?alg=prim_old&mode=find` },
-    { name: "Kruskal's (min. spanning tree)", url: `${baseUrl}/?alg=kruskal&mode=find` },
-    { name: "Warshall's (transitive closure)", url: `${baseUrl}/?alg=transitiveClosure&mode=tc` },
-    { name: 'Binary Search Tree', url: `${baseUrl}/?alg=binarySearchTree&mode=search` },
-    { name: '2-3-4 Tree', url: `${baseUrl}/?alg=TTFTree&mode=search` },
-    { name: 'AVL Tree', url: `${baseUrl}/?alg=AVLTree&mode=search` },
-    { name: 'Hashing (Linear Probing)', url: `${baseUrl}/?alg=HashingLP&mode=search` },
-    { name: 'Hashing (Double Hashing)', url: `${baseUrl}/?alg=HashingDH&mode=search` },
-    { name: 'Hashing (Chaining)', url: `${baseUrl}/?alg=HashingCH&mode=search` },
-    { name: 'Union Find', url: `${baseUrl}/?alg=unionFind&mode=find` },
-    { name: 'Heapsort', url: `${baseUrl}/?alg=heapSort&mode=sort` },
-    { name: 'Quicksort', url: `${baseUrl}/?alg=quickSort&mode=sort` },
-    { name: 'Quicksort (Median of 3)', url: `${baseUrl}/?alg=quickSortM3&mode=sort` },
-    { name: 'Merge Sort', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` },
-    { name: 'Merge Sort (Bottom-up)', url: `${baseUrl}/?alg=msort_arr_bup&mode=sort` },
-    { name: 'Merge Sort (Natural)', url: `${baseUrl}/?alg=msort_arr_nat&mode=sort` },
-    // msort_lista_td not included in menus
-    { name: 'Merge Sort (list rep. as array)', url: `${baseUrl}/?alg=msort_lista_td&mode=sort` },
-    { name: 'Radix Sort (MSD/Exchange)', url: `${baseUrl}/?alg=radixSortMSD&mode=sort` },
-    { name: 'Radix Sort (LSD/Straight)', url: `${baseUrl}/?alg=radixSortStraigh&mode=sort` },
-  ];
+/* eslint-disable react/prop-types */
+// Stub to create the HTML for each category container
+// this will be used to dynamically create a category container
+// in the main menu for each unique category present in the master list.
+const CategorySection = ({ category, items }) => (
+  <div className="category-container">
+    <h2 className="category">{category}</h2>
+    {items.map(({ name, url }) => (
+      <a key={url} href={url} className="mainmenu-algo-link">
+        {name}
+      </a>
+    ))}
+  </div>
+);
 
-// const allAlgorithms = [
-//   { name: 'Brute Force', url: 'alg=bruteForceStringSearch&mode=search' },
-//   { name: "Horspool's", url: 'alg=horspoolStringSearch&mode=search' },
-//   { name: 'Depth First Search', url: 'alg=DFSrec&mode=find' },
-//   { name: 'DFS (iterative)', url: 'alg=DFS&mode=find' },
-//   { name: 'Breadth First Search', url: 'alg=BFS&mode=find' },
-//   { name: "Dijkstra's (shortest path)", url: 'alg=dijkstra&mode=find' },
-//   { name: 'A* (heuristic search)', url: 'alg=aStar&mode=find' },
-//   { name: "Prim's (min. spanning tree)", url: 'alg=prim&mode=find' },
-//   { name: "Prim's (simpler code)", url: 'alg=prim_old&mode=find' },
-//   { name: "Kruskal's (min. spanning tree)", url: 'alg=kruskal&mode=find' },
-//   { name: "Warshall's (transitive closure)", url: 'alg=transitiveClosure&mode=tc' },
-//   { name: 'Binary Search Tree', url: 'alg=binarySearchTree&mode=search' },
-//   { name: '2-3-4 Tree', url: 'alg=TTFTree&mode=search' },
-//   { name: 'Union Find', url: 'alg=unionFind&mode=find' },
-//   { name: 'Heapsort', url: 'alg=heapSort&mode=sort' },
-//   { name: 'Quicksort', url: 'alg=quickSort&mode=sort' },
-//   { name: 'Quicksort (Median of 3)', url: 'alg=quickSortM3&mode=sort' },
-//   { name: 'Merge Sort', url: 'alg=msort_arr_td&mode=sort' } // don't include list mergesort?
-// ];
+// Array of objects linking name to url
+const nameToUrl = DeployedAlgorithms.flatMap(({ algorithms }) =>
+  algorithms.map(({ name, shorthand, mode }) => ({
+    name,
+    url: `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
+  }))
+);
 
 const Mainmenu = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -79,9 +44,11 @@ const Mainmenu = () => {
     setSearchTerm(event.target.value);
   };
 
-    const filteredAlgorithms = allAlgorithms.filter(algorithm =>
+    const filteredAlgorithms = nameToUrl.filter(algorithm =>
     algorithm.name.toLowerCase().includes(searchTerm.toLowerCase())
     // XXX nice to add keyword search also
+    // TODO: ask for clarification from client, just the functionality
+    // to do so or do we also need to come up with the keywords ourselves?
   );
   return (
     <div className="mainmenu-container">
