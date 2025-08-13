@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';  // add this line
-import '../../styles/mainmenu.scss';
+import '../../styles/MainMenu.scss';
 import logo from '../../assets/logo.svg';
-import SortingAlgorithms from './SortingAlgorithms';
-import InsertSearchAlgorithms from './InsertSearchAlgorithms';
-import GraphAlgorithms from './GraphAlgorithms';
-import SetAlgorithms from './SetAlgorithms';
-import StringSearchAlgorithms from './StringSearchAlgorithms';
 
 // Only pull algorithms that have property noDeploy set to false
 import { DeployedAlgorithms } from '../../algorithms';
@@ -37,6 +32,19 @@ const nameToUrl = DeployedAlgorithms.flatMap(({ algorithms }) =>
   }))
 );
 
+
+// Key word list
+// console.log(nameToUrl) // See names supported
+const KEY_WORDS = {
+  "Insertion Sort" : ["N^2"],
+}
+
+const keywordToVal = Object.fromEntries(
+  Object.entries(KEY_WORDS).flatMap(([value, keywords]) =>
+    keywords.map(k => [k.toLowerCase(), value.toLowerCase()])
+  )
+)
+
 const Mainmenu = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -46,9 +54,9 @@ const Mainmenu = () => {
 
     const filteredAlgorithms = nameToUrl.filter(algorithm =>
     algorithm.name.toLowerCase().includes(searchTerm.toLowerCase())
+    || (keywordToVal[searchTerm.toLowerCase()] ??= false) === algorithm.name.toLowerCase()
     // XXX nice to add keyword search also
-    // TODO: ask for clarification from client, just the functionality
-    // to do so or do we also need to come up with the keywords ourselves?
+    // TODO: Seek clarification from client.
   );
   return (
     <div className="mainmenu-container">
@@ -83,12 +91,18 @@ const Mainmenu = () => {
         <Link to="/about" className="about-link">About</Link>
       </div>
       <div className="main-content">
-        <SortingAlgorithms />
-        <SetAlgorithms />
-        <InsertSearchAlgorithms />
-        <StringSearchAlgorithms />
-	<GraphAlgorithms />
-	</div>
+        {DeployedAlgorithms.map(({ category, algorithms }) => (
+            // TODO: Consequence of this approach is a new category inclusion 
+            // in the master list alters the main page, client might not want this.
+            <CategorySection
+                category={category}
+                items={algorithms.map(({ name, shorthand, mode }) => ({
+                    name,
+                    url: `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
+                }))}
+            />
+        ))}
+      </div>
     </div>
   );
 };
