@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.becfb702.css",
-    "main.js": "/static/js/main.bccecfac.js",
+    "main.js": "/static/js/main.8b3b0858.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -46,6 +46,7 @@
     "static/media/PRIMInfo.md": "/static/media/PRIMInfo.112841726d0197d637e7.md",
     "static/media/HSInfo.md": "/static/media/HSInfo.6e9cabebf82cd75083f8.md",
     "static/media/BFSSExp.md": "/static/media/BFSSExp.59f0e4e68726bf2415a7.md",
+    "static/media/gwrap.md": "/static/media/gwrap.c3e1a39a66c30a7d7582.md",
     "static/media/QSM3Info.md": "/static/media/QSM3Info.c82d527bc5e82135217b.md",
     "static/media/UFInfo.md": "/static/media/UFInfo.0feb0f96d457730da1cc.md",
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
@@ -59,7 +60,6 @@
     "index.html": "/index.html",
     "static/media/HashingInfo.md": "/static/media/HashingInfo.d3215243c560b640b218.md",
     "static/media/MSDRadixSortInfo.md": "/static/media/MSDRadixSortInfo.19091e4c8468638fe366.md",
-    "static/media/gwrap.md": "/static/media/gwrap.c3e1a39a66c30a7d7582.md",
     "static/media/cancel.svg": "/static/media/cancel.da5c42223be72e07b42078ba244d26c0.svg",
     "static/media/pause.svg": "/static/media/pause.17441c19b10854106f8c646bb56ff885.svg",
     "static/media/arrow.svg": "/static/media/arrow.b799034555e959db988fd2c275c31132.svg",
@@ -81,10 +81,10 @@
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "main.becfb702.css.map": "/static/css/main.becfb702.css.map",
-    "main.bccecfac.js.map": "/static/js/main.bccecfac.js.map"
+    "main.8b3b0858.js.map": "/static/js/main.8b3b0858.js.map"
   },
   "entrypoints": [
     "static/css/main.becfb702.css",
-    "static/js/main.bccecfac.js"
+    "static/js/main.8b3b0858.js"
   ]
 }
