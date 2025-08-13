@@ -32,32 +32,37 @@ const nameToUrl = DeployedAlgorithms.flatMap(({ algorithms }) =>
   }))
 );
 
-
 // Key word list
-// console.log(nameToUrl) // See names supported
+// See names supported, the keys in KEY_WORDS are case insensitive
+console.log(nameToUrl)
 const KEY_WORDS = {
-  "Insertion Sort" : ["N^2"],
-}
-
-const keywordToVal = Object.fromEntries(
-  Object.entries(KEY_WORDS).flatMap(([value, keywords]) =>
-    keywords.map(k => [k.toLowerCase(), value.toLowerCase()])
-  )
-)
+  "heapsort" : ["logarithmic"],
+  "quicksort" : ["logarithmic"],
+};
 
 const Mainmenu = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearch = (event) => {
+  const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-    const filteredAlgorithms = nameToUrl.filter(algorithm =>
-    algorithm.name.toLowerCase().includes(searchTerm.toLowerCase())
-    || (keywordToVal[searchTerm.toLowerCase()] ??= false) === algorithm.name.toLowerCase()
+  const query = searchTerm.toLowerCase();
+
+  const algorithmsWithQueryInKeyword = Object.keys(KEY_WORDS).filter(name =>
+    // Can use === instead of includes, ask client
+    KEY_WORDS[name].some(k => k.toLowerCase().includes(query))
+  );
+  // Make case insensitive
+  const algorithmsWithQueryInKeywords = algorithmsWithQueryInKeyword.map(n => n.toLowerCase());
+
+  const filteredAlgorithms = nameToUrl.filter(({ name }) =>
+    name.toLowerCase().includes(query) || 
+    algorithmsWithQueryInKeywords.includes(name.toLowerCase())
     // XXX nice to add keyword search also
     // TODO: Seek clarification from client.
   );
+
   return (
     <div className="mainmenu-container">
       <div className="sidebar">
