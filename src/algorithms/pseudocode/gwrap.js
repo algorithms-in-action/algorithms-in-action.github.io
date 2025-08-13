@@ -4,9 +4,10 @@ export default parse(`
 
 \\Note{
 Gift wrapping/Jarvis algm for convex hull
+XXX probably needs more bookmarks
 
-Includes optional optimisation - ignore initially, maybe fill in later
-and have option selected like path compression in union find algm.
+Includes sketch of optional optimisation - ignore initially, maybe fill in
+later and have option selected like path compression in union find algm.
 
 Should be able to use graph package (disable edge input; maybe make
 nodes smaller); add/delete edges during algorithm execution.
@@ -21,23 +22,23 @@ giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B star
 \\In{
     if n <= 3
     \\In{
-        return the set of all points // n < 3 could be considered an error
+        return the set of all points // n < 3 could be considered an error \\B returnAll
     \\In}
-    minX <-  point with min. X value
+    hull <- Empty // Initialize hull to the empty set of points
+    minX <-  point with min. X value \\B minX
     \\Expl{ We could choose any point guaranteed to be on the convex
         hull. Here we use a point with the minimal X coordinate.  We
         scan through all points to find it. If there are multiple points
         with the minimal X coordinate we choose one with a minimal Y coordinate.
     \\Expl}
-    hull <- Empty // Initialize hull to the empty set of points
-    p <- minX // initialize current point; "string" points left/up
+    p <- minX // initialize current point; "string" points left/up \\B initP
     \\Expl{ In the animation we show a line from p; you can think
         of this as a string we use to wrap around the points to form the
         convex hull.
     \\Expl}
     do
     \\In{
-        add p to hull
+        add p to hull \\B addP
         \\Note{ Use color of p to indicate membership of hull.  Also q
           and i (not sure if two vars are equal or q/i are on hull...).
           Should also display vars next to (or in?) nodes. Should we
@@ -49,10 +50,10 @@ giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B star
           Note: going from p to q to any other point x requires a clockwise
           turn.
         \\Expl}
-        p <- q
+        p <- q \\B p<-q
     \\In} 
-    while p != minX // stop when we get back to the first node
-    return hull
+    while p != minX // stop when we get back to the first node \\B whileP
+    return hull \\B returnHull
 \\In} 
 \\Code} 
 
@@ -82,11 +83,11 @@ NextPoint
 clockwise than i.  If no such i exists then q is the least clockwise
 point after p.
 \\Expl}
-q <- (p + 1) mod n // initialise q to a point other than p
+q <- (p + 1) mod n // initialise q to a point other than p \\B initQ
 \\Expl{ Any point other than p will work.  Here we pick the next point
   in the array (or 0 if p is the last point).
 \\Expl}
-for i <- point in P
+for i <- point in P \\B assignI
 \\Expl{ We loop over all points. We could ignore point p but it
 does no harm. The path p->p->q is considered straight. Geometric
 algorithms often have tricky cases such as this.  Another subtlety is
@@ -99,7 +100,7 @@ for i <- 0 to n-1
 \\In{
     if p->i->q is a clockwise turn \\Ref piqClockwise
     \\In{
-        q <- i
+        q <- i \\B q<-i
         \\Expl{ i is less clockwise than q, so we update q.
         \\Expl}
     \\In}
@@ -109,7 +110,7 @@ for i <- 0 to n-1
 \\Code{
 piqClockwise
 // check if the cross product of vectors pi and pq is positive
-if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0
+if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0 \\B piqTest
 \\Expl{ See the "BACKGROUND" and "MORE" tabs for more details. Code in
   geometric algorithms often has cryptic bits like this based on
   mathematical results from geometry. For many operations, the most
