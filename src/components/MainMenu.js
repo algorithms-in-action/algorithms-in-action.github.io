@@ -33,7 +33,8 @@ const nameToUrl = DeployedAlgorithms.flatMap(({ algorithms }) =>
 );
 
 // Key word list
-// See names supported, the keys in KEY_WORDS are case insensitive
+// console.log(nameToUrl) // see algorithm names supported
+// The keys in KEY_WORDS are case insensitive
 console.log(nameToUrl)
 const KEY_WORDS = {
   "heapsort" : ["logarithmic"],
