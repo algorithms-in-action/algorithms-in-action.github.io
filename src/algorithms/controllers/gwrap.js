@@ -11,7 +11,7 @@
 // to fix this display without breaking other algorithms (code seems a
 // bit messy).
 // 
-// XXX Not properly linked to pseudocode (need more bookmarks and change
+// XXX Partially linked to pseudocode (may need more bookmarks/change
 // the bookmarks in this controller code); also will need to animate a
 // few more things.
 // 
@@ -50,7 +50,7 @@ export default {
   initVisualisers() {
     return {
       graph: {
-        instance: new GraphTracer('graph', null, 'Graph view'),
+        instance: new GraphTracer('graph', null, 'Points'),
         order: 0,
       },
     };
@@ -116,8 +116,22 @@ export default {
     // Prints convex hull of a set of n coords.
     function convexHull(coords, n, E)
     {
+        chunker.add(
+          'start',
+          (vis, edgeArray, coordsArray) => {
+            vis.graph.directed(false);
+            vis.graph.weighted(false);
+            vis.graph.moveNodeFn(moveNode);
+            vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
+            vis.graph.dimensions.defaultNodeRadius = 15;
+            vis.graph.dimensions.nodeRadius = 15;
+            vis.graph.setZoom(0.6);
+         },
+          [E, coords], 0
+        );
+
         // There must be at least 3 coords
-        // XXX highlight all
+        // XXX highlight all here if n < 3
         if (n < 3) return;
        
         // Initialize Result
@@ -146,13 +160,14 @@ export default {
         // clockwise until reach the start point
         // again. This loop runs O(h) times where h is
         // number of coords in result or output.
-        let p = l, q;
+        let p = l, q, prevP;
         chunker.add(
-          'start',
+          'initP',
           (vis, edgeArray, coordsArray, c_p, c_q) => {
-            // XXX Graph too big and too far left...
-            // vis.graph.setZoom(0.5);
-            vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+            // Add special node a long way away for "wrapper"
+            vis.graph.addNode(wrapperStr, wrapperStr);
+            vis.graph.setNodePosition(wrapperStr, 10, -2000);
+            vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
             vis.graph.addEdge(wrapperStr, c_p);
             vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
           },
@@ -161,6 +176,32 @@ export default {
         do
         {
         
+            chunker.add('addP',
+              (vis, edgeArray, coordsArray, c_pp, c_p) => {
+                vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                // Nice to do this in a couple of steps if possible
+                // Move wrapper close then final position with node
+                // colour change?
+                if (c_pp) { // first time around c_pp is undefined
+                  vis.graph.addEdge(c_pp, c_p);
+                  vis.graph.colorEdge(c_pp, c_p, colorsCH.HULL_E);
+                  vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                  // redo "wrapping" edge
+                  vis.graph.removeEdge(c_pp, wrapperStr);
+                  vis.graph.addEdge(wrapperStr, c_p);
+                  vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
+                  let [pX, pY] = vis.graph.getNodePosition(c_pp);
+                  let [qX, qY] = vis.graph.getNodePosition(c_p);
+                  // XXX wrapper position should be colinear but far away
+                  // Currently if p and q are close, wrapper may be too
+                  // close; also need to consider case where p=q...?
+                  let wX = qX + 50 * (qX - pX);
+                  let wY = qY + 50 * (qY - pY);
+                  vis.graph.setNodePosition(wrapperStr, wX, wY);
+                }
+              },
+              [E, coords, prevP, p], 0
+            );
             // Add current point to result
             hull.push(p);
             
@@ -249,18 +290,14 @@ export default {
               hullHasQ = hull.includes(q);
             }
        
-            // XXX this is more animation of add p to hull...
-            // Should move most of this earlier but have to deal with
-            // initial case when q is undefined and we don't have to
-            // add edge etc
             chunker.add('p<-q',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
-                // Nice to do this in a couple of steps if possile
+                // Nice to do this in a couple of steps if possible
                 // Move wrapper close then final position with node
                 // colour change?
                 vis.graph.addEdge(c_p, c_q);
                 vis.graph.colorEdge(c_p, c_q, colorsCH.HULL_E);
-                vis.graph.colorNode(c_q, colorsCH.HULLP_N);
+                // vis.graph.colorNode(c_q, colorsCH.HULLP_N);
                 // redo "wrapping" edge
                 vis.graph.removeEdge(c_p, wrapperStr);
                 vis.graph.addEdge(wrapperStr, c_q);
@@ -279,8 +316,20 @@ export default {
             // Now q is the most clockwise with
             // respect to p. Set p as q for next iteration, 
             // so that q is added to result 'hull'
+            prevP = p;
             p = q;
-            chunker.add('whileP');
+            if (p != l) {
+              chunker.add('whileP');
+            } else {
+              // clean up on loop exit
+              chunker.add('whileP',
+                (vis, edgeArray, coordsArray, c_pp, c_p) => {
+                  vis.graph.colorNode(c_pp, colorsCH.HULLP_N);
+                  vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                  },
+                  [E, coords, prevP, p], 0
+              );
+            }
        
         } while (p != l);  // While we don't come to first 
                            // point
@@ -317,22 +366,6 @@ export default {
     
     
 
-    chunker.add(
-      'start',
-      (vis, edgeArray, coordsArray) => {
-        vis.graph.directed(false);
-        vis.graph.weighted(false);
-        vis.graph.moveNodeFn(moveNode);
-        vis.graph.dimensions.defaultNodeRadius = 15;
-        vis.graph.dimensions.nodeRadius = 15;
-        vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
-        // vis.graph.edges = []
-        // Add special node a long way away for "wrapper"
-        vis.graph.addNode(wrapperStr, wrapperStr);
-        vis.graph.setNodePosition(wrapperStr, 10, -2000);
-      },
-      [E, coords], 0
-    );
 
     convexHull(coords, coords.length, E);
 

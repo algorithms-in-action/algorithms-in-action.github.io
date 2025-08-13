@@ -61,11 +61,19 @@ class GraphRenderer extends Renderer {
     // linked. Some magic numbers were added to shift things around and make
     // things look ok.  It should be rethought or at least the numbers for
     // this.centerX and this.centerY should be put in one place.
+    // Hacked so we now have an axes flag set depending on title XXX
     if (this.props.title === 'Graph view') {
       // Center to new axis origin
       // this.centerX = 180;
       this.centerX = 650; // shift graph display left
       this.centerY = -200;
+      this.axes = true;
+    } else if (this.props.title === 'Points') {
+      // Center to new axis origin
+      // this.centerX = 180;
+      this.centerX = 440; // shift graph display left a bit
+      this.centerY = -200;
+      this.axes = true;
     }
     this.zoom = 0.85; // zoom out a bit to fit graph on screen
 
@@ -319,7 +327,8 @@ class GraphRenderer extends Renderer {
 
     const originCoords = { x: axisCenter.x - 12, y: axisCenter.y + 16 };
 
-    if (this.props.title !== 'Graph view') {
+    // if (this.props.title !== 'Graph view') {
+    if (!this.axes) {
       // Do not render axis if its not graph
       return <g></g>;
     }

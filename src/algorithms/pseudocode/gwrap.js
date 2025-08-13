@@ -22,23 +22,23 @@ giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B star
 \\In{
     if n <= 3
     \\In{
-        return the set of all points // n < 3 could be considered an error
+        return the set of all points // n < 3 could be considered an error \\B returnAll
     \\In}
-    minX <-  point with min. X value
+    hull <- Empty // Initialize hull to the empty set of points
+    minX <-  point with min. X value \\B minX
     \\Expl{ We could choose any point guaranteed to be on the convex
         hull. Here we use a point with the minimal X coordinate.  We
         scan through all points to find it. If there are multiple points
         with the minimal X coordinate we choose one with a minimal Y coordinate.
     \\Expl}
-    hull <- Empty // Initialize hull to the empty set of points
-    p <- minX // initialize current point; "string" points left/up
+    p <- minX // initialize current point; "string" points left/up \\B initP
     \\Expl{ In the animation we show a line from p; you can think
         of this as a string we use to wrap around the points to form the
         convex hull.
     \\Expl}
     do
     \\In{
-        add p to hull
+        add p to hull \\B addP
         \\Note{ Use color of p to indicate membership of hull.  Also q
           and i (not sure if two vars are equal or q/i are on hull...).
           Should also display vars next to (or in?) nodes. Should we
