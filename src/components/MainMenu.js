@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';  // add this line
-import '../../styles/MainMenu.scss';
-import logo from '../../assets/logo.svg';
+import '../styles/MainMenu.scss';
+import logo from '../assets/logo.svg';
 
 // Only pull algorithms that have property noDeploy set to false
-import { DeployedAlgorithms } from '../../algorithms';
+import { DeployedAlgorithms } from '../algorithms';
 
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
@@ -50,7 +50,6 @@ const Mainmenu = () => {
   const query = searchTerm.toLowerCase();
 
   const algorithmsWithQueryInKeyword = Object.keys(KEY_WORDS).filter(name =>
-    // Can use === instead of includes, ask client
     KEY_WORDS[name].some(k => k.toLowerCase().includes(query))
   );
   // Make case insensitive
@@ -59,8 +58,6 @@ const Mainmenu = () => {
   const filteredAlgorithms = nameToUrl.filter(({ name }) =>
     name.toLowerCase().includes(query) || 
     algorithmsWithQueryInKeywords.includes(name.toLowerCase())
-    // XXX nice to add keyword search also
-    // TODO: Seek clarification from client.
   );
 
   return (
