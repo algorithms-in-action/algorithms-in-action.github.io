@@ -149,6 +149,9 @@
   text-align: center; // Keep centered
   margin-top: 5px;
   margin-bottom: 5px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 250px;
 }
 
 .mainmenu-algo-link:hover {
