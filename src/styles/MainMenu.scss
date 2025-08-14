@@ -115,9 +115,11 @@
 .main-content {
   flex-grow: 1;
   background-color: black;
+  // Grid display, each box fits in a grid
   display: grid;
+  // 3 cols? Discuss with client
   grid-template-columns: repeat(3, auto);
-  overflow-y: auto;
+  overflow-y: auto; // Scroll
   gap: 16px;
 }
 
@@ -135,6 +137,7 @@
 .category {
   font-size: 2em;
   color: white;
+  text-align: center;
   margin-bottom: 10px;
 }
 
@@ -143,6 +146,7 @@
   color: #89c9f5;
   text-decoration: underline;
   transition: color 0.3s ease;
+  text-align: center; // Keep centered
   margin-top: 5px;
   margin-bottom: 5px;
 }
