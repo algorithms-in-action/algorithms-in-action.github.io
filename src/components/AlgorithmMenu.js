@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import '../styles/AlgorithmMenu.scss';
+import React, { useState } from "react";
+import "../styles/AlgorithmMenu.scss";
+
+// AlgorithmMenu.js
 
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
 
-// XXX construct this from master list of algorithms!
-// or use this as master list
 const algorithms = {
   Sort: {
     Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
@@ -44,6 +44,31 @@ const algorithms = {
     "Horspool's": `${baseUrl}/?alg=horspoolStringSearch&mode=search`,
   },
 };
+  
+// TODO: I dont understand why this breaks everything, I used this import
+// in MainMenu.js with no issue.
+// Circular imports (npx madge src/components/AlgorithmMenu.js --circular)
+// but MainMenu.js (npx madge src/components/MainMenu.js --circular)
+// has the exact same circular imports???
+// import { DeployedAlgorithms } from '../algorithms';
+
+// This works but prod build doesnt allow top level await
+// so we can not commit this.
+// const { DeployedAlgorithms } = await import('../algorithms');
+
+// Dynamically create URLs in algorithm menu from master list (src/algorithms/index.js).
+// Only entries with noDeploy=false are included.
+// const algorithms = Object.fromEntries(
+//   DeployedAlgorithms.map(({ category, algorithms }) => [
+//     category,
+//     Object.fromEntries(
+//       algorithms.map(({ name, shorthand, mode }) => [
+//         name,
+//         `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
+//       ]),
+//     ),
+//   ]),
+// );
 
 function AlgorithmMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,7 +90,7 @@ function AlgorithmMenu() {
               {activeCategory === category && (
                 <div className="subcategory">
                   {Object.entries(algs).map(([alg, url]) => (
-                    <a key={alg} href={url || '#'}>
+                    <a key={alg} href={url || "#"}>
                       {alg}
                     </a>
                   ))}
