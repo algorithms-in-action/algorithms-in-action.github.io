@@ -70,6 +70,8 @@ const allalgs = {
     controller: {
       sort: Controller.isort,
     },
+    // Case insensitive
+    keywords : ["N^2"],
   },
   'heapSort': {
     name: 'Heapsort',
@@ -84,6 +86,7 @@ const allalgs = {
     controller: {
       sort: Controller.heapSort,
     },
+    keywords : ["Linearithmic"],
   },
   'quickSort': {
     name: 'Quicksort',
@@ -98,6 +101,7 @@ const allalgs = {
     controller: {
       sort: Controller.quickSort,
     },
+    keywords : ["Linearithmic"],
   },
   'quickSortM3': {
     name: 'Quicksort (Median of 3)',
@@ -548,9 +552,9 @@ export const getCategory = (key) => algorithms[key].category;
 
 // This function generates a list of algorithms classed by categories
 const generateAlgorithmCategoryList = (deployOnly=false) => {
-    const src = deployOnly
-    ? Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy))
-    : algorithms;
+  const src = deployOnly
+  ? Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy))
+  : algorithms;
 
   const alCatList = [];
   let categoryNum = 0;
@@ -575,6 +579,7 @@ const generateAlgorithmCategoryList = (deployOnly=false) => {
       name: value.name,
       shorthand: key,
       mode: getDefaultMode(key),
+      keywords: value.keywords,
     });
   }
 
@@ -582,9 +587,9 @@ const generateAlgorithmCategoryList = (deployOnly=false) => {
 };
 
 // This function generates a list of algorithms classed by categories
-const generateAlgorithmList = (deployOnly=false) => {
+const generateAlgorithmList = (deployOnly = false) => {
   const src = deployOnly
-    ? Object.fromEntries(Object.entries(allalgs).filter(a => !a[1].noDeploy))
+    ? Object.fromEntries(Object.entries(allalgs).filter((a) => !a[1].noDeploy))
     : algorithms;
 
   const alList = [];

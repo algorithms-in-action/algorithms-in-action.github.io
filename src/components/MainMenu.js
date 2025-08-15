@@ -25,21 +25,14 @@ const CategorySection = ({ category, items }) => (
 );
 
 // Array of objects linking name to url
-const nameToUrl = DeployedAlgorithms.flatMap(({ algorithms }) =>
-  algorithms.map(({ name, shorthand, mode }) => ({
+const nameToInfo = DeployedAlgorithms.flatMap(({ algorithms }) =>
+  algorithms.map(({ name, shorthand, mode, keywords}) => ({
     name,
     url: `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
+    // Keywords may be undefined in master list
+    keywords : (keywords ?? []).map((keyword) => keyword.toLowerCase()),
   }))
 );
-
-// Key word list
-// console.log(nameToUrl) // see algorithm names supported
-// The keys in KEY_WORDS are case insensitive
-console.log(nameToUrl)
-const KEY_WORDS = {
-  "heapsort" : ["logarithmic"],
-  "quicksort" : ["logarithmic"],
-};
 
 const Mainmenu = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,15 +43,9 @@ const Mainmenu = () => {
 
   const query = searchTerm.toLowerCase();
 
-  const algorithmsWithQueryInKeyword = Object.keys(KEY_WORDS).filter(name =>
-    KEY_WORDS[name].some(k => k.toLowerCase().includes(query))
-  );
-  // Make case insensitive
-  const algorithmsWithQueryInKeywords = algorithmsWithQueryInKeyword.map(n => n.toLowerCase());
-
-  const filteredAlgorithms = nameToUrl.filter(({ name }) =>
+  const filteredAlgorithms = nameToInfo.filter(({ name, keywords }) =>
     name.toLowerCase().includes(query) || 
-    algorithmsWithQueryInKeywords.includes(name.toLowerCase())
+    keywords.some((keyword => keyword.includes(query)))
   );
 
   return (
