@@ -27,6 +27,7 @@ const QUERY_ALGORITHM_ID    = "Enter the short ID (used as filename prefix in sr
 const QUERY_KEYWORDS        = "Enter search keywords (space-separated):\n";
 const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category)\n"
 const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n"
+// TODO: Query for existing algorithm code to copy (right now heapSort is hard coded)
 
 // Answer variables
 let nameOfAlgorithm;    // Full display name of the algorithm
@@ -42,6 +43,7 @@ function promisifyReads(rl) {
 }
 
 async function askUntil(rl, validate) {
+    // Just to bypass the commit rules
     let b = true;
     while (b) {
         let response = await promisifyReads(rl);
@@ -63,17 +65,19 @@ async function retrieveDataFromUser() {
             return false; 
         }
 
+        // TODO: Maybe add sensible characters check
+
         return true;
     }));
 
     // TODO: List all existing categories
+    // then let user selecting existing by entering number
+    // or if they want a new category just a alphabetical string
     rl.output.write(QUERY_CATEGORY);
     category = await askUntil(rl, (q => {
         const v = (q || "").trim();
         return true;
     }));
-    // Get the string from the index
-    // category = categories[category];
 
     rl.output.write(QUERY_ALGORITHM_ID);
     algorithmId = await askUntil(rl,(q => {
@@ -89,6 +93,9 @@ async function retrieveDataFromUser() {
             rl.output.write("Algorithm ID must start with a letter or number and may contain only letters, numbers, and underscores (not starting with underscore).\n");
             return false;
         }
+
+        // TODO: Must be unique in the master list this will be the key and also
+        // prefix of files.
 
         return true;
     }));
