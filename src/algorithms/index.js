@@ -54,6 +54,9 @@ this mechanism for acess to "hidden" algorithms
 // ...
 // export default MergesortParam
 
+// DO NOT DELETE COMMENT ITS A MARKER FOR
+// addNewAlgorithmScript.js
+//_MASTER_LIST_START_
 const allalgs = {
 
   'isort': {
@@ -535,6 +538,7 @@ const allalgs = {
   },
 
 };
+//_MASTER_LIST_END_
 
 const algorithms = allalgs;
 
