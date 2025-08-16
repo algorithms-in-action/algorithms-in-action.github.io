@@ -42,7 +42,8 @@ function promisifyReads(rl) {
 }
 
 async function askUntil(rl, validate) {
-    while (true) {
+    let b = true;
+    while (b) {
         let response = await promisifyReads(rl);
         // Validate should send to stdout appropriate messages
         // when failing to validate, directing the user towards a valid
@@ -130,10 +131,9 @@ const PATHS = {
     await retrieveDataFromUser();
 
     /* Run commands */
-    // Git commands commented out for now.
-    //shell.exec(`git switch ${nameOfDevBranch}`);
-    //shell.exec(`git pull`);
-    //shell.exec(`git switch -c add_${algorithmId}`);
+    shell.exec(`git switch ${nameOfDevBranch}`);
+    shell.exec(`git pull`);
+    shell.exec(`git switch -c add_${algorithmId}`);
 
     /* Create files and copy contents of heapSort */
     shell.cp(`${PATHS.controllers}/heapSort.js`, `${PATHS.controllers}/${algorithmId}.js`);
@@ -188,22 +188,21 @@ const PATHS = {
     shell.ShellString(updated).to(PATHS.master);
 
     /* Final commit */
-    // shell.exec(`git add ${PATHS.controllers}/${algorithmId}.js`);
-    // shell.exec(`git add ${PATHS.pseudocode}/${algorithmId}.js`);
-    // shell.exec(`git add ${PATHS.parameters}/${algorithmId}Param.js`);
-    // shell.exec(`git add ${PATHS.explanations}/${algorithmId}Exp.md`);
-    // shell.exec(`git add ${PATHS.extra}/${algorithmId}Info.md`);
-    // shell.exec(`git add ${PATHS.controllers}/index.js`);
-    // shell.exec(`git add ${PATHS.pseudocode}/index.js`);
-    // shell.exec(`git add ${PATHS.parameters}/index.js`);
-    // shell.exec(`git add ${PATHS.explanations}/index.js`);
-    // shell.exec(`git add ${PATHS.extra}/index.js`);
-    // shell.exec(`git add ${PATHS.instruction}/index.js`);
-    // shell.exec(`git add ${PATHS.master}`);
+    shell.exec(`git add ${PATHS.controllers}/${algorithmId}.js`);
+    shell.exec(`git add ${PATHS.pseudocode}/${algorithmId}.js`);
+    shell.exec(`git add ${PATHS.parameters}/${algorithmId}Param.js`);
+    shell.exec(`git add ${PATHS.explanations}/${algorithmId}Exp.md`);
+    shell.exec(`git add ${PATHS.extra}/${algorithmId}Info.md`);
+    shell.exec(`git add ${PATHS.controllers}/index.js`);
+    shell.exec(`git add ${PATHS.pseudocode}/index.js`);
+    shell.exec(`git add ${PATHS.parameters}/index.js`);
+    shell.exec(`git add ${PATHS.explanations}/index.js`);
+    shell.exec(`git add ${PATHS.extra}/index.js`);
+    shell.exec(`git add ${PATHS.instruction}/index.js`);
+    shell.exec(`git add ${PATHS.master}`);
    
-    // shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}"`);
-
-    // rl.output.write("Now attempt pull/push and hope there are no conflicts!")
+    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}"`);
+    rl.output.write("Now attempt pull/push and hope there are no conflicts!");
 
     rl.close(); // Free resources
 })(); // Run function when file is ran (like main in C)
