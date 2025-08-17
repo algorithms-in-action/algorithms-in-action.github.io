@@ -4,7 +4,7 @@ import '../styles/MainMenu.scss';
 import logo from '../assets/logo.svg';
 
 // Only pull algorithms that have property noDeploy set to false
-import { DeployedAlgorithms } from '../algorithms';
+import { DeployedAlgorithms } from '../algorithms/masterList';
 
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
