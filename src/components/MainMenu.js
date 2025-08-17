@@ -83,6 +83,7 @@ const Mainmenu = () => {
       <div className="main-content">
         {DeployedAlgorithmCategoryList.map(({ category, algorithms }) => (
             <CategorySection
+                key={`${category}-wrapper`}
                 category={category}
                 items={algorithms.map(({ name, shorthand, mode }) => ({
                     name,
