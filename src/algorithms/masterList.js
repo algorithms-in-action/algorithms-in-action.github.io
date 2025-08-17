@@ -7,7 +7,7 @@
           Files run directly with node (e.g. node addNewAlgorithm.js) will crash if they
           import a module that contains JSX or imports React components. So in the previous
           implementation these files could not retrieve metadata about algorithms.
-        - decouple UI: some files and UI only names/ids/categories; they shouldn’t
+        - decouple UI: some files only use names/ids/categories to do their job; they shouldn’t
           pull in UI/animation code or its dependency chain (this was the root cause
           of all the circular dependency issues). The UI layer later resolves
           the string keys (explanationKey, paramKey, etc.) to real modules.
