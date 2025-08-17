@@ -30,6 +30,8 @@ const getAlgorithms = (meta) =>
       return [
         id,
         {
+          name : m.name,
+          category: m.category,
           explanation: explanationModule,
           // Can not use <Component/> syntatic sugar
           // here because of the dynamic injection of module.
