@@ -2,11 +2,12 @@
 const shell = require("shelljs");
 // Read input API
 const readline = require("node:readline");
+const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms/masterList.js');
 
 /* 
     Requirements: 
-        - User has cloned repo and is at root of repo
-        - User must have git installed and on PATH variable
+        - User has cloned repo
+        - User must have git installed and on $PATH variable
     How to run: node addNewAlgorithm.js
 */
 
@@ -17,7 +18,7 @@ const rl = readline.createInterface({
 });
 
 // Change this for future years
-let nameOfDevBranch = "2025_sem2";
+const nameOfDevBranch = "2025_sem2";
 
 /* Put infomation wanted from user here */
 
@@ -25,9 +26,10 @@ let nameOfDevBranch = "2025_sem2";
 const QUERY_ALGORITHM_NAME  = "Enter the full algorithm name:\n";
 const QUERY_ALGORITHM_ID    = "Enter the short ID (used as filename prefix in src/algorithms/*):\n";
 const QUERY_KEYWORDS        = "Enter search keywords (space-separated):\n";
-const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category)\n"
-const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n"
+const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category if the category does not exist)\n";
+const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n";
 // TODO: Query for existing algorithm code to copy (right now heapSort is hard coded)
+const QUERY_COPY_ALGORITHM  = "What existing algorithm would you like to copy?";
 
 // Answer variables
 let nameOfAlgorithm;    // Full display name of the algorithm
@@ -35,6 +37,8 @@ let algorithmId;        // Short identifier used in filenames
 let listOfKeywords;     // Keywords for search in main menu
 let category;           // Category the algorithm will fall under
 let deploy;             // Deploy algorithm (appear in menus)
+// TODO:
+let algorithmCopy = "heapSort";
 
 // rl.on is asynchronous need to wrap in Promises so we can use await
 // to make synchronous code (i.e. wait for user input and halt rest of script)
@@ -65,19 +69,32 @@ async function retrieveDataFromUser() {
             return false; 
         }
 
-        // TODO: Maybe add sensible characters check
-
         return true;
     }));
 
-    // TODO: List all existing categories
-    // then let user selecting existing by entering number
-    // or if they want a new category just a alphabetical string
+    // Get category
     rl.output.write(QUERY_CATEGORY);
+
+    const sortedCategories = AlgorithmCategoryList
+                            .map(({ category }) => category)
+                            .sort((a, b) => (a === b ? 0 : (a < b ? -1 : 1)));
+
+    sortedCategories.forEach((val, idx) => rl.output.write(`${idx}: ${val}\n`));
+
     category = await askUntil(rl, (q => {
         const v = (q || "").trim();
+
+        if (/^\d+$/.test(v) && !(Number.parseInt(v, 10) >= 0 && 
+            Number.parseInt(v, 10) <= sortedCategories.length - 1)) {
+            rl.output.write(`Enter a number between 0 and ${sortedCategories.length - 1} (inclusive) or enter a new cateogry\n`);
+            return false;
+        }
+
         return true;
     }));
+
+    // Get the name from index
+    if (/^\d+$/.test(category)) category = sortedCategories[category];
 
     rl.output.write(QUERY_ALGORITHM_ID);
     algorithmId = await askUntil(rl,(q => {
@@ -89,13 +106,21 @@ async function retrieveDataFromUser() {
             return false;
         }
 
-        if (!/^[A-Za-z0-9][A-Za-z0-9_]*$/.test(v)) {
-            rl.output.write("Algorithm ID must start with a letter or number and may contain only letters, numbers, and underscores (not starting with underscore).\n");
+        if (!/^[a-z][A-Za-z0-9_]*$/.test(v)) {
+            rl.output.write("Algorithm ID must start with a lowercase letter and may contain letters, numbers, and underscores after.\n");
             return false;
         }
 
-        // TODO: Must be unique in the master list this will be the key and also
-        // prefix of files.
+        // This will be the key in master list so it must be unique
+        if (Object.hasOwn(algorithms, q)) {
+            rl.output.write("Algorithm ID is alreay used, please select another ID.\n");
+            return false;
+        }
+
+        // TODO: check ./src/algorithms/* all files and ensure it doesnt prefix with any
+        // existing files otherwise we will overwrite them. Low priority, in the codebase
+        // as of writing people name the file similar to ID, so being a unique ID should be enough,
+        // but still do this.
 
         return true;
     }));
@@ -105,6 +130,12 @@ async function retrieveDataFromUser() {
     listOfKeywords = listOfKeywords.trim() === ""
     ? []
     : listOfKeywords.trim().split(/\s+/);
+
+    // TODO:
+    // rl.output.write(QUERY_COPY_ALGORITHM);
+    // algorithmCopy = await.askUntil(rl, (q => {
+    //     return true;
+    // }));
 
     rl.output.write(QUERY_DEPLOY)
     deploy = await askUntil(rl, (q => {
@@ -117,8 +148,12 @@ async function retrieveDataFromUser() {
     }))
 
     if (deploy.trim().toLowerCase() === "n") 
-        rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<3000>/?alg=${algorithmId}&mode=sort`);
+        rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}&mode=sort
+                         Note: The default port should be 3000 but note what it is in the URL when you run npm start.`);
+
     // Property is called noDeploy in master so its reversed.
+    // Did not want to ask user "do you want to NOT deploy",
+    // could be confusing.
     deploy = deploy.trim().toLowerCase() === "y" ? "false" : "true";
 }
 
@@ -130,7 +165,7 @@ const PATHS = {
     explanations:"src/algorithms/explanations",
     extra:       "src/algorithms/extra-info",
     instruction: "src/algorithms/instructions",
-    master:      "src/algorithms/index.js",
+    master:      "src/algorithms/masterList.js",
 };
 
 (async () => {
@@ -156,7 +191,7 @@ const PATHS = {
     // Copying the echo >> into shell.exec() breaks
     // portability with windows.
     shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
-     .toEnd(`${PATHS.controllers}/index.js`);
+        .toEnd(`${PATHS.controllers}/index.js`);
     shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
         .toEnd(`${PATHS.pseudocode}/index.js`);
     shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}Param'\n`)
@@ -169,16 +204,16 @@ const PATHS = {
         .toEnd(`${PATHS.instruction}/index.js`);
 
     /* Adding the new entry to the master list. */
-    const template = `\t'${algorithmId}': {
+    const template = `\n\t'${algorithmId}': {
 \t\tname: '${nameOfAlgorithm}',
-\t\tnoDeploy: ${deploy},
 \t\tcategory: '${category}',
-\t\texplanation: Explanation.${algorithmId},
-\t\tparam: <Param.${algorithmId}/>,
-\t\tinstructions: Instructions.${algorithmId},
-\t\textraInfo: ExtraInfo.${algorithmId},
-\t\tpseudocode: { sort: Pseudocode.${algorithmId} },
-\t\tcontroller: { sort: Controller.${algorithmId} },
+\t\tnoDeploy: ${deploy},
+\t\texplanationKey: '${algorithmId}Exp',
+\t\tparamKey: '${algorithmId}Param',
+\t\tinstructionsKey: '${algorithmId}Instruction',
+\t\textraInfoKey: '${algorithmId}Info',
+\t\tpseudocode: { sort: '${algorithmId}' },
+\t\tcontroller: { sort: '${algorithmId}' },
 \t\tkeywords : ${JSON.stringify(listOfKeywords)}
 \t},`;
 
@@ -208,7 +243,7 @@ const PATHS = {
     shell.exec(`git add ${PATHS.instruction}/index.js`);
     shell.exec(`git add ${PATHS.master}`);
    
-    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}"`);
+    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}, files will contain ${algorithmCopy}'s source code."`);
     rl.output.write("Now attempt pull/push and hope there are no conflicts!");
 
     rl.close(); // Free resources
@@ -227,4 +262,9 @@ const PATHS = {
     n^2 slow hello world
     Do you want to deploy your algorithm to the site immediately? (y/n)
     y
+
+    To test again switch back to 2025_sem2 branch and delete the add_{algorithm_id} branch
+    For example
+    git checkout 2025_sem2
+    git branch -D add_bsort
 */
