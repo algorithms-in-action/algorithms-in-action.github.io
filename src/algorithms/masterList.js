@@ -518,7 +518,7 @@ const generateAlgorithmList = (deployOnly = false) => {
 
 export default algorithmMetadata;
 export const DeployedAlgorithmCategoryList = generateAlgorithmCategoryList(true);
-export const AlgorithmCategoryList = generateAlgorithmCategoryList(true); 
+export const AlgorithmCategoryList = generateAlgorithmCategoryList(); 
 export const AlgorithmList = generateAlgorithmList();
 export const AlgorithmNum = generateAlgorithmList().length;
 
