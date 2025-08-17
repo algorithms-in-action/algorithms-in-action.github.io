@@ -31,7 +31,9 @@ const getAlgorithms = (meta) =>
         id,
         {
           explanation: explanationModule,
-          param: <ParamModule />,
+          // Can not use <Component/> syntatic sugar
+          // here because of the dynamic injection of module.
+          param: React.createElement(ParamModule, null),
           instructions: instructionsModule,
           extraInfo: extraInfoModule,
           pseudocode: pseudocodeValue,
