@@ -28,8 +28,6 @@ const QUERY_ALGORITHM_ID    = "Enter the short ID (used as filename prefix in sr
 const QUERY_KEYWORDS        = "Enter search keywords (space-separated):\n";
 const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category if the category does not exist)\n";
 const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n";
-// TODO: Query for existing algorithm code to copy (right now heapSort is hard coded)
-const QUERY_COPY_ALGORITHM  = "What existing algorithm would you like to copy?";
 
 // Answer variables
 let nameOfAlgorithm;    // Full display name of the algorithm
@@ -37,8 +35,6 @@ let algorithmId;        // Short identifier used in filenames
 let listOfKeywords;     // Keywords for search in main menu
 let category;           // Category the algorithm will fall under
 let deploy;             // Deploy algorithm (appear in menus)
-// TODO:
-let algorithmCopy = "heapSort";
 
 // rl.on is asynchronous need to wrap in Promises so we can use await
 // to make synchronous code (i.e. wait for user input and halt rest of script)
@@ -117,11 +113,6 @@ async function retrieveDataFromUser() {
             return false;
         }
 
-        // TODO: check ./src/algorithms/* all files and ensure it doesnt prefix with any
-        // existing files otherwise we will overwrite them. Low priority, in the codebase
-        // as of writing people name the file similar to ID, so being a unique ID should be enough,
-        // but still do this.
-
         return true;
     }));
 
@@ -130,12 +121,6 @@ async function retrieveDataFromUser() {
     listOfKeywords = listOfKeywords.trim() === ""
     ? []
     : listOfKeywords.trim().split(/\s+/);
-
-    // TODO:
-    // rl.output.write(QUERY_COPY_ALGORITHM);
-    // algorithmCopy = await.askUntil(rl, (q => {
-    //     return true;
-    // }));
 
     rl.output.write(QUERY_DEPLOY)
     deploy = await askUntil(rl, (q => {
@@ -244,7 +229,7 @@ const PATHS = {
     shell.exec(`git add ${PATHS.instruction}/index.js`);
     shell.exec(`git add ${PATHS.master}`);
    
-    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}, files will contain ${algorithmCopy}'s source code."`);
+    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}, files will contain heapsort's source code."`);
     rl.output.write("Now attempt pull/push and hope there are no conflicts!");
 
     rl.close(); // Free resources
@@ -255,7 +240,7 @@ const PATHS = {
     Enter the full algorithm name:
     Bubble Sort
     What category does your algorithm fall under?
-    (Enter a number or enter a new category)    // number not implemented yet
+    (Enter a number or enter a new category)
     Sort
     Enter the short ID (used as filename perfix in src/algorithms/*):
     bsort
