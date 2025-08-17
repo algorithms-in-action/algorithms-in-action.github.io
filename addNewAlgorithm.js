@@ -1,162 +1,271 @@
-// standalone JS - needs Node.js installed; run with
-// node <thisfile>
-//
-// Idea here is to have a program that helps with creation of a new AIA
-// algorithm module.  Reads in the algorithm name and an ID used internally
-// in code, filenames, etc.  Output unix commands to create all the extra files
-// (currently copy the heapsort files; they will need to be edited for the
-// new algorithm), plus some snippets of code and indications of where to
-// put them so we can mostly copy+paste.
-// XXX It would be nice to be able to say what algorithm to copy (not Heapsort)
-// and input algCat but filenames are not really consistent enough currently.
+// Cross platform TODO:(Test on Windows machine) high level API for running commands from node js
+const shell = require("shelljs");
+// Read input API
+const readline = require("node:readline");
+const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms/masterList.js');
 
-const readline = require('readline');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-});
-
-// XXX there must be a better way to input a couple of things then call a
-// function with them as the arguments...
-
-let algName;
-let algID;
-let algCat = 'Sort';
-console.log("What's the name of your new algorithm used in menus etc, eg 2-3-4 Tree? ");
-
-rl.on('line', (line) => {
-  if (!algName) {
-    algName = line.trim();
-    console.log("What's the ID of your new algorithm used in code, eg tree_234?  ");
-  } else {
-    algID = line.trim();
-    // XXX Best check for alpha first char then alphanumeric + _ only
-    doIt(algName, algID);
-    process.exit(0);
-  }
-});
-
-rl.on('close', () => {
-  console.log('Exiting...');
-  process.exit(0);
-});
-
-// let devBranch = "<development branch>"
-let devBranch = "2025_sem2" // XXX
-
-let doIt = (algName, algID) => {
-    console.log("");
-    console.log("Guide to adding algorithm named " + algName + " with ID " + algID);
-    console.log("(best save this in a file and keep track of your progress)");
-    console.log("If you follow these steps exactly (recommended) your new algorithm");
-    console.log("will initially be a copy of Heapsort (you can then edit it as desired).");
-    console.log("It will not appear in algorithm menus but can be accessed via the URL.");
-    console.log("<base URL>/alg=" + algID + "&mode=sort");
-    console.log("");
-    console.log("Execute the following commands from the AIA repository directory:");
-    console.log("");
-    console.log("git switch " + devBranch + "; git pull");
-    console.log("git switch -c add_" + algID);
-    console.log("");
-    console.log("cp src/algorithms/controllers/heapSort.js src/algorithms/controllers/" + algID + ".js");
-    console.log("git add src/algorithms/controllers/" + algID + ".js");
-    console.log("cp src/algorithms/pseudocode/heapSort.js src/algorithms/pseudocode/" + algID + ".js");
-    console.log("git add src/algorithms/pseudocode/" + algID + ".js");
-    console.log("cp src/algorithms/parameters/HSParam.js src/algorithms/parameters/" + algID + ".js");
-    console.log("git add src/algorithms/parameters/" + algID + ".js");
-    console.log("cp src/algorithms/explanations/HSExp.md src/algorithms/explanations/" + algID + ".md");
-    console.log("git add src/algorithms/explanations/" + algID + ".md");
-    console.log("cp src/algorithms/extra-info/HSInfo.md src/algorithms/extra-info/" + algID + ".md");
-    console.log("git add src/algorithms/extra-info/" + algID + ".md");
-    console.log("echo \"export const " + algID + " = sortInstructions;\" >> src/algorithms/instructions/index.js");
-    console.log("");
-    console.log("The files above (and others) will need to be edited during development");
-    console.log("but best defer that until after you have added the new algorithm");
-    console.log("");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/controllers/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + ".md'\" >> src/algorithms/explanations/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + ".md'\" >> src/algorithms/extra-info/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID + "'\" >> src/algorithms/parameters/index.js");
-    console.log("echo \"export { default as " + algID + "} from './" + algID
-+ "'\" >> src/algorithms/pseudocode/index.js");
-    console.log("");
-    console.log("Edit src/algorithms/index.js to add the following to the allalgs definition:");
-    console.log("  '" + algID + "': {");
-    console.log("    name: '" + algName + "',");
-    console.log("    noDeploy: false,");
-    console.log("    category: 'Sort',");
-    console.log("    explanation: Explanation." + algID + ",");
-    console.log("    param: <Param." + algID + "/>,");
-    console.log("    instructions: Instructions." + algID + ",");
-    console.log("    extraInfo: ExtraInfo." + algID + ",");
-    console.log("    pseudocode: {");
-    console.log("      sort: Pseudocode." + algID + ",");
-    console.log("    },");
-    console.log("    controller: {");
-    console.log("      sort: Controller." + algID + ",");
-    console.log("    },");
-    console.log("  },");
-    // XXX ...
-    console.log("");
-    console.log("Note: above may change when code for algorithm index generation is modified");
-    console.log("");
-    console.log("Make sure the system compiles and existing algorithms run OK");
-    console.log("and you new algorithm (accessed via the URL) behaves as Heapsort.");
-    console.log("This may require checking and re-working some of the steps above.");
-    console.log("");
-    console.log("git commit -a -m 'Adding new algorithm: " + algID + "'");
-    console.log("git switch " + devBranch + "; git pull");
-    console.log("");
-    console.log("Cross your fingers and hope nobody else has made conflicting changes.");
-    console.log("If you do the steps above quickly, conflicts are less likely.");
-    console.log("");
-    console.log("git merge add_" + algID);
-    console.log("");
-    console.log("Resolve any conflicts (eg add extra code of yours plus others).");
-    console.log("Note: here and elsewhere when multiple files are changed, there may");
-    console.log("be spurious compile errors. npm recognises when (some) files are modified");
-    console.log("and incrementally recompiles but appears not to handle importing properly.");
-    console.log("You may need to stop the npm process and resart it with a fresh recompile.");
-    console.log("");
-    console.log("Also, througout development, those last two commands are your friends.");
-    console.log("If you do them frequently, any changes made by others can be dealt with");
-    console.log("relatively quickly. Several small merges are easier than one big one.");
-    console.log("");
-    console.log("git commit -a; git push");
-    console.log("");
-    console.log("Congratulations! The main repository " + devBranch + " now has your new algorithm.");
-    console.log("You should probably also push your branch to the main repository:");
-    console.log("");
-    console.log("git switch add_" + algID + "; git merge " + devBranch);
-    console.log("git push --set-upstream origin add_" + algID);
-    console.log("");
-    console.log("If others are working on " + devBranch + ", best merge any changes as soon as possible.");
-    console.log("");
-    console.log("");
-}
-
-/*
-let algName = "";
-let algID = "";
-rl.question("What's the name of your new algorithm (eg Union Find)?  ", function(answer) {
-    algName = answer;
-    rl.question("What's the ID of your new algorithm (eg unionFind)?  ", function(answer) {
-       algID = answer;
-   });
-   process(algName, algID);
-   rl.close();
-});
-
-/*
-rl.question("What's the ID of your new algorithm (eg unionFind)?  ", function(answer) {
-   algID = answer;
-   // console.log("Hello " + answer);
-   rl.close();
-});
+/* 
+    Requirements: 
+        - User has cloned repo
+        - User must have git installed and on $PATH variable
+    How to run: node addNewAlgorithm.js
 */
 
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+});
 
+// Change this for future years
+const nameOfDevBranch = "2025_sem2";
 
+/* Put infomation wanted from user here */
 
+// Prompt text constants
+const QUERY_ALGORITHM_NAME  = "Enter the full algorithm name:\n";
+const QUERY_ALGORITHM_ID    = "Enter the short ID (used as filename prefix in src/algorithms/*):\n";
+const QUERY_KEYWORDS        = "Enter search keywords (space-separated):\n";
+const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category if the category does not exist)\n";
+const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n";
+// TODO: Query for existing algorithm code to copy (right now heapSort is hard coded)
+const QUERY_COPY_ALGORITHM  = "What existing algorithm would you like to copy?";
+
+// Answer variables
+let nameOfAlgorithm;    // Full display name of the algorithm
+let algorithmId;        // Short identifier used in filenames
+let listOfKeywords;     // Keywords for search in main menu
+let category;           // Category the algorithm will fall under
+let deploy;             // Deploy algorithm (appear in menus)
+// TODO:
+let algorithmCopy = "heapSort";
+
+// rl.on is asynchronous need to wrap in Promises so we can use await
+// to make synchronous code (i.e. wait for user input and halt rest of script)
+function promisifyReads(rl) {
+    return new Promise((resolve) => rl.on("line", answer => resolve(answer)));
+}
+
+async function askUntil(rl, validate) {
+    // Just to bypass the commit rules
+    let b = true;
+    while (b) {
+        let response = await promisifyReads(rl);
+        // Validate should send to stdout appropriate messages
+        // when failing to validate, directing the user towards a valid
+        // input.
+        if (validate(response)) return response;
+    }
+}
+
+// Retrieve all data from the user
+async function retrieveDataFromUser() {
+    rl.output.write(QUERY_ALGORITHM_NAME);
+    nameOfAlgorithm = await askUntil(rl, (q => {
+        const v = (q || "").trim();
+
+        if (!v) { 
+            rl.output.write("Name cannot be empty.\n"); 
+            return false; 
+        }
+
+        return true;
+    }));
+
+    // Get category
+    rl.output.write(QUERY_CATEGORY);
+
+    const sortedCategories = AlgorithmCategoryList
+                            .map(({ category }) => category)
+                            .sort((a, b) => (a === b ? 0 : (a < b ? -1 : 1)));
+
+    sortedCategories.forEach((val, idx) => rl.output.write(`${idx}: ${val}\n`));
+
+    category = await askUntil(rl, (q => {
+        const v = (q || "").trim();
+
+        if (/^\d+$/.test(v) && !(Number.parseInt(v, 10) >= 0 && 
+            Number.parseInt(v, 10) <= sortedCategories.length - 1)) {
+            rl.output.write(`Enter a number between 0 and ${sortedCategories.length - 1} (inclusive) or enter a new cateogry\n`);
+            return false;
+        }
+
+        return true;
+    }));
+
+    // Get the name from index
+    if (/^\d+$/.test(category)) category = sortedCategories[category];
+
+    rl.output.write(QUERY_ALGORITHM_ID);
+    algorithmId = await askUntil(rl,(q => {
+        const v = (q || "").trim();
+
+        // must not be empty
+        if (!v) {
+            rl.output.write("Algorithm ID cannot be empty.\n");
+            return false;
+        }
+
+        if (!/^[a-z][A-Za-z0-9_]*$/.test(v)) {
+            rl.output.write("Algorithm ID must start with a lowercase letter and may contain letters, numbers, and underscores after.\n");
+            return false;
+        }
+
+        // This will be the key in master list so it must be unique
+        if (Object.hasOwn(algorithms, q)) {
+            rl.output.write("Algorithm ID is alreay used, please select another ID.\n");
+            return false;
+        }
+
+        // TODO: check ./src/algorithms/* all files and ensure it doesnt prefix with any
+        // existing files otherwise we will overwrite them. Low priority, in the codebase
+        // as of writing people name the file similar to ID, so being a unique ID should be enough,
+        // but still do this.
+
+        return true;
+    }));
+
+    rl.output.write(QUERY_KEYWORDS);
+    listOfKeywords = await askUntil(rl, (q => true));
+    listOfKeywords = listOfKeywords.trim() === ""
+    ? []
+    : listOfKeywords.trim().split(/\s+/);
+
+    // TODO:
+    // rl.output.write(QUERY_COPY_ALGORITHM);
+    // algorithmCopy = await.askUntil(rl, (q => {
+    //     return true;
+    // }));
+
+    rl.output.write(QUERY_DEPLOY)
+    deploy = await askUntil(rl, (q => {
+        const v = (q || "").trim().toLowerCase();
+
+        if (v === "y" || v === "n") return true;
+
+        rl.output.write("Please enter 'y' or 'n'.\n");
+        return false;
+    }))
+
+    if (deploy.trim().toLowerCase() === "n") 
+        rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}&mode=sort
+Note: The default port should be 3000 but note what it is in the URL when you run npm start.`);
+
+    // Property is called noDeploy in master so its reversed.
+    // Did not want to ask user "do you want to NOT deploy",
+    // could be confusing.
+    deploy = deploy.trim().toLowerCase() === "y" ? "false" : "true";
+}
+
+/* Small helpers to reduce repeated strings */
+const PATHS = {
+    controllers: "src/algorithms/controllers",
+    pseudocode:  "src/algorithms/pseudocode",
+    parameters:  "src/algorithms/parameters",
+    explanations:"src/algorithms/explanations",
+    extra:       "src/algorithms/extra-info",
+    instruction: "src/algorithms/instructions",
+    master:      "src/algorithms/masterList.js",
+};
+
+(async () => {
+    /* Get user data */
+    await retrieveDataFromUser();
+
+    /* Run commands */
+    shell.exec(`git switch ${nameOfDevBranch}`);
+    shell.exec(`git pull`);
+    shell.exec(`git switch -c add_${algorithmId}`);
+
+    /* Create files and copy contents of heapSort */
+    shell.cp(`${PATHS.controllers}/heapSort.js`, `${PATHS.controllers}/${algorithmId}.js`);
+    shell.cp(`${PATHS.pseudocode}/heapSort.js`, `${PATHS.pseudocode}/${algorithmId}.js`);
+    shell.cp(`${PATHS.parameters}/HSParam.js`, `${PATHS.parameters}/${algorithmId}Param.js`);
+    shell.cp(`${PATHS.explanations}/HSExp.md`, `${PATHS.explanations}/${algorithmId}Exp.md`);
+    shell.cp(`${PATHS.extra}/HSInfo.md`, `${PATHS.extra}/${algorithmId}Info.md`);
+
+    // https://www.npmjs.com/package/shelljs#shellstringprototypetoendfile
+    // https://www.npmjs.com/package/shelljs#shellstringstr
+    // toEnd() is analgous to >>
+    // Do not use UNIX specific commands in shell.exec()
+    // Copying the echo >> into shell.exec() breaks
+    // portability with windows.
+    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+        .toEnd(`${PATHS.controllers}/index.js`);
+    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+        .toEnd(`${PATHS.pseudocode}/index.js`);
+    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}Param'\n`)
+        .toEnd(`${PATHS.parameters}/index.js`);
+    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}Exp.md'\n`)
+        .toEnd(`${PATHS.explanations}/index.js`);
+    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}Info.md'\n`)
+        .toEnd(`${PATHS.extra}/index.js`);
+    shell.ShellString(`export const ${algorithmId} = sortInstructions\n`)
+        .toEnd(`${PATHS.instruction}/index.js`);
+
+    /* Adding the new entry to the master list. */
+    const template = `\n\t'${algorithmId}': {
+\t\tname: '${nameOfAlgorithm}',
+\t\tcategory: '${category}',
+\t\tnoDeploy: ${deploy},
+\t\texplanationKey: '${algorithmId}',
+\t\tparamKey: '${algorithmId}',
+\t\tinstructionsKey: '${algorithmId}',
+\t\textraInfoKey: '${algorithmId}',
+\t\tpseudocode: { sort: '${algorithmId}' },
+\t\tcontroller: { sort: '${algorithmId}' },
+\t\tkeywords : ${JSON.stringify(listOfKeywords)}
+\t},`;
+
+    // Get file before
+    const src = shell.cat(PATHS.master).toString();
+
+    // Regex replace.
+    // TODO: Windows carriage return quirks
+    const updated = src.replace(
+        /(\/\/_MASTER_LIST_START_\n[\s\S]*?)\n\};\n(\/\/_MASTER_LIST_END_)/,
+        `$1\n${template}\n};\n$2`
+    );
+
+    // Write over file.
+    shell.ShellString(updated).to(PATHS.master);
+
+    /* Final commit */
+    shell.exec(`git add ${PATHS.controllers}/${algorithmId}.js`);
+    shell.exec(`git add ${PATHS.pseudocode}/${algorithmId}.js`);
+    shell.exec(`git add ${PATHS.parameters}/${algorithmId}Param.js`);
+    shell.exec(`git add ${PATHS.explanations}/${algorithmId}Exp.md`);
+    shell.exec(`git add ${PATHS.extra}/${algorithmId}Info.md`);
+    shell.exec(`git add ${PATHS.controllers}/index.js`);
+    shell.exec(`git add ${PATHS.pseudocode}/index.js`);
+    shell.exec(`git add ${PATHS.parameters}/index.js`);
+    shell.exec(`git add ${PATHS.explanations}/index.js`);
+    shell.exec(`git add ${PATHS.extra}/index.js`);
+    shell.exec(`git add ${PATHS.instruction}/index.js`);
+    shell.exec(`git add ${PATHS.master}`);
+   
+    shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}, files will contain ${algorithmCopy}'s source code."`);
+    rl.output.write("Now attempt pull/push and hope there are no conflicts!");
+
+    rl.close(); // Free resources
+})(); // Run function when file is ran (like main in C)
+
+/*
+    Example run: node addNewAlgorithmScript.js
+    Enter the full algorithm name:
+    Bubble Sort
+    What category does your algorithm fall under?
+    (Enter a number or enter a new category)    // number not implemented yet
+    Sort
+    Enter the short ID (used as filename perfix in src/algorithms/*):
+    bsort
+    Enter search keywords (space-seperated):
+    n^2 slow hello world
+    Do you want to deploy your algorithm to the site immediately? (y/n)
+    y
+
+    To test again switch back to 2025_sem2 branch and delete the add_{algorithm_id} branch
+    For example
+    git checkout 2025_sem2
+    git branch -D add_bsort
+*/
