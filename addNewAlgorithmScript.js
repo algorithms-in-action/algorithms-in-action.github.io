@@ -149,7 +149,7 @@ async function retrieveDataFromUser() {
 
     if (deploy.trim().toLowerCase() === "n") 
         rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}&mode=sort
-                         Note: The default port should be 3000 but note what it is in the URL when you run npm start.`);
+Note: The default port should be 3000 but note what it is in the URL when you run npm start.`);
 
     // Property is called noDeploy in master so its reversed.
     // Did not want to ask user "do you want to NOT deploy",
@@ -221,6 +221,7 @@ const PATHS = {
     const src = shell.cat(PATHS.master).toString();
 
     // Regex replace.
+    // TODO: Windows carriage return quirks
     const updated = src.replace(
         /(\/\/_MASTER_LIST_START_\n[\s\S]*?)\n\};\n(\/\/_MASTER_LIST_END_)/,
         `$1\n${template}\n};\n$2`
