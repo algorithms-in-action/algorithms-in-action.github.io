@@ -4,7 +4,7 @@ import '../styles/MainMenu.scss';
 import logo from '../assets/logo.svg';
 
 // Only pull algorithms that have property noDeploy set to false
-import { DeployedAlgorithms } from '../algorithms/masterList';
+import { DeployedAlgorithmCategoryList } from '../algorithms/masterList';
 
 // Get the base URL dynamically
 const baseUrl = window.location.origin;
@@ -25,7 +25,7 @@ const CategorySection = ({ category, items }) => (
 );
 
 // Array of objects linking name to url
-const nameToInfo = DeployedAlgorithms.flatMap(({ algorithms }) =>
+const nameToInfo = DeployedAlgorithmCategoryList.flatMap(({ algorithms }) =>
   algorithms.map(({ name, shorthand, mode, keywords}) => ({
     name,
     url: `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
@@ -81,9 +81,7 @@ const Mainmenu = () => {
         <Link to="/about" className="about-link">About</Link>
       </div>
       <div className="main-content">
-        {DeployedAlgorithms.map(({ category, algorithms }) => (
-            // TODO: Consequence of this approach is a new category inclusion 
-            // in the master list alters the main page, client might not want this.
+        {DeployedAlgorithmCategoryList.map(({ category, algorithms }) => (
             <CategorySection
                 category={category}
                 items={algorithms.map(({ name, shorthand, mode }) => ({

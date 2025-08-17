@@ -4,10 +4,12 @@
     why: 
         - keeping it data-only avoids circular deps
         - keep JSX out: Node.js can’t parse JSX (<Param/>).
-          Scripts run directly with node (e.g. node addNewAlgorithm.js) will crash if they
-          import a module that contains JSX or imports React components.
+          Files run directly with node (e.g. node addNewAlgorithm.js) will crash if they
+          import a module that contains JSX or imports React components. So in the previous
+          implementation these files could not retrieve metadata about algorithms.
         - decouple UI: some files and UI only names/ids/categories; they shouldn’t
-          pull in UI/animation code or its dependency chain. The UI layer later resolves
+          pull in UI/animation code or its dependency chain (this was the root cause
+          of all the circular dependency issues). The UI layer later resolves
           the string keys (explanationKey, paramKey, etc.) to real modules.
 */
 
@@ -454,6 +456,8 @@ const algorithmMetadata = {
 
 export const getDefaultMode = (key) => Object.keys(algorithmMetadata[key].pseudocode)[0];
 
+export const getCategory = (key) => algorithmMetadata[key].category;
+
 const generateAlgorithmCategoryList = (deployOnly=false) => {
   const src = deployOnly
   ? Object.fromEntries(Object.entries(algorithmMetadata).filter(a => !a[1].noDeploy))
@@ -489,6 +493,32 @@ const generateAlgorithmCategoryList = (deployOnly=false) => {
   return alCatList;
 };
 
+// This function generates a list of algorithms classed by categories
+const generateAlgorithmList = (deployOnly = false) => {
+  const src = deployOnly
+    ? Object.fromEntries(Object.entries(algorithmMetadata).filter((a) => !a[1].noDeploy))
+    : algorithmMetadata;
+
+  const alList = [];
+  let alNum = 0;
+
+  // For every category, get all the algorithms
+  for (const [key, value] of Object.entries(src)) {
+    alList.push({
+      name: value.name,
+      shorthand: key,
+      id: alNum,
+      mode: getDefaultMode(key),
+    });
+    alNum += 1;
+  }
+
+  return alList;
+};
+
 export default algorithmMetadata;
-export const DeployedAlgorithms = generateAlgorithmCategoryList(true); 
+export const DeployedAlgorithmCategoryList = generateAlgorithmCategoryList(true);
+export const AlgorithmCategoryList = generateAlgorithmCategoryList(true); 
+export const AlgorithmList = generateAlgorithmList();
+export const AlgorithmNum = generateAlgorithmList().length;
 
