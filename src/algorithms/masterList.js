@@ -8,9 +8,18 @@
           import a module that contains JSX or imports React components. So in the previous
           implementation these files could not retrieve metadata about algorithms.
         - decouple UI: some files only use names/ids/categories to do their job; they shouldn’t
-          pull in UI/animation code or its dependency chain (this was the root cause
-          of all the circular dependency issues). The UI layer later resolves
-          the string keys (explanationKey, paramKey, etc.) to real modules.
+          pull in UI/animation code or its dependency chain 
+
+          Elaboration with the AlgorithmMenu: Want to access some metadata like
+            - name
+            - category
+          must import from src/algorithms/index.js which imports every directory under src/algorithms
+          which caused the uninitialised errors. Still not sure why, then, it didnt error for MainMenu 
+          but never the less. 
+          
+          The UI layer later resolves the string keys (explanationKey, paramKey, etc.) to real modules so in this
+          file we can have no imports and index.js can remain the same but dynamically inject the modules
+          with the strings defined in this file.
 */
 
 /*
