@@ -30,10 +30,6 @@ const getAlgorithms = (meta) =>
       return [
         id,
         {
-          name: m.name,
-          category: m.category,
-          noDeploy: (m.noDeploy !== undefined ? m.noDeploy : true),
-          keyword: (m.keywords !== undefined ? m.keywords : []),
           explanation: explanationModule,
           param: <ParamModule />,
           instructions: instructionsModule,
