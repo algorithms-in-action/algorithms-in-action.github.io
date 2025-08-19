@@ -33,9 +33,7 @@ const getAlgorithms = (meta) =>
           name : m.name,
           category: m.category,
           explanation: explanationModule,
-          // Can not use <Component/> syntatic sugar
-          // here because of the dynamic injection of module.
-          param: React.createElement(ParamModule, null),
+          param: <ParamModule/>,
           instructions: instructionsModule,
           extraInfo: extraInfoModule,
           pseudocode: pseudocodeValue,
@@ -46,5 +44,4 @@ const getAlgorithms = (meta) =>
   );
 
 const allalgs = getAlgorithms(algorithmMetadata);
-
 export default allalgs;
