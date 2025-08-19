@@ -119,7 +119,7 @@ const QUERY_ALGORITHM_ID    = "Enter the short ID (used as filename prefix in sr
 const QUERY_KEYWORDS        = "Enter search keywords (space-separated):\n";
 const QUERY_CATEGORY        = "What category does your algorithm fall under?\n(Enter a number or enter a new category if the category does not exist)\n";
 const QUERY_DEPLOY          = "Do you want to deploy your algorithm to the site immediately? (y/n)\n";
-const QUERY_ALGORITHM_COPY  = "What existing algorithm implementation would you like to copy?"
+const QUERY_ALGORITHM_COPY  = "What existing algorithm implementation would you like to copy?\n"
 
 // Answer variables
 let nameOfAlgorithm;    // Full display name of the algorithm
@@ -304,7 +304,6 @@ Note: The default port should be 3000 but it may be something else, see npm star
     shell.exec(`git pull`);
     shell.exec(`git switch -c add_${algorithmId}`);
 
-    /* Create files and COPY contents of selected algorithm */
     // New entry in master list
     let template = {
         [algorithmId] : {   
@@ -316,6 +315,8 @@ Note: The default port should be 3000 but it may be something else, see npm star
     };
 
     /* 
+        Create files and COPY contents of selected algorithm.
+
         This is the block of code that places the restriction that all exports from index.js
         files must have form export {x as default} from f.
     */
@@ -340,7 +341,15 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 const pat = new RegExp(
                     String.raw`export\s+\{\s*default\s+as\s+${innerExportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
                 );
+
                 const match = indexContents.match(pat);
+
+                if (!match) {
+                    throw new Error(
+                        `Could not find default export line for "${innerExportName}" in ${indexFilepath}`
+                    );
+                }
+
                 const relPath = match[1];
                 const baseName = relPath.split("/").pop();
                 const extension = baseName.includes(".") ? baseName.split(".").pop() : "js";
@@ -383,6 +392,13 @@ Note: The default port should be 3000 but it may be something else, see npm star
                     String.raw`export\s+\{\s*default\s+as\s+${exportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
                 );
                 const match = indexContents.match(pat);
+
+                if (!match) {
+                    throw new Error(
+                        `Could not find default export line for "${exportName}" in ${indexFilepath}`
+                    );
+                }
+                
                 const relPath = match[1];
                 const baseName = relPath.split("/").pop();
                 const extension = baseName.includes(".") ? baseName.split(".").pop() : "js";
@@ -414,25 +430,26 @@ Note: The default port should be 3000 but it may be something else, see npm star
     // shell.cp(DEFAULT_TO_HEAPSORT.parameters, `${PATHS.parameters}/${algorithmId}Param.js`);
     // shell.cp(DEFAULT_TO_HEAPSORT.explanations, `${PATHS.explanations}/${algorithmId}Exp.md`);
     // shell.cp(DEFAULT_TO_HEAPSORT.extra, `${PATHS.extra}/${algorithmId}Info.md`);
-    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}';\n`)
     //     .toEnd(`${PATHS.controllers}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}';\n`)
     //     .toEnd(`${PATHS.pseudocode}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Param } from './${algorithmId}Param'\n`)
+    // shell.ShellString(`export { default as ${algorithmId}Param } from './${algorithmId}Param';\n`)
     //     .toEnd(`${PATHS.parameters}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Exp } from './${algorithmId}Exp.md'\n`)
+    // shell.ShellString(`export { default as ${algorithmId}Exp } from './${algorithmId}Exp.md';\n`)
     //     .toEnd(`${PATHS.explanations}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Info } from './${algorithmId}Info.md'\n`)
+    // shell.ShellString(`export { default as ${algorithmId}Info } from './${algorithmId}Info.md';\n`)
     //     .toEnd(`${PATHS.extra}/index.js`);
-    // shell.ShellString(`export const ${algorithmId}Instruction = sortInstructions\n`)
+    // shell.ShellString(`export const ${algorithmId} = sortInstructions;\n`)
     //     .toEnd(`${PATHS.instruction}/index.js`);
 
-    // template[algorithmId].explanationKey  = `${algorithmId}Exp`;
-    // template[algorithmId].paramKey        = `${algorithmId}Param`;
-    // template[algorithmId].PROPERTY_NAMES.instruction = `${algorithmId}Instruction`;
-    // template[algorithmId].extraInfoKey    = `${algorithmId}Info`;
-    // template[algorithmId].pseudocode      = { sort: algorithmId };
-    // template[algorithmId].controller      = { sort: algorithmId };
+    // template[algorithmId][PROPERTY_NAMES.explanation] = `${algorithmId}Exp`;
+    // template[algorithmId][PROPERTY_NAMES.parameters]  = `${algorithmId}Param`;
+    // template[algorithmId][PROPERTY_NAMES.instruction] = `${algorithmId}`;
+    // template[algorithmId][PROPERTY_NAMES.extraInfo]   = `${algorithmId}Info`;
+    // template[algorithmId][PROPERTY_NAMES.pseudo]      = { sort: algorithmId };
+    // template[algorithmId][PROPERTY_NAMES.control]     = { sort: algorithmId };
     /* END DEFAULT TO HEAPSORT */
 
     let s = JSON.stringify(template, null, 2);
