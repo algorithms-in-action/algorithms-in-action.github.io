@@ -3,7 +3,6 @@ const shell = require("shelljs");
 // Read input API
 const readline = require("node:readline");
 const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms/masterList.js');
-const { KEY_WORDS } = require("./src/algorithms/instructions/index.js");
 
 /* 
     Requirements: 
@@ -15,14 +14,32 @@ const { KEY_WORDS } = require("./src/algorithms/instructions/index.js");
 
 /*
     For maintainers:
+        - Every index.js file must only use export {x as default} from y, variations like
+          {x as default, y, z} or {x, y, z} will not allow the script to copy the algorithm that
+          uses those exports. Why?
+            - To copy an algorithm we need to copy not only the files it relates to, but also the
+              export lines in index.js files.
+            - If we need to copy export {x as default} from f we copy the file f, name it something
+              else, say f', then we put the export line in: export {x' as default} from f'. No parsing
+              of the source code file was needed.
+            - With export {x, y, z} from f we copy the file to make f', but then we need
+              to find all instances of x, y, z change them to something else x',y',z' in the source code
+              then the export line needs to become export {x', y', z'} from f' becuase we can not have
+              the line export {x, y, z} from f and export {x, y, z} from f'.
+            - It is definitely doable with Regex but I found it difficult to implement, maybe there is a
+              better way to do it all together?
+        - Change of names for properties in master list will cause problems, we are
+          inserting an entry so we use the property names at the time of writing. I have
+          created a map PROPERTY_NAMES which should be modified if the property names in
+          masterList.js is changed.
         - Main concern with the script is copying, in order to copy an algorithm
           we must cp the source files thus this feature is naturally coupled heavily
           to the file system structure at the time of writing, namely src/directory/*.
         - In any case if the script can not be made to work or you want an easy fix
-          the functionality to select an algorithm to copy can be avoided by commenting out
+          the functionality to select an algorithm to copy can be removed by commenting out
           certain sections. See COPY and END COPY markers (match casing). Uncomment the section
           between DEFAULT TO HEAPSORT and END DEFAULT TO HEAPSORT. The algorithm
-          will now be set to copy heap sort.
+          will now be set to copy heap sort through hardcoded paths.
 
           Ensure DEFAULT_TO_HEAPSORT and PATHS have the right paths before doing this, 
           see below.
@@ -33,39 +50,64 @@ const nameOfDevBranch = "2025_sem2";
 
 // At time of writing these are the paths for heap sort files.
 const DEFAULT_TO_HEAPSORT = {
-    controllers: "src/algorithms/controllers/heapSort.js",
-    pseudocode:  "src/algorithms/pseudocode/heapSort.js",
-    parameters:  "src/algorithms/parameters/HSParam.js",
-    explanations:"src/algorithms/explanations/HSExp.md",
-    extra:       "src/algorithms/extra-info/HSInfo.md",
+    controllers : "src/algorithms/controllers/heapSort.js",
+    pseudocode  : "src/algorithms/pseudocode/heapSort.js",
+    parameters  : "src/algorithms/parameters/HSParam.js",
+    explanations: "src/algorithms/explanations/HSExp.md",
+    extra       : "src/algorithms/extra-info/HSInfo.md",
 }
 
 const PATHS = {
-    controllers: "src/algorithms/controllers",
-    pseudocode:  "src/algorithms/pseudocode",
-    parameters:  "src/algorithms/parameters",
-    explanations:"src/algorithms/explanations",
-    extra:       "src/algorithms/extra-info",
-    instruction: "src/algorithms/instructions",
-    master:      "src/algorithms/masterList.js",
+    controllers : "src/algorithms/controllers",
+    pseudocode  : "src/algorithms/pseudocode",
+    parameters  : "src/algorithms/parameters",
+    explanations: "src/algorithms/explanations",
+    extra       : "src/algorithms/extra-info",
+    instruction : "src/algorithms/instructions",
+    master      : "src/algorithms/masterList.js",
 };
 
-// Maps key name in master list to the index file its value
-// will be associated with. If you change the property
-// names in master list this needs to be changed. Some parts in the code
-// will also need to change if you change the property names in master list
-// best just to not change property keys in master list.
+// A map of concept to actual property name in master list,
+// this is so script does not need to be touched heavily
+// if property names are changed in master list.
+const PROPERTY_NAMES = {
+    name        : "name",
+    category    : "category",
+    noDeploy    : "noDeploy",
+    keyword     : "keywords",
+    instruction : "instructionsKey",
+    explanation : "explanationKey",
+    parameters  : "paramKey",
+    pseudo      : "pseudocode",
+    control     : "controller",
+    extraInfo   : "extraInfoKey"
+};
+
+// Collection of the keys that have values that are exports
+const MODULE_KEYS = new Set([
+  PROPERTY_NAMES.instruction,
+  PROPERTY_NAMES.explanation,
+  PROPERTY_NAMES.parameters,
+  PROPERTY_NAMES.pseudo,
+  PROPERTY_NAMES.control,
+  PROPERTY_NAMES.extraInfo,
+]);
+
+// Helper, we will be pulling keys from master list
+// and want to know what index.js file their values (exports)
+// correspond to.
 const KEYS_TO_DIRECTORY = {
-    explanationKey : PATHS.explanations,
-    paramKey : PATHS.parameters,
-    instructionsKey: PATHS.instruction,
-    pseduocode : PATHS.pseudocode,
-    controller : PATHS.controllers
+  [PROPERTY_NAMES.explanation]  : PATHS.explanations,
+  [PROPERTY_NAMES.parameters]   : PATHS.parameters,
+  [PROPERTY_NAMES.instruction]  : PATHS.instruction,
+  [PROPERTY_NAMES.pseudo]       : PATHS.pseudocode,
+  [PROPERTY_NAMES.control]      : PATHS.controllers,
+  [PROPERTY_NAMES.extraInfo]    : PATHS.extra
 };
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+    input   : process.stdin,
+    output  : process.stdout,
     terminal: false,
 });
 
@@ -85,6 +127,7 @@ let algorithmId;        // Short identifier used in filenames and the key in mas
 let listOfKeywords;     // Keywords for search in main menu
 let categorySel;        // Category the algorithm will fall under
 let deploy;             // Deploy algorithm (appear in menus)
+let noDeploy;           // Master list uses noDeploy but im asking user if they want to deploy
 let algorithmCopy = {   // Algorithm to copy (this will hold the master entry of the algorithm selected)
     name : "heapSort"
 };
@@ -179,40 +222,47 @@ async function retrieveDataFromUser() {
             return false;
         }
 
-        // In theory, this should be enough to ensure no files are overwritten, but that assumes
+        // In theory, the above should be enough to ensure no files are overwritten, but that assumes
         // all entries were made with this script, where algorithmId is the prefix for all files generated
         // so as long as the key is unique, filenames will be unique. At the time of writing there exist
         // many algorithms that do not use the key in the master list as a prefix for their associated
-        // files. TODO:
-
+        // files.
+        for (const [key, dir] of Object.entries(PATHS)) {
+            const files = shell.ls(dir);
+            const conflict = files.find(f => f.startsWith(v));
+            if (conflict) {
+                rl.output.write(`Conflict: file ${dir}/${conflict} already exists with that prefix.\n`);
+                return false;
+            }
+        }
 
         return true;
     }));
 
-    /* Get the algorithm to COPY*/
+    /* Get the algorithm to COPY */
     rl.output.write(QUERY_ALGORITHM_COPY);
 
     // Display the algorithms to copy
-    // const keys = Object.keys(algorithms).sort((a, b) => {
-    //     const an = algorithms[a];
-    //     const bn = algorithms[b];
-    //     return an === bn ? 0 : (an < bn ? -1 : 1);
-    // });
-    // keys.forEach((id, idx) => rl.output.write(`${idx}: ${algorithms[id].name}\n`));
+    const keys = Object.keys(algorithms).sort((a, b) => {
+        const an = algorithms[a];
+        const bn = algorithms[b];
+        return an === bn ? 0 : (an < bn ? -1 : 1);
+    });
+    keys.forEach((id, idx) => rl.output.write(`${idx}: ${algorithms[id].name}\n`));
 
-    // algorithmCopy = await askUntil(rl, (q => {
-    //     const v = (q || "").trim();
+    algorithmCopy = await askUntil(rl, (q => {
+        const v = (q || "").trim();
 
-    //     if (/^\d+$/.test(v) && !(Number.parseInt(v, 10) >= 0 && 
-    //         Number.parseInt(v, 10) <= Object.keys(algorithms).length - 1)) {
-    //         rl.output.write(`Enter a number between 0 and ${Object.keys(algorithms).length - 1} (inclusive)\n`);
-    //         return false;
-    //     }
+        if (/^\d+$/.test(v) && !(Number.parseInt(v, 10) >= 0 && 
+            Number.parseInt(v, 10) <= Object.keys(algorithms).length - 1)) {
+            rl.output.write(`Enter a number between 0 and ${Object.keys(algorithms).length - 1} (inclusive)\n`);
+            return false;
+        }
 
-    //     return true;
-    // }));
+        return true;
+    }));
 
-    // algorithmCopy = algorithms[keys[Number.parseInt(algorithmCopy, 10)]];
+    algorithmCopy = algorithms[keys[Number.parseInt(algorithmCopy, 10)]];
     /* END COPY */
 
     /* Get keywords */
@@ -237,15 +287,12 @@ async function retrieveDataFromUser() {
         return false;
     }))
 
-    if (deploy.trim().toLowerCase() === "n") {
+    noDeploy = deploy.trim().toLowerCase() === "y" ? false : true;
+
+    if (noDeploy) {
         rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}&mode=sort
 Note: The default port should be 3000 but it may be something else, see npm start's output.`);
     }
-
-    // Property is called noDeploy in master list so its reversed.
-    // Did not want to ask user "do you want to NOT deploy", could 
-    // be confusing.
-    deploy = deploy.trim().toLowerCase() === "y" ? false : true;
 }
 
 (async () => {
@@ -261,72 +308,131 @@ Note: The default port should be 3000 but it may be something else, see npm star
     // New entry in master list
     let template = {
         [algorithmId] : {   
-            name: nameOfAlgorithm, 
-            category: categorySel,
-            noDeploy: deploy,
-            keywords : listOfKeywords,
+            [PROPERTY_NAMES.name]     : nameOfAlgorithm, 
+            [PROPERTY_NAMES.category] : categorySel,
+            [PROPERTY_NAMES.noDeploy] : noDeploy,
+            [PROPERTY_NAMES.keyword]  : listOfKeywords,
         }
     };
 
+    /* 
+        This is the block of code that places the restriction that all exports from index.js
+        files must have form export {x as default} from f.
+    */
+
     // Set the other key:value pairs, requires us to copy source code
     // and export lines in index.js files.
-    // Object.keys(algorithmCopy).forEach((key) => {
-    //     let exportIndexFile = `${KEYS_TO_DIRECTORY[key]}/index.js`;
-    //     let exportName = algorithmCopy[key];
-    //     if (exportName && typeof exportName === "object") {
+    Object.keys(algorithmCopy).forEach((key) => {
+        // Do not traverse file systems for values that are not
+        // export keys, e.g. name, noDeploy, keywords, etc.
+        if (!MODULE_KEYS.has(key)) return;
 
-            
-    //     } else {
-    //         if (key === "instructionsKey") {
-    //             // For instruction export we assign variable names in index.js to exports,
-    //             // need to find what value the copied algorithm uses and assign to our algorithms
-    //             // export.
-    //             let src = shell.cat(`${PATHS.instruction}/index.js`).toString();
-    //             const pat = new RegExp(String.raw`export\s+const\s+${algorithmCopy.instructionsKey}\s*=\s*([^;\n]+)`);
-    //             const group = src.match(pat)[1];
-    //             // Insert the export for the new algorithm with the same variable assignment
-    //             shell.ShellString(`export const ${algorithmId}Instruction = ${group};\n`).toEnd(`${PATHS.instruction}/index.js`);
-    //             template[instructionsKey] = `${algorithmId}Instruction`;
-    //         } else {
-    //             // Others
-    //             // Find name of filename export from
-    //             let filename = "";
-    //             let extension = ""; // chop off in line below
-    //             let fullPath = `${KEYS_TO_DIRECTORY[key]}/${filename}`;
-    //             shell.cp(fullPath, `${KEYS_TO_DIRECTORY[key]}/${algorithmId}.${extension}`);
-    //             shell.ShellString(`export {${algorithmId} as default} from ./${algorithmId}.${extension}`)
-    //             .toEnd(`${exportIndexFile}/index.js`);
-    //             template[key] = algorithmId;
-    //         }
-    //     }
-    // });
+        let indexFilepath = `${KEYS_TO_DIRECTORY[key]}/index.js`;
+        let indexContents = shell.cat(indexFilepath).toString();
+        let exportName = algorithmCopy[key];
+
+        if (typeof exportName === "object") {
+            // Controllers and Psuedocode keys may contain multiple modes which
+            // link to multiple exports.
+            let addToTemplate = {};
+            Object.keys(exportName).forEach((mode) => {
+                let innerExportName = exportName[mode];
+                const pat = new RegExp(
+                    String.raw`export\s+\{\s*default\s+as\s+${innerExportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
+                );
+                const match = indexContents.match(pat);
+                const relPath = match[1];
+                const baseName = relPath.split("/").pop();
+                const extension = baseName.includes(".") ? baseName.split(".").pop() : "js";
+
+                // Copy file
+                const srcFile = baseName.includes(".")
+                    ? `${KEYS_TO_DIRECTORY[key]}/${baseName}`
+                    : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
+                const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}_${mode}.${extension}`;
+                shell.cp(srcFile, destFile);
+
+                // Write new export line
+                shell.ShellString(
+                    `export { default as ${algorithmId}_${mode} } from './${algorithmId}_${mode}.${extension}';\n`
+                ).toEnd(indexFilepath);
+
+                // Update template
+                addToTemplate[mode] = `${algorithmId}_${mode}`;
+            });
+            template[algorithmId][key] = addToTemplate;
+        } else {
+            if (key === PROPERTY_NAMES.instruction) {
+                // For instruction we only insert export line, we do not copy a file.
+                // We also assign the export to a variable in the file, we need to find
+                // what variable the algorithm we are copying used and set it to the value of the
+                // export for the new algorithm.
+
+                let src = shell.cat(`${PATHS.instruction}/index.js`).toString();
+                const pat = new RegExp(String.raw`export\s+const\s+${exportName}\s*=\s*([^;\n]+)`);
+                const variableAssignedToCopiedAlgorithm = src.match(pat)[1];
+
+                // Insert the export for the new algorithm with the same variable assignment
+                shell.ShellString(`export const ${algorithmId} = ${variableAssignedToCopiedAlgorithm};\n`)
+                     .toEnd(`${PATHS.instruction}/index.js`);
+
+                template[algorithmId][PROPERTY_NAMES.instruction] = `${algorithmId}`;
+            } else {
+                // Others
+                const pat = new RegExp(
+                    String.raw`export\s+\{\s*default\s+as\s+${exportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
+                );
+                const match = indexContents.match(pat);
+                const relPath = match[1];
+                const baseName = relPath.split("/").pop();
+                const extension = baseName.includes(".") ? baseName.split(".").pop() : "js";
+                
+                // Copy file
+                const srcFile = baseName.includes(".")
+                    ? `${KEYS_TO_DIRECTORY[key]}/${baseName}`
+                    : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
+                const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}.${extension}`;
+                shell.cp(srcFile, destFile);
+
+                // Write new export line
+                // Assumption: accompanying index.js only makes exports from default
+                // otherwise source files would have to be modified as well as copied
+                // to avoid export name clashes and it would not be as simple as this.
+                shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.${extension}';\n`)
+                     .toEnd(indexFilepath);
+                
+                // Update template
+                template[algorithmId][key] = algorithmId;
+            }
+        }
+    });
     /* COPY END */
 
     /* DEFAULT TO HEAPSORT */
-    shell.cp(DEFAULT_TO_HEAPSORT.controllers, `${PATHS.controllers}/${algorithmId}.js`);
-    shell.cp(DEFAULT_TO_HEAPSORT.pseudocode, `${PATHS.pseudocode}/${algorithmId}.js`);
-    shell.cp(DEFAULT_TO_HEAPSORT.parameters, `${PATHS.parameters}/${algorithmId}Param.js`);
-    shell.cp(DEFAULT_TO_HEAPSORT.explanations, `${PATHS.explanations}/${algorithmId}Exp.md`);
-    shell.cp(DEFAULT_TO_HEAPSORT.extra, `${PATHS.extra}/${algorithmId}Info.md`);
-    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
-        .toEnd(`${PATHS.controllers}/index.js`);
-    shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
-        .toEnd(`${PATHS.pseudocode}/index.js`);
-    shell.ShellString(`export { default as ${algorithmId}Param } from './${algorithmId}Param'\n`)
-        .toEnd(`${PATHS.parameters}/index.js`);
-    shell.ShellString(`export { default as ${algorithmId}Exp } from './${algorithmId}Exp.md'\n`)
-        .toEnd(`${PATHS.explanations}/index.js`);
-    shell.ShellString(`export { default as ${algorithmId}Info } from './${algorithmId}Info.md'\n`)
-        .toEnd(`${PATHS.extra}/index.js`);
-    shell.ShellString(`export const ${algorithmId}Instruction = sortInstructions\n`)
-        .toEnd(`${PATHS.instruction}/index.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.controllers, `${PATHS.controllers}/${algorithmId}.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.pseudocode, `${PATHS.pseudocode}/${algorithmId}.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.parameters, `${PATHS.parameters}/${algorithmId}Param.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.explanations, `${PATHS.explanations}/${algorithmId}Exp.md`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.extra, `${PATHS.extra}/${algorithmId}Info.md`);
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+    //     .toEnd(`${PATHS.controllers}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}'\n`)
+    //     .toEnd(`${PATHS.pseudocode}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId}Param } from './${algorithmId}Param'\n`)
+    //     .toEnd(`${PATHS.parameters}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId}Exp } from './${algorithmId}Exp.md'\n`)
+    //     .toEnd(`${PATHS.explanations}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId}Info } from './${algorithmId}Info.md'\n`)
+    //     .toEnd(`${PATHS.extra}/index.js`);
+    // shell.ShellString(`export const ${algorithmId}Instruction = sortInstructions\n`)
+    //     .toEnd(`${PATHS.instruction}/index.js`);
 
-    template[algorithmId].explanationKey  = `${algorithmId}Exp`;
-    template[algorithmId].paramKey        = `${algorithmId}Param`;
-    template[algorithmId].instructionsKey = `${algorithmId}Instruction`;
-    template[algorithmId].extraInfoKey    = `${algorithmId}Info`;
-    template[algorithmId].pseudocode      = { sort: algorithmId };
-    template[algorithmId].controller      = { sort: algorithmId };
+    // template[algorithmId].explanationKey  = `${algorithmId}Exp`;
+    // template[algorithmId].paramKey        = `${algorithmId}Param`;
+    // template[algorithmId].PROPERTY_NAMES.instruction = `${algorithmId}Instruction`;
+    // template[algorithmId].extraInfoKey    = `${algorithmId}Info`;
+    // template[algorithmId].pseudocode      = { sort: algorithmId };
+    // template[algorithmId].controller      = { sort: algorithmId };
     /* END DEFAULT TO HEAPSORT */
 
     let s = JSON.stringify(template, null, 2);
@@ -335,7 +441,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
     // TODO: Windows carriage return quirks
     const updated = src.replace(
         /(\/\/_MASTER_LIST_START_\n[\s\S]*?)\n\};\n(\/\/_MASTER_LIST_END_)/,
-        `$1\n${s}\n};\n$2`
+        `$1\n\n${s}\n};\n$2`
     );
     shell.ShellString(updated).to(PATHS.master);
 
