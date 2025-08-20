@@ -16,18 +16,8 @@ const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms
     For maintainers:
         - Every index.js file must only use export {default as x} from y, variations like
           {default as x, y, z} or {x, y, z} will not allow the script to copy the algorithm that
-          uses those exports. Why?
-            - To copy an algorithm we need to copy not only the files it relates to, but also the
-              export lines in index.js files.
-            - If we need to copy export {default as x} from f we copy the file f, name it something
-              else, say f', then we put the export line in: export {default as x'} from f'. No parsing
-              of the source code file was needed.
-            - With export {x, y, z} from f we copy the file to make f', but then we need
-              to find all instances of x, y, z change them to something else x',y',z' in the source code
-              then the export line needs to become export {x', y', z'} from f' becuase we can not have
-              the line export {x, y, z} from f and export {x, y, z} from f'.
-            - It is definitely doable with Regex but I found it difficult to implement, maybe there is a
-              better way to do it all together?
+          uses those exports. This is definitely something that can be implemented later on, but for
+          now the script can not copy Hashing related algorithm as a result.
         - Change of names for properties in master list will cause problems, we are
           inserting an entry so we use the property names at the time of writing. I have
           created a map PROPERTY_NAMES which should be modified if the property names in
@@ -203,7 +193,7 @@ async function retrieveDataFromUser() {
     algorithmId = await askUntil(rl,(q => {
         const v = (q || "").trim();
 
-        // must not be empty
+        // Must not be empty
         if (!v) {
             rl.output.write("Algorithm ID cannot be empty.\n");
             return false;
@@ -359,18 +349,21 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 const srcFile = baseName.includes(".")
                     ? `${KEYS_TO_DIRECTORY[key]}/${baseName}`
                     : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
-                const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}_${mode}.${extension}`;
+                
+                // camelCase convention
+                let suffix = mode.at(0).toUpperCase() + mode.slice(1);
+                const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}${suffix}.${extension}`;
                 shell.cp(srcFile, destFile);
                 newOrModifiedFiles.add(destFile);
 
                 // Write new export line
                 shell.ShellString(
-                    `export { default as ${algorithmId}_${mode} } from './${algorithmId}_${mode}.${extension}';\n`
+                    `export { default as ${algorithmId}${suffix} } from './${algorithmId}${suffix}.${extension}';\n`
                 ).toEnd(indexFilepath);
                 newOrModifiedFiles.add(indexFilepath);
 
                 // Update template
-                addToTemplate[mode] = `${algorithmId}_${mode}`;
+                addToTemplate[mode] = `${algorithmId}${suffix}`;
             });
             template[algorithmId][key] = addToTemplate;
         } else {
@@ -416,9 +409,6 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 newOrModifiedFiles.add(destFile);
 
                 // Write new export line
-                // Assumption: accompanying index.js only makes exports from default
-                // otherwise source files would have to be modified as well as copied
-                // to avoid export name clashes and it would not be as simple as this.
                 shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.${extension}';\n`)
                      .toEnd(indexFilepath);
                 newOrModifiedFiles.add(indexFilepath);
