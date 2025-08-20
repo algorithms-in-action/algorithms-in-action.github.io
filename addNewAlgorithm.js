@@ -14,13 +14,13 @@ const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms
 
 /*
     For maintainers:
-        - Every index.js file must only use export {x as default} from y, variations like
-          {x as default, y, z} or {x, y, z} will not allow the script to copy the algorithm that
+        - Every index.js file must only use export {default as x} from y, variations like
+          {default as x, y, z} or {x, y, z} will not allow the script to copy the algorithm that
           uses those exports. Why?
             - To copy an algorithm we need to copy not only the files it relates to, but also the
               export lines in index.js files.
-            - If we need to copy export {x as default} from f we copy the file f, name it something
-              else, say f', then we put the export line in: export {x' as default} from f'. No parsing
+            - If we need to copy export {default as x} from f we copy the file f, name it something
+              else, say f', then we put the export line in: export {default as x'} from f'. No parsing
               of the source code file was needed.
             - With export {x, y, z} from f we copy the file to make f', but then we need
               to find all instances of x, y, z change them to something else x',y',z' in the source code
@@ -314,6 +314,9 @@ Note: The default port should be 3000 but it may be something else, see npm star
         }
     };
 
+    // Files added, for git add later
+    let newOrModifiedFiles = new Set();
+
     /* 
         Create files and COPY contents of selected algorithm.
 
@@ -333,8 +336,6 @@ Note: The default port should be 3000 but it may be something else, see npm star
         let exportName = algorithmCopy[key];
 
         if (typeof exportName === "object") {
-            // Controllers and Psuedocode keys may contain multiple modes which
-            // link to multiple exports.
             let addToTemplate = {};
             Object.keys(exportName).forEach((mode) => {
                 let innerExportName = exportName[mode];
@@ -360,11 +361,13 @@ Note: The default port should be 3000 but it may be something else, see npm star
                     : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
                 const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}_${mode}.${extension}`;
                 shell.cp(srcFile, destFile);
+                newOrModifiedFiles.add(destFile);
 
                 // Write new export line
                 shell.ShellString(
                     `export { default as ${algorithmId}_${mode} } from './${algorithmId}_${mode}.${extension}';\n`
                 ).toEnd(indexFilepath);
+                newOrModifiedFiles.add(indexFilepath);
 
                 // Update template
                 addToTemplate[mode] = `${algorithmId}_${mode}`;
@@ -384,8 +387,9 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 // Insert the export for the new algorithm with the same variable assignment
                 shell.ShellString(`export const ${algorithmId} = ${variableAssignedToCopiedAlgorithm};\n`)
                      .toEnd(`${PATHS.instruction}/index.js`);
+                newOrModifiedFiles.add(indexFilepath);
 
-                template[algorithmId][PROPERTY_NAMES.instruction] = `${algorithmId}`;
+                template[algorithmId][key] = `${algorithmId}`;
             } else {
                 // Others
                 const pat = new RegExp(
@@ -409,6 +413,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
                     : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
                 const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}.${extension}`;
                 shell.cp(srcFile, destFile);
+                newOrModifiedFiles.add(destFile);
 
                 // Write new export line
                 // Assumption: accompanying index.js only makes exports from default
@@ -416,6 +421,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 // to avoid export name clashes and it would not be as simple as this.
                 shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.${extension}';\n`)
                      .toEnd(indexFilepath);
+                newOrModifiedFiles.add(indexFilepath);
                 
                 // Update template
                 template[algorithmId][key] = algorithmId;
@@ -426,32 +432,44 @@ Note: The default port should be 3000 but it may be something else, see npm star
 
     /* DEFAULT TO HEAPSORT */
     // shell.cp(DEFAULT_TO_HEAPSORT.controllers, `${PATHS.controllers}/${algorithmId}.js`);
+    // newOrModifiedFiles.add(`${PATHS.controllers}/${algorithmId}.js`);
     // shell.cp(DEFAULT_TO_HEAPSORT.pseudocode, `${PATHS.pseudocode}/${algorithmId}.js`);
-    // shell.cp(DEFAULT_TO_HEAPSORT.parameters, `${PATHS.parameters}/${algorithmId}Param.js`);
-    // shell.cp(DEFAULT_TO_HEAPSORT.explanations, `${PATHS.explanations}/${algorithmId}Exp.md`);
-    // shell.cp(DEFAULT_TO_HEAPSORT.extra, `${PATHS.extra}/${algorithmId}Info.md`);
+    // newOrModifiedFiles.add(`${PATHS.pseudocode}/${algorithmId}.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.parameters, `${PATHS.parameters}/${algorithmId}.js`);
+    // newOrModifiedFiles.add(`${PATHS.parameters}/${algorithmId}.js`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.explanations, `${PATHS.explanations}/${algorithmId}.md`);
+    // newOrModifiedFiles.add(`${PATHS.explanations}/${algorithmId}.md`);
+    // shell.cp(DEFAULT_TO_HEAPSORT.extra, `${PATHS.extra}/${algorithmId}.md`);
+    // newOrModifiedFiles.add(`${PATHS.extra}/${algorithmId}.md`);
 
     // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}';\n`)
     //     .toEnd(`${PATHS.controllers}/index.js`);
+    // newOrModifiedFiles.add(`${PATHS.controllers}/index.js`);
     // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}';\n`)
     //     .toEnd(`${PATHS.pseudocode}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Param } from './${algorithmId}Param';\n`)
+    // newOrModifiedFiles.add(`${PATHS.pseudocode}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}';\n`)
     //     .toEnd(`${PATHS.parameters}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Exp } from './${algorithmId}Exp.md';\n`)
+    // newOrModifiedFiles.add(`${PATHS.parameters}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.md';\n`)
     //     .toEnd(`${PATHS.explanations}/index.js`);
-    // shell.ShellString(`export { default as ${algorithmId}Info } from './${algorithmId}Info.md';\n`)
+    // newOrModifiedFiles.add(`${PATHS.explanations}/index.js`);
+    // shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.md';\n`)
     //     .toEnd(`${PATHS.extra}/index.js`);
+    // newOrModifiedFiles.add(`${PATHS.extra}/index.js`);
     // shell.ShellString(`export const ${algorithmId} = sortInstructions;\n`)
     //     .toEnd(`${PATHS.instruction}/index.js`);
-
-    // template[algorithmId][PROPERTY_NAMES.explanation] = `${algorithmId}Exp`;
-    // template[algorithmId][PROPERTY_NAMES.parameters]  = `${algorithmId}Param`;
-    // template[algorithmId][PROPERTY_NAMES.instruction] = `${algorithmId}`;
-    // template[algorithmId][PROPERTY_NAMES.extraInfo]   = `${algorithmId}Info`;
+    // newOrModifiedFiles.add(`${PATHS.instruction}/index.js`);
+    // template[algorithmId][PROPERTY_NAMES.explanation] = algorithmId;
+    // template[algorithmId][PROPERTY_NAMES.parameters]  = algorithmId;
+    // template[algorithmId][PROPERTY_NAMES.instruction] = algorithmId;
+    // template[algorithmId][PROPERTY_NAMES.extraInfo]   = algorithmId;
     // template[algorithmId][PROPERTY_NAMES.pseudo]      = { sort: algorithmId };
     // template[algorithmId][PROPERTY_NAMES.control]     = { sort: algorithmId };
     /* END DEFAULT TO HEAPSORT */
 
+    // All files and export lines created,
+    // insert the template into the master list.
     let s = JSON.stringify(template, null, 2);
     s = "\t" + s.slice(1, -1).trim(); // remove outer { }
     let src = shell.cat(PATHS.master).toString();
@@ -461,21 +479,10 @@ Note: The default port should be 3000 but it may be something else, see npm star
         `$1\n\n${s}\n};\n$2`
     );
     shell.ShellString(updated).to(PATHS.master);
+    newOrModifiedFiles.add(PATHS.master);
 
     /* Final commit */
-    shell.exec(`git add ${PATHS.controllers}/${algorithmId}.js`);
-    shell.exec(`git add ${PATHS.pseudocode}/${algorithmId}.js`);
-    shell.exec(`git add ${PATHS.parameters}/${algorithmId}Param.js`);
-    shell.exec(`git add ${PATHS.explanations}/${algorithmId}Exp.md`);
-    shell.exec(`git add ${PATHS.extra}/${algorithmId}Info.md`);
-    shell.exec(`git add ${PATHS.controllers}/index.js`);
-    shell.exec(`git add ${PATHS.pseudocode}/index.js`);
-    shell.exec(`git add ${PATHS.parameters}/index.js`);
-    shell.exec(`git add ${PATHS.explanations}/index.js`);
-    shell.exec(`git add ${PATHS.extra}/index.js`);
-    shell.exec(`git add ${PATHS.instruction}/index.js`);
-    shell.exec(`git add ${PATHS.master}`);
-    
+    newOrModifiedFiles.forEach((filepath) => shell.exec(`git add ${filepath}`));
     shell.exec(`git commit -m "Adding new algorithm: ${nameOfAlgorithm}, files will contain ${algorithmCopy.name}'s source code."`);
     rl.output.write("Now attempt pull/push and hope there are no conflicts!");
 
