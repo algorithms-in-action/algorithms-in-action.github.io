@@ -26,8 +26,12 @@ export { default as AStar } from './AStar';
 export { default as BFS } from './BFS';
 export { default as DFS } from './DFS';
 export { default as DFSrec } from './DFSrec';
-export { linearProbing, doubleHashing, chaining } from './HashingInsertion';
-export { linearSearch, doubleSearch, chainingSearch } from './HashingSearch';
+export { default as linearProbing } from './HashingLinearProbing';
+export { default as doubleHashing }from './HashingDoubleHashing';
+export { default as chaining } from './HashingChaining';
+export { default as linearSearch } from './HashingLinearSearch';
+export { default as doubleSearch }from './HashingDoubleSearch';
+export { default as chainingSearch} from './HashingChainingSearch';
 export { default as isort} from './isort'
 export { default as BSTrec} from './BSTrec'
 export { default as msort_list_td} from './msort_list_td'
