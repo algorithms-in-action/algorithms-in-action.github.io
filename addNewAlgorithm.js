@@ -40,10 +40,6 @@ const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms
 
           Extensions: 
             - Do not impose export {default as x} from y constraint
-            - Right now if the process fails the user can not use git branch -D
-              <created branch> to undo all changes because they were not commited
-              and must manually delete changes.
-
 */
 
 // Change this for future years
@@ -301,9 +297,9 @@ Note: The default port should be 3000 but it may be something else, see npm star
     await retrieveDataFromUser();
 
     /* Run commands */
-    //shell.exec(`git switch ${NAME_OF_DEV_BRANCH}`);
-    //shell.exec(`git pull`);
-    //shell.exec(`git switch -c add_${algorithmId}`);
+    shell.exec(`git switch ${NAME_OF_DEV_BRANCH}`);
+    shell.exec(`git pull`);
+    shell.exec(`git switch -c add_${algorithmId}`);
 
     // New entry in master list
     let template = {
@@ -325,6 +321,16 @@ Note: The default port should be 3000 but it may be something else, see npm star
         files must have form export {x as default} from f.
     */
 
+    // Do shell.cp() after everything retrieved
+    // with no errors, quality of life feature so in
+    // the event of error you do not have to manually delete
+    // all created files before error.
+    // each entry (srcFile, dstFile)
+    let cpCache = [];
+    // Same idea with the export lines
+    // each entry (exportString, fileToInsertInto)
+    let exportCache = [];
+
     // Set the other key:value pairs, requires us to copy source code
     // and export lines in index.js files.
     Object.keys(algorithmCopy).forEach((key) => {
@@ -341,7 +347,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
             Object.keys(exportName).forEach((mode) => {
                 let innerExportName = exportName[mode];
                 const pat = new RegExp(
-                    String.raw`export\s+\{\s*default\s+as\s+${innerExportName}\s*\}\s+from\s+['"](.+?)['"]\s*;?`
+                    String.raw`export\s*\{\s*default\s+as\s+${innerExportName}\s*\}\s*from\s*['"]([^'"]+)['"]\s*;?`,
                 );
 
                 const match = indexContents.match(pat);
@@ -364,14 +370,13 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 // camelCase convention
                 let suffix = mode.at(0).toUpperCase() + mode.slice(1);
                 const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}${suffix}.${extension}`;
-                shell.cp(srcFile, destFile);
-                newOrModifiedFiles.add(destFile);
+                cpCache.push([srcFile, destFile]);
 
                 // Write new export line
-                shell.ShellString(
-                    `export { default as ${algorithmId}${suffix} } from './${algorithmId}${suffix}.${extension}';\n`
-                ).toEnd(indexFilepath);
-                newOrModifiedFiles.add(indexFilepath);
+                exportCache.push([
+                    `export { default as ${algorithmId}${suffix} } from './${algorithmId}${suffix}.${extension}';\n`,
+                    indexFilepath
+                ]);
 
                 // Update template
                 addToTemplate[mode] = `${algorithmId}${suffix}`;
@@ -389,15 +394,16 @@ Note: The default port should be 3000 but it may be something else, see npm star
                 const variableAssignedToCopiedAlgorithm = src.match(pat)[1];
 
                 // Insert the export for the new algorithm with the same variable assignment
-                shell.ShellString(`export const ${algorithmId} = ${variableAssignedToCopiedAlgorithm};\n`)
-                     .toEnd(`${PATHS.instruction}/index.js`);
-                newOrModifiedFiles.add(indexFilepath);
+                exportCache.push([
+                    `export const ${algorithmId} = ${variableAssignedToCopiedAlgorithm};\n`,
+                    `${PATHS.instruction}/index.js`
+                ]);
 
                 template[algorithmId][key] = `${algorithmId}`;
             } else {
                 // Others
                 const pat = new RegExp(
-                    String.raw`export\s+\{\s*default\s+as\s+${exportName}\s*\}\s+from\s+['"](.+?)['"]\s*;?`
+                    String.raw`export\s*\{\s*default\s+as\s+${exportName}\s*\}\s*from\s*['"]([^'"]+)['"]\s*;?`,
                 );
                 const match = indexContents.match(pat);
 
@@ -416,18 +422,29 @@ Note: The default port should be 3000 but it may be something else, see npm star
                     ? `${KEYS_TO_DIRECTORY[key]}/${baseName}`
                     : `${KEYS_TO_DIRECTORY[key]}/${baseName}.${extension}`;
                 const destFile = `${KEYS_TO_DIRECTORY[key]}/${algorithmId}.${extension}`;
-                shell.cp(srcFile, destFile);
-                newOrModifiedFiles.add(destFile);
+                cpCache.push([srcFile, destFile]);
 
                 // Write new export line
-                shell.ShellString(`export { default as ${algorithmId} } from './${algorithmId}.${extension}';\n`)
-                     .toEnd(indexFilepath);
-                newOrModifiedFiles.add(indexFilepath);
+                exportCache.push([
+                    `export { default as ${algorithmId} } from './${algorithmId}.${extension}';\n`,
+                    indexFilepath
+                ]);
                 
                 // Update template
                 template[algorithmId][key] = algorithmId;
             }
         }
+    });
+
+    // No errors we can update the file system now.
+    cpCache.forEach(([src, dest]) => {
+        shell.cp(src, dest);
+        newOrModifiedFiles.add(dest);
+    });
+
+    exportCache.forEach(([line, file]) => {
+        shell.ShellString(line).toEnd(file);
+        newOrModifiedFiles.add(file);
     });
     /* COPY END */
 
@@ -491,6 +508,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
 })(); // Run function when file is ran (like main in C)
 
 /*
+    Assuming no errors.
     Example run: node addNewAlgorithmScript.js
     Enter the full algorithm name:
     Bubble Sort
