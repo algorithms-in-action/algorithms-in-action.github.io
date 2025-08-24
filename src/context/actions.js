@@ -2,7 +2,6 @@
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
-import { getDefaultMode } from '../algorithms/masterList';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import React, { useState } from 'react';
@@ -14,6 +13,7 @@ import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 import { genRandNumList } from '../algorithms/parameters/helpers/ParamHelper';
 
 const DEFAULT_ALGORITHM = 'heapSort';
+const DEFAULT_MODE = 'sort';
 // const DEFAULT_PARAM = DEFAULT_NODES; // maybe for other algorithms
 // import { DEFAULT_NODES } from '../algorithms/parameters/HSParam';
 const DEFAULT_NODES = genRandNumList(12, 1, 50);
@@ -494,14 +494,15 @@ export function dispatcher(state, setState) {
 export function initialState() {
   const currentUrl = new URL(window.location.href);
   const alg = currentUrl.searchParams.get('alg');
+  const mode = currentUrl.searchParams.get('mode');
 
   let initialNodes = DEFAULT_NODES; // Fallback to default nodes if parsing fails or param is not valid
 
   // Validate the algorithm and mode before proceeding
-  if (alg in algorithms) {
+  if (alg && mode && alg in algorithms && mode in algorithms[alg].pseudocode) {
     return GlobalActions.LOAD_ALGORITHM(undefined, {
       name: alg,
-      mode: getDefaultMode(alg),
+      mode: mode,
       initialNodes: initialNodes, // Use parsed or default parameters
     });
   }
@@ -510,7 +511,7 @@ export function initialState() {
 
   return GlobalActions.LOAD_ALGORITHM(undefined, {
     name: DEFAULT_ALGORITHM,
-    mode: getDefaultMode(DEFAULT_ALGORITHM),
+    mode: DEFAULT_MODE,
     initialNodes: initialNodes, // Ensure DEFAULT_PARAM is properly defined or imported
   });
 }
