@@ -16,10 +16,10 @@ const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms
     For maintainers:
         - Every index.js file must only use export {default as x} from y, variations like
           {default as x, y, z} or {x, y, z} will not allow the script to copy the algorithm that
-          uses those exports. This is definitely something that can be implemented later on, but for
-          now the script can not copy Hashing related algorithm as a result.
+          uses those exports. This is definitely something that can be implemented later on since
+          in some cases it can be annoying to make multiple files just to statisfy this constraint.
         - Change of names for properties in master list will cause problems, we are
-          inserting an entry so we use the property names at the time of writing. I have
+          inserting an entry, so we use the property names at the time of writing. I have
           created a map PROPERTY_NAMES which should be modified if the property names in
           masterList.js is changed.
         - Main concern with the script is copying, in order to copy an algorithm
@@ -33,10 +33,21 @@ const { default: algorithms, AlgorithmCategoryList } = require('./src/algorithms
 
           Ensure DEFAULT_TO_HEAPSORT and PATHS have the right paths before doing this, 
           see below.
+
+          The below constants should help protect against variations in key names
+          in masterList.js and file system changes without having to touch
+          this script to heavily, but it does not protect against everything.
+
+          Extensions: 
+            - Do not impose export {default as x} from y constraint
+            - Right now if the process fails the user can not use git branch -D
+              <created branch> to undo all changes because they were not commited
+              and must manually delete changes.
+
 */
 
 // Change this for future years
-const nameOfDevBranch = "2025_sem2";
+const NAME_OF_DEV_BRANCH = "2025_sem2";
 
 // At time of writing these are the paths for heap sort files.
 const DEFAULT_TO_HEAPSORT = {
@@ -280,7 +291,7 @@ async function retrieveDataFromUser() {
     noDeploy = deploy.trim().toLowerCase() === "y" ? false : true;
 
     if (noDeploy) {
-        rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}&mode=sort
+        rl.output.write(`Not deploying to site, algorithm accesible through 'secret' URL http://localhost:<port_num>/?alg=${algorithmId}
 Note: The default port should be 3000 but it may be something else, see npm start's output.`);
     }
 }
@@ -290,9 +301,9 @@ Note: The default port should be 3000 but it may be something else, see npm star
     await retrieveDataFromUser();
 
     /* Run commands */
-    shell.exec(`git switch ${nameOfDevBranch}`);
-    shell.exec(`git pull`);
-    shell.exec(`git switch -c add_${algorithmId}`);
+    //shell.exec(`git switch ${NAME_OF_DEV_BRANCH}`);
+    //shell.exec(`git pull`);
+    //shell.exec(`git switch -c add_${algorithmId}`);
 
     // New entry in master list
     let template = {
@@ -330,7 +341,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
             Object.keys(exportName).forEach((mode) => {
                 let innerExportName = exportName[mode];
                 const pat = new RegExp(
-                    String.raw`export\s+\{\s*default\s+as\s+${innerExportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
+                    String.raw`export\s+\{\s*default\s+as\s+${innerExportName}\s*\}\s+from\s+['"](.+?)['"]\s*;?`
                 );
 
                 const match = indexContents.match(pat);
@@ -386,7 +397,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
             } else {
                 // Others
                 const pat = new RegExp(
-                    String.raw`export\s+\{\s*default\s+as\s+${exportName}\s*\}\s+from\s+['"](.+?)['"]\s*;`
+                    String.raw`export\s+\{\s*default\s+as\s+${exportName}\s*\}\s+from\s+['"](.+?)['"]\s*;?`
                 );
                 const match = indexContents.match(pat);
 
@@ -466,7 +477,7 @@ Note: The default port should be 3000 but it may be something else, see npm star
     // TODO: Windows carriage return quirks
     const updated = src.replace(
         /(\/\/_MASTER_LIST_START_\n[\s\S]*?)\n\};\n(\/\/_MASTER_LIST_END_)/,
-        `$1\n\n${s}\n};\n$2`
+        `$1\n\n${s},\n};\n$2`
     );
     shell.ShellString(updated).to(PATHS.master);
     newOrModifiedFiles.add(PATHS.master);
