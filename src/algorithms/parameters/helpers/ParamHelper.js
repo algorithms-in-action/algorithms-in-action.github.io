@@ -110,7 +110,7 @@ export const errorParamMsg = (
   <ParamMsg
     logWarning
     logTag="Oops..."
-    logMsg={`${example || ''}`}
+    logMsg={`\n${reason}\n${example || ''}`}
   />
 );
 
