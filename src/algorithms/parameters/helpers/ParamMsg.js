@@ -7,17 +7,17 @@ function ParamMsg({ logWarning, logTag, logMsg }) {
 
   // Scroll logContainer into view
   const ref = useRef(null);
+
+  // Every render scroll into view.
   useEffect(() => {
     if (!ref.current) return;
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
     ref.current.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
       inline: 'nearest',
     });
-  }, [logTag, logMsg]); // Only when logMsg changes or appears for the first time.
-  // logTag added as well for future iterations if we have logTag changing but not logMsg.
+  });
 
   return (
     <div ref={ref} className="logContainer">
