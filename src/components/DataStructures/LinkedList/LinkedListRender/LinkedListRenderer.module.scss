@@ -1,0 +1,82 @@
+@import "../../common/stylesheet/index";
+
+.container {
+  position: relative;
+  overflow: visible; // 舞台可能比容器大
+}
+
+.stage {
+  position: relative;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.edges {
+  // svg 铺满舞台；线条风格
+  .edge {
+    stroke: #b8b8b8;
+    stroke-width: 2px;
+    opacity: 0.9;
+  }
+  .arrowHead {
+    fill: #b8b8b8;
+  }
+}
+
+.node {
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 14px;
+  background: var(--array-2d-row-col-bg, #333);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+
+  .value {
+    font-size: 12px;
+    color: var(--array-2d-row-col-value-color, #d9d9d9);
+    line-height: 1;
+    user-select: none;
+  }
+
+  .vars {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    pointer-events: none;
+  }
+
+  .varBadge {
+    background: rgba(180,180,180,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #ddd;
+  }
+}
+
+
+/* 状态色：与数组组件保持一致 */
+.patched   { background: var(--peach); }
+.sorted    { background: var(--stone); }
+.selected  { outline: 2px solid var(--sky);    }
+.selected1 { outline: 2px solid var(--leaf);   }
+.selected2 { outline: 2px solid var(--apple);  }
+.selected3 { outline: 2px solid var(--peach);  }
+.selected4 { outline: 2px solid var(--plum);   }
+.selected5 { outline: 2px solid var(--wood);   }
+
+.faded { opacity: .30; }
+.caption { 
+  position: absolute; 
+  bottom: 8px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  font-size: 13px; 
+  color: var(--array-2d-row-col-value-color); 
+}
