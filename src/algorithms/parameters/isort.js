@@ -93,7 +93,7 @@ function MergesortParam({ list }) {
     <>
       <div className="form">
         <ListParam
-          name="heapSort"
+          name="isort"
           buttonName="Reset"
           mode="sort"
           formClassName="formLeft"
