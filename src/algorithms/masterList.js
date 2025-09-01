@@ -1,3 +1,6 @@
+// XXX TODO: keywords from binarySearchTree onwards, maybe add more
+// earlier also, eg recursive
+
 /*
  Use node AddNewAlgorithm.js to have the entry, files and export lines
  created for you.
@@ -69,7 +72,7 @@ const algorithmMetadata = {
     name: 'Insertion Sort',
     category: 'Sort',
     noDeploy: false,
-    keywords: ['N^2'],
+    keywords: ['O(N^2)', 'O(N)', 'adaptive', 'comparison', 'stable'],
     explanationKey: 'isort',
     paramKey: 'isort',
     instructionsKey: 'isort',
@@ -82,7 +85,7 @@ const algorithmMetadata = {
     noDeploy: false,
     name: 'Heapsort',
     category: 'Sort',
-    keywords: ['Linearithmic'],
+    keywords: ['O(NlogN)', 'binary tree', 'array'],
     explanationKey: 'HSExp',
     paramKey: 'HSParam',
     instructionsKey: 'HSInstruction',
@@ -94,7 +97,7 @@ const algorithmMetadata = {
   quickSort: {
     name: 'Quicksort',
     category: 'Sort',
-    keywords: ['Linearithmic'],
+    keywords: ['O(N^2)', 'O(NlogN)', 'comparison', 'partition', 'divide and conquer'],
     explanationKey: 'QSExp',
     paramKey: 'QSParam',
     instructionsKey: 'QSInstruction',
@@ -106,6 +109,7 @@ const algorithmMetadata = {
   quickSortM3: {
     name: 'Quicksort (Median of 3)',
     category: 'Sort',
+    keywords: ['O(N^2)', 'O(NlogN)', 'comparison', 'partition', 'divide and conquer'],
     explanationKey: 'QSM3Exp',
     paramKey: 'QSM3Param',
     instructionsKey: 'QSInstruction',
@@ -117,6 +121,7 @@ const algorithmMetadata = {
   radixSortMSD: {
     name: 'MSD Radix Sort',
     category: 'Sort',
+    keywords: ['O(N)', 'exchange', 'partition', 'divide and conquer', 'bits', 'most significant digit'],
     explanationKey: 'MSDRadixSortExp',
     paramKey: 'MSDRadixSortParam',
     instructionsKey: 'RadixSortInstruction',
@@ -128,6 +133,7 @@ const algorithmMetadata = {
   radixSortStraight: {
     name: 'Straight Radix Sort',
     category: 'Sort',
+    keywords: ['O(N)', 'distribution', 'counting', 'digits', 'LSD', 'least significant digit', 'stable'],
     explanationKey: 'StraightRadixSortExp',
     paramKey: 'StraightRadixSortParam',
     instructionsKey: 'RadixSortInstruction',
@@ -139,6 +145,7 @@ const algorithmMetadata = {
   msort_arr_td: {
     name: 'Merge Sort (top down)',
     category: 'Sort',
+    keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable'],
     noDeploy: false,
     explanationKey: 'msort_arr_td',
     paramKey: 'msort_arr_td',
@@ -151,6 +158,7 @@ const algorithmMetadata = {
   msort_arr_bup: {
     name: 'Merge Sort (bottom up)',
     category: 'Sort',
+    keywords: ['O(NlogN)', 'comparison', 'stable'],
     noDeploy: false,
     explanationKey: 'msort_arr_bup',
     paramKey: 'msort_arr_bup',
@@ -163,6 +171,7 @@ const algorithmMetadata = {
   msort_arr_nat: {
     name: 'Merge Sort (natural)',
     category: 'Sort',
+    keywords: ['O(NlogN)', 'O(N)', 'comparison', 'stable', 'adaptive'],
     noDeploy: false,
     explanationKey: 'msort_arr_nat',
     paramKey: 'msort_arr_nat',
@@ -175,6 +184,7 @@ const algorithmMetadata = {
   msort_list_td: {
     name: 'Merge Sort (for lists)',
     category: 'Sort',
+    keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable', 'top down'],
     noDeploy: false,
     explanationKey: 'msort_list_td',
     paramKey: 'msort_list_td',
@@ -187,6 +197,8 @@ const algorithmMetadata = {
   msort_lista_td: {
     name: 'Merge Sort (lists as arrays)',
     category: 'Sort',
+    keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable'],
+    noDeploy: true,
     explanationKey: 'msort_lista_td',
     paramKey: 'msort_lista_td',
     instructionsKey: 'msort_lista_td',
@@ -215,7 +227,7 @@ const algorithmMetadata = {
 
   BSTrec: {
     name: 'Binary Search Tree (recursive)',
-    category: 'Sort',
+    category: 'Insert/Search',
     noDeploy: false,
     explanationKey: 'BSTrec',
     paramKey: 'BSTrec',
@@ -223,6 +235,24 @@ const algorithmMetadata = {
     extraInfoKey: 'BSTrec',
     pseudocode: { sort: 'BSTrec' },
     controller: { sort: 'BSTrec' },
+  },
+
+  AVLTree: {
+    name: 'AVL Tree',
+    category: 'Insert/Search',
+    keywords: ['O(logN)', 'balanced', 'binary', 'rotation', 'height'],
+    explanationKey: 'AVLExp',
+    paramKey: 'AVLTreeParam',
+    instructionsKey: 'AVLInstruction',
+    extraInfoKey: 'AVLInfo',
+    pseudocode: {
+      insertion: 'AVLTreeInsertion',
+      search: 'AVLTreeSearch',
+    },
+    controller: {
+      insertion: 'AVLTreeInsertion',
+      search: 'AVLTreeSearch',
+    },
   },
 
   TTFTree: {
@@ -290,23 +320,6 @@ const algorithmMetadata = {
     controller: {
       insertion: 'HashingChainingInsertion',
       search: 'HashingSearch',
-    },
-  },
-
-  AVLTree: {
-    name: 'AVL Tree',
-    category: 'Insert/Search',
-    explanationKey: 'AVLExp',
-    paramKey: 'AVLTreeParam',
-    instructionsKey: 'AVLInstruction',
-    extraInfoKey: 'AVLInfo',
-    pseudocode: {
-      insertion: 'AVLTreeInsertion',
-      search: 'AVLTreeSearch',
-    },
-    controller: {
-      insertion: 'AVLTreeInsertion',
-      search: 'AVLTreeSearch',
     },
   },
 
@@ -380,6 +393,7 @@ const algorithmMetadata = {
   prim_old: {
     name: "Prim's (simpler code)",
     category: 'Graph',
+    noDeploy: true,
     explanationKey: 'Prims_oldExp',
     paramKey: 'Prims_oldParam',
     instructionsKey: 'Prims_oldInstruction',
@@ -412,8 +426,8 @@ const algorithmMetadata = {
   },
 
   gwrap: {
-    name: 'Convex Hull (gift wrapping)',
-    category: 'Sort',
+    name: 'Gift Wrapping (convex hull)',
+    category: 'Geometric',
     noDeploy: false,
     explanationKey: 'gwrap',
     paramKey: 'gwrap',
