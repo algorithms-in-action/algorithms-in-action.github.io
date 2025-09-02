@@ -711,6 +711,36 @@ class GraphRenderer extends Renderer {
             )}
           </g>
 
+          {/* Nested recursion rectangles */}
+          {rectangles.map((stack, i) => {
+            if (!stack || !stack.rect) {
+              return null;
+            }
+            const [left, top, rgt, btm, text] = stack.rect;
+            return (
+              <g key={`rec-rect-${i}`}>
+                <text className={classes(styles.select_color)}
+                  fontSize={30} // font size
+                  x={left - 30}    // font position
+                  y={top - 60}
+                  style={{ opacity: 0.85 }} // font opacity
+                >
+                  {text}
+                </text>
+                <rect className={classes(
+                    styles.select_rect,
+                    styles && styles.backgroundStyle
+                  )}
+                  x={left - 40} // x position 
+                  y={top - 50} // y position 
+                  width={(rgt - left) + 80} // width of the sub-rectangle 
+                  height={(btm - top) + 100} // height of the sub-rectangle 
+                  style={{ opacity:  0.6 }} // opacity
+                />
+              </g>
+            );
+          })}
+
           {/* node graph */}
           {nodes.map((node) => {
             const {
