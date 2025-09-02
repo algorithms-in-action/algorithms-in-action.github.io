@@ -590,6 +590,19 @@ export default {
                         vis.graph.updateHeight(r, 1);
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
+
+                             // Add the new node's corresponding rectangle
+                            if (vis.graph.rectangles && vis.graph.rectangles.length) {
+                                for (const stack of vis.graph.rectangles) {
+                                    if (stack.rectangleNode.includes(p)) {
+                                        if (!stack.rectangleNode.includes(r)) {
+                                            stack.rectangleNode.push(r);
+                                        }
+                                        // resize this stack's rectangle immediately
+                                        vis.graph.rectangle_size_forStack(stack);
+                                    }
+                                }
+                            } 
                         }
                         vis.graph.rectangle_size();
                         // vis.graph.select(r, p);
