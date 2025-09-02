@@ -290,6 +290,7 @@ export default {
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
                     vis.graph.rectangle_size();
+                    vis.graph.popRectStack();
                 },
                 [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
@@ -467,6 +468,7 @@ export default {
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
                     vis.graph.rectangle_size();
+                    vis.graph.popRectStack();
                 },
                 [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
@@ -563,6 +565,12 @@ export default {
                     // print the function name and the key to be inserted
                     vis.graph.setFunctionName("AVLT_Insert");
                     vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+
+                    if (rr) {
+                        // Cretae a new nested rectangle
+                        let nodeIds = vis.graph.getSubtreeNodes(rr);
+                        vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
+                    } 
                 },
                 [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
                 depth
@@ -580,10 +588,10 @@ export default {
                     (vis, r, p) => {
                         vis.graph.addNode(r, r);
                         vis.graph.updateHeight(r, 1);
-
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
                         }
+                        vis.graph.rectangle_size();
                         // vis.graph.select(r, p);
                         ////  vis.graph.resetVisitAndSelect(r, p);
                     },
@@ -653,6 +661,7 @@ export default {
                 chunker.add('else k = root(t).key',
                     (vis) => {
                         vis.graph.clear(); // clear all highlighting
+                        vis.graph.popRectStack();
                     },
                     [],
                     depth
@@ -800,6 +809,7 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.popRectStack();
                     },
                     [(parentNode !== null) ? globalRoot.key : root.key, root],
                     depth);
@@ -840,12 +850,14 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.popRectStack();
                     }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else {
                 chunker.add('case Balanced', (vis) => null, [], depth);
                 chunker.add('return t',
                     (vis, r, p) => {
                         vis.graph.resetVisitAndSelect(r, p); // clear all highlighting
+                        vis.graph.popRectStack();
                     },
                     [root.key, parentNode ? parentNode.key : null],
                     depth
