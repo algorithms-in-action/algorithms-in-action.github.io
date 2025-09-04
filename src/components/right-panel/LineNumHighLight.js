@@ -159,6 +159,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <HelpIcon style={{ color: '#f7c679', fontSize: 'small' }} />
         </button>;
     }
+
     if (line.ref) {
       codeLines.push(
         <p
@@ -206,6 +207,12 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           key={i}
           className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
+          ref={el => {
+            if (line.bookmark !== undefined && algorithm.bookmark === line.bookmark && el) {
+              console.log("in");
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }}
         //onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>
