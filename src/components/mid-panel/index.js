@@ -52,7 +52,6 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
       let url = createUrl(baseUrl, category, urlContext);
 
       // Step and expand apply to all algorithms append them on.
-      console.log(algorithm)
       if (algorithm?.chunker?.currentChunk) url += `&step=${algorithm.chunker.currentChunk}`;
       if (algorithm?.collapse?.[algorithmKey]) url += `&expand=${JSON.stringify(algorithm.collapse[algorithmKey])}`;
       setCurrentUrl(url);
@@ -71,9 +70,9 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           <Popup open={open} closeOnDocumentClick onClose={closeModal}>
             <div className="helpArea">
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-              <a className="closeHelp" onClick={closeModal}>
+              <button className="closeHelp" onClick={closeModal}>
                 &times;
-              </a>
+              </button>
               {/* eslint-disable-next-line max-len */}
               <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
             </div>
@@ -85,9 +84,9 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           <Popup open={share} closeOnDocumentClick onClose={closeShare}>
             <div className="shareArea">
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-              <a className="closeShare" onClick={closeShare}>
+              <button className="closeShare" onClick={closeShare}>
                 &times;
-              </a>
+              </button>
               {/* eslint-disable-next-line max-len */}
               <p>
                 {currentUrl}
