@@ -50,6 +50,11 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
     if (share) {
       let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
       let url = createUrl(baseUrl, category, urlContext);
+
+      // Step and expand apply to all algorithms append them on.
+      console.log(algorithm)
+      if (algorithm?.chunker?.currentChunk) url += `&step=${algorithm.chunker.currentChunk}`;
+      if (algorithm?.collapse?.[algorithmKey]) url += `&expand=${JSON.stringify(algorithm.collapse[algorithmKey])}`;
       setCurrentUrl(url);
     }
   }, [share]);

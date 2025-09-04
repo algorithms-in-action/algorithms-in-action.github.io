@@ -21,7 +21,7 @@ import algorithms from '../../../algorithms';
 const VALID_PARAM_NAMES = [
     'alg', 'mode', 'list', 'value', 'xyCoords', 'edgeWeights',
     'size', 'start', 'end', 'string', 'pattern', 'union',
-    'heuristic', 'min', 'max'
+    'heuristic', 'min', 'max', 'step', 'expand'
 ];
 
 // Default values for each parameter
@@ -40,25 +40,14 @@ const DEFAULT_VALUES = {
     union: '',
     heuristic: '',
     min: '',
-    max: ''
+    max: '',
+    step: '0',
+    expand: '{}'
 };
 
 
 export function useUrlParams() {
-    const [search, setSearch] = useState(window.location.search);
-
-    useEffect(() => {
-        const handleUrlChange = () => {
-            setSearch(window.location.search);
-        };
-
-        window.addEventListener('popstate', handleUrlChange);
-        return () => {
-            window.removeEventListener('popstate', handleUrlChange);
-        };
-    }, []);
-
-    const urlParams = useMemo(() => new URLSearchParams(search), [search]);
+    const urlParams = new URLSearchParams(window.location.search)
     const params = {};
 
     // Filter and parse valid URL parameters

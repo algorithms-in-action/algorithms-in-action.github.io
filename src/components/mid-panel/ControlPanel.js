@@ -1,6 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable import/no-named-as-default */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
 import Grid from '@mui/material/Grid';
@@ -18,6 +18,7 @@ import { GlobalActions } from '../../context/actions';
 import '../../styles/ControlPanel.scss';
 import 'reactjs-popup/dist/index.css';
 import CodeBlock from '../../markdown/code-block';
+import { useUrlParams } from '../../algorithms/parameters/helpers/urlHelpers';
 
 const muiTheme = createTheme({
   overrides: {
@@ -122,6 +123,24 @@ function ControlPanel() {
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
+
+  // I guess it makes sense to go here.
+  const stepApplied = useRef(false);
+  useEffect(() => {
+    if (!algorithm?.chunker || stepApplied.current) return;
+    let { step } = useUrlParams();
+
+    if (step && !isNaN(step)) {
+      const maxStep = algorithm.chunker.chunks.length - 1;
+      const clampedStep = Math.max(0, Math.min(parseInt(step, 10), maxStep));
+
+      // do while <. Starts at 1 if step=0.
+      if (clampedStep > 0) dispatch(GlobalActions.NEXT_LINE, { stopAt: clampedStep });
+    }
+
+    stepApplied.current = true;
+  }, [algorithm?.chunker]); // When algorithm chunker changes. Make sure it only
+  // runs once however, do not want step param to influence every algorithm.
 
   return (
     <div className="controlContainer">
