@@ -38,14 +38,22 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
       // expand is expected to be a JSON string from the URL
       const expandState = JSON.parse(expand);
 
+      const algoKey = algorithm.id?.name;
+      const collapseState = algorithm.collapse?.[algoKey] || {};
+
       // Loop over modes (insertion, search, etc.)
       Object.entries(expandState).forEach(([modeName, blocks]) => {
-        // Loop over blocks inside each mode
-        Object.entries(blocks).forEach(([blockName, shouldExpand]) => {
-          dispatch(GlobalActions.COLLAPSE, {
-            codeblockname: blockName,
-            expandOrCollapase: shouldExpand,
-          });
+          // Loop over blocks inside each mode
+          if (!collapseState[modeName]) return;
+
+          Object.entries(blocks).forEach(([blockName, shouldExpand]) => {
+          // ensure this block actually exists in collapse tree
+          if (blockName in collapseState[modeName]) {
+            dispatch(GlobalActions.COLLAPSE, {
+              codeblockname: blockName,
+              expandOrCollapase: shouldExpand,
+            });
+          }
         });
       });
     } catch (err) {
