@@ -1,6 +1,11 @@
 import parse from '../../pseudocode/parse';
+import {
+  linearProbingIncrement,
+  doubleHashingIncrement,
+  hash1
+} from './HashingInsertion'
 
-export const main = `
+let main = `
     \\Code{
         Main
         HashSearch(T, k)  // Search for key k in table T \\B 1
@@ -36,7 +41,7 @@ export const main = `
              \\In}
     \\Code}
 `
-export const chainingPseudocode = `
+let chainingPseudocode = `
 \\Code{
     Main
     HashSearch(T, k)  // Search for key k in table T
@@ -66,3 +71,7 @@ export const chainingPseudocode = `
             \\In}
 \\Code}
 `
+
+export const doubleSearch = parse(main + '\n' + hash1 + '\n' + doubleHashingIncrement);
+export const linearSearch = parse(main + '\n' + hash1 + '\n' + linearProbingIncrement);
+export const chainingSearch = parse(chainingPseudocode + '\n' + hash1);

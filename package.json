@@ -61,7 +61,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
-    "@mui/lab": "latest",
+    "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.4",
     "@mui/styles": "^5.14.4",
     "@popperjs/core": "^2.11.8",
@@ -88,8 +88,7 @@
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
     "run-script-os": "^1.1.6",
-    "sass": "^1.50.0",
-    "shelljs": "^0.10.0"
+    "sass": "^1.50.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

@@ -4,8 +4,7 @@ import React, { createContext, useState } from 'react';
 import { initGlobalAlgorithmGetter } from '../algorithms/controllers/collapseChunkPlugin';
 import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { dispatcher, initialState } from './actions';
-import algorithms from '../algorithms';
-import { getDefaultMode, getCategory } from '../algorithms/masterList'
+import algorithms, { getDefaultMode, getCategory } from '../algorithms';
 import { Search } from '@mui/icons-material';
 import { URLProvider, URLContext } from './urlState';
 

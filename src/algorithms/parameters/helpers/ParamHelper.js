@@ -4,9 +4,18 @@ import Denque from 'denque';
 import ParamMsg from './ParamMsg';
 
 export const commaSeparatedNumberListValidCheck = (t) => {
-  const regex = /^[0-9]+(,[0-9]+)*$/g;
-  return t.match(regex);
+  if (!t || t.trim() === "") {
+    return { valid: false, error: "Input cannot be empty" };
+  }
+
+  const regex = /^[0-9]+(,[0-9]+)*$/;
+  if (!regex.test(t)) {
+    return { valid: false, error: "Must be a comma-separated list of positive numbers only" };
+  }
+
+  return { valid: true, error: null };
 };
+
 
 export const stringListValidCheck = (t) => {
   const regex = /^[a-zA-Z]+(,[a-zA-Z]+)*$/g;
@@ -15,13 +24,33 @@ export const stringListValidCheck = (t) => {
 
 export const stringValidCheck = (t) => {
   const regex = /^[a-z\s]+$/g;
-  return t.match(regex);
+
+  if (!t || t.trim() === "") {
+    return { valid: false, error: "Input cannot be empty." };
+  }
+
+  if (!regex.test(t)) {
+    return { valid: false, error: "Only lowercase letters and spaces are allowed." };
+  }
+
+  return { valid: true, error: null };
 };
 
+
 export const singleNumberValidCheck = (t) => {
-  const regex = /^\d+$/g;
-  return t.match(regex);
+  const regex = /^\d+$/;
+
+  if (!t || t.trim() === "") {
+    return { valid: false, error: "Input cannot be empty." };
+  }
+
+  if (!regex.test(t)) {
+    return { valid: false, error: "Only positive integers are allowed." };
+  }
+
+  return { valid: true, error: null };
 };
+
 
 // eslint-disable-next-line consistent-return
 export const matrixValidCheck = (m) => {
@@ -110,7 +139,7 @@ export const errorParamMsg = (
   <ParamMsg
     logWarning
     logTag="Oops..."
-    logMsg={`\n${reason}\n${example || ''}`}
+    logMsg={`${reason}${example ? `\nExample: ${example}` : ''}`}
   />
 );
 

@@ -498,23 +498,30 @@ function EuclideanMatrixParams({
   };
 
   // Get and parse the coordinates of each node
-  const getCoordinateMatrix = () => {
-    const coords = [];
-    data1.forEach((row) => {
-      const temp = [];
-      for (const [_, value] of Object.entries(row)) {
-        if (singleNumberValidCheck(value)) {
-          const num = parseInt(value, 10);
-          temp.push(num);
-        } else {
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
-          return;
-        }
+const getCoordinateMatrix = () => {
+  const coords = [];
+
+  for (const row of data1) {
+    const temp = [];
+
+    for (const [_, value] of Object.entries(row)) {
+      const check = singleNumberValidCheck(value);
+
+      if (check.valid) {
+        const num = parseInt(value, 10);
+        temp.push(num);
+      } else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, check.error));
+        return null;
       }
-      coords.push(temp);
-    });
-    return coords;
-  };
+    }
+
+    coords.push(temp);
+  }
+
+  return coords;
+};
+
 
   // Get coordinates from table and build list text (string)
   const getCoordinateList = (data1) => {

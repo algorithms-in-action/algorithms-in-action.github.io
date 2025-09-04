@@ -38,15 +38,17 @@ function ListParam({
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value.replace(/\s+/g, '');
-    if (commaSeparatedNumberListValidCheck(inputValue)) {
+    const { valid, error } = commaSeparatedNumberListValidCheck(inputValue);
+
+    if (valid) {
       const nodes = inputValue.split`,`.map((x) => +x);
-      // SET_VAL(nodes);
-      // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
-      //setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      console.log(valid, ",", error)
+      //alert(`Error in ${ALGORITHM_NAME}:\n${error}\nExample: ${EXAMPLE}`);
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, error));
     }
+
   };
 
   return (

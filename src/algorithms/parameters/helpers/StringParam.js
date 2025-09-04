@@ -35,18 +35,25 @@ function StringParam({
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    // check whether both input fields are valid string and patterns
+
     const string = e.target[0].value;
     const pattern = e.target[1].value;
-    if (stringValidCheck(string) && stringValidCheck(pattern)) {
-      // SET_VAL(nodes);
-      // run animation
+
+    const stringCheck = stringValidCheck(string);
+    const patternCheck = stringValidCheck(pattern);
+
+    if (stringCheck.valid && patternCheck.valid) {
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
       setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      const errorMsg = !stringCheck.valid
+        ? stringCheck.error
+        : patternCheck.error;
+
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, errorMsg));
     }
   };
+
 
   return (
     <StringParamForm

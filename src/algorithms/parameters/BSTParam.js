@@ -93,42 +93,47 @@ function BSTParam({ mode, list, value }) {
    * therefore we need some extra check to make sure the tree is not empty.
    * So we need to implement a new handle function instead of using the default one.
    */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const inputValue = e.target[0].value;
-    setLocalValue(inputValue);
+const handleSearch = (e) => {
+  e.preventDefault();
+  const inputValue = e.target[0].value;
 
-    if (singleNumberValidCheck(inputValue)) {
-      const target = parseInt(inputValue, 10);
-      // make sure the tree is not empty
-      if (
-        algorithm.hasOwnProperty('visualisers')
-        && !algorithm.visualisers.graph.instance.isEmpty()
-      ) {
-        const visualiser = algorithm.chunker.visualisers;
-        // run search animation
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'binarySearchTree',
-          mode: 'search',
-          visualiser,
-          target,
-        });
-        setMessage(successParamMsg(SEARCH));
-      } else {
-        // when the tree is &nbsp;&nbsp;empty
-        setMessage(
-          errorParamMsg(
-            SEARCH,
-            undefined,
-            'Please fully build the tree before running a search.',
-          ),
-        );
-      }
+  const check = singleNumberValidCheck(inputValue);
+
+  if (check.valid) {
+    const target = parseInt(inputValue, 10);
+
+    // make sure the tree is not empty
+    if (
+      algorithm.hasOwnProperty('visualisers')
+      && !algorithm.visualisers.graph.instance.isEmpty()
+    ) {
+      const visualiser = algorithm.chunker.visualisers;
+
+      // run search animation
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'binarySearchTree',
+        mode: 'search',
+        visualiser,
+        target,
+      });
+
+      setMessage(successParamMsg(SEARCH));
     } else {
-      // when the input cannot be converted to a number
-      setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE));
+      // tree is empty
+      setMessage(
+        errorParamMsg(
+          SEARCH,
+          undefined,
+          'Please fully build the tree before running a search.',
+        ),
+      );
     }
-  };
+  } else {
+    // invalid input
+    setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE, check.error));
+  }
+};
+
 
   useEffect(
     () => {

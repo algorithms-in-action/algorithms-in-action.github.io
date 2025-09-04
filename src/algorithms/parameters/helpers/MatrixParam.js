@@ -152,34 +152,40 @@ function MatrixParam({
   }, [data]);
 
   // Get and parse the matrix
-  const getMatrix = () => {
-    const matrix = [];
-    data.forEach((row) => {
-      const temp = [];
-      for (const [_, value] of Object.entries(row)) {
-        if (singleNumberValidCheck(value)) {
-          const num = parseInt(value, 10);
-          temp.push(num);
-        } else {
-          // when the input cannot be converted to a number
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
-          return;
-        }
-      }
-      matrix.push(temp);
-    });
+const getMatrix = () => {
+  const matrix = [];
 
-    if (matrix.length !== size || matrix[0].length !== size) return [];
-    if (name === 'primOld' || name === 'primNew') {
-      if (matrixValidCheck(matrix) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
-        // eslint-disable-next-line consistent-return
-        return [];
+  for (const row of data) {
+    const temp = [];
+
+    for (const [_, value] of Object.entries(row)) {
+      const check = singleNumberValidCheck(value);
+
+      if (check.valid) {
+        const num = parseInt(value, 10);
+        temp.push(num);
+      } else {
+        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, check.error));
+        return null; 
       }
     }
 
-    return matrix;
-  };
+    matrix.push(temp);
+  }
+
+  // Check for size mismatch
+  if (matrix.length !== size || matrix[0].length !== size) return [];
+
+  if (name === 'primOld' || name === 'primNew') {
+    if (matrixValidCheck(matrix) === false) {
+      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+      return [];
+    }
+  }
+
+  return matrix;
+};
+
 
   // Run the animation
   const handleSearch = () => { 

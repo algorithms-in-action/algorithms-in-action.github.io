@@ -133,28 +133,33 @@ function HashingCHParam({ mode, list, value }) {
    * Handle search box input
    * @param {*} e search box component
    */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const inputValue = e.target[0].value;
-    let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
+const handleSearch = (e) => {
+  e.preventDefault();
+  const inputValue = e.target[0].value;
+  let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
 
-    const visualisers = algorithm.chunker.visualisers; // Visualizers from insertion
-    if (singleNumberValidCheck(inputValue)) { // Check if input is a single positive number
-      const target = parseInt(inputValue);
+  const visualisers = algorithm.chunker.visualisers; // Visualizers from insertion
+  const check = singleNumberValidCheck(inputValue);
 
-      // Dispatch algorithm
-      dispatch(GlobalActions.RUN_ALGORITHM, {
-        name: 'HashingCH',
-        mode: 'search',
-        hashSize: hashSize,
-        visualisers,
-        target
-      });
-      setMessage(successParamMsg(ALGORITHM_NAME));
-    } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH));
-    }
+  if (check.valid) {
+    const target = parseInt(inputValue);
+
+    // Dispatch algorithm
+    dispatch(GlobalActions.RUN_ALGORITHM, {
+      name: 'HashingCH',
+      mode: 'search',
+      hashSize: hashSize,
+      visualisers,
+      target,
+    });
+
+    setMessage(successParamMsg(ALGORITHM_NAME));
+  } else {
+    // Invalid input
+    setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH, check.error));
   }
+};
+
 
   // Use effect to detect changes in radio box choice
   useEffect(
