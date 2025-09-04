@@ -25,7 +25,7 @@ function AlgorithmMenu() {
   const [activeCategory, setActiveCategory] = useState(null);
 
   return (
-    <div className="algorithm-menu">
+    <div className="algorithm-menu" onMouseLeave={() => setIsOpen(false)}>
       <button onClick={() => setIsOpen(!isOpen)}>Menu</button>
       {isOpen && (
         <div className="dropdown">
