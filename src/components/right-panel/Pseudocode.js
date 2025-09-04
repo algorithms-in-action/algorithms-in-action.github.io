@@ -48,7 +48,8 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
 
           Object.entries(blocks).forEach(([blockName, shouldExpand]) => {
           // ensure this block actually exists in collapse tree
-          if (blockName in collapseState[modeName]) {
+          if (blockName in collapseState[modeName] && 
+              typeof shouldExpand === "boolean") {
             dispatch(GlobalActions.COLLAPSE, {
               codeblockname: blockName,
               expandOrCollapase: shouldExpand,
