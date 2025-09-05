@@ -56,19 +56,32 @@ this mechanism for acess to "hidden" algorithms
 
 const allalgs = {
 
-  'isort': {
+  'insertionSort': {
     name: 'Insertion Sort',
-    noDeploy: false,
     category: 'Sort',
-    explanation: Explanation.isort,
-    param: <Param.isort/>,
-    instructions: Instructions.isort,
-    extraInfo: ExtraInfo.isort,
+    explanation: Explanation.insertionSortExp,
+    param: <Param.insertionSortParam/>,
+    instructions: Instructions.insertionSortInstruction,
+    extraInfo: ExtraInfo.insertionSortInfo,
     pseudocode: {
-      sort: Pseudocode.isort,
+      sort: Pseudocode.insertionSort,
     },
     controller: {
-      sort: Controller.isort,
+      sort: Controller.insertionSort,
+    },
+  },
+  'selectionSort': {
+    name: 'Selection Sort',
+    category: 'Sort',
+    explanation: Explanation.selectionSortExp,
+    param: <Param.selectionSortParam/>,
+    instructions: Instructions.selectionSortInstruction,
+    extraInfo: ExtraInfo.selectionSortInfo,
+    pseudocode: {
+      sort: Pseudocode.selectionSort,
+    },
+    controller: {
+      sort: Controller.selectionSort,
     },
   },
   'heapSort': {

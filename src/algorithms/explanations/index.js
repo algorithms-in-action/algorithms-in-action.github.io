@@ -27,3 +27,5 @@ export { default as isort} from './isort.md'
 export { default as BSTrec} from './BSTrec.md'
 export { default as msort_list_td} from './msort_list_td.md'
 export { default as gwrap} from './gwrap.md'
+export { default as insertionSortExp } from './insertionSortExp.md';
+export { default as selectionSortExp } from './selectionSortExp.md';
