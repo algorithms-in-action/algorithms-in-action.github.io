@@ -91,10 +91,10 @@ function BSTParam({ mode, list, value }) {
         });
         setMessage(null);
       } else {
-        setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR, EXAMPLES.GEN_LIST_PARAM));
+        setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR));
       }
     } else {
-      setMessage(errorParamMsg(error, EXAMPLES.GEN_LIST_PARAM));
+      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
     }
   };
 

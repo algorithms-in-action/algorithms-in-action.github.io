@@ -40,8 +40,10 @@ export const EXAMPLES = {
     GEN_COORDS_EXAMPLE      : "Please follow example: 1-1,3-4,4-1,6-6 giving the X-Y coordinates for each of the nodes in the graph.",
     GEN_EDGES_EXAMPLE       : "Please follow example: 1-2,1-3,2-3,3-2-6,3-4-7 giving NodeA-NodeB-Weight for each in the graph; -Weight is optional and defaults to 1.",
     GEN_NUMBERS_BETWEEN_0_1 : "Please provide positive numbers: 0,1",
+    GEN_SINGLE_INT          : "Please follow the example: 5",
     GEN_LIST_PARAM          : "Please follow the example provided: 0,1,2,3,4",
     GEN_ENDNODES_EXAMPLE    : "Input a list of comma-separated node numbers, eg 1,2",
+
     HASHING_INSERT          : "TODO: Place holder example message",
     HASHING_TOO_LARGE       : "TODO: Add right amount of inputs whatever that is",
 

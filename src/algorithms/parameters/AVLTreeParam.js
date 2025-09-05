@@ -118,7 +118,7 @@ function AVLTParam({ mode, list, value }) {
       }
     } else {
       // invalid number input
-      setMessage(errorParamMsg(error, EXAMPLES.GEN_LIST_PARAM));
+      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
     }
   };
 

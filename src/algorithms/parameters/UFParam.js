@@ -91,7 +91,7 @@ function UFParam({ mode, union, value }) {
     e.preventDefault();
 
     const textInput = e.target[0].value.replace(/\s+/g, '');
-    const { valid, error} = validateTextInput(textInput);
+    const { valid, error} = validateTextInput(textInput, N_ARRAY);
     if (valid) {
       const target = {
         arg1: textInput

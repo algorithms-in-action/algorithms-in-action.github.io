@@ -116,6 +116,9 @@ export const checkAllRangesValid = (values) => {
  * @returns {{ valid: boolean, error: string|null }}
  */
 export function validateListInput(input) {
+  const test = commaSeparatedNumberListValidCheck(input);
+  if (!test.valid) return test;
+
   const inputArr = input.split(',').map((s) => s.trim());
   const inputSet = new Set(inputArr);
 
@@ -167,7 +170,7 @@ export function validateTextInput(value, domain) {
       return { valid: false, error: ERRORS.GEN_ONLY_POSITIVE_INTEGERS };
     }
 
-    if (!domain.includes(a) || !domain.includes(b)) {
+    if (!domain.includes(aStr) || !domain.includes(bStr)) {
       return { valid: false, error: ERRORS.GEN_NUMBER_NOT_IN_DOMAIN };
     }
   }

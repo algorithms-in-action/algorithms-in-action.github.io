@@ -123,10 +123,10 @@ const handleSearch = (e) => {
 
       setMessage(null);
     } else {
-      setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE));
+      setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR));
     }
   } else {
-    setMessage(errorParamMsg(check.error));
+    setMessage(errorParamMsg(check.error, EXAMPLES.GEN_SINGLE_INT));
   }
 };
 
