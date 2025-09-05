@@ -833,7 +833,7 @@ function EuclideanMatrixParams({
               SET_VAL={setCoordsTxt}
               REFRESH_FUNCTION={() => '1,1'}
               ALGORITHM_NAME={ALGORITHM_NAME}
-              EXAMPLE={EXAMPLE.GEN_COORDS_EXAMPLE}
+              EXAMPLE={EXAMPLES.GEN_COORDS_EXAMPLE}
               setMessage={setMessage}
             />
           </div>
@@ -848,7 +848,7 @@ function EuclideanMatrixParams({
               SET_VAL={setEdgesTxt}
               REFRESH_FUNCTION={() => '1-2'}
               ALGORITHM_NAME={ALGORITHM_NAME}
-              EXAMPLE={EXAMPLE.GEN_EDGES_EXAMPLE}
+              EXAMPLE={EXAMPLES.GEN_EDGES_EXAMPLE}
               setMessage={setMessage}
             />
           </div>

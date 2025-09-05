@@ -14,7 +14,7 @@ import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import { singleNumberValidCheck } from './helpers/InputValidators';
+import { singleNumberValidCheck, validateListInput } from './helpers/InputValidators';
 import { genUniqueRandNumList, balanceBSTArray, shuffleArray } from './helpers/InputBuilders';
 import { errorParamMsg } from './helpers/ParamMsg';
 import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
@@ -84,8 +84,8 @@ function TTFTParam({ mode, list, value }) {
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
-          
-    if (validateListInput(list)) {
+    const {valid, error} = validateListInput(list);
+    if (valid) {
       let nodes = list.split(',').map(Number);
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
@@ -94,7 +94,7 @@ function TTFTParam({ mode, list, value }) {
       }); 
       setMessage(null);
     } else {
-      setMessage(errorParamMsg(ERRORS.TTF_INSERTION, EXAMPLES.TTF_INSERTION));
+      setMessage(errorParamMsg(error, EXAMPLES.TTF_INSERTION));
     }
   };
 
@@ -213,12 +213,3 @@ TTFTParam.propTypes = {
 };
 
 export default withAlgorithmParams(TTFTParam);
-
-function validateListInput(input) {
-  const inputArr = input.split(',');
-  const inputSet = new Set(inputArr);
-  return (
-    inputArr.length === inputSet.size
-    && inputArr.every((num) => singleNumberValidCheck(num))
-  );
-}

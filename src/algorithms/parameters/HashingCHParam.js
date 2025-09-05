@@ -98,10 +98,10 @@ function HashingCHParam({ mode, list, value }) {
         setMessage(null);
       }
       else {
-        setMessage(errorParamMsg(ERRORS.HASHING_INVALID_RANGES));
+        setMessage(errorParamMsg(ERRORS.GEN_INVALID_RANGES, EXAMPLES.HASHING_INSERT));
       }
     } else {
-      setMessage(errorParamMsg(ERRORS.HASHING_INVALID_INPUT_INSERT));
+      setMessage(errorParamMsg(ERRORS.GEN_PAIR_TRIPLES_POS_INT, EXAMPLES.HASHING_INSERT));
     }
   }
 
@@ -123,8 +123,9 @@ const handleSearch = (e) => {
       visualisers,
       target,
     });
+    setMessage(null);
   } else {
-    setMessage(errorParamMsg(ERRORS.GEN_ONLY_POSITIVE_INTEGERS, EXAMPLES.HASHING_INSERT));
+    setMessage(errorParamMsg(check.error, EXAMPLES.HASHING_INSERT));
   }
 };
 

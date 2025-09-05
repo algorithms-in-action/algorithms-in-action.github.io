@@ -26,12 +26,13 @@ export const ERRORS = {
     GEN_GRAPH_INVALID_COORDS       : "Coordinates input must follow the correct format",
     GEN_GRAPH_INVALID_EDGES        : "Edges input must follow the correct format",
     GEN_GRAPH_INVALID_ENDNODES     : "End nodes input must follow the correct format",
-
-    HASHING_INVALID_INPUT_INSERT   : "Please enter a list containing positive integers, pairs or triples",
-    HASHING_TOO_LARGE              : "Please enter the right amount of inputs",
-    HASHING_INVALID_RANGES         : "If you had entered ranges, please input valid ranges",
-
-    TTF_INSERTION                  : 'Duplicate-free list of non-negative integers please: 0,1,2,3,4',
+    GEN_PAIR_TRIPLES_POS_INT       : "Please enter a list containing positive integers, pairs or triples",
+    GEN_RIGHT_NUMBER_INPUTS        : "Please enter the right amount of inputs",
+    GEN_INVALID_RANGES             : "If you had entered ranges, please input valid ranges",
+    GEN_LIST_INVALID_NUMBER        : "List must only contain valid integers",
+    GEN_LIST_DUPLICATES            : "List must not contain duplicate values",
+    GEN_TEXT_PAIR_FORMAT           : "Input must be comma-separated pairs (a-b)",
+    GEN_NUMBER_NOT_IN_DOMAIN       : "Number entered is not in a valid domain."
 };
 
 export const EXAMPLES = {
@@ -47,6 +48,6 @@ export const EXAMPLES = {
     UF_FIND                 : "Please follow the example provided: 2. The single digit should be between 1 and 10.",
     UF_UNION                : "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.",
 
-    TTF_INSERTION           : "TODO: "
+    TTF_INSERTION           : "Duplicate-free list of non-negative integers please: 0,1,2,3,4",
 };
 

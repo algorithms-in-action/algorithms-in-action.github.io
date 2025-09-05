@@ -12,7 +12,14 @@ function ParamMsg({ logWarning, logTag, logMsg }) {
   const warningCol = '#FB3640';
   const successCol = '#52AA5E';
   return (
-    <div className="logContainer">
+    <div 
+      className="logContainer"
+      ref={(el) => {
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        }
+      }}
+    >
       <span
         className="logTag"
         data-testid="logTag"

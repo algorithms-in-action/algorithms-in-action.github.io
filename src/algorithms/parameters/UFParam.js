@@ -15,7 +15,8 @@ import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
-import { EXAMPLES } from './helpers/ErrorExampleStrings';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
+import { validateTextInput } from './helpers/InputValidators';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
@@ -64,8 +65,10 @@ function UFParam({ mode, union, value }) {
     const inputValue = e.target[0].value;
     setLocalValue(inputValue);
 
+    let nan = isNaN(inputValue);
+    let inDomain = N_ARRAY.includes(inputValue)
     // eslint-disable-next-line no-restricted-globals
-    if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
+    if (!(nan || !inDomain)) {
       const target = {
         arg1: parseInt(inputValue, 10),
         arg2: pathCompressionEnabled,
@@ -80,7 +83,7 @@ function UFParam({ mode, union, value }) {
       });
       setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
+      setMessage(errorParamMsg(nan ? ERRORS.GEN_POSITIVE_INT : ERRORS.GEN_NUMBER_NOT_IN_DOMAIN, FIND_EXAMPLE));
     }
   };
 
@@ -88,8 +91,8 @@ function UFParam({ mode, union, value }) {
     e.preventDefault();
 
     const textInput = e.target[0].value.replace(/\s+/g, '');
-
-    if (validateTextInput(textInput)) {
+    const { valid, error} = validateTextInput(textInput);
+    if (valid) {
       const target = {
         arg1: textInput
           .split(',')
@@ -105,7 +108,7 @@ function UFParam({ mode, union, value }) {
       });
       setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
+      setMessage(errorParamMsg(error, UNION_EXAMPLE));
     }
   };
 
@@ -181,31 +184,3 @@ UFParam.propTypes = {
 };
 
 export default withAlgorithmParams(UFParam); // Export with the wrapper for URL Params
-
-
-/**
- * Validate the text input within the DualValueParam component.
- * @param {String} value The text input.
- * @returns {Boolean} Whether the text input is valid.
- */
-function validateTextInput(value) {
-  if (!value) return false;
-
-  // ensuring only allowable characters
-  if (!/^[0-9,-\s]+$/.test(value)) return false;
-
-  // splits the string into an array of pairs
-  const pairs = value.split(',').map((pair) => pair.trim());
-
-  // checks if each pair is valid
-  for (let i = 0; i < pairs.length; i++) {
-    const pair = pairs[i].split('-');
-
-    // checks only two values in pair
-    if (pair.length !== 2) return false;
-
-    // checks if each value in pair is in domain
-    if (pair.some((val) => isNaN(val) || !N_ARRAY.includes(val))) return false;
-  }
-  return true;
-}
