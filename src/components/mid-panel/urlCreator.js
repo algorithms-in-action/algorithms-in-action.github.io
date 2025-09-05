@@ -8,7 +8,8 @@ export function createUrl(baseUrl, category, context) {
      graphEnd, 
      heuristic, 
      graphMin, 
-     graphMax 
+     graphMax,
+     compressed
    } = context;
 
    let url = baseUrl;
@@ -27,7 +28,7 @@ export function createUrl(baseUrl, category, context) {
        break;
  
      case 'Set':
-       url += `&union=${nodes}&value=${searchValue}`;
+       url += `&union=${nodes}&value=${searchValue}&compress=${compressed}`;
        break;
  
      case 'Graph':

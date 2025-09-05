@@ -41,18 +41,30 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function UFParam({ mode, union, value }) {
+function UFParam({ mode, union, value, compress }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(union || DEFAULT_UNION);
-  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
+  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(() => {
+    if (typeof compress === "string" ) {
+      if (compress.toLowerCase() === "true") return true;
+      if (compress.toLowerCase() === "false") return false;
+    }
+    return true; // default
+  });
+
   const [localValue, setLocalValue] = useState(DEFAULT_FIND);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const { 
+    setNodes, 
+    setSearchValue,  
+    setCompressed
+  } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(unions);
     setSearchValue(localValue);
-  }, [unions, localValue]);
+    setCompressed(pathCompressionEnabled);
+  }, [unions, localValue, pathCompressionEnabled]);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
@@ -179,7 +191,8 @@ UFParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   union: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  compress: PropTypes.string,
 };
 
 export default withAlgorithmParams(UFParam); // Export with the wrapper for URL Params
