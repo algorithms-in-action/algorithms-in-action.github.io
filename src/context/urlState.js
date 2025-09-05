@@ -16,6 +16,7 @@ export const URLProvider = ({ children }) => {
   const [graphMax, setGraphMax] = useState([]);
   const [compressed, setCompressed] = useState([]);
   const [weights, setWeights] = useState([]);
+  const [small, setSmall] = useState([]);
 
   const value = {
     nodes, setNodes,
@@ -28,6 +29,7 @@ export const URLProvider = ({ children }) => {
     graphMax, setGraphMax,
     compressed, setCompressed,
     weights, setWeights,
+    small, setSmall
   };
 
   return (

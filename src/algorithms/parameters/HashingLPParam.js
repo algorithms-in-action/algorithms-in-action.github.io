@@ -61,22 +61,26 @@ const ERROR_INVALID_RANGES = 'If you had entered ranges, please input valid rang
  * Linear probing input component
  * @returns the component
  */
-function HashingLPParam({ mode, list, value }) {
+function HashingLPParam({ mode, list, value, smallTable }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [array, setLocalArray] = useState(list || DEFAULT_ARRAY);
   const [search, setLocalSearch] = useState(DEFAULT_SEARCH);
-  const [HASHSize, setHashSize] = useState({
-    smallTable: true,
-    largeTable: false,
-  });
+  const [HASHSize, setHashSize] = useState(
+    (typeof smallTable === "string")
+      ? (smallTable === "true"
+          ? { smallTable: true, largeTable: false }
+          : { smallTable: false, largeTable: true })
+      : { smallTable: true, largeTable: false }
+  );
   const [expand, setExpand] = useState(DEFAULT_EXPAND);
-  const { setNodes, setSearchValue } = useContext(URLContext);
-
+  const { setNodes, setSearchValue, setSmall } = useContext(URLContext);
+  
   useEffect(() => {
     setNodes(array);
     setSearchValue(search);
-  }, [array, search])
+    setSmall(HASHSize.smallTable);
+  }, [array, search, HASHSize]);
 
 
     /**
@@ -272,6 +276,7 @@ HashingLPParam.propTypes = {
     alg: PropTypes.string.isRequired, // keep alg for all algorithms
     mode: PropTypes.string.isRequired, //keep mode for all algorithms
     list: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired
+    value: PropTypes.string.isRequired,
+    smallTable: PropTypes.string,
  };
 export default withAlgorithmParams(HashingLPParam);
