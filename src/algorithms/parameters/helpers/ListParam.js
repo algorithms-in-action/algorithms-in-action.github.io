@@ -42,12 +42,10 @@ function ListParam({
     if (valid) {
       const nodes = inputValue.split`,`.map((x) => +x);
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
+      setMessage(null);
     } else {
-      console.log(valid, ",", error)
-      //alert(`Error in ${ALGORITHM_NAME}:\n${error}\nExample: ${EXAMPLE}`);
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, error));
+      setMessage(errorParamMsg(error, EXAMPLE));
     }
-
   };
 
   return (

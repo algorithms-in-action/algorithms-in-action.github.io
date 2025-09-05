@@ -32,24 +32,24 @@ function SingleValueParam({
    * run an animation. It will check whether the input number
    * is valid first.
    */
-const handleDefaultSubmit = (e) => {
-  e.preventDefault();
-  const inputValue = e.target[0].value;
+  const handleDefaultSubmit = (e) => {
+    e.preventDefault();
+    const inputValue = e.target[0].value.replace(/\s+/g, '');
+    const { valid, error } = singleNumberValidCheck(inputValue);
 
-  const check = singleNumberValidCheck(inputValue);
+    if (valid) {
+      const target = parseInt(inputValue, 10);
+      setParamVal(target);
 
-  if (check.valid) {
-    const target = parseInt(inputValue, 10);
-    setParamVal(target);
-
-    if (!(name === 'transitiveClosure' || name === 'prim')) {
-
-      dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
+      if (!(name === 'transitiveClosure' || name === 'prim')) {
+        dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
+      }
+      setMessage(null);
+    } else {
+      setMessage(errorParamMsg(error, EXAMPLE));
     }
-  } else {
-    setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, check.error));
-  }
-};
+  };
+
 
 
   return (

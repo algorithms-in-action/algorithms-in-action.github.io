@@ -86,7 +86,7 @@ import { template } from 'lodash';
 import ListParam from './ListParam';
 import '../../../styles/Param.scss';
 import { URLContext } from '../../../context/urlState';
-
+import { EXAMPLES, ERRORS } from './ErrorExampleStrings';
 
 // We have an initial graph that is generated randomly (we could add
 // other graph here that are independent of the algorithm) and other
@@ -102,11 +102,6 @@ const sizeEgsInit = [SIZE_RANDOM];
 // COORDS etc for random graphs will be generated; use anything here
 const coordsEgsInit = ['1-1'];
 const edgesEgsInit = ['1-2'];
-
-const COORDS_EXAMPLE =
-  "Please follow example: 1-1,3-4,4-1,6-6 giving the X-Y coordinates for each of the nodes in the graph.";
-const EDGES_EXAMPLE =
-  "Please follow example: 1-2,1-3,2-3,3-2-6,3-4-7 giving NodeA-NodeB-Weight for each in the graph; -Weight is optional and defaults to 1.";
 
 // SIM Mouse click
 const mouseClickEvents = ['mousedown', 'click', 'mouseup'];
@@ -124,7 +119,7 @@ function simulateMouseClick(element) {
 // Note: if the new size differs from the old size we must also call
 // setData2 or we get into an inconsistent state and the new graph
 // is not rendered until that is done
-const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
+const coordTxt2Data1 = (value, size, setMessage) => {
   const textInput = value.replace(/\s+/g, '');
 
   if (isListofTuples(textInput, 2, 2)) {
@@ -138,9 +133,10 @@ const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
       const xyArray = coordMatrix[i];
       newData1.push({ col0: xyArray[0], col1: xyArray[1] });
     }
+    setMessage(null);
     return [newData1, newSize];
   } else {
-    setMessage(errorParamMsg(ALGORITHM_NAME, COORDS_EXAMPLE));
+    setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_COORDS, EXAMPLES.GEN_COORDS_EXAMPLE));
     return [null, size];
   }
 };
@@ -149,7 +145,7 @@ const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
 // to be outside that function and needs extra parameters passed in
 // XXX Could null if there is an error - BUT SHOULD CHECK RETURN VALUE!
 // Since return value is not currently checked we return [] instead...
-const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage, ALGORITHM_NAME) => {
+const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage) => {
   const textInput = value.replace(/\s+/g, '');
   // accept pairs and triples; pairs are padded out with default
   // weight of 1; XXX should check node values are in 1 to size
@@ -168,10 +164,10 @@ const edgeTxt2Data2 = (value, size, unweighted, symmetric, setMessage, ALGORITHM
       }
       newData2.push(data);
     }
-
+    setMessage(null);
     return newData2;
   } else {
-    setMessage(errorParamMsg(ALGORITHM_NAME, EDGES_EXAMPLE));
+    setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_EDGES, EXAMPLES.GEN_EDGES_EXAMPLE));
     // return null;
     return [];
   }
@@ -497,29 +493,30 @@ function EuclideanMatrixParams({
   };
 
   // Get and parse the coordinates of each node
-const getCoordinateMatrix = () => {
-  const coords = [];
+  const getCoordinateMatrix = () => {
+    const coords = [];
 
-  for (const row of data1) {
-    const temp = [];
+    for (const row of data1) {
+      const temp = [];
 
-    for (const [_, value] of Object.entries(row)) {
-      const check = singleNumberValidCheck(value);
+      for (const [_, value] of Object.entries(row)) {
+        const check = singleNumberValidCheck(value);
 
-      if (check.valid) {
-        const num = parseInt(value, 10);
-        temp.push(num);
-      } else {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, check.error));
-        return null;
+        if (check.valid) {
+          const num = parseInt(value, 10);
+          temp.push(num);
+          setMessage(null);
+        } else {
+          setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_COORDS, EXAMPLES.GEN_COORDS_EXAMPLE));
+          return null;
+        }
       }
+
+      coords.push(temp);
     }
 
-    coords.push(temp);
-  }
-
-  return coords;
-};
+    return coords;
+  };
 
 
   // Get coordinates from table and build list text (string)
@@ -534,18 +531,21 @@ const getCoordinateMatrix = () => {
 
   // Get and parse the edges from table; recompute weights depending on
   // weightCalc flag (maybe this should be a parameter)
-  const getEdgeValueMatrix = () => {
+    const getEdgeValueMatrix = () => {
 
     const adjacent = [];
     data2.forEach((row) => {
       const temp = [];
       for (const [_, value] of Object.entries(row)) {
-        if (singleNumberValidCheck(value)) {
+        const check = singleNumberValidCheck(value);
+
+        if (check.valid) {
           const num = parseInt(value, 10);
           temp.push(num);
+          setMessage(null);
         } else {
           // when the input cannot be converted to a number
-          setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+          setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_EDGES, EXAMPLES.GEN_EDGES_EXAMPLE));
           return;
         }
       }
@@ -585,7 +585,7 @@ const getCoordinateMatrix = () => {
     if (edges.length !== size || edges[0].length !== size) return [];
     if (name === 'prim') {
       if (matrixValidCheck(edges) === false) {
-        setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE2));
+        setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_EDGES, EXAMPLES.GEN_EDGES_EXAMPLE));
         // eslint-disable-next-line consistent-return
         return [];
       }
@@ -637,7 +637,7 @@ const getCoordinateMatrix = () => {
         moveNode
       });
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE)); // FIX message
+      setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_EDGES, EXAMPLES.GEN_EDGES_EXAMPLE));
     }
   };
 
@@ -711,10 +711,13 @@ const getCoordinateMatrix = () => {
         textInput
           .split(',')
           .map((s) => parseInt(s, 10));
-      if (!(endNodes.some((val) => val > size))) // check is NaN also?
+      if (!(endNodes.some((val) => val > size))) {
+        // check is NaN also?
+        setMessage(null);
         return endNodes;
+      }
     }
-    setMessage(errorParamMsg(ALGORITHM_NAME, 'Input a list of comma-separated node numbers, eg 1,2'));
+    setMessage(errorParamMsg(ERRORS.GEN_GRAPH_INVALID_ENDNODES, EXAMPLES.GEN_ENDNODES_EXAMPLE));
     return null;
   };
 
@@ -830,7 +833,7 @@ const getCoordinateMatrix = () => {
               SET_VAL={setCoordsTxt}
               REFRESH_FUNCTION={() => '1,1'}
               ALGORITHM_NAME={ALGORITHM_NAME}
-              EXAMPLE={COORDS_EXAMPLE}
+              EXAMPLE={EXAMPLE.GEN_COORDS_EXAMPLE}
               setMessage={setMessage}
             />
           </div>
@@ -845,7 +848,7 @@ const getCoordinateMatrix = () => {
               SET_VAL={setEdgesTxt}
               REFRESH_FUNCTION={() => '1-2'}
               ALGORITHM_NAME={ALGORITHM_NAME}
-              EXAMPLE={EDGES_EXAMPLE}
+              EXAMPLE={EXAMPLE.GEN_EDGES_EXAMPLE}
               setMessage={setMessage}
             />
           </div>

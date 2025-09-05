@@ -44,7 +44,6 @@ export const successParamMsg = (type) => (
 
 /**
  *
- * @param {string} type algorithm type
  * @param {string} example optional provided
  * @param {string} reason optional provided, if not provide, use default value
  */

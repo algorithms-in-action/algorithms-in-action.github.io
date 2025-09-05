@@ -15,6 +15,7 @@ import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
@@ -24,10 +25,8 @@ const ALGORITHM_NAME = 'Union Find';
 const FIND = 'Find';
 const UNION = 'Union';
 
-const FIND_EXAMPLE =
-  'Please follow the example provided: 2. The single digit should be between 1 and 10.';
-const UNION_EXAMPLE =
-  "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
+const FIND_EXAMPLE = EXAMPLES.UF_FIND;
+const UNION_EXAMPLE = EXAMPLES.UF_UNION;
 
 // button styling
 const BlueRadio = withStyles({
@@ -79,6 +78,7 @@ function UFParam({ mode, union, value }) {
         visualiser,
         target,
       });
+      setMessage(null);
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
     }
@@ -103,6 +103,7 @@ function UFParam({ mode, union, value }) {
         mode: 'union',
         target,
       });
+      setMessage(null);
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
     }

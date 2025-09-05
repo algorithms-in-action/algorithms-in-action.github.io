@@ -17,6 +17,7 @@ import '../../styles/Param.scss';
 import { singleNumberValidCheck } from './helpers/InputValidators';
 import { genUniqueRandNumList, balanceBSTArray, shuffleArray } from './helpers/InputBuilders';
 import { errorParamMsg } from './helpers/ParamMsg';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
@@ -27,8 +28,8 @@ const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
-const INSERTION_EXAMPLE = 'Duplicate-free list of non-negative integers please: 0,1,2,3,4';
-const SEARCH_EXAMPLE = 'Please follow the example provided: 16';
+const INSERTION_EXAMPLE = EXAMPLES.GEN_LIST_PARAM;
+const SEARCH_EXAMPLE = "2";
 const UNCHECKED = {
   random: false,
   sorted: false,
@@ -61,10 +62,6 @@ function TTFTParam({ mode, list, value }) {
   useEffect(() => {
     setNodes(localNodes);
     setSearchValue(localValue);
-    // If input nodes are manually edited, we want to uncheck the case.
-    // This also unchecks the case when sorted and balanced are selected
-    // but (for some unknown reason) not when random is selected. This
-    // isn't ideal XXX but is not too bad.
     setBSTCase(UNCHECKED);
   }, [localNodes, localValue, setNodes, setSearchValue]);
 
@@ -81,36 +78,26 @@ function TTFTParam({ mode, list, value }) {
         break;
       default:
     }
-
     setBSTCase({ ...UNCHECKED, [e.target.name]: true });
   };
-  /**
-   * For 234 tree, we don't support duplicate keys (XXX could just ignore)
-   * therefore we need some extra check to make sure the tree is not empty.
-   * So we need to implement a new handle function instead of using the default one.
-   */
+
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
           
     if (validateListInput(list)) {
       let nodes = list.split(',').map(Number);
-      // run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
         mode: 'insertion',
         nodes,
       }); 
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg('2-3-4 Trees', INSERTION_EXAMPLE));
+      setMessage(errorParamMsg(ERRORS.TTF_INSERTION, EXAMPLES.TTF_INSERTION));
     }
   };
 
-  /**
-   * For BST, since we need to insert nodes before run the search algorithm,
-   * therefore we need some extra check to make sure the tree is not empty.
-   * So we need to implement a new handle function instead of using the default one.
-   */
 const handleSearch = (e) => {
   e.preventDefault();
   const inputValue = e.target[0].value;
@@ -121,36 +108,27 @@ const handleSearch = (e) => {
   if (check.valid) {
     const target = parseInt(inputValue, 10);
 
-    // Make sure the tree is not empty
     if (
       algorithm.hasOwnProperty('visualisers') &&
       !algorithm.visualisers.tree.instance.isEmpty()
     ) {
       const visualiser = algorithm.chunker.visualisers;
 
-      // Run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
         mode: 'search',
         visualiser,
         target,
       });
+
+      setMessage(null);
     } else {
-      // Tree is empty
-      setMessage(
-        errorParamMsg(
-          SEARCH,
-          undefined,
-          'Please fully build the tree before running a search.',
-        ),
-      );
+      setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE));
     }
   } else {
-    // Invalid input
-    setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE, check.error));
+    setMessage(errorParamMsg(check.error));
   }
 };
-
 
   useEffect(
     () => {
@@ -162,7 +140,6 @@ const handleSearch = (e) => {
   return (
     <>
       <div className="form">
-        {/* Insert input */}
         <ListParam
           name="TTFTree"
           buttonName="Insert"
@@ -177,7 +154,6 @@ const handleSearch = (e) => {
           setMessage={setMessage}
         />
 
-        {/* Search input */}
         <SingleValueParam
           name="TTFTree"
           buttonName="Search"
@@ -224,13 +200,11 @@ const handleSearch = (e) => {
         label="Balanced"
         className="checkbox"
       />
-      {/* render success/error message */}
       {message}
     </>
   );
 }
 
-// Define the prop types for URL Params
 TTFTParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
@@ -238,15 +212,13 @@ TTFTParam.propTypes = {
   value: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(TTFTParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(TTFTParam);
 
-// XXX rename and put in ./helpers/ParamHelper
 function validateListInput(input) {
   const inputArr = input.split(',');
   const inputSet = new Set(inputArr);
   return (
-    inputArr.length === inputSet.size // no duplicates
+    inputArr.length === inputSet.size
     && inputArr.every((num) => singleNumberValidCheck(num))
   );
 }
-

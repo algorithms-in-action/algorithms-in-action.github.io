@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 import { URLContext } from '../../context/urlState';
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
@@ -122,7 +123,7 @@ function MergesortParam({ list }) {
             })()
           }
           ALGORITHM_NAME={MERGE_SORT}
-          EXAMPLE={MERGE_SORT_EXAMPLE}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
           setMessage={setMessage}
         />
       </div>

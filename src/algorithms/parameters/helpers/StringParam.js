@@ -35,20 +35,17 @@ function StringParam({
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
 
-    const string = e.target[0].value;
-    const pattern = e.target[1].value;
+    const string = e.target[0].value.replace(/\s+/g, '');
+    const pattern = e.target[1].value.replace(/\s+/g, '');
 
-    const stringCheck = stringValidCheck(string);
-    const patternCheck = stringValidCheck(pattern);
+    const { valid: stringValid, error: stringError } = stringValidCheck(string);
+    const { valid: patternValid, error: patternError } = stringValidCheck(pattern);
 
-    if (stringCheck.valid && patternCheck.valid) {
+    if (stringValid && patternValid) {
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
+      setMessage(null);
     } else {
-      const errorMsg = !stringCheck.valid
-        ? stringCheck.error
-        : patternCheck.error;
-
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, errorMsg));
+      setMessage(errorParamMsg(stringError || patternError, EXAMPLE));
     }
   };
 
