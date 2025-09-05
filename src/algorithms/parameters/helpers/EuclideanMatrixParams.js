@@ -119,7 +119,7 @@ function simulateMouseClick(element) {
 // Note: if the new size differs from the old size we must also call
 // setData2 or we get into an inconsistent state and the new graph
 // is not rendered until that is done
-const coordTxt2Data1 = (value, size, setMessage) => {
+const coordTxt2Data1 = (value, size, ALGORITHM_NAME, setMessage) => {
   const textInput = value.replace(/\s+/g, '');
 
   if (isListofTuples(textInput, 2, 2)) {
