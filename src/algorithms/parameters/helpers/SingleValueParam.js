@@ -6,11 +6,9 @@ import React from 'react';
 import '../../../styles/Param.scss';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
-import {
-  singleNumberValidCheck,
-  successParamMsg,
-  errorParamMsg,
-} from './ParamHelper';
+
+import { singleNumberValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
 
 import useParam from '../../../context/useParam';
 
@@ -48,7 +46,6 @@ const handleDefaultSubmit = (e) => {
 
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
     }
-    setMessage(successParamMsg(ALGORITHM_NAME));
   } else {
     setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE, check.error));
   }

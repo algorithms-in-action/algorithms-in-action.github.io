@@ -14,14 +14,9 @@ import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  singleNumberValidCheck,
-  genUniqueRandNumList,
-  successParamMsg,
-  errorParamMsg,
-  balanceBSTArray,
-  shuffleArray,
-} from './helpers/ParamHelper';
+import { singleNumberValidCheck } from './helpers/InputValidators';
+import { genUniqueRandNumList, balanceBSTArray, shuffleArray } from './helpers/InputBuilders';
+import { errorParamMsg } from './helpers/ParamMsg';
 
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
@@ -106,7 +101,6 @@ function TTFTParam({ mode, list, value }) {
         mode: 'insertion',
         nodes,
       }); 
-      setMessage(successParamMsg('2-3-4 Trees'));
     } else {
       setMessage(errorParamMsg('2-3-4 Trees', INSERTION_EXAMPLE));
     }
@@ -141,8 +135,6 @@ const handleSearch = (e) => {
         visualiser,
         target,
       });
-
-      setMessage(successParamMsg(SEARCH));
     } else {
       // Tree is empty
       setMessage(

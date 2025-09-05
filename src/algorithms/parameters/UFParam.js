@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
-import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
+import { errorParamMsg } from './helpers/ParamMsg';
 import { URLContext } from '../../context/urlState';
 
 import SingleValueParam from './helpers/SingleValueParam';
@@ -79,7 +79,6 @@ function UFParam({ mode, union, value }) {
         visualiser,
         target,
       });
-      setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
     }
@@ -104,8 +103,6 @@ function UFParam({ mode, union, value }) {
         mode: 'union',
         target,
       });
-
-      setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
     }

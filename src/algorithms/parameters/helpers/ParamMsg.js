@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/*
+  File contains the component to be filled in the message
+  container of components, it can represent a success
+  or error message, see bottom of file for those helper
+  wrapper components.
+*/
 
 function ParamMsg({ logWarning, logTag, logMsg }) {
   const warningCol = '#FB3640';
@@ -26,3 +32,29 @@ ParamMsg.propTypes = ({
 });
 
 export default ParamMsg;
+
+// Not used currently.
+export const successParamMsg = (type) => (
+  <ParamMsg
+    logWarning={false}
+    logTag=""
+    logMsg=""
+  />
+);
+
+/**
+ *
+ * @param {string} type algorithm type
+ * @param {string} example optional provided
+ * @param {string} reason optional provided, if not provide, use default value
+ */
+export const errorParamMsg = (
+  reason,
+  example,
+) => (
+  <ParamMsg
+    logWarning
+    logTag="Oops..."
+    logMsg={`${reason}${example ? `\n${example}` : ''}`}
+  />
+);

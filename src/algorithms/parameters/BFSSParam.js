@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useContext, useEffect } from 'react';
-import { genRandNumList } from './helpers/ParamHelper';
+import { genRandNumList } from './helpers/InputBuilders';
 import ListParam from './helpers/ListParam';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';

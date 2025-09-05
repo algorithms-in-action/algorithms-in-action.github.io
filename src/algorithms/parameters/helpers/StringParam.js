@@ -5,11 +5,10 @@ import React from 'react';
 import '../../../styles/Param.scss';
 import { GlobalActions } from '../../../context/actions';
 import StringParamForm from './StringParamForm';
-import {
-  successParamMsg,
-  errorParamMsg,
-  stringValidCheck,
-} from './ParamHelper';
+
+import { stringValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
+
 
 import useParam from '../../../context/useParam';
 
@@ -44,7 +43,6 @@ function StringParam({
 
     if (stringCheck.valid && patternCheck.valid) {
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
-      setMessage(successParamMsg(ALGORITHM_NAME));
     } else {
       const errorMsg = !stringCheck.valid
         ? stringCheck.error

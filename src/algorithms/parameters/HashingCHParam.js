@@ -12,15 +12,11 @@ import { withStyles } from '@mui/styles';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  genUniqueRandNumList,
-  singleNumberValidCheck,
-  successParamMsg,
-  errorParamMsg,
-  commaSeparatedPairTripleCheck,
-  checkAllRangesValid,
-} from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
+
+import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid } from './helpers/InputValidators';
+import { genUniqueRandNumList } from './helpers/InputBuilders';
+import { errorParamMsg } from './helpers/ParamMsg';
 
 // Algorithm information and magic phrases
 const ALGORITHM_NAME = 'Hashing (chaining)';
@@ -119,7 +115,6 @@ function HashingCHParam({ mode, list, value }) {
           values,
           expand: expand
         });
-        setMessage(successParamMsg(ALGORITHM_NAME));
       }
       else {
         setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));
@@ -152,8 +147,6 @@ const handleSearch = (e) => {
       visualisers,
       target,
     });
-
-    setMessage(successParamMsg(ALGORITHM_NAME));
   } else {
     // Invalid input
     setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH, check.error));

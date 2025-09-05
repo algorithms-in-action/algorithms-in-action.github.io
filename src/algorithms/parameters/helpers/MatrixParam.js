@@ -6,13 +6,9 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { GlobalActions } from '../../../context/actions';
 import Table from './Table';
-import {
-  makeColumnArray,
-  makeWeights,
-  singleNumberValidCheck,
-  errorParamMsg,
-  successParamMsg, matrixValidCheck,
-} from './ParamHelper';
+import { makeColumnArray, makeWeights } from './InputBuilders';
+import { singleNumberValidCheck, matrixValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
@@ -195,7 +191,6 @@ const getMatrix = () => {
     const matrix = getMatrix();
 
     if (matrix.length !== 0) {
-      // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
@@ -204,7 +199,6 @@ const getMatrix = () => {
         endNode,  
         startNode,
       });
-    //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
     }

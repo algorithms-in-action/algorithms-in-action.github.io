@@ -7,11 +7,10 @@ import '../../../styles/Param.scss';
 import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
-import {
-  commaSeparatedNumberListValidCheck,
-  genRandNumList,
-  errorParamMsg,
-} from './ParamHelper';
+import { genRandNumList } from './InputBuilders';
+import { commaSeparatedNumberListValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
+
 
 import useParam from '../../../context/useParam';
 

@@ -68,10 +68,9 @@ import {
   makeWeights,
   euclidean,
   manhattan,
-  singleNumberValidCheck,
-  errorParamMsg,
-  successParamMsg, matrixValidCheck,
-} from './ParamHelper';
+} from './InputBuilders';
+import { singleNumberValidCheck, matrixValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
 
 import useParam from '../../../context/useParam';
 import { closeInstructions } from '../../../components/mid-panel/helper';
@@ -626,7 +625,6 @@ const getCoordinateMatrix = () => {
     const edgeValueMatrix = getEdgeValueMatrix();
 
     if (edgeValueMatrix.length !== 0) {
-      // setMessage(successParamMsg(ALGORITHM_NAME));
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name,
         mode,
@@ -638,7 +636,6 @@ const getCoordinateMatrix = () => {
         edgeValueMatrix,
         moveNode
       });
-      //   setButtonMessage('Reset');
     } else {
       setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE)); // FIX message
     }

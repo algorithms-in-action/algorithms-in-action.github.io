@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
-import { genRandNumList } from '../algorithms/parameters/helpers/ParamHelper';
+import { genRandNumList } from '../algorithms/parameters/helpers/InputBuilders';
 
 const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
