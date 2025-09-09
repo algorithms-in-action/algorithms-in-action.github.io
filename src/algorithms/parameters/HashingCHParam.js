@@ -22,6 +22,14 @@ import {
 } from './helpers/ParamHelper';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
+<<<<<<< Updated upstream
+=======
+import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid, commaSeparatedNumberListValidCheck } from './helpers/InputValidators';
+import { genUniqueRandNumList } from './helpers/InputBuilders';
+import { errorParamMsg } from './helpers/ParamMsg';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
+
+>>>>>>> Stashed changes
 // Algorithm information and magic phrases
 const ALGORITHM_NAME = 'Hashing (chaining)';
 const HASHING_INSERT = 'Hashing Insertion';
@@ -105,7 +113,17 @@ function HashingCHParam({ mode, list, value }) {
 
     let removeSpace = inputs.split(' ').join('');
 
+<<<<<<< Updated upstream
     // Check if the inputs are either positive integers, pairs or triples
+=======
+    const { valid, error } = commaSeparatedNumberListValidCheck(inputs.replace(/\s+/g, ''));
+
+    if (!valid) {
+      setMessage(errorParamMsg(error, EXAMPLES.HASHING_INSERT));
+      return;
+    }
+
+>>>>>>> Stashed changes
     if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
       let values = removeSpace.split(","); // Converts input to array
       if (checkAllRangesValid(values)) {
