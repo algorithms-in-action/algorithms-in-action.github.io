@@ -468,7 +468,7 @@ export default {
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
                     vis.graph.rectangle_size();
-                    vis.graph.popRectStack();
+                    //vis.graph.popRectStack();
                 },
                 [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth

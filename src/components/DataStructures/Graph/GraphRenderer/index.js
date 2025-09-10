@@ -717,13 +717,16 @@ class GraphRenderer extends Renderer {
               return null;
             }
             const [left, top, rgt, btm, text] = stack.rect;
+            const isInnerMost = i == rectangles.length - 1;
+            const textOpacity = isInnerMost ? 0.8 : 0.2;
+            const rectOpacity = isInnerMost ? 0.8 : 0.2;
             return (
               <g key={`rec-rect-${i}`}>
                 <text className={classes(styles.select_color)}
                   fontSize={30} // font size
-                  x={left - 30}    // font position
-                  y={top - 60}
-                  style={{ opacity: 0.85 }} // font opacity
+                  x={left - 30 - (rectangles.length - 1 - i) * 10}    // font position
+                  y={top - 60 - (rectangles.length - 1 - i) * 10}
+                  style={{ opacity: textOpacity }} // font opacity
                 >
                   {text}
                 </text>
@@ -731,11 +734,11 @@ class GraphRenderer extends Renderer {
                     styles.select_rect,
                     styles && styles.backgroundStyle
                   )}
-                  x={left - 40} // x position 
-                  y={top - 50} // y position 
-                  width={(rgt - left) + 80} // width of the sub-rectangle 
-                  height={(btm - top) + 100} // height of the sub-rectangle 
-                  style={{ opacity:  0.6 }} // opacity
+                  x={left - 40 - (rectangles.length - 1 - i) * 10} // x position 
+                  y={top - 50 - (rectangles.length - 1 - i) * 10} // y position 
+                  width={(rgt - left) + 80 + (rectangles.length - 1 - i) * 20} // width of the sub-rectangle 
+                  height={(btm - top) + 100 + (rectangles.length - 1 - i) * 20} // height of the sub-rectangle 
+                  style={{ opacity: rectOpacity }} // opacity
                 />
               </g>
             );
