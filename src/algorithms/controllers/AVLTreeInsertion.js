@@ -290,7 +290,7 @@ export default {
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
                     vis.graph.rectangle_size();
-                    vis.graph.popRectStack();
+                    //vis.graph.popRectStack();
                 },
                 [parentNode ? globalRoot.key : temp.key, parentNode ? parentNode.key : null, A.key, R.key],
                 depth
@@ -747,6 +747,7 @@ export default {
                     vis.graph.setFunctionBalance(null);
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.popRectStack();
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance < -1 && key > root.right.key) {
                 // chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
@@ -785,6 +786,7 @@ export default {
                     vis.graph.clearSelect_Circle_Count();
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.popRectStack();
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance > 1 && key > root.left.key) {
                 // chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
