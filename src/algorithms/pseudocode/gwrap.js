@@ -4,6 +4,7 @@ export default parse(`
 
 \\Note{
 Gift wrapping/Jarvis algm for convex hull
+XXX maybe change so we wrap counter-clockwise for consistency?
 XXX probably needs more bookmarks
 
 Includes sketch of optional optimisation - ignore initially, maybe fill in
@@ -18,11 +19,14 @@ edge (at first step it will be far above the leftmost point)
 
 \\Code{
 Main
-giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B start
+giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
 \\In{
-    if n <= 3
+    if n <= 3 \\B n<=3
     \\In{
-        return the set of all points // n < 3 could be considered an error \\B returnAll
+        return the set of all points \\B returnAll
+        \\Expl{ n < 3 could be considered an error, depending on how
+          flexible our definition of convex hull is.
+        \\Expl}
     \\In}
     hull <- Empty // Initialize hull to the empty set of points
     minX <-  point with min. X value \\B minX
@@ -30,11 +34,16 @@ giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B star
         hull. Here we use a point with the minimal X coordinate.  We
         scan through all points to find it. If there are multiple points
         with the minimal X coordinate we choose one with a minimal Y coordinate.
+        Other choices can potentially have subtle interractions with the
+        other code and potentially affect termination - see the MORE tab.
     \\Expl}
-    p <- minX // initialize current point; "string" points left/up \\B initP
-    \\Expl{ In the animation we show a line from p; you can think
+    p <- minX // current point + "string" initialization \\B initP
+    \\Expl{ We start with p being the (bottom) leftmost point. In the
+        animation we show a line from p; you can think
         of this as a string we use to wrap around the points to form the
-        convex hull.
+        convex hull. It starts stretched anywhere to the left of p and
+        will gradually be wrapped around the hull (here we wrap
+        clockwise; either direction works).
     \\Expl}
     do
     \\In{
@@ -83,22 +92,26 @@ NextPoint
 clockwise than i.  If no such i exists then q is the least clockwise
 point after p.
 \\Expl}
-q <- (p + 1) mod n // initialise q to a point other than p \\B initQ
+q <- a point other than p // initialise q \\B initQ
 \\Expl{ Any point other than p will work.  Here we pick the next point
-  in the array (or 0 if p is the last point).
+  in the points array (or 1, if p is the last point).
 \\Expl}
 for i <- point in P \\B assignI
-\\Expl{ We loop over all points. We could ignore point p but it
-does no harm. The path p->p->q is considered straight. Geometric
-algorithms often have tricky cases such as this.  Another subtlety is
-the ordering of the points - see the "MORE" tab for details.
+\\Expl{ We loop over all points to find the least clockwise point from p.
+We could ignore point p but it does no harm. Here we scan the points
+in order. If there are multiple points that have the same least
+clockwise direction from p the ordering of points can be significant
+- see the "MORE" tab for details.
 \\Expl}
 \\Note{
 Better to have the following??
-for i <- 0 to n-1
+for i <- 1 to n
 \\Note}
 \\In{
     if p->i->q is a clockwise turn \\Ref piqClockwise
+    \\Expl{ Path p->p->q is not considered a turn.
+      Geometric algorithms often have tricky cases such as this.
+    \\Expl}
     \\In{
         q <- i \\B q<-i
         \\Expl{ i is less clockwise than q, so we update q.
@@ -122,19 +135,26 @@ if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0 \\B piqTest
 \\Code{
 removeQuad
 XXX
-for i <- point in P
+for k <- point in P
 \\In{
-    if XXX
+    if k is inside the quadrilateral formed by the maximal points \\Ref insidePoly
     \\In{
-       remove point i
+       remove point k
     \\In}
 \\In}
-if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0
-\\Expl{ See the "BACKGROUND" and "MORE" tabs for more details. Code in
-  geometric algorithms often has cryptic bits like this based on
-  mathematical results from geometry. For many operations, the most
-  intuitive coding involves division and is actually buggy because 
-  there can be cases where the divisor is zero.
+\\Code} 
+
+\\Code{
+insidePoly
+// below, i and j refer to consecutive points on a clockwise
+// traversal of the quadrilateral
+if i->j->k turns clockwise for each (i, j) pair
+\\Expl{ There are four (i, j) pairs:  (minX, maxY), (maxY, maxX),
+  (maxX, minY) and (minY, minX). If k is clockwise (to the right of)
+  each of these, it must be inside all four edges of the quadrilateral.
+  To test for clockwise turns we can use the cross product of vectors.
+  See the code for finding the next point in the convex hull and the
+  "BACKGROUND" and "MORE" tabs for more details.
 \\Expl}
 \\Code} 
 

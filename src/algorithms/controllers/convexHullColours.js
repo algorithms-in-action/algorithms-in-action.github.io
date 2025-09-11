@@ -10,6 +10,7 @@ export const colorsCH = {
     // FRONTIER_A: '0',  // Blue
     // FRONTIER_A: globalColors.sky,
     NEXTQ_N: 4,  // Blue
+    GWRAPI_N: 2,  // Orange/peach?
     CLOCKWISE_E: 4,  // Blue
     ANTICLOCK_E: 3, // anticlockwise edges, Red
     // PQ_MIN_A: globalColors.peach,

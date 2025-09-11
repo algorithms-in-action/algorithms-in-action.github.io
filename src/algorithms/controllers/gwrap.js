@@ -1,6 +1,7 @@
 // Gift wrapping convex hull algorithm
+// XXX maybe change so we wrap counter-clockwise for consistency??
 // 
-// XXX Based on DFSrec - may still be some leftover rubbish to delete.
+// XXX Based on DFSrec code - may still be some leftover rubbish to delete.
 // 
 // XXX Uses EuclideanMatrixParams; need to make some changes to this:
 // 1) The graphs here (initially at least) have no edges - need to change
@@ -11,9 +12,7 @@
 // to fix this display without breaking other algorithms (code seems a
 // bit messy).
 // 
-// XXX Partially linked to pseudocode (may need more bookmarks/change
-// the bookmarks in this controller code); also will need to animate a
-// few more things.
+// XXX may need more bookmarks and animate more things.
 // 
 // XXX Currently the "wrapper" uses an edge to a node that is off the
 // screen, usually. It should be off the screen always - need to work
@@ -29,15 +28,13 @@
 // hull edge could change a bit.
 //
 // XXX Maybe p,q,i should be shown explicitly - currently they are all
-// implicit using edges, colors etc (should at least color node i)
+// implicit using edges, colors etc; not great when they coincide
 // 
 // XXX Nice to have an option of removing all points in a quadralateral
 // made up of lef, top, right and bottom points. See union-find for an
 // example of such an option.  Need to fix up pseudocode for this (some
 // work has been done). Probably best not give too many details in code
 // or animation - mode details in explanation and/or MORE tab.
-// 
-// XXX a bunch more other stuff mentioned in code below
 // 
 // XXX Color stuff with graphs is a bit of a mess - this is a Global
 // Issue to be worked in separately - communication about this and how
@@ -57,7 +54,7 @@ export default {
   },
 
   // XXX don't need startNode, endNodes, edgeValueMatrix
-  // Nest parameter code(?)
+  // Best change parameter code + this(?)
   run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes, moveNode}) {
     // String Variables used in displaying algo
 
@@ -102,13 +99,14 @@ export default {
         return (val > 0)? GoClockwise: GoCounterCW;
     }
 
-    // checks if hull (h) has consecutive elements p,q (or q,p)
+    // checks if hull (h) has consecutive elements p,q
+    // (currently NOT q,p)
     // (ie, an edge between the two has been added)
     function includesConsecutive(h, p, q)
     {
         for (let i = 0; i < h.length; i++) {
           if (h[i] === p & h[i+1] === q) return true;
-          if (h[i] === q & h[i+1] === p) return true;
+          // if (h[i] === q & h[i+1] === p) return true;
         }
         return false;
     }
@@ -119,9 +117,13 @@ export default {
         chunker.add(
           'start',
           (vis, edgeArray, coordsArray) => {
-            vis.graph.directed(false);
+            // XXX directed graphs can be better for showing turns
+            // but currently edges can get curved when there are hull
+            // edges (could remove the hull edges temporarily and then
+            // put them back or just revert to undirected)
+            vis.graph.directed(true);
             vis.graph.weighted(false);
-            vis.graph.moveNodeFn(moveNode);
+            vis.graph.moveNodeFn(moveNode); // allows dragging of nodes
             vis.graph.set(edgeArray, Array.from({ length: numVertices }, (v, k) => (k + 1)),coordsArray);
             vis.graph.dimensions.defaultNodeRadius = 15;
             vis.graph.dimensions.nodeRadius = 15;
@@ -130,9 +132,29 @@ export default {
           [E, coords], 0
         );
 
-        // There must be at least 3 coords
-        // XXX highlight all here if n < 3
-        if (n < 3) return;
+        chunker.add('n<=3');
+        if (n <= 3) {
+          chunker.add('returnAll',
+            (vis, n) => {
+              // must be at least 1 point (currently XXX)
+              vis.graph.colorNode(0, colorsCH.HULLP_N);
+              if (n > 1 ) {
+                vis.graph.colorNode(1, colorsCH.HULLP_N);
+                vis.graph.addEdge(0, 1);
+                vis.graph.colorEdge(0, 1, colorsCH.HULL_E);
+                if (n > 1 ) {
+                  vis.graph.colorNode(2, colorsCH.HULLP_N);
+                  vis.graph.addEdge(2, 0);
+                  vis.graph.addEdge(1, 2);
+                  vis.graph.colorEdge(2, 0, colorsCH.HULL_E);
+                  vis.graph.colorEdge(1, 2, colorsCH.HULL_E);
+                }
+              }
+            },
+            [n], 0
+          );
+          return;
+        }
        
         // Initialize Result
         let hull = [];
@@ -142,7 +164,7 @@ export default {
         for (let i = 1; i < n; i++)
             if (coords[i][X] < coords[l][X])
                 l = i;
-            // XXX if there are 2 coords with minimal x value it doesn't
+            // NOTE: if there are 2 coords with minimal x value it doesn't
             // matter which we pick. If there are 3 such coords then
             // potentially it may make a difference. We may be fussy about
             // what hull we should return with colinear coords. Also the
@@ -166,9 +188,9 @@ export default {
           (vis, edgeArray, coordsArray, c_p, c_q) => {
             // Add special node a long way away for "wrapper"
             vis.graph.addNode(wrapperStr, wrapperStr);
-            vis.graph.setNodePosition(wrapperStr, 10, -2000);
+            vis.graph.setNodePosition(wrapperStr, -2000, -9000); // XXX
             vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
-            vis.graph.addEdge(wrapperStr, c_p);
+            vis.graph.addEdge(c_p, wrapperStr);
             vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
           },
           [E, coords, p, q], 0
@@ -188,7 +210,7 @@ export default {
                   vis.graph.colorNode(c_p, colorsCH.HULLP_N);
                   // redo "wrapping" edge
                   vis.graph.removeEdge(c_pp, wrapperStr);
-                  vis.graph.addEdge(wrapperStr, c_p);
+                  vis.graph.addEdge(c_p, wrapperStr);
                   vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
                   let [pX, pY] = vis.graph.getNodePosition(c_pp);
                   let [qX, qY] = vis.graph.getNodePosition(c_p);
@@ -207,13 +229,13 @@ export default {
             
             // console.log("(" + coords[p][X] + ", " + coords[p][Y] + ")", hull);
        
-            // Search for a point 'q' such that 
+            // XX Search for a point 'q' such that 
             // orientation(p, q, x) is clockwise
             // for all coords 'x'. The idea is to keep 
             // track of last visited most clock-
             // wise point in q. If any point 'i' is more 
             // clock-wise than q, then update q.
-            // XXX above NQR with colinear coords on hull
+            // Above NQR with colinear coords on hull
             // want q s.t. for no i, p->i->q is clockwise
             q = (p + 1) % n;
               
@@ -223,31 +245,47 @@ export default {
               },
               [E, coords, p, q], 0
             );
-            let hullHasQ, hullHasI, hullHasPI, hullHasQI;
+            let hullHasQ, hullHasI, hullHasPI, hullHasIP, hullHasIQ, hullHasQI;
             hullHasQ = hull.includes(q);
-            chunker.add('assignI');
+            hullHasI  = hull.includes(0); // initially i===0
+            chunker.add('assignI',
+              (vis, c_p, c_q, h_i) => {
+                // if (!h_i && 0 !== c_q && 0 !== c_p)
+                // Currently we always color node i and change it back
+                // to the old color (if any) later. A bit confusing
+                // because i can be on the hull and/or p or q
+                vis.graph.colorNode(0, colorsCH.GWRAPI_N);
+              },
+              [p, q, hullHasI], 0
+            );
             for (let i = 0; i < n; i++)
             {
               hullHasI = hull.includes(i);
               hullHasPI = includesConsecutive(hull, p, i);
-              hullHasQI = includesConsecutive(hull, i, q);
+              hullHasIP = includesConsecutive(hull, i, p);
+              hullHasIQ = includesConsecutive(hull, i, q);
+              hullHasQI = includesConsecutive(hull, q, i);
               let old_q = q;
               // If i is more clockwise than
               // current q, then update q
               if (orientation(coords[p], coords[i], coords[q]) == GoClockwise) {
-                // XXX see comment above re choice of first point in
+                // Note: see comment above re choice of first point in
                 // colinear case
                 // Here, if there are multiple coords with minimal
                 // clockwiseness (if thats a word), we pick the first one
                 // (min point number)
                 chunker.add('piqTest',
-                  (vis, edgeArray, coordsArray, c_p, c_q, c_i) => {
+                  (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_ip, h_qi) => {
+                    if (h_qi)
+                      vis.graph.removeEdge(c_q, c_i);
+                    if (h_ip)
+                      vis.graph.removeEdge(c_i, c_p);
                     vis.graph.addEdge(c_p, c_i);
-                    vis.graph.addEdge(c_q, c_i);
+                    vis.graph.addEdge(c_i, c_q);
                     vis.graph.colorEdge(c_p, c_i, colorsCH.CLOCKWISE_E);
-                    vis.graph.colorEdge(c_q, c_i, colorsCH.CLOCKWISE_E);
+                    vis.graph.colorEdge(c_i, c_q, colorsCH.CLOCKWISE_E);
                   },
-                  [E, coords, p, q, i], 0
+                  [E, coords, p, q, i, hullHasIP, hullHasQI], 0
                 );
                 chunker.add('q<-i',
                   (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_q) => {
@@ -264,27 +302,62 @@ export default {
                 // to refer to the old version of q for now
               } else {
                 chunker.add('piqTest',
-                  (vis, edgeArray, coordsArray, c_p, c_q, c_i) => {
+                  (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_ip, h_qi) => {
+                    if (h_qi)
+                      vis.graph.removeEdge(c_q, c_i);
+                    if (h_ip)
+                      vis.graph.removeEdge(c_i, c_p);
                     vis.graph.addEdge(c_p, c_i);
-                    vis.graph.addEdge(c_q, c_i);
+                    vis.graph.addEdge(c_i, c_q);
                     vis.graph.colorEdge(c_p, c_i, colorsCH.ANTICLOCK_E);
-                    vis.graph.colorEdge(c_q, c_i, colorsCH.ANTICLOCK_E);
+                    vis.graph.colorEdge(c_i, c_q, colorsCH.ANTICLOCK_E);
                   },
-                  [E, coords, p, q, i], 0
+                  [E, coords, p, q, i, hullHasIP, hullHasQI], 0
                 );
               }
               chunker.add('assignI',
-                (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_pi, h_qi) => {
+                (vis, edgeArray, coordsArray, c_p, c_q, n_q, c_i, h_i, h_pi, h_ip, h_iq, h_qi) => {
+                  if (h_qi) {
+                    vis.graph.addEdge(c_q, c_i);
+                    vis.graph.colorEdge(c_q, c_i, colorsCH.HULL_E);
+                  }
+                  if (h_ip) {
+                    vis.graph.addEdge(c_i, c_p);
+                    vis.graph.colorEdge(c_i, c_p, colorsCH.HULL_E);
+                  }
+                  if (c_i === n_q)
+                    vis.graph.colorNode(c_i, colorsCH.NEXTQ_N);
+                  else if (c_i === c_p || h_i)
+                    vis.graph.colorNode(c_i, colorsCH.HULLP_N);
+                  else
+                    vis.graph.removeNodeColor(c_i);
+                  let next_i = c_i + 1;
+                  if (next_i < n)
+                    vis.graph.colorNode(next_i, colorsCH.GWRAPI_N);
+                  else { // about to exit for loop
+                    // Move wrapper most of the way to it's next position
+                    // XXX improve interpolation - best use angle
+                    // somehow rather than X,Y coordinates
+                    let [oX, oY] = vis.graph.getNodePosition(wrapperStr);
+                    let [pX, pY] = vis.graph.getNodePosition(c_p);
+                    let [qX, qY] = vis.graph.getNodePosition(n_q);
+                    // XXX wrapper position should be colinear but far away
+                    // Currently if p and q are close, wrapper may be too
+                    // close; also need to consider case where p=q...?
+                    let wX = (qX + 50 * (qX - pX))*0.9 + oX*0.1;
+                    let wY = (qY + 50 * (qY - pY))*0.9 + oY*0.1;
+                    vis.graph.setNodePosition(wrapperStr, wX, wY);
+                  }
                   if (h_pi)
                     vis.graph.colorEdge(c_p, c_i, colorsCH.HULL_E);
                   else
                     vis.graph.removeEdge(c_p, c_i);
-                  if (h_qi)
-                    vis.graph.colorEdge(c_q, c_i, colorsCH.HULL_E);
+                  if (h_iq)
+                    vis.graph.colorEdge(c_i, c_q, colorsCH.HULL_E);
                   else
-                    vis.graph.removeEdge(c_q, c_i);
+                    vis.graph.removeEdge(c_i, c_q);
                 },
-                [E, coords, p, old_q, i, hullHasPI, hullHasQI], 0
+                [E, coords, p, old_q, q, i, hullHasI, hullHasPI, hullHasIP, hullHasIQ, hullHasQI], 0
               );
               // now update hullHasQ in case q changed above
               hullHasQ = hull.includes(q);
@@ -300,7 +373,7 @@ export default {
                 // vis.graph.colorNode(c_q, colorsCH.HULLP_N);
                 // redo "wrapping" edge
                 vis.graph.removeEdge(c_p, wrapperStr);
-                vis.graph.addEdge(wrapperStr, c_q);
+                vis.graph.addEdge(c_q, wrapperStr);
                 vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
                 let [pX, pY] = vis.graph.getNodePosition(c_p);
                 let [qX, qY] = vis.graph.getNodePosition(c_q);
