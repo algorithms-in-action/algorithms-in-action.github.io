@@ -29,13 +29,22 @@ giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
         \\Expl}
     \\In}
     hull <- Empty // Initialize hull to the empty set of points
-    minX <-  point with min. X value \\B minX
+    minX <- point with min. X value (optionally minY, maxX, maxY also) \\B minX
     \\Expl{ We could choose any point guaranteed to be on the convex
         hull. Here we use a point with the minimal X coordinate.  We
         scan through all points to find it. If there are multiple points
         with the minimal X coordinate we choose one with a minimal Y coordinate.
         Other choices can potentially have subtle interractions with the
         other code and potentially affect termination - see the MORE tab.
+        During this scan we can optionally also find the minimal Y point
+        and maximal X and Y points; here we do so if n >= 10. These
+        points are also on the convex hull.
+    \\Expl}
+    Optionally remove points inside polygon minX, maxY, maxX, minY \\Ref RemoveQuad
+    \\Expl{ If we know several points that are definitely on the
+        hull, any points strictly inside this polygon can (optionally)
+        be removed from consideration. This can speed up the rest of
+        the algorithm. Here we enable this option if n >= 10.
     \\Expl}
     p <- minX // current point + "string" initialization \\B initP
     \\Expl{ We start with p being the (bottom) leftmost point. In the
@@ -56,34 +65,19 @@ giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
         q <- next point in clockwise "string" rotation \\Ref NextPoint
         \\Expl{ Keeping tension on the string, we rotate it clockwise
           around all the points until it touches the next point, q.
-          Note: going from p to q to any other point x requires a clockwise
-          turn.
+          The animation here shows the string a little before it touches
+          q (which is highlighted).
+          Note: going from p to q to any other point x requires a
+          clockwise turn.
         \\Expl}
         p <- q \\B p<-q
+        \\Expl{ The animation here shows the string touching the node.
+        \\Expl}
     \\In} 
     while p != minX // stop when we get back to the first node \\B whileP
     return hull \\B returnHull
 \\In} 
 \\Code} 
-
-\\Note{ Alternative version of minX <-  point with min. X value
-    (should be able to put this note above but parser is rubbish)
-    Find point with min. X value (and optionally max X, min Y, max Y also)
-    \\Expl{ We could choose any point guaranteed to be on the convex
-        hull. Here we use a point with the minimal X coordinate.  We
-        scan through all points to find it. During
-        this scan we can optionally find other points guaranteed to be
-        on the hull; here we choose points with extreme X or Y
-        coordinates.
-        If there are multiple points with the same extreme X or Y coordinates
-        then the other coordinate is used to break the tie.
-    \\Expl}
-    Optionally remove points inside quadrilateral minX, maxY, maxX, minY \\Ref RemoveQuad
-    \\Expl{ If we know several points that are definitely on the
-        hull, any points strictly inside this polygon can be removed
-        from consideration. This can speed up the rest of the algorithm.
-    \\Expl}
-\\Note}
 
 \\Code{
 NextPoint
@@ -98,7 +92,8 @@ q <- a point other than p // initialise q \\B initQ
 \\Expl}
 for i <- point in P \\B assignI
 \\Expl{ We loop over all points to find the least clockwise point from p.
-We could ignore point p but it does no harm. Here we scan the points
+Here we skip points p and q to simplify the animation (the code works
+without this simplification).  Here we scan the points
 in order. If there are multiple points that have the same least
 clockwise direction from p the ordering of points can be significant
 - see the "MORE" tab for details.
@@ -133,25 +128,28 @@ if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0 \\B piqTest
 \\Code}
 
 \\Code{
-removeQuad
-XXX
-for k <- point in P
+RemoveQuad
+for k <- point in P // Optional loop \\B forkinP
+\\Expl{ We skip the points minX, maxY, minY and maxX.
+  Here we use this option if n >= 10.
+\\Expl}
 \\In{
-    if k is inside the quadrilateral formed by the maximal points \\Ref insidePoly
+    if k is inside the polygon formed by the min/max points \\Ref insidePoly
     \\In{
-       remove point k
+       remove point k // k can't be on the convex hull \\B removek
     \\In}
 \\In}
 \\Code} 
 
 \\Code{
 insidePoly
-// below, i and j refer to consecutive points on a clockwise
-// traversal of the quadrilateral
-if i->j->k turns clockwise for each (i, j) pair
-\\Expl{ There are four (i, j) pairs:  (minX, maxY), (maxY, maxX),
-  (maxX, minY) and (minY, minX). If k is clockwise (to the right of)
-  each of these, it must be inside all four edges of the quadrilateral.
+// Below, i and j refer to consecutive points
+// on a clockwise traversal of the polygon
+if i->j->k turns clockwise for each (i, j) pair \\B allClockwise
+\\Expl{ There are (up to) four (i, j) pairs: (minX, maxY), (maxY, maxX),
+  (maxX, minY) and (minY, minX); we skip pairs where i = j.
+  If k is clockwise (to the right of)
+  each of these, it must be inside all four edges of the polygon.
   To test for clockwise turns we can use the cross product of vectors.
   See the code for finding the next point in the convex hull and the
   "BACKGROUND" and "MORE" tabs for more details.

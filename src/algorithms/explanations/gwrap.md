@@ -2,6 +2,9 @@
 ---
 
 XXX chatGPT version - best review and enhance
+best case time complexity wrong?
+Should define convex hull, discuss vector products etc for clockwise
+turns etc.
 
 The **Gift Wrapping Algorithm** (also called **Jarvis March**) is a method for finding the **convex hull** of a set of points in 2D.  
 
@@ -30,3 +33,10 @@ It’s called *gift wrapping* because the process is like stretching a piece of 
   - h = number of points on the hull
 - **Worst case**: O(n²) (if most points are on the hull)
 - **Best case**: O(n log n) for small h
+
+
+
+
+## Akl-Toussaint heuristic
+
+XXX Describe this; currently enabled for 10 or more points

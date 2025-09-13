@@ -10,8 +10,12 @@ export const colorsCH = {
     // FRONTIER_A: '0',  // Blue
     // FRONTIER_A: globalColors.sky,
     NEXTQ_N: 4,  // Blue
+    AKL_N: 4,
     GWRAPI_N: 2,  // Orange/peach?
+    AKLK_N: 2,
+    AKLDEL_N: 3, // Want apple/something different
     CLOCKWISE_E: 4,  // Blue
+    AKL_E: 4,
     ANTICLOCK_E: 3, // anticlockwise edges, Red
     // PQ_MIN_A: globalColors.peach,
     // if we find a path to end node:

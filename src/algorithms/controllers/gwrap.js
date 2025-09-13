@@ -7,12 +7,6 @@
 // 1) The graphs here (initially at least) have no edges - need to change
 // graph generation and adjust display accordingly. Probably best to
 // have a noEdges option like we have weighted and directed as options.
-// 2) The initial display is too big (and too far left) - other
-// algorithms have an array display also and this affects zoom etc. Need
-// to fix this display without breaking other algorithms (code seems a
-// bit messy).
-// 
-// XXX may need more bookmarks and animate more things.
 // 
 // XXX Currently the "wrapper" uses an edge to a node that is off the
 // screen, usually. It should be off the screen always - need to work
@@ -29,12 +23,12 @@
 //
 // XXX Maybe p,q,i should be shown explicitly - currently they are all
 // implicit using edges, colors etc; not great when they coincide
+// Now revised so i they don't coincide and p is labelled (a bit small -
+// need to fix graph code for that)
 // 
-// XXX Nice to have an option of removing all points in a quadralateral
-// made up of lef, top, right and bottom points. See union-find for an
-// example of such an option.  Need to fix up pseudocode for this (some
-// work has been done). Probably best not give too many details in code
-// or animation - mode details in explanation and/or MORE tab.
+// XXX Maybe have an option button for the Akl-Toussaint heuristic.
+// See union-find for an example of such an option. Currently
+// implemented for n>=10 - not too bad.
 // 
 // XXX Color stuff with graphs is a bit of a mess - this is a Global
 // Issue to be worked in separately - communication about this and how
@@ -62,6 +56,7 @@ export default {
     // integer; '@' looks a bit like a roll of paper/string...
     // It's not normally visible but may be found if someone searches
     const wrapperStr = '@';
+    const pStr = 'p'; // XXX should be rendered a bit higher and larger?
 
     const coords = [...coordsMatrix];
     const numVertices = edgeValueMatrix.length;
@@ -70,6 +65,9 @@ export default {
     // Here we ignore edgeValueMatrix and create our own zero matrix
     const Zeros = new Array(numVertices).fill(0);
     const E = new Array(numVertices).fill(Zeros);
+
+    // Flags for deleted nodes for Alk heuristic
+    let deleted = new Array(numVertices).fill(false);
 
     // Javascript to find convex hull of a set of coords. Refer 
     // https://www.geeksforgeeks.org/dsa/orientation-3-ordered-coords/
@@ -86,6 +84,10 @@ export default {
     let GoStraight = 0;
     let GoClockwise = 1;
     let GoCounterCW = 2;
+
+    // flag for Akl-Toussaint heuristic
+    // XXX Could use extra input button; use n>= 10 for now
+    let aklOpt = numVertices >= 10
     
     // To find orientation of ordered triplet (p, q, r).
         // The function returns following values
@@ -110,6 +112,56 @@ export default {
         }
         return false;
     }
+
+
+    // checks if max1->max2->k is clockwise and
+    // adds appropriate chunk
+    function aklCheckTurn(minX, maxX, minY, maxY, k, max1, max2) {
+      if (max1 === max2) // ignore identical points
+        return true;
+      // could allow straight also - that would discard colinear points
+      if (orientation(coords[max1], coords[max2], coords[k]) == GoClockwise) {
+        chunker.add('allClockwise',
+          (vis, c_minX, c_maxX, c_minY, c_maxY, c_k, m1, m2) => {
+            vis.graph.removeEdge(c_maxY, c_k);
+            vis.graph.removeEdge(c_maxX, c_k);
+            vis.graph.removeEdge(c_minY, c_k);
+            vis.graph.removeEdge(c_minX, c_maxY);
+            vis.graph.removeEdge(c_maxY, c_maxX);
+            vis.graph.removeEdge(c_maxX, c_minY);
+            vis.graph.removeEdge(c_minY, c_minX);
+            vis.graph.addEdge(m1, m2);
+            vis.graph.addEdge(m2, c_k);
+            vis.graph.colorEdge(m1, m2, colorsCH.CLOCKWISE_E);
+            vis.graph.colorEdge(m2, c_k, colorsCH.CLOCKWISE_E);
+          },
+          [minX, maxX, minY, maxY, k, max1, max2], 0
+        );
+        return true;
+      } else {
+        chunker.add('allClockwise',
+          (vis, c_minX, c_maxX, c_minY, c_maxY, c_k, m1, m2) => {
+            vis.graph.removeEdge(c_maxY, c_k);
+            vis.graph.removeEdge(c_maxX, c_k);
+            vis.graph.removeEdge(c_minY, c_k);
+            vis.graph.removeEdge(c_minX, c_maxY);
+            vis.graph.removeEdge(c_maxY, c_maxX);
+            vis.graph.removeEdge(c_maxX, c_minY);
+            vis.graph.removeEdge(c_minY, c_minX);
+            vis.graph.addEdge(m1, m2);
+            vis.graph.addEdge(m2, c_k);
+            vis.graph.colorEdge(m1, m2, colorsCH.ANTICLOCK_E);
+            vis.graph.colorEdge(m2, c_k, colorsCH.ANTICLOCK_E);
+          },
+          [minX, maxX, minY, maxY, k, max1, max2], 0
+        );
+        return false;
+      }
+    }
+
+
+
+
     
     // Prints convex hull of a set of n coords.
     function convexHull(coords, n, E)
@@ -159,11 +211,10 @@ export default {
         // Initialize Result
         let hull = [];
        
-        // Find the leftmost point
-        let l = 0;
-        for (let i = 1; i < n; i++)
-            if (coords[i][X] < coords[l][X])
-                l = i;
+        // Find the leftmost point minX, plus maxX, minY, maxY
+        // XXX add explanation etc re possibility of minX == minY etc
+        let [minX, maxX, minY, maxY] = [0, 0, 0, 0];
+        for (let i = 1; i < n; i++) {
             // NOTE: if there are 2 coords with minimal x value it doesn't
             // matter which we pick. If there are 3 such coords then
             // potentially it may make a difference. We may be fussy about
@@ -175,25 +226,145 @@ export default {
             // Here we break ties by picking the min y coordinate value
             // Delete the else below to get the first minimal point and
             // change < to <= to get the last
-            else if (coords[i][X] === coords[l][X] && coords[i][Y] < coords[l][Y])
-                l = i;
-       
+            if (coords[i][X] < coords[minX][X])
+                minX = i;
+            else if (coords[i][X] === coords[minX][X] && coords[i][Y] < coords[minX][Y])
+                minX = i;
+            if (coords[i][X] > coords[maxX][X])
+                maxX = i;
+            else if (coords[i][X] === coords[maxX][X] && coords[i][Y] > coords[maxX][Y])
+                maxX = i;
+            if (coords[i][Y] < coords[minY][Y])
+                minY = i;
+            else if (coords[i][Y] === coords[minY][Y] && coords[i][X] < coords[minY][X])
+                minY = i;
+            if (coords[i][Y] > coords[maxY][Y])
+                maxY = i;
+            else if (coords[i][Y] === coords[maxY][Y] && coords[i][X] > coords[maxY][X])
+                maxY = i;
+        }
         // Start from (lowest) leftmost point, keep moving 
         // clockwise until reach the start point
         // again. This loop runs O(h) times where h is
         // number of coords in result or output.
-        let p = l, q, prevP;
+        let p = minX, q, prevP;
+        chunker.add(
+          'minX',
+          (vis, c_minX, c_maxX, c_minY, c_maxY) => {
+            vis.graph.colorNode(c_minX, colorsCH.AKL_N);
+            if (aklOpt) { // could pass this in
+              vis.graph.colorNode(c_maxX, colorsCH.AKL_N);
+              vis.graph.colorNode(c_minY, colorsCH.AKL_N);
+              vis.graph.colorNode(c_maxY, colorsCH.AKL_N);
+              vis.graph.addEdge(c_minX, c_maxY);
+              vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+              vis.graph.addEdge(c_maxY, c_maxX);
+              vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+              vis.graph.addEdge(c_maxX, c_minY);
+              vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+              vis.graph.addEdge(c_minY, c_minX);
+              vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+            }
+          },
+          [minX, maxX, minY, maxY], 0
+        );
+        if (aklOpt) { // optional Alk heuristic
+          let prev_k;
+          for (let k = 0; k < n; k++) {
+            // XXX skip messy animation - add explanation in pseudocode
+            if (k === minX || k === minY || k === maxX || k === maxY)
+              continue;
+            chunker.add(
+              'forkinP',
+              (vis, c_minX, c_maxX, c_minY, c_maxY, c_k, p_k) => {
+                if (p_k !== undefined) {
+                  vis.graph.removeNodeColor(p_k);
+                }
+                vis.graph.colorNode(c_k, colorsCH.AKLK_N);
+              },
+              [minX, maxX, minY, maxY, k, prev_k], 0
+            );
+            if (aklCheckTurn(minX, maxX, minY, maxY, k, minX, maxY) &&
+                aklCheckTurn(minX, maxX, minY, maxY, k, maxY, maxX) &&
+                aklCheckTurn(minX, maxX, minY, maxY, k, maxX, minY) &&
+                aklCheckTurn(minX, maxX, minY, maxY, k, minY, minX))
+            {
+              // Add extra chunk that redraws polygon and removes and
+              // removes any edges to k + highlight k
+              chunker.add(
+                'allClockwise',
+                (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
+                  vis.graph.addEdge(c_minX, c_maxY);
+                  vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_maxY, c_maxX);
+                  vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_maxX, c_minY);
+                  vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_minY, c_minX);
+                  vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+                  vis.graph.removeEdge(c_minX, c_k);
+                  vis.graph.removeEdge(c_minY, c_k);
+                  vis.graph.removeEdge(c_maxX, c_k);
+                  vis.graph.removeEdge(c_maxY, c_k);
+                  vis.graph.colorNode(c_k, colorsCH.AKLDEL_N); // highlight k
+                },
+                [minX, maxX, minY, maxY, k], 0
+              );
+              deleted[k] = true;
+              chunker.add('removek',
+                (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
+                  vis.graph.removeNode(c_k);
+                },
+                [minX, maxX, minY, maxY, k], 0
+              );
+            } else {
+              // Add extra chunk that redraws polygon and removes and
+              // removes any edges to k
+              chunker.add(
+                'allClockwise',
+                (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
+                  vis.graph.addEdge(c_minX, c_maxY);
+                  vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_maxY, c_maxX);
+                  vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_maxX, c_minY);
+                  vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+                  vis.graph.addEdge(c_minY, c_minX);
+                  vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+                  vis.graph.removeEdge(c_minX, c_k);
+                  vis.graph.removeEdge(c_minY, c_k);
+                  vis.graph.removeEdge(c_maxX, c_k);
+                  vis.graph.removeEdge(c_maxY, c_k);
+                  vis.graph.removeNodeColor(c_k);
+                },
+                [minX, maxX, minY, maxY, k], 0
+              );
+            }
+            prev_k = k;
+          }
+        }
+
         chunker.add(
           'initP',
-          (vis, edgeArray, coordsArray, c_p, c_q) => {
+          (vis, edgeArray, coordsArray, c_p, c_q, c_maxX, c_minY, c_maxY) => {
+            if (aklOpt) {
+              vis.graph.removeEdge(c_p, c_maxY);
+              vis.graph.removeEdge(c_maxY, c_maxX);
+              vis.graph.removeEdge(c_maxX, c_minY);
+              vis.graph.removeEdge(c_minY, c_p);
+              vis.graph.removeNodeColor(c_maxY);
+              vis.graph.removeNodeColor(c_maxX);
+              vis.graph.removeNodeColor(c_minY);
+            }
             // Add special node a long way away for "wrapper"
             vis.graph.addNode(wrapperStr, wrapperStr);
             vis.graph.setNodePosition(wrapperStr, -2000, -9000); // XXX
-            vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
+            vis.graph.updateHeight(c_p, pStr);
             vis.graph.addEdge(c_p, wrapperStr);
             vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
+            vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
           },
-          [E, coords, p, q], 0
+          [E, coords, p, q, maxX, minY, maxY], 0
         );
         do
         {
@@ -238,6 +409,8 @@ export default {
             // Above NQR with colinear coords on hull
             // want q s.t. for no i, p->i->q is clockwise
             q = (p + 1) % n;
+            while (deleted[q]) // check for deleted nodes
+              q = (q + 1) % n;
               
             chunker.add('initQ',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
@@ -247,19 +420,31 @@ export default {
             );
             let hullHasQ, hullHasI, hullHasPI, hullHasIP, hullHasIQ, hullHasQI;
             hullHasQ = hull.includes(q);
-            hullHasI  = hull.includes(0); // initially i===0
+            let first_i = 0;
+            // can optionally ignore p, q. It makes the animation less
+            // confusing so we do so. NOTE same tests later, twice!
+            // Could simplify some of the color resetting code with
+            // this short-cut.
+            while (first_i === p || first_i === q)
+              first_i = first_i + 1;
+            hullHasI  = hull.includes(first_i);
             chunker.add('assignI',
-              (vis, c_p, c_q, h_i) => {
+              (vis, c_p, c_q, h_i, f_i) => {
                 // if (!h_i && 0 !== c_q && 0 !== c_p)
                 // Currently we always color node i and change it back
                 // to the old color (if any) later. A bit confusing
-                // because i can be on the hull and/or p or q
-                vis.graph.colorNode(0, colorsCH.GWRAPI_N);
+                // because i can be on the hull and/or p or q (no
+                // longer!)
+                vis.graph.colorNode(f_i, colorsCH.GWRAPI_N);
               },
-              [p, q, hullHasI], 0
+              [p, q, hullHasI, first_i], 0
             );
             for (let i = 0; i < n; i++)
             {
+              if (deleted[i]) // ignore deleted nodes
+                continue;
+              if (i === p || i == q) // we skip i==p, i==q
+                continue;
               hullHasI = hull.includes(i);
               hullHasPI = includesConsecutive(hull, p, i);
               hullHasIP = includesConsecutive(hull, i, p);
@@ -332,6 +517,9 @@ export default {
                   else
                     vis.graph.removeNodeColor(c_i);
                   let next_i = c_i + 1;
+                  // we skip i==p, i==q
+                  while (next_i === c_p || next_i === c_q)
+                    next_i = next_i + 1;
                   if (next_i < n)
                     vis.graph.colorNode(next_i, colorsCH.GWRAPI_N);
                   else { // about to exit for loop
@@ -375,6 +563,8 @@ export default {
                 vis.graph.removeEdge(c_p, wrapperStr);
                 vis.graph.addEdge(c_q, wrapperStr);
                 vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
+                vis.graph.updateHeight(c_p, undefined);
+                vis.graph.updateHeight(c_q, pStr);
                 let [pX, pY] = vis.graph.getNodePosition(c_p);
                 let [qX, qY] = vis.graph.getNodePosition(c_q);
                 // XXX wrapper position should be colinear but far away
@@ -391,7 +581,7 @@ export default {
             // so that q is added to result 'hull'
             prevP = p;
             p = q;
-            if (p != l) {
+            if (p != minX) {
               chunker.add('whileP');
             } else {
               // clean up on loop exit
@@ -399,12 +589,13 @@ export default {
                 (vis, edgeArray, coordsArray, c_pp, c_p) => {
                   vis.graph.colorNode(c_pp, colorsCH.HULLP_N);
                   vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                  vis.graph.updateHeight(c_p, undefined);
                   },
                   [E, coords, prevP, p], 0
               );
             }
        
-        } while (p != l);  // While we don't come to first 
+        } while (p != minX);  // While we don't come to first 
                            // point
         // console.log("Reached (" + coords[p][X] + ", " + coords[p][Y] + ") again");
         chunker.add( 'returnHull',
