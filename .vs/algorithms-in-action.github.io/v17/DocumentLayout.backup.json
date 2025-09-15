@@ -51,7 +51,8 @@
               "RelativeToolTip": "src\\InputParam.test.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-09-11T23:47:44.164Z"
+              "WhenOpened": "2025-09-11T23:47:44.164Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -63,7 +64,8 @@
               "RelativeToolTip": "src\\App.test.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-09-11T23:41:48.611Z"
+              "WhenOpened": "2025-09-11T23:41:48.611Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -75,7 +77,8 @@
               "RelativeToolTip": "src\\AlgorithmSelection.test.js",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-09-11T23:38:51.987Z"
+              "WhenOpened": "2025-09-11T23:38:51.987Z",
+              "EditorCaption": ""
             }
           ]
         }
