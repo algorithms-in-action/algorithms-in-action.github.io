@@ -8,7 +8,7 @@ import React, {
   import { GlobalContext } from '../../context/GlobalState';
   import { GlobalActions } from '../../context/actions';
   import '../../styles/LeftPanel.scss';
-  import { AlgorithmCategoryList, AlgorithmList } from '../../algorithms/masterList';
+  import { AlgorithmCategoryList, AlgorithmList } from '../../algorithms';
   import { setFontSize } from '../top/helper';
   import openInstructions from '../mid-panel/helper';
   

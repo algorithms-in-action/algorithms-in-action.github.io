@@ -1,5 +1,6 @@
 import parse from '../../pseudocode/parse';
 
+
 // We now skip NullTable and HashInit function completely - just start
 // animation with initialised table
 // If dynamic tables are not implemented, both CheckTableFullness
@@ -8,7 +9,7 @@ import parse from '../../pseudocode/parse';
 // chaining.  The latter still has "Check how full the table is" that
 // doesn't expand but has an explanation. XXX could be added some time.
 
-export const main = `
+const main = `
 
         \\Code{
             NullTable
@@ -194,3 +195,107 @@ export const hash1 = `
                 \\Expl}
         \\Code}
 `
+export const linearProbingIncrement = `
+
+        \\Code{
+            SetIncrement
+            Increment <- 1 \\B 6
+            \\Expl{ For linear probing, if we have a collision we successively look at the
+	      next table entry (for double hashing, different increments are used).
+              The same increment is used for insertion, search and delete.
+            \\Expl}
+        \\Code}
+
+`
+
+export const doubleHashingIncrement = `
+
+        \\Code{
+            SetIncrement
+                Increment <- (k * BIGPRIME2) mod SMALLISHPRIME + 1 \\B 6
+                \\Expl{ Double hashing resolves collisions by hashing the key k a second time to set the increment
+                    to find the next empty slot in the table R. The value given by the function must be non-zero
+                    and must also be relatively prime to the table size.
+                    Here BIGPRIME2 is 1429 and SMALLISHPRIME is 3 or 23, depending on the table size selected.
+                    The same increment is used for insertion, search and delete.
+                \\Expl}
+        \\Code}
+`
+
+let chainingInsert = `
+    \\Code{
+        NullTable
+            i <- 0
+            while i<TableSize \\B 2
+            \\In{
+                T[i] <- Empty     // Table must start with all slots empty
+                i <- i+1
+            \\In}
+    \\Code}
+
+    \\Code{
+        Main
+        HashInsert(T, k)  // Insert key k into table T \\B 1
+            \\In{
+            Check how full the table is \\B 4
+            \\Expl{ This is not really required, but if the number of insertions
+                is getting large compared to the table size it may be worth expanding the
+                table (not currently implemented).
+            \\Expl}
+            i <- hash(k) \\Ref Hash1
+            insert k into list T[i] \\Ref InsertList
+            // Done \\B 10
+            \\In}
+
+        //=======================================================
+
+        HashDelete(T, k) \\B 11
+            \\In{
+            i <- hash(k) // Expand Hash in HashInsert for more details \\B 16
+            delete k from list T[i] \\B 14
+            \\Expl{ If k does not exist we ignore it (but highlight the
+              slot with a different color).
+            \\Expl}
+            \\In}
+    \\Code}
+
+    \\Code{
+    InsertList
+        l <- new list node with head k and tail T[i] \\B 7
+        \\Expl{ Here we simply insert k at the start of the list T[i]. We
+        could check for duplicates but it is not necessary and would require
+        scanning the list.
+        \\Expl}
+        T[i] <- l \\B 9
+    \\Code}
+
+    \\Code{
+    DeleteList
+        l <- T[i]  // l scans through the list T[i] \\B 20
+        prevptr <- pointer to T[i] // follows one step behind l
+        \\Expl{ prevptr is a pointer to a pointer. It trails one step behind
+            l as we scan through the list so the previous node (or T[i]) can
+            be modified when k is found.
+        \\Expl}
+        while not (l = Empty or head(l) = k) // 'Empty' is the empty list
+            \\In{
+            l <- tail(l)  // skip to next list element
+            prevptr <- pointer to tail(l)
+            \\In}
+        if l = Empty // reached the end of the list without finding k \\B 14
+            \\In{
+            // do nothing
+            \\In}
+        else \\B 18
+            \\In{
+            *prevptr <- tail(l) // previous node now points to tail(l)
+            \\Expl{ The list now skips over the node containing k. The
+                memory for this node can be reclaimed.
+            \\Expl}
+            \\In}
+    \\Code}
+`
+
+export const doubleHashing = parse(main + hash1 + '\n' + doubleHashingIncrement);
+export const linearProbing = parse(main + hash1 + '\n' + linearProbingIncrement);
+export const chaining = parse(chainingInsert + '\n' + hash1);

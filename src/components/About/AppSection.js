@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlgorithmNum } from '../../algorithms/masterList';
+import { AlgorithmNum } from '../../algorithms';
 
 function AppSection() {
   return (

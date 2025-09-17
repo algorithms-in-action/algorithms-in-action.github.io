@@ -231,7 +231,7 @@ class Array1DRenderer extends Array2DRenderer {
                   row,
                   i, // variable pointer only working for 1D arrays
                 ) => (
-                  <AnimateSharedLayout key={`vars-wrap-${i}`}>
+                  <AnimateSharedLayout>
                     <div
                       layout
                       className={styles.row}
