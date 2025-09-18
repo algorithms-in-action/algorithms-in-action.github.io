@@ -1,127 +1,160 @@
-import {cloneDeepWith} from 'lodash';
-import Tracer from '../common/Tracer.jsx';
-import LinkedListRenderer from "./LinkedListRenderer";
-import ListNode from "./ListNode";
+import React from 'react';
+import { motion, AnimateSharedLayout } from 'framer-motion';
+import Array2DRenderer from '../../Array/Array2DRenderer';
+import styles from './LinkedListRenderer.module.scss';
 
-class LinkedListTracer extends Tracer {
-  getRendererClass() { return LinkedListRenderer; }
-
-  init() {
-    super.init();
-    this.nodes = new Map();    // key -> ListNode
-    this.headKey = null;
-    this.tailKey = null;
-    this.motionOn = true;      // 与数组保持一致
-    this.layout = { direction: 'horizontal', gap: 100, start: {x:0, y:0} };
-    this.algo = undefined;
-    this.listOfNumbers = '';   // 可重用 caption
+class LinkedListRenderer extends Array2DRenderer {
+  constructor(props) {
+    super(props);
+    this.togglePan(true);
+    this.toggleZoom(true);
   }
 
-  // 设置链表（支持数组初始化或节点列表）
-  set(list = [], algo) {
-    this.algo = algo;
-    this.nodes.clear();
-    let prevKey = null;
+  renderData() {
+    const { nodes } = this.props.data;
+    const list = [...nodes.values()];
 
-    list.forEach((v, i) => {
-      const k = `n${i}_${Date.now()}`;       // 简易 key
-      const node = new ListNode(v, k);
-      node.pos.x = this.layout.start.x + i * this.layout.gap;
-      node.pos.y = this.layout.start.y;
-      if (prevKey) {
-        this.nodes.get(prevKey).nextKey = k;
-      }
-      this.nodes.set(k, node);
-      prevKey = k;
-    });
-    this.headKey = list.length ? [...this.nodes.keys()][0] : null;
-    this.tailKey = list.length ? [...this.nodes.keys()][list.length-1] : null;
+    // === 尺寸（与 SCSS 保持一致）===
+    const NODE_W = 60;
+    const NODE_H = 24;
+    const CAP_W  = 18;
+    const DOT_SIZE  = 6;
+    const DOT_RIGHT = (CAP_W - DOT_SIZE) / 2;
 
-    // 增加 head 标签
-    if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
+    // 由于 .node 使用 translate(-50%, -50%)，pos 即“中心坐标”
+    const dotCenterX = n => n.pos.x + NODE_W / 2 - DOT_RIGHT - DOT_SIZE / 2;
+    const dotCenterY = n => n.pos.y;
 
-    super.set(); // 通知渲染
-  }
+    // 让箭头停在下一个节点左边缘外一点
+    const SAFE_GAP = 6;
+    const targetX = to => to.pos.x - NODE_W / 2 - SAFE_GAP;
+    const targetY = to => to.pos.y;
 
-  // —— 通用高亮/选择（与 Array2DTracer 同名便于统一调用）——
-  selectByKey(k, c='0'){ this._mark(k, c, true); }
-  deselectByKey(k){ this._clearSelect(k); }
-  patchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.value=v; n.patched++; super.set(); }
-  depatchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.patched=Math.max(0,n.patched-1); n.value=v; super.set(); }
-  fadeOutByKey(k){ const n=this.nodes.get(k); if(n){ n.faded=true; super.set(); } }
-  fadeInByKey(k){ const n=this.nodes.get(k); if(n){ n.faded=false; super.set(); } }
-  sortedByKey(k){ const n=this.nodes.get(k); if(n){ n.sorted=true; super.set(); } }
+    const PADDING = 200;
+    const maxX = (list.length ? Math.max(...list.map(n => n.pos.x)) : 0) + NODE_W + PADDING;
+    const maxY = (list.length ? Math.max(...list.map(n => n.pos.y)) : 0) + NODE_H + PADDING;
 
-  // —— 变量/指针标签（head/cur/left/right…）——
-  assignVariableAtKey(v, k) {
-    // 清同名变量
-    for (const node of this.nodes.values()) {
-      node.variables = node.variables.filter(x => x !== v);
-    }
-    if (k) this.nodes.get(k)?.variables.push(v);
-    super.set();
-  }
-  clearVariables(){ for (const n of this.nodes.values()) n.variables=[]; super.set(); }
+    return (
+      <div className={styles.container}>
+        <div
+          className={styles.stage}
+          style={{
+            transform: `translate(${-this.centerX * 2}px, ${-this.centerY * 2}px) scale(${this.zoom})`,
+            transformOrigin: '0 0',
+            width: maxX,
+            height: maxY,
+            position: 'relative',
+          }}
+        >
+          {/* ===== 箭头层（在节点之上） ===== */}
+          <svg
+            className={styles.edges}
+            width={maxX}
+            height={maxY}
+            style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible' ,background: 'transparent'}}
+          >
+            <defs>
+              {/* 实心尖头；盒子尺寸与尖端对齐，避免被裁掉 */}
+              <marker
+                id="arrow-dark"
+                markerUnits="userSpaceOnUse"
+                markerWidth="12"
+                markerHeight="8"
+                refX="12"
+                refY="4"
+                orient="auto"
+                fill='none'
+              >
+                {/* 尖头三角形（与线条同色） */}
+                <path d="M0,0 L12,4 L0,8 Z" fill = "currentColor" className={styles.arrowHead} />
+              </marker>
+            </defs>
 
-  // —— 结构操作（插入/删除/断开/连接）——
-  insertAfter(afterKey, value, newKey=`n_${Date.now()}`){
-    const newNode = new ListNode(value, newKey);
-    // 布局：先放在 after 后一格，Renderer 会 tween 到位
-    const after = this.nodes.get(afterKey);
-    newNode.pos.x = (after?.pos.x ?? 0) + this.layout.gap;
-    newNode.pos.y = (after?.pos.y ?? 0);
-    // 接 pointer
-    newNode.nextKey = after?.nextKey ?? null;
-    if (after) after.nextKey = newKey;
-    // 尾指针
-    if (this.tailKey === afterKey) this.tailKey = newKey;
-    this.nodes.set(newKey, newNode);
-    super.set();
-  }
+            {list.map(n => {
+              if (!n.nextKey) return null;
+              const to = nodes.get(n.nextKey);
+              if (!to) return null;
+              
 
-  deleteAfter(prevKey){
-    const prev = this.nodes.get(prevKey);
-    if (!prev || !prev.nextKey) return;
-    const delKey = prev.nextKey;
-    const delNode = this.nodes.get(delKey);
-    prev.nextKey = delNode?.nextKey ?? null;
-    if (this.tailKey === delKey) this.tailKey = prevKey;
-    this.nodes.delete(delKey);
-    super.set();
-  }
+              const x1 = dotCenterX(n);
+              const y1 = dotCenterY(n);
+              const x2 = targetX(to);
+              const y2 = targetY(to);
 
-  // 把节点 newHead 设为链表开头（用于 merge 时拼接）
-  rehead(newHeadKey){ this.headKey = newHeadKey ?? null; super.set(); }
+              return (
+                <line
+                  key={`e-${n.key}-${to.key}`}
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  strokeLinecap="butt" 
+                  markerEnd="url(#arrow-dark)"
+                  className={styles.edge}
+                  vectorEffect="non-scaling-stroke"
+                />
+              );
+            })}
+          </svg>
 
-  // 移动节点“视觉位置”（逻辑 nextKey 不变）—用于有序合并时的视觉移动
-  moveNodeTo(k, x, y){ const n=this.nodes.get(k); if(!n) return; n.pos = {x,y}; super.set(); }
+          {/* ===== 节点层 ===== */}
+          <AnimateSharedLayout>
+            {list.map(n => (
+              <motion.div
+                key={n.key}
+                layout
+                className={[
+                  styles.node,
+                  styles.variantGray,
+                  n.faded && styles.faded,
+                  n.sorted && styles.sorted,
+                  n.patched && styles.patched,
+                  n.selected && styles.selected,
+                  n.selected1 && styles.selected1,
+                  n.selected2 && styles.selected2,
+                  n.selected3 && styles.selected3,
+                  n.selected4 && styles.selected4,
+                  n.selected5 && styles.selected5,
+                ].filter(Boolean).join(' ')}
+                style={{
+                  position: 'absolute',
+                  left: n.pos.x,
+                  top: n.pos.y,
+                  width: NODE_W,
+                  height: NODE_H,
+                  '--node-w': `${NODE_W}px`,
+                  '--node-h': `${NODE_H}px`,
+                  '--cap-w':  `${CAP_W}px`,
+                  '--dot-size': `${DOT_SIZE}px`,
+                  '--dot-right': `${DOT_RIGHT}px`,
+                }}
+                transition={{ duration: 0.45 }}
+              >
+                <div className={styles.pill}>
+                  <span className={styles.value}>{n.value}</span>
+                  <span className={styles.cap}>
+                    <i className={styles.dot} aria-hidden />
+                  </span>
+                </div>
 
-  // —— 辅助 —— //
-  setMotion(b=true){ this.motionOn=b; }     // 与 Array2DTracer 对齐
-  setLayout(layout){ this.layout = {...this.layout, ...layout}; super.set(); }
-  setList(arr){ this.listOfNumbers = arr ? arr.join(', ') : undefined; } // 复用 caption
-
-  // —— 之前的 #mark / #clearSelect，改成普通方法 —— //
-  _mark(k, c, on){
-    const n = this.nodes.get(k); if (!n) return;
-    const color = Number(c);
-    if (on) {
-      if (color===0) n.selected++;
-      else if (color>=1 && color<=5) n[`selected${color}`]=true;
-      else n.selected = 1;
-    } else {
-      n.selected=0; for(let i=1;i<=5;i++) n[`selected${i}`]=false;
-    }
-    super.set();
-  }
-
-  _clearSelect(k){
-    const n=this.nodes.get(k); if(!n) return;
-    n.selected=0;
-    for(let i=1;i<=5;i++) n[`selected${i}`]=false;
-    n.sorted=false;
-    super.set();
+                <div className={styles.vars}>
+                  {n.variables.map(v => (
+                    <motion.div
+                      layoutId={`${n.key}-${v}`}
+                      key={v}
+                      className={styles.varBadge}
+                    >
+                      {v}
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </AnimateSharedLayout>
+        </div>
+      </div>
+    );
   }
 }
 
-export default LinkedListTracer;
+export default LinkedListRenderer;

@@ -50,8 +50,9 @@ class LinkedListTracer extends Tracer {
   }
 
   // —— 通用高亮/选择（与 Array2DTracer 同名便于统一调用）——
-  selectByKey(k, c='0'){ this.#mark(k, c, true); }
-  deselectByKey(k){ this.#clearSelect(k); }
+  selectByKey(k, c='0'){ this._mark(k, c, true); }
+  deselectByKey(k){ this._clearSelect(k); }
+
   patchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.value=v; n.patched++; super.set(); }
   depatchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.patched=Math.max(0,n.patched-1); n.value=v; super.set(); }
   fadeOutByKey(k){ const n=this.nodes.get(k); if(n){ n.faded=true; super.set(); } }
@@ -108,7 +109,9 @@ class LinkedListTracer extends Tracer {
   setList(arr){ this.listOfNumbers = arr ? arr.join(', ') : undefined; } // 复用 caption
 
   // —— 私有 —— //
-  #mark(k, c, on){
+
+  _mark(k, c, on){
+
     const n = this.nodes.get(k); if (!n) return;
     const color = Number(c);
     if (on) {
@@ -120,7 +123,8 @@ class LinkedListTracer extends Tracer {
     }
     super.set();
   }
-  #clearSelect(k){ const n=this.nodes.get(k); if(!n) return; n.selected=0; for(let i=1;i<=5;i++) n[`selected${i}`]=false; n.sorted=false; super.set(); }
+  _clearSelect(k){ const n=this.nodes.get(k); if(!n) return; n.selected=0; for(let i=1;i<=5;i++) n[`selected${i}`]=false; n.sorted=false; super.set(); }
+
 }
 
 export default LinkedListTracer;

@@ -63,6 +63,9 @@ export default {
 // import 2D tracer to generate array in the middle panel
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 
+// import LinkedList data Structure to represent animination
+import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
+
 import {
   areExpanded,
 } from './collapseChunkPlugin';
@@ -164,6 +167,11 @@ export function initVisualisers() {
          'Array representation of lists (PROTOTYPE FOR POINTER REPRESENTATION)'),
         order: 0,
       },
+      list: {
+        instance: new LinkedListTracer('list', null, 
+          'Linked list (pointer representation)',),
+          order: 1,
+      },
     }
 }
 
@@ -262,6 +270,10 @@ export function run_msort() {
 
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
+
+        // 初始化 链表
+        vis.list.set(entire_num_array, 'mergeSort list init');
+
         vis.array.assignVariable('L', 2, cur_L);
         // colour all of list
         let Tails = Lists[2];
@@ -847,6 +859,7 @@ cur_right, c_stk) => {
       Tails.push(i+1);
     }
     Tails[entire_num_array.length-1] = 'Null';
+
     const msresult = MergeSort(1, entire_num_array.length - 1, 0);
     // const msresult = 0;
     let lastLine = (entire_num_array.length > 1 ? 'returnM': 'returnL');
