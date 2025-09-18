@@ -1,55 +1,106 @@
 @import "../../common/stylesheet/index";
 
-.container {
-  position: relative;
-  overflow: visible; // 舞台可能比容器大
-}
+/* ===== 容器 & 舞台 ===== */
+.container { position: relative; overflow: visible; }
+.stage     { position: relative; transform-origin: 0 0; will-change: transform; }
 
-.stage {
-  position: relative;
-  transform-origin: 0 0;
-  will-change: transform;
-}
-
+/* ===== 箭头：深灰粗线 + 圆角 + 起点小圆点 + 实心箭头头 ===== */
 .edges {
-  // svg 铺满舞台；线条风格
   .edge {
-    stroke: #b8b8b8;
-    stroke-width: 2px;
-    opacity: 0.9;
+    stroke: #2e2e2e;
+    stroke-width: 4px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    opacity: 1;
   }
-  .arrowHead {
-    fill: #b8b8b8;
-  }
+  .edge--active { stroke: #e53935; }
+  .arrowHead { fill: #2e2e2e; }
+  z-index: 3; 
+  position: absolute; 
 }
+.edgeDot { fill: #2e2e2e; }
 
+/* ===== 胶囊节点（半尺寸示例） ===== */
 .node {
+  position: absolute;
   box-sizing: border-box;
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 14px;
-  background: var(--array-2d-row-col-bg, #333);
+  background: transparent;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  z-index: 2; 
+
+  /* 尺寸变量（改这里即可整体缩放） */
+  --node-w: 60px;
+  --node-h: 24px;
+  --cap-w: 18px;
+  --pill-radius: 8px;
+  --value-fs: 15px;
+
+  /* 圆点相关（确保存在，否则会“消失”） */
+  --dot-size: 6px;                    /* 圆点直径 */
+  --dot-right: calc( (var(--cap-w) - var(--dot-size)) / 2 ); /* 圆点水平居中于盖子 */
+  /* 若想更靠右：把上一行改为 --dot-right: 4px; */
+
+  width: var(--node-w);
+  height: var(--node-h);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 10px;
+
+  .pill {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--pill-radius);
+    display: grid;
+    grid-template-columns: 1fr var(--cap-w);
+    overflow: hidden;
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 6px 16px rgba(0,0,0,.15);
+  }
 
   .value {
-    font-size: 12px;
-    color: var(--array-2d-row-col-value-color, #d9d9d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--value-fs);
+    font-weight: 600;
     line-height: 1;
+    letter-spacing: .2px;
     user-select: none;
+    color: #f1f1f1;
+  }
+
+  .cap {
+    position: relative;               /* 作为 .dot 的定位参照 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px solid #2b2b2b;   /* 中线始终贴缝 */
+  }
+
+  /* 如果曾用 .divider 元素，禁用它，避免遮挡圆点 */
+  .divider { display: none; }
+
+  /* 右盖上的小圆点 */
+  .dot {
+    position: absolute;
+    right: var(--dot-right);
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background: #4b4b4b;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.25) inset;
+    z-index: 1;                        /* 确保不被中线或背景遮住 */
   }
 
   .vars {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 6px);
     left: 0;
     display: flex;
     gap: 6px;
-    margin-top: 4px;
     pointer-events: none;
   }
-
   .varBadge {
     background: rgba(180,180,180,0.18);
     border: 1px solid rgba(255,255,255,0.25);
@@ -60,23 +111,41 @@
   }
 }
 
+/* ===== 颜色（固定灰色外观，左深灰 + 右更深） ===== */
+.variantGray .pill {
+  background:
+    linear-gradient(
+      90deg,
+      #666 0 calc(100% - var(--cap-w)),
+      #555 calc(100% - var(--cap-w))
+    );
+}
 
-/* 状态色：与数组组件保持一致 */
-.patched   { background: var(--peach); }
-.sorted    { background: var(--stone); }
-.selected  { outline: 2px solid var(--sky);    }
-.selected1 { outline: 2px solid var(--leaf);   }
-.selected2 { outline: 2px solid var(--apple);  }
-.selected3 { outline: 2px solid var(--peach);  }
-.selected4 { outline: 2px solid var(--plum);   }
-.selected5 { outline: 2px solid var(--wood);   }
+/* 可选彩色变体（保留以备后用） */
+.variantBlue   .pill { background: linear-gradient(90deg, #2f8cff 0 calc(100% - var(--cap-w)), #186ad6 calc(100% - var(--cap-w))); }
+.variantOrange .pill { background: linear-gradient(90deg, #ffb000 0 calc(100% - var(--cap-w)), #ff8a00 calc(100% - var(--cap-w))); }
+.variantRed    .pill { background: linear-gradient(90deg, #ff4a4a 0 calc(100% - var(--cap-w)), #d12f2f calc(100% - var(--cap-w))); }
+.variantGreen  .pill { background: linear-gradient(90deg, #69c587 0 calc(100% - var(--cap-w)), #4ea46d calc(100% - var(--cap-w))); }
+.variantGrayAlt .pill { background: linear-gradient(90deg, #7a7a7a 0 calc(100% - var(--cap-w)), #5a5a5a calc(100% - var(--cap-w))); }
+
+/* ===== 状态类 ===== */
+.patched  .pill { box-shadow: 0 0 0 2px var(--peach) inset, 0 6px 16px rgba(0,0,0,.15); }
+.sorted   .pill { box-shadow: 0 0 0 2px var(--stone) inset, 0 6px 16px rgba(0,0,0,.15); }
+
+.selected  .pill  { outline: 2px solid var(--sky);    outline-offset: 2px; }
+.selected1 .pill  { outline: 2px solid var(--leaf);   outline-offset: 2px; }
+.selected2 .pill  { outline: 2px solid var(--apple);  outline-offset: 2px; }
+.selected3 .pill  { outline: 2px solid var(--peach);  outline-offset: 2px; }
+.selected4 .pill  { outline: 2px solid var(--plum);   outline-offset: 2px; }
+.selected5 .pill  { outline: 2px solid var(--wood);   outline-offset: 2px; }
 
 .faded { opacity: .30; }
-.caption { 
-  position: absolute; 
-  bottom: 8px; 
-  left: 50%; 
-  transform: translateX(-50%); 
-  font-size: 13px; 
-  color: var(--array-2d-row-col-value-color); 
+
+.caption {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--array-2d-row-col-value-color);
 }
