@@ -48,55 +48,68 @@ class LinkedListRenderer extends Array2DRenderer {
         >
           {/* ===== 箭头层（在节点之上） ===== */}
           <svg
-            className={styles.edges}
-            width={maxX}
-            height={maxY}
-            style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible' ,background: 'transparent'}}
-          >
-            <defs>
-              {/* 实心尖头；盒子尺寸与尖端对齐，避免被裁掉 */}
-              <marker
-                id="arrow-dark"
-                markerUnits="userSpaceOnUse"
-                markerWidth="12"
-                markerHeight="8"
-                refX="12"
-                refY="4"
-                orient="auto"
-                fill='none'
-              >
-                {/* 尖头三角形（与线条同色） */}
-                <path d="M0,0 L12,4 L0,8 Z" fill = "currentColor" className={styles.arrowHead} />
-              </marker>
-            </defs>
+  className={styles.edges}
+  width={maxX}
+  height={maxY}
+  style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', background: 'transparent' }}
+>
+  <defs>
+    {/*
+      ARROW_LEN = 三角形的水平长度（越小越短）
+      ARROW_H   = 三角形的总高度（上下各一半）
+    */}
+    {(() => {
+      const ARROW_LEN = 4; // ← 改这里：比如 6 / 5 / 4
+      const ARROW_H   = 8; // 高度，通常保持 8 不动
+      const HALF_H    = ARROW_H / 2;
 
-            {list.map(n => {
-              if (!n.nextKey) return null;
-              const to = nodes.get(n.nextKey);
-              if (!to) return null;
-              
+      return (
+        <marker
+          id="arrow-dark"
+          viewBox={`0 0 ${ARROW_LEN} ${ARROW_H}`} // 一定要和 path / refX 对齐
+          markerUnits="userSpaceOnUse"
+          markerWidth={ARROW_LEN}
+          markerHeight={ARROW_H}
+          refX={ARROW_LEN}
+          refY={HALF_H}
+          orient="auto"
+        >
+          {/* 尖头三角形（颜色跟随线条） */}
+          <path d={`M0,0 L${ARROW_LEN},${HALF_H} L0,${ARROW_H} Z`} fill="currentColor" />
+        </marker>
+      );
+    })()}
+  </defs>
 
-              const x1 = dotCenterX(n);
-              const y1 = dotCenterY(n);
-              const x2 = targetX(to);
-              const y2 = targetY(to);
+  {list.map(n => {
+    if (!n.nextKey) return null;
+    const to = nodes.get(n.nextKey);
+    if (!to) return null;
 
-              return (
-                <line
-                  key={`e-${n.key}-${to.key}`}
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
-                  strokeLinecap="butt" 
-                  markerEnd="url(#arrow-dark)"
-                  className={styles.edge}
-                  vectorEffect="non-scaling-stroke"
-                />
-              );
-            })}
-          </svg>
+    const x1 = dotCenterX(n);
+    const y1 = dotCenterY(n);
 
+    // 如果还想让“整条线”再短点（不是只有三角形短），就把 BODY_GAP 调大一些
+    const BODY_GAP = 0;                    // ← 例如设成 2 或 4
+    const x2 = targetX(to) - BODY_GAP;     // 线的终点往回收
+    const y2 = targetY(to);
+
+    return (
+      <line
+        key={`e-${n.key}-${to.key}`}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        markerEnd="url(#arrow-dark)"
+        className={styles.edge}
+        vectorEffect="non-scaling-stroke"
+        shapeRendering="geometricPrecision"
+        strokeLinecap="butt"
+      />
+    );
+  })}
+</svg>
           {/* ===== 节点层 ===== */}
           <AnimateSharedLayout>
             {list.map(n => (
