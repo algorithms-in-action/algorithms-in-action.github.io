@@ -604,7 +604,7 @@ export default {
                                             stack.rectangleNode.push(r);
                                         }
                                         // resize this stack's rectangle immediately
-                                        vis.graph.rectangle_size_forStack(stack);
+                                        // vis.graph.rectangle_size_forStack(stack);
                                     }
                                 }
                             } 
@@ -760,6 +760,7 @@ export default {
                     vis.graph.setFunctionBalance(null);
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                     popAfterReturnFlag = true;
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance < -1 && key > root.right.key) {
@@ -799,6 +800,7 @@ export default {
                     vis.graph.clearSelect_Circle_Count();
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
                     popAfterReturnFlag = true;
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance > 1 && key > root.left.key) {
@@ -837,6 +839,7 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.rectangle_size();
                         popAfterReturnFlag = true;
                     },
                     [(parentNode !== null) ? globalRoot.key : root.key, root],
@@ -878,6 +881,7 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.rectangle_size();
                         popAfterReturnFlag = true;
                     }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else {
