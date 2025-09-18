@@ -1,119 +1,127 @@
-import React from 'react';
-import { motion, AnimateSharedLayout } from 'framer-motion';
-import Array2DRenderer from '../../Array/Array2DRenderer';
-import styles from './LinkedListRenderer.module.scss';
+import {cloneDeepWith} from 'lodash';
+import Tracer from '../common/Tracer.jsx';
+import LinkedListRenderer from "./LinkedListRenderer";
+import ListNode from "./ListNode";
 
-class LinkedListRenderer extends Array2DRenderer {
-  constructor(props) {
-    super(props);
-    this.togglePan(true);
-    this.toggleZoom(true);
+class LinkedListTracer extends Tracer {
+  getRendererClass() { return LinkedListRenderer; }
+
+  init() {
+    super.init();
+    this.nodes = new Map();    // key -> ListNode
+    this.headKey = null;
+    this.tailKey = null;
+    this.motionOn = true;      // 与数组保持一致
+    this.layout = { direction: 'horizontal', gap: 100, start: {x:0, y:0} };
+    this.algo = undefined;
+    this.listOfNumbers = '';   // 可重用 caption
   }
 
-  renderData() {
-  const { nodes } = this.props.data;
-  const list = [...nodes.values()];
+  // 设置链表（支持数组初始化或节点列表）
+  set(list = [], algo) {
+    this.algo = algo;
+    this.nodes.clear();
+    let prevKey = null;
 
-  // —— 尺寸与偏移（可按需要统一调整）——
-  const NODE_W = 35;          // 节点宽（比之前更宽一点）
-  const NODE_H = 40;           // 节点高
-  const PADDING = 120;         // 画布留白，避免裁剪
-  const START_OFFSET = NODE_W - 12;   // 箭头起点（离起点右边框 12px）
-  const END_OFFSET   = 12;            // 箭头终点（离终点左边框 12px）
-  const NODE_CY = NODE_H / 2;
+    list.forEach((v, i) => {
+      const k = `n${i}_${Date.now()}`;       // 简易 key
+      const node = new ListNode(v, k);
+      node.pos.x = this.layout.start.x + i * this.layout.gap;
+      node.pos.y = this.layout.start.y;
+      if (prevKey) {
+        this.nodes.get(prevKey).nextKey = k;
+      }
+      this.nodes.set(k, node);
+      prevKey = k;
+    });
+    this.headKey = list.length ? [...this.nodes.keys()][0] : null;
+    this.tailKey = list.length ? [...this.nodes.keys()][list.length-1] : null;
 
-  // —— 计算“舞台”尺寸，覆盖所有节点 —— //
-  const maxX = (list.length ? Math.max(...list.map(n => n.pos.x)) : 0) + NODE_W + PADDING;
-  const maxY = (list.length ? Math.max(...list.map(n => n.pos.y)) : 0) + NODE_H + PADDING;
+    // 增加 head 标签
+    if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
 
-  return (
-    <div className={styles.container}>
-      {/* 舞台：统一缩放/平移只作用在这里 */}
-      <div
-        className={styles.stage}
-        style={{
-          transform: `translate(${-this.centerX * 2}px, ${-this.centerY * 2}px) scale(${this.zoom})`,
-          transformOrigin: '0 0',
-          width: maxX,
-          height: maxY,
-          position: 'relative',
-        }}
-      >
-        {/* 箭头层（SVG 铺满舞台） */}
-        <svg
-          className={styles.edges}
-          width={maxX}
-          height={maxY}
-          style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible' }}
-        >
-          <defs>
-            {/* userSpaceOnUse + non-scaling-stroke 可保持线宽/箭头在缩放时观感更稳定 */}
-            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="userSpaceOnUse">
-              <path d="M0,0 L0,6 L9,3 z" className={styles.arrowHead} />
-            </marker>
-          </defs>
+    super.set(); // 通知渲染
+  }
 
-          {list.map(n => {
-            if (!n.nextKey) return null;
-            const to = nodes.get(n.nextKey);
-            if (!to) return null;
+  // —— 通用高亮/选择（与 Array2DTracer 同名便于统一调用）——
+  selectByKey(k, c='0'){ this._mark(k, c, true); }
+  deselectByKey(k){ this._clearSelect(k); }
+  patchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.value=v; n.patched++; super.set(); }
+  depatchByKey(k, v=this.nodes.get(k)?.value){ const n=this.nodes.get(k); if(!n) return; n.patched=Math.max(0,n.patched-1); n.value=v; super.set(); }
+  fadeOutByKey(k){ const n=this.nodes.get(k); if(n){ n.faded=true; super.set(); } }
+  fadeInByKey(k){ const n=this.nodes.get(k); if(n){ n.faded=false; super.set(); } }
+  sortedByKey(k){ const n=this.nodes.get(k); if(n){ n.sorted=true; super.set(); } }
 
-            return (
-              <line
-                key={`e-${n.key}-${to.key}`}
-                x1={n.pos.x + START_OFFSET}
-                y1={n.pos.y + NODE_CY}
-                x2={to.pos.x + END_OFFSET}
-                y2={to.pos.y + NODE_CY}
-                markerEnd="url(#arrow)"
-                className={styles.edge}
-                vectorEffect="non-scaling-stroke"
-              />
-            );
-          })}
-        </svg>
+  // —— 变量/指针标签（head/cur/left/right…）——
+  assignVariableAtKey(v, k) {
+    // 清同名变量
+    for (const node of this.nodes.values()) {
+      node.variables = node.variables.filter(x => x !== v);
+    }
+    if (k) this.nodes.get(k)?.variables.push(v);
+    super.set();
+  }
+  clearVariables(){ for (const n of this.nodes.values()) n.variables=[]; super.set(); }
 
-        {/* 节点层（和 SVG 在同一“舞台”坐标系下） */}
-        <AnimateSharedLayout>
-          {list.map(n => (
-            <motion.div
-              key={n.key}
-              layout
-              className={[
-                styles.node,
-                n.faded && styles.faded,
-                n.selected && styles.selected,
-                n.selected1 && styles.selected1,
-                n.selected2 && styles.selected2,
-                n.selected3 && styles.selected3,
-                n.selected4 && styles.selected4,
-                n.selected5 && styles.selected5,
-                n.patched && styles.patched,
-                n.sorted && styles.sorted,
-              ].filter(Boolean).join(' ')}
-              style={{
-                position: 'absolute',
-                left: n.pos.x,
-                top: n.pos.y,
-                width: NODE_W,
-                height: NODE_H,
-              }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className={styles.value}>{n.value}</div>
-              <div className={styles.vars}>
-                {n.variables.map(v => (
-                  <motion.div layoutId={`${n.key}-${v}`} key={v} className={styles.varBadge}>
-                    {v}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </AnimateSharedLayout>
-      </div>
-    </div>
-  );
+  // —— 结构操作（插入/删除/断开/连接）——
+  insertAfter(afterKey, value, newKey=`n_${Date.now()}`){
+    const newNode = new ListNode(value, newKey);
+    // 布局：先放在 after 后一格，Renderer 会 tween 到位
+    const after = this.nodes.get(afterKey);
+    newNode.pos.x = (after?.pos.x ?? 0) + this.layout.gap;
+    newNode.pos.y = (after?.pos.y ?? 0);
+    // 接 pointer
+    newNode.nextKey = after?.nextKey ?? null;
+    if (after) after.nextKey = newKey;
+    // 尾指针
+    if (this.tailKey === afterKey) this.tailKey = newKey;
+    this.nodes.set(newKey, newNode);
+    super.set();
+  }
+
+  deleteAfter(prevKey){
+    const prev = this.nodes.get(prevKey);
+    if (!prev || !prev.nextKey) return;
+    const delKey = prev.nextKey;
+    const delNode = this.nodes.get(delKey);
+    prev.nextKey = delNode?.nextKey ?? null;
+    if (this.tailKey === delKey) this.tailKey = prevKey;
+    this.nodes.delete(delKey);
+    super.set();
+  }
+
+  // 把节点 newHead 设为链表开头（用于 merge 时拼接）
+  rehead(newHeadKey){ this.headKey = newHeadKey ?? null; super.set(); }
+
+  // 移动节点“视觉位置”（逻辑 nextKey 不变）—用于有序合并时的视觉移动
+  moveNodeTo(k, x, y){ const n=this.nodes.get(k); if(!n) return; n.pos = {x,y}; super.set(); }
+
+  // —— 辅助 —— //
+  setMotion(b=true){ this.motionOn=b; }     // 与 Array2DTracer 对齐
+  setLayout(layout){ this.layout = {...this.layout, ...layout}; super.set(); }
+  setList(arr){ this.listOfNumbers = arr ? arr.join(', ') : undefined; } // 复用 caption
+
+  // —— 之前的 #mark / #clearSelect，改成普通方法 —— //
+  _mark(k, c, on){
+    const n = this.nodes.get(k); if (!n) return;
+    const color = Number(c);
+    if (on) {
+      if (color===0) n.selected++;
+      else if (color>=1 && color<=5) n[`selected${color}`]=true;
+      else n.selected = 1;
+    } else {
+      n.selected=0; for(let i=1;i<=5;i++) n[`selected${i}`]=false;
+    }
+    super.set();
+  }
+
+  _clearSelect(k){
+    const n=this.nodes.get(k); if(!n) return;
+    n.selected=0;
+    for(let i=1;i<=5;i++) n[`selected${i}`]=false;
+    n.sorted=false;
+    super.set();
+  }
 }
-}
-export default LinkedListRenderer;
+
+export default LinkedListTracer;
