@@ -575,7 +575,22 @@ export default {
                         // Cretae a new nested rectangle
                         let nodeIds = vis.graph.getSubtreeNodes(rr);
                         vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
-                    } 
+                    }
+                    else {
+                        // add temporary node
+                        vis.graph.addNode(k, k);
+                        if (p !== null) {
+                            vis.graph.addEdge(p, k);
+                        }
+                        vis.graph.addNodeToRectStack(k, p);
+                        vis.graph.updateHeight(k, 1);
+                        // Add a rectangle for the node
+                        vis.graph.pushRectStack([k], `Depth ${d}`);
+                        vis.graph.rectangle_size();
+                        // Pause the layout then remove the node
+                        vis.graph.setPauseLayout(true);
+                        vis.graph.removeNode(k);
+                    }
                 },
                 [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
                 depth
@@ -591,25 +606,15 @@ export default {
                 // chunker.add('create new node',
                 chunker.add('return n',
                     (vis, r, p) => {
+                        vis.graph.setPauseLayout(false);
                         vis.graph.addNode(r, r);
                         vis.graph.updateHeight(r, 1);
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
-
-                             // Add the new node's corresponding rectangle
-                            if (vis.graph.rectangles && vis.graph.rectangles.length) {
-                                for (const stack of vis.graph.rectangles) {
-                                    if (stack.rectangleNode.includes(p)) {
-                                        if (!stack.rectangleNode.includes(r)) {
-                                            stack.rectangleNode.push(r);
-                                        }
-                                        // resize this stack's rectangle immediately
-                                        // vis.graph.rectangle_size_forStack(stack);
-                                    }
-                                }
-                            } 
+                            vis.graph.addNodeToRectStack(r, p);
                         }
                         vis.graph.rectangle_size();
+                        popAfterReturnFlag = true;
                         // vis.graph.select(r, p);
                         ////  vis.graph.resetVisitAndSelect(r, p);
                     },
