@@ -18,7 +18,7 @@ class LinkedListTracer extends Tracer {
     this.headKey = null;
     this.tailKey = null;
     this.motionOn = true;      // 与数组保持一致
-    this.layout = { direction: 'horizontal', gap: 100, start: {x:0, y:0} };
+    this.layout = { direction: 'horizontal', gap: 65, start: {x:0, y:0} };
     this.algo = undefined;
     this.listOfNumbers = '';   // 可重用 caption
   }

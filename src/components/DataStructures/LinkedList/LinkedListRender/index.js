@@ -15,14 +15,17 @@ class LinkedListRenderer extends Array2DRenderer {
     const list = [...nodes.values()];
 
     // === 尺寸（与 SCSS 保持一致）===
-    const NODE_W = 60;
-    const NODE_H = 24;
-    const CAP_W  = 18;
-    const DOT_SIZE  = 6;
+    const NODE_W = 50;
+    const NODE_H = 20;
+    const CAP_W  = 15;
+    const DOT_SIZE  = 5;
     const DOT_RIGHT = (CAP_W - DOT_SIZE) / 2;
 
+    const H_GAP = 40; // 自定义间距
+
     // 由于 .node 使用 translate(-50%, -50%)，pos 即“中心坐标”
-    const dotCenterX = n => n.pos.x + NODE_W / 2 - DOT_RIGHT - DOT_SIZE / 2;
+    //const dotCenterX = n => n.pos.x + NODE_W/2 - DOT_RIGHT - DOT_SIZE/2 + n.index * H_GAP;
+    const dotCenterX = n => n.pos.x + NODE_W / 2 - DOT_RIGHT - DOT_SIZE / 2 - 30;
     const dotCenterY = n => n.pos.y;
 
     // 让箭头停在下一个节点左边缘外一点
@@ -30,7 +33,7 @@ class LinkedListRenderer extends Array2DRenderer {
     const targetX = to => to.pos.x - NODE_W / 2 - SAFE_GAP;
     const targetY = to => to.pos.y;
 
-    const PADDING = 200;
+    const PADDING = 0;
     const maxX = (list.length ? Math.max(...list.map(n => n.pos.x)) : 0) + NODE_W + PADDING;
     const maxY = (list.length ? Math.max(...list.map(n => n.pos.y)) : 0) + NODE_H + PADDING;
 
@@ -48,20 +51,20 @@ class LinkedListRenderer extends Array2DRenderer {
         >
           {/* ===== 箭头层（在节点之上） ===== */}
           <svg
-  className={styles.edges}
-  width={maxX}
-  height={maxY}
-  style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', background: 'transparent' }}
->
-  <defs>
-    {/*
-      ARROW_LEN = 三角形的水平长度（越小越短）
-      ARROW_H   = 三角形的总高度（上下各一半）
-    */}
-    {(() => {
-      const ARROW_LEN = 4; // ← 改这里：比如 6 / 5 / 4
-      const ARROW_H   = 8; // 高度，通常保持 8 不动
-      const HALF_H    = ARROW_H / 2;
+            className={styles.edges}
+            width={maxX}
+            height={maxY}
+            style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', background: 'transparent' }}
+          >
+            <defs>
+              {/*
+                ARROW_LEN = 三角形的水平长度（越小越短）
+                ARROW_H   = 三角形的总高度（上下各一半）
+              */}
+              {(() => {
+                const ARROW_LEN = 5; // ← 改这里：比如 6 / 5 / 4
+                const ARROW_H   = 8; // 高度，通常保持 8 不动
+                const HALF_H    = ARROW_H / 2;
 
       return (
         <marker
@@ -77,39 +80,40 @@ class LinkedListRenderer extends Array2DRenderer {
           {/* 尖头三角形（颜色跟随线条） */}
           <path d={`M0,0 L${ARROW_LEN},${HALF_H} L0,${ARROW_H} Z`} fill="currentColor" />
         </marker>
-      );
-    })()}
-  </defs>
+        );
+        })()}
+      </defs>
 
-  {list.map(n => {
-    if (!n.nextKey) return null;
-    const to = nodes.get(n.nextKey);
-    if (!to) return null;
+        {list.map(n => {
+        if (!n.nextKey) return null;
+        const to = nodes.get(n.nextKey);
+        if (!to) return null;
 
-    const x1 = dotCenterX(n);
-    const y1 = dotCenterY(n);
+        const x1 = dotCenterX(n);
+        const y1 = dotCenterY(n);
 
-    // 如果还想让“整条线”再短点（不是只有三角形短），就把 BODY_GAP 调大一些
-    const BODY_GAP = 0;                    // ← 例如设成 2 或 4
-    const x2 = targetX(to) - BODY_GAP;     // 线的终点往回收
-    const y2 = targetY(to);
+        // 如果还想让“整条线”再短点（不是只有三角形短），就把 BODY_GAP 调大一些
+        const BODY_GAP = 25;                    // ← 例如设成 2 或 4
+        const x2 = targetX(to) - BODY_GAP;     // 线的终点往回收
+        const y2 = targetY(to);
+        
 
-    return (
-      <line
-        key={`e-${n.key}-${to.key}`}
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        markerEnd="url(#arrow-dark)"
-        className={styles.edge}
-        vectorEffect="non-scaling-stroke"
-        shapeRendering="geometricPrecision"
-        strokeLinecap="butt"
-      />
-    );
-  })}
-</svg>
+        return (
+          <line
+            key={`e-${n.key}-${to.key}`}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            markerEnd="url(#arrow-dark)"
+            className={styles.edge}
+            vectorEffect="non-scaling-stroke"
+            shapeRendering="geometricPrecision"
+            strokeLinecap="butt"
+          />
+        );
+        })}
+      </svg>
           {/* ===== 节点层 ===== */}
           <AnimateSharedLayout>
             {list.map(n => (
@@ -131,7 +135,7 @@ class LinkedListRenderer extends Array2DRenderer {
                 ].filter(Boolean).join(' ')}
                 style={{
                   position: 'absolute',
-                  left: n.pos.x,
+                  left: n.pos.x - 30,
                   top: n.pos.y,
                   width: NODE_W,
                   height: NODE_H,
