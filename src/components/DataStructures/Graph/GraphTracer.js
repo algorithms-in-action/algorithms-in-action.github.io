@@ -1013,6 +1013,21 @@ class GraphTracer extends Tracer {
     }
   }
 
+   // Add a node to each rectangle that contains a given parent
+  addNodeToRectStack(nodeId, parentId) {
+    if (this.rectangles && this.rectangles.length) {
+      for (const stack of this.rectangles) {
+
+        if (stack.rectangleNode.includes(parentId)) {
+          if (!stack.rectangleNode.includes(nodeId)) {
+            stack.rectangleNode.push(nodeId);
+          }
+        }
+        
+      }
+    }
+  }
+
   /* Set the size of a sub rectangle, follow the structure of
     the setRect method
     * maximum limit of the rectangle;

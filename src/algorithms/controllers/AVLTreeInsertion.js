@@ -575,7 +575,22 @@ export default {
                         // Cretae a new nested rectangle
                         let nodeIds = vis.graph.getSubtreeNodes(rr);
                         vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
-                    } 
+                    }
+                    else {
+                        // add temporary node
+                        vis.graph.addNode(k, k);
+                        if (p !== null) {
+                            vis.graph.addEdge(p, k);
+                        }
+                        vis.graph.addNodeToRectStack(k, p);
+                        vis.graph.updateHeight(k, 1);
+                        // Add a rectangle for the node
+                        vis.graph.pushRectStack([k], `Depth ${d}`);
+                        vis.graph.rectangle_size();
+                        // Pause the layout then remove the node
+                        vis.graph.setPauseLayout(true);
+                        vis.graph.removeNode(k);
+                    }
                 },
                 [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
                 depth
@@ -591,25 +606,15 @@ export default {
                 // chunker.add('create new node',
                 chunker.add('return n',
                     (vis, r, p) => {
+                        vis.graph.setPauseLayout(false);
                         vis.graph.addNode(r, r);
                         vis.graph.updateHeight(r, 1);
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
-
-                             // Add the new node's corresponding rectangle
-                            if (vis.graph.rectangles && vis.graph.rectangles.length) {
-                                for (const stack of vis.graph.rectangles) {
-                                    if (stack.rectangleNode.includes(p)) {
-                                        if (!stack.rectangleNode.includes(r)) {
-                                            stack.rectangleNode.push(r);
-                                        }
-                                        // resize this stack's rectangle immediately
-                                        // vis.graph.rectangle_size_forStack(stack);
-                                    }
-                                }
-                            } 
+                            vis.graph.addNodeToRectStack(r, p);
                         }
                         vis.graph.rectangle_size();
+                        popAfterReturnFlag = true;
                         // vis.graph.select(r, p);
                         ////  vis.graph.resetVisitAndSelect(r, p);
                     },
@@ -901,7 +906,7 @@ export default {
         // initial settings for the visualisation
         chunker.add(
             'AVLT_Insert(t, k)',
-            (vis, elements) => {
+            (vis, elements, k, k_p) => {
                 vis.array.set(elements); // fill the array with the keys
                 vis.graph.isWeighted = true;
                 vis.graph.setFunctionName('Tree is Empty');
@@ -913,29 +918,39 @@ export default {
                 vis.graph.setSize(2.5);
                 vis.graph.setZoom(0.8);
                 vis.array.setZoom(0.9);
-            },
-            [nodes],
-            1
-        );
 
-        // Set initial function information
-        chunker.add(
-            'if t = Empty',
-            (vis, k, k_p) => {
+                // Set initial function information
                 vis.graph.setFunctionName("AVLT_Insert");
                 vis.graph.setFunctionInsertText(`( Empty , ${k} )`);
-            },
-            [nodes[0], nodes[0].parentNode],
-            1
-        );
 
-        // initialise the tree with the first key
-        // chunker.add('create new node',
-        chunker.add('return n',
-            (vis, k) => {
+                // initialise the tree with the first key with box
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
+                vis.graph.pushRectStack([k], `Depth 1`);
+                vis.graph.rectangle_size();
+
+                // Pause the layout then remove the node, keep the rectangle
+                vis.graph.setPauseLayout(true);
+                vis.graph.removeNode(k);
+
+            },
+            [nodes, nodes[0], nodes[0].parentNode],
+            1
+        );
+
+        // empty second chunker
+        chunker.add('if t = Empty', (vis) => null, [], 1)
+
+        // Insert the first key into the rectangle
+        // chunker.add('create new node',
+        chunker.add('return n',
+            (vis, k) => {
+                vis.graph.setPauseLayout(false);
+                vis.graph.addNode(k, k);
+                vis.graph.updateHeight(k, 1);
+                vis.graph.rectangle_size();
+                popAfterReturnFlag = true;
             },
             [nodes[0]],
             1
