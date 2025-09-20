@@ -5,8 +5,9 @@ import { GlobalContext } from '../../context/GlobalState';
 import '../../styles/MidPanel.scss';
 /* eslint-disable-next-line import/no-named-as-default */
 import Popup from 'reactjs-popup';
-import ReactMarkDown from 'react-markdown/with-html';
-import toc from 'remark-toc';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkToc from 'remark-toc';
 import HelpIcon from '@mui/icons-material/Help';
 import CodeBlock from '../../markdown/code-block';
 import { increaseFontSize, setFontSize } from '../top/helper';
@@ -48,7 +49,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     // this creates the url of the current algorithm, with required parameters
     if (share) {
-      let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`
+      let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`;
       let url = createUrl(baseUrl, category, urlContext);
 
       // Step and expand apply to all algorithms append them on.
@@ -74,13 +75,19 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
                 &times;
               </button>
               {/* eslint-disable-next-line max-len */}
-              <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+              <ReactMarkdown
+                rehypePlugins={[rehypeRaw]}
+                remarkPlugins={[remarkToc]}
+                components={{ code: CodeBlock }}
+              >
+                {explanation}
+              </ReactMarkdown>
             </div>
           </Popup>
         </div>
 
         <div>
-          <ControlButton icon={< ShareIcon />} onClick={() => setShare((o) => !o)} />
+          <ControlButton icon={<ShareIcon />} onClick={() => setShare((o) => !o)} />
           <Popup open={share} closeOnDocumentClick onClose={closeShare}>
             <div className="shareArea">
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
@@ -99,8 +106,8 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
         </div>
 
         <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
-
       </div>
+
       <div className="midPanelBody">
         {algorithm.chunker
           && algorithm.chunker.getVisualisers().map((o) => o.render())}
