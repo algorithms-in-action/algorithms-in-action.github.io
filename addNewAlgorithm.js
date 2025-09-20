@@ -551,9 +551,18 @@ const getExportsFromFile = (filepath) => {
   });
 
   exportCache.forEach(([line, file]) => {
-    shell.ShellString(line).toEnd(file);
-    console.log("Inserted into", file, ":", line);
+    let content = shell.cat(file).toString();
+
+    // If file doesn't end with a newline, add one
+    // script broke if someone did export const x = 5 (no newline)
+    if (!content.endsWith("\n")) {
+      shell.ShellString("\n").toEnd(file);
+    }
+
+    shell.ShellString(`${line}\n`).toEnd(file);
+    console.log("Inserted into", file, ":", line.trim());
   });
+
 
   // Insert new entry into master list,
   // probably a way you could do this with babel
