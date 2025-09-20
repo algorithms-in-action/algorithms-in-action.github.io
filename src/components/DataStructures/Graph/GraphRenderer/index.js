@@ -718,8 +718,8 @@ class GraphRenderer extends Renderer {
             }
             const [left, top, rgt, btm, text] = stack.rect;
             const isInnerMost = i == rectangles.length - 1;
-            const textOpacity = isInnerMost ? 0.8 : 0.2;
-            const rectOpacity = isInnerMost ? 0.8 : 0.2;
+            const textOpacity = isInnerMost ? 0.8 : 0.4;
+            const rectOpacity = isInnerMost ? 0.8 : 0.4;
             return (
               <g key={`rec-rect-${i}`}>
                 <text className={classes(styles.select_color)}
