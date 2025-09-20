@@ -88,14 +88,13 @@
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
-    "run-script-os": "^1.1.6",
     "sass": "^1.50.0",
     "shelljs": "^0.10.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@testing-library/react-hooks": "^8.0.1",
-    "electron": "^31.4.0",
+    "electron": "^38.1.0",
     "enzyme": "^3.11.0",
     "eslint-config-react-app": "^7.0.1",
     "form-data": ">=4.0.4",
