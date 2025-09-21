@@ -10,6 +10,8 @@ const sortingAlgorithms = [
   { name: 'Merge Sort (top-down)', url: `${baseUrl}/?alg=msort_arr_td&mode=sort` },
   { name: 'Merge Sort (bottom-up)', url: `${baseUrl}/?alg=msort_arr_bup&mode=sort` },
   { name: 'Merge Sort (natural)', url: `${baseUrl}/?alg=msort_arr_nat&mode=sort` },
+  // add merge Sort (lists as arrays) into the menu
+  { name: 'Merge Sort (lists as arrays)', url: `${baseUrl}/?alg=msort_lista_td&mode=sort`},
   { name: 'Radix Sort (MSD/Exchange)', url: `${baseUrl}/?alg=radixSortMSD&mode=sort` },
   { name: 'Radix Sort (LSD/Straight)', url: `${baseUrl}/?alg=radixSortStraight&mode=sort` },
 ];
