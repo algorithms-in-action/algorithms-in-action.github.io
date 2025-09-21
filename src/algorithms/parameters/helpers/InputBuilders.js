@@ -1,45 +1,11 @@
-/* eslint-disable no-param-reassign */
-import React from 'react';
 import Denque from 'denque';
-import ParamMsg from './ParamMsg';
 
-export const commaSeparatedNumberListValidCheck = (t) => {
-  const regex = /^[0-9]+(,[0-9]+)*$/g;
-  return t.match(regex);
-};
-
-export const stringListValidCheck = (t) => {
-  const regex = /^[a-zA-Z]+(,[a-zA-Z]+)*$/g;
-  return t.match(regex);
-};
-
-export const stringValidCheck = (t) => {
-  const regex = /^[a-z\s]+$/g;
-  return t.match(regex);
-};
-
-export const singleNumberValidCheck = (t) => {
-  const regex = /^\d+$/g;
-  return t.match(regex);
-};
-
-// eslint-disable-next-line consistent-return
-export const matrixValidCheck = (m) => {
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < m.length; i++) {
-    // eslint-disable-next-line no-plusplus
-    for (let j = 0; j < i; j++) {
-      if (m[i][j] !== m[j][i]) {
-        return false;
-      }
-    }
-    if (m[i][i] !== 0) {
-      return false;
-    }
-  }
-  return true;
-};
-
+/*
+    File contains functions that build an input 
+    for the parameter pane, for example some functions
+    create sorted arrays for when the sorted button
+    on sort algorithm parameter panes are clicked.
+*/
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -87,32 +53,6 @@ export const quicksortPerfectPivotArray = (minA, maxA) => {
   }
   return idealOrder(minA, maxA, 1, 2);
 };
-
-export const successParamMsg = (type) => (
-  <ParamMsg
-    logWarning={false}
-    logTag=""
-    logMsg=""
-  />
-);
-
-/**
- *
- * @param {string} type algorithm type
- * @param {string} example optional provided
- * @param {string} reason optional provided, if not provide, use default value
- */
-export const errorParamMsg = (
-  type,
-  example,
-  reason = `It seems the ${type} algorithm does not accept this data.`,
-) => (
-  <ParamMsg
-    logWarning
-    logTag="Oops..."
-    logMsg={`${example || ''}`}
-  />
-);
 
 /**
  * Populate the Column array, see React-Table API
@@ -443,24 +383,6 @@ export const shuffleArray = (array) => {
 };
 
 /**
- * Check if the input string are comma-separated numbers, pairs and triples
- * @param {*} allowPosInteger is a toggle, if true it allows positive integers
- * @param {*} allowNegInteger is a toggle, if true it allows negative integers
- * @param {*} input the input string
- * @returns whether the check is true
- */
-export const commaSeparatedPairTripleCheck = (allowPosInteger, allowNegInteger, input) => {
-  const regex_pos_num = /^[0-9]+(-[0-9]+){0,2}$/g;
-  const regex_all_num = /^[0-9]+(-[0-9]+){0,2}$|^-[0-9]+$/g;
-  const regex_no_num = /^[0-9]+(-[0-9]+){1,2}$/g;
-  let array = input.split(",");
-  for (let item of array) {
-    if (!item.match(allowPosInteger ? (allowNegInteger ? regex_all_num : regex_pos_num) : regex_no_num)) return false;
-  }
-  return true;
-}
-
-/**
  * return an array of number according to the range specified
  * @param {*} str the string of range, e.g."2-7-4", "2-5"
  * @param {*} mode "Array" or "Count", return array of inputs or count of inputs, respectively (delete "Count" returns -1 and "Array return array of that negative number") 
@@ -500,18 +422,3 @@ const arrayRange = (start, stop, step) =>
   { length: (stop - start) / step + 1 },
   (value, index) => start + index * step
   );
-
-/**
- * Check if all ranges in array of inputs are valid (e.g for a-b, a must < b)
- * @param {*} values the array of inputs
- * @returns whether the check is true or not
- */
-export const checkAllRangesValid = (values) => {
-  for (let item of values) {
-    let rangesItems = item.split("-").map(Number);
-    if ((rangesItems.length == 2 || rangesItems.length == 3) && rangesItems[0] > rangesItems[1]) {
-      return false;
-    }
-  }
-  return true;
-}

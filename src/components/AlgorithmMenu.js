@@ -1,35 +1,19 @@
-import React, { useState } from "react";
-import "../styles/AlgorithmMenu.scss";
-
-// Get the base URL dynamically
-const baseUrl = window.location.origin;
-  
+import React, { useState } from 'react';
 import { DeployedAlgorithmCategoryList } from '../algorithms/masterList';
+import '../styles/AlgorithmMenu.scss';
 
-// Dynamically create URLs in algorithm menu from master list (src/algorithms/index.js).
-// Only entries with noDeploy=false are included.
-const algorithms = Object.fromEntries(
-  DeployedAlgorithmCategoryList.map(({ category, algorithms }) => [
-    category,
-    Object.fromEntries(
-      algorithms.map(({ name, shorthand, mode }) => [
-        name,
-        `${baseUrl}/?alg=${shorthand}&mode=${mode}`,
-      ]),
-    ),
-  ]),
-);
+const baseUrl = window.location.origin;
 
 function AlgorithmMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
 
   return (
-    <div className="algorithm-menu">
+    <div className="algorithm-menu" onMouseLeave={() => setIsOpen(false)}>
       <button onClick={() => setIsOpen(!isOpen)}>Menu</button>
       {isOpen && (
         <div className="dropdown">
-          {Object.entries(algorithms).map(([category, algs]) => (
+          {DeployedAlgorithmCategoryList.map(({ category, algorithms }) => (
             <div
               key={category}
               className="category"
@@ -39,9 +23,12 @@ function AlgorithmMenu() {
               {category}
               {activeCategory === category && (
                 <div className="subcategory">
-                  {Object.entries(algs).map(([alg, url]) => (
-                    <a key={alg} href={url || "#"}>
-                      {alg}
+                  {algorithms.map(({ name, shorthand, mode }) => (
+                    <a
+                      key={shorthand}
+                      href={`${baseUrl}/?alg=${shorthand}&mode=${mode}`}
+                    >
+                      {name}
                     </a>
                   ))}
                 </div>

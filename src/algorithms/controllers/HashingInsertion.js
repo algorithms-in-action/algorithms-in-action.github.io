@@ -26,7 +26,7 @@ import {
   POINTER_CUT_OFF,
   newCycle
 } from './HashingCommon';
-import { translateInput } from '../parameters/helpers/ParamHelper';
+import { translateInput } from '../parameters/helpers/InputBuilders';
 import HashingDelete from './HashingDelete';
 
 // Bookmarks to link chunker with pseudocode
