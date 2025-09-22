@@ -477,6 +477,25 @@ const algorithmMetadata = {
     pseudocode: { search: 'horspoolStringSearching' },
     controller: { search: 'horspoolStringSearch' },
   },
+
+"convHullDC": {
+    "name": "Convex Hull (divide and conquer)",
+    "category": "Geometric",
+    "noDeploy": false,
+    "keywords": [
+      "O(NlogN)"
+    ],
+    "explanationKey": "convHullDC",
+    "paramKey": "convHullDC",
+    "instructionsKey": "convHullDC",
+    "extraInfoKey": "convHullDC",
+    "pseudocode": {
+      "find": "convHullDCFind"
+    },
+    "controller": {
+      "find": "convHullDCFind"
+    }
+  },
 };
 //_MASTER_LIST_END_
 

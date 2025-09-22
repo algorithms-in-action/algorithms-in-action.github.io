@@ -1,3 +1,16 @@
+// XXX some things to possibly fix:
+// src/algorithms/pseudocode/index.js was missing semicolons at the end of
+// the last few lines which broke addNewAlgorithm and left things modified
+// in the 2025_sem2 branch - a bit fragile
+// 
+// new alg convHullDC based on gwrap -> needed to fix
+// src/algorithms/parameters/convHullDC.js
+//      <EuclideanMatrixParams
+//         name="convHullDC"    // XXX was gwrap
+// May be related to param changes that have not been reflected in this
+// file.
+
+
 // Parser for JS files
 const parser = require("@babel/parser");
 // Traverser helper for the JSO produced by using parser above

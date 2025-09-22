@@ -32,7 +32,8 @@ export { default as chaining } from './HashingChaining';
 export { default as linearSearch } from './HashingLinearSearch';
 export { default as doubleSearch }from './HashingDoubleSearch';
 export { default as chainingSearch} from './HashingChainingSearch';
-export { default as isort} from './isort'
-export { default as BSTrec} from './BSTrec'
-export { default as msort_list_td} from './msort_list_td'
-export { default as gwrap} from './gwrap'
+export { default as isort} from './isort';
+export { default as BSTrec} from './BSTrec';
+export { default as msort_list_td} from './msort_list_td';
+export { default as gwrap} from './gwrap';
+export { default as convHullDCFind } from './convHullDCFind.js';

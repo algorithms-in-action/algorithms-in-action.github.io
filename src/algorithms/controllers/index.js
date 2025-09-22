@@ -34,3 +34,4 @@ export { default as isort} from './isort'
 export { default as BSTrec} from './BSTrec'
 export { default as msort_list_td} from './msort_list_td'
 export { default as gwrap} from './gwrap'
+export { default as convHullDCFind } from './convHullDCFind.js';
