@@ -1,8 +1,54 @@
+.category-container .category {
+  font-size: 1.8rem;  
+  margin: 0 0 14px 0;
+  font-weight: 600;
+  text-decoration: underline;  
+}
+
+.mainmenu-algo-link {
+  display: block;
+  text-align: left;
+  font-size: 1.32rem;  
+  padding: 6px 0;
+  margin-bottom: 6px;
+  color: black;
+  border-radius: 5px;
+  text-decoration: underline;  
+}
+
+.mainmenu-algo-link:hover {
+  color: rgb(1, 110, 144);
+}
+
+.category-container {
+  flex: 0 1 calc(33.33% - 20px); 
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color:black;
+}
+
+
+.main-content {
+  width: 83.33%;
+  height: 100vh;
+  overflow-y: auto;  
+  overflow-x: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;      
+  gap: 20px;            
+  align-content: flex-start; 
+}
+
 .mainmenu-container {
   display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background: #ada8a8; 
 }
 
 .sidebar {
@@ -17,6 +63,23 @@
   overflow-y: auto;
   box-sizing: border-box;
   justify-content: space-between; // 这会将内容分散到顶部和底部
+}
+
+// XXX Maybe should be .main-content??? - thats what is used in
+// src/components/mainmenu/index.js
+// Things are currently pretty awful for main menu formatting and if the
+// browser font size is larger than the default things just vanish off
+// the page, not to mention all the magic numbers in translating bits in
+// all the (separate) sccs files XXX
+.main-contents {
+  width: 83.33%; 
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 
 .algorithm-category {
@@ -107,53 +170,137 @@
   }
 }
 
-// TODO: NOT FINAL, Design is just to address scaling issues with the previous implementation
-// further discussion with the client is needed. For example the client might not want
-// each cell to take up the same Y as its biggest item in the row.
 
-// Container for the "boxes" of different algorithm categories on the main page.
-.main-content {
-  flex-grow: 1;
-  background-color: black;
-  // Grid display, each box fits in a grid
-  display: grid;
-  // 3 cols? Discuss with client
-  grid-template-columns: repeat(3, auto);
-  overflow-y: auto; // Scroll
-  gap: 16px;
+
+
+
+.mainmenu-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #ada8a8;
+
+  @media (max-width: 768px) {
+    flex-direction: column; // stack header + content
+    height: auto;
+  }
 }
 
-// Container for each category of algorithms
-// these will hold the various links to each algorithm
-// in a specific category.
-.category-container {
+.sidebar {
+  width: 16.67%;
+  height: 100vh;
+  background-color: #00008B; 
+  color: white;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
+  overflow-y: auto; // 👈 this is the problem on mobile
+  box-sizing: border-box;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;         // ✅ let height grow naturally
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    overflow: visible;    // ✅ allow dropdown to overflow
+  }
 }
 
-.category {
-  font-size: 2em;
-  color: white;
-  text-align: center;
+
+.logo {
+  width: 50%;
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    width: 40px; // small square logo in header
+    margin-bottom: 0;
+  }
 }
 
-.mainmenu-algo-link {
-  font-size: 1.5em;
-  color: #89c9f5;
-  text-decoration: underline;
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+}
+
+.search-container {
+  width: 100%;
+  position: relative;
+
+  @media (max-width: 768px) {
+    width: 50%;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.about-link {
+  margin-top: auto;
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 1.1em;
   transition: color 0.3s ease;
-  text-align: center; // Keep centered
-  margin-top: 5px;
-  margin-bottom: 5px;
-  overflow-wrap: anywhere;
-  min-width: 0;
-  max-width: 250px;
+
+  &:hover {
+    color: #f0f0f0;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    font-size: 0.9rem;
+  }
 }
 
-.mainmenu-algo-link:hover {
-  color: #2c3e50;
+.main-content {
+  width: 83.33%;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-content: flex-start;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+  }
+}
+
+
+
+.search-container {
+  width: 100%;
+  position: relative;
+
+  @media (max-width: 768px) {
+    width: 60%; // still adjusts width on mobile
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;   // still attaches below input
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 5px 5px;
+  max-height: 200px;
+  overflow-y: auto;
+
+  // 👇 key fix
+  z-index: 9999;  
 }

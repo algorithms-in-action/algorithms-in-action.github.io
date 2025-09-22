@@ -5,11 +5,10 @@ import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_SIZE = 5;
 const DFS = 'DFS\'s';
-const DFS_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
-const DFS_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
 const DEFAULT_START = 5; // XXX null should disable
 // const DEFAULT_END = null; // disable end nodes display/input
 // XXX For now we support at most one end node
@@ -50,8 +49,8 @@ function DFSParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, mi
         graphEgs={graph_egs}
         symmetric
         ALGORITHM_NAME={DFS}
-        EXAMPLE={DFS_EXAMPLE}
-        EXAMPLE2={DFS_EXAMPLE2}
+        EXAMPLE={EXAMPLES.GEN_NUMBERS_BETWEEN_0_1}
+        EXAMPLE2={EXAMPLES.GEN_SYMMETRIC_MATRIX}
         setMessage={setMessage} 
         unweighted
       />
@@ -77,5 +76,3 @@ DFSParam.propTypes = {
 };
 
 export default withAlgorithmParams(DFSParam); // Export with the wrapper for URL Params
-
-

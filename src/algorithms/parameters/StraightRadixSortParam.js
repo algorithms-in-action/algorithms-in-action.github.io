@@ -5,12 +5,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
-import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/InputBuilders';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 import { URLContext } from '../../context/urlState';
 
@@ -18,7 +19,7 @@ import { URLContext } from '../../context/urlState';
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 63);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
 const MERGE_SORT = 'Straight Radix Sort';
-const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const MERGE_SORT_EXAMPLE = EXAMPLES.GEN_LIST_PARAM;
 const UNCHECKED = {
   random: false,
   sortedAsc: false,

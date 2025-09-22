@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { GlobalActions } from '../../context/actions';
 import { GlobalContext } from '../../context/GlobalState';
-import { successParamMsg, errorParamMsg } from './helpers/ParamHelper';
+import { errorParamMsg } from './helpers/ParamMsg';
 import { URLContext } from '../../context/urlState';
 
 import SingleValueParam from './helpers/SingleValueParam';
@@ -15,6 +15,8 @@ import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
+import { validateTextInput } from './helpers/InputValidators';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
@@ -24,10 +26,8 @@ const ALGORITHM_NAME = 'Union Find';
 const FIND = 'Find';
 const UNION = 'Union';
 
-const FIND_EXAMPLE =
-  'Please follow the example provided: 2. The single digit should be between 1 and 10.';
-const UNION_EXAMPLE =
-  "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.";
+const FIND_EXAMPLE = EXAMPLES.UF_FIND;
+const UNION_EXAMPLE = EXAMPLES.UF_UNION;
 
 // button styling
 const BlueRadio = withStyles({
@@ -41,18 +41,30 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function UFParam({ mode, union, value }) {
+function UFParam({ mode, union, value, compress }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [unions, setUnions] = useState(union || DEFAULT_UNION);
-  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(true);
+  const [pathCompressionEnabled, setPathCompressionEnabled] = useState(() => {
+    if (typeof compress === "string" ) {
+      if (compress.toLowerCase() === "true") return true;
+      if (compress.toLowerCase() === "false") return false;
+    }
+    return true; // default
+  });
+
   const [localValue, setLocalValue] = useState(DEFAULT_FIND);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const { 
+    setNodes, 
+    setSearchValue,  
+    setCompressed
+  } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(unions);
     setSearchValue(localValue);
-  }, [unions, localValue]);
+    setCompressed(pathCompressionEnabled);
+  }, [unions, localValue, pathCompressionEnabled]);
 
   // toggling path compression (i.e., a boolean value)
   const handleChange = () => {
@@ -65,8 +77,10 @@ function UFParam({ mode, union, value }) {
     const inputValue = e.target[0].value;
     setLocalValue(inputValue);
 
+    let nan = isNaN(inputValue);
+    let inDomain = N_ARRAY.includes(inputValue)
     // eslint-disable-next-line no-restricted-globals
-    if (!(isNaN(inputValue) || !N_ARRAY.includes(inputValue))) {
+    if (!(nan || !inDomain)) {
       const target = {
         arg1: parseInt(inputValue, 10),
         arg2: pathCompressionEnabled,
@@ -79,9 +93,9 @@ function UFParam({ mode, union, value }) {
         visualiser,
         target,
       });
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, FIND_EXAMPLE));
+      setMessage(errorParamMsg(nan ? ERRORS.GEN_POSITIVE_INT : ERRORS.GEN_NUMBER_NOT_IN_DOMAIN, FIND_EXAMPLE));
     }
   };
 
@@ -89,8 +103,8 @@ function UFParam({ mode, union, value }) {
     e.preventDefault();
 
     const textInput = e.target[0].value.replace(/\s+/g, '');
-
-    if (validateTextInput(textInput)) {
+    const { valid, error} = validateTextInput(textInput, N_ARRAY);
+    if (valid) {
       const target = {
         arg1: textInput
           .split(',')
@@ -104,10 +118,9 @@ function UFParam({ mode, union, value }) {
         mode: 'union',
         target,
       });
-
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, UNION_EXAMPLE));
+      setMessage(errorParamMsg(error, UNION_EXAMPLE));
     }
   };
 
@@ -179,35 +192,8 @@ UFParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   union: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  compress: PropTypes.string,
 };
 
 export default withAlgorithmParams(UFParam); // Export with the wrapper for URL Params
-
-
-/**
- * Validate the text input within the DualValueParam component.
- * @param {String} value The text input.
- * @returns {Boolean} Whether the text input is valid.
- */
-function validateTextInput(value) {
-  if (!value) return false;
-
-  // ensuring only allowable characters
-  if (!/^[0-9,-\s]+$/.test(value)) return false;
-
-  // splits the string into an array of pairs
-  const pairs = value.split(',').map((pair) => pair.trim());
-
-  // checks if each pair is valid
-  for (let i = 0; i < pairs.length; i++) {
-    const pair = pairs[i].split('-');
-
-    // checks only two values in pair
-    if (pair.length !== 2) return false;
-
-    // checks if each value in pair is in domain
-    if (pair.some((val) => isNaN(val) || !N_ARRAY.includes(val))) return false;
-  }
-  return true;
-}

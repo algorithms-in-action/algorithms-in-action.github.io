@@ -5,7 +5,7 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
-
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_SIZE = 4; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = null; // disable
@@ -13,7 +13,7 @@ const DEFAULT_END = null; // disable
 const DEFAULT_HEUR = null; // disable
 const DEFAULT_WEIGHT = 2; // weights "as input"
 const TRANSITIVE_CLOSURE = 'Transitive Closure';
-const TRANSITIVE_CLOSURE_EXAMPLE = 'Please follow the example provided: 0,1';
+const TRANSITIVE_CLOSURE_EXAMPLE = EXAMPLES.GEN_NUMBERS_BETWEEN_0_1;
 const GRAPH_EGS = [ // XXX think up better examples?
         { name: 'Graph 1',
           size: 4,
@@ -79,5 +79,3 @@ TransitiveClosureParam.propTypes = {
 };
 
 export default withAlgorithmParams(TransitiveClosureParam); // Export with the wrapper for URL Params
-
-

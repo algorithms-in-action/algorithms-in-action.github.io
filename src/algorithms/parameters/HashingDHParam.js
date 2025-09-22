@@ -12,21 +12,16 @@ import { withStyles } from '@mui/styles';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  genUniqueRandNumList,
-  singleNumberValidCheck,
-  successParamMsg,
-  errorParamMsg,
-  commaSeparatedPairTripleCheck,
-  checkAllRangesValid
-} from './helpers/ParamHelper';
+import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid, commaSeparatedNumberListValidCheck } from './helpers/InputValidators';
+import { genUniqueRandNumList } from './helpers/InputBuilders';
+import { errorParamMsg } from './helpers/ParamMsg';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
-// Algotiyhm information and magic phrases
+// Algorithm information and magic phrases
 const ALGORITHM_NAME = 'Hashing (double hashing)';
 const HASHING_INSERT = 'Hashing Insertion';
 const HASHING_SEARCH = 'Hashing Search';
-const HASHING_EXAMPLE = 'PLACE HOLDER ERROR MESSAGE';
 
 // Default inputs
 const DEFAULT_ARRAY = genUniqueRandNumList(10, 1, 50);
@@ -51,68 +46,58 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />)
 
-// Error messages
-const ERROR_INVALID_INPUT_INSERT = 'Please enter a list containing positive integers, pairs or triples';
-const ERROR_INVALID_INPUT_SEARCH = 'Please enter a positive integer';
-const ERROR_TOO_LARGE = `Please enter the right amount of inputs`;
-const ERROR_INVALID_RANGES = 'If you had entered ranges, please input valid ranges'
-
 /**
  * Double Hashing input component
  * @returns the component
  */
-function HashingDHParam({ mode, list, value }) {
+function HashingDHParam({ mode, list, value, smallTable }) {
   const [message, setMessage] = useState(null);
   const { algorithm, dispatch } = useContext(GlobalContext);
   const [array, setLocalArray] = useState(list || DEFAULT_ARRAY);
   const [search, setLocalSearch] = useState(DEFAULT_SEARCH);
-  const [HASHSize, setHashSize] = useState({
-    smallTable: true,
-    largeTable: false,
-  });
+  const [HASHSize, setHashSize] = useState(
+    (typeof smallTable === "string")
+      ? (smallTable === "true"
+          ? { smallTable: true, largeTable: false }
+          : { smallTable: false, largeTable: true })
+      : { smallTable: true, largeTable: false }
+  );
 
   const [expand, setExpand] = useState(DEFAULT_EXPAND);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const { setNodes, setSearchValue, setSmall } = useContext(URLContext);
 
   useEffect(() => {
     setNodes(array);
     setSearchValue(search);
-  }, [array, search])
+    setSmall(HASHSize.smallTable);
+  }, [array, search, HASHSize])
 
-    /**
-   * Handle changes to input
-   * @param {*} e the input box component
-   */
   const handleChange = (e) => {
     setHashSize({ ...UNCHECKED, [e.target.name]: true })
   }
 
-  /**
-   * Handle changes to input
-   * @param {*} e the input box component
-   */
   const handleExpand = (e) => {
     setExpand(!expand)
   }
 
-  /**
-   * Handle insert box inputs
-   * @param {*} e the insert box component
-   */
   const handleInsertion = (e) => {
     e.preventDefault();
-    const inputs = e.target[0].value; // Get the value of the input
+    const inputs = e.target[0].value;
 
     let removeSpace = inputs.split(' ').join('');
 
+    const { valid, error } = commaSeparatedNumberListValidCheck(inputs.replace(/\s+/g, ''));
+  
+      if (!valid) {
+        setMessage(errorParamMsg(error, EXAMPLES.HASHING_INSERT));
+        return;
+      }
 
-    // Check if the inputs are either positive integers, pairs or triples
     if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
-      let values = removeSpace.split(","); // Converts input to array
+      let values = removeSpace.split(",");
       if (checkAllRangesValid(values)) {
-        let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
+        let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE;
 
-        // Dispatch algo
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingDH',
           mode: 'insertion',
@@ -120,44 +105,41 @@ function HashingDHParam({ mode, list, value }) {
           values,
           expand: expand
         });
-        setMessage(successParamMsg(ALGORITHM_NAME));
+        setMessage(null);
       }
       else {
-        setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_RANGES));
+        setMessage(errorParamMsg(ERRORS.GEN_INVALID_RANGES, EXAMPLES.HASHING_INSERT));
       }
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_INSERT));
+      setMessage(errorParamMsg(ERRORS.GEN_PAIR_TRIPLES_POS_INT, EXAMPLES.HASHING_INSERT));
     }
   }
 
-  /**
-   * Handle search box input
-   * @param {*} e search box component
-   */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const inputValue = e.target[0].value;
-    let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE; // Table size
+const handleSearch = (e) => {
+  e.preventDefault();
+  const inputValue = e.target[0].value;
+  let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE;
 
-    const visualisers = algorithm.chunker.visualisers; // Visualizers from insertion
-    if (singleNumberValidCheck(inputValue)) { // Check if input is a single positive number
-      const target = parseInt(inputValue);
+  const visualisers = algorithm.chunker.visualisers;
+  const check = singleNumberValidCheck(inputValue);
 
-      // Dispatch algorithm
-      dispatch(GlobalActions.RUN_ALGORITHM, {
-        name: 'HashingDH',
-        mode: 'search',
-        hashSize: hashSize,
-        visualisers,
-        target
-      });
-      setMessage(successParamMsg(ALGORITHM_NAME));
-    } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, ERROR_INVALID_INPUT_SEARCH));
-    }
+  if (check.valid) {
+    const target = parseInt(inputValue);
+
+    dispatch(GlobalActions.RUN_ALGORITHM, {
+      name: 'HashingDH',
+      mode: 'search',
+      hashSize: hashSize,
+      visualisers,
+      target,
+    });
+    setMessage(null);
+  } else {
+    setMessage(errorParamMsg(check.error, EXAMPLES.HASHING_INSERT));
   }
+};
 
-  // Use effect to detect changes in radio box choice
+
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
@@ -165,7 +147,6 @@ function HashingDHParam({ mode, list, value }) {
     [HASHSize],
   );
 
-  // Use effect to detect changes in expand radio box choice
   useEffect(
     () => {
       document.getElementById('startBtnGrp').click();
@@ -195,7 +176,7 @@ function HashingDHParam({ mode, list, value }) {
             })()
           }
           ALGORITHM_NAME = {HASHING_INSERT}
-          EXAMPLE={HASHING_EXAMPLE}
+          EXAMPLE={EXAMPLES.HASHING_INSERT}
           handleSubmit={handleInsertion}
           setMessage={setMessage}
         />
@@ -209,6 +190,7 @@ function HashingDHParam({ mode, list, value }) {
           DEFAULT_VAL = {value || DEFAULT_SEARCH}
           SET_VAL = {setLocalSearch}
           ALGORITHM_NAME = {HASHING_SEARCH}
+          EXAMPLE={EXAMPLES.HASHING_INSERT}
           handleSubmit={handleSearch}
           setMessage={setMessage}
          />}
@@ -262,18 +244,16 @@ function HashingDHParam({ mode, list, value }) {
         </div>
       </div>
 
-      {/* render success/error message */}
       {message}
     </>
   );
 }
 
-// Define the prop types for URL Params
 HashingDHParam.propTypes = {
-    alg: PropTypes.string.isRequired, // keep alg for all algorithms
-    mode: PropTypes.string.isRequired, //keep mode for all algorithms
-    list: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired
- };
+  alg: PropTypes.string.isRequired, // keep alg for all algorithms
+  mode: PropTypes.string.isRequired, //keep mode for all algorithms
+  list: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  smallTable: PropTypes.string,
+};
 export default withAlgorithmParams(HashingDHParam);
-

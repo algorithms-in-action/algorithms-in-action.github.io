@@ -14,6 +14,10 @@ export const URLProvider = ({ children }) => {
   const [heuristic, setHeuristic] = useState([]);
   const [graphMin, setGraphMin] = useState([]);
   const [graphMax, setGraphMax] = useState([]);
+  const [compressed, setCompressed] = useState([]);
+  const [weights, setWeights] = useState([]);
+  const [small, setSmall] = useState([]);
+
   const value = {
     nodes, setNodes,
     searchValue, setSearchValue,
@@ -23,6 +27,9 @@ export const URLProvider = ({ children }) => {
     heuristic, setHeuristic,
     graphMin, setGraphMin,
     graphMax, setGraphMax,
+    compressed, setCompressed,
+    weights, setWeights,
+    small, setSmall
   };
 
   return (

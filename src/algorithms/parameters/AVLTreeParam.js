@@ -1,4 +1,4 @@
-// minimal mods from BST- chould change some names XXX
+// minimal mods from BST - could change some names XXX
 // XXX radio button behaviour could still be improved
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable max-len */
@@ -14,26 +14,27 @@ import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  singleNumberValidCheck,
+
+import { singleNumberValidCheck } from './helpers/InputValidators';
+import { 
   genUniqueRandNumList,
-  successParamMsg,
-  errorParamMsg,
   balanceBSTArray,
-  shuffleArray,
-} from './helpers/ParamHelper';
+  shuffleArray
+} from './helpers/InputBuilders';
+
+import { errorParamMsg } from './helpers/ParamMsg';
 
 import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { withAlgorithmParams } from './helpers/urlHelpers';
 
-// import useParam from '../../context/useParam';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
 const DEFAULT_TARGET = '2';
+
 const INSERTION = 'insertion';
 const SEARCH = 'search';
-const INSERTION_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
-const SEARCH_EXAMPLE = 'Please follow the example provided: 16';
+
 const UNCHECKED = {
   random: false,
   sorted: false,
@@ -56,21 +57,13 @@ function AVLTParam({ mode, list, value }) {
   const [message, setMessage] = useState(null);
   const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
   const { setNodes, setSearchValue } = useContext(URLContext);
-  const [bstCase, setBSTCase] = useState({
-    random: false,
-    sorted: false,
-    balanced: false,
-  });
+  const [bstCase, setBSTCase] = useState(UNCHECKED);
   const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
     setNodes(localNodes);
     setSearchValue(localValue);
-    // If input nodes are manually edited, we want to uncheck the case.
-    // This also unchecks the case when sorted and balanced are selected
-    // but (for some unknown reason) not when random is selected. This
-    // isn't ideal XXX but is not too bad.
-    setBSTCase(UNCHECKED);
+    setBSTCase(UNCHECKED); // uncheck when nodes/values change
   }, [localNodes, localValue, setNodes, setSearchValue]);
 
   const handleChange = (e) => {
@@ -89,54 +82,49 @@ function AVLTParam({ mode, list, value }) {
 
     setBSTCase({ ...UNCHECKED, [e.target.name]: true });
   };
+
   /**
-   * For BST, since we need to insert nodes before run the search algorithm,
-   * therefore we need some extra check to make sure the tree is not empty.
-   * So we need to implement a new handle function instead of using the default one.
+   * Custom search handler for AVLTree — checks tree is not empty first.
    */
   const handleSearch = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value;
     setLocalValue(inputValue);
 
-    if (singleNumberValidCheck(inputValue)) {
+    const { valid, error } = singleNumberValidCheck(inputValue);
+
+    if (valid) {
       const target = parseInt(inputValue, 10);
-      // make sure the tree is not empty
+
       if (
-        algorithm.hasOwnProperty('visualisers')
-        && !algorithm.visualisers.graph.instance.isEmpty()
+        algorithm.hasOwnProperty('visualisers') &&
+        !algorithm.visualisers.graph.instance.isEmpty()
       ) {
         const visualiser = algorithm.chunker.visualisers;
-        // run search animation
+
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'AVLTree',
           mode: 'search',
           visualiser,
           target,
         });
-        setMessage(successParamMsg(SEARCH));
+
+        setMessage(null);
       } else {
-        // when the tree is &nbsp;&nbsp;empty
+        // tree is empty
         setMessage(
-          errorParamMsg(
-            SEARCH,
-            undefined,
-            'Please fully build the tree before running a search.',
-          ),
+          errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR),
         );
       }
     } else {
-      // when the input cannot be converted to a number
-      setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE));
+      // invalid number input
+      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
     }
   };
 
-  useEffect(
-    () => {
-      document.getElementById('startBtnGrp').click();
-    },
-    [bstCase],
-  );
+  useEffect(() => {
+    document.getElementById('startBtnGrp').click();
+  }, [bstCase]);
 
   return (
     <>
@@ -151,7 +139,7 @@ function AVLTParam({ mode, list, value }) {
           SET_VAL={setlocalNodes}
           REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
           ALGORITHM_NAME={INSERTION}
-          EXAMPLE={INSERTION_EXAMPLE}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
           setMessage={setMessage}
         />
 
@@ -163,7 +151,7 @@ function AVLTParam({ mode, list, value }) {
           formClassName="formRight"
           DEFAULT_VAL={value || localValue}
           ALGORITHM_NAME={SEARCH}
-          EXAMPLE={SEARCH_EXAMPLE}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
           handleSubmit={handleSearch}
           setMessage={setMessage}
         />
@@ -213,7 +201,7 @@ AVLTParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   list: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
 };
 
-export default withAlgorithmParams(AVLTParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(AVLTParam);

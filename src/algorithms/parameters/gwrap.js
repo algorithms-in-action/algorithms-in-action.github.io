@@ -6,11 +6,10 @@ import '../../styles/Param.scss';
 import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_SIZE = 5;
 const gwrap = 'ConxexHull'; // is this used anywhere???
-const gwrap_EXAMPLE = 'Please provided positive numbers: 0,1'; //TODO
-const gwrap_EXAMPLE2 = 'Please enter the symmetrical value in matrix'; //TODO
 const DEFAULT_START = 5; // XXX null should disable
 // const DEFAULT_END = null; // disable end nodes display/input
 // XXX For now we support at most one end node
@@ -52,8 +51,8 @@ function gwrapParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, 
         graphEgs={graph_egs}
         symmetric
         ALGORITHM_NAME={gwrap}
-        EXAMPLE={gwrap_EXAMPLE}
-        EXAMPLE2={gwrap_EXAMPLE2}
+        EXAMPLE={EXAMPLES.GEN_NUMBERS_BETWEEN_0_1}
+        EXAMPLE2={EXAMPLES.GEN_SYMMETRIC_MATRIX}
         setMessage={setMessage} 
         unweighted
       />
@@ -80,5 +79,3 @@ gwrapParam.propTypes = {
 };
 
 export default withAlgorithmParams(gwrapParam); // Export with the wrapper for URL Params
-
-
