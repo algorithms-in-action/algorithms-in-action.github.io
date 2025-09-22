@@ -713,11 +713,38 @@ class GraphRenderer extends Renderer {
 
           {/* Nested recursion rectangles */}
           {rectangles.map((stack, i) => {
+            const hasEmpty = rectangles.length > 0 && 
+              rectangles[rectangles.length - 1].label === 'Empty';
             if (!stack || !stack.rect) {
+              // Render the "Empty" rectangle
+              if (stack && stack.label === 'Empty' && i > 0) {
+                const parentStack = rectangles[i - 1];
+                if (parentStack && parentStack.rect) {
+                  const [pLeft, pTop, pRgt, pBtm] = parentStack.rect;
+                  return (
+                    <text
+                      key={`rec-rect-empty-${i}`}
+                      className={classes(styles.select_color)}
+                      fontSize={30}
+                      // Display the 'Empty' text roughly in the middle of the parent box.
+                      x={(pLeft + pRgt) / 2}
+                      y={(pTop + pBtm) / 2 + 10}
+                      textAnchor="middle"
+                      style={{ opacity: 0.8 }}
+                    >
+                      Empty
+                    </text>
+                  );
+                }
+              }
               return null;
             }
             const [left, top, rgt, btm, text] = stack.rect;
-            const isInnerMost = i == rectangles.length - 1;
+            let isInnerMost = i == rectangles.length - 1;
+            if (hasEmpty) {
+              // InnerMost is the parent rectangle of the "Empty" 
+              isInnerMost = i == rectangles.length - 2;
+            }
             const textOpacity = isInnerMost ? 0.8 : 0.4;
             const rectOpacity = isInnerMost ? 0.8 : 0.4;
             return (

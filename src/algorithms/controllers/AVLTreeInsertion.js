@@ -586,6 +586,8 @@ export default {
                         vis.graph.updateHeight(k, 1);
                         // Add a rectangle for the node
                         vis.graph.pushRectStack([k], `Depth ${d}`);
+                        // Add a empty rectangle to display "Empty"
+                        vis.graph.pushRectStack([], 'Empty');
                         vis.graph.rectangle_size();
                         // Pause the layout then remove the node
                         vis.graph.setPauseLayout(true);
@@ -606,6 +608,8 @@ export default {
                 // chunker.add('create new node',
                 chunker.add('return n',
                     (vis, r, p) => {
+                        // Pop the "Empty" rectangle
+                        vis.graph.popRectStack();
                         vis.graph.setPauseLayout(false);
                         vis.graph.addNode(r, r);
                         vis.graph.updateHeight(r, 1);
@@ -928,6 +932,7 @@ export default {
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
                 vis.graph.pushRectStack([k], `Depth 1`);
+                vis.graph.pushRectStack([], 'Empty');
                 vis.graph.rectangle_size();
 
                 // Pause the layout then remove the node, keep the rectangle
@@ -946,6 +951,7 @@ export default {
         // chunker.add('create new node',
         chunker.add('return n',
             (vis, k) => {
+                vis.graph.popRectStack();
                 vis.graph.setPauseLayout(false);
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
