@@ -9,7 +9,7 @@
 // contracted are not enabled.
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
   'heapSort', 'msort_lista_td', 'msort_arr_bup',
-   'msort_arr_nat', 'radixSortStraight', 'radixSortMSD'];
+   'msort_arr_nat', 'radixSortStraight', 'radixSortMSD', 'AVLTree'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and
@@ -43,6 +43,15 @@ export function areExpanded(blocks) {
   const { bookmark, pseudocode, collapse } = algorithm;
   return blocks.reduce((acc, curr) =>
     (acc && collapse[alg_name].sort[curr]), true);
+}
+
+// areExpanded function for AVLTreeInsertion 
+export function areAVLTreeInsertionBlocksExpanded(blocks) {
+  const algorithm = getGlobalAlgorithm();
+  const alg_name = algorithm.id.name;
+  const { bookmark, pseudocode, collapse } = algorithm;
+  return blocks.reduce((acc, curr) =>
+    (acc && collapse[alg_name].insertion[curr]), true);
 }
 
 // Trigger refresh of display when code is expanded/collapsed.

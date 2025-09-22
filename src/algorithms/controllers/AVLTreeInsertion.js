@@ -18,6 +18,7 @@
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
+import { areAVLTreeInsertionBlocksExpanded } from './collapseChunkPlugin';
 
 export default {
     initVisualisers() {
@@ -570,28 +571,31 @@ export default {
                     // print the function name and the key to be inserted
                     vis.graph.setFunctionName("AVLT_Insert");
                     vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
-
-                    if (rr) {
-                        // Cretae a new nested rectangle
-                        let nodeIds = vis.graph.getSubtreeNodes(rr);
-                        vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
-                    }
-                    else {
-                        // add temporary node
-                        vis.graph.addNode(k, k);
-                        if (p !== null) {
-                            vis.graph.addEdge(p, k);
+                    
+                    // Only add rectangles when the algorithm is expanded
+                    if (areAVLTreeInsertionBlocksExpanded(['insertLeft', 'insertRight'])) {
+                        if (rr) {
+                            // Cretae a new nested rectangle
+                            let nodeIds = vis.graph.getSubtreeNodes(rr);
+                            vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
                         }
-                        vis.graph.addNodeToRectStack(k, p);
-                        vis.graph.updateHeight(k, 1);
-                        // Add a rectangle for the node
-                        vis.graph.pushRectStack([k], `Depth ${d}`);
-                        // Add a empty rectangle to display "Empty"
-                        vis.graph.pushRectStack([], 'Empty');
-                        vis.graph.rectangle_size();
-                        // Pause the layout then remove the node
-                        vis.graph.setPauseLayout(true);
-                        vis.graph.removeNode(k);
+                        else {
+                            // add temporary node
+                            vis.graph.addNode(k, k);
+                            if (p !== null) {
+                                vis.graph.addEdge(p, k);
+                            }
+                            vis.graph.addNodeToRectStack(k, p);
+                            vis.graph.updateHeight(k, 1);
+                            // Add a rectangle for the node
+                            vis.graph.pushRectStack([k], `Depth ${d}`);
+                            // Add a empty rectangle to display "Empty"
+                            vis.graph.pushRectStack([], 'Empty');
+                            vis.graph.rectangle_size();
+                            // Pause the layout then remove the node
+                            vis.graph.setPauseLayout(true);
+                            vis.graph.removeNode(k);
+                        }
                     }
                 },
                 [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
@@ -931,13 +935,15 @@ export default {
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
-                vis.graph.pushRectStack([k], `Depth 1`);
-                vis.graph.pushRectStack([], 'Empty');
-                vis.graph.rectangle_size();
+                if (areAVLTreeInsertionBlocksExpanded(['insertLeft', 'insertRight'])) {
+                    vis.graph.pushRectStack([k], `Depth 1`);
+                    vis.graph.pushRectStack([], 'Empty');
+                    vis.graph.rectangle_size();
 
-                // Pause the layout then remove the node, keep the rectangle
-                vis.graph.setPauseLayout(true);
-                vis.graph.removeNode(k);
+                    // Pause the layout then remove the node, keep the rectangle
+                    vis.graph.setPauseLayout(true);
+                    vis.graph.removeNode(k);
+                }
 
             },
             [nodes, nodes[0], nodes[0].parentNode],

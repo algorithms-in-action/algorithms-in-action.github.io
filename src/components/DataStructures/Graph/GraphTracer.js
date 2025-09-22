@@ -1153,6 +1153,10 @@ class GraphTracer extends Tracer {
     this.rectangleNode = null;
   }
 
+  clearRectangles() {
+    this.rectangles = [];
+  }
+
   /**
    * udpate the height of the node
    * @param {int} id the node id
