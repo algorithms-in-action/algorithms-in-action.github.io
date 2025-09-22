@@ -35,3 +35,5 @@ export { default as BSTrec} from './BSTrec'
 export { default as msort_list_td} from './msort_list_td'
 export { default as gwrap} from './gwrap'
 export { default as convHullDCFind } from './convHullDCFind.js';
+export { default as grahamScan_find } from './grahamScan_find.js';
+

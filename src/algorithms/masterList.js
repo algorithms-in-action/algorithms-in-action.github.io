@@ -496,6 +496,21 @@ const algorithmMetadata = {
       "find": "convHullDCFind"
     }
   },
+
+	"grahamScan": {
+    "name": "Graham Scan (convex hull)",
+    "category": "Geometric",
+    "noDeploy": true,
+    "keywords": [
+      "O(NlogN)"
+    ],
+    "controller": "grahamScan_find",
+    "pseudocode": "grahamScan_find",
+    "paramKey": "grahamScan",
+    "explanationKey": "grahamScan",
+    "extraInfoKey": "grahamScan",
+    "instructionsKey": "grahamScan"
+  },
 };
 //_MASTER_LIST_END_
 
