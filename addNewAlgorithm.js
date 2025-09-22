@@ -1,4 +1,4 @@
-// XXX some things to possibly fix:
+// XXX some things to (possibly) fix:
 // src/algorithms/pseudocode/index.js was missing semicolons at the end of
 // the last few lines which broke addNewAlgorithm and left things modified
 // in the 2025_sem2 branch - a bit fragile
@@ -9,6 +9,13 @@
 //         name="convHullDC"    // XXX was gwrap
 // May be related to param changes that have not been reflected in this
 // file.
+//
+// After adding grahamScan the master list had
+//    "controller": "grahamScan_find",
+//     "pseudocode": "grahamScan_find",
+// instead of
+//  "controller": { "find": "grahamScan_find"},
+//   "pseudocode": { "find": "grahamScan_find"},
 
 
 // Parser for JS files

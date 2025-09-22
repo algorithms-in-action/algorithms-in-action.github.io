@@ -478,7 +478,7 @@ const algorithmMetadata = {
     controller: { search: 'horspoolStringSearch' },
   },
 
-"convHullDC": {
+  "convHullDC": {
     "name": "Convex Hull (divide and conquer)",
     "category": "Geometric",
     "noDeploy": false,
@@ -497,15 +497,15 @@ const algorithmMetadata = {
     }
   },
 
-	"grahamScan": {
+  "grahamScan": {
     "name": "Graham Scan (convex hull)",
     "category": "Geometric",
     "noDeploy": true,
     "keywords": [
       "O(NlogN)"
     ],
-    "controller": "grahamScan_find",
-    "pseudocode": "grahamScan_find",
+    "controller": { "find": "grahamScan_find"},
+    "pseudocode": { "find": "grahamScan_find"},
     "paramKey": "grahamScan",
     "explanationKey": "grahamScan",
     "extraInfoKey": "grahamScan",
