@@ -1,5 +1,5 @@
 // Gift wrapping convex hull algorithm
-// XXX maybe change so we wrap counter-clockwise for consistency??
+// XXX maybe change so we wrap counter-clockwise for consistency?
 // 
 // XXX Based on DFSrec code - may still be some leftover rubbish to delete.
 // 
