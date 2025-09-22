@@ -9,7 +9,7 @@ import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
 import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_SIZE = 5;
-const gwrap = 'ConxexHull'; // is this used anywhere???
+const gwrap = 'grahamScan';
 const DEFAULT_START = 5; // XXX null should disable
 // const DEFAULT_END = null; // disable end nodes display/input
 // XXX For now we support at most one end node
@@ -40,7 +40,7 @@ function gwrapParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, 
     <>
       {/* Matrix input */}
       <EuclideanMatrixParams
-        name="gwrap"
+        name="grahamScan"
         mode="find"
         defaultSize={ size1 }
         defaultStart={ start1 }
