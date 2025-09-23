@@ -987,6 +987,7 @@ export default {
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null);
                 vis.graph.clearSelect_Circle_Count();
+                vis.graph.clearRectangles();
             },
             [],
             1
