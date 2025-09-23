@@ -5,11 +5,10 @@ import React from 'react';
 import '../../../styles/Param.scss';
 import { GlobalActions } from '../../../context/actions';
 import StringParamForm from './StringParamForm';
-import {
-  successParamMsg,
-  errorParamMsg,
-  stringValidCheck,
-} from './ParamHelper';
+
+import { stringValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
+
 
 import useParam from '../../../context/useParam';
 
@@ -35,18 +34,21 @@ function StringParam({
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    // check whether both input fields are valid string and patterns
-    const string = e.target[0].value;
-    const pattern = e.target[1].value;
-    if (stringValidCheck(string) && stringValidCheck(pattern)) {
-      // SET_VAL(nodes);
-      // run animation
+
+    const string = e.target[0].value.replace(/\s+/g, '');
+    const pattern = e.target[1].value.replace(/\s+/g, '');
+
+    const { valid: stringValid, error: stringError } = stringValidCheck(string);
+    const { valid: patternValid, error: patternError } = stringValidCheck(pattern);
+
+    if (stringValid && patternValid) {
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes: [string, pattern] });
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      setMessage(errorParamMsg(stringError || patternError, EXAMPLE));
     }
   };
+
 
   return (
     <StringParamForm

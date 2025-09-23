@@ -1,12 +1,13 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable import/no-named-as-default */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
 import Grid from '@mui/material/Grid';
 import Popup from 'reactjs-popup';
-import ReactMarkDown from 'react-markdown/with-html';
-import toc from 'remark-toc';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkToc from 'remark-toc';
 import ControlButton from '../common/ControlButton';
 import ProgressBar from './ProgressBar';
 import useInterval from '../../context/useInterval';
@@ -18,6 +19,7 @@ import { GlobalActions } from '../../context/actions';
 import '../../styles/ControlPanel.scss';
 import 'reactjs-popup/dist/index.css';
 import CodeBlock from '../../markdown/code-block';
+import { useUrlParams } from '../../algorithms/parameters/helpers/urlHelpers';
 
 const muiTheme = createTheme({
   overrides: {
@@ -119,9 +121,28 @@ function ControlPanel() {
   useInterval(() => {
     play();
   }, playing ? 2000 - (19 * speed) : null);
+
   const handleSliderChange = (event, newSpeed) => {
     setSpeed(newSpeed);
   };
+
+  // I guess it makes sense to go here.
+  const stepApplied = useRef(false);
+  useEffect(() => {
+    if (!algorithm?.chunker || stepApplied.current) return;
+    let { step } = useUrlParams();
+
+    if (step && !isNaN(step)) {
+      const maxStep = algorithm.chunker.chunks.length - 1;
+      const clampedStep = Math.max(0, Math.min(parseInt(step, 10), maxStep));
+
+      // do while <. Starts at 1 if step=0.
+      if (clampedStep > 0) dispatch(GlobalActions.NEXT_LINE, { stopAt: clampedStep });
+    }
+
+    stepApplied.current = true;
+  }, [algorithm?.chunker]); // When algorithm chunker changes. Make sure it only
+  // runs once however, do not want step param to influence every algorithm.
 
   return (
     <div className="controlContainer">
@@ -186,90 +207,28 @@ function ControlPanel() {
             dispatch={dispatch}
           />
         </div>
-
       </div>
       <div className="parameterPanel">
         {algorithm.param}
       </div>
 
       <div className="InstructionPanel">
-
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
             <a className="close" onClick={closeModal}>
               &times;
             </a>
-            {/* eslint-disable-next-line max-len */}
-            <ReactMarkDown source={explanation} escapeHtml={false} renderers={{ code: CodeBlock }} plugins={[toc]} />
+            {/* ⬇️ Fixed ReactMarkdown usage for v6+ */}
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkToc]}
+              components={{ code: CodeBlock }}
+            >
+              {explanation}
+            </ReactMarkdown>
           </div>
         </Popup>
-      </div>
-    </div>
-  );
-  // eslint-disable-next-line no-unreachable
-  return (
-    <div className="controlContainer">
-      <div className="controlPanel">
-        {/* Speed Slider */}
-        <div className="speed">
-          <div className="innerSpeed">
-            {/* Label the speed slider as SPEED */}
-            SPEED
-          </div>
-        </div>
-        <div className="sliderContainer">
-          <div className="slider">
-            <ThemeProvider theme={muiTheme}>
-              <Grid container spacing={2}>
-                <Grid item xs>
-                  <Slider
-                    value={speed}
-                    onChange={handleSliderChange}
-                    aria-labelledby="continuous-slider"
-                  />
-                </Grid>
-              </Grid>
-            </ThemeProvider>
-          </div>
-        </div>
-        <div className="rightControl">
-          {/* Progress Status Bar */}
-          <ProgressBar
-            current={currentChunk}
-            max={chunkerLength}
-          />
-          <div className="controlButtons">
-            {/* Prev Button */}
-            <ControlButton
-              icon={<PrevIcon />}
-              type="prev"
-              disabled={!(chunker && chunker.isValidChunk(currentChunk - 1))}
-              onClick={() => prev()}
-            />
-            {/* Play/Pause Button */}
-            {playing ? (
-              <ControlButton icon={<PauseIcon />} type="pause" onClick={() => pause()} />
-            ) : (
-              <ControlButton
-                icon={<PlayIcon />}
-                type="play"
-                disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-                onClick={handleClickPlay}
-              />
-            )}
-            {/* Next Button */}
-            <ControlButton
-              icon={<NextIcon />}
-              type="next"
-              disabled={!(chunker && chunker.isValidChunk(currentChunk + 1))}
-              onClick={() => next()}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="parameterPanel">
-        {algorithm.param}
       </div>
     </div>
   );

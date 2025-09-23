@@ -146,11 +146,20 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
         <button
           id={"buttonexpl" + i}
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
-          onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
+          onClick={() => { 
+            // If click the button again and its the currently active lineExplanation
+            // in global state clear the line explanation.
+            if (algorithm.lineExplanation === line.explanation) {
+              dispatch(GlobalActions.LineExplan, "");
+            } else {
+              dispatch(GlobalActions.LineExplan, line.explanation);
+            }
+          }}
         >
           <HelpIcon style={{ color: '#f7c679', fontSize: 'small' }} />
         </button>;
     }
+
     if (line.ref) {
       codeLines.push(
         <p
@@ -198,6 +207,12 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           key={i}
           className={(line.bookmark !== undefined && algorithm.bookmark === line.bookmark) ? 'active' : ''}
           role="presentation"
+          ref={el => {
+            if (line.bookmark !== undefined && algorithm.bookmark === line.bookmark && el) {
+              console.log("in");
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          }}
         //onClick={() => { dispatch(GlobalActions.LineExplan, line.explanation); }}
         >
           <span>{i}</span>

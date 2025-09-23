@@ -7,11 +7,10 @@ import '../../../styles/Param.scss';
 import { ReactComponent as RefreshIcon } from '../../../assets/icons/refresh.svg';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
-import {
-  commaSeparatedNumberListValidCheck,
-  genRandNumList,
-  errorParamMsg,
-} from './ParamHelper';
+import { genRandNumList } from './InputBuilders';
+import { commaSeparatedNumberListValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
+
 
 import useParam from '../../../context/useParam';
 
@@ -38,14 +37,14 @@ function ListParam({
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
     const inputValue = e.target[0].value.replace(/\s+/g, '');
-    if (commaSeparatedNumberListValidCheck(inputValue)) {
+    const { valid, error } = commaSeparatedNumberListValidCheck(inputValue);
+
+    if (valid) {
       const nodes = inputValue.split`,`.map((x) => +x);
-      // SET_VAL(nodes);
-      // run animation
       dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, nodes });
-      //setMessage(successParamMsg(ALGORITHM_NAME));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      setMessage(errorParamMsg(error, EXAMPLE));
     }
   };
 

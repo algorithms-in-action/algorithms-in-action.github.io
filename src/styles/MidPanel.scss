@@ -39,3 +39,34 @@ $midTitleFontSize: 0.89em;
 
 }
 
+.popup-content {
+  background: var(--left-bg) !important;
+}
+
+.shareArea {
+  color: var(--left-font);
+  p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    height: fit-content;
+    overflow: hidden;
+  }
+
+  button {
+    background-color: grey;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+  }
+}
+
+.helpArea {
+  color: var(--left-font);
+
+  button {
+    background-color: grey;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+  }
+}
