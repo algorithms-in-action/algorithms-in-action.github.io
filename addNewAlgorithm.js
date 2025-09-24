@@ -503,7 +503,7 @@ const getExportsFromFile = (filepath) => {
           indexFile,
         ]);
         
-        if (wanted.length > 1) {
+        if (typeof exportKey !== "string") {
           // multiple (controllers, pseudocode, etc.)
           if (!masterListEntry[algorithmId][def.property]) masterListEntry[algorithmId][def.property] = {};
           masterListEntry[algorithmId][def.property][modes[idx]] = newExported;
@@ -532,7 +532,7 @@ const getExportsFromFile = (filepath) => {
         ]);
 
         // Again, not needed, but left for future.
-        if (wanted.length > 1) {
+        if (typeof exportKey !== "string") {
           // multiple (controllers, pseudocode, etc.)
           if (!masterListEntry[algorithmId][def.property]) masterListEntry[algorithmId][def.property] = {};
           masterListEntry[algorithmId][def.property][modes[idx]] = newExported;
