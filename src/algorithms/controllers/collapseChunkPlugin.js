@@ -18,6 +18,7 @@ const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
 
 // not sure if finding the running algorithm needs such complex code, but this
 // seems to work...
+// XXX can grab name+mode from URL it seems
 let algorithmGetter = () => null;
 
 function getGlobalAlgorithm() {
@@ -38,20 +39,13 @@ export function initGlobalAlgorithmGetter(getter) {
 // block we are interested in *plus enclosing blocks* (Main is always
 // expanded so that is not needed).
 export function areExpanded(blocks) {
+  const currentUrl = new URL(window.location.href);
+  const mode = currentUrl.searchParams.get('mode');
   const algorithm = getGlobalAlgorithm();
   const alg_name = algorithm.id.name;
   const { bookmark, pseudocode, collapse } = algorithm;
   return blocks.reduce((acc, curr) =>
-    (acc && collapse[alg_name].sort[curr]), true);
-}
-
-// areExpanded function for AVLTreeInsertion 
-export function areAVLTreeInsertionBlocksExpanded(blocks) {
-  const algorithm = getGlobalAlgorithm();
-  const alg_name = algorithm.id.name;
-  const { bookmark, pseudocode, collapse } = algorithm;
-  return blocks.reduce((acc, curr) =>
-    (acc && collapse[alg_name].insertion[curr]), true);
+    (acc && collapse[alg_name][mode][curr]), true);
 }
 
 // Trigger refresh of display when code is expanded/collapsed.
@@ -64,8 +58,7 @@ export function areAVLTreeInsertionBlocksExpanded(blocks) {
 // more robust).
 export function onCollapseChange(chunker) {
   const algorithm = getGlobalAlgorithm();
-  const alg_name = algorithm.id.name;
-  console.log(alg_name);
+  const alg_name = algorithm.id.name;  // XXX better to get from URL??
   if (!importsThis.includes(alg_name)) return;
   chunker.refresh();
 }

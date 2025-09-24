@@ -18,7 +18,12 @@
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
-import { areAVLTreeInsertionBlocksExpanded } from './collapseChunkPlugin';
+import { areExpanded } from './collapseChunkPlugin';
+
+// checks if either recursive call is expanded
+export function isRecursionExpanded() {
+  return areExpanded(['insertLeft']) || areExpanded(['insertRight']);
+}
 
 export default {
     initVisualisers() {
@@ -572,10 +577,10 @@ export default {
                     vis.graph.setFunctionName("AVLT_Insert");
                     vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
                     
-                    // Only add rectangles when the algorithm is expanded
-                    if (areAVLTreeInsertionBlocksExpanded(['insertLeft', 'insertRight'])) {
+                    // Only add rectangles when recursion is expanded
+                    if (isRecursionExpanded()) {
                         if (rr) {
-                            // Cretae a new nested rectangle
+                            // Create a new nested rectangle
                             let nodeIds = vis.graph.getSubtreeNodes(rr);
                             vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
                         }
@@ -935,7 +940,7 @@ export default {
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
-                if (areAVLTreeInsertionBlocksExpanded(['insertLeft', 'insertRight'])) {
+                if (isRecursionExpanded()) {
                     vis.graph.pushRectStack([k], `Depth 1`);
                     vis.graph.pushRectStack([], 'Empty');
                     vis.graph.rectangle_size();
@@ -978,7 +983,7 @@ export default {
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
         }
 
-        // finalise the visualisation; cursur back to top to save having a
+        // finalise the visualisation; cursor back to top to save having a
         // "Done" extra line of code
         chunker.add('AVLT_Insert(t, k)',
             vis => {
