@@ -61,6 +61,7 @@ class GraphTracer extends Tracer {
     this.functionBalance = null;
 
     //rectangle
+    this.rectangles = []; // rectangle stack for highlighting recursion
     this.rectangleNode = null;
     this.rectangle = null; // [x_r, y_u, x_l, y_d, text]
 
@@ -430,6 +431,7 @@ class GraphTracer extends Tracer {
     }
     const { method, args } = this.callLayout;
     method.apply(this, args);
+    this.rectangle_size();
   }
 
   layoutCircle() {
@@ -910,7 +912,7 @@ class GraphTracer extends Tracer {
     let marked = {};
     let root = Number(this.functionNode);
     let nodeDepth = {};
-    this.rectangleNode = [];
+    // this.rectangleNode = [];
 
     //create the tree, marking the depth of each node
     const recursiveAnalyze = (id, depth) => {
@@ -930,7 +932,7 @@ class GraphTracer extends Tracer {
     const recursive = (id) => {
       mark[id] = true;
 
-      this.rectangleNode.push(id);
+      // this.rectangleNode.push(id);
 
       const linkedNodeIds = this.findLinkedNodeIds(id, false);
       for (const linkedNodeId of linkedNodeIds) {
@@ -977,6 +979,9 @@ class GraphTracer extends Tracer {
   rectangle_size() {
     // this.clearRect();
     // this.setRect();
+
+    // resize the rectangles for recursion
+    this.recursion_rectangle_size_all();
     if (this.rectangleNode != null) {
       for (const id of this.rectangleNode) {
         const node = this.findNode(id);
@@ -986,6 +991,133 @@ class GraphTracer extends Tracer {
         }
       }
     }
+  }
+
+  // Push recursion stack (rectangle)
+  pushRectStack(nodeIds, label = '') {
+    if (!this.rectangles) this.rectangles = [];
+    const stack = {
+       rectangleNode: [...nodeIds], // the nodes that a rectangle surrounds
+       rect: null,  // rectangle's coordinates
+       label        // label text displayed on screen
+      };
+
+    this.rectangles.push(stack);
+    this.rectangle_size_forStack(stack); // resize immediately
+  }
+
+  // Pop recursion stack (rectangle)
+  popRectStack() {
+    if (this.rectangles.length) {
+      this.rectangles.pop();
+    }
+  }
+
+   // Add a node to each rectangle that contains a given parent
+  addNodeToRectStack(nodeId, parentId) {
+    if (this.rectangles && this.rectangles.length) {
+      for (const stack of this.rectangles) {
+
+        if (stack.rectangleNode.includes(parentId)) {
+          if (!stack.rectangleNode.includes(nodeId)) {
+            stack.rectangleNode.push(nodeId);
+          }
+        }
+        
+      }
+    }
+  }
+
+  /* Set the size of a sub rectangle, follow the structure of
+    the setRect method
+    * maximum limit of the rectangle;
+    * x_r: x right
+    * y_u: y up
+    * x_l: x left
+    * y_d: y down
+  */
+  setSubRect(rectStack, x_r, y_u, x_l, y_d) {
+    if (!rectStack) {
+      return;
+    }
+    if (!rectStack.rect) {
+      rectStack.rect = [x_r, y_u, x_l, y_d, ''];
+    } else {
+      if (x_r < rectStack.rect[0]) rectStack.rect[0] = x_r;
+      if (y_u < rectStack.rect[1]) rectStack.rect[1] = y_u;
+      if (x_l > rectStack.rect[2]) rectStack.rect[2] = x_l;
+      if (y_d > rectStack.rect[3]) rectStack.rect[3] = y_d;
+    }
+  }
+
+  // Resize one rectangle recursion stack based on its nodes
+  rectangle_size_forStack(rectStack) {
+    if (!rectStack || rectStack.rectangleNode.length === 0) {
+      if (rectStack) {
+        rectStack.rect = null;
+      }
+      return;
+    }
+    rectStack.rect = null;
+    for (const id of rectStack.rectangleNode) {
+      const node = this.findNode(id);
+      if (node && node.x != null && node.y != null) {
+        this.setSubRect(rectStack, node.x, node.y, node.x, node.y);
+      }
+    }
+    if (rectStack.rect && rectStack.label) {
+      rectStack.rect[4] = rectStack.label;
+    }
+  }
+
+  // Resize all the recursion stacks
+  recursion_rectangle_size_all() {
+    if (this.rectangles.length === 0) {
+      return;
+    }
+    for (const rect of this.rectangles) { 
+      this.rectangle_size_forStack(rect);
+    }
+  }
+
+
+  /** 
+   * Get all the child nodes' ids of a root,
+   * follow the structure of the Children_Balance method
+   */ 
+  getSubtreeNodes(rootId) {
+    if (rootId == null) return [];
+    // Traversal of the entire Subtree, counting number of leaves.
+    let marked = {};
+    let nodeDepth = {};
+
+    //create the tree, marking the depth of each node
+    const recursiveAnalyze = (id, depth) => {
+      marked[id] = true;
+      nodeDepth[id] = depth;
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (marked[linkedNodeId]) continue;
+        recursiveAnalyze(linkedNodeId, depth + 1);
+      }
+    };
+    recursiveAnalyze(this.root, 0);
+
+    // find the children of the given node
+    const children = []
+    let mark = {};
+    const recursive = (id) => {
+      mark[id] = true;
+      children.push(id)
+      const linkedNodeIds = this.findLinkedNodeIds(id, false);
+      for (const linkedNodeId of linkedNodeIds) {
+        if (mark[linkedNodeId]) continue;
+        if (nodeDepth[linkedNodeId] < nodeDepth[rootId]) continue;
+        recursive(linkedNodeId);
+      }
+    };
+    recursive(rootId);
+    return children
   }
 
   /*
@@ -1019,6 +1151,10 @@ class GraphTracer extends Tracer {
 
   clearRectNode() {
     this.rectangleNode = null;
+  }
+
+  clearRectangles() {
+    this.rectangles = [];
   }
 
   /**
