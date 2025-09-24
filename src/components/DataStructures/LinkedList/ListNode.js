@@ -4,10 +4,15 @@
 export default class ListNode{
     constructor(value,key){
         this.value = value;
-        this.ket = key;
+        this.key = key;
         this.nextKey = null;
         this.patched = 0;
         this.selected = 0;
+        // add new values: Visiable Controll
+        // Node can be hidden now
+        this.hidden = false;    // Hidden node
+        this.faded = false;     // (Optional) Node can faded, not hidden 
+
         this.selected1 = false;
         this.selected2 = false;
         this.selected3 = false;
