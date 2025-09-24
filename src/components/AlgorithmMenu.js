@@ -8,6 +8,8 @@ const baseUrl = window.location.origin;
 // or use this as master list
 const algorithms = {
   Sort: {
+    'Insertion Sort': `${baseUrl}/?alg=insertionSort&mode=sort`,
+    'Selection Sort': `${baseUrl}/?alg=selectionSort&mode=sort`,
     Heapsort: `${baseUrl}/?alg=heapSort&mode=sort`,
     Quicksort: `${baseUrl}/?alg=quickSort&mode=sort`,
     'Quicksort (Median of 3)': `${baseUrl}/?alg=quickSortM3&mode=sort`,
