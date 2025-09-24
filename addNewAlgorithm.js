@@ -260,21 +260,11 @@ const verifyPreReqs = () => {
 
   if (!shell.which("git")) problems.push("Git is not installed or not on $PATH.");
 
-  // Live and learn :(
-  // Makes sure user has no unsaved changes before attempting to switch
-  const testBranch = `test${Date.now()}` // avoid collisions
-  const result = shell.exec(`git switch -c ${testBranch}`, { silent: true });
-  if (result.code !== 0) {
-    console.error(
-      `Error: Cannot create/switch to a new branch.\n` +
-      `Reason: ${result.stderr.trim() || "unknown"}\n` +
-      `Hint: Make sure you have committed or stashed your working changes before running this script.`
-    );
+  const status = shell.exec("git status --porcelain", { silent: true })
+  if (status.length > 0) {
+    console.error("Error: working tree is not clean. Please commit or stash your changes first.");
     process.exit(1);
   }
-
-  shell.exec("git switch -", { silent: true });
-  shell.exec(`git branch -D ${testBranch}`, { silent: true });
 
   for (const [key, def] of Object.entries(DATA.meta)) {
     if (!def.property) problems.push(`meta.${key}: missing "property"`);
