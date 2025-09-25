@@ -3,7 +3,7 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 
 \\Note{
-Gift wrapping/Jarvis algm for convex hull
+XXXGift wrapping/Jarvis algm for convex hull
 XXX maybe change so we wrap counter-clockwise for consistency?
 XXX probably needs more bookmarks
 
