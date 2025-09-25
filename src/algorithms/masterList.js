@@ -477,6 +477,40 @@ const algorithmMetadata = {
     pseudocode: { search: 'horspoolStringSearching' },
     controller: { search: 'horspoolStringSearch' },
   },
+
+  "convHullDC": {
+    "name": "Convex Hull (divide and conquer)",
+    "category": "Geometric",
+    "noDeploy": false,
+    "keywords": [
+      "O(NlogN)"
+    ],
+    "explanationKey": "convHullDC",
+    "paramKey": "convHullDC",
+    "instructionsKey": "convHullDC",
+    "extraInfoKey": "convHullDC",
+    "pseudocode": {
+      "find": "convHullDCFind"
+    },
+    "controller": {
+      "find": "convHullDCFind"
+    }
+  },
+
+  "grahamScan": {
+    "name": "Graham Scan (convex hull)",
+    "category": "Geometric",
+    "noDeploy": true,
+    "keywords": [
+      "O(NlogN)"
+    ],
+    "controller": { "find": "grahamScan_find"},
+    "pseudocode": { "find": "grahamScan_find"},
+    "paramKey": "grahamScan",
+    "explanationKey": "grahamScan",
+    "extraInfoKey": "grahamScan",
+    "instructionsKey": "grahamScan"
+  },
 };
 //_MASTER_LIST_END_
 

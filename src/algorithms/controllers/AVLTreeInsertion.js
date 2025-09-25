@@ -18,6 +18,12 @@
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
+import { areExpanded } from './collapseChunkPlugin';
+
+// checks if either recursive call is expanded
+export function isRecursionExpanded() {
+  return areExpanded(['insertLeft']) || areExpanded(['insertRight']);
+}
 
 export default {
     initVisualisers() {
@@ -533,6 +539,8 @@ export default {
             return RRCR(root, parentNode, depth, true);
         }
 
+        let popAfterReturnFlag = false;
+
         /**
          * Insert a key into the AVL tree recursively
          * 
@@ -551,6 +559,11 @@ export default {
             // visualise the basic information of the insertion
             chunker.add('AVLT_Insert(t, k)',
                 (vis, k, d, index, r, p, rr) => {
+                    if (popAfterReturnFlag) {
+                        vis.graph.popRectStack();
+                        popAfterReturnFlag = false;
+                    }
+                    
                     if (d === 1) {
                         // highlight the node in the array
                         vis.array.depatch(index - 1);
@@ -563,6 +576,32 @@ export default {
                     // print the function name and the key to be inserted
                     vis.graph.setFunctionName("AVLT_Insert");
                     vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                    
+                    // Only add rectangles when recursion is expanded
+                    if (isRecursionExpanded()) {
+                        if (rr) {
+                            // Create a new nested rectangle
+                            let nodeIds = vis.graph.getSubtreeNodes(rr);
+                            vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
+                        }
+                        else {
+                            // add temporary node
+                            vis.graph.addNode(k, k);
+                            if (p !== null) {
+                                vis.graph.addEdge(p, k);
+                            }
+                            vis.graph.addNodeToRectStack(k, p);
+                            vis.graph.updateHeight(k, 1);
+                            // Add a rectangle for the node
+                            vis.graph.pushRectStack([k], `Depth ${d}`);
+                            // Add a empty rectangle to display "Empty"
+                            vis.graph.pushRectStack([], 'Empty');
+                            vis.graph.rectangle_size();
+                            // Pause the layout then remove the node
+                            vis.graph.setPauseLayout(true);
+                            vis.graph.removeNode(k);
+                        }
+                    }
                 },
                 [key, depth, currIndex, root ? `...${root.key}...` : "Empty", parentNode ? parentNode.key : null, root ? root.key : null],
                 depth
@@ -578,12 +617,17 @@ export default {
                 // chunker.add('create new node',
                 chunker.add('return n',
                     (vis, r, p) => {
+                        // Pop the "Empty" rectangle
+                        vis.graph.popRectStack();
+                        vis.graph.setPauseLayout(false);
                         vis.graph.addNode(r, r);
                         vis.graph.updateHeight(r, 1);
-
                         if (p !== null) {
                             vis.graph.addEdge(p, r);
+                            vis.graph.addNodeToRectStack(r, p);
                         }
+                        vis.graph.rectangle_size();
+                        popAfterReturnFlag = true;
                         // vis.graph.select(r, p);
                         ////  vis.graph.resetVisitAndSelect(r, p);
                     },
@@ -628,6 +672,10 @@ export default {
                     (vis, k, r) => {
                         vis.graph.setFunctionName("AVLT_Insert");
                         vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                        if (popAfterReturnFlag) {
+                            vis.graph.popRectStack();
+                            popAfterReturnFlag = false;
+                        }
                     },
                     [key, root ? `...${root.key}...` : "Empty"],
                     depth);
@@ -644,6 +692,10 @@ export default {
                     (vis, k, r) => {
                         vis.graph.setFunctionName("AVLT_Insert");
                         vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                        if (popAfterReturnFlag) {
+                            vis.graph.popRectStack();
+                            popAfterReturnFlag = false;
+                        }
                     },
                     [key, root ? `...${root.key}...` : "Empty"],
                     depth);
@@ -653,6 +705,7 @@ export default {
                 chunker.add('else k = root(t).key',
                     (vis) => {
                         vis.graph.clear(); // clear all highlighting
+                        popAfterReturnFlag = true;
                     },
                     [],
                     depth
@@ -725,6 +778,8 @@ export default {
                     vis.graph.setFunctionBalance(null);
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
+                    popAfterReturnFlag = true;
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance < -1 && key > root.right.key) {
                 // chunker.add('if balance < -1 && k > right(t).key', (vis) => null, [], depth);
@@ -763,6 +818,8 @@ export default {
                     vis.graph.clearSelect_Circle_Count();
                     vis.graph.setPauseLayout(false);
                     vis.graph.layoutAVL(g, true, false);
+                    vis.graph.rectangle_size();
+                    popAfterReturnFlag = true;
                 }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else if (balance > 1 && key > root.left.key) {
                 // chunker.add('if balance > 1 && k > left(t).key', (vis) => null, [], depth);
@@ -800,6 +857,8 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.rectangle_size();
+                        popAfterReturnFlag = true;
                     },
                     [(parentNode !== null) ? globalRoot.key : root.key, root],
                     depth);
@@ -840,12 +899,15 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
+                        vis.graph.rectangle_size();
+                        popAfterReturnFlag = true;
                     }, [(parentNode !== null) ? globalRoot.key : root.key, root], depth);
             } else {
                 chunker.add('case Balanced', (vis) => null, [], depth);
                 chunker.add('return t',
                     (vis, r, p) => {
                         vis.graph.resetVisitAndSelect(r, p); // clear all highlighting
+                        popAfterReturnFlag = true;
                     },
                     [root.key, parentNode ? parentNode.key : null],
                     depth
@@ -857,7 +919,7 @@ export default {
         // initial settings for the visualisation
         chunker.add(
             'AVLT_Insert(t, k)',
-            (vis, elements) => {
+            (vis, elements, k, k_p) => {
                 vis.array.set(elements); // fill the array with the keys
                 vis.graph.isWeighted = true;
                 vis.graph.setFunctionName('Tree is Empty');
@@ -869,29 +931,43 @@ export default {
                 vis.graph.setSize(2.5);
                 vis.graph.setZoom(0.8);
                 vis.array.setZoom(0.9);
-            },
-            [nodes],
-            1
-        );
 
-        // Set initial function information
-        chunker.add(
-            'if t = Empty',
-            (vis, k, k_p) => {
+                // Set initial function information
                 vis.graph.setFunctionName("AVLT_Insert");
                 vis.graph.setFunctionInsertText(`( Empty , ${k} )`);
-            },
-            [nodes[0], nodes[0].parentNode],
-            1
-        );
 
-        // initialise the tree with the first key
-        // chunker.add('create new node',
-        chunker.add('return n',
-            (vis, k) => {
+                // initialise the tree with the first key with box
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
+                if (isRecursionExpanded()) {
+                    vis.graph.pushRectStack([k], `Depth 1`);
+                    vis.graph.pushRectStack([], 'Empty');
+                    vis.graph.rectangle_size();
+
+                    // Pause the layout then remove the node, keep the rectangle
+                    vis.graph.setPauseLayout(true);
+                    vis.graph.removeNode(k);
+                }
+
+            },
+            [nodes, nodes[0], nodes[0].parentNode],
+            1
+        );
+
+        // empty second chunker
+        chunker.add('if t = Empty', (vis) => null, [], 1)
+
+        // Insert the first key into the rectangle
+        // chunker.add('create new node',
+        chunker.add('return n',
+            (vis, k) => {
+                vis.graph.popRectStack();
+                vis.graph.setPauseLayout(false);
+                vis.graph.addNode(k, k);
+                vis.graph.updateHeight(k, 1);
+                vis.graph.rectangle_size();
+                popAfterReturnFlag = true;
             },
             [nodes[0]],
             1
@@ -907,7 +983,7 @@ export default {
             globalRoot = insert(globalRoot, nodes[i], i, null, 1);
         }
 
-        // finalise the visualisation; cursur back to top to save having a
+        // finalise the visualisation; cursor back to top to save having a
         // "Done" extra line of code
         chunker.add('AVLT_Insert(t, k)',
             vis => {
@@ -916,6 +992,7 @@ export default {
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null);
                 vis.graph.clearSelect_Circle_Count();
+                vis.graph.clearRectangles();
             },
             [],
             1
