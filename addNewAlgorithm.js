@@ -507,7 +507,7 @@ const getExportsFromFile = (filepath) => {
 
         // If multiple exports, append the mode to export.
         // Also append to new filename to avoid clashes.
-        const suffix = modes ? `_${modes[idx]}` : "";
+        const suffix = modes && modes.length > 1 ? `_${modes[idx]}` : "";
 
         const newFile = path.join(dir, `${algorithmId}${suffix}${ext}`);
 
@@ -545,7 +545,7 @@ const getExportsFromFile = (filepath) => {
         // export const foo = "bar" form
 
         // Not needed at time of writing but left for future.
-        const suffix = modes ? `_${modes[idx]}` : "";
+        const suffix = modes && modes.length > 1 ? `_${modes[idx]}` : "";
         const newExported = `${algorithmId}${suffix}`;
 
         const alreadyExists = exportsInFile.some((e) => e.exported === newExported);
