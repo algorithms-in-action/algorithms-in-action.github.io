@@ -14,6 +14,9 @@ const rl = readline.createInterface({
   terminal: false,
 });
 
+// Please read below, this tells you how to minimally change global vars
+// to include a new property query (if you add a property to the master list)
+// you do not need to know any in depth knowledge of the script.
 /*
   What could break this script?
 
@@ -64,67 +67,9 @@ const SORTED_CATEGORIES = AlgorithmCategoryList
 
 const DATA = {
 
-  // Do not need to modify this, unless you know what you are doing.
-  general: {
-    algorithmId: {
-
-      property: "algorithmId",
-
-      query: (rl) => rl.output.write("Enter the short ID (used as filename prefix in src/algorithms/*):\n"),
-
-      validate: (ans, rl) => {
-        const v = (ans || "").trim();
-        if (!v) {
-          rl.output.write("Algorithm ID cannot be empty.\n");
-          return false;
-        }
-        if (!/^[a-z][A-Za-z0-9_]*$/.test(v)) {
-          rl.output.write("Algorithm ID must start with a lowercase letter and may contain letters, numbers, and underscores after.\n");
-          return false;
-        }
-        if (Object.hasOwn(algorithms, v)) {
-          rl.output.write("Algorithm ID already used, please select another ID.\n");
-          return false;
-        }
-        return true;
-      },
-
-      postProcess: (ans) => ans.trim(),
-    },
-
-    algorithmCopy: {
-      property: "algorithmCopy",
-
-      query: (rl) => {
-        rl.output.write("What existing algorithm implementation would you like to copy?\n");
-        const keys = Object.keys(algorithms).sort((a, b) =>
-          algorithms[a].name.localeCompare(algorithms[b].name)
-        );
-        keys.forEach((id, idx) => rl.output.write(`${idx}: ${algorithms[id].name}\n`));
-      },
-
-      validate: (ans, rl) => {
-        const v = (ans || "").trim();
-        const keys = Object.keys(algorithms).sort((a, b) =>
-          algorithms[a].name.localeCompare(algorithms[b].name)
-        );
-        if (/^\d+$/.test(v) && !(+v >= 0 && +v <= keys.length - 1)) {
-          rl.output.write(`Enter a number between 0 and ${keys.length - 1} (inclusive)\n`);
-          return false;
-        }
-        return true;
-      },
-
-      postProcess: (ans) => {
-        const keys = Object.keys(algorithms).sort((a, b) =>
-          algorithms[a].name.localeCompare(algorithms[b].name)
-        );
-        return keys[Number.parseInt(ans.trim(), 10)];
-      },
-    },
-  },
-
   // Keys in master list that do not represent export keys
+  // Extend this if a new property is created in master list, 
+  // following the examples.
   meta: {
     name: {
       property: "name",
@@ -215,7 +160,9 @@ const DATA = {
     },
   },
 
-  // Export keys in master list metadata
+  // Keys in master list that do represent export keys
+  // Extend this if a new key that represents an export
+  // is entered into the master list.
   exports: {
     controllers: {
       property: "controller",
@@ -245,6 +192,67 @@ const DATA = {
     instruction: {
       property: "instructionsKey",
       dir: "src/algorithms/instructions",
+    },
+  },
+
+  // Do not need to modify this, unless you know what you are doing.
+  // Modify the meta and export keys
+  general: {
+    algorithmId: {
+
+      property: "algorithmId",
+
+      query: (rl) => rl.output.write("Enter the short ID (used as filename prefix in src/algorithms/*):\n"),
+
+      validate: (ans, rl) => {
+        const v = (ans || "").trim();
+        if (!v) {
+          rl.output.write("Algorithm ID cannot be empty.\n");
+          return false;
+        }
+        if (!/^[a-z][A-Za-z0-9_]*$/.test(v)) {
+          rl.output.write("Algorithm ID must start with a lowercase letter and may contain letters, numbers, and underscores after.\n");
+          return false;
+        }
+        if (Object.hasOwn(algorithms, v)) {
+          rl.output.write("Algorithm ID already used, please select another ID.\n");
+          return false;
+        }
+        return true;
+      },
+
+      postProcess: (ans) => ans.trim(),
+    },
+
+    algorithmCopy: {
+      property: "algorithmCopy",
+
+      query: (rl) => {
+        rl.output.write("What existing algorithm implementation would you like to copy?\n");
+        const keys = Object.keys(algorithms).sort((a, b) =>
+          algorithms[a].name.localeCompare(algorithms[b].name)
+        );
+        keys.forEach((id, idx) => rl.output.write(`${idx}: ${algorithms[id].name}\n`));
+      },
+
+      validate: (ans, rl) => {
+        const v = (ans || "").trim();
+        const keys = Object.keys(algorithms).sort((a, b) =>
+          algorithms[a].name.localeCompare(algorithms[b].name)
+        );
+        if (/^\d+$/.test(v) && !(+v >= 0 && +v <= keys.length - 1)) {
+          rl.output.write(`Enter a number between 0 and ${keys.length - 1} (inclusive)\n`);
+          return false;
+        }
+        return true;
+      },
+
+      postProcess: (ans) => {
+        const keys = Object.keys(algorithms).sort((a, b) =>
+          algorithms[a].name.localeCompare(algorithms[b].name)
+        );
+        return keys[Number.parseInt(ans.trim(), 10)];
+      },
     },
   },
 };
@@ -405,6 +413,17 @@ const getExportsFromFile = (filepath) => {
   const { general, masterListEntry } = await retrieveDataFromUser();
   const algorithmId = general.algorithmId;
   const algorithmCopy = algorithms[general.algorithmCopy];
+
+  // XXX TODO: Temporary warning, this should be removed once parameter/masterList coupling is refactored.
+  await askUntil(rl, (rl) =>
+    rl.output.write(
+      `IMPORTANT: At the time of writing, there is a hard coupling between parameter files and the key for your algorithm in the masterList.
+  Please manually replace all occurrences of "${general.algorithmCopy}" with "${algorithmId}" in the newly created parameter file.
+  (Press any key to proceed)\n`
+    ),
+    () => true,
+    
+  );
 
   // Create a new branch for this algorithm
   const branchName = `add_${algorithmId}`;
@@ -581,7 +600,7 @@ const getExportsFromFile = (filepath) => {
   ];
 
   shell.exec(`git add ${filesToCommit.join(" ")}`);
-  shell.exec(`git commit -m "Adding new algorithm: ${masterListEntry[algorithmId].name}, files will contain ${algorithmCopy.name}'s source code."`);
+  shell.exec(`git commit -m "Adding new algorithm: ${masterListEntry[algorithmId].name}, files will contain ${algorithmCopy.name}'s source code." --no-verify`);
 
   rl.close();
 })();
