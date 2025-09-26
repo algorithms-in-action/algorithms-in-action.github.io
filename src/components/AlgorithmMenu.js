@@ -15,7 +15,7 @@ const algorithms = {
     'Merge Sort (Bottom-up)': `${baseUrl}/?alg=msort_arr_bup&mode=sort`,
     'Merge Sort (Natural)': `${baseUrl}/?alg=msort_arr_nat&mode=sort`,
     // add merge sort (lists as arrays)
-    'Merge Sort (lists as arrays)': `${baseUrl}/?alg=msort_lista_td&mode=sort`,
+    'Merge Sort (Lists as arrays)': `${baseUrl}/?alg=msort_lista_td&mode=sort`,
     'Radix Sort (MSD/Exchange)': `${baseUrl}/?alg=radixSortMSD&mode=sort`,
     'Radix Sort (LSD/Straight)': `${baseUrl}/?alg=radixSortStraight&mode=sort`,
   },
