@@ -163,7 +163,33 @@ const unionFindInstructions = [{
   ]
 }];
 
+export const BSTInstruction = bstInstructions;
 export const HSInstruction = sortInstructions;
+export const QSInstruction = sortInstructions;
+export const msort_arr_td = sortInstructions;
+export const msort_arr_bup = sortInstructions;
+export const msort_arr_nat = sortInstructions;
+export const RadixSortInstruction = radixSortInstructions;
+export const msort_lista_td = sortInstructions;
+export const TCInstruction = graphInstructionsTC;
+export const Prims_oldInstruction = graphInstructions;
+export const PrimsInstruction = graphInstructions;
+export const KruskalInstruction = graphInstructions;
+export const BFSSInstruction = stringInstructions;
+export const HSSInstruction = stringInstructions;
+export const UFInstruction = unionFindInstructions;
+export const TTFInstruction = bstInstructions;
+export const AVLInstruction = bstInstructions;
+export const DIJKInstruction = graphInstructions;
+export const ASTARInstruction = graphInstructions;
+export const BFSInstruction = graphInstructions;
+export const DFSInstruction = graphInstructions;
+export const DFSrecInstruction = graphInstructions;
+export const HashingLPDHInstruction = hashingInstructions;
+export const HashingCHInstruction = hashingInstructions;
+export const isort = sortInstructions;
+export const BSTrec = sortInstructions;
+export const msort_list_td = sortInstructions;
 export const gwrap = graphInstructions; // XXX refine this?
 export const convHullDC = graphInstructions;
 export const grahamScan = graphInstructions;

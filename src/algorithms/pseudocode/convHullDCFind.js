@@ -77,7 +77,9 @@ convexHullDC(P, n) // As above using divide and conquer, for sorted points \\B C
     else // recursive case
     \\In{
       mid <- middle index of P \\B mid
-      \\Expl{ We can round up or down; here we round down.
+      \\Expl{ This is used to distinguish the left and right halves. For
+        odd numbers of nodes, here the right "half" has one more node
+        than the left (it doesn't matter which side has the extra node).
       \\Expl} 
       hl <- convex hull of left half of P \\Ref RecCall1
       hr <- convex hull of right half of P \\Ref RecCall2
@@ -178,13 +180,17 @@ while path prev(l)->l->r->next(r) turns clockwise at l or r \\B lowerWhile
   if prev(l)->l->r turns clockwise \\B prev(l)->l->r
   \\In{
     l <- prev(l) \\B l<-prev(l)
-    \\Expl{ Move l down/left to the previous point on hl.
+    \\Expl{ Move l down/left to the previous point on hl (if this point has
+      been eliminated when finding the upper hull we show the upper point
+      on hr).
     \\Expl} 
   \\In}
   if l->r->next(r) turns clockwise \\B l->r->next(r)
   \\In{
     r <- next(r) \\B r<-next(r)
-    \\Expl{ Move r down/right to the next point on hr.
+    \\Expl{ Move r down/right to the next point on hr (if this point has
+      been eliminated when finding the upper hull we show the upper point
+      on hl).
     \\Expl} 
   \\In}
 \\In}
@@ -239,15 +245,7 @@ if uhr, uhl and next(uhl) are co-linear \\B colinearRLN
 \\In{
   uhl <- next(uhl) \\B updateRLN
 \\In}
-if lhr, lhl and prev(lhl) are co-linear \\B colinearRLP
-\\Expl{ Here prev(lhl) is the point just before (clockwise of) lhl.
-  We don't want to add the middle point (lhl) to the hull so we move
-  set lhl to the outer point.
-\\Expl}
-\\In{
-  lhl <- prev(lhl) \\B updateRLP
-\\In}
-if uhl, uhr and the prev(uhr) are co-linear \\B colinearLRP
+if prev(uhr), uhr and uhl are co-linear \\B colinearLRP
 \\Expl{ Here prev(uhr) is the point just before (clockwise of) uhr.
   We don't want to add the middle point (uhr) to the hull so we move
   set uhr to the outer point.
@@ -262,6 +260,14 @@ if lhl, lhr and next(lhr) are co-linear \\B colinearLRN
 \\Expl}
 \\In{
   lhr <- next(lhr) \\B updateLRN
+\\In}
+if prev(lhl), lhl and lhr are co-linear \\B colinearRLP
+\\Expl{ Here prev(lhl) is the point just before (clockwise of) lhl.
+  We don't want to add the middle point (lhl) to the hull so we move
+  set lhl to the outer point.
+\\Expl}
+\\In{
+  lhl <- prev(lhl) \\B updateRLP
 \\In}
 \\Code} 
 

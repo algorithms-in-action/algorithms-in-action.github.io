@@ -1,5 +1,31 @@
 export { default as HSExp } from './HSExp.md';
-export { default as UFExp } from './UFExp.md'; // needed by multiple algs
+export { default as BSTExp } from './BSTExp.md';
+export { default as QSExp } from './QSExp.md';
+export { default as msort_arr_td } from './msort_arr_td.md';
+export { default as msort_arr_bup } from './msort_arr_bup.md';
+export { default as MSDRadixSortExp } from './MSDRadixSortExp.md';
+export { default as StraightRadixSortExp } from './StraightRadixSortExp.md';
+export { default as msort_lista_td } from './msort_lista_td.md';
+export { default as msort_arr_nat } from './msort_arr_nat.md';
+export { default as Prims_oldExp } from './PRIM_oldExp.md';
+export { default as PrimsExp } from './PRIMExp.md';
+export { default as KruskalExp } from './KRUSKALExp.md';
+export { default as TCExp } from './TCExp.md';
+export { default as BFSSExp } from './BFSSExp.md';
+export { default as QSM3Exp } from './QSM3Exp.md';
+export { default as HSSExp } from './HSSExp.md';
+export { default as UFExp } from './UFExp.md';
+export { default as TTFExp } from './TTFExp.md';
+export { default as AVLExp } from './AVLExp.md';
+export { default as DIJKExp } from './DIJKExp.md';
+export { default as ASTARExp } from './ASTExp.md';
+export { default as BFSExp } from './BFSExp.md';
+export { default as DFSExp } from './DFSExp.md';
+export { default as DFSrecExp } from './DFSrecExp.md';
+export { default as HashingExp } from './HashingExp.md';
+export { default as isort} from './isort.md'
+export { default as BSTrec} from './BSTrec.md'
+export { default as msort_list_td} from './msort_list_td.md'
 export { default as gwrap} from './gwrap.md'
 export { default as convHullDC } from './convHullDC.md';
 export { default as grahamScan } from './grahamScan.md';
