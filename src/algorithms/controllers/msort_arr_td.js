@@ -58,7 +58,6 @@ import {
 } from './collapseChunkPlugin';
 
 /////////////////////////////////////////////////////
-
 // arrayB exists and is displayed only if MergeCopy is expanded
 function isMergeCopyExpanded() {
   return areExpanded(['MergeCopy']);
@@ -105,19 +104,41 @@ function assert(condition, message) {
 }
 
 
-export function update_vis_with_stack_frame(a, stack_frame, stateVal) {
+// 修复的 update_vis_with_stack_frame
+// 修改 update_vis_with_stack_frame 函数（约第 99 行）
+export function update_vis_with_stack_frame(a, stack_frame, stateVal, arrayValues, arrayLength) {
   let left, right, depth;
   [left, right, depth] = stack_frame;
 
-  for (let i = left; i <= right; i += 1) {
-    // each element in the vis stack is a tuple:
-    // 0th index is for base color,
-    // 1th index is for pivot, i, j colors
-    a[depth][i] = { base: stateVal, extra: [] };
+  // 边界检查
+  if (depth >= a.length || depth < 0) {
+    return a;
   }
-  let mid = Math.floor((left + right) / 2);
-  // a[depth][mid] = { base: STACK_FRAME_COLOR.P_color, extra: [] };
-  a[depth][mid] = { base: STACK_FRAME_COLOR.Current_stackFrame, extra: [] };
+
+  // 确保该深度的数组存在
+  if (!a[depth]) {
+    a[depth] = [...Array.from({ length: arrayLength })].map(() => ({
+      base: STACK_FRAME_COLOR.No_color,
+      extra: [],
+      value: undefined,
+      isLeftBoundary: false,
+      isRightBoundary: false
+    }));
+  }
+
+  // 填充整个区间，并添加数值信息
+  for (let i = left; i <= right && i < a[depth].length; i++) {
+    if (i >= 0) {
+      a[depth][i] = { 
+        base: stateVal, 
+        extra: [],
+        value: arrayValues ? arrayValues[i] : undefined,
+        isLeftBoundary: i === left,
+        isRightBoundary: i === right
+      };
+    }
+  }
+  
   return a;
 }
 
@@ -158,7 +179,7 @@ export function initVisualisers() {
         instance: new ArrayTracer('arrayB', null, 'Array B', {
           arrayItemMagnitudes: true,
         }),
-        order: 0,
+        order: 1,
       },
     }
   } else {
@@ -172,6 +193,7 @@ export function initVisualisers() {
     }
   }
 }
+
 
 /**
  *
@@ -189,125 +211,145 @@ export function run_msort() {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     const entire_num_array = nodes;
+    const original_array = [...nodes];
     let A = nodes;
     let B = [...entire_num_array].fill(undefined);
     let max_depth_index = -1; // indexes into 2D array, starts at zero
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack = []; // [ [left, right,  depth], ...]
+    let HIDE_STACKS_DURING_MERGE = [];
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) {
-      // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
-      // for visualise this data
-
+    function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, arrayValues) {
+      // 递归折叠时，不显示栈
+      if (!isRecursionExpanded()) {
+        return [];
+      }
+    
       let stack_vis = [];
-
+      const displayValues = original_array;
+      const arrayLen = entire_num_array.length;  // 获取数组长度
+    
+      // 初始化栈可视化数组
       for (let i = 0; i < max_depth_index + 1; i++) {
-        // for whatever reason fill() does not work here... JavaScript
         stack_vis.push(
-          [...Array.from({ length: entire_num_array.length })].map(() => ({
+          [...Array.from({ length: arrayLen })].map(() => ({
             base: STACK_FRAME_COLOR.No_color,
             extra: [],
+            value: undefined,
+            isLeftBoundary: false,
+            isRightBoundary: false
           })),
         );
       }
-
+    
+      // 先显示所有已完成的栈帧（灰色）
       cur_finished_stack_frames.forEach((stack_frame) => {
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
           stack_frame,
           STACK_FRAME_COLOR.Finished_stackFrame,
+          displayValues,
+          arrayLen  // 传递数组长度
         );
       });
-
-      cur_real_stack.forEach((stack_frame) => {
+    
+      // 然后显示当前活动的栈帧
+      cur_real_stack.forEach((stack_frame, index) => {
+        const color = (index === cur_real_stack.length - 1) 
+          ? STACK_FRAME_COLOR.Current_stackFrame
+          : STACK_FRAME_COLOR.In_progress_stackFrame;
+        
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
           stack_frame,
-          STACK_FRAME_COLOR.In_progress_stackFrame,
+          color,
+          displayValues,
+          arrayLen  // 传递数组长度
         );
       });
-
-      if (cur_real_stack.length !== 0) {
-        stack_vis = update_vis_with_stack_frame(
-          stack_vis,
-          cur_real_stack[cur_real_stack.length - 1],
-          STACK_FRAME_COLOR.Current_stackFrame,
-        );
-      }
-
-      if (cur_depth === undefined) {
-        // return stack_vis;
-        return []; // clobber stack display for now
-      }
-
-      cur_pivot_index = Math.floor((cur_i + cur_j) / 2);
-      stack_vis[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
-      if (cur_pivot_index !== undefined) {
-        // stack_vis[cur_depth][cur_pivot_index].extra.push(STACK_FRAME_COLOR.P_color);
-      }
-
-      if (!isMergeCopyExpanded()) { return stack_vis; }
-      // XXX clobber stack display for now
-      // if (!isMergeCopyExpanded()) { return []; }
-
-      if (cur_i !== undefined) {
-        // stack_vis[cur_depth][cur_i].extra.push(STACK_FRAME_COLOR.I_color);
-      }
-
-      if (cur_j !== undefined) {
-        // stack_vis[cur_depth][cur_j].extra.push(STACK_FRAME_COLOR.J_color);
-      }
-
+    
       return stack_vis;
-      // return []; // XXX  clobber stack display for now
     }
-
-    const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth) => {
-
-      // XXX left over from quicksort...
-      // We can't render the -1 index in the array
-      // For now we display i=0/j=0 at left of array if appropriate
-      let cur_i_too_low;
-      let cur_j_too_low;
-      if (cur_i === -1) {
-        cur_i = undefined;
-        cur_i_too_low = 0;
-      } else {
-        cur_i_too_low = undefined;
+    
+    
+    const refresh_stack = (
+      vis, cur_real_stack, cur_finished_stack_frames,
+      cur_i, cur_j, cur_pivot_index, cur_depth, cur_array, cur_B
+    ) => {
+      console.log(`Depth ${cur_depth}: Real stack has ${cur_real_stack.length} frames`);
+      for (let i = 0; i < cur_real_stack.length; i++) {
+        console.log(`  Frame ${i}: [${cur_real_stack[i]}]`);
       }
-      if (cur_j === -1) {
-        cur_j = undefined;
-        cur_j_too_low = 0;
-      } else {
-        cur_j_too_low = undefined;
-      }
-
+      if (cur_i === -1) cur_i = undefined;
+      if (cur_j === -1) cur_j = undefined;
+    
       assert(vis.array);
       assert(cur_real_stack && cur_finished_stack_frames);
-
-      if (!isMergeCopyExpanded()) {
-        // j should not show up in vis if partition is collapsed
-        // cur_j = undefined;
-        // cur_j_too_low = undefined;
+    
+      // 递归折叠：不显示栈
+      if (!isRecursionExpanded()) {
+        vis.array.setStackDepth(0);
+        vis.array.setStack(undefined);
+        if (vis.arrayB) {
+          vis.arrayB.setStackDepth(0);
+          vis.arrayB.setStack(undefined);
+        }
+        return;
       }
-
-      if (!isMergeCopyExpanded() && !isRecursionExpanded()) {
-        // i should not show up in vis if partition + recursion is collapsed
-        // cur_i = undefined;
-        // cur_i_too_low = undefined;
+    
+      // ✅ 合并阶段总开关：一旦打开，无论 B 有没有值，都隐藏栈
+// 检查当前深度的合并标志
+      if (HIDE_STACKS_DURING_MERGE[cur_depth]) {  // 使用当前深度的标志
+        vis.array.setStackDepth(0);
+        vis.array.setStack(undefined);
+        if (vis.arrayB) {
+          vis.arrayB.setStackDepth(0);
+          vis.arrayB.setStack(undefined);
+        }
+        return;
       }
-
-      vis.array.setStackDepth(cur_real_stack.length);
-      vis.array.setStack(
-        derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth)
+          
+      // B 有内容：也隐藏（双保险）
+      let arrayBHasContent = false;
+      if (cur_B && isMergeCopyExpanded()) {
+        arrayBHasContent = cur_B.some(val => val !== undefined);
+      }
+      if (arrayBHasContent) {
+        vis.array.setStackDepth(0);
+        vis.array.setStack(undefined);
+        if (vis.arrayB) {
+          vis.arrayB.setStackDepth(0);
+          vis.arrayB.setStack(undefined);
+        }
+        return;
+      }
+    
+      // B 为空且非合并阶段：正常显示栈
+      const stack_data = derive_stack(
+        cur_real_stack,
+        cur_finished_stack_frames,
+        cur_i,
+        cur_j,
+        cur_pivot_index,
+        cur_depth,
+        original_array
       );
-
+    
+      if (isMergeCopyExpanded() && vis.arrayB) {
+        vis.arrayB.setStackDepth(cur_real_stack.length);
+        vis.arrayB.setStack(stack_data);
+        vis.array.setStackDepth(0);
+        vis.array.setStack(undefined);
+      } else {
+        vis.array.setStackDepth(cur_real_stack.length);
+        vis.array.setStack(stack_data);
+      }
     };
-
+    
 
     function assignVarToA(vis, variable_name, index) {
       if (index === undefined)
@@ -327,50 +369,91 @@ export function run_msort() {
     // Define quicksort functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1, cur_max2, c_stk) {
-      // re-does a fair bit of work - could make more like BUP/Nat
+    function renderInMerge(
+      vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, 
+      cur_max1, cur_max2, c_stk, cur_depth  // 添加 cur_depth
+    ) {
+      // 正常的数组与变量/高亮逻辑
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_arr_td');
-        // set_simple_stack(vis.array, c_stk);
+        
         assignVarToA(vis, 'ap1', cur_ap1);
         assignVarToA(vis, 'max1', cur_max1);
+        
         for (let i = cur_left; i <= cur_max1; i++) {
-          if (i === cur_ap1)
-            highlight(vis, i, apColor);
-          else
-            highlight(vis, i, runAColor);
+          if (i === cur_ap1) highlight(vis, i, apColor);
+          else highlight(vis, i, runAColor);
         }
-        for (let i = cur_max1+1; i <= cur_max2; i++) {
-          if (i === cur_ap2)
-            highlight(vis, i, apColor);
-          else
-            highlight(vis, i, runBColor);
+        for (let i = cur_max1 + 1; i <= cur_max2; i++) {
+          if (i === cur_ap2) highlight(vis, i, apColor);
+          else highlight(vis, i, runBColor);
         }
-        if (cur_ap2 < a.length) { // can't render beyond array:(
+        
+        if (cur_ap2 < a.length) {
           assignVarToA(vis, 'ap2', cur_ap2);
-          assignVarToA(vis, 'ap2='+(a.length+1), undefined);
+          assignVarToA(vis, 'ap2=' + (a.length + 1), undefined);
         } else {
-          assignVarToA(vis, 'ap2='+(a.length+1), a.length - 1);
+          assignVarToA(vis, 'ap2=' + (a.length + 1), a.length - 1);
           assignVarToA(vis, 'ap2', undefined);
         }
         assignVarToA(vis, 'max2', cur_max2);
-        vis.arrayB.set(b, 'msort_arr_td');
-        assignVarToB(vis, 'bp', cur_bp);
-        for (let i = cur_left; i < cur_bp; i++) {
-          highlightB(vis, i, sortColor);
+        
+        if (isMergeCopyExpanded()) {
+          vis.arrayB.set(b, 'msort_arr_td');
+          assignVarToB(vis, 'bp', cur_bp);
+          for (let i = cur_left; i < cur_bp; i++) {
+            highlightB(vis, i, sortColor);
+          }
         }
+      } else {
+        vis.array.set(a, 'msort_arr_td');
       }
+      
+      // 调用 set_simple_stack 来处理栈列表的显示/隐藏
+      set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
     }
+    
 
     // calls vis.array.setList(c_stk) to display simple stack but only
     // if recursion is expanded (otherwise stack is never displayed)
     // XXX is this confusing if we run the algorithm a bit with
     // recursion expanded then collapse recursion? I guess if you are
     // doing that you have a pretty good understanding anyway?
-    const set_simple_stack = (vis_array, c_stk) => {
-      if (isRecursionExpanded())
-        vis_array.setList(c_stk);
-    }
+    
+    const set_simple_stack = (vis_array, c_stk, vis, cur_B, cur_depth) => {
+      // 递归折叠：不显示栈列表
+      if (!isRecursionExpanded()) {
+        vis_array.setList(undefined);
+        if (vis && vis.arrayB) vis.arrayB.setList(undefined);
+        return;
+      }
+    
+      // 合并阶段总开关：隐藏
+      if (HIDE_STACKS_DURING_MERGE[cur_depth]) {
+        vis_array.setList(undefined);
+        if (vis && vis.arrayB) vis.arrayB.setList(undefined);
+        return;
+      }
+    
+      // B 有内容：隐藏（双保险）
+      let arrayBHasContent = false;
+      if (cur_B && isMergeCopyExpanded()) {
+        arrayBHasContent = cur_B.some(val => val !== undefined);
+      }
+      if (arrayBHasContent) {
+        vis_array.setList(undefined);
+        if (vis && vis.arrayB) vis.arrayB.setList(undefined);
+        return;
+      }
+    
+      // B 为空：不再设置栈列表，只清除
+      vis_array.setList(undefined);
+      if (vis && vis.arrayB) vis.arrayB.setList(undefined);
+    };
+    
+    
+          
+    
 
     function MergeSort(left, right, depth) {
 
@@ -385,101 +468,133 @@ export function run_msort() {
       let pivot;
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
-
+      
       chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_depth,
-        cur_real_stack, cur_finished_stack_frames, c_stk) => {
-        vis.array.set(a, 'msort_arr_td');
-        if (cur_depth === 0) {
-          vis.array.setLargestValue(maxValue);
-          vis.array.setStack([]); // used for a custom stack visualisation
-          if (isMergeCopyExpanded()) {
-            vis.arrayB.set(b, 'msort_arr_td');
-            vis.arrayB.setLargestValue(maxValue);
-          }
-        }
-        assignVarToA(vis, 'left', cur_left);
-        assignVarToA(vis, 'right', cur_right);
-        for (let i = cur_left; i <= cur_right; i++) {
-          highlight(vis, i, runAColor)
-        }
-        // XXX give up on QS-like stack for now
-        // refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_left, cur_right, 2, cur_depth);
-        set_simple_stack(vis.array, c_stk);
-      }, [A, B, left, right, depth, real_stack, finished_stack_frames,
-        simple_stack], depth);
+  cur_real_stack, cur_finished_stack_frames, c_stk) => {
+  vis.array.set(a, 'msort_arr_td');
+  
+  if (cur_depth === 0) {
+    vis.array.setLargestValue(maxValue);
+    // 不要在这里清除栈
+    
+    if (isMergeCopyExpanded()) {
+      vis.arrayB.set(b, 'msort_arr_td');
+      vis.arrayB.setLargestValue(maxValue);
+      // 同样不要清除 arrayB 的栈
+    }
+  }
+  
+  assignVarToA(vis, 'left', cur_left);
+  assignVarToA(vis, 'right', cur_right);
+  for (let i = cur_left; i <= cur_right; i++) {
+    highlight(vis, i, runAColor)
+  }
+  
+  refresh_stack(
+    vis,
+    cur_real_stack,
+    cur_finished_stack_frames,
+    cur_left,
+    cur_right,
+    Math.floor((cur_left + cur_right)/2),
+    cur_depth,
+    A,  // 改为大写
+    B   // 改为大写
+  );
+  
+  // 传递当前区间的左右边界
+  set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+}, [A, B, left, right, depth, real_stack, finished_stack_frames, simple_stack], depth);
+      
+      function refreshStackAt(vis, left, right, depth, real_stack, finished_stack_frames, array, arrayB) {
+        refresh_stack(
+          vis,
+          real_stack,
+          finished_stack_frames,
+          left,
+          right,
+          undefined,
+          depth,
+          array,
+          arrayB  // 添加数组参数
+        );
+      }
+        
 
-      chunker.add('left<right', (vis, a, cur_left, cur_right) => {
+      chunker.add('left<right', (vis, a, b, cur_left, cur_right) => {
         // assignVarToA(vis, 'left', undefined);
         // assignVarToA(vis, 'right', undefined);
         for (let i = cur_left; i <= cur_right; i++) {
           // unhighlight(vis, i, true)
         }
-      }, [A, left, right], depth);
+      }, [A, B, left, right], depth);
 
       if (left < right) {
         let mid = Math.floor((left + right) / 2);
-        chunker.add('mid', (vis, a, cur_left, cur_mid, cur_right) => {
+        chunker.add('mid', (vis, a, b, cur_left, cur_mid, cur_right) => {
           for (let i = cur_mid + 1; i <= cur_right; i++) {
             unhighlight(vis, i, true)
             highlight(vis, i, runBColor)
           }
           assignVarToA(vis, 'mid', cur_mid);
-        }, [A, left, mid, right], depth);
+        }, [A, B, left, mid, right], depth);
 
         // dummy chunk for before recursive call - we need this so there
         // is a chunk at this recursion level as the first chunk in the
         // collapsed code for the recursive call
-        chunker.add('preSortL', (vis, a, cur_left, cur_mid, cur_right) => {
+        chunker.add('preSortL', (vis, a, b, cur_left, cur_mid, cur_right) => {
           assignVarToA(vis, 'left', undefined);
           assignVarToA(vis, 'right', undefined);
           assignVarToA(vis, 'mid', undefined);
           // for (let i = cur_mid + 1; i <= right; i++) {
             // highlight(vis, i, true)
           // }
-        }, [A, left, mid, right], depth);
+        }, [A, B, left, mid, right], depth);
 
         MergeSort(left, mid, depth + 1);
 
         // chunk after recursive call - it's good to highlight the
         // recursive call once it has returned plus we need a chunk at
         // this level when the recursive code is collapsed
-        chunker.add('sortL', (vis, a, cur_left, cur_mid, cur_right,
-          c_stk) => {
-          vis.array.set(a, 'msort_arr_td');
-          set_simple_stack(vis.array, c_stk);
+        chunker.add('sortL', (
+          vis, a, b, cur_left, cur_mid, cur_right, c_stk,  // 改为 c_stk
+          cur_real_stack, cur_finished_stack_frames, cur_depth
+        ) => {
+          refreshStackAt(vis, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames, A, B);
+          vis.array.set(a, 'msort_arr_td');  // 使用小写 a
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);  
+        
           assignVarToA(vis, 'left', cur_left);
           assignVarToA(vis, 'mid', cur_mid);
           assignVarToA(vis, 'right', cur_right);
+        
           for (let i = cur_left; i <= cur_mid; i++) {
-            // unhighlight(vis, i, true);
-            highlight(vis, i, runAColor)
+            highlight(vis, i, runAColor);
           }
           for (let i = cur_mid + 1; i <= cur_right; i++) {
             highlight(vis, i, runBColor);
           }
-        }, [A, left, mid, right, simple_stack], depth);
-
+        }, [A, B, left, mid, right, simple_stack, real_stack, finished_stack_frames, depth], depth);
+        
         // dummy chunk before recursive call, as above
-        chunker.add('preSortR', (vis, a, cur_left, cur_mid, cur_right) => {
-          // vis.array.set(a, 'msort_arr_td');
-          for (let i = cur_left; i <= cur_mid; i++) {
-            unhighlight(vis, i, false);
-          }
-          assignVarToA(vis, 'left', undefined);
-          assignVarToA(vis, 'mid', undefined);
-          assignVarToA(vis, 'right', undefined);
-          // for (let i = cur_mid + 1; i <= cur_right; i++) {
-            // highlight(vis, i, true)
-          // }
-        }, [A, left, mid, right], depth);
+        chunker.add('sortR', (vis, a, b, cur_left, cur_mid, cur_right, c_stk,
+          cur_real_stack, cur_finished_stack_frames, cur_depth) => {
+            refreshStackAt(vis, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames, A, B);
+            // vis.array.set(a, 'msort_arr_td');
+            for (let i = cur_left; i <= cur_mid; i++) {
+              unhighlight(vis, i, false);
+            }
+            assignVarToA(vis, 'left', undefined);
+            assignVarToA(vis, 'mid', undefined);
+            assignVarToA(vis, 'right', undefined);
+        }, [A, B, left, mid, right, simple_stack, real_stack, finished_stack_frames, depth], depth);
 
         MergeSort(mid + 1, right, depth + 1);
 
         // chunk after recursive call
-        chunker.add('sortR', (vis, a, cur_left, cur_mid, cur_right,
-          c_stk) => {
+        chunker.add('sortR', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {
           // vis.array.set(a, 'msort_arr_td');
-          set_simple_stack(vis.array, c_stk);
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);  // 使用 cur_depth
           assignVarToA(vis, 'left', cur_left);
           assignVarToA(vis, 'mid', cur_mid);
           assignVarToA(vis, 'right', cur_right);
@@ -491,7 +606,7 @@ export function run_msort() {
             // unhighlight(vis, i, true);
             highlight(vis, i, runBColor)
           }
-        }, [A, left, mid, right, simple_stack], depth);
+        }, [A, B, left, mid, right, simple_stack, depth], depth);
 
         // XXX should we shorten psuedocode? eg, (ap1,max1) <- (left,mid)
         let ap1 = left;
@@ -499,51 +614,56 @@ export function run_msort() {
         let ap2 = mid + 1;
         let max2 = right;
         let bp = left;
-
-        chunker.add('ap1', (vis, a, cur_left, cur_mid, cur_right) => {
+        
+        chunker.add('ap1', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
           // disable stack display during merge: hopefully its not
           // confusing, it avoids extra distraction and the position of
           // the stack and array B can sometimes overlap:(
           // vis.array.set(a, 'msort_arr_td');
-          set_simple_stack(vis.array, undefined);
           if (isMergeExpanded()) {
             assignVarToA(vis, 'left', undefined);
             assignVarToA(vis, 'ap1', cur_left);
             highlight(vis, cur_left, apColor);
           }
-        }, [A, left, mid, right], depth);
-        chunker.add('max1', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [A, B, left, mid, right, simple_stack, depth], depth);
+        chunker.add('max1', (vis, a, b, cur_left, cur_mid, cur_right) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'mid', undefined);
             assignVarToA(vis, 'max1', cur_mid);
           }
-        }, [A, left, mid, right], depth);
-        chunker.add('ap2', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [A, B, left, mid, right], depth);
+        chunker.add('ap2', (vis, a, b, cur_left, cur_mid, cur_right) => {
           if (isMergeExpanded()) {
             assignVarToA(vis, 'ap2', cur_mid + 1);
             highlight(vis, cur_mid + 1, apColor);
           }
-        }, [A, left, mid, right], depth);
-        chunker.add('max2', (vis, a, cur_left, cur_mid, cur_right) => {
+        }, [A, B, left, mid, right], depth);
+        chunker.add('max2', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
           if (isMergeExpanded()) {
             assignVarToA(vis, 'right', undefined);
             assignVarToA(vis, 'max2', right);
           }
-        }, [A, left, mid, right], depth);
-        chunker.add('bp', (vis, a, cur_left, cur_mid, cur_right) => {
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);// 添加这行
+        }, [A, B, left, mid, right, simple_stack, depth], depth);  // 添加 simple_stack 参数
+        
+        chunker.add('bp', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
           if (isMergeExpanded()) {
             assignVarToB(vis, 'bp', left);
           }
-        }, [A, left, mid, right], depth);
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+        }, [A, B, left, mid, right, simple_stack, depth], depth);  // 添加 simple_stack 参数
 
         // while (ap1 <= max1 && ap2 <= max2) 
         /* eslint-disable no-constant-condition */
         while (true) {
           chunker.add('MergeWhile', (vis, a, b, cur_ap1, cur_ap2,
-            cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-            renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
-              cur_max2, cur_stk, cur_left);
-          }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+            cur_bp, cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                cur_max2, cur_stk, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, 
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b)
+          }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
 
           if (!(ap1 <= max1 && ap2 <= max2)) break;
 
@@ -554,54 +674,73 @@ export function run_msort() {
             B[bp] = A[ap1];
             A[ap1] = undefined;
             chunker.add('copyap1', (vis, a, b, cur_ap1, cur_ap2,
-              cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
+              cur_bp, cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                HIDE_STACKS_DURING_MERGE[cur_depth] = true;  // 在这里添加这行
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
               if (isMergeExpanded()) {
                 highlightB(vis, cur_bp, sortColor);
               }
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
-            ap1 = ap1 + 1;
+              // 关键：B 方才写入，立刻评估并隐藏栈
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
+            ap1 = ap1 + 1; 
             chunker.add('ap1++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
+              cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
               if (isMergeExpanded()) {
                 highlightB(vis, cur_bp, sortColor);
               }
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
+            
             bp = bp + 1;
             chunker.add('bp++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+              cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
+            
           } else {
             B[bp] = A[ap2];
             A[ap2] = undefined;
             chunker.add('copyap2', (vis, a, b, cur_ap1, cur_ap2,
-              cur_bp, cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
+              cur_bp, cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                HIDE_STACKS_DURING_MERGE[cur_depth] = true;
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
               if (isMergeExpanded()) {
                 highlightB(vis, cur_bp, sortColor);
               }
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
+            
             ap2 = ap2 + 1;
             chunker.add('ap2++', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
+              cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
               if (isMergeExpanded()) {
                 highlightB(vis, cur_bp, sortColor);
               }
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
+            
             bp = bp + 1;
             chunker.add('bp++_2', (vis, a, b, cur_ap1, cur_ap2, cur_bp,
-              cur_max1, cur_max2, cur_stk, cur_left) => {
-              renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp,
-                cur_max1, cur_max2, cur_stk, cur_left);
-            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left], depth);
+              cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
+                renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
+                  cur_max2, cur_stk, cur_depth);
+              refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+                cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
+            }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);            
           }
         }
 
@@ -612,33 +751,23 @@ export function run_msort() {
         }
 
         chunker.add('CopyRest1', (vis, a, b, cur_left, cur_ap1,
-          cur_ap2, cur_max1, cur_max2, cur_bp, c_stk) => {
+          cur_ap2, cur_max1, cur_max2, cur_bp, c_stk, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
           if (isMergeExpanded()) {
             vis.array.set(a, 'msort_arr_td');
-            // set_simple_stack(vis.array, c_stk);
-            // unhighlight(vis, cur_ap1, true);
-            // assignVarToA(vis, 'ap1', undefined);
-            // assignVarToA(vis, 'max1', undefined);
-            if (cur_ap2 < a.length)
-              assignVarToA(vis, 'ap2', cur_ap2);
+            if (cur_ap2 < a.length) assignVarToA(vis, 'ap2', cur_ap2);
             assignVarToA(vis, 'max2', cur_max2);
-            for (let i = cur_left; i <= cur_max1; i++) {
-              highlight(vis, i, runAColor);
-            }
-            for (let i = cur_max1 + 1; i <= cur_max2; i++) {
-              highlight(vis, i, runBColor);
-            }
+            for (let i = cur_left; i <= cur_max1; i++) highlight(vis, i, runAColor);
+            for (let i = cur_max1 + 1; i <= cur_max2; i++) highlight(vis, i, runBColor);
             vis.arrayB.set(b, 'msort_arr_td');
-            for (let i = cur_left; i <= cur_bp - 1; i++) {
-              highlightB(vis, i, sortColor);
-            }
-            if (cur_bp < a.length) {
-              assignVarToB(vis, 'bp', cur_bp);
-            } else {
-              assignVarToB(vis, 'bp', undefined);  // XXX anination unclear?
-            }
+            for (let i = cur_left; i <= cur_bp - 1; i++) highlightB(vis, i, sortColor);
+            if (cur_bp < a.length) assignVarToB(vis, 'bp', cur_bp); else assignVarToB(vis, 'bp', undefined);
           }
-        }, [A, B, left, ap1, ap2, max1, max2, bp, simple_stack], depth);
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+          // 关键：补一次刷新，防止剩余批量复制阶段露栈
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+            cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, A, B);
+        }, [A, B, left, ap1, ap2, max1, max2, bp, simple_stack, right, depth, real_stack, finished_stack_frames], depth);
+        
 
         for (let i = ap2; i <= max2; i++) {
           B[bp] = A[i];
@@ -647,14 +776,11 @@ export function run_msort() {
         }
 
         chunker.add('CopyRest2', (vis, a, b, cur_left, cur_right, cur_ap2,
-          cur_max2, cur_b, c_stk) => {
+          cur_max2, cur_bp, c_stk, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
           if (isMergeCopyExpanded()) {
             vis.array.set(a, 'msort_arr_td');
-            // set_simple_stack(vis.array, c_stk);
             vis.arrayB.set(b, 'msort_arr_td');
-            for (let i = cur_left; i <= cur_right; i++) {
-              highlightB(vis, i, sortColor);
-            }
+            for (let i = cur_left; i <= cur_right; i++) highlightB(vis, i, sortColor);
           }
           if (isMergeExpanded()) {
             if (cur_ap2 < a.length) {
@@ -664,54 +790,84 @@ export function run_msort() {
             assignVarToA(vis, 'max2', undefined);
             assignVarToB(vis, 'bp', undefined);
           }
-        }, [A, B, left, right, ap2, max2, bp, simple_stack], depth);
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+          // 关键：复制剩余第二段后也立即评估隐藏
+          refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
+            cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, A, B);
+        }, [A, B, left, right, ap2, max2, bp, simple_stack, depth, real_stack, finished_stack_frames], depth);
+        
 
         for (let i = left; i <= right; i++) {
           A[i] = B[i];
           B[i] = undefined;
         }
-        chunker.add('copyBA', (vis, a, b, cur_left, cur_mid,
-          cur_right, c_stk) => {
-          if (isMergeCopyExpanded()) {
-            for (let i = cur_left; i <= cur_right; i++) {
-              // unhighlightB(vis, i, false);
-            }
-            vis.arrayB.set(b, 'msort_arr_td');
-          }
-          vis.array.set(a, 'msort_arr_td');
-          set_simple_stack(vis.array, c_stk);
-          for (let i = cur_left; i <= cur_right; i++) {
-            highlight(vis, i, sortColor);
-          }
-          if (isMergeExpanded()) {
-            assignVarToA(vis, 'ap1', undefined);
-            assignVarToA(vis, 'max1', undefined);
-            assignVarToA(vis, 'ap2', undefined);
-            assignVarToA(vis, 'max2', undefined);
-          }
-          // XXX best highlight cur_mid+1..right from previous
-          // recursion level?
-          // for (let i = cur_mid+1; i <= right; i++) {
-          // highlight(vis, i, true)
-          // }
-        }, [A, B, left, mid, right, simple_stack], depth);
+        // 修改 copyBA chunk
+        // 修改 copyBA chunk
+      // 修改 copyBA chunk - 直接隐藏栈列表
+      chunker.add('copyBA', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, 
+        cur_real_stack, cur_finished_stack_frames, cur_depth) => {
+          HIDE_STACKS_DURING_MERGE[cur_depth] = false;
+        if (isMergeCopyExpanded()) {
+          vis.arrayB.set(b, 'msort_arr_td');
+        }
+        vis.array.set(a, 'msort_arr_td');
+        
+        // 高亮已排序的元素
+        for (let i = cur_left; i <= cur_right; i++) {
+          highlight(vis, i, sortColor);
+        }
+        
+        // 关键：刷新栈显示
+        refresh_stack(
+          vis,
+          cur_real_stack,
+          cur_finished_stack_frames,
+          cur_left,
+          cur_right,
+          Math.floor((cur_left + cur_right)/2),
+          cur_depth,
+          A,
+          B
+        );
+        
+        // 设置简单栈列表
+        set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+        
+        // 清理变量
+        if (isMergeExpanded()) {
+          assignVarToA(vis, 'ap1', undefined);
+          assignVarToA(vis, 'max1', undefined);
+          assignVarToA(vis, 'ap2', undefined);
+          assignVarToA(vis, 'max2', undefined);
+        }
+      }, [A, B, left, mid, right, simple_stack, real_stack, finished_stack_frames, depth], depth);
+        
 
         // chunk after recursive call, as above, after adjusting
         // stack frames/depth etc
+        
       }
       // XXX should we delete 'else' and always go to the 'Done' line
       // even for non-trivial array segments? (might need to
       // generalise (un)highlight code below
       else {
-        chunker.add('Done', (vis, a, cur_left, cur_right) => {
+        // Base case: left >= right  
+        chunker.add('Done', (vis, a, b, cur_left, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
           if (cur_left === cur_right) {
             unhighlight(vis, cur_left, true);
-            highlight(vis, cur_left, sortColor) // XXX check color
+            highlight(vis, cur_left, sortColor);
+            // 删除 sortedRanges.add 这行
           }
-          // finished_stack_frames.push(real_stack.pop());
-        }, [A, left, right], depth);
+          
+          // 关键：继续显示栈列表！
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+          
+        }, [A, B, left, right, simple_stack, depth], depth);// 确保传递 simple_stack
       }
-
+      const frame = real_stack.pop();
+      if (frame) {
+        finished_stack_frames.push(frame);
+      }
       simple_stack.shift();
       return A; // Facilitates testing
     }
@@ -751,13 +907,53 @@ export function run_msort() {
     // },
     // [entire_num_array.length - 1],
     // 0);
-    chunker.add('Done', (vis) => {
+    chunker.add('Done', (vis, cur_finished_stack_frames, cur_array) => {
+      HIDE_STACKS_DURING_MERGE = [];  // 清空数组，重置所有深度的标志
+    
+      // 最终高亮（保留你原来的逻辑）
       for (let i = 0; i < entire_num_array.length; i++) {
         highlight(vis, i, doneColor);
       }
-    }, [], 0);
+    
+      // 递归面板展开时，计算“最终栈”
+      if (isRecursionExpanded()) {
+        const finalStack = derive_stack(
+          [],                       // 最终态不需要当前 real_stack
+          cur_finished_stack_frames,
+          undefined, undefined, undefined, undefined,
+          cur_array                 // 当前最终数组
+        );
+        const depth = Array.isArray(finalStack) ? finalStack.length : 0;
+    
+        // 根据是否展开 Merge Copy 决定挂到 A 还是 B
+        if (isMergeCopyExpanded() && vis.arrayB) {
+          // 只在 B 显示
+          vis.array.setStackDepth(0);
+          vis.array.setStack(undefined);
+    
+          vis.arrayB.setStackDepth(depth);
+          vis.arrayB.setStack(finalStack);
+        } else {
+          // 只在 A 显示
+          if (vis.arrayB) {
+            vis.arrayB.setStackDepth(0);
+            vis.arrayB.setStack(undefined);
+          }
+    
+          vis.array.setStackDepth(depth);
+          vis.array.setStack(finalStack);
+        }
+      } else {
+        // 面板折叠：都隐藏
+        vis.array.setStackDepth(0);
+        vis.array.setStack(undefined);
+        if (vis.arrayB) {
+          vis.arrayB.setStackDepth(0);
+          vis.arrayB.setStack(undefined);
+        }
+      }
+    }, [finished_stack_frames, A], 0);
 
     return msresult;
   }
 }
-

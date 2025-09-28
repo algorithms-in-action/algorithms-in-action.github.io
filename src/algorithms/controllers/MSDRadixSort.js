@@ -70,15 +70,18 @@ const MSD_BOOKMARKS = {
 // Stack frames are all [left, right, mid, depth],
 const FRAME_MID = 2;
 const FRAME_DEPTH = 3;
-const update_vis_with_stack_frame = (a, stack_frame, stateVal, stateValR) => {
+const update_vis_with_stack_frame = (a, stack_frame, stateVal, stateValR, arrayValues) => {
   let left, right, mid, depth;
   [left, right, mid, depth] = stack_frame;
 
   for (let k = left; k <= right; k += 1) {
-    // each element in the vis stack is a tuple:
-    // 0th index is for base color,
-    // 1th index is for pivot, i, j colors (not used here)
-    a[depth][k] = { base: (k >= mid? stateValR: stateVal), extra: [] };
+    a[depth][k] = { 
+      base: (k >= mid? stateValR: stateVal), 
+      extra: [],
+      value: arrayValues ? arrayValues[k] : undefined,  // 添加数值
+      isLeftBoundary: k === left,   // 标记左边界
+      isRightBoundary: k === right   // 标记右边界
+    };
   }
   return a;
 }
@@ -150,6 +153,7 @@ export default {
      */
     run(chunker, { nodes }) {
       let A = [...nodes]
+      const original_array = [...nodes];  
       let n = A.length
 
       // ----------------------------------------------------------------------------------------------------------------------------
@@ -245,7 +249,7 @@ export default {
         if (isRecursionExpanded()) {
           vis.array.setStackDepth(cur_real_stack.length);
           vis.array.setStack(
-            deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
+            deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, arr)
           );
         } else
           vis.array.setStack([]);
@@ -271,11 +275,12 @@ export default {
       };
 
 
-      function deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth) {
+      function deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, arrayValues) {
         // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
         // for visualise this data
 
         let stack_vis = [];
+        const displayValues = original_array;
 
         for (let k = 0; k < max_depth_index + 1; k++) {
           // for whatever reason fill() does not work here... JavaScript
@@ -293,6 +298,7 @@ export default {
             stack_frame,
             STACK_FRAME_COLOR.Finished_stackFrame,
             STACK_FRAME_COLOR.Finished_stackFrameR,
+            displayValues
           );
         });
 
@@ -302,6 +308,7 @@ export default {
             stack_frame,
             STACK_FRAME_COLOR.In_progress_stackFrame,
             STACK_FRAME_COLOR.In_progress_stackFrameR,
+            displayValues
           );
         });
 
@@ -311,6 +318,7 @@ export default {
             cur_real_stack[cur_real_stack.length - 1],
             STACK_FRAME_COLOR.Current_stackFrame,
             STACK_FRAME_COLOR.Current_stackFrameR,
+            displayValues
           );
         }
         return stack_vis;
@@ -571,7 +579,7 @@ arr],
             vis.array.setStack(deriveStack(real_stack, finished_stack_frames));
           } else
             vis.array.setStack([]);
-        }, [],
+        }, [A],
         0
       );
       return A;

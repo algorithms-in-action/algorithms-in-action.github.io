@@ -209,7 +209,8 @@
         .stackElement {
             display: grid;
             grid-auto-flow: row;
-            height: 0.6em;
+            height: 1.2em;
+            position: relative;
             transition-duration: 0.1s;
             margin-bottom: m#{i}n(1vh, 1em);
 
