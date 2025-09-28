@@ -85,9 +85,9 @@ class LinkedListRenderer extends Array2DRenderer {
       </defs>
 
         {list.map(n => {
-        if (!n.nextKey) return null;
+        if (!n.nextKey || n.hidden) return null;  // 没有 nextKey 或 节点隐藏时，不画箭头
         const to = nodes.get(n.nextKey);
-        if (!to) return null;
+        if (!to || to.hidden) return null;  // 指向的节点不存在或隐藏时，不画箭头
 
         const x1 = dotCenterX(n);
         const y1 = dotCenterY(n);
@@ -124,6 +124,7 @@ class LinkedListRenderer extends Array2DRenderer {
                   styles.node,
                   styles.variantGray,
                   n.faded && styles.faded,
+                  n.hidden && styles.hidden,  // 支持隐藏
                   n.sorted && styles.sorted,
                   n.patched && styles.patched,
                   n.selected && styles.selected,
@@ -141,7 +142,7 @@ class LinkedListRenderer extends Array2DRenderer {
                   height: NODE_H,
                   '--node-w': `${NODE_W}px`,
                   '--node-h': `${NODE_H}px`,
-                  '--cap-w':  `${CAP_W}px`,
+                  '--cap-w': `${CAP_W}px`,
                   '--dot-size': `${DOT_SIZE}px`,
                   '--dot-right': `${DOT_RIGHT}px`,
                 }}
