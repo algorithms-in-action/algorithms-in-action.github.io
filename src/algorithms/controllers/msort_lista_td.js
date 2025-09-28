@@ -164,12 +164,12 @@ export function initVisualisers() {
     return {
       array: {
         instance: new Array2DTracer('array', null,
-         'Array representation of lists (PROTOTYPE FOR POINTER REPRESENTATION)'),
+         'Array representation of linked list'),
         order: 0,
       },
       list: {
         instance: new LinkedListTracer('list', null, 
-          'Linked list (pointer representation)',),
+          'Pointer representation of linked list'),
           order: 1,
       },
     }

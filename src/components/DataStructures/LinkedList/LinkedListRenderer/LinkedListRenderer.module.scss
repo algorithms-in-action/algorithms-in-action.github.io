@@ -1,7 +1,7 @@
 @import "../../common/stylesheet/index";
 
 /* ===== 容器 & 舞台 ===== */
-.container { position: relative; overflow: visible; }
+.container { position: relative; overflow: visible; margin-top: 20px; }
 .stage     { position: relative; transform-origin: 0 0; will-change: transform; }
 
 /* ===== 箭头：深灰粗线 + 圆角 + 起点小圆点 + 实心箭头头 ===== */
