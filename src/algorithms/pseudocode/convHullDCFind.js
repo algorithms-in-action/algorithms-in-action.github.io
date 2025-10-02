@@ -158,7 +158,7 @@ while path prev(r)->r->l->next(l) turns clockwise at r or l \\B upperWhile
     \\Expl} 
   \\In}
 \\In}
-(uhl, uhl) <- (l, r) \\B AssignUhlUhr
+(uhl, uhl) <- (l, r) // Upper Hull found \\B AssignUhlUhr
 
 \\Code} 
 
@@ -194,7 +194,7 @@ while path prev(l)->l->r->next(r) turns clockwise at l or r \\B lowerWhile
     \\Expl} 
   \\In}
 \\In}
-(lhl, lhl) <- (l, r) \\B AssignLhlLhr
+(lhl, lhl) <- (l, r) // Lower Hull found \\B AssignLhlLhr
 \\Code} 
 
 \\Code{

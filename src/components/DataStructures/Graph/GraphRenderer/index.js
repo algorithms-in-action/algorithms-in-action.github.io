@@ -780,6 +780,8 @@ class GraphRenderer extends Renderer {
               height,
               Select_Circle_Count,
               AVL_TID,
+              upperLabel,
+              lowerLabel,
               visitedCount0,
               visitedCount,
               visitedCount1,
@@ -870,6 +872,18 @@ class GraphRenderer extends Renderer {
                       {height != null ? height : ''}
                     </tspan>
                   )}
+                </text>
+
+                {/* labels for convex hull etc */}
+                <text className={styles.upper_label}>
+                  <tspan>
+                    {upperLabel != null ? upperLabel : ''}
+                  </tspan>
+                </text>
+                <text className={styles.lower_label}>
+                  <tspan>
+                    {upperLabel != null ? lowerLabel : ''}
+                  </tspan>
                 </text>
 
                 {isPointer && (

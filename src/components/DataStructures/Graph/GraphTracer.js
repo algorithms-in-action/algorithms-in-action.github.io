@@ -41,7 +41,7 @@ class GraphTracer extends Tracer {
       padding: 32,
       // nodeRadius is used in binary trees and graphs but font size and
       // zoom(?) has been adjusted for Euclidean graphs so nodes look a
-      // bit fat there and a bit think in other places - should make
+      // bit fat there and a bit thin in other places - should make
       // them all look similar if possible XXX
       defaultNodeRadius: 33,
       nodeRadius: 33,  // Should be identical to default node radius.
@@ -307,17 +307,21 @@ class GraphTracer extends Tracer {
     this.moveNode = moveNode;
   }
 
+  // XXX addNode has an unweildy number of arguments...
+
   addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
     x = defaultXY, y = defaultXY, Select_Circle_Count = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
     isPointer = 0, pointerText = '',
-    height = undefined, AVL_TID = undefined) {
+    height = undefined, AVL_TID = undefined,
+    upperLabel = undefined, lowerLabel = undefined) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
     const key = id;
     // eslint-disable-next-line max-len
     this.nodes.push({
       id, value, shape, color, weight, x, y, Select_Circle_Count,
-      visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText, height, AVL_TID
+      visitedCount, selectedCount, key, visitedCount1, isPointer,
+      pointerText, height, AVL_TID, upperLabel, lowerLabel
     });
     this.layout();
   }
@@ -1158,12 +1162,20 @@ class GraphTracer extends Tracer {
   }
 
   /**
-   * udpate the height of the node
+   * udpate the height of the AVL tree node
    * @param {int} id the node id
    * @param {int} height the height of the node
    */
   updateHeight(id, height) {
     this.findNode(id).height = height;
+  }
+
+  updateLowerLabel(id, x) {
+    this.findNode(id).lowerLabel = x;
+  }
+
+  updateUpperLabel(id, x) {
+    this.findNode(id).upperLabel = x;
   }
 
   /**

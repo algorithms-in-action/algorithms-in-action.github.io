@@ -29,6 +29,9 @@
 // XXX Maybe have an option button for the Akl-Toussaint heuristic.
 // See union-find for an example of such an option. Currently
 // implemented for n>=10 - not too bad.
+//
+// When Akl-Toussaint heuristic operates, restore deleted nodes at last
+// chunk? Save copy of coordinates + id when we delete each node.
 // 
 // XXX Color stuff with graphs is a bit of a mess - this is a Global
 // Issue to be worked in separately - communication about this and how
@@ -359,7 +362,7 @@ export default {
             // Add special node a long way away for "wrapper"
             vis.graph.addNode(wrapperStr, wrapperStr);
             vis.graph.setNodePosition(wrapperStr, -2000, -9000); // XXX
-            vis.graph.updateHeight(c_p, pStr);
+            vis.graph.updateUpperLabel(c_p, pStr); // XXX use Lower -breaks???
             vis.graph.addEdge(c_p, wrapperStr);
             vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
             vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
@@ -563,8 +566,8 @@ export default {
                 vis.graph.removeEdge(c_p, wrapperStr);
                 vis.graph.addEdge(c_q, wrapperStr);
                 vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
-                vis.graph.updateHeight(c_p, undefined);
-                vis.graph.updateHeight(c_q, pStr);
+                vis.graph.updateUpperLabel(c_p, '');
+                vis.graph.updateUpperLabel(c_q, pStr);
                 let [pX, pY] = vis.graph.getNodePosition(c_p);
                 let [qX, qY] = vis.graph.getNodePosition(c_q);
                 // XXX wrapper position should be colinear but far away
@@ -589,7 +592,7 @@ export default {
                 (vis, edgeArray, coordsArray, c_pp, c_p) => {
                   vis.graph.colorNode(c_pp, colorsCH.HULLP_N);
                   vis.graph.colorNode(c_p, colorsCH.HULLP_N);
-                  vis.graph.updateHeight(c_p, undefined);
+                  vis.graph.updateUpperLabel(c_p, '');
                   },
                   [E, coords, prevP, p], 0
               );

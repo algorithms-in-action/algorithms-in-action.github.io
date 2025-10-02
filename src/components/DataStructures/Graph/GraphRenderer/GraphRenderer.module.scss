@@ -50,6 +50,12 @@
   --height-Yposition: calc(var(--circle-radius)/37*-50);
   --stroke-width: calc(var(--circle-radius)/37*7);
 
+  // labels for convex hull etc, based on AVL tree height
+  --label-fontsize: calc(var(--circle-radius)/37*60);
+  --upper-label-Yposition: calc(var(--circle-radius)/37*-70);
+  --lower-label-Yposition: calc(var(--circle-radius)/37*70);
+
+
 
   .node {
 
@@ -115,9 +121,7 @@
     .height {
       //--breath_color: var(--graph-node-height-fill);
       //animation: colorChange 1.5s 3; // anmation
-
       fill: var(--graph-node-id-fill);
-
       // font-weight: bold;
       // font-size: 15px;
       // alignment-baseline: central;
@@ -141,6 +145,25 @@
       // transform: translateY(-40px);
       transform: translate(+50px, -35px);
       // text-anchor: left;
+    }
+
+    // height is same colour as node whereas these labels are not - not
+    // sure why - maybe there is some extra code involding height
+    // somewhere.  Default colour is ok.
+    .upper_label {
+      fill: var(--graph-node-id-fill);
+      dominant-baseline: central;
+      text-anchor: middle;
+      font-size: var(--label-fontsize);
+      transform: translateY(var(--upper-label-Yposition));
+    }
+
+    .lower_label {
+      fill: var(--graph-node-id-fill);
+      dominant-baseline: central;
+      text-anchor: middle;
+      font-size: var(--label-fontsize);
+      transform: translateY(var(--lower-label-Yposition));
     }
 
     // XXX best change this so it's consistent with "selected" in array colors!
