@@ -76,6 +76,8 @@ giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
     \\In} 
     while p != minX // stop when we get back to the first node \\B whileP
     return hull \\B returnHull
+    \\Expl{ The animation shows any points that were removed earlier.
+    \\Expl}
 \\In} 
 \\Code} 
 
@@ -96,7 +98,9 @@ Here we skip points p and q to simplify the animation (the code works
 without this simplification).  Here we scan the points
 in order. If there are multiple points that have the same least
 clockwise direction from p the ordering of points can be significant
-- see the "MORE" tab for details.
+- see the "MORE" tab for details. The animation stops at this line once
+more when there are no more points i to consider, and moves the "string"
+close to the next node q.
 \\Expl}
 \\Note{
 Better to have the following??
