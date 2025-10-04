@@ -8,17 +8,17 @@ import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
 
 // Color constants
-const apColor = colors.apple;
-const runAColor = colors.peach;
-const runBColor = colors.sky;
-const sortColor = colors.leaf;
-const doneColor = colors.stone;
+const apColor = colors.apple;    // Comparing elements (red-ish)
+const runAColor = colors.peach;  // Left sublist L (orange-ish)
+const runBColor = colors.sky;    // Right sublist R (blue-ish)
+const sortColor = colors.leaf;   // Sorted/merged elements (green-ish)
+const doneColor = colors.stone;  // Completely finished (gray-ish)
 
 // Global variables for list representation
-let Indices;
-let Heads;
-let Tails;
-let simple_stack;
+let Indices; // ['i',    1,   2,   3,   4]
+let Heads;   // ['data', 5,   3,   8,   1]
+let Tails;   // ['next', 2,   3,   4,   'Null']
+let simple_stack; // Call stack representation
 
 const run = run_msort();
 
@@ -28,64 +28,79 @@ export default {
   run
 };
 
-// Expansion check functions
-function isMergeCopyExpanded() {
-  return areExpanded(['MergeCopy']);
-}
-
-function isMergeExpanded() {
-  return areExpanded(['MergeCopy', 'Merge']);
-}
-
 function isRecursionExpanded() {
   return areExpanded(['MergesortL']) || areExpanded(['MergesortR']);
 }
 
-// Stack frame color constants
-const STACK_FRAME_COLOR = {
-  No_color: 0,
-  In_progress_stackFrame: 1,
-  Current_stackFrame: 2,
-  Finished_stackFrame: 3,
-  I_color: 4,
-  J_color: 5,
-  P_color: 6,
-};
-
-// Helper functions
-function assert(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'Assertion failed');
-  }
-}
-
+/**
+ * Assign a variable label to a node or show "variable=Null" when pointer is null
+ * 
+ * Purpose: Display pointer variables (L, R, E, M) on the array view.
+ * Shows special "L=Null" notation when a pointer reaches the end of the list.
+ * 
+ * @param {object} vis - Visualization object containing array tracer
+ * @param {string} variable_name - Name of the variable ('L', 'R', 'E', 'M')
+ * @param {number|string} index - Node index (1,2,3...) or 'Null'
+ * 
+ * Example:
+ *   assignMaybeNullVar(vis, 'L', 2)      // Shows 'L' at node 2
+ *   assignMaybeNullVar(vis, 'L', 'Null') // Shows 'L=Null' at column 0
+ */
 function assignMaybeNullVar(vis, variable_name, index) {
   if (index === 'Null') {
+    // Remove variable from any node
     vis.array.assignVariable(variable_name, 2, undefined);
+    // Show "variable=Null" label at header position (row 2, column 0)
     vis.array.assignVariable(variable_name + '=Null', 2, 0);
   } else {
+    // Point variable to the specified node index on row 2 (Tails row)
     vis.array.assignVariable(variable_name, 2, index);
   }
 }
 
-function assignVarToA(vis, variable_name, index) {
-  if (index === undefined) {
-    vis.array.removeVariable(variable_name);
-  } else {
-    vis.array.assignVariable(variable_name, 0, index);
-  }
-}
-
+/**
+ * Display the recursion call stack if the user has expanded the recursion section
+ * 
+ * Purpose: Show depth of recursion to help users understand recursive calls.
+ * Only displays when recursion code is expanded (saves screen space).
+ * 
+ * @param {object} vis_array - Array visualizer instance
+ * @param {Array<string>} c_stk - Call stack array, e.g. ['([5..],4)', '([3..],2)']
+ * 
+ * Example display:
+ *   ([5..],4)  ← Current: sort list starting at value 5, length 4
+ *   ([3..],2)  ← Parent: sort sublist starting at 3, length 2
+ */
 const set_simple_stack = (vis_array, c_stk) => {
+  // Only show stack if user expanded the recursion section in the UI
   if (isRecursionExpanded()) {
     vis_array.setList(c_stk);
   }
 }
 
+/**
+ * Color all nodes in a linked list chain
+ * 
+ * Purpose: Highlight sublists with different colors during sorting.
+ * Colors left sublist (peach), right sublist (blue), or merged result (green).
+ * 
+ * @param {object} vis - Visualization object
+ * @param {number|string} startIndex - Starting node index
+ * @param {string} color - Color constant (runAColor, runBColor, sortColor, etc.)
+ * @param {Array} Lists - The [Indices, Heads, Tails] structure
+ * 
+ * Example:
+ *   colorList(vis, 1, runAColor, Lists) // Colors nodes 1→2→3→... in peach
+ *   colorList(vis, 5, runBColor, Lists) // Colors nodes 5→6→... in blue
+ */
 function colorList(vis, startIndex, color, Lists) {
-  const Tails = Lists[2];
+  const Tails = Lists[2]; // Extract the 'next' pointers array
+
+  // Traverse the list following next pointers until reaching 'Null'
   for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+    // Color row 1 (Heads - the data values)
     vis.array.select(1, i, 1, i, color);
+    // Color row 2 (Tails - the next pointers)
     vis.array.select(2, i, 2, i, color);
   }
 }
@@ -94,11 +109,11 @@ export function initVisualisers() {
   return {
     array: {
       instance: new Array2DTracer('array', null, 'Array representation of linked list'),
-      order: 0,
+      order: 1,
     },
     list: {
       instance: new LinkedListTracer('list', null, 'Pointer representation of linked list'),
-      order: 1,
+      order: 0,
     },
   }
 }
