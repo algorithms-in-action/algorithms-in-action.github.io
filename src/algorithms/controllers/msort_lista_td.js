@@ -129,12 +129,12 @@ export function run_msort() {
       Tails = ['i.tail (next)'];
       simple_stack = [];
 
-      for (let i = 1; i < entire_num_array.length; i++) {
+      for (let i = 1; i <= entire_num_array.length; i++) {
         Indices.push(i);
-        Heads.push(entire_num_array[i - 1]);
-        Tails.push(i + 1);
+        Heads.push(entire_num_array[i-1]);
+        Tails.push(i+1);
       }
-      Tails[entire_num_array.length - 1] = 'Null';
+      Tails[entire_num_array.length] = 'Null';
     }
 
     function setupInitialVisualization(L, len, depth) {
