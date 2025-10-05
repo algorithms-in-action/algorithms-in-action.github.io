@@ -378,11 +378,11 @@ export function run_msort() {
 
     // Main execution
     initializeListStructure();
-    const msresult = MergeSort(1, entire_num_array.length - 1, 0);
+    const msresult = MergeSort(1, entire_num_array.length, 0);
 
     let lastLine = (entire_num_array.length > 1 ? 'returnM' : 'returnL');
     chunker.add(lastLine, (vis, a) => {
-      for (let i = 1; i < entire_num_array.length; i++) {
+      for (let i = 1; i <= entire_num_array.length; i++) {
         vis.array.select(1, i, 1, i, doneColor);
         vis.array.select(2, i, 2, i, doneColor);
       }
