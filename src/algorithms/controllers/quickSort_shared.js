@@ -227,7 +227,7 @@ export function run_QS(is_qs_median_of_3) {
       
       let stack_vis = [];
       // 使用保存的原始数组
-      const displayValues = original_array;
+      const displayValues = arrayValues || entire_num_array;
     
       for (let i = 0; i < max_depth_index + 1; i++) {
         stack_vis.push(

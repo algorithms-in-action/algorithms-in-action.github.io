@@ -17,19 +17,13 @@ const highlightColor = colors.apple; // for i,j in partition,...
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
   No_color: 0,
-  In_progress_stackFrame: 1,
-  Current_stackFrame: 2,
-  Finished_stackFrame: 3,
-  I_color: 4, // not currently used
-  J_color: 5, // not currently used
-  P_color: 6, // pivot, left-over from quicksort
-  // Because MSD radix sort doesn't have a pivot splitting the two
-  // halves of a partition, it was hard to reconsruct recursion after
-  // the fact.  The solution here is to have a separate colour for the
-  // right part of each partition (when known)
-  In_progress_stackFrameR: 7,
-  Current_stackFrameR: 8,
-  Finished_stackFrameR: 9,
+  In_progress_stackFrame: 1,  // 进行中（索引1）
+  Current_stackFrame: 2,       // 当前（索引2）  
+  Finished_stackFrame: 3,      // 已完成（索引3）
+  I_color: 4,  // 不使用
+  J_color: 5,  // 不使用
+  P_color: 6,  // 不使用
+  // 删除 In_progress_stackFrameR, Current_stackFrameR, Finished_stackFrameR
 };
 
 const VIS_VARIABLE_STRINGS = {
@@ -70,17 +64,17 @@ const MSD_BOOKMARKS = {
 // Stack frames are all [left, right, mid, depth],
 const FRAME_MID = 2;
 const FRAME_DEPTH = 3;
-const update_vis_with_stack_frame = (a, stack_frame, stateVal, stateValR, arrayValues) => {
+const update_vis_with_stack_frame = (a, stack_frame, stateVal, arrayValues) => {
   let left, right, mid, depth;
   [left, right, mid, depth] = stack_frame;
 
   for (let k = left; k <= right; k += 1) {
     a[depth][k] = { 
-      base: (k >= mid? stateValR: stateVal), 
+      base: stateVal,  // 直接使用传入的状态值，不再区分左右
       extra: [],
-      value: arrayValues ? arrayValues[k] : undefined,  // 添加数值
-      isLeftBoundary: k === left,   // 标记左边界
-      isRightBoundary: k === right   // 标记右边界
+      value: arrayValues ? arrayValues[k] : undefined,
+      isLeftBoundary: k === left,
+      isRightBoundary: k === right
     };
   }
   return a;
@@ -276,51 +270,51 @@ export default {
 
 
       function deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, arrayValues) {
-        // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
-        // for visualise this data
-
         let stack_vis = [];
-        const displayValues = original_array;
-
+        const displayValues = arrayValues || A;
+      
         for (let k = 0; k < max_depth_index + 1; k++) {
-          // for whatever reason fill() does not work here... JavaScript
           stack_vis.push(
             [...Array.from({ length: entire_num_array.length })].map(() => ({
               base: STACK_FRAME_COLOR.No_color,
               extra: [],
+              value: undefined,
+              isLeftBoundary: false,
+              isRightBoundary: false
             })),
           );
         }
-
+      
+        // 已完成的栈帧
         cur_finished_stack_frames.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.Finished_stackFrame,
-            STACK_FRAME_COLOR.Finished_stackFrameR,
+            STACK_FRAME_COLOR.Finished_stackFrame,  // 索引3
             displayValues
           );
         });
-
+      
+        // 进行中的栈帧
         cur_real_stack.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.In_progress_stackFrame,
-            STACK_FRAME_COLOR.In_progress_stackFrameR,
+            STACK_FRAME_COLOR.In_progress_stackFrame,  // 索引1
             displayValues
           );
         });
-
+      
+        // 当前栈帧（最上面的）
         if (cur_real_stack.length !== 0) {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             cur_real_stack[cur_real_stack.length - 1],
-            STACK_FRAME_COLOR.Current_stackFrame,
-            STACK_FRAME_COLOR.Current_stackFrameR,
+            STACK_FRAME_COLOR.Current_stackFrame,  // 索引2
             displayValues
           );
         }
+      
         return stack_vis;
       }
 

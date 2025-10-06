@@ -218,62 +218,88 @@ export function run_msort() {
     const finished_stack_frames = []; // [ [left, right,  depth], ...]  (although depth could be implicit this is easier)
     const real_stack = []; // [ [left, right,  depth], ...]
     let HIDE_STACKS_DURING_MERGE = [];
+    
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // Define helper functions
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, arrayValues) {
-      // 递归折叠时，不显示栈
-      if (!isRecursionExpanded()) {
-        return [];
-      }
+function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, arrayValues) {
+  // 递归折叠时，不显示栈
+  if (!isRecursionExpanded()) {
+    return [];
+  }
+
+  let stack_vis = [];
+  const displayValues = original_array;
+  const arrayLen = entire_num_array.length;
+
+  // 关键修改：检测是否为初始状态
+  // 如果只有一个栈帧，且是[0, arrayLen-1, 0]，则这是初始状态
+  if (cur_real_stack.length === 1 && 
+    cur_real_stack[0][0] === 0 && 
+    cur_real_stack[0][1] === arrayLen - 1 && 
+    cur_real_stack[0][2] === 0 &&
+    cur_finished_stack_frames.length === 0) {  // 添加这个条件！
+  // 真正的初始状态，不需要做任何事
+}
+
+  // 根据栈的实际内容计算深度
+  let actualMaxDepth = 0;
+  
+  // 从 finished_stack_frames 计算最大深度
+  cur_finished_stack_frames.forEach(frame => {
+    if (frame[2] > actualMaxDepth) actualMaxDepth = frame[2];
+  });
+  
+  // 从 real_stack 计算最大深度  
+  cur_real_stack.forEach(frame => {
+    if (frame[2] > actualMaxDepth) actualMaxDepth = frame[2];
+  });
+  
+  const stackDepth = actualMaxDepth + 1;
+  
+  // 初始化栈可视化数组
+  for (let i = 0; i < stackDepth; i++) {
+    stack_vis.push(
+      [...Array.from({ length: arrayLen })].map(() => ({
+        base: STACK_FRAME_COLOR.No_color,
+        extra: [],
+        value: undefined,
+        isLeftBoundary: false,
+        isRightBoundary: false
+      })),
+    );
+  }
+
+  // 先显示所有已完成的栈帧（灰色）
+  cur_finished_stack_frames.forEach((stack_frame) => {
+    stack_vis = update_vis_with_stack_frame(
+      stack_vis,
+      stack_frame,
+      STACK_FRAME_COLOR.Finished_stackFrame,
+      displayValues,
+      arrayLen
+    );
+  });
+
+  // 然后显示当前活动的栈帧
+  cur_real_stack.forEach((stack_frame, index) => {
+    const color = (index === cur_real_stack.length - 1) 
+      ? STACK_FRAME_COLOR.Current_stackFrame
+      : STACK_FRAME_COLOR.In_progress_stackFrame;
     
-      let stack_vis = [];
-      const displayValues = original_array;
-      const arrayLen = entire_num_array.length;  // 获取数组长度
-    
-      // 初始化栈可视化数组
-      for (let i = 0; i < max_depth_index + 1; i++) {
-        stack_vis.push(
-          [...Array.from({ length: arrayLen })].map(() => ({
-            base: STACK_FRAME_COLOR.No_color,
-            extra: [],
-            value: undefined,
-            isLeftBoundary: false,
-            isRightBoundary: false
-          })),
-        );
-      }
-    
-      // 先显示所有已完成的栈帧（灰色）
-      cur_finished_stack_frames.forEach((stack_frame) => {
-        stack_vis = update_vis_with_stack_frame(
-          stack_vis,
-          stack_frame,
-          STACK_FRAME_COLOR.Finished_stackFrame,
-          displayValues,
-          arrayLen  // 传递数组长度
-        );
-      });
-    
-      // 然后显示当前活动的栈帧
-      cur_real_stack.forEach((stack_frame, index) => {
-        const color = (index === cur_real_stack.length - 1) 
-          ? STACK_FRAME_COLOR.Current_stackFrame
-          : STACK_FRAME_COLOR.In_progress_stackFrame;
-        
-        stack_vis = update_vis_with_stack_frame(
-          stack_vis,
-          stack_frame,
-          color,
-          displayValues,
-          arrayLen  // 传递数组长度
-        );
-      });
-    
-      return stack_vis;
-    }
+    stack_vis = update_vis_with_stack_frame(
+      stack_vis,
+      stack_frame,
+      color,
+      displayValues,
+      arrayLen
+    );
+  });
+
+  return stack_vis;
+}
     
     
     const refresh_stack = (
@@ -460,52 +486,59 @@ export function run_msort() {
 
       //// start mergesort -------------------------------------------------------- 
       // XXXXX
-
-      real_stack.push([left, right, depth]);
       max_depth_index = Math.max(max_depth_index, depth);
       simple_stack.unshift('(' + (left + 1) + ',' + (right + 1) + ')');
-
+      real_stack.push([left, right, depth]); 
       let pivot;
 
       // should show animation if doing high level steps for whole array OR if code is expanded to do all reccursive steps
       
       chunker.add('Main', (vis, a, b, cur_left, cur_right, cur_depth,
-  cur_real_stack, cur_finished_stack_frames, c_stk) => {
-  vis.array.set(a, 'msort_arr_td');
-  
-  if (cur_depth === 0) {
-    vis.array.setLargestValue(maxValue);
-    // 不要在这里清除栈
-    
-    if (isMergeCopyExpanded()) {
-      vis.arrayB.set(b, 'msort_arr_td');
-      vis.arrayB.setLargestValue(maxValue);
-      // 同样不要清除 arrayB 的栈
-    }
-  }
-  
-  assignVarToA(vis, 'left', cur_left);
-  assignVarToA(vis, 'right', cur_right);
-  for (let i = cur_left; i <= cur_right; i++) {
-    highlight(vis, i, runAColor)
-  }
-  
-  refresh_stack(
-    vis,
-    cur_real_stack,
-    cur_finished_stack_frames,
-    cur_left,
-    cur_right,
-    Math.floor((cur_left + cur_right)/2),
-    cur_depth,
-    A,  // 改为大写
-    B   // 改为大写
-  );
-  
-  // 传递当前区间的左右边界
-  set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
-}, [A, B, left, right, depth, real_stack, finished_stack_frames, simple_stack], depth);
-      
+        cur_real_stack, cur_finished_stack_frames, c_stk) => {
+        vis.array.set(a, 'msort_arr_td');
+        
+        // 如果是最开始的调用，重置 HIDE_STACKS_DURING_MERGE
+        if (cur_depth === 0 && cur_left === 0 && cur_right === entire_num_array.length - 1) {
+          HIDE_STACKS_DURING_MERGE = [];
+        }
+        
+        if (cur_depth === 0) {
+          vis.array.setLargestValue(maxValue);
+          
+          if (isMergeCopyExpanded()) {
+            vis.arrayB.set(b, 'msort_arr_td');
+            vis.arrayB.setLargestValue(maxValue);
+          }
+          
+          // 确保在第一次调用时初始化栈深度
+          if (isRecursionExpanded()) {
+            // 确保 max_depth_index 至少为 0
+            max_depth_index = Math.max(max_depth_index, 0);
+          }
+        }
+        
+        assignVarToA(vis, 'left', cur_left);
+        assignVarToA(vis, 'right', cur_right);
+        for (let i = cur_left; i <= cur_right; i++) {
+          highlight(vis, i, runAColor)
+        }
+        
+        // 刷新栈显示
+        refresh_stack(
+          vis,
+          cur_real_stack,
+          cur_finished_stack_frames,
+          cur_left,
+          cur_right,
+          Math.floor((cur_left + cur_right)/2),
+          cur_depth,
+          a,
+          b
+        );
+        
+        set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
+      }, [A, B, left, right, depth, real_stack, finished_stack_frames, simple_stack], depth);
+
       function refreshStackAt(vis, left, right, depth, real_stack, finished_stack_frames, array, arrayB) {
         refresh_stack(
           vis,
@@ -542,14 +575,14 @@ export function run_msort() {
         // dummy chunk for before recursive call - we need this so there
         // is a chunk at this recursion level as the first chunk in the
         // collapsed code for the recursive call
-        chunker.add('preSortL', (vis, a, b, cur_left, cur_mid, cur_right) => {
+        chunker.add('preSortL', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {
           assignVarToA(vis, 'left', undefined);
           assignVarToA(vis, 'right', undefined);
           assignVarToA(vis, 'mid', undefined);
-          // for (let i = cur_mid + 1; i <= right; i++) {
-            // highlight(vis, i, true)
-          // }
-        }, [A, B, left, mid, right], depth);
+          
+          // 只设置栈列表，不刷新栈本身
+          set_simple_stack(vis.array, c_stk, vis, B, cur_depth);
+        }, [A, B, left, mid, right, simple_stack, depth], depth);
 
         MergeSort(left, mid, depth + 1);
 
@@ -580,7 +613,11 @@ export function run_msort() {
         chunker.add('sortR', (vis, a, b, cur_left, cur_mid, cur_right, c_stk,
           cur_real_stack, cur_finished_stack_frames, cur_depth) => {
             refreshStackAt(vis, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames, A, B);
-            // vis.array.set(a, 'msort_arr_td');
+            
+            // 这里已经有 refreshStackAt，所以栈应该是可见的
+            // 但可能需要添加 set_simple_stack
+            set_simple_stack(vis.array, c_stk, vis, B, cur_depth);
+            
             for (let i = cur_left; i <= cur_mid; i++) {
               unhighlight(vis, i, false);
             }
