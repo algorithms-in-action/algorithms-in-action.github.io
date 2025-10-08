@@ -28,10 +28,10 @@ export function isRecursionExpanded() {
 export default {
     initVisualisers() {
         return {
-            array: {
-                instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
-                order: 0,
-            },
+            // array: {
+            //     instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
+            //     order: 0,
+            // },
             graph: {
                 instance: new GraphTracer('avl', null, 'AVL tree'),
                 order: 1,
@@ -566,8 +566,8 @@ export default {
                     
                     if (d === 1) {
                         // highlight the node in the array
-                        vis.array.depatch(index - 1);
-                        vis.array.patch(index);
+                        // vis.array.depatch(index - 1);
+                        // vis.array.patch(index);
                     }
                     if (rr) {
                         // highlight the edge between the parent and the root node
@@ -920,17 +920,17 @@ export default {
         chunker.add(
             'AVLT_Insert(t, k)',
             (vis, elements, k, k_p) => {
-                vis.array.set(elements); // fill the array with the keys
+                // vis.array.set(elements); // fill the array with the keys
                 vis.graph.isWeighted = true;
                 vis.graph.setFunctionName('Tree is Empty');
                 vis.graph.setFunctionInsertText(``);
                 vis.graph.setPauseLayout(false);
                 vis.graph.setMoveRatio(1);
-                vis.array.patch(0);
+                // vis.array.patch(0);
                 // make a bit more room for tree
-                vis.graph.setSize(2.5);
-                vis.graph.setZoom(0.8);
-                vis.array.setZoom(0.9);
+                vis.graph.setSize(1.5);
+                vis.graph.setZoom(0.6);
+                // vis.array.setZoom(0.9);
 
                 // Set initial function information
                 vis.graph.setFunctionName("AVLT_Insert");
