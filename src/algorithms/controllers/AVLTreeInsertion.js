@@ -941,14 +941,13 @@ export default {
                 vis.graph.updateHeight(k, 1);
                 vis.graph.layoutAVL(k, true, false);
                 if (isRecursionExpanded()) {
+                    // Pause the layout then remove the node, keep the rectangle
                     vis.graph.pushRectStack([k], `Depth 1`);
                     vis.graph.pushRectStack([], 'Empty');
                     vis.graph.rectangle_size();
-
-                    // Pause the layout then remove the node, keep the rectangle
-                    vis.graph.setPauseLayout(true);
-                    vis.graph.removeNode(k);
                 }
+                vis.graph.setPauseLayout(true);
+                vis.graph.removeNode(k);
 
             },
             [nodes, nodes[0], nodes[0].parentNode],
