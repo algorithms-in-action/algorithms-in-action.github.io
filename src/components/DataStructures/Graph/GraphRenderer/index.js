@@ -897,8 +897,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Name */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 250}
+            x={+ 0}
+            y={+ 350}
             textAnchor="middle">
             <tspan className={styles.pseudocode_function}>
               {this.props.data.functionName}
@@ -908,8 +908,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Node */}
           <text className={classes(styles.text)}
-            x={+400}
-            y={-200}
+            x={- 100}
+            y={+ 400}
             textAnchor="middle">
             {functionNode != null && (
               <tspan className={styles.pseudocode_function}>
@@ -927,8 +927,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Balance */}
           <text className={classes(styles.text)}
-            x={+650}
-            y={-200}
+            x={+ 150}
+            y={+ 400}
             textAnchor="middle">
 
             {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
@@ -950,8 +950,8 @@ class GraphRenderer extends Renderer {
 
           {/* AVL Tree ID */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 150}
+            x={+ 0}
+            y={+ 450}
             textAnchor="middle">
             {tagInfo}
           </text>
