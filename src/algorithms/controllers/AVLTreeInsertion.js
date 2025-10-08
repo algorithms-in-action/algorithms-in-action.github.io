@@ -574,8 +574,8 @@ export default {
                         vis.graph.visit(rr, p);
                     }
                     // print the function name and the key to be inserted
-                    vis.graph.setFunctionName("AVLT_Insert");
-                    vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                    vis.graph.setFunctionName("Inserting:");
+                    vis.graph.setFunctionInsertText(` ${k} `);
                     
                     // Only add rectangles when recursion is expanded
                     if (isRecursionExpanded()) {
@@ -670,8 +670,8 @@ export default {
                 // restore the function information after the recursive call
                 chunker.add('left(t) <- AVLT_Insert(left(t), k)',
                     (vis, k, r) => {
-                        vis.graph.setFunctionName("AVLT_Insert");
-                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                        vis.graph.setFunctionName("Inserting:");
+                        vis.graph.setFunctionInsertText(` ${k} `);
                         if (popAfterReturnFlag) {
                             vis.graph.popRectStack();
                             popAfterReturnFlag = false;
@@ -690,8 +690,8 @@ export default {
                 // restore the function information after the recursive call
                 chunker.add('right(t) <- AVLT_Insert(right(t), k)',
                     (vis, k, r) => {
-                        vis.graph.setFunctionName("AVLT_Insert");
-                        vis.graph.setFunctionInsertText(`( ${r} , ${k} )`);
+                        vis.graph.setFunctionName("Inserting:");
+                        vis.graph.setFunctionInsertText(` ${k} `);
                         if (popAfterReturnFlag) {
                             vis.graph.popRectStack();
                             popAfterReturnFlag = false;
@@ -755,7 +755,7 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalance(b);
+                        // vis.graph.setFunctionBalance(b);
 
                         // highlight the edge about the case
                         vis.graph.visit(rl, r);
@@ -793,7 +793,7 @@ export default {
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
-                        vis.graph.setFunctionBalance(b);
+                        // vis.graph.setFunctionBalance(b);
 
                         // highlight the edge about the case
                         vis.graph.visit(rr, r);
@@ -833,7 +833,7 @@ export default {
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
                         vis.graph.setFunctionNode(`${r}`);
-                        vis.graph.setFunctionBalance(b);
+                        // vis.graph.setFunctionBalance(b);
 
                         // highlight the edge about the case
                         vis.graph.visit(rl, r);
@@ -874,7 +874,7 @@ export default {
                         vis.graph.setFunctionNode(`${r}`);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setSelect_Circle_Count(r);
-                        vis.graph.setFunctionBalance(b);
+                        // vis.graph.setFunctionBalance(b);
 
                         // highlight the edge about the case
                         vis.graph.visit(rr, r);
@@ -918,24 +918,26 @@ export default {
 
         // initial settings for the visualisation
         chunker.add(
-            'AVLT_Insert(t, k)',
-            (vis, elements, k, k_p) => {
-                // vis.array.set(elements); // fill the array with the keys
+            'Initialise',
+            (vis) => {
                 vis.graph.isWeighted = true;
                 vis.graph.setFunctionName('Tree is Empty');
-                vis.graph.setFunctionInsertText(``);
                 vis.graph.setPauseLayout(false);
                 vis.graph.setMoveRatio(1);
-                // vis.array.patch(0);
-                // make a bit more room for tree
-                vis.graph.setSize(1.5);
-                vis.graph.setZoom(0.6);
-                // vis.array.setZoom(0.9);
+                vis.graph.setSize(1.2);
+                vis.graph.setZoom(0.5);
+            },
+            [],
+            1
+        );
 
+        // initialise the first key insertion
+        chunker.add(
+            'AVLT_Insert(t, k)',
+            (vis, elements, k, k_p) => {
                 // Set initial function information
-                vis.graph.setFunctionName("AVLT_Insert");
-                vis.graph.setFunctionInsertText(`( Empty , ${k} )`);
-
+                vis.graph.setFunctionName("Inserting:");
+                vis.graph.setFunctionInsertText(` ${k} `);
                 // initialise the tree with the first key with box
                 vis.graph.addNode(k, k);
                 vis.graph.updateHeight(k, 1);
