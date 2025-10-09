@@ -500,7 +500,7 @@ const algorithmMetadata = {
   "grahamScan": {
     "name": "Graham Scan (convex hull)",
     "category": "Geometric",
-    "noDeploy": true,
+    "noDeploy": false,
     "keywords": [
       "O(NlogN)"
     ],

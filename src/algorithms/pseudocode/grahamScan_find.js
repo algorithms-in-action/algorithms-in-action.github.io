@@ -3,7 +3,7 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 
 \\Note{
-XXXGift wrapping/Jarvis algm for convex hull
+Gift wrapping/Jarvis algm for convex hull
 XXX maybe change so we wrap counter-clockwise for consistency?
 XXX probably needs more bookmarks
 
@@ -76,6 +76,8 @@ giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
     \\In} 
     while p != minX // stop when we get back to the first node \\B whileP
     return hull \\B returnHull
+    \\Expl{ The animation shows any points that were removed earlier.
+    \\Expl}
 \\In} 
 \\Code} 
 
@@ -96,7 +98,9 @@ Here we skip points p and q to simplify the animation (the code works
 without this simplification).  Here we scan the points
 in order. If there are multiple points that have the same least
 clockwise direction from p the ordering of points can be significant
-- see the "MORE" tab for details.
+- see the "MORE" tab for details. The animation stops at this line once
+more when there are no more points i to consider, and moves the "string"
+close to the next node q.
 \\Expl}
 \\Note{
 Better to have the following??
@@ -155,6 +159,131 @@ if i->j->k turns clockwise for each (i, j) pair \\B allClockwise
   "BACKGROUND" and "MORE" tabs for more details.
 \\Expl}
 \\Code} 
+
+\\Note{
+// Javascript program to find convex hull of a set of points. Refer 
+// https://www.geeksforgeeks.org/dsa/orientation-3-ordered-points/
+// for explanation of orientation()
+
+class Point
+{
+    constructor(x, y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+// constants for collinear/Clockwise/Counterclockwise
+let GoStraight = 0;
+let GoClockwise = 1;
+let GoCounterCW = 2;
+
+// To find orientation of ordered triplet (p, q, r).
+    // The function returns following values
+    // GoStraight --> p, q and r are collinear
+    // GoClockwise --> Clockwise
+    // GoCounterCW --> Counterclockwise
+function orientation(p, q, r)
+{
+    let val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+    if (val == 0) return GoStraight;
+    return (val > 0)? GoClockwise: GoCounterCW;
+}
+
+// Prints convex hull of a set of n points.
+function convexHull(points, n)
+{
+    // There must be at least 3 points
+        if (n < 3) return;
+       
+        // Initialize Result
+        let hull = [];
+       
+        // Find the leftmost point
+        let l = 0;
+        for (let i = 1; i < n; i++)
+            if (points[i].x < points[l].x)
+                l = i;
+            // XXX if there are 2 points with minimal x value it doesn't
+            // matter which we pick. If there are 3 such points then
+            // potentially it may make a difference. We may be fussy about
+            // what hull we should return with colinear points. Also the
+            // termination condition and code for finding the next point
+            // interracts with this - potentially the next point code could
+            // miss the point chosen here (and choose a colinear one
+            // instead), causing a loop.
+            // Here we break ties by picking the min y coordinate value
+            else if (points[i].x === points[l].x && points[i].y < points[l].y)
+                l = i;
+       
+        // Start from (lowest) leftmost point, keep moving 
+        // clockwise until reach the start point
+        // again. This loop runs O(h) times where h is
+        // number of points in result or output.
+        let p = l, q;
+        do
+        {
+        
+            // Add current point to result
+            hull.push(points[p]);
+       
+            // Search for a point 'q' such that 
+            // orientation(p, q, x) is clockwise
+            // for all points 'x'. The idea is to keep 
+            // track of last visited most clock-
+            // wise point in q. If any point 'i' is more 
+            // clock-wise than q, then update q.
+            // XXX above NQR with colinear points on hull
+            // want q s.t. for no i, p->i->q is clockwise
+            q = (p + 1) % n;
+              
+            for (let i = 0; i < n; i++)
+            {
+               // If i is more clockwise than
+               // current q, then update q
+               if (orientation(points[p], points[i], points[q])
+                                                   == GoClockwise)
+                   // XXX see comment above re choice of first point in
+                   // colinear case
+                   // Here, if there are multiple points with minimal
+                   // clockwiseness (if thats a word), we pick the first one
+                   // (min point number)
+                   q = i;
+            }
+       
+            // Now q is the most clockwise with
+            // respect to p. Set p as q for next iteration, 
+            // so that q is added to result 'hull'
+            p = q;
+       
+        } while (p != l);  // While we don't come to first 
+                           // point
+       
+        // Print Result
+        for (let temp of hull.values())
+            console.log("(" + temp.x + ", " +
+                                temp.y + ")");
+}
+
+/* Driver program to test above function */
+let points = new Array(7);
+// points[0] = new Point(0, 3);
+points[0] = new Point(0, 2);
+points[1] = new Point(2, 3);
+// points[1] = new Point(2, 3);
+points[2] = new Point(1, 1);
+points[3] = new Point(2, 1);
+points[4] = new Point(3, 0);
+points[5] = new Point(0, 0);
+points[6] = new Point(3, 3);
+
+let n = points.length;
+convexHull(points, n);
+
+// This code is contributed by avanitrachhadiya2155
+// Modified by Lee Naish
+\\Note}
 
 
 `);
