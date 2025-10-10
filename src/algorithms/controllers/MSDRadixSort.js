@@ -62,15 +62,22 @@ const MSD_BOOKMARKS = {
 // update stack frame left..right with new value(s)
 // If mid is defined and index >= mid use stateValR, otherwise stateVal
 // Stack frames are all [left, right, mid, depth],
-const FRAME_MID = 2;
-const FRAME_DEPTH = 3;
+// const FRAME_MID = 2;
+// const FRAME_DEPTH = 3;
 const update_vis_with_stack_frame = (a, stack_frame, stateVal, arrayValues) => {
-  let left, right, mid, depth;
-  [left, right, mid, depth] = stack_frame;
+  let left, right, mid, depth, snapshot;
+  
+  // 检查栈帧是否包含快照（新格式有5个元素）
+  if (stack_frame.length === 5) {
+    [left, right, mid, depth, snapshot] = stack_frame;
+    arrayValues = snapshot;  // 使用栈帧中的快照
+  } else {
+    [left, right, mid, depth] = stack_frame;
+  }
 
   for (let k = left; k <= right; k += 1) {
     a[depth][k] = { 
-      base: stateVal,  // 直接使用传入的状态值，不再区分左右
+      base: stateVal,
       extra: [],
       value: arrayValues ? arrayValues[k] : undefined,
       isLeftBoundary: k === left,
@@ -409,7 +416,7 @@ arr],
             // about to return i from partition.  We update the "mid" of
             // the partition on the stack here so it is displayed at the
             // last chunk of partition
-            real_stack[real_stack.length - 1][FRAME_MID] = i;
+            real_stack[real_stack.length - 1][2] = i; 
             partitionChunkerWrapper(MSD_BOOKMARKS.swap_condition)
           }
         }
@@ -421,7 +428,7 @@ arr],
       }
 
       const msdRadixSortRecursive = (arr, left, right, mask, depth) => {
-        real_stack.push([left, right, undefined, depth]);
+        real_stack.push([left, right, undefined, depth, [...arr]]); 
         max_depth_index = Math.max(max_depth_index, depth);
         // Base case: If the array has 1 or fewer elements or mask is less than 0, stop
         partitionChunker(MSD_BOOKMARKS.rec_function, undefined, undefined, undefined, undefined, left, right, depth, arr, mask)

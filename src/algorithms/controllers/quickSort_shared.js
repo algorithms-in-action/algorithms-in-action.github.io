@@ -146,16 +146,23 @@ function assert(condition, message) {
 
 
 export function update_vis_with_stack_frame(a, stack_frame, stateVal, arrayValues) {
-  let left, right, depth;
-  [left, right, depth] = stack_frame;
+  let left, right, depth, snapshot;
+  
+  // 检查栈帧是否包含快照（新格式）
+  if (stack_frame.length === 4) {
+    [left, right, depth, snapshot] = stack_frame;
+    arrayValues = snapshot;  // 使用栈帧中的快照
+  } else {
+    [left, right, depth] = stack_frame;
+  }
 
   for (let i = left; i <= right; i += 1) {
     a[depth][i] = { 
       base: stateVal, 
       extra: [],
       value: arrayValues ? arrayValues[i] : undefined,
-      isLeftBoundary: i === left,   // 添加左边界
-      isRightBoundary: i === right  // 添加右边界
+      isLeftBoundary: i === left,
+      isRightBoundary: i === right
     };
   }
   return a;
@@ -591,7 +598,8 @@ pivot_index, left, right, depth, a]
 
       //// start quicksort -------------------------------------------------------- 
 
-      real_stack.push([left, right, depth]);
+      const arraySnapshot = [...qs_num_array];
+      real_stack.push([left, right, depth, arraySnapshot]); 
       max_depth_index = Math.max(max_depth_index, depth);
 
       let a = qs_num_array;
@@ -601,10 +609,8 @@ pivot_index, left, right, depth, a]
 
       chunker.add(QS_BOOKMARKS.SHARED_if_left_less_right, 
         (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array) => {
-          // 在回调中推入栈帧
-          // cur_real_stack.push([cur_left, cur_right, cur_depth]);
+          // 这里不需要再push了，因为已经在函数开始处push了
           max_depth_index = Math.max(max_depth_index, cur_depth);
-          
           refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array);
         }, 
         [real_stack, finished_stack_frames, undefined, undefined, undefined, left, right, depth, a], 
@@ -711,7 +717,8 @@ cur_right, cur_depth,a) // refresh shows i
         
         // 如果递归展开，初始化栈并推入第一帧
         if (isRecursionExpanded()) {
-          real_stack.push([cur_left, cur_right, 0]);
+          const snapshot = [...array];
+          real_stack.push([cur_left, cur_right, 0, snapshot]); 
           max_depth_index = 0;
           vis.array.setStack([]);
           vis.array.setStackDepth(1);
