@@ -6,6 +6,7 @@ import { colors } from '../../components/DataStructures/colors';
 import { areExpanded } from './collapseChunkPlugin';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
+import { List } from '@mui/material';
 
 // Color constants
 const apColor = colors.apple;    // Comparing elements (red-ish)
@@ -144,12 +145,19 @@ export function run_msort() {
         vis.array.set(Lists, 'msort_lista_td');
         vis.list.set(entire_num_array, 'mergeSort list init');
         vis.array.assignVariable('L', 2, cur_L);
+        // pointer list vis
+        vis.list.assignVariableByIndex('L', cur_L);
         colorList(vis, cur_L, runAColor, Lists);
         set_simple_stack(vis.array, c_stk);
       }, [[Indices, Heads, Tails], L, len, depth, simple_stack], depth);
 
-      chunker.add('len>1', (vis, a) => {
-      }, [[Indices, Heads, Tails]], depth);
+      /* chunker.add('len>1', (vis, a) => {
+      }, [[Indices, Heads, Tails]], depth); */
+      // STEP 2: Check if len > 1
+      chunker.add('len>1', (vis, Lists, cur_L, cur_len) => {
+        // Just a logical checkpoint, no visual change needed
+        // Could add a highlight or pause here if desired
+      }, [[Indices, Heads, Tails], L, len], depth);
     }
 
     function splitList(L, midNum, depth) {
@@ -157,6 +165,8 @@ export function run_msort() {
 
       chunker.add('Mid', (vis, Lists, cur_L, cur_Mid, c_stk) => {
         vis.array.assignVariable('Mid', 2, cur_Mid);
+        // For pointer list: assign Mid variable to the head node
+        vis.list.assignVariableByIndex('Mid', cur_Mid);
       }, [[Indices, Heads, Tails], L, Mid, simple_stack], depth);
 
       for (let i = 1; i < midNum; i++) {
@@ -167,11 +177,28 @@ export function run_msort() {
       Tails[Mid] = 'Null';
 
       chunker.add('tail(Mid)<-Null', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
+        // update array view
         vis.array.set(Lists, 'msort_lista_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
         vis.array.assignVariable('Mid', 2, cur_Mid);
         vis.array.assignVariable('R', 2, cur_R);
+
+        // update pointer list view
+        // update connections
+        vis.list.updateConnections(Lists[2]);
+        // assign variables in pointer view
+        vis.list.assignVariableByIndex('L', cur_L);
+        vis.list.assignVariableByIndex('Mid', cur_Mid);
+        vis.list.assignVariableByIndex('R', cur_R);
+
+        // Color the left part (L to Mid) orange
+        colorListPointer(vis, cur_L, runAColor, Lists);
+
+        // Color the right part (R onwards) blue
+        colorListPointer(vis, cur_R, runBColor, Lists);
+
+        // color array view
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
       }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
@@ -179,7 +206,68 @@ export function run_msort() {
       return { L, R, Mid };
     }
 
+    // NEW HELPER FUNCTION: Move right half below left half
+    function moveRightHalfBelow(vis, leftStart, rightStart, Lists) {
+      if (rightStart === 'Null') return;
+
+      const Tails = Lists[2];
+      const VERTICAL_GAP = 70; // Distance below the left half
+
+      // Calculate the leftmost position of the left half for alignment
+      const leftKey = vis.list.indexToKey.get(leftStart);
+      const firstLeftNode = vis.list.nodes.get(leftKey);
+      const startX = firstLeftNode ? firstLeftNode.pos.x : 0;
+      const startY = firstLeftNode ? firstLeftNode.pos.y + VERTICAL_GAP : VERTICAL_GAP;
+
+      // Move each node in the right half
+      let xOffset = 0;
+      for (let i = rightStart; i !== 'Null'; i = Tails[i]) {
+        const key = vis.list.indexToKey.get(i);
+        if (key) {
+          vis.list.moveNodeTo(key, startX + xOffset, startY);
+          xOffset += vis.list.layout.gap; // Use the same horizontal gap
+        }
+      }
+    }
+
+    // Helper function to fade list to grey
+    function fadeListToGrey(vis, startIndex, Lists) {
+      if (startIndex === 'Null') return;
+
+      const Tails = Lists[2];
+
+      for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+        vis.list.deselectByIndex(i);
+      }
+    }
+
+    // NEW HELPER FUNCTION: Color nodes in pointer list view
+    function colorListPointer(vis, startIndex, color, Lists) {
+      if (startIndex === 'Null') return;
+
+      const Tails = Lists[2];
+      const colorMapping = {
+        [runAColor]: '3',  // Orange - use selected3
+        [runBColor]: '0',  // Blue - use selected (default blue)
+        [sortColor]: '1',  // Green - use selected1
+        [apColor]: '2',    // Red - use selected2
+        [doneColor]: 'sorted', // Gray - use sorted state
+      };
+
+      const colorState = colorMapping[color] || '0';
+
+      // Traverse and color each node
+      for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+        if (colorState === 'sorted') {
+          vis.list.sortedByIndex(i);
+        } else {
+          vis.list.selectByIndex(i, colorState);
+        }
+      }
+    }
+
     function performRecursiveSort(L, R, midNum, len, depth) {
+      // **NEW: Move right half down AND fade to grey before processing left**
       // Sort left half
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
@@ -187,6 +275,12 @@ export function run_msort() {
         vis.array.assignVariable('L', 2, cur_L);
         vis.array.select(1, cur_L, 1, cur_L, runAColor);
         vis.array.select(2, cur_L, 2, cur_L, runAColor);
+
+        // **Move right half below left half**
+        moveRightHalfBelow(vis, cur_L, cur_R, Lists);
+
+        // **Fade right half to grey**
+        fadeListToGrey(vis, cur_R, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       L = MergeSort(L, midNum, depth + 1);
@@ -200,6 +294,9 @@ export function run_msort() {
         colorList(vis, cur_R, runBColor, Lists);
         vis.array.select(1, cur_R, 1, cur_R, runBColor);
         vis.array.select(2, cur_R, 2, cur_R, runBColor);
+
+        // **Restore right half color in pointer view**
+        colorListPointer(vis, cur_R, runBColor, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       // Sort right half
@@ -209,6 +306,9 @@ export function run_msort() {
         vis.array.assignVariable('R', 2, cur_R);
         vis.array.select(1, cur_R, 1, cur_R, runBColor);
         vis.array.select(2, cur_R, 2, cur_R, runBColor);
+
+        // **Optional: Fade left half now (or keep it visible)**
+        // fadeListToGrey(vis, cur_L, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       R = MergeSort(R, len - midNum, depth + 1);
@@ -220,6 +320,10 @@ export function run_msort() {
         vis.array.assignVariable('R', 2, cur_R);
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
+
+        // **Restore both halves colors in pointer view**
+        colorListPointer(vis, cur_L, runAColor, Lists);
+        colorListPointer(vis, cur_R, runBColor, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       return { L, R };
