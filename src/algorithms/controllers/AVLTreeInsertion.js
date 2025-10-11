@@ -906,6 +906,8 @@ export default {
                 chunker.add('case Balanced', (vis) => null, [], depth);
                 chunker.add('return t',
                     (vis, r, p) => {
+						vis.graph.setFunctionNode(null);
+                        vis.graph.setFunctionBalance(null); // clear balance after return in switch case
                         vis.graph.resetVisitAndSelect(r, p); // clear all highlighting
                         popAfterReturnFlag = true;
                     },
