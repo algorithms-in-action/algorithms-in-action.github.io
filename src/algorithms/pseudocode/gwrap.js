@@ -5,16 +5,9 @@ export default parse(`
 \\Note{
 Gift wrapping/Jarvis algm for convex hull
 XXX maybe change so we wrap counter-clockwise for consistency?
-XXX probably needs more bookmarks
 
-Includes sketch of optional optimisation - ignore initially, maybe fill in
-later and have option selected like path compression in union find algm.
-
-Should be able to use graph package (disable edge input; maybe make
-nodes smaller); add/delete edges during algorithm execution.
-For hull/wrapper/"string", create extra temp node far away so it's invisible
-with normal zoom and move it around so its colinear with most recently added
-edge (at first step it will be far above the leftmost point)
+Includes sketch of optional heuristic for removing points if n >= 10
+XXX could have option selected like path compression in union find algm.
 \\Note}
 
 \\Code{
