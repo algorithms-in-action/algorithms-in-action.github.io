@@ -1,4 +1,4 @@
-@import './global.scss';
+@use './global' as *;
 
 $codePad: 24px;
 $rightNumWidth: 36px;
