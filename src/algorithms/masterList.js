@@ -581,4 +581,7 @@ export const DeployedAlgorithmCategoryList = generateAlgorithmCategoryList(true)
 export const AlgorithmCategoryList = generateAlgorithmCategoryList(); 
 export const AlgorithmList = generateAlgorithmList();
 export const AlgorithmNum = generateAlgorithmList().length;
+export const visibleAlgorithmMetadata = Object.fromEntries(
+  Object.entries(algorithmMetadata).filter(([, v]) => !v.noDeploy)
+);
 

@@ -2,18 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import './styles/App.scss';
 import Header from './components/top/Header';
-import AlgorithmMenu from './components/AlgorithmMenu';
 import { ReactComponent as Circle } from './assets/icons/circle.svg';
-import { ReactComponent as Direction } from './assets/icons/direction.svg';
 import { GlobalProvider } from './context/GlobalState';
-import LeftPanel from './components/left-panel';
 import RightPanel from './components/right-panel';
 import MidPanel from './components/mid-panel';
 import ControlPanel from './components/mid-panel/ControlPanel';
 import Settings from './components/top/Settings';
-import {
-  resizeWindow, startLeftDrag, startRightDrag, startBottomDrag, endDrag, onDrag, collapseLeftDrag, collapseBottomDrag, collapseRightDrag, addEvent,
-} from './BorderResize';
 import {
   setTheme,
   setAlgoTheme,
@@ -23,45 +17,19 @@ import {
   ALGO_THEME_1,
   SYSTEM_THEME_KEY,
 } from './components/top/helper';
+// eslint-disable-next-line import/no-unresolved
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 const DEFAULT_FONT_INCREMENT = 0;
-const LEFT_FONT_SIZE = 15;
 const MID_FONT_SIZE = 15;
 const RIGHT_FONT_SIZE = 15;
 
 function App() {
-  useEffect(() => {
-    window.addEventListener('resize', resizeWindow);
-    return () => {
-      window.removeEventListener('resize', resizeWindow);
-    };
-  }, []);
-
-  useEffect(() => {
-    const mouseOutCallback = (e) => {
-      const from = e.relatedTarget || e.toElement;
-      if (!from || from.nodeName === 'HTML') {
-        endDrag();
-      }
-    };
-
-    document.addEventListener('mouseout', mouseOutCallback);
-
-    return () => {
-      document.removeEventListener('mouseout', mouseOutCallback);
-    };
-  }, []);
-
   const [isSettingVisible, setSettingVisible] = useState(false);
-
-  const onSetting = () => {
-    setSettingVisible(!isSettingVisible);
-  };
+  const onSetting = () => setSettingVisible(!isSettingVisible);
 
   const [fontSizeIncrease, setFontSizeIncrease] = useState(DEFAULT_FONT_INCREMENT);
-  const onFontIncrease = (val) => {
-    setFontSizeIncrease(fontSizeIncrease + val);
-  };
+  const onFontIncrease = (val) => setFontSizeIncrease(fontSizeIncrease + val);
 
   const initAlgoColor = () => {
     const algoTheme = getWithExpiry(ALGO_THEME_KEY);
@@ -102,7 +70,7 @@ function App() {
 
   return (
     <GlobalProvider>
-      {isSettingVisible ? (
+      {isSettingVisible && (
         <Settings
           onFontIncrease={onFontIncrease}
           onSetting={onSetting}
@@ -111,88 +79,64 @@ function App() {
           systemColor={systemColor}
           handleSystemColorChange={handleSystemColorChange}
         />
-      ) : ''}
+      )}
 
-      <div
-        id="page"
-        onMouseUp={endDrag}
-        role="button"
-        tabIndex="-1"
-        onMouseMove={(event) => onDrag(event)}
-      >
-        <div id="header" className="header-container">
-          <div className="header-left">
-            <AlgorithmMenu />
-          </div>
-          <div className="header-right">
-            <Header onSetting={onSetting} />
-          </div>
-        </div>
-        <div id="leftcol">
-          <LeftPanel
-            fontSize={LEFT_FONT_SIZE}
-            fontSizeIncrement={fontSizeIncrease}
-          />
-        </div>
-        <div
-          id="leftdragbar"
-          tabIndex="-1"
-          aria-label="Move left drag bar"
-          onDoubleClick={collapseLeftDrag}
-          onMouseDown={startLeftDrag}
-          role="button"
-          className="dragbar"
-        >
-          <div id="draghandle" className="handle">
-            <Direction id="leftdraghandle" />
-          </div>
-        </div>
-        <div id="tabpages">
-          <MidPanel
-            fontSize={MID_FONT_SIZE}
-            fontSizeIncrement={fontSizeIncrease}
-          />
-        </div>
-        <div
-          id="rightdragbar"
-          tabIndex="-1"
-          aria-label="Move right drag bar"
-          onDoubleClick={collapseRightDrag}
-          onMouseDown={startRightDrag}
-          role="button"
-          className="dragbar"
-        >
-          <div id="draghandle" className="handle">
-            <Circle />
-            <Circle />
-            <Circle />
-          </div>
-        </div>
-        <div id="rightcol">
-          <RightPanel
-            fontSize={RIGHT_FONT_SIZE}
-            fontSizeIncrement={fontSizeIncrease}
-          />
-        </div>
-        <div
-          id="bottomdragbar"
-          tabIndex="-1"
-          aria-label="Move bottom drag bar"
-          onDoubleClick={collapseBottomDrag}
-          onMouseDown={startBottomDrag}
-          role="button"
-          className="dragbar"
-        >
-          <div id="draghandle" className="handle bottomHandle">
-            <Circle />
-            <Circle />
-            <Circle />
-          </div>
-        </div>
-        <div id="footer">
-          <ControlPanel />
-        </div>
-      </div>
+      <PanelGroup direction="vertical" style={{ height: '100vh', width: '100vw' }}>
+        
+        <Header onSetting={onSetting}/>
+
+        <PanelGroup direction="horizontal">
+          <Panel>
+            <PanelGroup direction="vertical">
+
+              <Panel defaultSize={70}>
+                <MidPanel fontSize={MID_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
+              </Panel>
+
+              <PanelResizeHandle
+                style={{
+                  background: 'var(--splitter-color, #ccc)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px',
+                  height: '8px',
+                  cursor: 'row-resize',
+                }}
+              >
+                <Circle style={{ width: 8, height: 8 }} />
+                <Circle style={{ width: 8, height: 8 }} />
+                <Circle style={{ width: 8, height: 8 }} />
+              </PanelResizeHandle>
+
+              <Panel defaultSize={30}>
+                <ControlPanel />
+              </Panel>
+            </PanelGroup>
+          </Panel>
+
+          <PanelResizeHandle
+            style={{
+              background: 'var(--splitter-color, #ccc)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              width: '8px',
+              cursor: 'col-resize',
+            }}
+          >
+            <Circle style={{ width: 8, height: 8 }} />
+            <Circle style={{ width: 8, height: 8 }} />
+            <Circle style={{ width: 8, height: 8 }} />
+          </PanelResizeHandle>
+
+          <Panel defaultSize={35} style={{ background: 'var(--panel-bg-right, #f3f3f3)' }}>
+            <RightPanel fontSize={RIGHT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
+          </Panel>
+        </PanelGroup>
+      </PanelGroup>
     </GlobalProvider>
   );
 }
