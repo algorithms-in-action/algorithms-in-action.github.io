@@ -485,9 +485,13 @@ console.log(stopAt, playing, state);
   }),
 };
 
-export function dispatcher(state, setState) {
+export function dispatcher(setState) {
   return (action, params) => {
-    setState(action(state, params));
+    // Functional updater version of setState, previously
+    // calling two dispatches inside of one callback caused
+    // issues due to React batching and this form not being used.
+    // See more https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state
+    setState((prevState) => action(prevState, params));
   };
 }
 
