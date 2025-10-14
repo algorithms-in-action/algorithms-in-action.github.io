@@ -26,47 +26,47 @@ function HeaderButton({ value, onChange }) {
       minHeight: tabHeight,
       height: tabHeight,
       width: "100%",
+      display: "flex",
     },
     tabRoot: {
       minHeight: tabHeight,
       height: tabHeight,
       width: "30px",
+      flex: 1,
     },
   }));
 
   const classes = useStyles();
 
   return (
-    <>
-      <ThemeProvider theme={globalTheme}>
-        <Paper square elevation={0} className="rightPanelButtons">
-          <Tabs
-            value={state}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            indicatorColor="primary"
-            textColor="primary"
-            aria-label="tabs button"
-            classes={{
-              root: classes.tabsRoot,
-            }}
-          >
-            {value.map((item) => (
-              <Tab
-                key={item.id}
-                label={item.label}
-                disableRipple
-                value={item.id}
-                classes={{
-                  root: classes.tabRoot,
-                }}
-              />
-            ))}
-          </Tabs>
-        </Paper>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={globalTheme}>
+      <Paper square elevation={0} className="rightPanelButtons">
+        <Tabs
+          value={state}
+          onChange={handleChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          indicatorColor="primary"
+          textColor="primary"
+          aria-label="tabs button"
+          classes={{
+            root: classes.tabsRoot,
+          }}
+        >
+          {value.map((item) => (
+            <Tab
+              key={item.id}
+              label={item.label}
+              disableRipple
+              value={item.id}
+              classes={{
+                root: classes.tabRoot,
+              }}
+            />
+          ))}
+        </Tabs>
+      </Paper>
+    </ThemeProvider>
   );
 }
 

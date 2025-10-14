@@ -258,7 +258,11 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const pseudoCodePad = pseudoCodePadding(index + 1, PADDING_LINE);
 
   return (
-    <div className="line-light">
+    <div className="line-light" style={{
+        flex: "1 0 0",
+        overflowY: "scroll",
+        scrollbarGutter: "stable",
+      }}>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
       <div className="code-container" id={fontID}>
         {cl}

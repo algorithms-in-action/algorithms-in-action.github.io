@@ -51,10 +51,10 @@ function RightPanel({ fontSize, fontSizeIncrement }) {
     setState(val)
   }
   return (
-    <>
+    <div style={{display: "flex", height: "100%", width: "100%", flexDirection:"column"}}>
       <HeaderButton value={buttons} onChange={getBtnState} />
       {buttons[state].display}
-    </>
+    </div>
   )
 }
 
