@@ -27,12 +27,11 @@ function HeaderButton({ value, onChange }) {
       height: tabHeight,
       width: "100%",
       display: "flex",
+      backgroundColor: "var(--mid-header-bg)"
     },
     tabRoot: {
       minHeight: tabHeight,
       height: tabHeight,
-      width: "30px",
-      flex: 1,
     },
   }));
 

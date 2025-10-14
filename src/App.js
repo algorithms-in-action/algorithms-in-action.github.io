@@ -93,9 +93,21 @@ function App() {
                 <MidPanel fontSize={MID_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
               </Panel>
 
-              <PanelResizeHandle
+              <PanelResizeHandle className="resizer"
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = 'var(--system-handle-bg-hover)')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = 'var(--system-handle-bg)')
+                }
+                onMouseDown={(e) =>
+                  (e.currentTarget.style.background = 'var(--system-handle-bg-active)')
+                }
+                onMouseUp={(e) =>
+                  (e.currentTarget.style.background = 'var(--system-handle-hover-bg)')
+                }
                 style={{
-                  background: 'var(--splitter-color, #ccc)',
+                  background: 'var(--system-handle-bg)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -104,20 +116,31 @@ function App() {
                   cursor: 'row-resize',
                 }}
               >
-                <Circle style={{ width: 8, height: 8 }} />
-                <Circle style={{ width: 8, height: 8 }} />
-                <Circle style={{ width: 8, height: 8 }} />
+                <Circle />
+                <Circle />
+                <Circle />
               </PanelResizeHandle>
 
-              <Panel defaultSize={30}>
+              <Panel defaultSize={30} style={{backgroundColor: "var(--mid-control-bg)"}}>
                 <ControlPanel />
               </Panel>
             </PanelGroup>
           </Panel>
 
-          <PanelResizeHandle
+          <PanelResizeHandle className="resizer"
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = 'var(--system-handle-bg-hover)')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = 'var(--system-handle-bg)')
+            }
+            onMouseDown={(e) =>
+              (e.currentTarget.style.background = 'var(--system-handle-bg-active)')
+            }
+            onMouseUp={(e) =>
+              (e.currentTarget.style.background = 'var(--system-handle-hover-bg)')
+            }
             style={{
-              background: 'var(--splitter-color, #ccc)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -125,14 +148,15 @@ function App() {
               gap: '4px',
               width: '8px',
               cursor: 'col-resize',
+              background: 'var(--system-handle-bg)',
             }}
           >
-            <Circle style={{ width: 8, height: 8 }} />
-            <Circle style={{ width: 8, height: 8 }} />
-            <Circle style={{ width: 8, height: 8 }} />
+            <Circle />
+            <Circle />
+            <Circle />
           </PanelResizeHandle>
 
-          <Panel defaultSize={35} style={{ background: 'var(--panel-bg-right, #f3f3f3)' }}>
+          <Panel defaultSize={35}>
             <RightPanel fontSize={RIGHT_FONT_SIZE} fontSizeIncrement={fontSizeIncrease} />
           </Panel>
         </PanelGroup>

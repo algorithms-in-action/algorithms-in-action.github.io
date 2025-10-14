@@ -83,30 +83,61 @@ return show ? (
         flexShrink: 0,
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <button
         onClick={onExpand}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            "var(--right-code-bottom-btn-bg-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--mid-header-bg)")
+        }
+        style={{
+          all: "unset",
+          flex: 1,
+          cursor: "pointer",
+          borderRight: "1px solid var(--system-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          fontFamily: 'Roboto, sans-serif',
+          padding: "8px",
+          color: "var(--right-code-bottom-btn)",
+          backgroundColor: "var(--mid-header-bg)",
+        }}
+      >
+        EXPAND ALL
+      </button>
+
+      <button
+        onClick={onCollapse}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            "var(--right-code-bottom-btn-bg-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--mid-header-bg)")
+        }
         style={{
           all: "unset",
           flex: 1,
           cursor: "pointer",
           borderRight: "1px solid black",
-          borderRightColor: "black",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          fontFamily: 'Roboto, sans-serif',
+          padding: "8px",
+          color: "var(--right-code-bottom-btn)",
+          backgroundColor: "var(--mid-header-bg)",
         }}
       >
-        Expand All
-      </button>
-
-      <button
-        onClick={onCollapse}
-        style={{
-          all: "unset",
-          flex: 1,
-          cursor: "pointer",
-        }}
-      >
-        Collapse All
+        COLLAPSE ALL
       </button>
     </div>
 

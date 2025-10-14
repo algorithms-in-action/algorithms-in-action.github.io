@@ -89,15 +89,7 @@ $dragBarWidth: 10px;
 
 
 
-.handle {
-	overflow: hidden;
-	width: $dragBarWidth;
-	// height: $handleLen;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
-
+.resizer {
 	svg {
 		height: 5px;
 		width: 5px;

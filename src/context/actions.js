@@ -3,6 +3,8 @@
 /* eslint-disable max-len */
 import algorithms from '../algorithms';
 import Chunker from './chunker';
+import findBookmark from '../pseudocode/findBookmark';
+import React, { useState } from 'react';
 // generic version of collapseChunkPlugin - could probably adapt code and
 // delete some others XXX
 import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin';
@@ -483,9 +485,9 @@ console.log(stopAt, playing, state);
   }),
 };
 
-export function dispatcher(setState) {
+export function dispatcher(state, setState) {
   return (action, params) => {
-    setState((prevState) => action(prevState, params));
+    setState(action(state, params));
   };
 }
 
@@ -513,4 +515,3 @@ export function initialState() {
     initialNodes: initialNodes, // Ensure DEFAULT_PARAM is properly defined or imported
   });
 }
-

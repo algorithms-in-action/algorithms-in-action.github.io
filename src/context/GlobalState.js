@@ -28,7 +28,7 @@ export const GlobalProvider = ({ children }) => {
   const [state, setState] = useState(initialState());
   // Think of this as partial function application to get state & setState in scope
   // for later calls from elsewhere in the app.
-  const dispatch = dispatcher(setState);
+  const dispatch = dispatcher(state, setState);
 
   const globalState = {
     algorithm: state,

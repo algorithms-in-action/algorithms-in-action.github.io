@@ -209,7 +209,6 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           role="presentation"
           ref={el => {
             if (line.bookmark !== undefined && algorithm.bookmark === line.bookmark && el) {
-              console.log("in");
               el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
           }}

@@ -16,8 +16,8 @@ function Header({ onSetting }) {
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    fontSize: '1rem',
-    padding: '0.5rem 0.75rem',
+    fontSize: '14px',
+    color: "var(--top-header-btn)"
   };
 
   const hoverTapAnim = {
@@ -33,15 +33,13 @@ function Header({ onSetting }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '70px',
-          padding: '0 1rem',
-          background: 'var(--header-bg, #f5f5f5)',
-          borderBottom: '1px solid #ddd',
+          height: '40px',
+          background: 'var(--top-header-bg)',
         }}
       >
         <motion.button
           {...hoverTapAnim}
-          style={buttonStyle}
+          style={{...buttonStyle, marginLeft: "8px"}}
           onClick={handleOpen}
         >
           Menu
@@ -64,11 +62,11 @@ function Header({ onSetting }) {
           <motion.img
             src={logo}
             alt="logo"
-            style={{ height: '60%', objectFit: 'contain' }}
+            style={{ height: '60%' }}
             whileHover={{ rotate: 5 }}
             transition={{ type: 'spring', stiffness: 200, damping: 10 }}
           />
-          <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Algorithms in Action</h1>
+          <h1 style={{ fontSize: '1.1rem', margin: 0, color: "var(--top-header-btn)" }}>Algorithms in Action</h1>
         </motion.button>
 
         <div
@@ -77,6 +75,7 @@ function Header({ onSetting }) {
             alignItems: 'center',
             gap: '1rem',
             height: '100%',
+            marginRight: "8px"
           }}
         >
           <motion.button
@@ -111,7 +110,7 @@ function Header({ onSetting }) {
             open={open}
             onClose={handleClose}
             aria-labelledby="algorithm-menu-modal"
-            sx={{ backdropFilter: 'blur(2px)' }}
+            sx={{backdropFilter: 'blur(2px)', backgroundColor: "transparent"}}
           >
             <motion.div
               key="algorithm-menu"
@@ -120,12 +119,10 @@ function Header({ onSetting }) {
               exit={{ x: '-100%', opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
               style={{
-                width: '320px',
+                width: 'fit-content',
                 height: '100vh',
-                background: 'var(--panel-bg, #fff)',
                 boxShadow: '4px 0 12px rgba(0,0,0,0.2)',
                 overflowY: 'auto',
-                padding: '1rem',
               }}
             >
               <AlgorithmMenu onClose={handleClose} />
