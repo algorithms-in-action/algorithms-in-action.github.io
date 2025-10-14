@@ -9,7 +9,7 @@
 // contracted are not enabled.
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
   'heapSort', 'msort_lista_td', 'msort_arr_bup',
-   'msort_arr_nat', 'radixSortStraight', 'radixSortMSD', 'AVLTree'];
+   'msort_arr_nat', 'radixSortStraight', 'radixSortMSD', 'AVLTree', 'binarySearchTree'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and
