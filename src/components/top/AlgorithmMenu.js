@@ -8,6 +8,7 @@ import {
 import { GlobalActions } from "../../context/actions";
 import { GlobalContext } from "../../context/GlobalState";
 import { flushSync } from "react-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const algorithms = Object.entries(visibleAlgorithmMetadata).reduce(
   (acc, [shorthand, meta]) => {
@@ -18,7 +19,10 @@ const algorithms = Object.entries(visibleAlgorithmMetadata).reduce(
   {}
 );
 
-function AlgoButton({ name, shorthand, isActive, onSelect }) {
+// Using inline styles, absolute headache to track what is applying
+// a default style, .module.scss or tailwind would have been ideal.
+
+function AlgoButton({ name, shorthand, isActive }) {
   const baseStyle = {
     all: "unset",
     background: "var(--left-item-bg)",
@@ -31,11 +35,16 @@ function AlgoButton({ name, shorthand, isActive, onSelect }) {
     width: "100%",
     fontWeight: isActive ? "bold" : "normal",
     transition: "all 0.2s ease",
+    display: "block",
+    textDecoration: "none",
   };
 
+  const href = `/?alg=${shorthand}&mode=${getDefaultMode(shorthand)}`;
+
+  // Unfortunately have to resort to a full reload.
   return (
-    <button
-      onClick={() => onSelect(shorthand)}
+    <a
+      href={href}
       style={baseStyle}
       onMouseEnter={(e) => {
         e.currentTarget.style.background = "var(--left-item-bg-hover)";
@@ -45,9 +54,10 @@ function AlgoButton({ name, shorthand, isActive, onSelect }) {
       }}
     >
       {name}
-    </button>
+    </a>
   );
 }
+
 
 AlgoButton.propTypes = {
   name: PropTypes.string.isRequired,
@@ -91,24 +101,36 @@ function AlgorithmMenu({ onClose }) {
     );
   }, []);
 
+  /*
   const selectAlgorithm = useCallback(
     (algoId) => {
-      // Forget it, changing global actions dispatch
-      // to use a functional updater version breaks
-      // collapse chunk plugins.
-      // Below SHOULD BE possible without flushSync.
-      flushSync(() => {
-        dispatch(GlobalActions.TOGGLE_PLAY, { playing: false });
-      });
+      // Multiple dispatches is not a problem here, functional
+      // updater is used in dispatcher in global state.
+      // XXX Unfortunately this is not possible, a full reload
+      // is required, the loading process of this codebase, is so 
+      // convoluted, we LOAD_ALGORITHM to kick off RUN_ALGORITHM
+      // through indirection in the parameter component through
+      // a simulated click by id in a React useEffect call. Way
+      // too difficult to trace and resolve issues like the below
+      // not working. I know the reason, it is because the indirection
+      // to get RUN_ALGORTIHM to happen does not happen unless the parameter
+      // component re-mounts, to get it to re-mount React must tear it down
+      // and re-mount it, however, this does not happen by calling LOAD_ALGORITHM
+      // after it has already been mounted. One hacky way to fix it is to just make
+      // the whole app load again which is what is done when using <a> tags, but this
+      // is by no means resolving the underlying problem at ALL.
+      // dispatch(GlobalActions.TOGGLE_PLAY, { playing: false });
+      // dispatch(GlobalActions.LOAD_ALGORITHM, {
+      //   name: algoId,
+      //   mode: getDefaultMode(algoId),
+      // });
+      // onClose();
 
-      dispatch(GlobalActions.LOAD_ALGORITHM, {
-        name: algoId,
-        mode: getDefaultMode(algoId),
-      });
-      onClose();
+
     },
     [dispatch, onClose]
   );
+  */
 
   return (
     <div
@@ -135,6 +157,7 @@ function AlgorithmMenu({ onClose }) {
           color: "var(--left-font)",
           outline: "none",
           transition: "all 0.2s ease",
+          flexShrink: 0,
         }}
         onFocus={(e) => {
           e.currentTarget.style.background = "var(--left-search-bg-focus)";
@@ -153,7 +176,6 @@ function AlgorithmMenu({ onClose }) {
             name={name}
             shorthand={shorthand}
             isActive={name === shorthand}
-            onSelect={selectAlgorithm}
           />
         ))
       ) : (
@@ -172,9 +194,9 @@ function AlgorithmMenu({ onClose }) {
                   fontWeight: "bold",
                   background: "var(--left-cat-bg)",
                   cursor: "pointer",
-                  marginLeft: "4px",
-                  marginRight: "4px",
-                  marginBottom: "4px",
+                  paddingLeft: "4px",
+                  paddingRight: "4px",
+                  paddingBottom: "4px",
                   color: "var(--left-cat-font)",
                   transition: "all 0.2s ease",
                 }}
@@ -190,16 +212,25 @@ function AlgorithmMenu({ onClose }) {
                 }}
               >
                 <span>{category}</span>
-                <span
+                <motion.span
+                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
                   style={{
                     marginRight: "8px",
-                    transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
-                    transition: "transform 0.2s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     color: "var(--left-cat-font)",
                   }}
                 >
-                  ▶
-                </span>
+                  <ExpandMoreIcon
+                    fontSize="small"
+                    style={{
+                      color: "var(--left-cat-font)",
+                      transition: "color 0.2s ease",
+                    }}
+                  />
+                </motion.span>
               </button>
 
               <AnimatePresence initial={false}>
@@ -224,7 +255,6 @@ function AlgorithmMenu({ onClose }) {
                         name={name}
                         shorthand={shorthand}
                         isActive={name === shorthand}
-                        onSelect={selectAlgorithm}
                       />
                     ))}
                   </motion.div>
