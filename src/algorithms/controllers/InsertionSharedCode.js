@@ -570,8 +570,8 @@ export function createTreeInsertionController(isAVL = false) {
                         }
                         
                         if (rr) {
-                            // highlight the edge between the parent and the root node
-                            vis.graph.visit(rr, p);
+                            // visit from root to root, to just highlight the current node, without highlighting the edge
+                            vis.graph.visit(rr, rr);
                         }
                         // print the function name and the key to be inserted
                         vis.graph.setFunctionName("Inserting:");
