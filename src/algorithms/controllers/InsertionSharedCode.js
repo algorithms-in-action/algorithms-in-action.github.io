@@ -132,15 +132,17 @@ export function createTreeInsertionController(isAVL = false) {
                 // assign the root as t6 in the pseudocode
                 chunker.add('rightRotate(t6)',
                     (vis, r, rl, rll) => {
+                        vis.graph.clear();
+                        vis.graph.clearSelect_Circle_Count();
                         // show tid of t6 on the graph
                         vis.graph.updateTID(r, 't6');
 
                         // cancel highlighting of the edges (r->rl, rl->rll)
                         // they were highlighted when the case was detected
-                        vis.graph.resetVisitAndSelect(rl, r);
-                        if (rll) {
-                            vis.graph.resetVisitAndSelect(rll, rl);
-                        }
+                        vis.graph.visit(rl,r);
+                        vis.graph.setSelect_Circle_Count(r);
+                        vis.graph.setSelect_Circle_Count(rl);
+                      
                     }, [root.key, root.left.key, root.left.left ? root.left.left.key : null],
                     depth
                 );
@@ -281,6 +283,10 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.removeEdge(p, t6);
                             vis.graph.addEdge(p, t2);
                         }
+
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.clear();
+                      
                         vis.graph.setMoveRatio(3/6);
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
@@ -310,14 +316,15 @@ export function createTreeInsertionController(isAVL = false) {
                 // assign the root as t2 in the pseudocode
                 chunker.add('leftRotate(t2)',
                     (vis, r, rr, rrr) => {
+
+                        vis.graph.clear();
+                        vis.graph.clearSelect_Circle_Count();
                         // show tid of t2 on the graph
                         vis.graph.updateTID(r, 't2');
 
-                        // cancel highlighting of the edges (r->rr, rr->rrr)
-                        vis.graph.resetVisitAndSelect(rr, r);
-                        if (rrr) {
-                            vis.graph.resetVisitAndSelect(rrr, rr);
-                        }
+                        vis.graph.visit(rr,r);
+                        vis.graph.setSelect_Circle_Count(r);
+                        vis.graph.setSelect_Circle_Count(rr);
 
                     }, [root.key, root.right.key, root.right.right ? root.right.right.key : null],
                     depth
@@ -460,6 +467,8 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.removeEdge(p, t2);
                             vis.graph.addEdge(p, t6);
                         }
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.clear();
                         vis.graph.setMoveRatio(3/6);
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
@@ -726,8 +735,8 @@ export function createTreeInsertionController(isAVL = false) {
                 // update the balance factor in the graph
                 chunker.add('switch balanceCase of', (vis, r) => {
                     vis.graph.setFunctionNode(`${r}`);
-                    vis.graph.clearSelect_Circle_Count();
-                    vis.graph.setSelect_Circle_Count(r);
+                    // vis.graph.clearSelect_Circle_Count();
+                    // vis.graph.setSelect_Circle_Count(r);
                     vis.graph.setFunctionBalance(balance);
                 }, [root.key], depth);
 
@@ -745,14 +754,9 @@ export function createTreeInsertionController(isAVL = false) {
                             // show the rotation type and the node to be rotated
                             vis.graph.setFunctionName(`balanceCase: `);
                             vis.graph.setFunctionInsertText(`LL`);
-                            vis.graph.clearSelect_Circle_Count();
-                            vis.graph.setSelect_Circle_Count(r);
+                            // vis.graph.clearSelect_Circle_Count();
+                            // vis.graph.setSelect_Circle_Count(r);
                             vis.graph.setFunctionNode(`${r}`);
-                            // highlight the edge about the case
-                            vis.graph.visit(rl, r);
-                            if (rll) {
-                                vis.graph.visit(rll, rl);
-                            }
                         },
                         [root.key, balance, root.left.key, root.left.left ? root.left.left.key : null],
                         depth
@@ -767,6 +771,8 @@ export function createTreeInsertionController(isAVL = false) {
                         vis.graph.setFunctionNode(null);
                         vis.graph.clearSelect_Circle_Count();
                         vis.graph.setFunctionBalance(null);
+                        vis.graph.clearSelect_Circle_Count();
+                        vis.graph.clear();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
                         vis.graph.rectangle_size();
@@ -779,15 +785,11 @@ export function createTreeInsertionController(isAVL = false) {
                         (vis, r, b, rr, rrr) => {
                             // show the rotation type and the node to be rotated
                             vis.graph.setFunctionName(`balanceCase: `);
+                            vis.graph.setFunctionName(`Rotation: `);
                             vis.graph.setFunctionInsertText(`RR`);
                             vis.graph.setFunctionNode(`${r}`);
-                            vis.graph.clearSelect_Circle_Count();
-                            vis.graph.setSelect_Circle_Count(r);
-                            // highlight the edge about the case
-                            vis.graph.visit(rr, r);
-                            if (rrr) {
-                                vis.graph.visit(rrr, rr);
-                            }
+                            // vis.graph.clearSelect_Circle_Count();
+                            // vis.graph.setSelect_Circle_Count(r);
                         },
                         [root.key, balance, root.right.key, root.right.right ? root.right.right.key : null],
                         depth
@@ -803,6 +805,7 @@ export function createTreeInsertionController(isAVL = false) {
                         vis.graph.setFunctionNode(null);
                         vis.graph.setFunctionBalance(null);
                         vis.graph.clearSelect_Circle_Count();
+                        vis.graph.clear();
                         vis.graph.setPauseLayout(false);
                         vis.graph.layoutAVL(g, true, false);
                         vis.graph.rectangle_size();
@@ -817,13 +820,8 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.setFunctionName(`balanceCase: `);
                             vis.graph.setFunctionInsertText(`LR`);
                             vis.graph.clearSelect_Circle_Count();
-                            vis.graph.setSelect_Circle_Count(r);
-                            vis.graph.setFunctionNode(`${r}`);
-                            // highlight the edge about the case
-                            vis.graph.visit(rl, r);
-                            if (rlr) {
-                                vis.graph.visit(rlr, rl);
-                            }
+                            // vis.graph.setSelect_Circle_Count(r);
+                            // vis.graph.setFunctionNode(`${r}`);
                         },
                         [root.key, balance, root.left.key, root.left.right ? root.left.right.key : null],
                         depth
@@ -838,6 +836,7 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.setFunctionNode(null);
                             vis.graph.setFunctionBalance(null);
                             vis.graph.clearSelect_Circle_Count();
+                            vis.graph.clear();
                             vis.graph.setPauseLayout(false);
                             vis.graph.layoutAVL(g, true, false);
                             vis.graph.rectangle_size();
@@ -854,13 +853,8 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.setFunctionName(`balanceCase: `);
                             vis.graph.setFunctionInsertText(`RL`);
                             vis.graph.setFunctionNode(`${r}`);
-                            vis.graph.clearSelect_Circle_Count();
-                            vis.graph.setSelect_Circle_Count(r);
-                            // highlight the edge about the case
-                            vis.graph.visit(rr, r);
-                            if (rrl) {
-                                vis.graph.visit(rrl, rr);
-                            }
+                            // vis.graph.clearSelect_Circle_Count();
+                            // vis.graph.setSelect_Circle_Count(r);
                         },
                         [root.key, balance, root.right.key, root.right.left ? root.right.left.key : null],
                         depth
@@ -876,6 +870,7 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.setFunctionNode(null);
                             vis.graph.setFunctionBalance(null);
                             vis.graph.clearSelect_Circle_Count();
+                            vis.graph.clear();
                             vis.graph.setPauseLayout(false);
                             vis.graph.layoutAVL(g, true, false);
                             vis.graph.rectangle_size();
