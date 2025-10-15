@@ -764,6 +764,7 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.clear();
                             vis.graph.setSelect_Circle_Count(r)
                             vis.graph.visit(rl, r);
+                            vis.graph.visit(rll, rl);
 
                         },
                         [root.key, balance, root.left.key, root.left.left ? root.left.left.key : null],
@@ -803,6 +804,7 @@ export function createTreeInsertionController(isAVL = false) {
                             vis.graph.clear();
                             vis.graph.setSelect_Circle_Count(r)
                             vis.graph.visit(rr, r);
+                            vis.graph.visit(rrr, rr);
                         },
                         [root.key, balance, root.right.key, root.right.right ? root.right.right.key : null],
                         depth
