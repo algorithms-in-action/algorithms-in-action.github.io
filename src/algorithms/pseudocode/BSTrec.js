@@ -2,82 +2,63 @@ import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Code{
-    Main
-    BST_Build(keys)  // return the BST that results from inserting nodes
-                     // with keys 'keys', in the given order, into an
-                     // initially empty BST
-    t <- Empty \\B 1
-    for each k in keys \\B 2
+Main
+\\Note{
+  This is a recursive BST insertion. The structure is identical to AVL
+  insertion, but without the height update and re-balancing steps on the
+  way back up the recursion tree.
+\\Note}
+BST_Insert(t, k) // returns t with key k inserted \\B BST_Insert(t, k)
+  \\In{
+    if t = Empty \\B if t = Empty
     \\In{
-        t <- BST_Insert(t, k) \\Ref Insert
+      return a single-node tree containing k \\B return n
+      \\Expl{ Both subtrees are Empty and its height is 1.
+              New memory will need to be allocated for it.
+              This is the base case of the recursion.
+      \\Expl}
     \\In}
-\\Code}
-\\Code{
-    Insert
-    // Insert key k in BST t, maintaining the BST invariant
-    Create_Node() \\Ref NewNode
-
-    if t = Empty \\B 7
+    if k < t.key \\B if k < root(t).key
+    \\Expl{ The key in the root determines if we insert into the left or
+          right subtree.
+    \\Expl}
     \\In{
-        t <- n      // in this case, the result is a tree with just one node \\B 8
-        \\Expl{  If the tree is initially empty, the resulting BST is just
-                the new node, which has key k, and empty sub-trees.
+        insert k into the left subtree of t \\Ref insertLeft
+    \\In}
+    else if k > t.key \\B else if k > root(t).key
+    \\In{
+        insert k into the right subtree of t \\Ref insertRight
+    \\In}
+    else \\B else k = root(t).key
+    \\In{
+        return t // ignore duplicate key \\B return t, no change
+        \\Expl{  Key k is already in the tree and here we ignore duplicate keys.
         \\Expl}
     \\In}
-    else
-    \\In{
-      Locate the node p that should be the parent of the new node n. \\Ref Locate
-      if k < p.key  \\B 9
-      \\Expl{  The new node n (whose key is k) will be a child of p. We just 
-              need to decide whether it should be a left or a right child of p.
-      \\Expl}
-      \\In{
-          p.left <- n       // insert n as p's left child \\B 10
-      \\In}
-      else
-      \\In{
-          p.right <- n      // insert n as p's right child  \\B 11
-      \\In}
-    \\In}
+    return t \\B return t
+    \\Expl{
+        Unlike an AVL tree, a standard BST does not perform height updates or
+        re-balancing. We simply return the pointer to the current subtree.
+    \\Expl}
+  \\In}
 \\Code}
 
 \\Code{
-    NewNode
-    n <- new Node     // create a new node to hold key k \\B 3
-    n.key <- k \\B 4
-    n.left <- Empty   // it will be a leaf, that is, \\B 5
-    n.right <- Empty  // it has empty subtrees \\B 6
+insertLeft
+// *recursively* call insert with the left subtree \\B prepare for the left recursive call
+t.left <- BST_Insert(t.left, k) \\B left(t) <- BST_Insert(left(t), k)
+\\Expl{
+The (possibly empty) left subtree is replaced by the result of this recursive call.
+\\Expl}
 \\Code}
-  
+
+
 \\Code{
-  Locate
-  c <- t            // c traverses the path from the root to the insertion point \\B 13
-  
-  \\Expl{  c is going to follow a path down to where the new node is to 
-          be inserted. We start from the root (t).
-  \\Expl}
-  repeat
-  \\In{
-      p <- c        // when the loop exits, p will be c's parent \\B 14
-      \\Expl{  Parent p and child c will move in lockstep, with p always 
-              trailing one step behind c.
-      \\Expl}
-      if k < c.key \\B 15
-      \\Expl{  The BST condition is that nodes with keys less than the current
-              node's key are to be found in the left subtree, and nodes whose
-              keys are greater (or the same) are to be in the right subtree.
-      \\Expl}
-      \\In{
-          c <- c.left \\B 16
-      \\In}
-      else
-      \\In{
-          c <- c.right \\B 17
-      \\In}
-  \\In}
-  until c = Empty \\B 18
-  \\Expl{  At the end of this loop, c has located the empty subtree where new
-          node n should be located, and p will be the parent of the new node.
-  \\Expl}
+insertRight
+// *recursively* call insert with the right subtree \\B prepare for the right recursive call
+t.right <- BST_Insert(t.right, k) \\B right(t) <- BST_Insert(right(t), k)
+\\Expl{
+The (possibly empty) right subtree is replaced by the result of this recursive call.
+\\Expl}
 \\Code}
 `);

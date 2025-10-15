@@ -923,10 +923,9 @@ export function createTreeInsertionController(isAVL = false) {
                     vis.graph.addNode(k, k);
                     if (isAVL) {
                         vis.graph.updateHeight(k, 1);
-                        vis.graph.layoutAVL(k, true, false);
-                    } else {
-                        vis.graph.layoutTree(k, true, false);
                     }
+                    vis.graph.layoutAVL(k, true, false);
+                   
                     if (isRecursionExpanded()) {
                         // Pause the layout then remove the node, keep the rectangle
                         vis.graph.pushRectStack([k], `Depth 1`);
