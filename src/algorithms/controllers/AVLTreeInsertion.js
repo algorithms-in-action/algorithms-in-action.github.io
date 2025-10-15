@@ -772,6 +772,10 @@ export default {
                         vis.graph.setFunctionNode(`${r}`);
                         // vis.graph.setFunctionBalance(b);
 
+                        // highlight edges involved in the rotation case
+                        vis.graph.clear();
+                        vis.graph.setSelect_Circle_Count(r)
+                        vis.graph.visit(rl, r);
                     },
                     [root.key, balance, root.left.key, root.left.left ? root.left.left.key : null],
                     depth
@@ -808,8 +812,11 @@ export default {
                         //vis.graph.clearSelect_Circle_Count();
                         //vis.graph.setSelect_Circle_Count(r);
                         // vis.graph.setFunctionBalance(b);
-
-
+                        
+                        // highlight edges involved in the rotation case
+                        vis.graph.clear();
+                        vis.graph.setSelect_Circle_Count(r)
+                        vis.graph.visit(rr, r);
                     },
                     [root.key, balance, root.right.key, root.right.right ? root.right.right.key : null],
                     depth
@@ -846,7 +853,11 @@ export default {
                         vis.graph.setFunctionNode(`${r}`);
                         // vis.graph.setFunctionBalance(b);
 
-
+                        // highlight edges involved in the rotation case
+                        vis.graph.clear();
+                        vis.graph.setSelect_Circle_Count(r)
+                        vis.graph.visit(rl, r);
+                        vis.graph.visit(rlr, rl);
                     },
                     [root.key, balance, root.left.key, root.left.right ? root.left.right.key : null],
                     depth
@@ -883,8 +894,12 @@ export default {
                         //vis.graph.clearSelect_Circle_Count();
                         //vis.graph.setSelect_Circle_Count(r);
                         // vis.graph.setFunctionBalance(b);
-
-
+                        
+                        // highlight edges involved in the rotation case
+                        vis.graph.clear();
+                        vis.graph.setSelect_Circle_Count(r)
+                        vis.graph.visit(rr, r);
+                        vis.graph.visit(rrl, rr);
                     },
                     [root.key, balance, root.right.key, root.right.left ? root.right.left.key : null],
                     depth
