@@ -12,7 +12,7 @@
  * 5. Check the balance factor of the root node.
  * 6. If unbalanced, perform rotations to balance the tree.
  * 7. Return the root node of the tree.
- */
+ */ 
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
