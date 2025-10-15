@@ -7,12 +7,32 @@ to three and more dimensions and has many applications). The polygon
 is normally represented as the set of points that are the vertices of
 the polygon and possibly some or all of the points that lie on the
 edges but are not at vertices (for this coding some of those points
-may be included).  The **Graham Scan** algorithm is a quite simple but
-reasonably efficient method for computing convex hulls.
+may be included).  The **Graham Scan** algorithm is a quite simple
+but reasonably efficient method for computing convex hulls.  It works
+by **sorting points by angle** and then constructing the hull by adding
+the points to the hull in sorted order, removing non-convex points using
+stack-like operations.
 
 ## How It Works
 
-XXX TODO
+1. **Find the anchor point**  
+   Choose the point with the lowest x-coordinate (and lowest y if there’s a tie).  
+   This point is guaranteed to be on the hull.
+
+2. **Sort points by polar angle**  
+   Sort the remaining points by the angle they make with the anchor point
+and the x-axis.  The points will be considered in this order, resulting in a
+counter-clockwise scan.
+
+3. **Traverse and build the hull**  
+   Use a list of points to keep track of the hull vertices, starting the the lowest angle point plus the anchor point.
+   For each point:
+   - Add the point to the front of the list
+   - If the front of the list has three points that are not **convex** (a counter-clockwise scan doesn't result in a **left turn**), delete the middle point from the list and repeat this step.
+
+4. **Complete the hull**  
+   When all points are processed, the list contains the vertices of the convex hull in counter-clockwise order, starting with the anchor point.
+
 
 ## Checking for clockwise turns using vector products
 
@@ -38,4 +58,6 @@ subtle cases involving colinear points - see the MORE tab for details.
 
 ## Complexity
 
-**Time**: O(n log n) where n is the number of points
+- **Time**: O(n log n) — dominated by the sorting step  
+- **Space**: O(n) for the stack
+

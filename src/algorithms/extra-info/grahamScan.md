@@ -22,6 +22,9 @@ Geeks for Geeks Link: [**Convex Hull Algorithms**][G4GLink]
 
 ## Exercises/Exploration
 
+Graham scan is often described as using a stack for the partially
+constructed null. Compare a stack-based coding with the AIA coding.
+
 Look up other efficient convex hull algorithms and find out about the
 many different convex hull algorithms invented over the years.
 
