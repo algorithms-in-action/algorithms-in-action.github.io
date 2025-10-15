@@ -211,8 +211,9 @@ export default {
             // let t2's right child point to t6
             chunker.add('t2.right = t6',
                 (vis, t6, t2, t4, p, rotate) => {
-                    if (rotate) vis.graph.visit(t2, p);
+                    //if (rotate) vis.graph.visit(t2, p);
 
+                    vis.graph.resetVisitAndSelect(t2, t6);
                     vis.graph.removeEdge(t6, t2);
 
                     if (t4 !== null) {
@@ -222,6 +223,7 @@ export default {
                     if (rotate) vis.graph.resetVisitAndSelect(t6, null);
 
                     vis.graph.addEdge(t2, t6);
+                    vis.graph.visit(t6, t2);
 
                     if (t4 !== null) vis.graph.removeEdge(t6, t4);
                     // set the new position of the node(s)
@@ -395,8 +397,9 @@ export default {
             chunker.add('t6.left = t2',
                 (vis, t2, t6, t4, p, rotate) => {
                     // highlight the edge between t6 and t2
-                    if (rotate) vis.graph.visit(t2, p);
+                    //if (rotate) vis.graph.visit(t2, p);
 
+                    vis.graph.resetVisitAndSelect(t6, t2);
                     vis.graph.removeEdge(t2, t6);
 
                     if (t4 !== null) {
@@ -406,6 +409,7 @@ export default {
                     if (rotate) vis.graph.resetVisitAndSelect(t2, null);
 
                     vis.graph.addEdge(t6, t2);
+                    vis.graph.visit(t2, t6);
                     // remove edge after layout to perform the middle step
                     if (t4 !== null) vis.graph.removeEdge(t2, t4);
                     // set the new position of the nodes
