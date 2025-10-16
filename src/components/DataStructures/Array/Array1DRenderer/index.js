@@ -335,50 +335,71 @@ function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth, stackGapPx =
   if (!stack) {
     return <div />;
   }
+  
+  // Find the boundary information of the last row (bottom stack frame)
+  let lastRowBoundaries = null;
+  if (stack.length > 0) {
+    const lastRow = stack[stack.length - 1];
+    lastRowBoundaries = lastRow.map(item => ({
+      isLeftBoundary: item.isLeftBoundary,
+      isRightBoundary: item.isRightBoundary
+    }));
+  }
+  
   let stackItems = [];
   for (let i = 0; i < stack.length; i += 1) {
+    const isLastRow = (i === stack.length - 1);
+    
     stackItems.push(
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {stack[i].map(({ base, extra, value, isLeftBoundary, isRightBoundary }, index) =>
-        (
-          <div
-            className={styles.stackElement}
-            style={{
-              width: `calc(100%/${nodeCount})`,
-              textAlign: 'center',
-              color: 'gray',
-              backgroundColor: stackFrameColour(base),
-              // 添加边界样式
-              borderLeft: isLeftBoundary ? '2px solid black' : 'none',
-              borderRight: isRightBoundary ? '2px solid black' : 'none',
-            }}
-          >
-            {/* 显示数值 */}
-            {value !== undefined && (
-              <span style={{ 
-                fontSize: '10px', 
-                color: 'white',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}>
-                {value}
-              </span>
-            )}
-            
-            {extra.map((extraColor) => (
-              <div
-                className={styles.stackSubElement}
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  backgroundColor: stackFrameColour(extraColor),
-                }}
-              />
-            ))}
-          </div>
-        )
+      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        {stack[i].map(({ base, extra, value, isLeftBoundary, isRightBoundary }, index) => {
+          return (
+            <div
+              className={styles.stackElement}
+              style={{
+                width: `calc(100%/${nodeCount})`,
+                minWidth: `calc(100%/${nodeCount})`,
+                maxWidth: `calc(100%/${nodeCount})`,
+                textAlign: 'center',
+                color: 'gray',
+                backgroundColor: stackFrameColour(base),
+                boxSizing: 'border-box',
+                // Add boundary styles
+                borderLeft: isLeftBoundary ? '2px solid black' : 
+                           (!isLastRow && lastRowBoundaries && lastRowBoundaries[index] && lastRowBoundaries[index].isLeftBoundary ? 
+                            `2px solid ${stackFrameColour(base)}` : 'none'),
+                borderRight: isRightBoundary ? '2px solid black' : 
+                            (!isLastRow && lastRowBoundaries && lastRowBoundaries[index] && lastRowBoundaries[index].isRightBoundary ? 
+                             `2px solid ${stackFrameColour(base)}` : 'none'),
+              }}
+            >
+              {/* Display values */}
+              {value !== undefined && (
+                <span style={{ 
+                  fontSize: '10px', 
+                  color: 'white',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}>
+                  {value}
+                </span>
+              )}
+              
+              {extra.map((extraColor) => (
+                <div
+                  className={styles.stackSubElement}
+                  style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    backgroundColor: stackFrameColour(extraColor),
+                  }}
+                />
+              ))}
+            </div>
+          );
+        }
         )}
       </div>,
     );

@@ -17,13 +17,13 @@ const highlightColor = colors.apple; // for i,j in partition,...
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
   No_color: 0,
-  In_progress_stackFrame: 1,  // 进行中（索引1）
-  Current_stackFrame: 2,       // 当前（索引2）  
-  Finished_stackFrame: 3,      // 已完成（索引3）
-  I_color: 4,  // 不使用
-  J_color: 5,  // 不使用
-  P_color: 6,  // 不使用
-  // 删除 In_progress_stackFrameR, Current_stackFrameR, Finished_stackFrameR
+  In_progress_stackFrame: 1,  // In progress (index 1)
+  Current_stackFrame: 2,       // Current (index 2)  
+  Finished_stackFrame: 3,      // Completed (index 3)
+  I_color: 4,  // Not used
+  J_color: 5,  // Not used
+  P_color: 6,  // Not used
+  // Removed In_progress_stackFrameR, Current_stackFrameR, Finished_stackFrameR
 };
 
 const VIS_VARIABLE_STRINGS = {
@@ -67,10 +67,10 @@ const MSD_BOOKMARKS = {
 const update_vis_with_stack_frame = (a, stack_frame, stateVal, arrayValues) => {
   let left, right, mid, depth, snapshot;
   
-  // 检查栈帧是否包含快照（新格式有5个元素）
+  // Check if the stack frame contains a snapshot (new format has 5 elements)
   if (stack_frame.length === 5) {
     [left, right, mid, depth, snapshot] = stack_frame;
-    arrayValues = snapshot;  // 使用栈帧中的快照
+    arrayValues = snapshot;  // Use the snapshot from the stack frame
   } else {
     [left, right, mid, depth] = stack_frame;
   }
@@ -292,32 +292,32 @@ export default {
           );
         }
       
-        // 已完成的栈帧
+        // Completed stack frames
         cur_finished_stack_frames.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.Finished_stackFrame,  // 索引3
+            STACK_FRAME_COLOR.Finished_stackFrame,  // Index 3
             displayValues
           );
         });
       
-        // 进行中的栈帧
+        // In-progress stack frames
         cur_real_stack.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.In_progress_stackFrame,  // 索引1
+            STACK_FRAME_COLOR.In_progress_stackFrame,  // Index 1
             displayValues
           );
         });
       
-        // 当前栈帧（最上面的）
+        // Current stack frame (topmost)
         if (cur_real_stack.length !== 0) {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             cur_real_stack[cur_real_stack.length - 1],
-            STACK_FRAME_COLOR.Current_stackFrame,  // 索引2
+            STACK_FRAME_COLOR.Current_stackFrame,  // Index 2
             displayValues
           );
         }

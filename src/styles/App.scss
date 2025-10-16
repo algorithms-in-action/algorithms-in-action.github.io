@@ -125,9 +125,9 @@ $dragBarWidth: 10px;
 #leftdragbar {
 	grid-area: leftdragbar;
 	width: 0px;
-	/* 或者您想要的宽度 */
+	/* or the width you want */
 	background-color: #ccc;
-	/* 或者您想要的颜色 */
+	/* or the color you want */
 	cursor: default;
 }
 
@@ -137,7 +137,7 @@ $dragBarWidth: 10px;
 
 #leftdragbar .handle {
 	display: none;
-	/* 隐藏拖动手柄 */
+	/* Hide drag handle */
 }
 
 #leftdraghandle {
@@ -159,10 +159,10 @@ $dragBarWidth: 10px;
 
 #tabpages.full-width {
 	top: 60px;
-	/* 调整这个值以匹配新的 header 高度 */
+	/* Adjust this value to match the new header height */
 	left: 0;
 	width: calc(100% - 300px);
-	/* 假设右侧面板宽度为 300px，根据实际情况调整 */
+	/* Assuming right panel width is 300px, adjust according to actual situation */
 }
 
 .header-container {

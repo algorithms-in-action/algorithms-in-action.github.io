@@ -148,10 +148,10 @@ function assert(condition, message) {
 export function update_vis_with_stack_frame(a, stack_frame, stateVal, arrayValues) {
   let left, right, depth, snapshot;
   
-  // 检查栈帧是否包含快照（新格式）
+  // Check if the stack frame contains a snapshot (new format)
   if (stack_frame.length === 4) {
     [left, right, depth, snapshot] = stack_frame;
-    arrayValues = snapshot;  // 使用栈帧中的快照
+    arrayValues = snapshot;  // Use the snapshot from the stack frame
   } else {
     [left, right, depth] = stack_frame;
   }
@@ -233,7 +233,7 @@ export function run_QS(is_qs_median_of_3) {
       }
       
       let stack_vis = [];
-      // 使用保存的原始数组
+      // Use the saved original array
       const displayValues = arrayValues || entire_num_array;
     
       for (let i = 0; i < max_depth_index + 1; i++) {
@@ -248,7 +248,7 @@ export function run_QS(is_qs_median_of_3) {
         );
       }
     
-      // 使用 displayValues 而不是 arrayValues
+      // Use displayValues instead of arrayValues
       cur_finished_stack_frames.forEach((stack_frame) => {
         stack_vis = update_vis_with_stack_frame(
           stack_vis,
@@ -284,7 +284,7 @@ export function run_QS(is_qs_median_of_3) {
     const refresh_stack = (vis, cur_real_stack, cur_finished_stack_frames, 
       cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array) => {
       
-      // 处理 i 和 j 的边界情况
+      // Handle boundary cases for i and j
       let cur_i_too_low;
       let cur_j_too_low;
       if (cur_i === -1) {
@@ -300,7 +300,7 @@ export function run_QS(is_qs_median_of_3) {
         cur_j_too_low = undefined;
       }
       
-      // 处理 right < left 的情况
+      // Handle the case where right < left
       let cur_right_lt_left;
       if (cur_right === -1) {
         cur_right = undefined;
@@ -325,7 +325,7 @@ export function run_QS(is_qs_median_of_3) {
     
       if (isRecursionExpanded()) {
         vis.array.setStackDepth(cur_real_stack.length);
-        // 传递数组值给 derive_stack
+        // Pass array values to derive_stack
         vis.array.setStack(
           derive_stack(cur_real_stack, cur_finished_stack_frames, 
             cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array)
@@ -334,7 +334,7 @@ export function run_QS(is_qs_median_of_3) {
         vis.array.setStack([]);
       }
     
-      // 设置变量显示
+      // Set variable display
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_left_index, cur_i);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.i_eq_0, cur_i_too_low);
       assign_i_j(vis, VIS_VARIABLE_STRINGS.pivot, cur_pivot_index);
@@ -609,7 +609,7 @@ pivot_index, left, right, depth, a]
 
       chunker.add(QS_BOOKMARKS.SHARED_if_left_less_right, 
         (vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array) => {
-          // 这里不需要再push了，因为已经在函数开始处push了
+          // No need to push here anymore, as it was already pushed at the beginning of the function
           max_depth_index = Math.max(max_depth_index, cur_depth);
           refresh_stack(vis, cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_left, cur_right, cur_depth, cur_array);
         }, 
@@ -715,7 +715,7 @@ cur_right, cur_depth,a) // refresh shows i
       (vis, array, cur_left, cur_right) => {
         vis.array.set(array, 'quicksort');
         
-        // 如果递归展开，初始化栈并推入第一帧
+        // If recursion is expanded, initialize the stack and push the first frame
         if (isRecursionExpanded()) {
           const snapshot = [...array];
           real_stack.push([cur_left, cur_right, 0, snapshot]); 
@@ -749,7 +749,7 @@ cur_right, cur_depth,a) // refresh shows i
         vis.array.clearVariables();
         if (isRecursionExpanded()) {
           vis.array.setStackDepth(0);
-          // 传递最终数组状态
+          // Pass the final array state
           vis.array.setStack(derive_stack(real_stack, finished_stack_frames, 
             undefined, undefined, undefined, undefined, undefined, 0, cur_array));
         } else {

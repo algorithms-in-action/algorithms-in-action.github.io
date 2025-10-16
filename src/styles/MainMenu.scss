@@ -16,7 +16,7 @@
   align-items: center;
   overflow-y: auto;
   box-sizing: border-box;
-  justify-content: space-between; // 这会将内容分散到顶部和底部
+  justify-content: space-between; // This will distribute content to top and bottom
 }
 
 .algorithm-category {
@@ -95,7 +95,7 @@
 }
 
 .about-link {
-  margin-top: auto; // 这会将链接推到底部
+  margin-top: auto; // This will push the link to the bottom
   padding: 10px;
   color: white;
   text-decoration: none;

@@ -104,18 +104,18 @@ function assert(condition, message) {
 }
 
 
-// 修复的 update_vis_with_stack_frame
-// 修改 update_vis_with_stack_frame 函数（约第 99 行）
+// Fixed update_vis_with_stack_frame
+// Modified update_vis_with_stack_frame function (around line 99)
 export function update_vis_with_stack_frame(a, stack_frame, stateVal, arrayValues, arrayLength) {
   let left, right, depth;
   [left, right, depth] = stack_frame;
 
-  // 边界检查
+  // Boundary check
   if (depth >= a.length || depth < 0) {
     return a;
   }
 
-  // 确保该深度的数组存在
+  // Ensure the array at this depth exists
   if (!a[depth]) {
     a[depth] = [...Array.from({ length: arrayLength })].map(() => ({
       base: STACK_FRAME_COLOR.No_color,
@@ -126,7 +126,7 @@ export function update_vis_with_stack_frame(a, stack_frame, stateVal, arrayValue
     }));
   }
 
-  // 填充整个区间，并添加数值信息
+  // Fill the entire range and add value information
   for (let i = left; i <= right && i < a[depth].length; i++) {
     if (i >= 0) {
       a[depth][i] = { 
@@ -225,7 +225,7 @@ export function run_msort() {
     // ----------------------------------------------------------------------------------------------------------------------------
 
 function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_pivot_index, cur_depth, arrayValues) {
-  // 递归折叠时，不显示栈
+  // Don't display stack when recursion is collapsed
   if (!isRecursionExpanded()) {
     return [];
   }
@@ -234,32 +234,32 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
   const displayValues = original_array;
   const arrayLen = entire_num_array.length;
 
-  // 关键修改：检测是否为初始状态
-  // 如果只有一个栈帧，且是[0, arrayLen-1, 0]，则这是初始状态
+  // Key modification: detect if it's the initial state
+  // If there's only one stack frame and it's [0, arrayLen-1, 0], this is the initial state
   if (cur_real_stack.length === 1 && 
     cur_real_stack[0][0] === 0 && 
     cur_real_stack[0][1] === arrayLen - 1 && 
     cur_real_stack[0][2] === 0 &&
-    cur_finished_stack_frames.length === 0) {  // 添加这个条件！
-  // 真正的初始状态，不需要做任何事
+    cur_finished_stack_frames.length === 0) {  // Add this condition!
+  // True initial state, no need to do anything
 }
 
-  // 根据栈的实际内容计算深度
+  // Calculate depth based on actual stack content
   let actualMaxDepth = 0;
   
-  // 从 finished_stack_frames 计算最大深度
+  // Calculate maximum depth from finished_stack_frames
   cur_finished_stack_frames.forEach(frame => {
     if (frame[2] > actualMaxDepth) actualMaxDepth = frame[2];
   });
   
-  // 从 real_stack 计算最大深度  
+  // Calculate maximum depth from real_stack  
   cur_real_stack.forEach(frame => {
     if (frame[2] > actualMaxDepth) actualMaxDepth = frame[2];
   });
   
   const stackDepth = actualMaxDepth + 1;
   
-  // 初始化栈可视化数组
+  // Initialize stack visualization array
   for (let i = 0; i < stackDepth; i++) {
     stack_vis.push(
       [...Array.from({ length: arrayLen })].map(() => ({
@@ -272,7 +272,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
     );
   }
 
-  // 先显示所有已完成的栈帧（灰色）
+  // First display all completed stack frames (gray)
   cur_finished_stack_frames.forEach((stack_frame) => {
     stack_vis = update_vis_with_stack_frame(
       stack_vis,
@@ -283,7 +283,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
     );
   });
 
-  // 然后显示当前活动的栈帧
+  // Then display current active stack frames
   cur_real_stack.forEach((stack_frame, index) => {
     const color = (index === cur_real_stack.length - 1) 
       ? STACK_FRAME_COLOR.Current_stackFrame
@@ -316,7 +316,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
       assert(vis.array);
       assert(cur_real_stack && cur_finished_stack_frames);
     
-      // 递归折叠：不显示栈
+      // Recursion collapsed: don't display stack
       if (!isRecursionExpanded()) {
         vis.array.setStackDepth(0);
         vis.array.setStack(undefined);
@@ -327,9 +327,9 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         return;
       }
     
-      // ✅ 合并阶段总开关：一旦打开，无论 B 有没有值，都隐藏栈
-// 检查当前深度的合并标志
-      if (HIDE_STACKS_DURING_MERGE[cur_depth]) {  // 使用当前深度的标志
+      // ✅ Merge phase master switch: once enabled, hide stack regardless of B's content
+// Check merge flag for current depth
+      if (HIDE_STACKS_DURING_MERGE[cur_depth]) {  // Use flag for current depth
         vis.array.setStackDepth(0);
         vis.array.setStack(undefined);
         if (vis.arrayB) {
@@ -339,7 +339,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         return;
       }
           
-      // B 有内容：也隐藏（双保险）
+      // B has content: also hide (double insurance)
       let arrayBHasContent = false;
       if (cur_B && isMergeCopyExpanded()) {
         arrayBHasContent = cur_B.some(val => val !== undefined);
@@ -354,7 +354,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         return;
       }
     
-      // B 为空且非合并阶段：正常显示栈
+      // B is empty and not in merge phase: display stack normally
       const stack_data = derive_stack(
         cur_real_stack,
         cur_finished_stack_frames,
@@ -397,9 +397,9 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
 
     function renderInMerge(
       vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, 
-      cur_max1, cur_max2, c_stk, cur_depth  // 添加 cur_depth
+      cur_max1, cur_max2, c_stk, cur_depth  // Add cur_depth
     ) {
-      // 正常的数组与变量/高亮逻辑
+      // Normal array and variable/highlight logic
       if (isMergeExpanded()) {
         vis.array.set(a, 'msort_arr_td');
         
@@ -435,7 +435,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         vis.array.set(a, 'msort_arr_td');
       }
       
-      // 调用 set_simple_stack 来处理栈列表的显示/隐藏
+      // Call set_simple_stack to handle stack list display/hide
       set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
     }
     
@@ -447,21 +447,21 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
     // doing that you have a pretty good understanding anyway?
     
     const set_simple_stack = (vis_array, c_stk, vis, cur_B, cur_depth) => {
-      // 递归折叠：不显示栈列表
+      // Recursion collapsed: don't display stack list
       if (!isRecursionExpanded()) {
         vis_array.setList(undefined);
         if (vis && vis.arrayB) vis.arrayB.setList(undefined);
         return;
       }
     
-      // 合并阶段总开关：隐藏
+      // Merge phase master switch: hide
       if (HIDE_STACKS_DURING_MERGE[cur_depth]) {
         vis_array.setList(undefined);
         if (vis && vis.arrayB) vis.arrayB.setList(undefined);
         return;
       }
     
-      // B 有内容：隐藏（双保险）
+      // B has content: hide (double insurance)
       let arrayBHasContent = false;
       if (cur_B && isMergeCopyExpanded()) {
         arrayBHasContent = cur_B.some(val => val !== undefined);
@@ -472,7 +472,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         return;
       }
     
-      // B 为空：不再设置栈列表，只清除
+      // B is empty: no longer set stack list, only clear
       vis_array.setList(undefined);
       if (vis && vis.arrayB) vis.arrayB.setList(undefined);
     };
@@ -497,7 +497,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         cur_real_stack, cur_finished_stack_frames, c_stk) => {
         vis.array.set(a, 'msort_arr_td');
         
-        // 如果是最开始的调用，重置 HIDE_STACKS_DURING_MERGE
+        // If this is the initial call, reset HIDE_STACKS_DURING_MERGE
         if (cur_depth === 0 && cur_left === 0 && cur_right === entire_num_array.length - 1) {
           HIDE_STACKS_DURING_MERGE = [];
         }
@@ -510,9 +510,9 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
             vis.arrayB.setLargestValue(maxValue);
           }
           
-          // 确保在第一次调用时初始化栈深度
+          // Ensure stack depth is initialized on first call
           if (isRecursionExpanded()) {
-            // 确保 max_depth_index 至少为 0
+            // Ensure max_depth_index is at least 0
             max_depth_index = Math.max(max_depth_index, 0);
           }
         }
@@ -523,7 +523,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           highlight(vis, i, runAColor)
         }
         
-        // 刷新栈显示
+        // Refresh stack display
         refresh_stack(
           vis,
           cur_real_stack,
@@ -549,7 +549,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           undefined,
           depth,
           array,
-          arrayB  // 添加数组参数
+          arrayB  // Add array parameter
         );
       }
         
@@ -580,7 +580,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           assignVarToA(vis, 'right', undefined);
           assignVarToA(vis, 'mid', undefined);
           
-          // 只设置栈列表，不刷新栈本身
+          // Only set stack list, don't refresh stack itself
           set_simple_stack(vis.array, c_stk, vis, B, cur_depth);
         }, [A, B, left, mid, right, simple_stack, depth], depth);
 
@@ -590,11 +590,11 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         // recursive call once it has returned plus we need a chunk at
         // this level when the recursive code is collapsed
         chunker.add('sortL', (
-          vis, a, b, cur_left, cur_mid, cur_right, c_stk,  // 改为 c_stk
+          vis, a, b, cur_left, cur_mid, cur_right, c_stk,  // Changed to c_stk
           cur_real_stack, cur_finished_stack_frames, cur_depth
         ) => {
           refreshStackAt(vis, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames, A, B);
-          vis.array.set(a, 'msort_arr_td');  // 使用小写 a
+          vis.array.set(a, 'msort_arr_td');  // Use lowercase a
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);  
         
           assignVarToA(vis, 'left', cur_left);
@@ -614,8 +614,8 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           cur_real_stack, cur_finished_stack_frames, cur_depth) => {
             refreshStackAt(vis, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames, A, B);
             
-            // 这里已经有 refreshStackAt，所以栈应该是可见的
-            // 但可能需要添加 set_simple_stack
+            // There's already refreshStackAt here, so stack should be visible
+            // But may need to add set_simple_stack
             set_simple_stack(vis.array, c_stk, vis, B, cur_depth);
             
             for (let i = cur_left; i <= cur_mid; i++) {
@@ -631,7 +631,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         // chunk after recursive call
         chunker.add('sortR', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {
           // vis.array.set(a, 'msort_arr_td');
-          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);  // 使用 cur_depth
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);  // Use cur_depth
           assignVarToA(vis, 'left', cur_left);
           assignVarToA(vis, 'mid', cur_mid);
           assignVarToA(vis, 'right', cur_right);
@@ -652,7 +652,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         let max2 = right;
         let bp = left;
         
-        chunker.add('ap1', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
+        chunker.add('ap1', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // Add cur_depth
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
           // disable stack display during merge: hopefully its not
           // confusing, it avoids extra distraction and the position of
@@ -676,20 +676,20 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
             highlight(vis, cur_mid + 1, apColor);
           }
         }, [A, B, left, mid, right], depth);
-        chunker.add('max2', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
+        chunker.add('max2', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // Add cur_depth
           if (isMergeExpanded()) {
             assignVarToA(vis, 'right', undefined);
             assignVarToA(vis, 'max2', right);
           }
-          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);// 添加这行
-        }, [A, B, left, mid, right, simple_stack, depth], depth);  // 添加 simple_stack 参数
+          set_simple_stack(vis.array, c_stk, vis, b, cur_depth);// Add this line
+        }, [A, B, left, mid, right, simple_stack, depth], depth);  // Add simple_stack parameter
         
-        chunker.add('bp', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
+        chunker.add('bp', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, cur_depth) => {  // Add cur_depth
           if (isMergeExpanded()) {
             assignVarToB(vis, 'bp', left);
           }
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
-        }, [A, B, left, mid, right, simple_stack, depth], depth);  // 添加 simple_stack 参数
+        }, [A, B, left, mid, right, simple_stack, depth], depth);  // Add simple_stack parameter
 
         // while (ap1 <= max1 && ap2 <= max2) 
         /* eslint-disable no-constant-condition */
@@ -712,13 +712,13 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
             A[ap1] = undefined;
             chunker.add('copyap1', (vis, a, b, cur_ap1, cur_ap2,
               cur_bp, cur_max1, cur_max2, cur_stk, cur_left, cur_right, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
-                HIDE_STACKS_DURING_MERGE[cur_depth] = true;  // 在这里添加这行
+                HIDE_STACKS_DURING_MERGE[cur_depth] = true;  // Add this line here
                 renderInMerge(vis, a, b, cur_left, cur_ap1, cur_ap2, cur_bp, cur_max1,
                   cur_max2, cur_stk, cur_depth);
               if (isMergeExpanded()) {
                 highlightB(vis, cur_bp, sortColor);
               }
-              // 关键：B 方才写入，立刻评估并隐藏栈
+              // Key: B just written, immediately evaluate and hide stack
               refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
                 cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, a, b);
             }, [A, B, ap1, ap2, bp, max1, max2, simple_stack, left, right, depth, real_stack, finished_stack_frames], depth);
@@ -800,7 +800,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
             if (cur_bp < a.length) assignVarToB(vis, 'bp', cur_bp); else assignVarToB(vis, 'bp', undefined);
           }
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
-          // 关键：补一次刷新，防止剩余批量复制阶段露栈
+          // Key: Add one more refresh to prevent stack exposure during remaining batch copy phase
           refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
             cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, A, B);
         }, [A, B, left, ap1, ap2, max1, max2, bp, simple_stack, right, depth, real_stack, finished_stack_frames], depth);
@@ -828,7 +828,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
             assignVarToB(vis, 'bp', undefined);
           }
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
-          // 关键：复制剩余第二段后也立即评估隐藏
+          // Key: Also immediately evaluate and hide after copying remaining second segment
           refresh_stack(vis, cur_real_stack, cur_finished_stack_frames,
             cur_left, cur_right, Math.floor((cur_left + cur_right)/2), cur_depth, A, B);
         }, [A, B, left, right, ap2, max2, bp, simple_stack, depth, real_stack, finished_stack_frames], depth);
@@ -838,9 +838,9 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           A[i] = B[i];
           B[i] = undefined;
         }
-        // 修改 copyBA chunk
-        // 修改 copyBA chunk
-      // 修改 copyBA chunk - 直接隐藏栈列表
+        // Modified copyBA chunk
+        // Modified copyBA chunk
+      // Modified copyBA chunk - directly hide stack list
       chunker.add('copyBA', (vis, a, b, cur_left, cur_mid, cur_right, c_stk, 
         cur_real_stack, cur_finished_stack_frames, cur_depth) => {
           HIDE_STACKS_DURING_MERGE[cur_depth] = false;
@@ -849,12 +849,12 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
         }
         vis.array.set(a, 'msort_arr_td');
         
-        // 高亮已排序的元素
+        // Highlight sorted elements
         for (let i = cur_left; i <= cur_right; i++) {
           highlight(vis, i, sortColor);
         }
         
-        // 关键：刷新栈显示
+        // Key: Refresh stack display
         refresh_stack(
           vis,
           cur_real_stack,
@@ -867,10 +867,10 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           B
         );
         
-        // 设置简单栈列表
+        // Set simple stack list
         set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
         
-        // 清理变量
+        // Clean up variables
         if (isMergeExpanded()) {
           assignVarToA(vis, 'ap1', undefined);
           assignVarToA(vis, 'max1', undefined);
@@ -889,17 +889,17 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
       // generalise (un)highlight code below
       else {
         // Base case: left >= right  
-        chunker.add('Done', (vis, a, b, cur_left, cur_right, c_stk, cur_depth) => {  // 添加 cur_depth
+        chunker.add('Done', (vis, a, b, cur_left, cur_right, c_stk, cur_depth) => {  // Add cur_depth
           if (cur_left === cur_right) {
             unhighlight(vis, cur_left, true);
             highlight(vis, cur_left, sortColor);
-            // 删除 sortedRanges.add 这行
+            // Remove sortedRanges.add line
           }
           
-          // 关键：继续显示栈列表！
+          // Key: Continue displaying stack list!
           set_simple_stack(vis.array, c_stk, vis, b, cur_depth);
           
-        }, [A, B, left, right, simple_stack, depth], depth);// 确保传递 simple_stack
+        }, [A, B, left, right, simple_stack, depth], depth);// Ensure simple_stack is passed
       }
       const frame = real_stack.pop();
       if (frame) {
@@ -945,33 +945,33 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
     // [entire_num_array.length - 1],
     // 0);
     chunker.add('Done', (vis, cur_finished_stack_frames, cur_array) => {
-      HIDE_STACKS_DURING_MERGE = [];  // 清空数组，重置所有深度的标志
+      HIDE_STACKS_DURING_MERGE = [];  // Clear array, reset flags for all depths
     
-      // 最终高亮（保留你原来的逻辑）
+      // Final highlighting (keep your original logic)
       for (let i = 0; i < entire_num_array.length; i++) {
         highlight(vis, i, doneColor);
       }
     
-      // 递归面板展开时，计算“最终栈”
+      // When recursion panel is expanded, calculate "final stack"
       if (isRecursionExpanded()) {
         const finalStack = derive_stack(
-          [],                       // 最终态不需要当前 real_stack
+          [],                       // Final state doesn't need current real_stack
           cur_finished_stack_frames,
           undefined, undefined, undefined, undefined,
-          cur_array                 // 当前最终数组
+          cur_array                 // Current final array
         );
         const depth = Array.isArray(finalStack) ? finalStack.length : 0;
     
-        // 根据是否展开 Merge Copy 决定挂到 A 还是 B
+        // Decide whether to attach to A or B based on whether Merge Copy is expanded
         if (isMergeCopyExpanded() && vis.arrayB) {
-          // 只在 B 显示
+          // Display only on B
           vis.array.setStackDepth(0);
           vis.array.setStack(undefined);
     
           vis.arrayB.setStackDepth(depth);
           vis.arrayB.setStack(finalStack);
         } else {
-          // 只在 A 显示
+          // Display only on A
           if (vis.arrayB) {
             vis.arrayB.setStackDepth(0);
             vis.arrayB.setStack(undefined);
@@ -981,7 +981,7 @@ function derive_stack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, c
           vis.array.setStack(finalStack);
         }
       } else {
-        // 面板折叠：都隐藏
+        // Panel collapsed: hide all
         vis.array.setStackDepth(0);
         vis.array.setStack(undefined);
         if (vis.arrayB) {
