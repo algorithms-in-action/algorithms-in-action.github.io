@@ -542,7 +542,7 @@ export function run_msort() {
         const { M, L: remainingL, R: remainingR } = mergeHeads(sortedL, sortedR, depth);
         const mergedList = mergeRemainingElements(remainingL, remainingR, M, depth);
 
-        chunker.add('returnM', (vis, Lists, cur_L, cur_M, c_stk) => {
+        chunker.add('returnM', (vis, Lists, cur_L, cur_M, c_stk, cur_depth) => {
           vis.array.set(Lists, 'msort_lista_td');
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, undefined);
@@ -550,7 +550,15 @@ export function run_msort() {
           vis.array.assignVariable('E', 2, undefined);
           vis.array.assignVariable('M', 2, cur_M);
           colorList(vis, cur_M, sortColor, Lists);
-        }, [[Indices, Heads, Tails], newL, mergedList, simple_stack], depth);
+
+          // **NEW: Reposition merged nodes in sorted order**
+          repositionMergedList(vis, cur_M, Lists, cur_depth);
+
+          // Update connections and color
+          vis.list.updateConnections(Lists[2]);
+          vis.list.assignVariableByIndex('M', cur_M);
+          colorListPointer(vis, cur_M, sortColor, Lists);
+        }, [[Indices, Heads, Tails], newL, mergedList, simple_stack, depth], depth);
 
         simple_stack.shift();
         return mergedList;
@@ -558,11 +566,43 @@ export function run_msort() {
         chunker.add('returnL', (vis, a, cur_L) => {
           vis.array.select(1, cur_L, 1, cur_L, '1');
           vis.array.select(2, cur_L, 2, cur_L, '1');
+
+          // Single element is already "sorted" - no repositioning needed
         }, [A, L], depth);
 
         simple_stack.shift();
         return L;
       }
+    }
+
+    // **NEW HELPER FUNCTION: Reposition merged list horizontally**
+    function repositionMergedList(vis, startIndex, Lists, depth) {
+      if (startIndex === 'Null') return;
+
+      const Tails = Lists[2];
+
+      // Collect all nodes in the merged list
+      const mergedNodes = [];
+      for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+        const key = vis.list.indexToKey.get(i);
+        if (key) {
+          mergedNodes.push({ index: i, key, node: vis.list.nodes.get(key) });
+        }
+      }
+
+      if (mergedNodes.length === 0) return;
+
+      // Use the leftmost position and Y level of the merged nodes
+      const leftmostX = Math.min(...mergedNodes.map(n => n.node.pos.x));
+      const averageY = mergedNodes.reduce((sum, n) => sum + n.node.pos.y, 0) / mergedNodes.length;
+
+      const NODE_GAP = 65;
+
+      // Reposition in sorted order starting from leftmost position
+      mergedNodes.forEach((item, position) => {
+        const newX = leftmostX + (position * NODE_GAP);
+        vis.list.moveNodeTo(item.key, newX, averageY);
+      });
     }
 
     // Main execution
