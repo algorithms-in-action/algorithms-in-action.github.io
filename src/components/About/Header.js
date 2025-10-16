@@ -19,7 +19,7 @@ function Header() {
         <div className="subtitle">
           Designed by students, for students.
         </div>
-        <Link className="start" to="/">Start Now</Link>
+        <Link className="start" to="/animation">Start Now</Link>
       </div>
 
     </>

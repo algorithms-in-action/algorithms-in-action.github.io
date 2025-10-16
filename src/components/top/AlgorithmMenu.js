@@ -20,7 +20,7 @@ const algorithms = Object.entries(visibleAlgorithmMetadata).reduce(
 );
 
 // Using inline styles, absolute headache to track what is applying
-// a default style, .module.scss or tailwind would have been ideal.
+// a default style, .module.scss would have been ideal.
 
 function AlgoButton({ name, shorthand, isActive }) {
   const baseStyle = {
@@ -39,7 +39,8 @@ function AlgoButton({ name, shorthand, isActive }) {
     textDecoration: "none",
   };
 
-  const href = `/?alg=${shorthand}&mode=${getDefaultMode(shorthand)}`;
+  const href = `${window.location.origin}/animation/?alg=${shorthand}&mode=${getDefaultMode(shorthand)}`;
+
 
   // Unfortunately have to resort to a full reload.
   return (
@@ -145,7 +146,7 @@ function AlgorithmMenu({ onClose }) {
       }}
     >
       <input
-        placeholder="Search..."
+        placeholder="Search algorithms"
         onChange={searchAlgorithm}
         style={{
           all: "unset",

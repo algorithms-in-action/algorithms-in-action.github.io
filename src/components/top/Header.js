@@ -21,7 +21,7 @@ function Header({ onSetting }) {
   };
 
   const hoverTapAnim = {
-    whileHover: { scale: 1.05, color: 'var(--accent-color, #0077ff)' },
+    whileHover: { scale: 1.02, color: 'var(--accent-color, #0077ff)' },
     whileTap: { scale: 0.95 },
     transition: { type: 'spring', stiffness: 300, damping: 15 },
   };

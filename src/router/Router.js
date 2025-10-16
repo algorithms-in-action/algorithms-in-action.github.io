@@ -8,10 +8,10 @@ function Router() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={App} />
         <Route path="/about" component={About} />
         <Route path="/mainmenu" component={Mainmenu} />
-        <Route component={App} />
+        <Route path="/animation" component={App} />
+        <Route exact path="*" component={Mainmenu} />
       </Switch>
     </BrowserRouter>
   );
