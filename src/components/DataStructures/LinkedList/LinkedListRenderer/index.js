@@ -26,7 +26,7 @@ class LinkedListRenderer extends Array2DRenderer {
     const dotCenterY = n => n.pos.y;
 
     const SAFE_GAP = 6;
-    const targetX = to => to.pos.x - NODE_W / 2 - SAFE_GAP;
+    const targetX = to => to.pos.x - NODE_W / 2 - SAFE_GAP + 6;
     const targetY = to => to.pos.y;
 
     const PADDING = 0;
@@ -107,13 +107,13 @@ class LinkedListRenderer extends Array2DRenderer {
                     id="arrow-dark"
                     viewBox={`0 0 ${ARROW_LEN} ${ARROW_H}`}
                     markerUnits="userSpaceOnUse"
-                    markerWidth={ARROW_LEN}
-                    markerHeight={ARROW_H}
+                    markerWidth={ARROW_LEN * 1.2}
+                    markerHeight={ARROW_H * 1.2}
                     refX={ARROW_LEN}
                     refY={HALF_H}
                     orient="auto"
                   >
-                    <path d={`M0,0 L${ARROW_LEN},${HALF_H} L0,${ARROW_H} Z`} fill="currentColor" />
+                    <path d={`M0,0 L${ARROW_LEN},${HALF_H} L0,${ARROW_H} Z`} fill="#ff3b3b" />
                   </marker>
                 );
               })()}
