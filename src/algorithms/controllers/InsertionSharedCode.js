@@ -794,7 +794,7 @@ export function createTreeInsertionController(isAVL = false) {
                         (vis, r, b, rr, rrr) => {
                             // show the rotation type and the node to be rotated
                             vis.graph.setFunctionName(`balanceCase: `);
-                            vis.graph.setFunctionName(`Rotation: `);
+                            vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                             vis.graph.setFunctionInsertText(`RR`);
                             vis.graph.setFunctionNode(`${r}`);
                             // vis.graph.clearSelect_Circle_Count();
@@ -833,7 +833,7 @@ export function createTreeInsertionController(isAVL = false) {
                         (vis, r, b, rl, rlr) => {
                             // show the rotation type and the node to be rotated
                             vis.graph.setFunctionName(`balanceCase: `);
-                            vis.graph.setFunctionName(`Rotation: `);
+                            vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                             vis.graph.setFunctionInsertText(`LR`);
                             // vis.graph.clearSelect_Circle_Count();
                             // vis.graph.setSelect_Circle_Count(r);
@@ -873,7 +873,7 @@ export function createTreeInsertionController(isAVL = false) {
                         (vis, r, b, rr, rrl) => {
                             // show the rotation type and the node to be rotated
                             vis.graph.setFunctionName(`balanceCase: `);
-                            vis.graph.setFunctionName(`Rotation: `);
+                            vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                             vis.graph.setFunctionInsertText(`RL`);
                             vis.graph.setFunctionNode(`${r}`);
                             // vis.graph.clearSelect_Circle_Count();
