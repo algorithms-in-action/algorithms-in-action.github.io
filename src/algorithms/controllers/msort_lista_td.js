@@ -143,20 +143,28 @@ export function run_msort() {
 
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
-        vis.list.set(entire_num_array, 'mergeSort list init');
+
+        // **NEW: Handle visibility for recursive calls**
+        if (cur_depth > 0) {
+          // In a recursive call - hide everything first
+          hideAllNodes(vis);
+          // Then show only the current sublist
+          showList(vis, cur_L, Lists);
+        } else {
+          // Initial call - show everything
+          vis.list.set(entire_num_array, 'mergeSort list init');
+        }
+
         vis.array.assignVariable('L', 2, cur_L);
         // pointer list vis
         vis.list.assignVariableByIndex('L', cur_L);
+        colorListPointer(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_L, runAColor, Lists);
         set_simple_stack(vis.array, c_stk);
       }, [[Indices, Heads, Tails], L, len, depth, simple_stack], depth);
 
-      /* chunker.add('len>1', (vis, a) => {
-      }, [[Indices, Heads, Tails]], depth); */
-      // STEP 2: Check if len > 1
       chunker.add('len>1', (vis, Lists, cur_L, cur_len) => {
         // Just a logical checkpoint, no visual change needed
-        // Could add a highlight or pause here if desired
       }, [[Indices, Heads, Tails], L, len], depth);
     }
 
@@ -165,7 +173,6 @@ export function run_msort() {
 
       chunker.add('Mid', (vis, Lists, cur_L, cur_Mid, c_stk) => {
         vis.array.assignVariable('Mid', 2, cur_Mid);
-        // For pointer list: assign Mid variable to the head node
         vis.list.assignVariableByIndex('Mid', cur_Mid);
       }, [[Indices, Heads, Tails], L, Mid, simple_stack], depth);
 
@@ -185,16 +192,17 @@ export function run_msort() {
         vis.array.assignVariable('R', 2, cur_R);
 
         // update pointer list view
-        // update connections
         vis.list.updateConnections(Lists[2]);
-        // assign variables in pointer view
         vis.list.assignVariableByIndex('L', cur_L);
         vis.list.assignVariableByIndex('Mid', cur_Mid);
         vis.list.assignVariableByIndex('R', cur_R);
 
+        // **NEW: Make sure both L and R sublists are visible**
+        showList(vis, cur_L, Lists);
+        showList(vis, cur_R, Lists);
+
         // Color the left part (L to Mid) orange
         colorListPointer(vis, cur_L, runAColor, Lists);
-
         // Color the right part (R onwards) blue
         colorListPointer(vis, cur_R, runBColor, Lists);
 
@@ -267,8 +275,6 @@ export function run_msort() {
     }
 
     function performRecursiveSort(L, R, midNum, len, depth) {
-      // **NEW: Move right half down AND fade to grey before processing left**
-      // Sort left half
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
         set_simple_stack(vis.array, c_stk);
@@ -279,8 +285,11 @@ export function run_msort() {
         // **Move right half below left half**
         moveRightHalfBelow(vis, cur_L, cur_R, Lists);
 
-        // **Fade right half to grey**
-        fadeListToGrey(vis, cur_R, Lists);
+        // **NEW: Hide right half before recursing into left**
+        hideList(vis, cur_R, Lists);
+
+        // **Fade left to grey (about to recurse into it)**
+        fadeListToGrey(vis, cur_L, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       L = MergeSort(L, midNum, depth + 1);
@@ -295,11 +304,11 @@ export function run_msort() {
         vis.array.select(1, cur_R, 1, cur_R, runBColor);
         vis.array.select(2, cur_R, 2, cur_R, runBColor);
 
-        // **Restore right half color in pointer view**
-        colorListPointer(vis, cur_R, runBColor, Lists);
+        // **NEW: Show left (sorted), keep right hidden**
+        showList(vis, cur_L, Lists);
+        colorListPointer(vis, cur_L, sortColor, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
-      // Sort right half
       chunker.add('preSortR', (vis, Lists, cur_L, cur_R, c_stk) => {
         vis.array.set(Lists, 'msort_lista_td');
         set_simple_stack(vis.array, c_stk);
@@ -307,8 +316,12 @@ export function run_msort() {
         vis.array.select(1, cur_R, 1, cur_R, runBColor);
         vis.array.select(2, cur_R, 2, cur_R, runBColor);
 
-        // **Optional: Fade left half now (or keep it visible)**
-        // fadeListToGrey(vis, cur_L, Lists);
+        // **NEW: Hide left, show right before recursing into right**
+        hideList(vis, cur_L, Lists);
+        showList(vis, cur_R, Lists);
+
+        // **Fade right to grey (about to recurse)**
+        fadeListToGrey(vis, cur_R, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       R = MergeSort(R, len - midNum, depth + 1);
@@ -321,12 +334,50 @@ export function run_msort() {
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
 
+        // **NEW: Show both halves for merge**
+        showList(vis, cur_L, Lists);
+        showList(vis, cur_R, Lists);
+
         // **Restore both halves colors in pointer view**
         colorListPointer(vis, cur_L, runAColor, Lists);
         colorListPointer(vis, cur_R, runBColor, Lists);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       return { L, R };
+    }
+
+    // **NEW HELPER FUNCTIONS for visibility control**
+
+    function hideAllNodes(vis) {
+      vis.list.nodes.forEach((node, key) => {
+        vis.list.hideByKey(key);
+      });
+    }
+
+    function hideList(vis, startIndex, Lists) {
+      if (startIndex === 'Null') return;
+
+      const Tails = Lists[2];
+
+      for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+        const key = vis.list.indexToKey.get(i);
+        if (key) {
+          vis.list.hideByKey(key);
+        }
+      }
+    }
+
+    function showList(vis, startIndex, Lists) {
+      if (startIndex === 'Null') return;
+
+      const Tails = Lists[2];
+
+      for (let i = startIndex; i !== 'Null'; i = Tails[i]) {
+        const key = vis.list.indexToKey.get(i);
+        if (key) {
+          vis.list.showByKey(key);
+        }
+      }
     }
 
     // Update mergeHeads function to include pointer visualization
@@ -370,7 +421,11 @@ export function run_msort() {
         vis.array.select(1, cur_M, 1, cur_M, sortColor);
         vis.array.select(2, cur_M, 2, cur_M, sortColor);
 
-        // **NEW: Update pointer list view**
+        // **NEW: Ensure all merge nodes are visible**
+        showList(vis, cur_L, Lists);
+        showList(vis, cur_R, Lists);
+        showList(vis, cur_M, Lists);
+
         vis.list.updateConnections(Lists[2]);
         vis.list.assignVariableByIndex('L', cur_L);
         vis.list.assignVariableByIndex('R', cur_R);
@@ -381,7 +436,7 @@ export function run_msort() {
         colorListPointer(vis, cur_M, sortColor, Lists);
       }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
 
-      // Merge loop
+      // Rest of merge loop stays the same...
       while (L !== 'Null' && R !== 'Null') {
         chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
           vis.array.set(Lists, 'msort_lista_td');
@@ -394,7 +449,6 @@ export function run_msort() {
           colorList(vis, cur_R, runBColor, Lists);
           colorMergedList(vis, cur_M, cur_E, sortColor, Lists);
 
-          // **NEW: Update pointer list view**
           vis.list.updateConnections(Lists[2]);
           updatePointerVariables(vis, cur_L, cur_R, cur_M, cur_E);
           colorListPointer(vis, cur_L, runAColor, Lists);
@@ -408,7 +462,6 @@ export function run_msort() {
           vis.array.deselect(1, cur_R);
           vis.array.select(1, cur_R, 1, cur_R, apColor);
 
-          // **NEW: Highlight comparison in pointer view**
           if (cur_L !== 'Null') {
             colorSingleNodePointer(vis, cur_L, apColor);
           }
@@ -418,19 +471,18 @@ export function run_msort() {
         }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
         if (Heads[L] <= Heads[R]) {
-          Tails[E] = L;    // Update pointer
+          Tails[E] = L;
           E = L;
           L = Tails[L];
           addMergeVisualization('popL', L, R, M, E, depth);
         } else {
-          Tails[E] = R;    // Update pointer
+          Tails[E] = R;
           E = R;
           R = Tails[R];
           addMergeVisualization('popR', L, R, M, E, depth);
         }
       }
 
-      // Append remaining elements
       if (L === 'Null') {
         Tails[E] = R;
         addFinalVisualization('appendR', M, depth);
