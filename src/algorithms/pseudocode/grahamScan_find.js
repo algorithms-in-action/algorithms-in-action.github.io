@@ -6,7 +6,6 @@ export default parse(`
 Graham scan algm for convex hull, draft
 This version uses a list rather than a "stack" - a bit simpler I think
 XXX use h rather than H??
-XXX add exercise for stack-like coding
 
 Could add optional optimisation to remove points in quadralateral
 but better to just have that for gift wrapping as complexity is ok here
@@ -31,23 +30,24 @@ grahamScan(P, n) // return convex hull of points P[1]...P[n] in a plane \\B star
       A point p, where the gradient of the line from p1 to p is small, comes
       before points where the gradient is larger. Any comparison-based
       sorting algorithm could potentially be used. P[1] will be p1.
+      The animation re-numbers the points so P[i] = i, for all i.
     \\Expl}
     H <- list [P[2], p1] // hull is the first two points initially \\B initH
     \\Expl{ H contains points that form a convex hull for the first i
       points (initially i=2) in the (sorted) list of points. The most
       recently added point is at the front of the list. Here we use array
-      notation to refer to elements of H, with H[0] the first element.
+      notation to refer to elements of H, with H[1] the first element.
     \\Expl}
     for i <- 3 to n // for each remaining point \\B forI
     \\Expl{ For each remaining point P[i], in counter-clockwise order, we add
-      P[i] to the convex hull and remove any points that would not make the hull
+      P[i] to the convex hull H and remove any points that would not make the hull
       convex.
     \\Expl}
     \\In{
         Add P[i] to H (at the front of the list, H[1]) \\B addP
         \\Note{ Use same color for all points in H.  Best also highlight
           all points to be removed here for case where removePoints isn't
-          expanded (might require some repeated code in controller).
+          expanded? (might require some repeated code in controller).
         \\Note}
         Remove non-convex points from H \\Ref removePoints
         \\Expl{ Adding P[i] may make one or more points just before P[i] no
@@ -78,7 +78,7 @@ whileTest
 // Remove while the cross product of these two vectors is <= 0
 // (or H only has 2 points)
 while H length > 2 & (H[2].y-H[3].y)*(H[1].x-H[2].x) - (H[2].x-H[3].x)*(H[1].y-H[2].y) <= 0 \\B whileNotCC
-\\Expl{ See the "BACKGROUND" and "MORE" tabs for more details. Code in
+\\Expl{ See the "BACKGROUND" tabs for more details. Code in
   geometric algorithms often has cryptic bits like this based on
   mathematical results from geometry. For many operations, the most
   intuitive coding involves division and is actually buggy because 

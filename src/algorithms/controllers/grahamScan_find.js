@@ -3,6 +3,13 @@
 // developed somewhat separately (with aim of simple presentation etc)
 // so it's rather more ugly - one of the disadvantages of grabbing existing
 // code rather than writing pseudocode then writing code based on it.
+// Also, initially we didn't re-number the points in the sorting phase,
+// requiring some extra complexity that could now be removed as we have
+// added a small chunk of code to do the re-ordering (but not gone back to
+// the original ordering a the end).
+// XXX probably should highlight the nodes as well as the edges, at least at
+// the end.
+// XXX base case not animated yet
 // 
 // XXX Based on gwrap.js - see comments there also
 
@@ -101,7 +108,7 @@ export default {
         chunker.add(
           'start',
           (vis, edgeArray, coordsArray, ids) => {
-            vis.graph.setSize(4);
+            vis.graph.setSize(5);
             vis.array.setSize(1);
             vis.array.set(ids);
             vis.graph.directed(true);
@@ -181,19 +188,31 @@ export default {
            [p1], 0
          );
 
+        // XXX now renumbering rendered points - best simplify other code
+        let newCoords = new Array(n);
+        for (let i = 0; i < n; i++) {
+          newCoords[i] = new Array(2);
+          newCoords[i][0] = a[i].x;
+          newCoords[i][1] = a[i].y;
+          a[i].id = i;
+        }
+        p1 = 0;
+
         chunker.add(
            'sort',
-           (vis, a, n) => {
+           (vis, edgeArray, coordsArray, a, n) => {
+             vis.graph.set(edgeArray, Array.from({ length: n }, (v, k) => (k + 1)), coordsArray);
              // add some edges + min/max labels to illustrate sorting
              // (XXX could change labels like div&conq but not worth it??)
              for (let i = 1; i < n; i++) {
                vis.graph.addEdge(a[0].id, a[i].id);
                vis.graph.colorEdge(a[0].id, a[i].id, colorsCH.HULL_E);
              }
+             vis.graph.updateUpperLabel(0, 'p1');
              vis.graph.updateUpperLabel(a[1].id, 'min'); // XXX Lower broken
              vis.graph.updateUpperLabel(a[n-1].id, 'max');
            },
-           [a, n], 0
+           [E, newCoords, a, n], 0
          );
     
         // If fewer than 3 points remain, hull is not possible

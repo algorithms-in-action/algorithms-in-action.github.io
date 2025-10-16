@@ -11,7 +11,8 @@ may be included).  The **Graham Scan** algorithm is a quite simple
 but reasonably efficient method for computing convex hulls.  It works
 by **sorting points by angle** and then constructing the hull by adding
 the points to the hull in sorted order, removing non-convex points using
-stack-like operations.
+stack-like operations - adding new nodes and deleting nodes from (close to)
+the same end of the list.
 
 ## How It Works
 
@@ -25,7 +26,7 @@ and the x-axis.  The points will be considered in this order, resulting in a
 counter-clockwise scan.
 
 3. **Traverse and build the hull**  
-   Use a list of points to keep track of the hull vertices, starting the the lowest angle point plus the anchor point.
+   Use a list of points to keep track of the hull vertices, starting with two points: the lowest angle point plus the anchor point.
    For each point:
    - Add the point to the front of the list
    - If the front of the list has three points that are not **convex** (a counter-clockwise scan doesn't result in a **left turn**), delete the middle point from the list and repeat this step.
