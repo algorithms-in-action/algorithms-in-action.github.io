@@ -55,9 +55,10 @@
   box-sizing: border-box;
   background: transparent;
   padding: 0;
-  transform: translate(-50%, -50%);
+  //transform: translate(-50%, -50%);
   z-index: 2;
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  //transition: opacity 0.45s ease, transform 0.45s ease;
+  transition: opacity 0.25s ease;
 
   /* 尺寸变量（改这里即可整体缩放） */
   --node-w: 60px;

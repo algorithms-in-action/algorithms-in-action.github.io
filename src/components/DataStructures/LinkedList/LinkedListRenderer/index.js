@@ -72,7 +72,9 @@ class LinkedListRenderer extends Array2DRenderer {
       }
 
       // Quadratic bezier curve
-      return `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`;
+      //return `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`;
+      //弧线和直线的开关
+      return `M ${x1},${y1} L ${x2},${y2}`;
     };
 
     return (
@@ -186,8 +188,8 @@ class LinkedListRenderer extends Array2DRenderer {
                 ].filter(Boolean).join(' ')}
                 style={{
                   position: 'absolute',
-                  left: n.pos.x - 30,
-                  top: n.pos.y,
+                  left: n.pos.x - 60,
+                  top: n.pos.y - 10,
                   width: NODE_W,
                   height: NODE_H,
                   '--node-w': `${NODE_W}px`,
@@ -196,7 +198,7 @@ class LinkedListRenderer extends Array2DRenderer {
                   '--dot-size': `${DOT_SIZE}px`,
                   '--dot-right': `${DOT_RIGHT}px`,
                 }}
-                transition={{ duration: 0.45 }}
+                transition={{ duration: 0.25 }}
               >
                 <div className={styles.pill}>
                   <span className={styles.value}>{n.value}</span>
