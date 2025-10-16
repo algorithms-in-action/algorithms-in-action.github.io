@@ -42,24 +42,34 @@ class LinkedListRenderer extends Array2DRenderer {
       return dx > H_GAP * 1.5 || dy > 10;
     };
 
-    // **NEW: Generate curved path**
+    // **UPDATED: Generate more pronounced curved path**
     const getCurvedPath = (x1, y1, x2, y2) => {
       const dx = x2 - x1;
       const dy = y2 - y1;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      // Calculate curve control points
-      // Curve downward if going right, upward if going left
-      const curveHeight = Math.min(40, distance * 0.3);
-      const direction = dx > 0 ? 1 : -1;
+      // **INCREASED curve height for more pronounced curves**
+      const curveHeight = Math.min(80, distance * 0.5); // Was 40 and 0.3
+
+      // Determine if arrow goes backward (right to left)
+      const goingBackward = dx < 0;
 
       // Midpoint
       const mx = (x1 + x2) / 2;
       const my = (y1 + y2) / 2;
 
-      // Control point (below/above the midpoint)
-      const cx = mx;
-      const cy = my + curveHeight * direction;
+      // Control point
+      let cx, cy;
+
+      if (goingBackward) {
+        // For backward arrows, curve upward more dramatically
+        cx = mx;
+        cy = my - curveHeight; // Curve upward
+      } else {
+        // For forward long arrows, curve downward
+        cx = mx;
+        cy = my + curveHeight; // Curve downward
+      }
 
       // Quadratic bezier curve
       return `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`;
