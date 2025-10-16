@@ -1,21 +1,24 @@
-import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer_insertionSort';
 import { colors } from '../../components/DataStructures/colors';
 
-const pivotColor   = colors.leaf;   // key (element which is currently handling)
-const focusColor   = colors.apple;  // the position which is currently comparing with
-const leftColor    = colors.peach;  // sorted portion
-const rightColor   = colors.sky;    // unsorted portion
-const sortedColor  = colors.stone;  // complete sorting
+const pivotColor = colors.apple;
+const focusColor = colors.sky;
+const leftColor  = colors.leaf;
+const waitColor  = colors.sky;
+const finalColor = colors.stone;
 
-const IS = {
+const BK = {
   INIT: 1,
-  OUTER_I: 2,
-  SET_KEY_J: 3,
-  WHILE_CHECK: 4,
-  SHIFT_SWAP: 5,
-  INSERT_DONE: 6,
-  MARK_PREFIX: 7,
-  FINISH: 8,
+  OUTER: 2,
+  K2TEMP: 3,
+  JSET: 4,
+  WHILE: 5,
+  SHIFT: 6,
+  JDEC: 7,
+  PLACE: 8,
+  FINISH: 20,
 };
 
 export default {
@@ -30,119 +33,161 @@ export default {
     };
   },
 
-  /**
-   * @param {object} chunker
-   * @param {{nodes:number[]}} param1
-   */
   run(chunker, { nodes }) {
-    // operate directly on nodes to ensure animations synchronize with data
-    const A = nodes;
+    const N = nodes.length;
 
-    // initialize display
+    const SPACER = N;
+    const TEMP   = N + 1;
+
+    const A = [...nodes, null, null];
+
     chunker.add(
-      IS.INIT,
+      BK.INIT,
       (vis, arr) => {
         vis.array.set(arr, 'insertion-sort');
-        vis.array.setStack([]);
+        vis.array.setStack?.([]);
         vis.array.clearVariables?.();
 
-        if (arr.length > 0) vis.array.selectColor(0, leftColor);
-        for (let k = 1; k < arr.length; k++) vis.array.selectColor(k, rightColor);
+        if (N > 0) vis.array.selectColor(0, leftColor);
+        for (let k = 1; k < N; k++) vis.array.selectColor(k, waitColor);
       },
       [A]
     );
 
-    // main loop
-    for (let i = 1; i < A.length; i++) {
+    for (let i = 1; i < N; i++) {
       const key = A[i];
       let j = i - 1;
-      let kpos = i; // key's current position
 
-      // Highlight the key and update the colors of the left and right areas.
       chunker.add(
-        IS.OUTER_I,
-        (vis, idx) => {
+        BK.OUTER,
+        (vis, idx, n) => {
           vis.array.selectColor(idx, pivotColor);
           for (let t = 0; t < idx; t++) vis.array.selectColor(t, leftColor);
-          for (let t = idx + 1; t < A.length; t++) vis.array.selectColor(t, rightColor);
+          for (let t = idx + 1; t < n; t++) vis.array.selectColor(t, waitColor);
+          vis.array.assignVariable?.('key', idx);
         },
-        [i]
+        [i, N]
       );
 
-      // show variable
       chunker.add(
-        IS.SET_KEY_J,
-        (vis, _i, _j) => {
-          vis.array.assignVariable?.('key', _i);
-          vis.array.assignVariable?.('j', _j);
+        BK.K2TEMP,
+        (vis, from, to) => {
+          vis.array.swapElements(from, to);
+          vis.array.assignVariable?.('key', to);
         },
-        [i, j]
+        [i, TEMP]
       );
 
-      // Shift the key progressively to the left: Use swapElements for a unified animation.
+      chunker.add(
+        BK.JSET,
+        (vis, jVal) => {
+          if (jVal >= 0) {
+            vis.array.assignVariable?.('j', jVal);
+            vis.array.selectColor(jVal, focusColor);
+          } else {
+            vis.array.removeVariable?.('j');
+          }
+        },
+        [j]
+      );
+
       while (j >= 0 && A[j] > key) {
-        // highlight comparation
         chunker.add(
-          IS.WHILE_CHECK,
-          (vis, _j, _kpos) => {
-            vis.array.selectColor(_j, focusColor);
-            vis.array.selectColor(_kpos, focusColor);
-            vis.array.assignVariable?.('j', _j);
+          BK.WHILE,
+          (vis, jVal) => {
+            if (jVal >= 0) {
+              vis.array.assignVariable?.('j', jVal);
+              vis.array.selectColor(jVal, focusColor);
+            } else {
+              vis.array.removeVariable?.('j');
+            }
           },
-          [j, kpos]
+          [j]
         );
 
-        // Swap: Swap A[j] with the current position of key, equivalent to shifting key one position to the left.
-        [A[j], A[kpos]] = [A[kpos], A[j]];
-        const l = j, r = kpos;
-
         chunker.add(
-          IS.SHIFT_SWAP,
-          (vis, _l, _r) => {
-            vis.array.swapElements(_l, _r);
+          BK.SHIFT,
+          (vis, l, r) => {
+            vis.array.swapElements(l, r);
           },
-          [l, r]
+          [j, j + 1]
         );
+        [A[j], A[j + 1]] = [A[j + 1], A[j]];
 
-        kpos = j;
-        j--;
+        j -= 1;
+        chunker.add(
+          BK.JDEC,
+          (vis, jVal) => {
+            if (jVal >= 0) {
+              vis.array.assignVariable?.('j', jVal);
+              vis.array.selectColor(jVal, focusColor);
+            } else {
+              vis.array.removeVariable?.('j');
+            }
+          },
+          [j]
+        );
       }
 
-      // Clear temporary highlights and variables
+      const place = j + 1;
       chunker.add(
-        IS.INSERT_DONE,
-        (vis, p) => {
-          vis.array.deselect(p);
+        BK.PLACE,
+        (vis, tempIdx, targetIdx) => {
+          vis.array.swapElements(tempIdx, targetIdx);
           vis.array.removeVariable?.('j');
-          vis.array.assignVariable?.('key', p);
+          vis.array.assignVariable?.('key', targetIdx);
         },
-        [kpos]
+        [TEMP, place]
       );
 
-      // Marked prefix [0..i] as sorted
+      A[place] = key;
+      A[TEMP]  = null;
+      A[SPACER] = null;
+
       chunker.add(
-        IS.MARK_PREFIX,
-        (vis, upto) => {
-          for (let t = 0; t <= upto; t++) vis.array.selectColor(t, sortedColor);
+        BK.WHILE,
+        (vis, upto, n) => {
+          for (let t = 0; t <= upto; t++) vis.array.selectColor(t, leftColor);
+          for (let t = upto + 1; t < n; t++) vis.array.selectColor(t, waitColor);
         },
-        [i]
+        [i, N]
       );
     }
 
-    // Final state: Set all to sortedColor, clean up variables and stack
     chunker.add(
-      IS.FINISH,
+      BK.FINISH,
       (vis, n) => {
         for (let i = 0; i < n; i++) {
-          vis.array.selectColor(i, sortedColor);
+          vis.array.selectColor(i, finalColor);
           vis.array.fadeIn?.(i);
         }
         vis.array.clearVariables?.();
-        vis.array.setStack([]);
+        vis.array.setStack?.([]);
       },
-      [A.length]
+      [N]
     );
 
     return A;
   },
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
