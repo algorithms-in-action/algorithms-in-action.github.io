@@ -109,11 +109,11 @@ function colorList(vis, startIndex, color, Lists) {
 export function initVisualisers() {
   return {
     array: {
-      instance: new Array2DTracer('array', null, 'Array representation of linked list'),
+      instance: new Array2DTracer('array', null, 'Array representation of linked list (Expand all code to see full animation)'),
       order: 1,
     },
     list: {
-      instance: new LinkedListTracer('list', null, 'Pointer representation of linked list'),
+      instance: new LinkedListTracer('list', null, 'Pointer representation of linked list (Expand all code to see full animation)'),
       order: 0,
     },
   }
