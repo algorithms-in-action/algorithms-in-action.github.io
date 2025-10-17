@@ -390,17 +390,58 @@ export function run_msort() {
         vis.array.deselect(1, cur_R);
         vis.array.select(1, cur_R, 1, cur_R, apColor);
 
-        // **NEW: Highlight comparison in pointer view**
+        // Highlight comparison in pointer view
         colorSingleNodePointer(vis, cur_L, apColor);
         colorSingleNodePointer(vis, cur_R, apColor);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       if (Heads[L] <= Heads[R]) {
         M = L;
+
+        // Show M <- L step
+        chunker.add('M<-L', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
+          vis.array.assignVariable('M', 2, cur_M);
+          vis.list.assignVariableByIndex('M', cur_M);
+        }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
+
         L = Tails[L];
+
+        // **FIXED: Use assignMaybeNullVar for L since it might be Null**
+        chunker.add('L<-tail(L)', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
+          assignMaybeNullVar(vis, 'L', cur_L);  // Handles Null case
+          if (cur_L !== 'Null') {
+            vis.list.assignVariableByIndex('L', cur_L);
+          } else {
+            // Clear L variable from pointer view when Null
+            vis.list.nodes.forEach(node => {
+              node.variables = node.variables.filter(v => v !== 'L');
+            });
+          }
+        }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
+
       } else {
         M = R;
+
+        // Show M <- R step
+        chunker.add('M<-R', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
+          vis.array.assignVariable('M', 2, cur_M);
+          vis.list.assignVariableByIndex('M', cur_M);
+        }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
+
         R = Tails[R];
+
+        // **FIXED: Use assignMaybeNullVar for R since it might be Null**
+        chunker.add('R<-tail(R)', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
+          assignMaybeNullVar(vis, 'R', cur_R);  // Handles Null case
+          if (cur_R !== 'Null') {
+            vis.list.assignVariableByIndex('R', cur_R);
+          } else {
+            // Clear R variable from pointer view when Null
+            vis.list.nodes.forEach(node => {
+              node.variables = node.variables.filter(v => v !== 'R');
+            });
+          }
+        }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
       }
 
       return { M, L, R };
