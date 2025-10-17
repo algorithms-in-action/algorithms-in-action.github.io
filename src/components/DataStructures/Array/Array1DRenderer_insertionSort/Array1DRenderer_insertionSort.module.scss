@@ -1,0 +1,260 @@
+@import "../../common/stylesheet/index";
+
+.array_1d {
+    flex-shrink: 0;
+
+    // default caption is at top; some code may use undefined styles for
+    // captions - should fix XXX
+    .top_caption {
+        caption-side: top;
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 18px;
+        // color: var(--array-2d-row-col-value-color);
+        // font-family: Menlo, "Liberation Mono", Courier, monospace;
+    }
+
+    .bottom_caption {
+        caption-side: bottom;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 13px;
+        color: var(--array-2d-row-col-value-color);
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
+    }
+
+    // used for some merge sorts and recursive DFS
+    .simple_stack_caption {
+        caption-side: bottom;
+        // caption-side: top;
+        text-align: right; // so stack grows to the left
+        margin-top: 70px;
+        // margin-top: 0px;
+    }
+
+
+
+    .row {
+        margin-bottom: m#{i}n(8px, 1vh);
+        position: relative;
+        --array-1d-minimum-height: 1em;
+
+        /* 
+        Pivot Line Styling:
+        - This style defines the visual representation of the pivot element in 1D arrays, particularly in algorithms like QuickSort.
+        - Currently disabled for design reasons, but can be re-enabled if required in the future.
+        - To reactivate, uncomment this style and the corresponding JSX code in index.js.
+        */
+
+        // .pivotLine {
+        //     position: absolute;
+        //     width: 100%;
+        //     height: 3px;
+        //     background-color: var(--apple);
+        //     opacity: 0.4;
+        //     margin-right: 4px;
+        //     z-index: 1;
+        // }
+
+        .columnGap { // like .col but for a gap - no border
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+            min-width: 8px;
+            width: 28px;
+            // min-height: var(--array-1d-minimum-height);
+            // background-color: var(--array-2d-row-col-bg);
+            border: none;
+            padding: 0 4px;
+            margin-right: 4px;
+
+            .value {
+                font-size: 12px;
+                color: var(--array-2d-row-col-value-color);
+            }
+            &.index {
+                background: var(--array-2d-row-col-bg-index);
+                border: none;
+                color: var(--array-2d-row-col-color-index);
+                padding: 0 4px;
+                margin-right: 5px;
+            }
+            &.variables {
+                background: var(--array-2d-row-col-bg-index);
+                border: none;
+                color: var(--array-2d-row-col-color-index);
+                vertical-align: text-top;
+                min-height: 60px;
+            }
+        }
+
+        .gapCell {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 4px;
+            margin-right: 4px;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .gapLabel {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 4px;
+            margin-right: 4px;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .col { // column (within a row, ie an array element)
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+            min-width: 8px;
+            width: 28px;
+            min-height: var(--array-1d-minimum-height);
+            background-color: var(--array-2d-row-col-bg);
+            border: 1px solid var(--array-2d-row-col-border);
+            padding: 0 4px;
+            margin-right: 4px;
+
+            .value {
+                font-size: 12px;
+                color: var(--array-2d-row-col-value-color);
+            }
+
+            .variable {
+                font-size: 18px;
+                color: var(--apple);
+            }
+
+            &.selected {
+                background-color: var(--sky);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.selected1 {
+                background-color: var(--leaf);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.selected2 {
+                background-color: var(--apple);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.selected3 {
+                background-color: var(--peach);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.selected4 {
+                background-color: var(--plum);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.selected5 {
+                background-color: var(--wood);
+
+                span {
+                    color: var(--array-2d-row-col-selected);
+                }
+            }
+
+            &.patched { // XXX inconsistent with 2D array (other stuff also maybe)
+                background-color: var(--leaf);
+
+                span {
+                    color: var(--array-2d-row-col-patched);
+                }
+
+            }
+
+            &.sorted {
+                background-color: var(--stone);
+
+                span {
+                    color: var(--array-2d-row-col-sorted);
+                }
+            }
+
+
+
+            &.index {
+                background: var(--array-2d-row-col-bg-index);
+                border: var(--array-2d-row-col-border-index);
+                color: var(--array-2d-row-col-color-index);
+                padding: 0 4px;
+                margin-right: 5px;
+
+            }
+
+            &.variables {
+                background: var(--array-2d-row-col-bg-index);
+                border: var(--array-2d-row-col-border-index);
+                color: var(--array-2d-row-col-color-index);
+                vertical-align: text-top;
+                min-height: 60px;
+
+            }
+
+            &.faded {
+                opacity: 0.5;
+            }
+
+
+        }
+    }
+
+    .stack {
+        .stackElement {
+            display: grid;
+            grid-auto-flow: row;
+            height: 0.6em;
+            transition-duration: 0.1s;
+            margin-bottom: m#{i}n(1vh, 1em);
+
+            // XXX should really have names for these (that may vary with
+            // different global color options)
+            --not-started-section: rgba(0, 0, 0, 0); // transparent
+            --in-progress-section: rgb(20, 20, 190);
+            --current-section: rgb(210, 30, 30);
+            --finished-section: rgb(100, 100, 100);
+            --in-progress-sectionR: rgb(0, 0, 255);
+            --current-sectionR: rgb(255, 0, 0);
+            --finished-sectionR: rgb(140, 140, 140);
+            --in-progress-sectionOLD: rgb(169, 169, 169);
+            --current-sectionOLD: var(--peach);
+            --finished-sectionOLD: rgb(0, 0, 0);
+
+            .stackSubElement {
+                transition-duration: 0.1s;
+                --j-section: var(--sky);
+                --p-section: var(--leaf);
+                --i-section: var(--peach);
+            }
+        }
+
+        p {
+            color: rgb(133, 133, 133);
+            font-size: 0.8em;
+        }
+    }
+}

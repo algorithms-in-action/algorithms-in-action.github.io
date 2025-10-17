@@ -191,3 +191,5 @@ export const isort = sortInstructions;
 export const BSTrec = sortInstructions;
 export const msort_list_td = sortInstructions;
 export const gwrap = graphInstructions; // XXX refine this?
+export const insertionSortInstruction = sortInstructions;
+export const selectionSortInstruction = sortInstructions;
