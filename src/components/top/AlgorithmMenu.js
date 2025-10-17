@@ -5,9 +5,7 @@ import {
   visibleAlgorithmMetadata,
   getDefaultMode,
 } from "../../algorithms/masterList";
-import { GlobalActions } from "../../context/actions";
 import { GlobalContext } from "../../context/GlobalState";
-import { flushSync } from "react-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const algorithms = Object.entries(visibleAlgorithmMetadata).reduce(
@@ -214,7 +212,7 @@ function AlgorithmMenu({ onClose }) {
               >
                 <span>{category}</span>
                 <motion.span
-                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  animate={{ rotate: isOpen ? 0 : -90 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
                   style={{
                     marginRight: "8px",
@@ -234,7 +232,7 @@ function AlgorithmMenu({ onClose }) {
                 </motion.span>
               </button>
 
-              <AnimatePresence initial={false}>
+              <AnimatePresence>
                 {isOpen && (
                   <motion.div
                     key="content"

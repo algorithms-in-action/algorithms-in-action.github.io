@@ -19,6 +19,7 @@ import {
 } from './components/top/helper';
 // eslint-disable-next-line import/no-unresolved
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 const DEFAULT_FONT_INCREMENT = 0;
 const MID_FONT_SIZE = 15;
@@ -71,14 +72,18 @@ function App() {
   return (
     <GlobalProvider>
       {isSettingVisible && (
-        <Settings
-          onFontIncrease={onFontIncrease}
-          onSetting={onSetting}
-          colorMode={colorMode}
-          handleColorModeChange={handleColorModeChange}
-          systemColor={systemColor}
-          handleSystemColorChange={handleSystemColorChange}
-        />
+        <ClickAwayListener onClickAway={() => setSettingVisible(false)}>
+          <div>
+            <Settings
+              onFontIncrease={onFontIncrease}
+              onSetting={onSetting}
+              colorMode={colorMode}
+              handleColorModeChange={handleColorModeChange}
+              systemColor={systemColor}
+              handleSystemColorChange={handleSystemColorChange}
+            />
+          </div>
+        </ClickAwayListener>
       )}
 
       <PanelGroup direction="vertical" style={{ height: '100vh', width: '100vw' }}>
