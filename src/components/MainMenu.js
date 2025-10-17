@@ -4,15 +4,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import logo from "../assets/logo.svg";
 import { DeployedAlgorithmCategoryList } from "../algorithms/masterList";
 import PropTypes from "prop-types";
+import { easing } from "@mui/material";
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 
 const baseUrl = window.location.origin;
 
 const CategorySection = ({ category, items }) => (
   <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.3 }}
+    transition={{ duration: 0.1 }}
     style={{
       background: "rgba(255,255,255,0.1)",
       borderRadius: "12px",
@@ -21,7 +20,7 @@ const CategorySection = ({ category, items }) => (
       backdropFilter: "blur(8px)",
       width: "250px",
       textAlign: "center",
-      transition: "background 0.3s",
+      transition: "background 0.1s",
     }}
     whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.2)" }}
   >
@@ -75,10 +74,7 @@ const Mainmenu = () => {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <div
       style={{
         display: "flex",
         flexDirection: "column",
@@ -90,10 +86,7 @@ const Mainmenu = () => {
         boxSizing: "border-box",
       }}
     >
-      <motion.div
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+      <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -105,12 +98,9 @@ const Mainmenu = () => {
         <h1 style={{ fontSize: "24px", fontWeight: "600", color: "white" }}>
           Algorithms In Action
         </h1>
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ y: -5, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4 }}
+      <div
         style={{
           position: "relative",
           width: "100%",
@@ -152,20 +142,27 @@ const Mainmenu = () => {
           }
           onBlur={(e) => (e.target.style.background = "rgba(255,255,255,0.1)")}
         />
-      </motion.div>
+      </div>
 
-      <AnimatePresence mode="wait">
+      {
+      /* 
+        Im so confused the non deprecated version of mode="wait" which supposedly does the same thing
+        does not actually "wait" like exitBeforeEnter does. OMG I am an idiot, this project is using
+        an old version of framer motion lol.
+      */
+      }
+      <AnimatePresence exitBeforeEnter>
         <motion.div
           key={query ? "search" : "categories"}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8 }}   
-          transition={{ duration: 0.15 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.2 }}
           style={{
-            display: "flex",
-            flexWrap: "wrap",
+            display: query ? "flex" : "grid",
+            flexWrap: query ? "wrap" : "unset",
+            gridTemplateColumns: query ? "none" : "repeat(3, 1fr)",
             justifyContent: "center",
-            maxWidth: "75vw",
           }}
         >
           {query ? (
@@ -173,8 +170,6 @@ const Mainmenu = () => {
               filteredAlgorithms.map(({ name, url }) => (
                 <motion.div
                   key={url}
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.15 }}
                   whileHover={{scale: 1.02}}
                 >
@@ -235,7 +230,7 @@ const Mainmenu = () => {
       >
         About
       </a>
-    </motion.div>
+    </div>
   );
 };
 

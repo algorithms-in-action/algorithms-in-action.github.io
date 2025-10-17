@@ -45,8 +45,7 @@ function Header({ onSetting }) {
           Menu
         </motion.button>
 
-        <motion.button
-          {...hoverTapAnim}
+        <button
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -59,15 +58,16 @@ function Header({ onSetting }) {
           }}
           onClick={() => history.push('/mainmenu')}
         >
+          {/* Easter egg :) */}
           <motion.img
             src={logo}
             alt="logo"
             style={{ height: '60%' }}
-            whileHover={{ rotate: 5 }}
+            whileHover={{ rotate: 10 }}
             transition={{ type: 'spring', stiffness: 200, damping: 10 }}
           />
           <h1 style={{ fontSize: '1.1rem', margin: 0, color: "var(--top-header-btn)" }}>Algorithms in Action</h1>
-        </motion.button>
+        </button>
 
         <div
           style={{
