@@ -14,14 +14,10 @@ import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-import {
-  singleNumberValidCheck,
-  genUniqueRandNumList,
-  successParamMsg,
-  errorParamMsg,
-  balanceBSTArray,
-  shuffleArray,
-} from './helpers/ParamHelper';
+import { singleNumberValidCheck, validateListInput } from './helpers/InputValidators';
+import { genUniqueRandNumList, balanceBSTArray, shuffleArray } from './helpers/InputBuilders';
+import { errorParamMsg } from './helpers/ParamMsg';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
@@ -32,8 +28,8 @@ const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
 const DEFAULT_TARGET = '2';
 const INSERTION = 'insertion';
 const SEARCH = 'search';
-const INSERTION_EXAMPLE = 'Duplicate-free list of non-negative integers please: 0,1,2,3,4';
-const SEARCH_EXAMPLE = 'Please follow the example provided: 16';
+const INSERTION_EXAMPLE = EXAMPLES.GEN_LIST_PARAM;
+const SEARCH_EXAMPLE = "2";
 const UNCHECKED = {
   random: false,
   sorted: false,
@@ -66,10 +62,6 @@ function TTFTParam({ mode, list, value }) {
   useEffect(() => {
     setNodes(localNodes);
     setSearchValue(localValue);
-    // If input nodes are manually edited, we want to uncheck the case.
-    // This also unchecks the case when sorted and balanced are selected
-    // but (for some unknown reason) not when random is selected. This
-    // isn't ideal XXX but is not too bad.
     setBSTCase(UNCHECKED);
   }, [localNodes, localValue, setNodes, setSearchValue]);
 
@@ -86,73 +78,57 @@ function TTFTParam({ mode, list, value }) {
         break;
       default:
     }
-
     setBSTCase({ ...UNCHECKED, [e.target.name]: true });
   };
-  /**
-   * For 234 tree, we don't support duplicate keys (XXX could just ignore)
-   * therefore we need some extra check to make sure the tree is not empty.
-   * So we need to implement a new handle function instead of using the default one.
-   */
+
   const handleInsertion = (e) => {
     e.preventDefault();
     const list = e.target[0].value;
-          
-    if (validateListInput(list)) {
+    const {valid, error} = validateListInput(list);
+    if (valid) {
       let nodes = list.split(',').map(Number);
-      // run search animation
       dispatch(GlobalActions.RUN_ALGORITHM, {
         name: 'TTFTree',
         mode: 'insertion',
         nodes,
       }); 
-      setMessage(successParamMsg('2-3-4 Trees'));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg('2-3-4 Trees', INSERTION_EXAMPLE));
+      setMessage(errorParamMsg(error, EXAMPLES.TTF_INSERTION));
     }
   };
 
-  /**
-   * For BST, since we need to insert nodes before run the search algorithm,
-   * therefore we need some extra check to make sure the tree is not empty.
-   * So we need to implement a new handle function instead of using the default one.
-   */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const inputValue = e.target[0].value;
-    setLocalValue(inputValue);
+const handleSearch = (e) => {
+  e.preventDefault();
+  const inputValue = e.target[0].value;
+  setLocalValue(inputValue);
 
-    if (singleNumberValidCheck(inputValue)) {
-      const target = parseInt(inputValue, 10);
-      // make sure the tree is not empty
-      if (
-        algorithm.hasOwnProperty('visualisers')
-        && !algorithm.visualisers.tree.instance.isEmpty()
-      ) {
-        const visualiser = algorithm.chunker.visualisers;
-        // run search animation
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'TTFTree',
-          mode: 'search',
-          visualiser,
-          target,
-        });
-        setMessage(successParamMsg(SEARCH));
-      } else {
-        // when the tree is &nbsp;&nbsp;empty
-        setMessage(
-          errorParamMsg(
-            SEARCH,
-            undefined,
-            'Please fully build the tree before running a search.',
-          ),
-        );
-      }
+  const check = singleNumberValidCheck(inputValue);
+
+  if (check.valid) {
+    const target = parseInt(inputValue, 10);
+
+    if (
+      algorithm.hasOwnProperty('visualisers') &&
+      !algorithm.visualisers.tree.instance.isEmpty()
+    ) {
+      const visualiser = algorithm.chunker.visualisers;
+
+      dispatch(GlobalActions.RUN_ALGORITHM, {
+        name: 'TTFTree',
+        mode: 'search',
+        visualiser,
+        target,
+      });
+
+      setMessage(null);
     } else {
-      // when the input cannot be converted to a number
-      setMessage(errorParamMsg(SEARCH, SEARCH_EXAMPLE));
+      setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR));
     }
-  };
+  } else {
+    setMessage(errorParamMsg(check.error, EXAMPLES.GEN_SINGLE_INT));
+  }
+};
 
   useEffect(
     () => {
@@ -164,7 +140,6 @@ function TTFTParam({ mode, list, value }) {
   return (
     <>
       <div className="form">
-        {/* Insert input */}
         <ListParam
           name="TTFTree"
           buttonName="Insert"
@@ -179,7 +154,6 @@ function TTFTParam({ mode, list, value }) {
           setMessage={setMessage}
         />
 
-        {/* Search input */}
         <SingleValueParam
           name="TTFTree"
           buttonName="Search"
@@ -226,13 +200,11 @@ function TTFTParam({ mode, list, value }) {
         label="Balanced"
         className="checkbox"
       />
-      {/* render success/error message */}
       {message}
     </>
   );
 }
 
-// Define the prop types for URL Params
 TTFTParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
@@ -240,15 +212,4 @@ TTFTParam.propTypes = {
   value: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(TTFTParam); // Export with the wrapper for URL Params
-
-// XXX rename and put in ./helpers/ParamHelper
-function validateListInput(input) {
-  const inputArr = input.split(',');
-  const inputSet = new Set(inputArr);
-  return (
-    inputArr.length === inputSet.size // no duplicates
-    && inputArr.every((num) => singleNumberValidCheck(num))
-  );
-}
-
+export default withAlgorithmParams(TTFTParam);

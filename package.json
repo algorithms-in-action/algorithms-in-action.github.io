@@ -61,7 +61,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
-    "@mui/lab": "latest",
+    "@mui/lab": "@mui/lab@5.0.0-alpha.153",
     "@mui/material": "^5.14.4",
     "@mui/styles": "^5.14.4",
     "@popperjs/core": "^2.11.8",
@@ -84,10 +84,13 @@
     "react-scripts": "^5.0.1",
     "react-table": "^7.5.0",
     "reactjs-popup": "^2.0.5",
+    "rehype-raw": "^7.0.0",
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
-    "sass": "^1.50.0"
+    "run-script-os": "^1.1.6",
+    "sass": "^1.50.0",
+    "shelljs": "^0.10.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

@@ -6,11 +6,9 @@ import React from 'react';
 import '../../../styles/Param.scss';
 import { GlobalActions } from '../../../context/actions';
 import ParamForm from './ParamForm';
-import {
-  singleNumberValidCheck,
-  successParamMsg,
-  errorParamMsg,
-} from './ParamHelper';
+
+import { singleNumberValidCheck } from './InputValidators';
+import { errorParamMsg } from './ParamMsg';
 
 import useParam from '../../../context/useParam';
 
@@ -36,22 +34,23 @@ function SingleValueParam({
    */
   const handleDefaultSubmit = (e) => {
     e.preventDefault();
-    const inputValue = e.target[0].value;
+    const inputValue = e.target[0].value.replace(/\s+/g, '');
+    const { valid, error } = singleNumberValidCheck(inputValue);
 
-    if (singleNumberValidCheck(inputValue)) {
+    if (valid) {
       const target = parseInt(inputValue, 10);
       setParamVal(target);
 
-      // TODO: need to be removed when these two algorithms are done
       if (!(name === 'transitiveClosure' || name === 'prim')) {
-        // run animation
         dispatch(GlobalActions.RUN_ALGORITHM, { name, mode, target });
       }
-      setMessage(successParamMsg(ALGORITHM_NAME));
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(ALGORITHM_NAME, EXAMPLE));
+      setMessage(errorParamMsg(error, EXAMPLE));
     }
   };
+
+
 
   return (
     <ParamForm

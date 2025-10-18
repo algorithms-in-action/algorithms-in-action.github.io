@@ -5,25 +5,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
-import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/InputBuilders';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import PropTypes from 'prop-types';
+import { withAlgorithmParams } from './helpers/urlHelpers'
 
 import { URLContext } from '../../context/urlState';
-
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
 const MERGE_SORT = 'Heap Sort';
-const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
   random: false,
   sortedAsc: false,
   // bestCase: false,
-  sortedDesc: false
+  sortedDesc: false,
 };
 
 const BlueRadio = withStyles({
@@ -34,60 +33,48 @@ const BlueRadio = withStyles({
     },
   },
   checked: {},
-  // eslint-disable-next-line react/jsx-props-no-spreading
-})((props) => <Radio {...props} />)
+})((props) => <Radio {...props} />);
 
 function MergesortParam({ list }) {
-  const [message, setMessage] = useState(null)
-
-  const [array, setArray] = useState(list || DEFAULT_ARR)
-  const { setNodes } = useContext(URLContext)
+  const [message, setMessage] = useState(null);
+  const [array, setArray] = useState(list || DEFAULT_ARR);
+  const { setNodes } = useContext(URLContext);
 
   const [QSCase, setQSCase] = useState({
     random: true,
     sortedAsc: false,
     // bestCase: false,
-    sortedDesc: false
+    sortedDesc: false,
   });
 
   useEffect(() => {
     setNodes(array);
   }, [array]);
 
-  // XXX best case definitely not needed; could skip choice of cases
-  // function for choosing the type of input
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'sortedAsc':
-        setArray([...array].sort(function (a, b) {
-          return (+a) - (+b)
-        }));
+        setArray([...array].sort((a, b) => (+a) - (+b)));
         break;
       case 'sortedDesc':
-        setArray([...array].sort(function (a, b) {
-          return (+b) - (+a)
-        }));
+        setArray([...array].sort((a, b) => (+b) - (+a)));
         break;
       case 'random':
         setArray(DEFAULT_ARRAY_GENERATOR());
         break;
       case 'bestCase':
-        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
+        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + Math.floor(Math.random() * 25)));
         break;
       default:
         break;
     }
 
-    setQSCase({ ...UNCHECKED, [e.target.name]: true })
+    setQSCase({ ...UNCHECKED, [e.target.name]: true });
+  };
 
-  }
-
-  useEffect(
-    () => {
-      document.getElementById('startBtnGrp').click();
-    },
-    [QSCase],
-  );
+  useEffect(() => {
+    document.getElementById('startBtnGrp').click();
+  }, [QSCase]);
 
   return (
     <>
@@ -102,75 +89,44 @@ function MergesortParam({ list }) {
           REFRESH_FUNCTION={
             (() => {
               if (QSCase.sortedAsc) {
-                return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
-                    return (+a) - (+b)
-                  }));
-                }
-              }
-              else if (QSCase.sortedDesc) {
-                return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
-                    return (+b) - (+a)
-                  }));
-                }
-              }
-              else if (QSCase.bestCase) {
-                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
+                return () => DEFAULT_ARRAY_GENERATOR().sort((a, b) => (+a) - (+b));
+              } else if (QSCase.sortedDesc) {
+                return () => DEFAULT_ARRAY_GENERATOR().sort((a, b) => (+b) - (+a));
+              } else if (QSCase.bestCase) {
+                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + Math.floor(Math.random() * 25));
               }
             })()
           }
           ALGORITHM_NAME={MERGE_SORT}
-          EXAMPLE={MERGE_SORT_EXAMPLE}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
           setMessage={setMessage}
         />
       </div>
       <span className="generalText">Choose input format: &nbsp;&nbsp;</span>
-      {/* create a checkbox for Random array elements */}
       <FormControlLabel
-        control={
-          <BlueRadio
-            checked={QSCase.random}
-            onChange={handleChange}
-            name="random"
-          />
-        }
+        control={<BlueRadio checked={QSCase.random} onChange={handleChange} name="random" />}
         label="Random"
         className="checkbox"
       />
       <FormControlLabel
-        control={
-          <BlueRadio
-            checked={QSCase.sortedAsc}
-            onChange={handleChange}
-            name="sortedAsc"
-          />
-        }
+        control={<BlueRadio checked={QSCase.sortedAsc} onChange={handleChange} name="sortedAsc" />}
         label="Sorted (ascending)"
         className="checkbox"
       />
       <FormControlLabel
-        control={
-          <BlueRadio
-            checked={QSCase.sortedDesc}
-            onChange={handleChange}
-            name="sortedDesc"
-          />
-        }
+        control={<BlueRadio checked={QSCase.sortedDesc} onChange={handleChange} name="sortedDesc" />}
         label="Sorted (descending)"
         className="checkbox"
       />
-      {/* render success/error message */}
       {message}
     </>
-  )
+  );
 }
 
-// Define the prop types for URL Params
 MergesortParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired
+  list: PropTypes.string.isRequired,
 };
 
-export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(MergesortParam);

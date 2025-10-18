@@ -459,7 +459,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo, newZoom } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo, newZoom, rectangles } =
       this.props.data;
     const {
       baseWidth,
@@ -710,6 +710,66 @@ class GraphRenderer extends Renderer {
               </>
             )}
           </g>
+
+          {/* Nested recursion rectangles */}
+          {rectangles.map((stack, i) => {
+            const hasEmpty = rectangles.length > 0 && 
+              rectangles[rectangles.length - 1].label === 'Empty';
+            if (!stack || !stack.rect) {
+              // Render the "Empty" rectangle
+              if (stack && stack.label === 'Empty' && i > 0) {
+                const parentStack = rectangles[i - 1];
+                if (parentStack && parentStack.rect) {
+                  const [pLeft, pTop, pRgt, pBtm] = parentStack.rect;
+                  return (
+                    <text
+                      key={`rec-rect-empty-${i}`}
+                      className={classes(styles.select_color)}
+                      fontSize={30}
+                      // Display the 'Empty' text roughly in the middle of the parent box.
+                      x={(pLeft + pRgt) / 2}
+                      y={(pTop + pBtm) / 2 + 10}
+                      textAnchor="middle"
+                      style={{ opacity: 0.8 }}
+                    >
+                      Empty
+                    </text>
+                  );
+                }
+              }
+              return null;
+            }
+            const [left, top, rgt, btm, text] = stack.rect;
+            let isInnerMost = i == rectangles.length - 1;
+            if (hasEmpty) {
+              // InnerMost is the parent rectangle of the "Empty" 
+              isInnerMost = i == rectangles.length - 2;
+            }
+            const textOpacity = isInnerMost ? 0.8 : 0.4;
+            const rectOpacity = isInnerMost ? 0.8 : 0.4;
+            return (
+              <g key={`rec-rect-${i}`}>
+                <text className={classes(styles.select_color)}
+                  fontSize={30} // font size
+                  x={left - 30 - (rectangles.length - 1 - i) * 10}    // font position
+                  y={top - 60 - (rectangles.length - 1 - i) * 10}
+                  style={{ opacity: textOpacity }} // font opacity
+                >
+                  {text}
+                </text>
+                <rect className={classes(
+                    styles.select_rect,
+                    styles && styles.backgroundStyle
+                  )}
+                  x={left - 40 - (rectangles.length - 1 - i) * 10} // x position 
+                  y={top - 50 - (rectangles.length - 1 - i) * 10} // y position 
+                  width={(rgt - left) + 80 + (rectangles.length - 1 - i) * 20} // width of the sub-rectangle 
+                  height={(btm - top) + 100 + (rectangles.length - 1 - i) * 20} // height of the sub-rectangle 
+                  style={{ opacity: rectOpacity }} // opacity
+                />
+              </g>
+            );
+          })}
 
           {/* node graph */}
           {nodes.map((node) => {
