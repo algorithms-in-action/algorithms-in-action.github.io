@@ -14,7 +14,7 @@
     "dev": "run-script-os",
     "dev:default": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "dev:win32": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
-    "heroku-postbuild": "run-script-os",
+    "heroku-postbuild": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "react-scripts test",
     "test-msdrs": "npm test -- ./src/algorithms/controllers/MSDRadixSort.test.js",
     "test-srs": "npm test -- ./src/algorithms/controllers/straightRadixSort.test.js",
