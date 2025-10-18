@@ -198,7 +198,7 @@ const algorithmMetadata = {
     name: 'Merge Sort (lists as arrays)',
     category: 'Sort',
     keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable'],
-    noDeploy: true,
+    noDeploy: false,
     explanationKey: 'msort_lista_td',
     paramKey: 'msort_lista_td',
     instructionsKey: 'msort_lista_td',
