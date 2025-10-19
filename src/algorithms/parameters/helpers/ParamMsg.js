@@ -29,6 +29,7 @@ function ParamMsg({ logWarning, logTag, logMsg }) {
   return (
     <div 
       className="logContainer"
+      ref={ref}
     >
       <span
         className="logTag"
