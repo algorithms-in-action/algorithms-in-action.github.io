@@ -9,7 +9,7 @@ import parse from '../../pseudocode/parse';
 // chaining.  The latter still has "Check how full the table is" that
 // doesn't expand but has an explanation. XXX could be added some time.
 
-const main = `
+export const main = `
 
         \\Code{
             NullTable

@@ -14,11 +14,7 @@ import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
 
-<<<<<<< Updated upstream
 import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid } from './helpers/InputValidators';
-=======
-import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid, commaSeparatedNumberListValidCheck } from './helpers/InputValidators';
->>>>>>> Stashed changes
 import { genUniqueRandNumList } from './helpers/InputBuilders';
 import { errorParamMsg } from './helpers/ParamMsg';
 import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
@@ -87,16 +83,6 @@ function HashingCHParam({ mode, list, value }) {
 
     let removeSpace = inputs.split(' ').join('');
 
-<<<<<<< Updated upstream
-=======
-    const { valid, error } = commaSeparatedNumberListValidCheck(inputs.replace(/\s+/g, ''));
-
-    if (!valid) {
-      setMessage(errorParamMsg(error, EXAMPLES.HASHING_INSERT));
-      return;
-    }
-
->>>>>>> Stashed changes
     if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
       let values = removeSpace.split(",");
       if (checkAllRangesValid(values)) {

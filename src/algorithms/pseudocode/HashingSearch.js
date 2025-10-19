@@ -5,7 +5,7 @@ import {
   hash1
 } from './HashingInsertion'
 
-let main = `
+export const main = `
     \\Code{
         Main
         HashSearch(T, k)  // Search for key k in table T \\B 1
@@ -41,7 +41,7 @@ let main = `
              \\In}
     \\Code}
 `
-let chainingPseudocode = `
+export const chainingPseudocode = `
 \\Code{
     Main
     HashSearch(T, k)  // Search for key k in table T

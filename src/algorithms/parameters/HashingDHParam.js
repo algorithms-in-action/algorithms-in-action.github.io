@@ -12,11 +12,7 @@ import { withStyles } from '@mui/styles';
 import ListParam from './helpers/ListParam';
 import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
-<<<<<<< Updated upstream
 import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid } from './helpers/InputValidators';
-=======
-import { singleNumberValidCheck, commaSeparatedPairTripleCheck, checkAllRangesValid, commaSeparatedNumberListValidCheck } from './helpers/InputValidators';
->>>>>>> Stashed changes
 import { genUniqueRandNumList } from './helpers/InputBuilders';
 import { errorParamMsg } from './helpers/ParamMsg';
 import { SMALL_SIZE, LARGE_SIZE } from '../controllers/HashingCommon';
@@ -86,16 +82,6 @@ function HashingDHParam({ mode, list, value }) {
 
     let removeSpace = inputs.split(' ').join('');
 
-<<<<<<< Updated upstream
-=======
-    const { valid, error } = commaSeparatedNumberListValidCheck(inputs.replace(/\s+/g, ''));
-  
-      if (!valid) {
-        setMessage(errorParamMsg(error, EXAMPLES.HASHING_INSERT));
-        return;
-      }
-
->>>>>>> Stashed changes
     if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
       let values = removeSpace.split(",");
       if (checkAllRangesValid(values)) {
