@@ -6,6 +6,8 @@ import { ReactComponent as Font } from '../../assets/icons/font.svg';
 import {
   allColBtn, allSystemCol,
 } from './helper';
+import { motion } from 'framer-motion';
+import { Height } from '@mui/icons-material';
 // import Checkbox from './Checkbox';
 
 const DEFAULT_COL = 0;
@@ -21,7 +23,17 @@ function Settings({
   handleSystemColorChange,
 }) {
   return (
-    <div className="settingsContainer">
+    <motion.div 
+      className="settingsContainer"  
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      style={{
+        height: "fit-content",
+        width: "fit-content",
+      }}
+    >
       <div className="setContainer">
         <div className="label">Font Size</div>
         <div className="fontSize">
@@ -76,7 +88,7 @@ function Settings({
       <div className="settingFooter">
         <button className="saveBtn" type="button" onClick={onSetting}>Return</button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

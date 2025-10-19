@@ -20,6 +20,8 @@ import {
 // eslint-disable-next-line import/no-unresolved
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import { AnimatePresence, motion } from 'framer-motion';
+import zIndex from '@mui/material/styles/zIndex';
 
 const DEFAULT_FONT_INCREMENT = 0;
 const MID_FONT_SIZE = 15;
@@ -68,23 +70,25 @@ function App() {
     setAlgoTheme(getWithExpiry(ALGO_THEME_KEY));
     document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
   }, []);
-
+  
   return (
     <GlobalProvider>
-      {isSettingVisible && (
-        <ClickAwayListener onClickAway={() => setSettingVisible(false)}>
-          <div>
-            <Settings
-              onFontIncrease={onFontIncrease}
-              onSetting={onSetting}
-              colorMode={colorMode}
-              handleColorModeChange={handleColorModeChange}
-              systemColor={systemColor}
-              handleSystemColorChange={handleSystemColorChange}
-            />
-          </div>
-        </ClickAwayListener>
-      )}
+      <AnimatePresence>
+        {isSettingVisible && (
+          <ClickAwayListener onClickAway={() => setSettingVisible(false)}>
+            <div style={{height: "fit-content", width: "fit-content"}}>
+              <Settings
+                onFontIncrease={onFontIncrease}
+                onSetting={onSetting}
+                colorMode={colorMode}
+                handleColorModeChange={handleColorModeChange}
+                systemColor={systemColor}
+                handleSystemColorChange={handleSystemColorChange}
+              />
+            </div>
+          </ClickAwayListener>
+        )}
+      </AnimatePresence>
 
       <PanelGroup direction="vertical" style={{ height: '100vh', width: '100vw' }}>
         
