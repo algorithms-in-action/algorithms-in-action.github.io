@@ -12,7 +12,7 @@ import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosu
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 import { genRandNumList } from '../algorithms/parameters/helpers/InputBuilders';
 
-const DEFAULT_ALGORITHM = 'heapSort';
+export const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
 // const DEFAULT_PARAM = DEFAULT_NODES; // maybe for other algorithms
 // import { DEFAULT_NODES } from '../algorithms/parameters/HSParam';
