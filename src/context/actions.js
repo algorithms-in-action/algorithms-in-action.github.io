@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
-import algorithms from '../algorithms';
+import algorithms, { getDefaultMode } from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import React, { useState } from 'react';
@@ -11,6 +11,7 @@ import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin'
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 import { genRandNumList } from '../algorithms/parameters/helpers/InputBuilders';
+import algorithmMetadata from '../algorithms/masterList';
 
 export const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
@@ -250,7 +251,7 @@ export const GlobalActions = {
 
     return {
       id: params,
-      name,
+      name: params.name,
       explanation,
       instructions,
       extraInfo,
@@ -302,7 +303,7 @@ export const GlobalActions = {
     return {
       ...state,
       id: params,
-      name,
+      name: params.name,
       explanation,
       extraInfo,
       instructions,
@@ -497,25 +498,15 @@ export function dispatcher(setState) {
 
 export function initialState() {
   const currentUrl = new URL(window.location.href);
-  const alg = currentUrl.searchParams.get('alg');
-  const mode = currentUrl.searchParams.get('mode');
+  let alg = currentUrl.searchParams.get('alg');
+  let mode = currentUrl.searchParams.get('mode');
 
-  let initialNodes = DEFAULT_NODES; // Fallback to default nodes if parsing fails or param is not valid
-
-  // Validate the algorithm and mode before proceeding
-  if (alg && mode && alg in algorithms && mode in algorithms[alg].pseudocode) {
-    return GlobalActions.LOAD_ALGORITHM(undefined, {
-      name: alg,
-      mode: mode,
-      initialNodes: initialNodes, // Use parsed or default parameters
-    });
-  }
-
-  // Fallback to default settings if parameters are incorrect or incomplete
+  if (!alg || !(alg in algorithms)) alg = DEFAULT_ALGORITHM;
+  if (!mode || !(mode in algorithmMetadata[alg].pseudocode)) mode = getDefaultMode(alg);
 
   return GlobalActions.LOAD_ALGORITHM(undefined, {
-    name: DEFAULT_ALGORITHM,
-    mode: DEFAULT_MODE,
-    initialNodes: initialNodes, // Ensure DEFAULT_PARAM is properly defined or imported
+    name: alg,
+    mode: mode,
   });
 }
+

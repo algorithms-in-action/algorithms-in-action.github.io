@@ -51,6 +51,17 @@ export class Element {
     this.variables = [];
     this.stack = [];
     this.fill = 0;
+
+    // Leak a little bit of CSS styling through to
+    // the tracer layer, a CSS color property can be used here.
+    // This includes css vars like --peach if you want.
+    // It is not bad practice to do so, I am guessing this is why
+    // the above became so convuluted because we did not want to leak
+    // CSS props as input for the Tracer layer, but this is a case where
+    // we want to break a general design principle. Controllers should
+    // have a map that maps its specific algorithm semantics to colours
+    // not the tracer. This is already what is being done in the refactor.
+    this.color = undefined;
   }
 }
 
@@ -682,6 +693,13 @@ class Array2DTracer extends Tracer {
 
   setHighlightRow(row) {
     this.highlightRow = row;
+  }
+
+  /**
+   * Sets the colour of the element at `rowIdx` `colIdx` in the array.
+   */
+  setColor(rowIdx, colIdx, color) {
+    this.data[rowIdx][colIdx].color = color
   }
 }
 

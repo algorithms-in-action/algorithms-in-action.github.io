@@ -616,6 +616,7 @@ class GraphRenderer extends Renderer {
                 visitedCount2,
                 visitedCount3,
                 visitedCount4,
+                color,
               } = edge;
               const sourceNode = this.props.data.findNode(source);
               const targetNode = this.props.data.findNode(target);
@@ -649,6 +650,10 @@ class GraphRenderer extends Renderer {
               // console.log(sx,sy,ex,ey,cx,cy);
               return (
                 <g
+                  style={{
+                    stroke: color ? color : undefined,
+                  }}
+
                   className={classes(
                     styles.edge,
                     targetNode.sorted && styles.sorted,
@@ -774,6 +779,7 @@ class GraphRenderer extends Renderer {
           {/* node graph */}
           {nodes.map((node) => {
             const {
+              color,
               x,
               y,
               weight,
@@ -842,6 +848,9 @@ class GraphRenderer extends Renderer {
                 )}
 
                 <circle
+                  style={{
+                    fill: color ? color : undefined,
+                  }}
                   className={classes(
                     styles.circle,
                     style && style.backgroundStyle

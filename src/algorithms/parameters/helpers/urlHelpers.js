@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import algorithms from '../../../algorithms';
+import algorithms from '../../../algorithms/masterList';
 
 // const DEFAULT_ALGORITHM = 'heapSort';
 // const DEFAULT_MODE = 'sort';
