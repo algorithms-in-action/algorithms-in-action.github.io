@@ -701,6 +701,20 @@ class Array2DTracer extends Tracer {
   setColor(rowIdx, colIdx, color) {
     this.data[rowIdx][colIdx].color = color
   }
+
+  /**
+   * Assigns the colour property to the region defined by startCol + endCol, startRow + endRow.
+   */
+  myColorRegion(startCol, startRow, endCol = startCol, endRow = startRow, color = '#00f') {
+    // Loop over every cell in the rectangular region
+    for (let col = startCol; col <= endCol; col++) {
+      for (let row = startRow; row <= endRow; row++) {
+        const cell = this.data[col][row];
+        if (!cell) continue;
+        cell.color = color;
+      }
+    }
+  }
 }
 
 export default Array2DTracer;

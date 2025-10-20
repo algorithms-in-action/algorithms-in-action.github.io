@@ -650,10 +650,6 @@ class GraphRenderer extends Renderer {
               // console.log(sx,sy,ex,ey,cx,cy);
               return (
                 <g
-                  style={{
-                    stroke: color ? color : undefined,
-                  }}
-
                   className={classes(
                     styles.edge,
                     targetNode.sorted && styles.sorted,
@@ -669,6 +665,10 @@ class GraphRenderer extends Renderer {
                 >
                   <path
                     d={pathSvg}
+                    style={{
+                      fill: color ? color : undefined,
+                      stroke: color ? color : undefined,
+                    }}
                     className={classes(
                       styles.line,
                       isDirected && styles.directed
