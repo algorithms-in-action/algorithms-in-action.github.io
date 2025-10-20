@@ -95,7 +95,7 @@ function MergesortParam({ list }) {
     <>
       <div className="form">
         <ListParam
-          name="msort_lista_td"
+          name="msort_list_td"
           buttonName="Reset"
           mode="sort"
           formClassName="formLeft"
