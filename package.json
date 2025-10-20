@@ -22,7 +22,8 @@
     "test-hashsearch": "npm test -- ./src/algorithms/controllers/tests/HashingSearch.test.js",
     "test-hashdelete": "npm test -- ./src/algorithms/controllers/tests/HashingDeletion.test.js",
     "test-avl": "npm test -- ./src/algorithms/controllers/AVLTree.test.js",
-    "test-url": "npm test -- ./src/algorithms/parameters/helpers/urlHelpers.test.js"
+    "test-url": "npm test -- ./src/algorithms/parameters/helpers/urlHelpers.test.js",
+    "add-algo": "node addNewAlgorithm.js"
   },
   "husky": {
     "hooks": {
