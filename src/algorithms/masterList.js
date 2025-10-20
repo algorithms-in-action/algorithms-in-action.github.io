@@ -515,7 +515,7 @@ const algorithmMetadata = {
 	"hsortNewColors": {
     "name": "Heap Sort Alternate Colour API",
     "category": "Insert/Search",
-    "noDeploy": false,
+    "noDeploy": true,
     "keywords": [],
     "controller": {
       "sort": "hsortNewColors"
