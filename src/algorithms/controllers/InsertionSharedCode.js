@@ -140,8 +140,7 @@ export function createTreeInsertionController(isAVL = false) {
                         // cancel highlighting of the edges (r->rl, rl->rll)
                         // they were highlighted when the case was detected
                         vis.graph.visit(rl,r);
-                        vis.graph.setSelect_Circle_Count(r);
-                        vis.graph.setSelect_Circle_Count(rl);
+                        vis.graph.findNode(r).visitedCount = 1;
                       
                     }, [root.key, root.left.key, root.left.left ? root.left.left.key : null],
                     depth
@@ -210,6 +209,8 @@ export function createTreeInsertionController(isAVL = false) {
 
                         vis.graph.addEdge(t2, t6);
                         vis.graph.visit(t6, t2);
+                        vis.graph.findNode(t6).visitedCount = 1;
+                        vis.graph.findNode(t2).visitedCount = 1;
 
                         if (t4 !== null) vis.graph.removeEdge(t6, t4);
                         // set the new position of the node(s)
@@ -324,8 +325,7 @@ export function createTreeInsertionController(isAVL = false) {
                         vis.graph.updateTID(r, 't2');
 
                         vis.graph.visit(rr,r);
-                        vis.graph.setSelect_Circle_Count(r);
-                        vis.graph.setSelect_Circle_Count(rr);
+                        vis.graph.findNode(r).visitedCount = 1;
 
                     }, [root.key, root.right.key, root.right.right ? root.right.right.key : null],
                     depth
@@ -395,6 +395,8 @@ export function createTreeInsertionController(isAVL = false) {
 
                         vis.graph.addEdge(t6, t2);
                         vis.graph.visit(t2, t6);
+                        vis.graph.findNode(t6).visitedCount = 1;
+                        vis.graph.findNode(t2).visitedCount = 1;
                         // remove edge after layout to perform the middle step
                         if (t4 !== null) vis.graph.removeEdge(t2, t4);
                         // set the new position of the nodes
@@ -762,7 +764,7 @@ export function createTreeInsertionController(isAVL = false) {
 
                             // highlight edges involved in the rotation case
                             vis.graph.clear();
-                            vis.graph.setSelect_Circle_Count(r)
+                            vis.graph.findNode(r).visitedCount = 1;
                             vis.graph.visit(rl, r);
                             vis.graph.visit(rll, rl);
 
@@ -802,7 +804,7 @@ export function createTreeInsertionController(isAVL = false) {
 
                             // highlight edges involved in the rotation case
                             vis.graph.clear();
-                            vis.graph.setSelect_Circle_Count(r)
+                            vis.graph.findNode(r).visitedCount = 1;
                             vis.graph.visit(rr, r);
                             vis.graph.visit(rrr, rr);
                         },
@@ -841,7 +843,7 @@ export function createTreeInsertionController(isAVL = false) {
                             
                             // highlight edges involved in the rotation case
                             vis.graph.clear();
-                            vis.graph.setSelect_Circle_Count(r)
+                            vis.graph.findNode(r).visitedCount = 1;
                             vis.graph.visit(rl, r);
                             vis.graph.visit(rlr, rl);
                         },
@@ -881,7 +883,7 @@ export function createTreeInsertionController(isAVL = false) {
 
                             // highlight edges involved in the rotation case
                             vis.graph.clear();
-                            vis.graph.setSelect_Circle_Count(r)
+                            vis.graph.findNode(r).visitedCount = 1;
                             vis.graph.visit(rr, r);
                             vis.graph.visit(rrl, rr);
                         },
