@@ -90,7 +90,7 @@ function MergesortParam({ list }) {
     <>
       <div className="form">
         <ListParam
-          name="heapSort"
+          name="hsortNewColors"
           buttonName="Reset"
           mode="sort"
           formClassName="formLeft"

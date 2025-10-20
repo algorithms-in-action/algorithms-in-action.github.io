@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable dot-notation */
 /* eslint-disable max-len */
-import algorithms, { getDefaultMode } from '../algorithms';
+import algorithms from '../algorithms';
 import Chunker from './chunker';
 import findBookmark from '../pseudocode/findBookmark';
 import React, { useState } from 'react';
@@ -11,7 +11,7 @@ import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin'
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
 import { genRandNumList } from '../algorithms/parameters/helpers/InputBuilders';
-import algorithmMetadata from '../algorithms/masterList';
+import algorithmMetadata, { getDefaultMode } from '../algorithms/masterList';
 
 export const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
@@ -251,7 +251,7 @@ export const GlobalActions = {
 
     return {
       id: params,
-      name: params.name,
+      name,
       explanation,
       instructions,
       extraInfo,
@@ -303,7 +303,7 @@ export const GlobalActions = {
     return {
       ...state,
       id: params,
-      name: params.name,
+      name,
       explanation,
       extraInfo,
       instructions,
@@ -501,7 +501,7 @@ export function initialState() {
   let alg = currentUrl.searchParams.get('alg');
   let mode = currentUrl.searchParams.get('mode');
 
-  if (!alg || !(alg in algorithms)) alg = DEFAULT_ALGORITHM;
+  if (!alg || !(alg in algorithmMetadata)) alg = DEFAULT_ALGORITHM;
   if (!mode || !(mode in algorithmMetadata[alg].pseudocode)) mode = getDefaultMode(alg);
 
   return GlobalActions.LOAD_ALGORITHM(undefined, {

@@ -20,8 +20,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import { AnimatePresence, motion } from 'framer-motion';
-import zIndex from '@mui/material/styles/zIndex';
+import { AnimatePresence } from 'framer-motion';
 
 const DEFAULT_FONT_INCREMENT = 0;
 const MID_FONT_SIZE = 15;

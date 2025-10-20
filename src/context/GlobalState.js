@@ -33,10 +33,9 @@ export const GlobalProvider = ({ children }) => {
   const globalState = {
     algorithm: state,
     dispatch,
-    // WTF
-    algorithmKey: state.name,
-    category: getCategory(state.name),
-    mode: getDefaultMode(state.name),
+    algorithmKey: state.id.name,
+    category: getCategory(state.id.name),
+    mode: getDefaultMode(state.id.name),
   };
 
   initGlobalAlgorithmGetter(
