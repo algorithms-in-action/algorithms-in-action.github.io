@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';  // add this line
-import '../styles/mainmenu.scss';
+import '../styles/MainMenu.scss';
 import logo from '../assets/logo.svg';
 
 // Only pull algorithms that have property noDeploy set to false
