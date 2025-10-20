@@ -511,6 +511,23 @@ const algorithmMetadata = {
     "extraInfoKey": "grahamScan",
     "instructionsKey": "grahamScan"
   },
+
+	"hsortNewColors": {
+    "name": "Heap Sort Alternate Colour API",
+    "category": "Insert/Search",
+    "noDeploy": true,
+    "keywords": [],
+    "controller": {
+      "sort": "hsortNewColors"
+    },
+    "pseudocode": {
+      "sort": "hsortNewColors"
+    },
+    "paramKey": "hsortNewColors",
+    "explanationKey": "hsortNewColors",
+    "extraInfoKey": "hsortNewColors",
+    "instructionsKey": "hsortNewColors"
+  },
 };
 //_MASTER_LIST_END_
 
