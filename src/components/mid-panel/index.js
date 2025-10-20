@@ -15,6 +15,7 @@ import ControlButton from '../common/ControlButton';
 import ShareIcon from '@mui/icons-material/Share';
 import { URLContext } from '../../context/urlState';
 import { createUrl } from './urlCreator';
+import algorithmMetadata from '../../algorithms/masterList';
 
 function MidPanel({ fontSize, fontSizeIncrement }) {
   const { algorithm, algorithmKey, category, mode } = useContext(GlobalContext);
@@ -105,7 +106,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
           </Popup>
         </div>
 
-        <div className="algorithmTitle" id={fontID}>{algorithm.name}</div>
+        <div className="algorithmTitle" id={fontID}>{algorithmMetadata[algorithmKey].name}</div>
       </div>
 
       <div className="midPanelBody">
