@@ -2,12 +2,11 @@
 // Visualizes both pointer-based and array-based representations simultaneously.
 // Shows recursive splitting, merging, and pointer manipulation during the sort process.
 
-import { msort_lista_td } from '../explanations';
+import { msort_list_td } from '../explanations';
 import { colors } from '../../components/DataStructures/colors';
 import { areExpanded } from './collapseChunkPlugin';
 import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
-import { List } from '@mui/material';
 
 const apColor = colors.apple;    // Comparing elements
 const runAColor = colors.peach;  // Left sublist L
@@ -24,7 +23,7 @@ let simple_stack; // Call stack representation
 const run = run_msort();
 
 export default {
-  explanation: msort_lista_td,
+  explanation: msort_list_td,
   initVisualisers,
   run
 };
@@ -116,7 +115,7 @@ export function run_msort() {
       simple_stack.unshift('([' + Heads[L] + '..],' + len + ')'); // Add current call to stack for visualization
 
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
 
         // For recursive calls, hide all nodes then show only current sublist
         if (cur_depth > 0) {
@@ -157,7 +156,7 @@ export function run_msort() {
       Tails[Mid] = 'Null'; // Disconnect left and right halves
 
       chunker.add('tail(Mid)<-Null', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
 
         // assign variables in array view
@@ -248,7 +247,7 @@ export function run_msort() {
     function performRecursiveSort(L, R, midNum, len, depth) {
       // prepare to sort left half
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
         vis.array.select(1, cur_L, 1, cur_L, runAColor);
@@ -263,7 +262,7 @@ export function run_msort() {
 
       // After left recursion returns
       chunker.add('sortL', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
         vis.array.assignVariable('R', 2, cur_R);
@@ -279,7 +278,7 @@ export function run_msort() {
 
       // Sort right half
       chunker.add('preSortR', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('R', 2, cur_R);
         vis.array.select(1, cur_R, 1, cur_R, runBColor);
@@ -295,7 +294,7 @@ export function run_msort() {
 
       // After right recursion returns
       chunker.add('sortR', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
         vis.array.assignVariable('R', 2, cur_R);
@@ -416,7 +415,7 @@ export function run_msort() {
 
       // Initialize E to point to M 
       chunker.add('E', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
 
         // Assign all variables in array view
@@ -452,7 +451,7 @@ export function run_msort() {
       while (L !== 'Null' && R !== 'Null') {
         // Show current state before comparison
         chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-          vis.array.set(Lists, 'msort_lista_td');
+          vis.array.set(Lists, 'msort_list_td');
           set_simple_stack(vis.array, c_stk);
           assignMaybeNullVar(vis, 'L', cur_L);
           assignMaybeNullVar(vis, 'R', cur_R);
@@ -521,7 +520,7 @@ export function run_msort() {
     // Add visualization step during merge (after appending element)
     function addMergeVisualization(stepName, L, R, M, E, depth) {
       chunker.add(stepName, (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         assignMaybeNullVar(vis, 'L', cur_L);
         assignMaybeNullVar(vis, 'R', cur_R);
@@ -542,7 +541,7 @@ export function run_msort() {
     // Add final visualization after appending remaining elements
     function addFinalVisualization(stepName, M, depth) {
       chunker.add(stepName, (vis, Lists, cur_M, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        vis.array.set(Lists, 'msort_list_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('M', 2, cur_M);
         colorList(vis, cur_M, sortColor, Lists);
@@ -605,7 +604,7 @@ export function run_msort() {
 
         // Return merged result and reposition nodes in sorted order
         chunker.add('returnM', (vis, Lists, cur_L, cur_M, c_stk, cur_depth) => {
-          vis.array.set(Lists, 'msort_lista_td');
+          vis.array.set(Lists, 'msort_list_td');
           set_simple_stack(vis.array, c_stk);
           vis.array.assignVariable('L', 2, undefined);
           vis.array.assignVariable('R', 2, undefined);

@@ -18,7 +18,8 @@ import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
-const MERGE_SORT = 'Heap Sort';
+const MERGE_SORT = 'Merge Sort (lists)';
+const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
   random: false,
   sortedAsc: false,
@@ -89,11 +90,12 @@ function MergesortParam({ list }) {
     [QSCase],
   );
 
+  // XXX some QSCase.bestCase etc junk best cleaned up
   return (
     <>
       <div className="form">
         <ListParam
-          name="heapSort"
+          name="msort_lista_td"
           buttonName="Reset"
           mode="sort"
           formClassName="formLeft"
@@ -173,4 +175,4 @@ MergesortParam.propTypes = {
   list: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(MergesortParam)
