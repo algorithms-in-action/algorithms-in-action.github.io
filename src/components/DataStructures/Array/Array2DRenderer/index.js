@@ -256,6 +256,9 @@ class Array2DRenderer extends Renderer {
 
                 return (
                   <td
+                  style={{
+                    backgroundColor: col.color || undefined,
+                  }}
                   className={classes(
                     styles.col,
                     (i === highlightRow) && styles.highlightRow,

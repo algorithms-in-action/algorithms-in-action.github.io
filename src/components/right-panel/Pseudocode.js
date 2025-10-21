@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { GlobalContext } from '../../context/GlobalState';
 import { GlobalActions } from '../../context/actions';
 import LineNumHighLight from './LineNumHighLight';
-import BottomButton from './BottomButton';
 import LineExplanation from './LineExplanation';
 import { useUrlParams } from '../../algorithms/parameters/helpers/urlHelpers';
 
@@ -64,20 +63,94 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
     expandApplied.current = true; // ensure it only runs once
   }, [algorithm?.chunker]);
 
-  return (
-    show ? (
-      <>
-        <LineNumHighLight fontSize={fontSize} fontSizeIncrement={fontSizeIncrement} />
-        <div className="btnPanel">
-          <BottomButton onClick={onExpand} name="Expand All" />
-          <BottomButton onClick={onCollapse} name="Collapse All" />
-        </div>
-        { explanation ? (
-        <LineExplanation explanation={explanation} fontSize={fontSize} fontSizeIncrement={fontSizeIncrement}/>
-        ) : ''}
-      </>
-    ) : null
-  );
+return show ? (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+      height: "100%",
+    }}
+  >
+ 
+    <LineNumHighLight
+      fontSize={fontSize}
+      fontSizeIncrement={fontSizeIncrement}
+    />
+
+    <div
+      style={{
+        flexShrink: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <button
+        onClick={onExpand}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            "var(--right-code-bottom-btn-bg-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--mid-header-bg)")
+        }
+        style={{
+          all: "unset",
+          flex: 1,
+          cursor: "pointer",
+          borderRight: "1px solid var(--system-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          fontFamily: 'Roboto, sans-serif',
+          padding: "8px",
+          color: "var(--right-code-bottom-btn)",
+          backgroundColor: "var(--mid-header-bg)",
+        }}
+      >
+        EXPAND ALL
+      </button>
+
+      <button
+        onClick={onCollapse}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            "var(--right-code-bottom-btn-bg-hover)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "var(--mid-header-bg)")
+        }
+        style={{
+          all: "unset",
+          flex: 1,
+          cursor: "pointer",
+          borderRight: "1px solid black",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          fontFamily: 'Roboto, sans-serif',
+          padding: "8px",
+          color: "var(--right-code-bottom-btn)",
+          backgroundColor: "var(--mid-header-bg)",
+        }}
+      >
+        COLLAPSE ALL
+      </button>
+    </div>
+
+    {explanation ? (
+      <LineExplanation
+        explanation={explanation}
+        fontSize={fontSize}
+        fontSizeIncrement={fontSizeIncrement}
+      />
+    ) : null}
+  </div>
+) : null;
+
 }
 
 export default Pseudocode;
