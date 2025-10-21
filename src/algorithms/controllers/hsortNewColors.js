@@ -113,7 +113,7 @@ export default {
         vis.array.setColor(index, HSColors.CURRENT_T);
       } else {
         vis.heap.myColorNode(index + 1, HSColors.CHILD_T);
-        vis.array.setColor(index, HSColors.CURRENT_T);
+        vis.array.setColor(index, HSColors.CHILD_T);
       }
     };
 
