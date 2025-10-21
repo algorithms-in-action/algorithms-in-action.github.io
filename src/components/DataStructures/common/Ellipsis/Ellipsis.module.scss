@@ -1,4 +1,4 @@
-@import "../stylesheet/index";
+@use "../stylesheet/index" as *;
 
 .ellipsis {
   white-space: nowrap;

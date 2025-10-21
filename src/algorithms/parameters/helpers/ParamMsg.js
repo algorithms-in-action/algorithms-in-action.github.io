@@ -29,11 +29,7 @@ function ParamMsg({ logWarning, logTag, logMsg }) {
   return (
     <div 
       className="logContainer"
-      ref={(el) => {
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-        }
-      }}
+      ref={ref}
     >
       <span
         className="logTag"

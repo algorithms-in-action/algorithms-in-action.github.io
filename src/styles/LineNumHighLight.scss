@@ -1,4 +1,4 @@
-@import './global.scss';
+@use './global' as *;
 
 $codePad: 24px;
 $rightNumWidth: 36px;
@@ -9,8 +9,6 @@ $containerTopBottomPad: 2%;
   font-family: Menlo, "Liberation Mono", Courier, monospace;
   // height: 100% - (2 * $containerTopBottomPad);
   padding: $containerTopBottomPad 0;
-  padding-bottom: 100px;
-  display: inline-block;
   min-width: 100%;
 }
 

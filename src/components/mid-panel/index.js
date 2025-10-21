@@ -49,7 +49,7 @@ function MidPanel({ fontSize, fontSizeIncrement }) {
   useEffect(() => {
     // this creates the url of the current algorithm, with required parameters
     if (share) {
-      let baseUrl = `${window.location.origin}/?alg=${algorithmKey}&mode=${mode}`;
+      let baseUrl = `${window.location.origin}/animation/?alg=${algorithmKey}&mode=${mode}`;
       let url = createUrl(baseUrl, category, urlContext);
 
       // Step and expand apply to all algorithms append them on.

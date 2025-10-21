@@ -1,4 +1,4 @@
-@import './global.scss';
+@use './global' as *;
 
 $padding: 16px;
 $itemHeight: 40px;
