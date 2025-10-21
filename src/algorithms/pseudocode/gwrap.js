@@ -5,16 +5,9 @@ export default parse(`
 \\Note{
 Gift wrapping/Jarvis algm for convex hull
 XXX maybe change so we wrap counter-clockwise for consistency?
-XXX probably needs more bookmarks
 
-Includes sketch of optional optimisation - ignore initially, maybe fill in
-later and have option selected like path compression in union find algm.
-
-Should be able to use graph package (disable edge input; maybe make
-nodes smaller); add/delete edges during algorithm execution.
-For hull/wrapper/"string", create extra temp node far away so it's invisible
-with normal zoom and move it around so its colinear with most recently added
-edge (at first step it will be far above the leftmost point)
+Includes sketch of optional heuristic for removing points if n >= 10
+XXX could have option selected like path compression in union find algm.
 \\Note}
 
 \\Code{
@@ -76,6 +69,8 @@ giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
     \\In} 
     while p != minX // stop when we get back to the first node \\B whileP
     return hull \\B returnHull
+    \\Expl{ The animation shows any points that were removed earlier.
+    \\Expl}
 \\In} 
 \\Code} 
 
@@ -96,7 +91,9 @@ Here we skip points p and q to simplify the animation (the code works
 without this simplification).  Here we scan the points
 in order. If there are multiple points that have the same least
 clockwise direction from p the ordering of points can be significant
-- see the "MORE" tab for details.
+- see the "MORE" tab for details. The animation stops at this line once
+more when there are no more points i to consider, and moves the "string"
+close to the next node q.
 \\Expl}
 \\Note{
 Better to have the following??

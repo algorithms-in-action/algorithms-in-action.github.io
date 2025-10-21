@@ -86,17 +86,20 @@ function HashingDHParam({ mode, list, value, smallTable }) {
 
     let removeSpace = inputs.split(' ').join('');
 
+/*
     const { valid, error } = commaSeparatedNumberListValidCheck(inputs.replace(/\s+/g, ''));
   
       if (!valid) {
         setMessage(errorParamMsg(error, EXAMPLES.HASHING_INSERT));
         return;
       }
+*/
 
     if (commaSeparatedPairTripleCheck(true, true, removeSpace)) {
       let values = removeSpace.split(",");
       if (checkAllRangesValid(values)) {
-        let hashSize = HASHSize.smallTable ? SMALL_SIZE : LARGE_SIZE;
+        // HASHSize init asynchronous? default to small
+        let hashSize = !HASHSize.largeTable ? SMALL_SIZE : LARGE_SIZE;
 
         dispatch(GlobalActions.RUN_ALGORITHM, {
           name: 'HashingDH',
