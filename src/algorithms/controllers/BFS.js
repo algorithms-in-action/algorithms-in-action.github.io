@@ -72,7 +72,8 @@ export default {
         vis.graph.weighted(false);
         vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
-
+        // vis.graph.myColorEdge(0, 1, "purple");
+        // vis.graph.myColorEdge(1, 2, "yellow");
       },
       [E, coords]
     );
@@ -127,6 +128,7 @@ export default {
           // select start node in blue
           vis.array.select(0, s + 1, 0, s + 1, colors.FRONTIER_A);
           vis.graph.colorNode(s, colors.FRONTIER_N);
+          // vis.graph.myColorNode(s, "red");
         },
         [[displayedNodes, displayedParent, displayedVisited], displayedQueue]
       );
@@ -165,9 +167,11 @@ export default {
             for (let i = 0; i < c_visited.length; i++) {
               if (c_visited[i] == true)
                 if (!c_Nodes.includes(i)) {
+                  //vis.array.myColorRegion(0, i + 1, 0, i + 1, "green");
                   vis.array.select(0, i + 1, 0, i + 1, colors.FINALISED_A);
                 } else {
                   // vis.array.deselect(0, i + 1);
+                  // vis.array.myColorRegion(0, i + 1, 0, i + 1, "yellow");
                   vis.array.select(0, i + 1, 0, i + 1, colors.FRONTIER_A);
                 }
             }
@@ -176,12 +180,16 @@ export default {
             // and the last visited neighbor
             if ((c_n != null) && (c_lastNei != null)) {
               vis.graph.removeEdgeColor(c_n, c_lastNei);
+              //vis.graph.myColorEdge(c_n, c_lastNei, "grey");
               if ((c_n != null) && (c_lastNei != null)) {
                 vis.graph.removeEdgeColor(c_n, c_lastNei);
+                //vis.graph.myColorEdge(c_n, c_lastNei, "grey");
                 if (c_parent[c_lastNei] === c_n)
                   vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
+                  //vis.graph.myColorEdge(c_n, c_lastNei, "purple");
                 else if (c_parent[c_n] === c_lastNei)
                   vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
+                  //vis.graph.myColorEdge(c_n, c_lastNei, "purple");
               }
             }
           },

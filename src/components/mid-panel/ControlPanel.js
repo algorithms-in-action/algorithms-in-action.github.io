@@ -219,7 +219,6 @@ function ControlPanel() {
             <a className="close" onClick={closeModal}>
               &times;
             </a>
-            {/* ⬇️ Fixed ReactMarkdown usage for v6+ */}
             <ReactMarkdown
               rehypePlugins={[rehypeRaw]}
               remarkPlugins={[remarkToc]}

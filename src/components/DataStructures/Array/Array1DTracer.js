@@ -128,6 +128,7 @@ class Array1DTracer extends Array2DTracer {
         newEl.stack = val.stack;
         newEl.stackDepth = val.stackDepth;
         newEl.largestValue = val.largestValue;
+        newEl.color = val.color;
         return newEl;
       }
     }
@@ -165,6 +166,10 @@ class Array1DTracer extends Array2DTracer {
 
   stringTheContent() {
     return this.data;
+  }
+
+  setColor(colIdx, color) {
+    super.setColor(0, colIdx, color);
   }
 }
 

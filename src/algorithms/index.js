@@ -33,7 +33,7 @@ const getAlgorithms = (meta) =>
           name : m.name,
           category: m.category,
           explanation: explanationModule,
-          param: <ParamModule/>,
+          param: <ParamModule />,
           instructions: instructionsModule,
           extraInfo: extraInfoModule,
           pseudocode: pseudocodeValue,

@@ -1,4 +1,4 @@
-@import './global.scss';
+@use './global' as *;
 
 $midOffset: 16px;
 $midHeaderHeight: 40px;
