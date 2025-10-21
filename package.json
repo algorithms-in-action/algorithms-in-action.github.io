@@ -88,7 +88,6 @@
     "remark-gfm": "^1.0.0",
     "remark-toc": "^7.0.0",
     "rfdc": "^1.1.4",
-    "run-script-os": "^1.1.6",
     "sass": "^1.50.0",
     "shelljs": "^0.10.0"
   },

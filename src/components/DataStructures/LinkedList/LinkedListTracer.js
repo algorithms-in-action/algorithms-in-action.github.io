@@ -6,21 +6,34 @@ import Tracer from '../common/Tracer.jsx';
 import LinkedListRenderer from "./LinkedListRenderer";
 import ListNode from "./ListNode";
 
+/**
+ * LinkedListTracer
+ * - Maintains a linked list model (nodes map + head/tail/next pointers).
+ * - Exposes helper methods to mutate state (select, patch, fade, hide, etc.).
+ * - Calls super.set() after any mutation to trigger a re-render.
+ * - Renders via LinkedListRenderer.
+ */
 class LinkedListTracer extends Tracer {
+  // Provide the renderer class used by this tracer
   getRendererClass() { return LinkedListRenderer; }
 
+  // Initialize runtime state and default layout
   init() {
     super.init();
-    this.nodes = new Map();
-    this.headKey = null;
-    this.tailKey = null;
-    this.motionOn = true;
+    this.nodes = new Map();                  // key => ListNode
+    this.headKey = null;                     // key of head node
+    this.tailKey = null;                     // key of tail node
+    this.motionOn = true;                    // toggle motion animations
     this.layout = { direction: 'horizontal', gap: 65, start: { x: 0, y: 0 } };
-    this.algo = undefined;
-    this.listOfNumbers = '';
-    this.indexToKey = new Map(); // NEW: Map array indices to node keys
+    this.algo = undefined;                   // optional algorithm tag/name
+    this.listOfNumbers = '';                 // optional text snapshot
+    this.indexToKey = new Map();             // Map(1-based index => node key)
   }
 
+  /**
+   * Build the list from an array of values.
+   * Also fills indexToKey for 1-based indexing.
+   */
   // Set up with index mapping
   set(list = [], algo) {
     this.algo = algo;
@@ -29,15 +42,15 @@ class LinkedListTracer extends Tracer {
     let prevKey = null;
 
     list.forEach((v, i) => {
-      const k = `n${i}_${Date.now()}`;
+      const k = `n${i}_${Date.now()}`;       // unique-ish key
       const node = new ListNode(v, k);
       node.pos.x = this.layout.start.x + i * this.layout.gap;
       node.pos.y = this.layout.start.y;
       if (prevKey) {
-        this.nodes.get(prevKey).nextKey = k;
+        this.nodes.get(prevKey).nextKey = k; // link previous to this
       }
       this.nodes.set(k, node);
-      this.indexToKey.set(i + 1, k); // Map 1-based index to key
+      this.indexToKey.set(i + 1, k);         // 1-based index mapping
       prevKey = k;
     });
     this.headKey = list.length ? [...this.nodes.keys()][0] : null;
@@ -45,9 +58,14 @@ class LinkedListTracer extends Tracer {
 
     if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
 
-    super.set();
+    super.set();                              // trigger render
   }
 
+  /**
+   * Update next pointers using a "tailsArray":
+   * - tailsArray[index] gives the 1-based index of the next node
+   * - 'Null' or null means no next
+   */
   // NEW: Update node connections based on Tails array
   updateConnections(tailsArray) {
     for (const [index, key] of this.indexToKey.entries()) {
@@ -65,6 +83,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Update a node's value by its 1-based index.
+   */
   // NEW: Update node value by index
   updateValueByIndex(index, value) {
     const key = this.indexToKey.get(index);
@@ -77,9 +98,13 @@ class LinkedListTracer extends Tracer {
     }
   }
 
+  /**
+   * Assign a "variable" label to a node by 1-based index.
+   * Ensures the same varName exists on only one node at a time.
+   */
   // NEW: Assign variable by array index
   assignVariableByIndex(varName, index) {
-    // Clear same variable from all nodes
+    // Remove the same variable from all nodes first
     for (const node of this.nodes.values()) {
       node.variables = node.variables.filter(x => x !== varName);
     }
@@ -93,6 +118,10 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Selection helpers using 1-based indices.
+   * color: '0' for default, or '1'..'5' for colored slots.
+   */
   // NEW: Select by array index
   selectByIndex(index, color = '0') {
     const key = this.indexToKey.get(index);
@@ -105,10 +134,15 @@ class LinkedListTracer extends Tracer {
     if (key) this.deselectByKey(key);
   }
 
+  // ---- Selection helpers by key ----
   // Existing methods
   selectByKey(k, c = '0') { this._mark(k, c, true); }
   deselectByKey(k) { this._clearSelect(k); }
 
+  /**
+   * Mark node as "patched" (e.g., temporarily updated) and optionally set value.
+   * Increments patched counter to allow nested patching.
+   */
   patchByKey(k, v = this.nodes.get(k)?.value) {
     const n = this.nodes.get(k);
     if (!n) return;
@@ -117,6 +151,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Reverse one patch level (decrement patched), keep value in sync.
+   */
   depatchByKey(k, v = this.nodes.get(k)?.value) {
     const n = this.nodes.get(k);
     if (!n) return;
@@ -125,6 +162,7 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  // Visual emphasis helpers
   fadeOutByKey(k) {
     const n = this.nodes.get(k);
     if (n) {
@@ -141,6 +179,7 @@ class LinkedListTracer extends Tracer {
     }
   }
 
+  // Mark a node as sorted (e.g., final positioning)
   sortedByKey(k) {
     const n = this.nodes.get(k);
     if (n) {
@@ -149,6 +188,7 @@ class LinkedListTracer extends Tracer {
     }
   }
 
+  // Visibility toggles for a single node
   hideByKey(k) {
     const n = this.nodes.get(k);
     if (n) {
@@ -165,6 +205,9 @@ class LinkedListTracer extends Tracer {
     }
   }
 
+  /**
+   * Hide an entire chain starting from startKey (following next pointers).
+   */
   hideFromNode(startKey) {
     let current = startKey;
     while (current !== null && current !== 'Null') {
@@ -176,6 +219,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Show an entire chain starting from startKey (following next pointers).
+   */
   showFromNode(startKey) {
     let current = startKey;
     while (current !== null && current !== 'Null') {
@@ -187,6 +233,7 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  // Batch visibility helpers
   hideRange(keys) {
     keys.forEach(k => {
       const n = this.nodes.get(k);
@@ -203,6 +250,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Hide everything except the provided keys.
+   */
   hideExcept(keepKeys) {
     for (const [key, node] of this.nodes.entries()) {
       node.hidden = !keepKeys.includes(key);
@@ -210,6 +260,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Reset visibility and emphasis for all nodes.
+   */
   showAll() {
     for (const node of this.nodes.values()) {
       node.hidden = false;
@@ -218,6 +271,7 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  // Batch emphasis toggles
   fadeRange(keys) {
     keys.forEach(k => {
       const n = this.nodes.get(k);
@@ -234,6 +288,10 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Assign a variable label to a specific node by key,
+   * ensuring uniqueness of that label across all nodes.
+   */
   assignVariableAtKey(v, k) {
     for (const node of this.nodes.values()) {
       node.variables = node.variables.filter(x => x !== v);
@@ -242,11 +300,18 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Remove all variable labels from all nodes.
+   */
   clearVariables() {
     for (const n of this.nodes.values()) n.variables = [];
     super.set();
   }
 
+  /**
+   * Insert a new node after a given node key.
+   * Positions the new node one gap to the right of the reference.
+   */
   insertAfter(afterKey, value, newKey = `n_${Date.now()}`) {
     const newNode = new ListNode(value, newKey);
     const after = this.nodes.get(afterKey);
@@ -259,6 +324,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Delete the node immediately after prevKey (if any).
+   */
   deleteAfter(prevKey) {
     const prev = this.nodes.get(prevKey);
     if (!prev || !prev.nextKey) return;
@@ -270,11 +338,17 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Set a new head (by key). Does not change positions or next pointers.
+   */
   rehead(newHeadKey) {
     this.headKey = newHeadKey ?? null;
     super.set();
   }
 
+  /**
+   * Move a node to an absolute (x, y) position.
+   */
   moveNodeTo(k, x, y) {
     const n = this.nodes.get(k);
     if (!n) return;
@@ -282,19 +356,28 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  // Toggle motion animations (does not trigger render by itself)
   setMotion(b = true) {
     this.motionOn = b;
   }
 
+  // Merge provided layout properties into current layout
   setLayout(layout) {
     this.layout = { ...this.layout, ...layout };
     super.set();
   }
 
+  // Save a human-readable snapshot of the list values
   setList(arr) {
     this.listOfNumbers = arr ? arr.join(', ') : undefined;
   }
 
+  /**
+   * Internal selection marker:
+   * - c: '0' increments the generic selected counter
+   * - c: '1'..'5' toggles named selection flags (selected1..selected5)
+   * - on=false clears all selection flags
+   */
   _mark(k, c, on) {
     const n = this.nodes.get(k);
     if (!n) return;
@@ -310,6 +393,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
+  /**
+   * Clear all selection flags on a node and unset "sorted".
+   */
   _clearSelect(k) {
     const n = this.nodes.get(k);
     if (!n) return;
