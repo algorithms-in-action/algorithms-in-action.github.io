@@ -43,7 +43,6 @@ export function initGlobalAlgorithmGetter(getter) {
 // like initGlobalAlgorithmGetter for the mode and add code in
 // src/context/GlobalState.js to call it.  Avoiding that for now - enough
 // merge conflicts etc already!
-/*
 export function areExpanded(blocks) {
   const currentUrl = new URL(window.location.href);
   const mode = currentUrl.searchParams.get('mode');
@@ -53,8 +52,8 @@ export function areExpanded(blocks) {
   return blocks.reduce((acc, curr) =>
     (acc && collapse[alg_name][mode][curr]), true);
 }
-*/
 
+/*
 // Checks if list of pseudocode blocks are all currently expanded.  Note
 // that "inner" blocks can be expanded even when "outer" ones are not, eg,
 // for msort_arr_td has block Merge inside MergeCopy.  To check if Merge
@@ -73,6 +72,7 @@ export function areExpanded(blocks) {
   return blocks.reduce((acc, curr) =>
     (acc && collapse[alg_name].sort[curr]), true);
 }
+*/
 
 // Trigger refresh of display when code is expanded/collapsed.
 // Not so efficient - runs through all the chunks from the start. XXX
