@@ -141,6 +141,10 @@
 
   /* Label group shown below node (e.g., variable names) */
   .vars {
+    display: flex;
+    flex-direction: column; // stack vertically
+    align-items: center;
+    margin-top: 4px; // spacing from node
     position: absolute;
     top: calc(100% + 6px);
     left: 0;
@@ -151,12 +155,14 @@
 
   /* Label style (currently transparent) */
   .varBadge {
+    margin-top: 2px;
     background: rgba(180, 180, 180, 0.18);
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 999px;
     padding: 2px 6px; 
     font-size: 12px;
     color: #ddd;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.15)); // subtle outline to improve legibility
   }
 }
 

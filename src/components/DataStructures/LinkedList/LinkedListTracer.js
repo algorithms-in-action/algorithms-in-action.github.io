@@ -56,7 +56,7 @@ class LinkedListTracer extends Tracer {
     this.headKey = list.length ? [...this.nodes.keys()][0] : null;
     this.tailKey = list.length ? [...this.nodes.keys()][list.length - 1] : null;
 
-    if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
+    // if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
 
     super.set();                              // trigger render
   }
