@@ -3,158 +3,239 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 
 \\Note{
-Gift wrapping/Jarvis algm for convex hull
-XXX maybe change so we wrap counter-clockwise for consistency?
-XXX probably needs more bookmarks
+Graham scan algm for convex hull, draft
+This version uses a list rather than a "stack" - a bit simpler I think
+XXX use h rather than H??
 
-Includes sketch of optional optimisation - ignore initially, maybe fill in
-later and have option selected like path compression in union find algm.
-
-Should be able to use graph package (disable edge input; maybe make
-nodes smaller); add/delete edges during algorithm execution.
-For hull/wrapper/"string", create extra temp node far away so it's invisible
-with normal zoom and move it around so its colinear with most recently added
-edge (at first step it will be far above the leftmost point)
+Could add optional optimisation to remove points in quadralateral
+but better to just have that for gift wrapping as complexity is ok here
 \\Note}
 
 \\Code{
 Main
-giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
+grahamScan(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
 \\In{
     if n <= 3 \\B n<=3
     \\In{
-        return the set of all points \\B returnAll
+        return the set of all points
         \\Expl{ n < 3 could be considered an error, depending on how
           flexible our definition of convex hull is.
         \\Expl}
     \\In}
-    hull <- Empty // Initialize hull to the empty set of points
-    minX <- point with min. X value (optionally minY, maxX, maxY also) \\B minX
-    \\Expl{ We could choose any point guaranteed to be on the convex
-        hull. Here we use a point with the minimal X coordinate.  We
-        scan through all points to find it. If there are multiple points
-        with the minimal X coordinate we choose one with a minimal Y coordinate.
-        Other choices can potentially have subtle interractions with the
-        other code and potentially affect termination - see the MORE tab.
-        During this scan we can optionally also find the minimal Y point
-        and maximal X and Y points; here we do so if n >= 10. These
-        points are also on the convex hull.
+    p1 <- point with min. X value (min. Y if there are ties) \\B minX
+    \\Expl{ We scan through all points to find the lowest leftmost point.
     \\Expl}
-    Optionally remove points inside polygon minX, maxY, maxX, minY \\Ref RemoveQuad
-    \\Expl{ If we know several points that are definitely on the
-        hull, any points strictly inside this polygon can (optionally)
-        be removed from consideration. This can speed up the rest of
-        the algorithm. Here we enable this option if n >= 10.
+    sort P on how "counter-clockwise" each point is from p1 \\B sort
+    \\Expl{ If there are ties, points closer to p1 are put first.
+      A point p, where the gradient of the line from p1 to p is small, comes
+      before points where the gradient is larger. Any comparison-based
+      sorting algorithm could potentially be used. P[1] will be p1.
+      The animation re-numbers the points so P[i] = i, for all i.
     \\Expl}
-    p <- minX // current point + "string" initialization \\B initP
-    \\Expl{ We start with p being the (bottom) leftmost point. In the
-        animation we show a line from p; you can think
-        of this as a string we use to wrap around the points to form the
-        convex hull. It starts stretched anywhere to the left of p and
-        will gradually be wrapped around the hull (here we wrap
-        clockwise; either direction works).
+    H <- list [P[2], p1] // hull is the first two points initially \\B initH
+    \\Expl{ H contains points that form a convex hull for the first i
+      points (initially i=2) in the (sorted) list of points. The most
+      recently added point is at the front of the list. Here we use array
+      notation to refer to elements of H, with H[1] the first element.
     \\Expl}
-    do
+    for i <- 3 to n // for each remaining point \\B forI
+    \\Expl{ For each remaining point P[i], in counter-clockwise order, we add
+      P[i] to the convex hull H and remove any points that would not make the hull
+      convex.
+    \\Expl}
     \\In{
-        add p to hull \\B addP
-        \\Note{ Use color of p to indicate membership of hull.  Also q
-          and i (not sure if two vars are equal or q/i are on hull...).
-          Should also display vars next to (or in?) nodes. Should we
-          also display their value elsewhere or is the graph enough?
+        Add P[i] to H (at the front of the list, H[1]) \\B addP
+        \\Note{ Use same color for all points in H.  Best also highlight
+          all points to be removed here for case where removePoints isn't
+          expanded? (might require some repeated code in controller).
         \\Note}
-        q <- next point in clockwise "string" rotation \\Ref NextPoint
-        \\Expl{ Keeping tension on the string, we rotate it clockwise
-          around all the points until it touches the next point, q.
-          The animation here shows the string a little before it touches
-          q (which is highlighted).
-          Note: going from p to q to any other point x requires a
-          clockwise turn.
-        \\Expl}
-        p <- q \\B p<-q
-        \\Expl{ The animation here shows the string touching the node.
+        Remove non-convex points from H \\Ref removePoints
+        \\Expl{ Adding P[i] may make one or more points just before P[i] no
+          longer convex. We delete these points from H.
         \\Expl}
     \\In} 
-    while p != minX // stop when we get back to the first node \\B whileP
-    return hull \\B returnHull
+    return H \\B returnH
 \\In} 
 \\Code} 
 
 \\Code{
-NextPoint
-// look for point q such that for no i, p->i->q is a clockwise turn
-\\Expl{ If path p->i->q has a clockwise turn at i it means q is further
-clockwise than i.  If no such i exists then q is the least clockwise
-point after p.
-\\Expl}
-q <- a point other than p // initialise q \\B initQ
-\\Expl{ Any point other than p will work.  Here we pick the next point
-  in the points array (or 1, if p is the last point).
-\\Expl}
-for i <- point in P \\B assignI
-\\Expl{ We loop over all points to find the least clockwise point from p.
-Here we skip points p and q to simplify the animation (the code works
-without this simplification).  Here we scan the points
-in order. If there are multiple points that have the same least
-clockwise direction from p the ordering of points can be significant
-- see the "MORE" tab for details.
-\\Expl}
-\\Note{
-Better to have the following??
-for i <- 1 to n
-\\Note}
+removePoints
+while H[3]->H[2]->H[1] is not a counter-clockwise turn \\Ref whileTest
+\\Expl{ The sequences of edges from p1 must have counter-clockwise turns
+  at each point. If the most recent three points added are not
+  counter-clockwise, the middle point is removed.
+\\Expl} 
 \\In{
-    if p->i->q is a clockwise turn \\Ref piqClockwise
-    \\Expl{ Path p->p->q is not considered a turn.
-      Geometric algorithms often have tricky cases such as this.
+    remove H[2] \\B removeH2
+    \\Expl{ P[i] (in H[1]) stays in the hull but the previous point (H[2]) is
+      removed as it is not convex.
     \\Expl}
-    \\In{
-        q <- i \\B q<-i
-        \\Expl{ i is less clockwise than q, so we update q.
-        \\Expl}
-    \\In}
 \\In}
-\\Code}
+\\Code} 
 
 \\Code{
-piqClockwise
-// check if the cross product of vectors pi and pq is positive
-if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0 \\B piqTest
-\\Expl{ See the "BACKGROUND" and "MORE" tabs for more details. Code in
+whileTest
+// Remove while the cross product of these two vectors is <= 0
+// (or H only has 2 points)
+while H length > 2 & (H[2].y-H[3].y)*(H[1].x-H[2].x) - (H[2].x-H[3].x)*(H[1].y-H[2].y) <= 0 \\B whileNotCC
+\\Expl{ See the "BACKGROUND" tabs for more details. Code in
   geometric algorithms often has cryptic bits like this based on
   mathematical results from geometry. For many operations, the most
   intuitive coding involves division and is actually buggy because 
   there can be cases where the divisor is zero.
 \\Expl}
-\\Code}
-
-\\Code{
-RemoveQuad
-for k <- point in P // Optional loop \\B forkinP
-\\Expl{ We skip the points minX, maxY, minY and maxX.
-  Here we use this option if n >= 10.
-\\Expl}
-\\In{
-    if k is inside the polygon formed by the min/max points \\Ref insidePoly
-    \\In{
-       remove point k // k can't be on the convex hull \\B removek
-    \\In}
-\\In}
 \\Code} 
 
-\\Code{
-insidePoly
-// Below, i and j refer to consecutive points
-// on a clockwise traversal of the polygon
-if i->j->k turns clockwise for each (i, j) pair \\B allClockwise
-\\Expl{ There are (up to) four (i, j) pairs: (minX, maxY), (maxY, maxX),
-  (maxX, minY) and (minY, minX); we skip pairs where i = j.
-  If k is clockwise (to the right of)
-  each of these, it must be inside all four edges of the polygon.
-  To test for clockwise turns we can use the cross product of vectors.
-  See the code for finding the next point in the convex hull and the
-  "BACKGROUND" and "MORE" tabs for more details.
-\\Expl}
-\\Code} 
+\\Note{
+// This code is from geeks4geeks, Modified by Lee Naish
+// Graham scan convex hull algorithm
+// XXX may want to remove duplicate points
+
+// Class to represent a point
+// XXX may want to change this for consistency with other CH algorithms
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Method to check equality of two points
+    equals(t) {
+        return this.x === t.x && this.y === t.y;
+    }
+}
+
+// Function to compute orientation of the triplet (a, b, c)
+// Returns -1 for clockwise, 1 for counter-clockwise, 0 for collinear
+function orientation(a, b, c) {
+    const v = a.x * (b.y - c.y) + 
+              b.x * (c.y - a.y) + 
+              c.x * (a.y - b.y);
+    if (v < 0) return -1;  // clockwise
+    if (v > 0) return +1;  // counter-clockwise
+    return 0;              // collinear
+}
+
+// Function to compute squared distance between two points
+function distSq(a, b) {
+    return (a.x - b.x) * (a.x - b.x) + 
+           (a.y - b.y) * (a.y - b.y);
+}
+
+// Function to find the convex hull of a set of points
+function findConvexHull(points) {
+    const n = points.length;
+
+    // Convex hull is not possible if there are fewer than 3 points
+    // XXX
+    // if (n < 3) return [[-1]];
+    if (n < 3) return points;
+
+    // Convert input array to Point objects
+    let a = points.map(p => new Point(p[0], p[1]));
+
+    // Find the point with the lowest y-coordinate (and leftmost if tie)
+    const p0 = a.reduce((min, p) => 
+        (p.y < min.y || (p.y === min.y && p.x < min.x)) ? p : min, a[0]);
+
+    // a = a.filter((p) => (p.x !== p0.x || p.y != p0.y)); // remove p0
+
+    // Sort the points by polar angle with respect to p0
+    a.sort((a, b) => {
+        const o = orientation(p0, a, b);
+
+        // If collinear, place the farther point later
+        // This ensures p0 comes first in the array (we could do that
+        // separately) and also avoids possible extra (colinear) points
+        // at the end of the array when we have finished computing the
+        // hull (this could be done separately also).
+        if (o === 0) {
+            return distSq(p0, a) - distSq(p0, b);
+            // XXX return 0;
+        }
+
+        // Otherwise, order based on counter-clockwise direction
+        // XXX return o < 0 ? -1 : 1;
+        return o < 0 ? 1 : -1;
+    });
+
+    // a.unshift(p0); // put p0 back at start
+
+    // Remove duplicate collinear points (keep farthest one)
+    // XXX not needed?
+/*
+    let m = 1;
+    for (let i = 1; i < a.length; i++) {
+
+        // Skip closer collinear points
+        while (i < a.length - 1 && orientation(p0, a[i], a[i + 1]) === 0) {
+            i++;
+        }
+
+        // Keep current point in place
+        a[m] = a[i];
+        m++;
+    }
+*/
+    let m = a.length;
+
+    // If fewer than 3 points remain, hull is not possible
+    // XXX not needed? (can return all)
+    if (m < 3) return [[-1]];
+
+    // Initialize the convex hull stack with first two points
+    const st = [a[0], a[1]];
+
+    // Process the remaining points
+    for (let i = 2; i < m; i++) {
+
+        // While the last three points do not make a left turn, pop the middle one
+        // XXX while (st.length > 1 && orientation(st[st.length - 2], st[st.length - 1], a[i]) >= 0) {
+        while (st.length > 1 && orientation(st[st.length - 2], st[st.length - 1], a[i]) <= 0) {
+            console.log('Pop ', st[st.length - 2].x, st[st.length - 2].y, st[st.length - 1].x, st[st.length - 1].y, a[i].x, a[i].y);
+            st.pop();
+        }
+
+        // Add current point to stack
+        st.push(a[i]);
+    }
+
+    // Final validation: if fewer than 3 points in stack, hull is not valid
+    // XXX not needed? (can return all)
+    if (st.length < 3) return [[-1]];
+
+    // Convert hull points to [x, y] arrays
+    return st.map(p => [Math.round(p.x), Math.round(p.y)]);
+}
+
+// Test case
+/*
+const points = [
+     [0, 0], [1, -4], [-1, -5], [-5, -3], [-3, -1],
+    [-1, -3], [-2, -2], [-1, -1], [-2, -1], [-1, 1]
+];
+*/
+// a few cases where there are ties in the sorting - all work without
+// removing points 
+const points = [
+     // [2, 1], [0, 0], [4, 0], [5, 0], [1, 0], [6, 0], [3, 5],
+     // [3, 7], [0, 0], [2, 2], [5, 5], [1, 0], [6, 6], [4, 4],
+     [3, 7], [0, 0], [0, 2], [5, 5], [0, 2], [0, 1], [0, 3], [0, 6], [0, 4],
+    [1, 2], [2, 4]
+];
+
+// Compute the convex hull
+const hull = findConvexHull(points);
+
+// Output the result
+if (hull.length === 1 && hull[0][0] === -1) {
+    console.log(-1);
+} else {
+    hull.forEach(point => {
+        console.log(point[0], point[1]);
+    });
+}
+\\Note}
 
 
 `);

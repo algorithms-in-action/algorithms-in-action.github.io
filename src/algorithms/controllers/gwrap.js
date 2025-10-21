@@ -1,5 +1,5 @@
 // Gift wrapping convex hull algorithm
-// XXX maybe change so we wrap counter-clockwise for consistency?
+// Maybe change so we wrap counter-clockwise for consistency?
 // 
 // XXX Based on DFSrec code - may still be some leftover rubbish to delete.
 // 
@@ -21,15 +21,10 @@
 // wrapper could go through the next node at the first step then the new
 // hull edge could change a bit.
 //
-// XXX Maybe p,q,i should be shown explicitly - currently they are all
-// implicit using edges, colors etc; not great when they coincide
-// Now revised so i they don't coincide and p is labelled (a bit small -
-// need to fix graph code for that)
-// 
 // XXX Maybe have an option button for the Akl-Toussaint heuristic.
 // See union-find for an example of such an option. Currently
 // implemented for n>=10 - not too bad.
-// 
+//
 // XXX Color stuff with graphs is a bit of a mess - this is a Global
 // Issue to be worked in separately - communication about this and how
 // merge conflicts are handed may be needed
@@ -56,7 +51,9 @@ export default {
     // integer; '@' looks a bit like a roll of paper/string...
     // It's not normally visible but may be found if someone searches
     const wrapperStr = '@';
-    const pStr = 'p'; // XXX should be rendered a bit higher and larger?
+    const pStr = 'p';
+    const iStr = 'i';
+    const qStr = 'q';
 
     const coords = [...coordsMatrix];
     const numVertices = edgeValueMatrix.length;
@@ -313,6 +310,17 @@ export default {
               deleted[k] = true;
               chunker.add('removek',
                 (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
+                  // smash original coords with ones from the display
+                  // that are scaled etc for rendering so deleted nodes
+                  // can be restored in the last chunk. NOTE: coords is
+                  // an array defined in this file that is updated here
+                  // *when this chunk is executed* (not when the chunk
+                  // is created) because when chunks are created we
+                  // don't have the proper node position with scaling
+                  // etc. Thus coords is not passed as a parameter.
+                  let [pX, pY] = vis.graph.getNodePosition(c_k);
+                  coords[c_k][0] = pX;
+                  coords[c_k][1] = pY;
                   vis.graph.removeNode(c_k);
                 },
                 [minX, maxX, minY, maxY, k], 0
@@ -359,7 +367,7 @@ export default {
             // Add special node a long way away for "wrapper"
             vis.graph.addNode(wrapperStr, wrapperStr);
             vis.graph.setNodePosition(wrapperStr, -2000, -9000); // XXX
-            vis.graph.updateHeight(c_p, pStr);
+            vis.graph.updateUpperLabel(c_p, pStr); // XXX Lower broken???
             vis.graph.addEdge(c_p, wrapperStr);
             vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
             vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
@@ -383,6 +391,7 @@ export default {
                   vis.graph.removeEdge(c_pp, wrapperStr);
                   vis.graph.addEdge(c_p, wrapperStr);
                   vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
+                  // XXX could use coordsArray
                   let [pX, pY] = vis.graph.getNodePosition(c_pp);
                   let [qX, qY] = vis.graph.getNodePosition(c_p);
                   // XXX wrapper position should be colinear but far away
@@ -415,6 +424,7 @@ export default {
             chunker.add('initQ',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
                 vis.graph.colorNode(c_q, colorsCH.NEXTQ_N);
+                vis.graph.updateUpperLabel(c_q, qStr);
               },
               [E, coords, p, q], 0
             );
@@ -425,7 +435,7 @@ export default {
             // confusing so we do so. NOTE same tests later, twice!
             // Could simplify some of the color resetting code with
             // this short-cut.
-            while (first_i === p || first_i === q)
+            while (first_i === p || first_i === q || deleted[first_i])
               first_i = first_i + 1;
             hullHasI  = hull.includes(first_i);
             chunker.add('assignI',
@@ -436,6 +446,7 @@ export default {
                 // because i can be on the hull and/or p or q (no
                 // longer!)
                 vis.graph.colorNode(f_i, colorsCH.GWRAPI_N);
+                vis.graph.updateUpperLabel(f_i, iStr);
               },
               [p, q, hullHasI, first_i], 0
             );
@@ -443,7 +454,7 @@ export default {
             {
               if (deleted[i]) // ignore deleted nodes
                 continue;
-              if (i === p || i == q) // we skip i==p, i==q
+              if (i === p || i === q) // we skip i==p, i==q
                 continue;
               hullHasI = hull.includes(i);
               hullHasPI = includesConsecutive(hull, p, i);
@@ -479,6 +490,8 @@ export default {
                       vis.graph.colorNode(c_q, colorsCH.HULLP_N);
                     else
                       vis.graph.removeNodeColor(c_q);
+                    vis.graph.updateUpperLabel(c_q, '');
+                    vis.graph.updateUpperLabel(c_i, qStr);
                   },
                   [E, coords, p, q, i, hullHasQ], 0
                 );
@@ -518,11 +531,14 @@ export default {
                     vis.graph.removeNodeColor(c_i);
                   let next_i = c_i + 1;
                   // we skip i==p, i==q
-                  while (next_i === c_p || next_i === c_q)
+                  while (next_i === c_p || next_i === n_q || deleted[next_i])
                     next_i = next_i + 1;
-                  if (next_i < n)
+                  if (c_i !== n_q)
+                    vis.graph.updateUpperLabel(c_i, '');
+                  if (next_i < n) {
                     vis.graph.colorNode(next_i, colorsCH.GWRAPI_N);
-                  else { // about to exit for loop
+                    vis.graph.updateUpperLabel(next_i, iStr);
+                  } else { // about to exit for loop
                     // Move wrapper most of the way to it's next position
                     // XXX improve interpolation - best use angle
                     // somehow rather than X,Y coordinates
@@ -563,8 +579,9 @@ export default {
                 vis.graph.removeEdge(c_p, wrapperStr);
                 vis.graph.addEdge(c_q, wrapperStr);
                 vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
-                vis.graph.updateHeight(c_p, undefined);
-                vis.graph.updateHeight(c_q, pStr);
+                vis.graph.updateUpperLabel(c_q, '');
+                vis.graph.updateUpperLabel(c_p, '');
+                vis.graph.updateUpperLabel(c_q, pStr);
                 let [pX, pY] = vis.graph.getNodePosition(c_p);
                 let [qX, qY] = vis.graph.getNodePosition(c_q);
                 // XXX wrapper position should be colinear but far away
@@ -589,7 +606,7 @@ export default {
                 (vis, edgeArray, coordsArray, c_pp, c_p) => {
                   vis.graph.colorNode(c_pp, colorsCH.HULLP_N);
                   vis.graph.colorNode(c_p, colorsCH.HULLP_N);
-                  vis.graph.updateHeight(c_p, undefined);
+                  vis.graph.updateUpperLabel(c_p, '');
                   },
                   [E, coords, prevP, p], 0
               );
@@ -599,11 +616,22 @@ export default {
                            // point
         // console.log("Reached (" + coords[p][X] + ", " + coords[p][Y] + ") again");
         chunker.add( 'returnHull',
-          (vis, edgeArray, coordsArray, c_p, c_q) => {
+          (vis, c_p, c_q, del, n) => {
+            for (let i = 0; i < n; i++)
+              // restore deleted nodes: NOTE: coords is an array defined
+              // in this file that is read here, having been modified by
+              // a previous chunk (possibly). coords is not passed in as
+              // a parameter as that would be the version when the
+              // chunks are created, not the version after some chunks
+              // have been executed.
+              if (del[i]) {
+                vis.graph.addNode(i, i+1);
+                vis.graph.setNodePosition(i, coords[i][0], coords[i][1]);
+              }
             vis.graph.removeEdge(c_p, wrapperStr);
             vis.graph.removeNode(wrapperStr);
           },
-          [E, coords, p, q], 0
+          [p, q, deleted, n], 0
         );
        
         // Print Result
