@@ -249,11 +249,13 @@ export function run_msort() {
     function performRecursiveSort(L, R, midNum, len, depth) {
       // prepare to sort left half
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
+          // Hide the mid after split the array
           vis.array.assignVariable('Mid', 2, undefined);
           vis.array.assignVariable('Mid=Null', 2, undefined);
           vis.list.nodes.forEach(node => {
             node.variables = node.variables.filter(v => v !== 'Mid' && v !== 'Mid=Null');
           });
+          
         vis.array.set(Lists, 'msort_lista_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
@@ -468,6 +470,9 @@ export function run_msort() {
           colorList(vis, cur_R, runBColor, Lists);
           colorMergedList(vis, cur_M, cur_E, sortColor, Lists);
           vis.list.updateConnections(Lists[2]);
+          vis.list.nodes.forEach(node => {
+            node.variables = node.variables.filter(v => v !== 'R');
+          });
           updatePointerVariables(vis, cur_L, cur_R, cur_M, cur_E);
           // colorPointerList(vis, cur_L, runAColor, Lists);
           // colorPointerList(vis, cur_R, runBColor, Lists);
@@ -538,6 +543,9 @@ export function run_msort() {
         colorMergedList(vis, cur_M, cur_E, sortColor, Lists);
 
         vis.list.updateConnections(Lists[2]);
+        vis.list.nodes.forEach(node => {
+          node.variables = node.variables.filter(v => v !== 'R');
+        });
         updatePointerVariables(vis, cur_L, cur_R, cur_M, cur_E);
         // colorPointerList(vis, cur_L, runAColor, Lists);
         // colorPointerList(vis, cur_R, runBColor, Lists);
