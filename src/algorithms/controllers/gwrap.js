@@ -30,7 +30,7 @@
 // merge conflicts are handed may be needed
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import {colorsCH} from './convexHullColours';
+import {CHColors} from './convexHullColours';
 
 export default {
   initVisualisers() {
@@ -129,8 +129,8 @@ export default {
             vis.graph.removeEdge(c_minY, c_minX);
             vis.graph.addEdge(m1, m2);
             vis.graph.addEdge(m2, c_k);
-            vis.graph.colorEdge(m1, m2, colorsCH.CLOCKWISE_E);
-            vis.graph.colorEdge(m2, c_k, colorsCH.CLOCKWISE_E);
+            vis.graph.myColorEdge(m1, m2, CHColors.CLOCKWISE_E);
+            vis.graph.myColorEdge(m2, c_k, CHColors.CLOCKWISE_E);
           },
           [minX, maxX, minY, maxY, k, max1, max2], 0
         );
@@ -147,8 +147,8 @@ export default {
             vis.graph.removeEdge(c_minY, c_minX);
             vis.graph.addEdge(m1, m2);
             vis.graph.addEdge(m2, c_k);
-            vis.graph.colorEdge(m1, m2, colorsCH.ANTICLOCK_E);
-            vis.graph.colorEdge(m2, c_k, colorsCH.ANTICLOCK_E);
+            vis.graph.myColorEdge(m1, m2, CHColors.ANTICLOCK_E);
+            vis.graph.myColorEdge(m2, c_k, CHColors.ANTICLOCK_E);
           },
           [minX, maxX, minY, maxY, k, max1, max2], 0
         );
@@ -186,17 +186,17 @@ export default {
           chunker.add('returnAll',
             (vis, n) => {
               // must be at least 1 point (currently XXX)
-              vis.graph.colorNode(0, colorsCH.HULLP_N);
+              vis.graph.myColorNode(0, CHColors.HULLP_N);
               if (n > 1 ) {
-                vis.graph.colorNode(1, colorsCH.HULLP_N);
+                vis.graph.myColorNode(1, CHColors.HULLP_N);
                 vis.graph.addEdge(0, 1);
-                vis.graph.colorEdge(0, 1, colorsCH.HULL_E);
+                vis.graph.myColorEdge(0, 1, CHColors.HULL_E);
                 if (n > 1 ) {
-                  vis.graph.colorNode(2, colorsCH.HULLP_N);
+                  vis.graph.myColorNode(2, CHColors.HULLP_N);
                   vis.graph.addEdge(2, 0);
                   vis.graph.addEdge(1, 2);
-                  vis.graph.colorEdge(2, 0, colorsCH.HULL_E);
-                  vis.graph.colorEdge(1, 2, colorsCH.HULL_E);
+                  vis.graph.myColorEdge(2, 0, CHColors.HULL_E);
+                  vis.graph.myColorEdge(1, 2, CHColors.HULL_E);
                 }
               }
             },
@@ -248,19 +248,19 @@ export default {
         chunker.add(
           'minX',
           (vis, c_minX, c_maxX, c_minY, c_maxY) => {
-            vis.graph.colorNode(c_minX, colorsCH.AKL_N);
+            vis.graph.myColorNode(c_minX, CHColors.AKL_N);
             if (aklOpt) { // could pass this in
-              vis.graph.colorNode(c_maxX, colorsCH.AKL_N);
-              vis.graph.colorNode(c_minY, colorsCH.AKL_N);
-              vis.graph.colorNode(c_maxY, colorsCH.AKL_N);
+              vis.graph.myColorNode(c_maxX, CHColors.AKL_N);
+              vis.graph.myColorNode(c_minY, CHColors.AKL_N);
+              vis.graph.myColorNode(c_maxY, CHColors.AKL_N);
               vis.graph.addEdge(c_minX, c_maxY);
-              vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+              vis.graph.myColorEdge(c_minX, c_maxY, CHColors.AKL_E);
               vis.graph.addEdge(c_maxY, c_maxX);
-              vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+              vis.graph.myColorEdge(c_maxY, c_maxX, CHColors.AKL_E);
               vis.graph.addEdge(c_maxX, c_minY);
-              vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+              vis.graph.myColorEdge(c_maxX, c_minY, CHColors.AKL_E);
               vis.graph.addEdge(c_minY, c_minX);
-              vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+              vis.graph.myColorEdge(c_minY, c_minX, CHColors.AKL_E);
             }
           },
           [minX, maxX, minY, maxY], 0
@@ -275,9 +275,10 @@ export default {
               'forkinP',
               (vis, c_minX, c_maxX, c_minY, c_maxY, c_k, p_k) => {
                 if (p_k !== undefined) {
-                  vis.graph.removeNodeColor(p_k);
+                  // XXX should have separate function for this
+                  vis.graph.myColorNode(p_k, undefined);
                 }
-                vis.graph.colorNode(c_k, colorsCH.AKLK_N);
+                vis.graph.myColorNode(c_k, CHColors.AKLK_N);
               },
               [minX, maxX, minY, maxY, k, prev_k], 0
             );
@@ -292,18 +293,18 @@ export default {
                 'allClockwise',
                 (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
                   vis.graph.addEdge(c_minX, c_maxY);
-                  vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_minX, c_maxY, CHColors.AKL_E);
                   vis.graph.addEdge(c_maxY, c_maxX);
-                  vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_maxY, c_maxX, CHColors.AKL_E);
                   vis.graph.addEdge(c_maxX, c_minY);
-                  vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_maxX, c_minY, CHColors.AKL_E);
                   vis.graph.addEdge(c_minY, c_minX);
-                  vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_minY, c_minX, CHColors.AKL_E);
                   vis.graph.removeEdge(c_minX, c_k);
                   vis.graph.removeEdge(c_minY, c_k);
                   vis.graph.removeEdge(c_maxX, c_k);
                   vis.graph.removeEdge(c_maxY, c_k);
-                  vis.graph.colorNode(c_k, colorsCH.AKLDEL_N); // highlight k
+                  vis.graph.myColorNode(c_k, CHColors.AKLDEL_N); // highlight k
                 },
                 [minX, maxX, minY, maxY, k], 0
               );
@@ -332,18 +333,18 @@ export default {
                 'allClockwise',
                 (vis, c_minX, c_maxX, c_minY, c_maxY, c_k) => {
                   vis.graph.addEdge(c_minX, c_maxY);
-                  vis.graph.colorEdge(c_minX, c_maxY, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_minX, c_maxY, CHColors.AKL_E);
                   vis.graph.addEdge(c_maxY, c_maxX);
-                  vis.graph.colorEdge(c_maxY, c_maxX, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_maxY, c_maxX, CHColors.AKL_E);
                   vis.graph.addEdge(c_maxX, c_minY);
-                  vis.graph.colorEdge(c_maxX, c_minY, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_maxX, c_minY, CHColors.AKL_E);
                   vis.graph.addEdge(c_minY, c_minX);
-                  vis.graph.colorEdge(c_minY, c_minX, colorsCH.AKL_E);
+                  vis.graph.myColorEdge(c_minY, c_minX, CHColors.AKL_E);
                   vis.graph.removeEdge(c_minX, c_k);
                   vis.graph.removeEdge(c_minY, c_k);
                   vis.graph.removeEdge(c_maxX, c_k);
                   vis.graph.removeEdge(c_maxY, c_k);
-                  vis.graph.removeNodeColor(c_k);
+                  vis.graph.myColorNode(c_k, undefined);
                 },
                 [minX, maxX, minY, maxY, k], 0
               );
@@ -360,17 +361,17 @@ export default {
               vis.graph.removeEdge(c_maxY, c_maxX);
               vis.graph.removeEdge(c_maxX, c_minY);
               vis.graph.removeEdge(c_minY, c_p);
-              vis.graph.removeNodeColor(c_maxY);
-              vis.graph.removeNodeColor(c_maxX);
-              vis.graph.removeNodeColor(c_minY);
+              vis.graph.myColorNode(c_maxY, undefined);
+              vis.graph.myColorNode(c_maxX, undefined);
+              vis.graph.myColorNode(c_minY, undefined);
             }
             // Add special node a long way away for "wrapper"
             vis.graph.addNode(wrapperStr, wrapperStr);
             vis.graph.setNodePosition(wrapperStr, -2000, -9000); // XXX
             vis.graph.updateUpperLabel(c_p, pStr); // XXX Lower broken???
             vis.graph.addEdge(c_p, wrapperStr);
-            vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
-            vis.graph.colorNode(c_p, colorsCH.NEXTQ_N);
+            vis.graph.myColorEdge(c_p, wrapperStr, CHColors.HULL_E);
+            vis.graph.myColorNode(c_p, CHColors.NEXTQ_N);
           },
           [E, coords, p, q, maxX, minY, maxY], 0
         );
@@ -379,18 +380,18 @@ export default {
         
             chunker.add('addP',
               (vis, edgeArray, coordsArray, c_pp, c_p) => {
-                vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                vis.graph.myColorNode(c_p, CHColors.HULLP_N);
                 // Nice to do this in a couple of steps if possible
                 // Move wrapper close then final position with node
                 // colour change?
                 if (c_pp) { // first time around c_pp is undefined
                   vis.graph.addEdge(c_pp, c_p);
-                  vis.graph.colorEdge(c_pp, c_p, colorsCH.HULL_E);
-                  vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                  vis.graph.myColorEdge(c_pp, c_p, CHColors.HULL_E);
+                  vis.graph.myColorNode(c_p, CHColors.HULLP_N);
                   // redo "wrapping" edge
                   vis.graph.removeEdge(c_pp, wrapperStr);
                   vis.graph.addEdge(c_p, wrapperStr);
-                  vis.graph.colorEdge(c_p, wrapperStr, colorsCH.HULL_E);
+                  vis.graph.myColorEdge(c_p, wrapperStr, CHColors.HULL_E);
                   // XXX could use coordsArray
                   let [pX, pY] = vis.graph.getNodePosition(c_pp);
                   let [qX, qY] = vis.graph.getNodePosition(c_p);
@@ -423,7 +424,7 @@ export default {
               
             chunker.add('initQ',
               (vis, edgeArray, coordsArray, c_p, c_q) => {
-                vis.graph.colorNode(c_q, colorsCH.NEXTQ_N);
+                vis.graph.myColorNode(c_q, CHColors.NEXTQ_N);
                 vis.graph.updateUpperLabel(c_q, qStr);
               },
               [E, coords, p, q], 0
@@ -445,7 +446,7 @@ export default {
                 // to the old color (if any) later. A bit confusing
                 // because i can be on the hull and/or p or q (no
                 // longer!)
-                vis.graph.colorNode(f_i, colorsCH.GWRAPI_N);
+                vis.graph.myColorNode(f_i, CHColors.GWRAPI_N);
                 vis.graph.updateUpperLabel(f_i, iStr);
               },
               [p, q, hullHasI, first_i], 0
@@ -478,18 +479,18 @@ export default {
                       vis.graph.removeEdge(c_i, c_p);
                     vis.graph.addEdge(c_p, c_i);
                     vis.graph.addEdge(c_i, c_q);
-                    vis.graph.colorEdge(c_p, c_i, colorsCH.CLOCKWISE_E);
-                    vis.graph.colorEdge(c_i, c_q, colorsCH.CLOCKWISE_E);
+                    vis.graph.myColorEdge(c_p, c_i, CHColors.CLOCKWISE_E);
+                    vis.graph.myColorEdge(c_i, c_q, CHColors.CLOCKWISE_E);
                   },
                   [E, coords, p, q, i, hullHasIP, hullHasQI], 0
                 );
                 chunker.add('q<-i',
                   (vis, edgeArray, coordsArray, c_p, c_q, c_i, h_q) => {
-                    vis.graph.colorNode(c_i, colorsCH.NEXTQ_N);
+                    vis.graph.myColorNode(c_i, CHColors.NEXTQ_N);
                     if (h_q)
-                      vis.graph.colorNode(c_q, colorsCH.HULLP_N);
+                      vis.graph.myColorNode(c_q, CHColors.HULLP_N);
                     else
-                      vis.graph.removeNodeColor(c_q);
+                      vis.graph.myColorNode(c_q, undefined);
                     vis.graph.updateUpperLabel(c_q, '');
                     vis.graph.updateUpperLabel(c_i, qStr);
                   },
@@ -507,8 +508,8 @@ export default {
                       vis.graph.removeEdge(c_i, c_p);
                     vis.graph.addEdge(c_p, c_i);
                     vis.graph.addEdge(c_i, c_q);
-                    vis.graph.colorEdge(c_p, c_i, colorsCH.ANTICLOCK_E);
-                    vis.graph.colorEdge(c_i, c_q, colorsCH.ANTICLOCK_E);
+                    vis.graph.myColorEdge(c_p, c_i, CHColors.ANTICLOCK_E);
+                    vis.graph.myColorEdge(c_i, c_q, CHColors.ANTICLOCK_E);
                   },
                   [E, coords, p, q, i, hullHasIP, hullHasQI], 0
                 );
@@ -517,18 +518,18 @@ export default {
                 (vis, edgeArray, coordsArray, c_p, c_q, n_q, c_i, h_i, h_pi, h_ip, h_iq, h_qi) => {
                   if (h_qi) {
                     vis.graph.addEdge(c_q, c_i);
-                    vis.graph.colorEdge(c_q, c_i, colorsCH.HULL_E);
+                    vis.graph.myColorEdge(c_q, c_i, CHColors.HULL_E);
                   }
                   if (h_ip) {
                     vis.graph.addEdge(c_i, c_p);
-                    vis.graph.colorEdge(c_i, c_p, colorsCH.HULL_E);
+                    vis.graph.myColorEdge(c_i, c_p, CHColors.HULL_E);
                   }
                   if (c_i === n_q)
-                    vis.graph.colorNode(c_i, colorsCH.NEXTQ_N);
+                    vis.graph.myColorNode(c_i, CHColors.NEXTQ_N);
                   else if (c_i === c_p || h_i)
-                    vis.graph.colorNode(c_i, colorsCH.HULLP_N);
+                    vis.graph.myColorNode(c_i, CHColors.HULLP_N);
                   else
-                    vis.graph.removeNodeColor(c_i);
+                    vis.graph.myColorNode(c_i, undefined);
                   let next_i = c_i + 1;
                   // we skip i==p, i==q
                   while (next_i === c_p || next_i === n_q || deleted[next_i])
@@ -536,7 +537,7 @@ export default {
                   if (c_i !== n_q)
                     vis.graph.updateUpperLabel(c_i, '');
                   if (next_i < n) {
-                    vis.graph.colorNode(next_i, colorsCH.GWRAPI_N);
+                    vis.graph.myColorNode(next_i, CHColors.GWRAPI_N);
                     vis.graph.updateUpperLabel(next_i, iStr);
                   } else { // about to exit for loop
                     // Move wrapper most of the way to it's next position
@@ -553,11 +554,11 @@ export default {
                     vis.graph.setNodePosition(wrapperStr, wX, wY);
                   }
                   if (h_pi)
-                    vis.graph.colorEdge(c_p, c_i, colorsCH.HULL_E);
+                    vis.graph.myColorEdge(c_p, c_i, CHColors.HULL_E);
                   else
                     vis.graph.removeEdge(c_p, c_i);
                   if (h_iq)
-                    vis.graph.colorEdge(c_i, c_q, colorsCH.HULL_E);
+                    vis.graph.myColorEdge(c_i, c_q, CHColors.HULL_E);
                   else
                     vis.graph.removeEdge(c_i, c_q);
                 },
@@ -573,12 +574,12 @@ export default {
                 // Move wrapper close then final position with node
                 // colour change?
                 vis.graph.addEdge(c_p, c_q);
-                vis.graph.colorEdge(c_p, c_q, colorsCH.HULL_E);
-                // vis.graph.colorNode(c_q, colorsCH.HULLP_N);
+                vis.graph.myColorEdge(c_p, c_q, CHColors.HULL_E);
+                // vis.graph.myColorNode(c_q, CHColors.HULLP_N);
                 // redo "wrapping" edge
                 vis.graph.removeEdge(c_p, wrapperStr);
                 vis.graph.addEdge(c_q, wrapperStr);
-                vis.graph.colorEdge(c_q, wrapperStr, colorsCH.HULL_E);
+                vis.graph.myColorEdge(c_q, wrapperStr, CHColors.HULL_E);
                 vis.graph.updateUpperLabel(c_q, '');
                 vis.graph.updateUpperLabel(c_p, '');
                 vis.graph.updateUpperLabel(c_q, pStr);
@@ -604,8 +605,8 @@ export default {
               // clean up on loop exit
               chunker.add('whileP',
                 (vis, edgeArray, coordsArray, c_pp, c_p) => {
-                  vis.graph.colorNode(c_pp, colorsCH.HULLP_N);
-                  vis.graph.colorNode(c_p, colorsCH.HULLP_N);
+                  vis.graph.myColorNode(c_pp, CHColors.HULLP_N);
+                  vis.graph.myColorNode(c_p, CHColors.HULLP_N);
                   vis.graph.updateUpperLabel(c_p, '');
                   },
                   [E, coords, prevP, p], 0
