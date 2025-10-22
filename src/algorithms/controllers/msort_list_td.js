@@ -180,7 +180,9 @@ export function run_msort() {
 
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
+        
       }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
+
 
       return { L, R, Mid };
     }
@@ -247,6 +249,11 @@ export function run_msort() {
     function performRecursiveSort(L, R, midNum, len, depth) {
       // prepare to sort left half
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
+          vis.array.assignVariable('Mid', 2, undefined);
+          vis.array.assignVariable('Mid=Null', 2, undefined);
+          vis.list.nodes.forEach(node => {
+            node.variables = node.variables.filter(v => v !== 'Mid' && v !== 'Mid=Null');
+          });
         vis.array.set(Lists, 'msort_lista_td');
         set_simple_stack(vis.array, c_stk);
         vis.array.assignVariable('L', 2, cur_L);
