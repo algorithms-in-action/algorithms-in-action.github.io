@@ -5,29 +5,82 @@ import styles from './LinkedListRenderer.module.scss';
 
 /**
  * LinkedListRenderer
- * - Visualizes a linked list: nodes (pills) + edges (SVG arrows).
- * - Inherits pan/zoom behavior from Array2DRenderer.
- * - Uses Framer Motion for smooth layout transitions.
+ * - Visualizes a linked list with nodes (pills) and connecting arrows.
+ * - Preserves the original color scheme via `n.fillVariant`.
+ * - Automatically centers all visible nodes within a defined safe box.
+ * - Includes a small offset adjustment for better visual composition.
  */
 class LinkedListRenderer extends Array2DRenderer {
   constructor(props) {
     super(props);
-    // Enable interactive panning and zooming from the base renderer
     this.togglePan(true);
     this.toggleZoom(true);
   }
 
+  // ---- Compute the visual bounds of all visible nodes (includes tag area) ----
+  _getNodesBounds(list, tagBlockH = 24) {
+    const visible = list.filter(n => !n.hidden);
+    if (!visible.length) return { minX: 0, minY: 0, maxX: 0, maxY: 0, width: 0, height: 0 };
+
+    const NODE_W = 50, NODE_H = 20;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+    visible.forEach(n => {
+      // Offset used in rendering: left = n.pos.x - 60, top = n.pos.y - 10
+      const left = n.pos.x - 60;
+      const top = n.pos.y - 10;
+      const right = left + NODE_W;
+      const bottom = top + NODE_H + 6 + tagBlockH; // Node pill + tag area
+
+      if (left < minX) minX = left;
+      if (top < minY) minY = top;
+      if (right > maxX) maxX = right;
+      if (bottom > maxY) maxY = bottom;
+    });
+
+    return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY };
+  }
+
+  // ---- Calculate offset to center all nodes within a safe visual box ----
+  _getAutoOffset(bounds, safeBox, containerWidth) {
+    const sx = Number.isFinite(safeBox?.x) ? safeBox.x : 0;
+    const sy = Number.isFinite(safeBox?.y) ? safeBox.y : 0;
+    const sw = Number.isFinite(safeBox?.width) ? safeBox.width : containerWidth;
+    const sh = Number.isFinite(safeBox?.height) ? safeBox.height : 240;
+
+    const groupCx = bounds.minX + bounds.width / 2;
+    const groupCy = bounds.minY + bounds.height / 2;
+    const safeCx = sx + sw / 2;
+    const safeCy = sy + sh / 2;
+
+    let offX = safeCx - groupCx;
+    let offY = safeCy - groupCy;
+
+    // Prevent overflow outside the safe box
+    const after = {
+      minX: bounds.minX + offX,
+      maxX: bounds.maxX + offX,
+      minY: bounds.minY + offY,
+      maxY: bounds.maxY + offY,
+    };
+    if (after.minX < sx) offX += (sx - after.minX);
+    if (after.maxX > sx + sw) offX -= (after.maxX - (sx + sw));
+    if (after.minY < sy) offY += (sy - after.minY);
+    if (after.maxY > sy + sh) offY -= (after.maxY - (sy + sh));
+
+    return { offX, offY };
+  }
+
   renderData() {
-    const { nodes } = this.props.data;
+    const { nodes, layout } = this.props.data;
     const list = [...nodes.values()];
 
-    // ---- Node geometry (in pixels) ----
+    // ---- Node geometry constants ----
     const NODE_W = 50;
     const NODE_H = 20;
     const CAP_W = 15;
     const DOT_SIZE = 5;
     const DOT_RIGHT = (CAP_W - DOT_SIZE) / 2;
-
     const H_GAP = 40;
 
     const dotCenterX = n => n.pos.x + NODE_W / 2 - DOT_RIGHT - DOT_SIZE / 2 - 30;
@@ -41,53 +94,52 @@ class LinkedListRenderer extends Array2DRenderer {
     const maxX = (list.length ? Math.max(...list.map(n => n.pos.x)) : 0) + NODE_W + PADDING;
     const maxY = (list.length ? Math.max(...list.map(n => n.pos.y)) : 0) + NODE_H + PADDING;
 
+    // Determine whether an edge should be curved based on distance
     const needsCurve = (fromNode, toNode) => {
       const dx = Math.abs(toNode.pos.x - fromNode.pos.x);
       const dy = Math.abs(toNode.pos.y - fromNode.pos.y);
       return dx > H_GAP * 1.5 || dy > 10;
     };
 
-    const getCurvedPath = (x1, y1, x2, y2) => {
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const curveHeight = Math.min(80, distance * 0.5);
-      const goingBackward = dx < 0;
-      const mx = (x1 + x2) / 2;
-      const my = (y1 + y2) / 2;
-      let cx, cy;
-      if (goingBackward) { cx = mx; cy = my - curveHeight; }
-      else { cx = mx; cy = my + curveHeight; }
-      return `M ${x1},${y1} L ${x2},${y2}`;
-      // To enable curves: return `M ${x1},${y1} Q ${cx},${cy} ${x2},${y2}`;
-    };
+    // For now, keep edges straight (can be changed to quadratic Bézier later)
+    const getCurvedPath = (x1, y1, x2, y2) => `M ${x1},${y1} L ${x2},${y2}`;
 
-    // Map node.fillVariant => css class
+    // ---- Map fillVariant to CSS class ----
     const variantClass = (n) => {
       switch (n.fillVariant) {
-        case 'orange': return styles.variantOrange;
-        case 'blue':   return styles.variantBlue;
-        case 'green':  return styles.variantGreen;
-        case 'red':    return styles.variantRed;
-        case 'grayAlt':return styles.variantGrayAlt;
+        case 'orange':  return styles.variantOrange;
+        case 'blue':    return styles.variantBlue;
+        case 'green':   return styles.variantGreen;
+        case 'red':     return styles.variantRed;
+        case 'grayAlt': return styles.variantGrayAlt;
         case 'gray':
-        default:       return styles.variantGray;
+        default:        return styles.variantGray;
       }
     };
+
+    // ---- Auto-centering with a small manual offset ----
+    const safeBox = layout?.safeBox ?? { x: 0, y: 24, width: Infinity, height: 240 };
+    const tagBlockH = layout?.tagBlockH ?? 24;
+    const bounds = this._getNodesBounds(list, tagBlockH);
+    const containerWidth = this.props.width || 800;
+    const { offX, offY } = this._getAutoOffset(bounds, safeBox, containerWidth);
+
+    const cameraTranslateX = (-this.centerX * 2) + offX - 100; // Horizontal offset
+    const cameraTranslateY = (-this.centerY * 2) + offY - 30;  // Vertical offset
 
     return (
       <div className={styles.container}>
         <div
           className={styles.stage}
           style={{
-            transform: `translate(${-this.centerX * 2}px, ${-this.centerY * 2}px) scale(${this.zoom})`,
+            transform: `translate(${cameraTranslateX}px, ${cameraTranslateY}px) scale(${this.zoom})`,
             transformOrigin: '0 0',
             width: maxX,
             height: maxY,
             position: 'relative',
           }}
         >
-          {/* ===== Edges layer (SVG) ===== */}
+          {/* ===== SVG Layer for edges (arrows) ===== */}
           <svg
             className={styles.edges}
             width={maxX}
@@ -95,6 +147,7 @@ class LinkedListRenderer extends Array2DRenderer {
             style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', background: 'transparent' }}
           >
             <defs>
+              {/* Arrowhead definition */}
               {(() => {
                 const ARROW_LEN = 5;
                 const ARROW_H = 8;
@@ -159,7 +212,7 @@ class LinkedListRenderer extends Array2DRenderer {
             })}
           </svg>
 
-          {/* ===== Nodes layer (animated layout) ===== */}
+          {/* ===== Animated Node Layer ===== */}
           <AnimateSharedLayout>
             {list.map(n => (
               <motion.div
@@ -167,7 +220,7 @@ class LinkedListRenderer extends Array2DRenderer {
                 layout
                 className={[
                   styles.node,
-                  variantClass(n),             // <<< pick gradient by fillVariant
+                  variantClass(n),             // Apply color variant
                   n.faded && styles.faded,
                   n.hidden && styles.hidden,
                   n.sorted && styles.sorted,
@@ -193,6 +246,7 @@ class LinkedListRenderer extends Array2DRenderer {
                 }}
                 transition={{ duration: 0.25 }}
               >
+                {/* Node pill (main visual block) */}
                 <div className={styles.pill}>
                   <span className={styles.value}>{n.value}</span>
                   <span className={styles.cap}>
@@ -200,6 +254,7 @@ class LinkedListRenderer extends Array2DRenderer {
                   </span>
                 </div>
 
+                {/* Tag / variable badges under each node */}
                 <div className={styles.vars}>
                   {n.variables.map(v => (
                     <motion.div
