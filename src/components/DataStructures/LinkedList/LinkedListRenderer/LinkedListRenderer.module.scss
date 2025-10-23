@@ -146,10 +146,10 @@
     align-items: center;
     margin-top: 4px; // spacing from node
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 2px);
     left: 0;
     display: flex;
-    gap: 6px;
+    gap: 4px;
     pointer-events: none;
   }
 
