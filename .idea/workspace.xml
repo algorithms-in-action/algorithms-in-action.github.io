@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/instructions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/instructions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/HashingDHParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/HashingDHParam.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/parameters/HashingLPParam.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/parameters/HashingLPParam.js" afterDir="false" />
-    </list>
+    <list default="true" id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,9 +21,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2lpNwMEtCXH3aoSNxw3UXU0mWtn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -39,10 +34,26 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "wes__update__instructions",
-    "kotlin-language-version-configured": "true"
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Sunny/Desktop/IT Project"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="algorithms-in-action.github.io" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="algorithms-in-action.github.io" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

@@ -1,82 +1,72 @@
-@import './global.scss';
+@use './global' as *;
 
 $sidePad: 16px;
 $codeExplanationButtonHeight: 40px;
 $borderSize: 3px;
 $rightBtnFontSize: 0.72em;
 
-#rightcol {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.rightPanelButtons {
+  height: $codeExplanationButtonHeight;
+  background-color: var(--right-header-bg);
 
-
-  .rightPanelButtons {
-    height: $codeExplanationButtonHeight;
-    background-color: var(--right-header-bg);
-  
-    button {
-      font-size: $rightBtnFontSize;
-      font-weight: 400;
-      color: var(--right-header-font);
-    }
-
-    .MuiTab-textColorPrimary.Mui-selected {
-      // color: var('--right-header-font-active') !important;
-      color: #027AFF;
-    }
+  button {
+    font-size: $rightBtnFontSize;
+    font-weight: 400;
+    color: var(--right-header-font);
   }
 
-  .textArea {
-    font-size: 0.9em;
-    color: var(--right-text-font);
-    overflow-y: auto;
-
-    height: 100%;
-    padding: $sidePad;
-    background-color: var(--right-text-bg);
-    
+  .MuiTab-textColorPrimary.Mui-selected {
+    // color: var('--right-header-font-active') !important;
+    color: #027AFF;
   }
-
-  .line-light {
-    font-size: 0.87em;
-    overflow: auto;
-    height: 100%;
-  }
-
-  .btnPanel {
-    overflow: hidden;
-    display: flex;
-    padding: none;
-
-    .bottomBtn {
-      @include removeBtnStyling;
-      padding: 8px;
-      background: var(--right-code-bottom-btn-bg);
-      text-transform: uppercase;
-      font-size: 0.70em;
-      font-weight: 400;
-      color: var(--right-code-bottom-btn);
-      white-space: nowrap;
-      border-right: 1px solid var(--system-border);
-      flex: 1;
-      text-overflow: ellipsis;
-      height: 100%;
-      width: 100%;
-
-    }
-
-    .bottomBtn:hover {
-      background: var(--right-code-bottom-btn-bg-hover);
-    }
-
-    .bottomBtn:active {
-      background: var(--right-code-bottom-btn-bg-active);
-    }
-  }
-  
 }
 
+.textArea {
+  font-size: 0.9em;
+  color: var(--right-text-font);
+  overflow-y: auto;
+
+  height: 100%;
+  padding: $sidePad;
+  background-color: var(--right-text-bg);
+}
+
+.line-light {
+  font-size: 0.87em;
+  overflow: auto;
+  height: 100%;
+}
+
+.btnPanel {
+  overflow: hidden;
+  display: flex;
+  padding: none;
+
+  .bottomBtn {
+    @include removeBtnStyling;
+    padding: 8px;
+    background: var(--right-code-bottom-btn-bg);
+    text-transform: uppercase;
+    font-size: 0.70em;
+    font-weight: 400;
+    color: var(--right-code-bottom-btn);
+    white-space: nowrap;
+    border-right: 1px solid var(--system-border);
+    flex: 1;
+    text-overflow: ellipsis;
+    height: 100%;
+    width: 100%;
+
+  }
+
+  .bottomBtn:hover {
+    background: var(--right-code-bottom-btn-bg-hover);
+  }
+
+  .bottomBtn:active {
+    background: var(--right-code-bottom-btn-bg-active);
+  }
+}
 
 
 

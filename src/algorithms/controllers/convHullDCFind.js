@@ -1,5 +1,5 @@
 // Divide and conquer convex hull algorithm
-// - adapting gift wrapping convex hull algorithm code XXX
+// - adapted from gift wrapping convex hull algorithm
 // Note: some bugs corrected from javascript code without animation
 // test all points colinear in merge, duplicate points(??)
 // XXX original code best be fixed
@@ -44,17 +44,19 @@ export default {
   // Best change parameter code + this(?)
   run(chunker, { edgeValueMatrix, coordsMatrix, startNode, endNodes, moveNode}) {
     // String Variables used in displaying algo
-    // Could remove/add labels using un/setPointerNode??
-    // (Best add resetPointerNode?? XXX)
-    // Currently use updateHeight also but that has some unfortunate
-    // special cases (eg strings containing 't') so we use upper case
-    // for now
-    let lStr = 'L';
-    let rStr = 'R';
-    let nextlStr = 'NEXT(L)'; // could omit args??
-    let nextrStr = 'NEXT(R)';
-    let prevlStr = 'PREV(L)';
-    let prevrStr = 'PREV(R)';
+    // Currently use updateUpperLabel (+ Lower); allows one label - in
+    // some cases (eg with 3 points on the hull) we get collisions and
+    // just live with it for now.
+    let lStr = 'l';
+    let rStr = 'r';
+    let nextlStr = 'next(l)'; // could omit args??
+    let nextrStr = 'next(r)';
+    let prevlStr = 'prev(l)';
+    let prevrStr = 'prev(r)';
+    let uhlStr = 'uhl';
+    let uhrStr = 'uhr';
+    let lhlStr = 'lhl';
+    let lhrStr = 'lhr';
 
     const coords = [...coordsMatrix];
     let numVertices = edgeValueMatrix.length; // aka n
@@ -128,19 +130,21 @@ export default {
     
     // ---------- Tangent finding ----------
 
+    // return l and r points on upper tangent
+    // We don't skip over co-linear point but return the innermost tangent
+    // points (there are some subtle termination issues otherwise)
     function findUpperTangent(HL, HR, depth) {
-// XXX add similar chunks for LowerTangent
       let l = rightmostIndex(HL);
       chunker.add('assignLU',
          (vis, pl) => {
-           vis.graph.updateHeight(pl, lStr);
+           vis.graph.updateUpperLabel(pl, lStr);
         },
        [HL[l].id], depth
       );
       let r = leftmostIndex(HR);
       chunker.add('assignRU',
          (vis, pl, pr) => {
-           vis.graph.updateHeight(pr, rStr);
+           vis.graph.updateUpperLabel(pr, rStr);
            vis.graph.addEdge(pr, pl);
            vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
         },
@@ -169,7 +173,7 @@ export default {
       }
     */
       // simpler code (possibly more repeated tests); inner ifs could be whiles
-
+ 
       // r1/l1 are the next/previous nodes; we also need to old
       // versions of r/l these for cleaning up colors etc
       let r1 = (r - 1 + HR.length) % HR.length;
@@ -181,8 +185,8 @@ export default {
            // vis.graph.addEdge(pr, pl);
            // vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
            vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
-           vis.graph.updateHeight(pl1, nextlStr);
-           vis.graph.updateHeight(pr1, prevrStr);
+           vis.graph.updateUpperLabel(pl1, nextlStr);
+           vis.graph.updateUpperLabel(pr1, prevrStr);
            vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
@@ -204,9 +208,9 @@ export default {
              (vis, pl, pr, pr1, pro) => {
                vis.graph.removeEdge(pr, pro);
                vis.graph.removeEdge(pro, pl);
-               vis.graph.updateHeight(pro, '');
-               vis.graph.updateHeight(pr, rStr);
-               vis.graph.updateHeight(pr1, prevrStr);
+               vis.graph.updateUpperLabel(pro, '');
+               vis.graph.updateUpperLabel(pr, rStr);
+               vis.graph.updateUpperLabel(pr1, prevrStr);
                vis.graph.addEdge(pr, pl);
                vis.graph.removeEdgeColor(pr, pro);
                vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
@@ -238,9 +242,9 @@ export default {
           l1 = (l + 1) % HL.length;
           chunker.add('l<-next(l)',
              (vis, pl, pr, pl1, plo) => {
-               vis.graph.updateHeight(plo, '');
-               vis.graph.updateHeight(pl, lStr);
-               vis.graph.updateHeight(pl1, nextlStr);
+               vis.graph.updateUpperLabel(plo, '');
+               vis.graph.updateUpperLabel(pl, lStr);
+               vis.graph.updateUpperLabel(pl1, nextlStr);
                vis.graph.removeEdge(pr, plo);
                vis.graph.removeEdge(plo, pl);
                vis.graph.addEdge(pr, pl);
@@ -262,27 +266,24 @@ export default {
         }
         chunker.add('upperWhile',
            (vis, pl, pr, pl1, pr1, plo) => {
-             vis.graph.updateHeight(pl, lStr); // l or r changed; reset both
-             vis.graph.updateHeight(pr, rStr);
-             vis.graph.updateHeight(pl1, nextlStr);
-             vis.graph.updateHeight(pr1, prevrStr);
-             // vis.graph.removeEdgeColor(pr, pl);
+             vis.graph.updateUpperLabel(pl, lStr); // l or r changed; reset both
+             vis.graph.updateUpperLabel(pr, rStr);
+             vis.graph.updateUpperLabel(pl1, nextlStr);
+             vis.graph.updateUpperLabel(pr1, prevrStr);
              vis.graph.removeEdgeColor(pl, plo);
-             // XXX color now moved earlier
              vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
              vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
              vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
-             // vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
           },
          [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id, HL[lold].id], depth
         );
       }
       chunker.add('AssignUhlUhr',
          (vis, pl, pr, pl1, pr1) => {
-           vis.graph.updateHeight(pl, '');
-           vis.graph.updateHeight(pl1, '');
-           vis.graph.updateHeight(pr, '');
-           vis.graph.updateHeight(pr1, '');
+           vis.graph.updateUpperLabel(pl, uhlStr);
+           vis.graph.updateUpperLabel(pl1, '');
+           vis.graph.updateUpperLabel(pr, uhrStr);
+           vis.graph.updateUpperLabel(pr1, '');
            vis.graph.removeEdgeColor(pr1, pr);
            vis.graph.removeEdgeColor(pr, pl);
            vis.graph.removeEdgeColor(pl, pl1);
@@ -292,20 +293,54 @@ export default {
       return [l, r];
     }
 
-    function findLowerTangent(HL, HR, depth) {
+    // return l and r points on lower tangent
+    // We don't skip over co-linear point but return the innermost tangent
+    // points (there are some subtle termination issues otherwise)
+    // Points on upper tangent are passed in so animation is more
+    // intuitive (eg, next(r) in the animation may be point upperL in
+    // the left hull because the actual next(r) has been eliminated from
+    // the hull in the upper tangent calculation)
+    function findLowerTangent(HL, HR, upperL, upperR, depth) {
+      let r1id; // used with upperL/upperR fudge
+      let l1id;
       let l = rightmostIndex(HL);
+      chunker.add('assignLL',
+         (vis, pl) => {
+           vis.graph.updateLowerLabel(pl, lStr);
+        },
+       [HL[l].id], depth
+      );
+
       let r = leftmostIndex(HR);
-    
-      chunker.add('lowerWhile',
+      chunker.add('assignRL',
          (vis, pl, pr) => {
+           vis.graph.updateLowerLabel(pr, rStr);
            vis.graph.addEdge(pl, pr);
-           vis.graph.colorEdge(pl, pr, colorsCH.HULL_E);
+           vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id], depth
       );
-      while (orientation(HL[l], HR[r], HR[(r + 1 + HR.length) % HR.length]) < 0
+
+    
+      // r1/l1 are the next/previous nodes; we also need to old
+      // versions of r/l these for cleaning up colors etc
+      let r1 = (r + 1) % HR.length;
+      let rold = r;
+      let l1 = (l - 1 + HL.length) % HL.length;
+      let lold = l;
+      l1id = HL[l1].id;
+      r1id = HR[r1].id;
+      chunker.add('lowerWhile',
+         (vis, pl, pr, pl1, pr1) => {
+           vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
+           vis.graph.updateLowerLabel(pl1, prevlStr);
+           vis.graph.updateLowerLabel(pr1, nextrStr);
+           vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
+        },
+       [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
+      );
+      while (orientation(HL[l], HR[r], HR[(r + 1) % HR.length]) < 0
             || orientation(HR[r], HL[l], HL[(l - 1 + HL.length) % HL.length]) > 0) {
-        let l1 = (l - 1 + HL.length) % HL.length;
         if (orientation(HR[r], HL[l], HL[(l - 1 + HL.length) % HL.length]) > 0) {
           chunker.add('prev(l)->l->r',
              (vis, pl, pr, pl1) => {
@@ -314,75 +349,116 @@ export default {
             },
            [HL[l].id, HR[r].id, HL[l1].id], depth
           );
-          chunker.add('l<-prev(l)',
-             (vis, pl, pr, pl1) => {
-               vis.graph.removeEdge(pl, pr);
-               vis.graph.addEdge(pl1, pr);
-               vis.graph.colorEdge(pl1, pr, colorsCH.HULL_E);
-               // XXX better remove this later, not here
-               vis.graph.removeEdge(pl1, pl);
-            },
-           [HL[l].id, HR[r].id, HL[l1].id], depth
-          );
+          lold = l;
           l = l1;
+          l1 = (l - 1 + HL.length) % HL.length;
+          // see comment for r1 case below
+          if (l === upperL)
+            l1id = HR[upperR].id;
+          else
+            l1id = HL[l1].id;
+          chunker.add('l<-prev(l)',
+             (vis, pl, pr, pl1, plo) => {
+               vis.graph.removeEdge(plo, pr);
+               vis.graph.removeEdge(pl, plo);
+               vis.graph.updateLowerLabel(plo, '');
+               vis.graph.updateLowerLabel(pl, lStr);
+               vis.graph.updateLowerLabel(pl1, prevlStr);
+               vis.graph.addEdge(pl, pr);
+               vis.graph.removeEdgeColor(pl, plo);
+               vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
+               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
+            },
+           [HL[l].id, HR[r].id, l1id, HL[lold].id], depth
+          );
         } else {
+          l1id = HL[l1].id;
           chunker.add('prev(l)->l->r',
              (vis, pl, pr, pl1) => {
                vis.graph.colorEdge(pl1, pl, colorsCH.DCANTICLOCK_E);
                vis.graph.colorEdge(pl, pr, colorsCH.DCANTICLOCK_E);
             },
-           [HL[l].id, HR[r].id, HL[l1].id], depth
+           [HL[l].id, HR[r].id, l1id], depth
           );
         }
-        let r1 = (r + 1 + HR.length) % HR.length;
-        if (orientation(HL[l], HR[r], HR[(r + 1 + HR.length) % HR.length]) < 0) {
+        if (orientation(HL[l], HR[r], HR[(r + 1) % HR.length]) < 0) {
           chunker.add('l->r->next(r)',
-             (vis, pl, pr, pl1, pr1) => {
-               vis.graph.removeEdgeColor(pl1, pl);
-               vis.graph.removeEdgeColor(pl, pr);
+             (vis, pl, pr, pl1, pr1, plo) => {
+               vis.graph.removeEdgeColor(plo, pl);
+               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
                vis.graph.colorEdge(pl, pr, colorsCH.DCCLOCKWISE_E);
                vis.graph.colorEdge(pr, pr1, colorsCH.DCCLOCKWISE_E);
             },
-           [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
+           [HL[l].id, HR[r].id, l1id, HR[r1].id, HL[lold].id], depth
           );
-          chunker.add('r<-next(r)',
-             (vis, pl, pr, pr1) => {
-               vis.graph.removeEdge(pl, pr);
-               vis.graph.addEdge(pl, pr1);
-               vis.graph.colorEdge(pl, pr1, colorsCH.HULL_E);
-               // XXX better remove this later, not here
-               vis.graph.removeEdge(pr, pr1);
-            },
-           [HL[l].id, HR[r].id, HR[r1].id], depth
-          );
+          rold = r;
           r = r1;
+          r1 = (r + 1) % HR.length;
+          // above (and similar l1 case above) may be
+          // tricky - this r1 may have been eliminated from the hull
+          // (when finding the upper tangent), so r1 should be
+          // really be the first point added to the hull from L. This
+          // can only happen(?) when we have found the final r value so
+          // it's not an issue for correctness, but it does affect the
+          // animation. The directed edges suggest next(r) should be a
+          // point on L, so we go with that.
+          if (r === upperR)
+            r1id = HL[upperL].id;
+          else
+            r1id = HR[r1].id;
+          chunker.add('r<-next(r)',
+             (vis, pl, pr, pr1, pro) => {
+               vis.graph.updateLowerLabel(pro, '');
+               vis.graph.updateLowerLabel(pr, rStr);
+               vis.graph.updateLowerLabel(pr1, nextrStr);
+               vis.graph.removeEdge(pl, pro);
+               vis.graph.removeEdge(pro, pr);
+               vis.graph.addEdge(pl, pr);
+               vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
+               vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
+            },
+           [HL[l].id, HR[r].id, r1id, HR[rold].id], depth
+          );
         } else {
+          r1id = HR[r1].id;
           chunker.add('l->r->next(r)',
-             (vis, pl, pr, pl1, pr1) => {
-               vis.graph.removeEdgeColor(pl1, pl);
-               vis.graph.removeEdgeColor(pl, pr);
+             (vis, pl, pr, pl1, pr1, plo) => {
+               vis.graph.removeEdgeColor(plo, pl);
+               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
                vis.graph.colorEdge(pl, pr, colorsCH.DCANTICLOCK_E);
                vis.graph.colorEdge(pr, pr1, colorsCH.DCANTICLOCK_E);
             },
-           [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
+           [HL[l].id, HR[r].id, l1id, r1id, HL[lold].id], depth
           );
         }
         chunker.add('lowerWhile',
-           (vis, pl, pr, pr1) => {
-             vis.graph.removeEdgeColor(pr, pr1);
-             vis.graph.colorEdge(pl, pr, colorsCH.HULL_E);
+           (vis, pl, pr, pl1, pr1, plo) => {
+             vis.graph.updateLowerLabel(pl, lStr); // l or r changed; reset both
+             vis.graph.updateLowerLabel(pr, rStr);
+             vis.graph.updateLowerLabel(pl1, prevlStr);
+             vis.graph.updateLowerLabel(pr1, nextrStr);
+             // vis.graph.removeEdgeColor(pr, pl);
+             // vis.graph.removeEdgeColor(pro, pr);
+             vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
+             vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
+             vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
           },
-         [HL[l].id, HR[r].id, HR[r1].id], depth
+         [HL[l].id, HR[r].id, l1id, r1id, HL[lold].id], depth
         );
       }
-      // XXX avoid this extra chunk - need to reset color somewhere though
-        chunker.add('lowerWhile',
-           (vis, pl, pr) => {
-             vis.graph.removeEdgeColor(pl, pr);
-          },
-         [HL[l].id, HR[r].id], depth
-        );
-    
+      chunker.add('AssignLhlLhr',
+         (vis, pl, pr, pl1, pr1, pul, pur) => {
+           vis.graph.updateLowerLabel(pl, lhlStr);
+           vis.graph.updateLowerLabel(pl1, '');
+           vis.graph.updateLowerLabel(pr, lhrStr);
+           vis.graph.updateLowerLabel(pr1, '');
+           vis.graph.removeEdgeColor(pr, pr1);
+           vis.graph.removeEdgeColor(pl, pr);
+           vis.graph.removeEdgeColor(pl1, pl);
+        },
+       [HL[l].id, HR[r].id, l1id, r1id, HL[upperL].id, HR[upperR].id], depth
+      );
+
     /*
       // original code
       let done = false;
@@ -391,8 +467,8 @@ export default {
         done = true;
     
         // Move j counterclockwise on HR
-        while (orientation(HL[i], HR[j], HR[(j + 1 + HR.length) % HR.length]) < 0) {
-          j = (j + 1 + HR.length) % HR.length;
+        while (orientation(HL[i], HR[j], HR[(j + 1) % HR.length]) < 0) {
+          j = (j + 1) % HR.length;
           done = false;
         }
     
@@ -406,6 +482,41 @@ export default {
     
       return [l, r];
     }
+
+    // add chunks for dealing with three colinear points
+    // points must be in hull (counterclockwise) order!
+    // str2 is the label on p2; it gets moved to p3 if label3 is true
+    // otherwise it gets moved to p1
+    function colinChunks(p1, p2, p3, label3, str2, bookmark1, bookmark2, isUpper, depth) {
+      chunker.add(bookmark1,
+         (vis, p1, p2, p3) => {
+           vis.graph.colorEdge(p1, p2, colorsCH.DCCOLINEAR_E);
+           vis.graph.colorEdge(p2, p3, colorsCH.DCCOLINEAR_E);
+        },
+       [p1, p2, p3], depth
+      );
+      chunker.add(bookmark2,
+         (vis, p1, p2, p3, l3, upper) => {
+           vis.graph.removeEdge(p1, p2);
+           vis.graph.removeEdge(p2, p3);
+           vis.graph.addEdge(p1, p3);
+           if (upper) {
+             vis.graph.updateUpperLabel(p2, '');
+             if (l3)
+               vis.graph.updateUpperLabel(p3, str2);
+             else
+               vis.graph.updateUpperLabel(p1, str2);
+           } else {
+             vis.graph.updateLowerLabel(p2, '');
+             if (l3)
+               vis.graph.updateLowerLabel(p3, str2);
+             else
+               vis.graph.updateLowerLabel(p1, str2);
+           }
+        },
+       [p1, p2, p3, label3, isUpper], depth
+      );
+    }
     
     // ---------- Convex hull core ----------
    
@@ -413,7 +524,7 @@ export default {
     
       // Find upper and lower tangents
       const [ui, uj] = findUpperTangent(HL, HR, depth);
-      const [li, lj] = findLowerTangent(HL, HR, depth);
+      const [li, lj] = findLowerTangent(HL, HR, ui, uj, depth);
     
       let hull = [];
       if (ui === li && lj === uj) {
@@ -447,6 +558,14 @@ export default {
              vis.graph.colorNode(pr, undefined);
              vis.graph.addEdge(pl1, pr1);
              vis.graph.addEdge(pr1, pl1);
+             vis.graph.updateUpperLabel(pl, '');
+             vis.graph.updateUpperLabel(pr, '');
+             vis.graph.updateUpperLabel(pl1, '');
+             vis.graph.updateUpperLabel(pr1, '');
+             vis.graph.updateLowerLabel(pl, '');
+             vis.graph.updateLowerLabel(pr, '');
+             vis.graph.updateLowerLabel(pl1, '');
+             vis.graph.updateLowerLabel(pr1, '');
           },
          [HL[ui].id, HR[uj].id, HL[inext].id, HR[jnext].id], depth
         );
@@ -456,48 +575,43 @@ export default {
         let iLast = li;
         let j = lj;
         let jLast = uj;
-        let col;
+        let colin; // Colin the colinear point
         // deal with other colinear cases:
         // HR[uj], HL[ui], HL[ui+1] colinlear -> skip ui
         // HR[lj], HL[li], HL[li-1] colinlear -> skip li
         // HL[ui], HR[uj], HR[uj-1] colinlear -> skip uj
         // HL[li], HR[lj], HR[lj+1] colinlear -> skip lj
-        col = (i + 1) % HL.length;
-        if (!orientation(HR[uj], HL[ui], HL[col])) {
-          // XXX duplicate for other three cases
-          chunker.add('colinearRLN',
-             (vis, pl, pr, pc) => {
-               vis.graph.colorEdge(pr, pl, colorsCH.DCCOLINEAR_E);
-               vis.graph.colorEdge(pl, pc, colorsCH.DCCOLINEAR_E);
-            },
-           [HL[i].id, HR[jLast].id, HL[col].id], depth
-          );
-          chunker.add('updateRLN',
-             (vis, pl, pr, pc) => {
-               vis.graph.removeEdge(pr, pl);
-               vis.graph.removeEdge(pl, pc);
-               vis.graph.addEdge(pr, pc);
-            },
-           [HL[i].id, HR[jLast].id, HL[col].id], depth
-          );
-          i = col;
+        colin = (i + 1) % HL.length;
+        if (!orientation(HR[uj], HL[ui], HL[colin])) {
+          colinChunks(HR[uj].id, HL[ui].id, HL[colin].id,
+                      true, uhlStr, 'colinearRLN', 'updateRLN', true, depth);
+          i = colin;
         }
-        if (!orientation(HR[lj], HL[li], HL[(li - 1 + HL.length) % HL.length])) {
-          iLast = (li - 1 + HL.length) % HL.length;
+        colin = (uj - 1 + HR.length) % HR.length;
+        if (!orientation(HL[ui], HR[uj], HR[colin])) {
+          colinChunks(HR[colin].id, HR[uj].id, HL[i].id,
+                      false, uhrStr, 'colinearLRP', 'updateLRP', true, depth);
+          jLast = colin;
         }
-        if (!orientation(HL[ui], HR[uj], HR[(uj - 1 + HR.length) % HR.length])) {
-          jLast = (uj - 1 + HR.length) % HR.length;
+        colin = (lj + 1) % HR.length;
+        if (!orientation(HL[li], HR[lj], HR[colin])) {
+          colinChunks(HL[li].id, HR[lj].id, HR[colin].id,
+                      true, lhrStr, 'colinearLRN', 'updateLRN', false, depth);
+          j = colin;
         }
-        if (!orientation(HL[li], HR[lj], HR[(lj + 1) % HR.length])) {
-          j = (j + 1) % HR.length;
+        colin = (li - 1 + HL.length) % HL.length;
+        if (!orientation(HR[lj], HL[li], HL[colin])) {
+          colinChunks(HL[colin].id, HL[li].id, HR[j].id,
+                      false, lhlStr, 'colinearRLP', 'updateRLP', false, depth);
+          iLast = colin;
         }
         // Collect hull points from HL between i -> iLast
         hull.push(HL[i]);
         chunker.add('initH',
            (vis, cp, nv) => {
-             for (let i = 0; i < nv; i++)
-               vis.graph.colorNode(i, undefined); // overkill
              vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+               vis.graph.updateUpperLabel(cp, '');
+               vis.graph.updateLowerLabel(cp, '');
           },
          [HL[i].id, numVertices], depth
         );
@@ -507,6 +621,7 @@ export default {
           chunker.add('addUhl',
              (vis, cp) => {
                vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+               vis.graph.updateLowerLabel(cp, '');
             },
            [HL[i].id], depth
           );
@@ -514,38 +629,53 @@ export default {
       
         // Collect hull points from HR between j -> jLast
         hull.push(HR[j]);
-        chunker.add('addUhr0',
-           (vis, cp) => {
-             vis.graph.colorNode(cp, colorsCH.DCHULL_N);
-          },
-         [HR[j].id], depth
-        );
-        while (j !== jLast) {
-          j = (j + 1) % HR.length;
-          hull.push(HR[j]);
-          chunker.add('addUhr',
+        if (j !== jLast) { // not the last point added
+          chunker.add('addUhr0',
              (vis, cp) => {
                vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+               vis.graph.updateLowerLabel(cp, '');
             },
            [HR[j].id], depth
           );
+        } else {
+          chunker.add('addUhr0',
+             (vis, cp, h, nv) => {
+               vis.graph.updateLowerLabel(cp, '');
+               vis.graph.updateUpperLabel(cp, '');
+               for (let i = 0; i < nv; i++)
+                 if (!h.some((p) => p.id === i))
+                   vis.graph.colorNode(i, undefined);
+               vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+            },
+           [HR[j].id, hull, numVertices], depth
+          );
+        }
+        while (j !== jLast) {
+          j = (j + 1) % HR.length;
+          hull.push(HR[j]);
+          if (j !== jLast) { // not the last point added
+            chunker.add('addUhr',
+               (vis, cp) => {
+                 vis.graph.updateUpperLabel(cp, '');
+                 vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+              },
+             [HR[j].id], depth
+            );
+          } else { // last point: remove colours of nodes not in hull
+            chunker.add('addUhr',
+               (vis, cp, h, nv) => {
+                 vis.graph.updateUpperLabel(cp, '');
+                 for (let i = 0; i < nv; i++)
+                   if (!h.some((p) => p.id === i))
+                     vis.graph.colorNode(i, undefined);
+                 vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+              },
+             [HR[j].id, hull, numVertices], depth
+            );
+          }
         }
       }
 
-/*
-     // XXX should be able to delete this chunk when other chunks
-     // color things properly
-     chunker.add('whileUhr',
-        (vis, hl, hr, h, nv) => {
-          for (let i = 0; i < nv; i++)
-            vis.graph.colorNode(i, undefined); // overkill
-          // colorNodes(vis, hl, 0, hl.length-1, undefined);
-          // colorNodes(vis, hr, 0, hr.length-1, undefined);
-          colorNodes(vis, h, 0, h.length-1, colorsCH.DCHULL_N);
-       },
-      [HL, HR, hull, numVertices], depth
-     );
-*/
     // console.log('merged ', hull);
       chunker.add('returnHullRec',
          (vis) => {
@@ -579,7 +709,7 @@ export default {
         } else if (ccPoints.length === 2) {
           chunker.add('n<=3',
              (vis, pts) => {
-               // XXX curved edges - not ideal??
+               // XX curved edges - not ideal?? nothing better?
                vis.graph.addEdge(pts[0].id, pts[1].id);
                vis.graph.addEdge(pts[1].id, pts[0].id);
                colorNodes(vis, pts, 0, pts.length - 1, colorsCH.DCHULL_N);
@@ -602,7 +732,7 @@ export default {
           // Assumes no duplicate points
           chunker.add('n<=3',
              (vis, pts) => {
-               // XXX curved edges - not ideal??
+               // XX curved edges - not ideal?? nothing better?
                vis.graph.addEdge(pts[0].id, pts[2].id);
                vis.graph.addEdge(pts[2].id, pts[0].id);
             },
@@ -612,7 +742,6 @@ export default {
         }
       }
     
-      // XXX NQR re pseudocode
       const mid = Math.floor(points.length / 2);
       chunker.add('mid',
          (vis, pts, m) => {
@@ -663,19 +792,18 @@ export default {
       let depth = 0;
       chunker.add('start',
          (vis, edgeArray, coordsArray) => {
-           // XXX directed graphs can be better for showing turns
+           // directed graphs can be better for showing turns
            // but currently edges can get curved when there are hull
-           // edges (could remove the hull edges temporarily and then
-           // put them back or just revert to undirected)
+           // edges - seems OK though?
            vis.graph.directed(true);
            vis.graph.weighted(false);
            vis.graph.moveNodeFn(moveNode); // allows dragging of nodes
            vis.graph.set(edgeArray, Array.from({ length: n }, (v, k) => (k + 1)),coordsArray);
-           vis.graph.dimensions.defaultNodeRadius = 15;
-           vis.graph.dimensions.nodeRadius = 15;
+           vis.graph.dimensions.defaultNodeRadius = 12;
+           vis.graph.dimensions.nodeRadius = 12;
            // XXX best avoid zoom if we can to avoid labels getting too
            // small etc(?)
-           vis.graph.setZoom(0.6);
+           vis.graph.setZoom(0.7);
         },
          [E, coords], depth
         );

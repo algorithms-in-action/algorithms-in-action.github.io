@@ -194,3 +194,5 @@ export const gwrap = graphInstructions; // XXX refine this?
 export const convHullDC = graphInstructions;
 export const grahamScan = graphInstructions;
 
+export const hsortNewColors = sortInstructions;
+

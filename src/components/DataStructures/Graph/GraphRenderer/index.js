@@ -616,6 +616,7 @@ class GraphRenderer extends Renderer {
                 visitedCount2,
                 visitedCount3,
                 visitedCount4,
+                color,
               } = edge;
               const sourceNode = this.props.data.findNode(source);
               const targetNode = this.props.data.findNode(target);
@@ -664,6 +665,10 @@ class GraphRenderer extends Renderer {
                 >
                   <path
                     d={pathSvg}
+                    style={{
+                      fill: color ? color : undefined,
+                      stroke: color ? color : undefined,
+                    }}
                     className={classes(
                       styles.line,
                       isDirected && styles.directed
@@ -774,12 +779,15 @@ class GraphRenderer extends Renderer {
           {/* node graph */}
           {nodes.map((node) => {
             const {
+              color,
               x,
               y,
               weight,
               height,
               Select_Circle_Count,
               AVL_TID,
+              upperLabel,
+              lowerLabel,
               visitedCount0,
               visitedCount,
               visitedCount1,
@@ -842,6 +850,9 @@ class GraphRenderer extends Renderer {
                 )}
 
                 <circle
+                  style={{
+                    fill: color ? color : undefined,
+                  }}
                   className={classes(
                     styles.circle,
                     style && style.backgroundStyle
@@ -870,6 +881,18 @@ class GraphRenderer extends Renderer {
                       {height != null ? height : ''}
                     </tspan>
                   )}
+                </text>
+
+                {/* labels for convex hull etc */}
+                <text className={styles.upper_label}>
+                  <tspan>
+                    {upperLabel != null ? upperLabel : ''}
+                  </tspan>
+                </text>
+                <text className={styles.lower_label}>
+                  <tspan>
+                    {upperLabel != null ? lowerLabel : ''}
+                  </tspan>
                 </text>
 
                 {isPointer && (

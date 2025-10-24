@@ -19,7 +19,7 @@ import '../../styles/LineNumHighLight.scss';
 import LineExplanation from './LineExplanation';
 import { setFontSize, increaseFontSize } from '../top/helper';
 import { markdownKeywords } from './MarkdownKeywords';
-
+import { AnimatePresence, motion } from 'framer-motion';
 
 function blockContainsBookmark(algorithm, block) {
   for (const line of algorithm.pseudocode[block]) {
@@ -148,7 +148,10 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           className={line.explanation === algorithm.lineExplanation ? 'line-explanation-button-active' : 'line-explanation-button-negative'}
           onClick={() => { 
             // If click the button again and its the currently active lineExplanation
-            // in global state clear the line explanation.
+            // in global state clear the line explanation. Very weird that we are using
+            // global state to conditionally render the line explanation, only the right
+            // panel uses it at time of writing. XXX could be a worthy extension to make
+            // going to a next/prev step close the line explanation?
             if (algorithm.lineExplanation === line.explanation) {
               dispatch(GlobalActions.LineExplan, "");
             } else {
@@ -172,9 +175,7 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           <span>{i}</span>
           <span>
             <button
-              className={algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref] ? 'expand-collapse-button-active' : 'expand-collopse-button'}
               onClick={() => {
-                // If the block needs to collapse, get reference for all sub-blocks (recursively) and collapse the sub-blocks
                 if (algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]) {
                   const blocksToCollapse = getAllBlocksToCollapse(algorithm, line.ref);
                   for (let l = 0; l < blocksToCollapse.length; l++) {
@@ -184,10 +185,21 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
                   dispatch(GlobalActions.COLLAPSE, { codeblockname: line.ref });
                 }
               }}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              {algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref]
-                ? <ExpandMoreIcon style={{ fontSize: 12 }} />
-                : <ChevronRightIcon style={{ fontSize: 12 }} />}
+              <motion.div
+                animate={{ rotate: algorithm.collapse[algorithm.id.name][algorithm.id.mode][line.ref] ? 90 : 0 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                <ChevronRightIcon style={{ fontSize: 14, color: "var(--text-color)" }} />
+              </motion.div>
             </button>
           </span>
           <span
@@ -209,7 +221,6 @@ function pseudocodeBlock(algorithm, dispatch, blockName, lineNum) {
           role="presentation"
           ref={el => {
             if (line.bookmark !== undefined && algorithm.bookmark === line.bookmark && el) {
-              console.log("in");
               el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
           }}
@@ -258,9 +269,16 @@ const LineNumHighLight = ({ fontSize, fontSizeIncrement }) => {
   const pseudoCodePad = pseudoCodePadding(index + 1, PADDING_LINE);
 
   return (
-    <div className="line-light">
+    <div className="line-light" style={{
+        flex: "1 0 0",
+        overflowY: "scroll",
+        scrollbarGutter: "stable",
+      }}>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet" />
       <div className="code-container" id={fontID}>
+        {/* Unfortunately done in a very odd way it makes animating the presence
+            of a new codeblock very difficult, if not impossible.
+        */}
         {cl}
         {pseudoCodePad}
       </div>

@@ -1,0 +1,252 @@
+@import "../../common/stylesheet/index";
+
+/* ======================================================
+   🔹 Container & Stage
+   ====================================================== */
+
+/* The outer container wrapping the visualization stage */
+.container {
+  position: relative;      /* Allows absolutely positioned children */
+  overflow: visible;       /* Let arrows/nodes overflow */
+  margin-top: 20px;        /* Add top spacing */
+}
+
+/* The stage area where nodes and edges are rendered */
+.stage {
+  position: relative;
+  transform-origin: 0 0;   /* Scale/rotation pivot at top-left */
+  will-change: transform;  /* Optimize rendering for animations */
+}
+
+/* ======================================================
+   🔹 Edges & Arrowheads
+   ====================================================== */
+.edges {
+  /* Base arrow line: red stroke with smooth opacity transition */
+  .edge {
+    stroke: #ff3b3b;
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    opacity: 1;
+    transition: opacity 0.45s ease;
+  }
+
+  /* Active arrow (slightly darker red) */
+  .edge--active {
+    stroke: #e53935;
+  }
+
+  /* Hidden edge: invisible and non-interactive */
+  .edge--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Faded edge: for deemphasized connections */
+  .edge--faded {
+    opacity: 0.2;
+  }
+
+  /* Arrowhead fill color (solid dark grey) */
+  .arrowHead {
+    fill: #2e2e2e;
+  }
+
+  z-index: 3;             /* Render above nodes */
+  position: absolute;     /* Overlay entire stage */
+}
+
+/* Circle at the start of each arrow */
+.edgeDot {
+  fill: #2e2e2e;
+}
+
+/* ======================================================
+   🔹 List Node Capsule
+   ====================================================== */
+.node {
+  position: absolute;
+  box-sizing: border-box;
+  background: transparent;
+  padding: 0;
+  z-index: 2;             /* Render below edges */
+  transition: opacity 0.25s ease;
+
+  /* Node size variables (easy global scaling) */
+  --node-w: 60px;
+  --node-h: 24px;
+  --cap-w: 18px;
+  --pill-radius: 8px;
+  --value-fs: 13px;
+
+  /* Dot positioning and size */
+  --dot-size: 6px;
+  --dot-right: calc((var(--cap-w) - var(--dot-size)) / 2);
+
+  width: var(--node-w);
+  height: var(--node-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Node capsule body */
+  .pill {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--pill-radius);
+    display: grid;
+    grid-template-columns: 1fr var(--cap-w); /* Main area + right cap */
+    overflow: hidden;
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+  }
+
+  /* Text inside the node */
+  .value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--value-fs);
+    font-weight: 600;
+    color: #f1f1f1;
+    user-select: none;
+  }
+
+  /* Right-side capsule cap */
+  .cap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 2px solid #2b2b2b;
+  }
+
+  /* Deprecated divider (disabled to prevent overlap with dot) */
+  .divider {
+    display: none;
+  }
+
+  /* Small circular dot on the right cap */
+  .dot {
+    position: absolute;
+    right: var(--dot-right);
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+    background: #4b4b4b;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .25) inset;
+    z-index: 1;
+  }
+
+  /* Label group shown below node (e.g., variable names) */
+  .vars {
+    display: flex;
+    flex-direction: column; // stack vertically
+    align-items: center;
+    margin-top: 4px; // spacing from node
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    display: flex;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  /* Label style (currently transparent) */
+  .varBadge {
+    margin-top: 2px;
+    background: rgba(180, 180, 180, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    padding: 2px 6px; 
+    font-size: 12px;
+    color: #ddd;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.15)); // subtle outline to improve legibility
+  }
+}
+
+/* ======================================================
+   🔹 Node Color Variants
+   ====================================================== */
+
+/* Default gray (lighter left, darker right) */
+.variantGray .pill {
+  background:
+    linear-gradient(90deg,
+      #666 0 calc(100% - var(--cap-w)),
+      #555 calc(100% - var(--cap-w)));
+}
+
+/* Blue variant (used for right-side highlighting) */
+.variantBlue .pill {
+  background: linear-gradient(90deg, #2f8cff 0 calc(100% - var(--cap-w)), #186ad6 calc(100% - var(--cap-w)));
+}
+
+/* Orange variant (used for left-side highlighting) */
+.variantOrange .pill {
+  background: linear-gradient(90deg, #ffb000 0 calc(100% - var(--cap-w)), #ff8a00 calc(100% - var(--cap-w)));
+}
+
+/* Red variant (used for comparison highlighting) */
+.variantRed .pill {
+  background: linear-gradient(90deg, #ff4a4a 0 calc(100% - var(--cap-w)), #d12f2f calc(100% - var(--cap-w)));
+}
+
+/* Green variant (used for correctly sorted or placed nodes) */
+.variantGreen .pill {
+  background: linear-gradient(90deg, #69c587 0 calc(100% - var(--cap-w)), #4ea46d calc(100% - var(--cap-w)));
+}
+
+/* Alternative gray variant (backup) */
+.variantGrayAlt .pill {
+  background: linear-gradient(90deg, #7a7a7a 0 calc(100% - var(--cap-w)), #5a5a5a calc(100% - var(--cap-w)));
+}
+
+/* ======================================================
+   🔹 Node State Modifiers
+   ====================================================== */
+
+/* Patched node: inner orange outline */
+.patched .pill {
+  box-shadow: 0 0 0 2px var(--peach) inset, 0 6px 16px rgba(0, 0, 0, .15);
+}
+
+/* Sorted node: inner gray outline */
+.sorted .pill {
+  box-shadow: 0 0 0 2px var(--stone) inset, 0 6px 16px rgba(0, 0, 0, .15);
+}
+
+/* Selection outlines (different colors for levels or groups) */
+.selected .pill { outline: 2px solid var(--sky); outline-offset: 2px; }
+.selected1 .pill { outline: 2px solid var(--leaf); outline-offset: 2px; }
+.selected2 .pill { outline: 2px solid var(--apple); outline-offset: 2px; }
+.selected3 .pill { outline: 2px solid var(--peach); outline-offset: 2px; }
+.selected4 .pill { outline: 2px solid var(--plum); outline-offset: 2px; }
+.selected5 .pill { outline: 2px solid var(--wood); outline-offset: 2px; }
+
+/* Faded node: semi-transparent */
+.faded {
+  opacity: .30;
+}
+
+/* Hidden node: fully transparent and slightly scaled down */
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* ======================================================
+   🔹 Caption Below Node
+   ====================================================== */
+
+/* Optional text label displayed under a node */
+.caption {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--array-2d-row-col-value-color);
+}

@@ -20,7 +20,7 @@ const DEFAULT_HEUR = null;  // disable heuristic display/input
 // const DEFAULT_HEUR = 0;  // 0 = Euclidean
 const GRAPH_EGS = [ // XXX think up better examples?
         { name: 'Graph 1',
-          size: 14,
+          size: 7,
           coords: '33-10,2-7,11-7,14-11,22-7,19-4,21-15',
           // coords: '4-3,2-7,7-11,9-3,12-6,13-2,12-16,17-2,20-4,34-4,26-9,30-6,34-10,38-5',
           edges: ''
