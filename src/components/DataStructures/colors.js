@@ -39,3 +39,24 @@ export const colors = {
   // XXX add ink (black), darker/lighter versions of other colors, ...
 };
 
+// Not touching the above, not sure what relies on it.
+//
+// The following color palette defines the limited, consistent set of CSS theme
+// variables available to algorithm modules. Although the newer Graph and Array
+// tracer APIs allow direct coloring via ANY CSS color strings, algorithm controllers
+// should ideally reference these shared color variables instead.
+//
+// This ensures that all visualizations remain consistent with global themes
+// and accessibility features (such as color perception adjustments).
+// If your algorithm requires more than 7 colours (not sure why you would need more) 
+// extend both this dictionary and the corresponding CSS variables in `global.scss`.
+export const ALGO_COLOR_PALLETE = {
+  sky: "var(--sky)",
+  leaf: "var(--leaf)",
+  apple: "var(--apple)",
+  peach: "var(--peach)",
+  plum: "var(--plum)",
+  wood: "var(--wood)",
+  stone: "var(--stone)",
+};
+

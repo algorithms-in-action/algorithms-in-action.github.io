@@ -4,6 +4,7 @@ import EuclideanMatrixParams from './helpers/EuclideanMatrixParams';
 import '../../styles/Param.scss';
 import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams, addURLGraph } from './helpers/urlHelpers'
+import { EXAMPLES, ERRORS } from './helpers/ErrorExampleStrings';
 
 const DEFAULT_SIZE = 5; // gets overwritten by GRAPH_EGS[0] now
 const DEFAULT_START = 5; // XXX null should disable
@@ -15,9 +16,6 @@ const DEFAULT_END = null; // disable end nodes display/input
 const DEFAULT_HEUR = null;  // disable heuristic display/input
 // const DEFAULT_HEUR = 0;  // 0 = Euclidean
 const PRIMS = 'New Prim\'s';
-// XXX fix up error messages some time and change from 'EXAMPLE'
-const PRIMS_EXAMPLE = 'Please enter positive edge weights (or 0 for no edge)';
-const PRIMS_EXAMPLE2 = 'Please enter the symmetrical value in matrix';
 const GRAPH_EGS = [ // XXX think up better examples?
         { name: 'Graph 1',
           size: 14,
@@ -61,8 +59,8 @@ function PRIMParam({ mode, xyCoords, edgeWeights, size, start, end, heuristic, m
         graphEgs={graph_egs}
         symmetric
         ALGORITHM_NAME={PRIMS}
-        EXAMPLE={PRIMS_EXAMPLE}
-        EXAMPLE2={PRIMS_EXAMPLE2}
+        EXAMPLE={ERRORS.GEN_POSITIVE_EDGE_WEIGHTS}
+        EXAMPLE2={ERRORS.GEN_MATRIX_NOT_SYMMETRIC}
         setMessage={setMessage}
       />
 
@@ -87,5 +85,3 @@ PRIMParam.propTypes = {
 };
 
 export default withAlgorithmParams(PRIMParam); // Export with the wrapper for URL Params
-
-

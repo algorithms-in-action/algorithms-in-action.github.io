@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
-import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import { genRandNumList, quicksortPerfectPivotArray } from './helpers/InputBuilders';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 
@@ -13,11 +13,12 @@ import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
 
 import { URLContext } from '../../context/urlState';
+import { EXAMPLES } from './helpers/ErrorExampleStrings';
 
 
 const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
 const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
-const MERGE_SORT = 'Heap Sort';
+const MERGE_SORT = 'Merge Sort (lists)';
 const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
 const UNCHECKED = {
   random: false,
@@ -89,6 +90,7 @@ function MergesortParam({ list }) {
     [QSCase],
   );
 
+  // XXX some QSCase.bestCase etc junk best cleaned up
   return (
     <>
       <div className="form">
@@ -121,7 +123,7 @@ function MergesortParam({ list }) {
             })()
           }
           ALGORITHM_NAME={MERGE_SORT}
-          EXAMPLE={MERGE_SORT_EXAMPLE}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
           setMessage={setMessage}
         />
       </div>
@@ -173,4 +175,4 @@ MergesortParam.propTypes = {
   list: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(MergesortParam)

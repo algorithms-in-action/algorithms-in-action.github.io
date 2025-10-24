@@ -149,6 +149,7 @@ class Array1DRenderer extends Array2DRenderer {
                           style={{
                             height: `${this.toString(scaleY(col.value))}vh`,
                             display: 'flex',
+                            backgroundColor: col.color || undefined,
                           }}
                           /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                           className={classes(
@@ -232,7 +233,7 @@ class Array1DRenderer extends Array2DRenderer {
                   row,
                   i, // variable pointer only working for 1D arrays
                 ) => (
-                  <AnimateSharedLayout key={`vars-wrap-${i}`}>
+                  <AnimateSharedLayout>
                     <div
                       layout
                       className={styles.row}

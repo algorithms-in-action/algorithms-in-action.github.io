@@ -2,17 +2,15 @@
 import React, { useState, useContext, useEffect } from 'react';
 import StringParam from './helpers/StringParam';
 import '../../styles/Param.scss';
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import PropTypes from 'prop-types'; 
+import { withAlgorithmParams } from './helpers/urlHelpers'
 
 import { URLContext } from '../../context/urlState';
+import { ERRORS } from './helpers/ErrorExampleStrings';
 
-// const DEFAULT_STRING = 'cddaadddabdda';
-// const DEFAULT_PATTERN = 'dddac';
 const DEFAULT_STRING = 'dcaccdddabddac';
 const DEFAULT_PATTERN = 'ddac';
 const HSS_SEARCH = 'Horspool String Search';
-const HSS_EXAMPLE = 'Enter lower case alphabetic character or space.';
 
 function HSSParam({ mode, string, pattern }) {
   const [message, setMessage] = useState(null);
@@ -38,17 +36,14 @@ function HSSParam({ mode, string, pattern }) {
           SET_STRING={setString}
           SET_PATTERN={setPattern}
           ALGORITHM_NAME={HSS_SEARCH}
-          EXAMPLE={HSS_EXAMPLE}
           setMessage={setMessage}
         />
       </div>
-      {/* render success/error message */}
       {message}
     </>
   );
 }
 
-// Define the prop types for URL Params
 HSSParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
@@ -56,4 +51,4 @@ HSSParam.propTypes = {
   pattern: PropTypes.string.isRequired
 };
 
-export default withAlgorithmParams(HSSParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(HSSParam);

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
-import { genRandNumList } from './helpers/ParamHelper';
+import { genRandNumList } from './helpers/InputBuilders';
 import ListParam from './helpers/ListParam';
 import '../../styles/Param.scss';
 

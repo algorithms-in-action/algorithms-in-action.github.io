@@ -4,8 +4,7 @@ import React, { createContext, useState } from 'react';
 import { initGlobalAlgorithmGetter } from '../algorithms/controllers/collapseChunkPlugin';
 import { initGlobalAlgotithmGetter } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { dispatcher, initialState } from './actions';
-import algorithms from '../algorithms';
-import { getDefaultMode, getCategory } from '../algorithms/masterList'
+import algorithms, { getDefaultMode, getCategory } from '../algorithms/masterList';
 import { Search } from '@mui/icons-material';
 import { URLProvider, URLContext } from './urlState';
 
@@ -22,23 +21,21 @@ import { URLProvider, URLContext } from './urlState';
 
 // Create context
 export const GlobalContext = createContext();
-// only call this function once
-const init = initialState();
 
 // Provider components
 // eslint-disable-next-line react/prop-types
 export const GlobalProvider = ({ children }) => {
-  const [state, setState] = useState(init);
+  const [state, setState] = useState(initialState());
   // Think of this as partial function application to get state & setState in scope
   // for later calls from elsewhere in the app.
-  const dispatch = dispatcher(state, setState);
+  const dispatch = dispatcher(setState);
 
   const globalState = {
     algorithm: state,
-    algorithmKey: Object.keys(algorithms).find(key => algorithms[key].name === state.name),
-    category: getCategory(Object.keys(algorithms).find(key => algorithms[key].name === state.name)),
-    mode: getDefaultMode(Object.keys(algorithms).find(key => algorithms[key].name === state.name)),
     dispatch,
+    algorithmKey: state.id.name,
+    category: getCategory(state.id.name),
+    mode: getDefaultMode(state.id.name),
   };
 
   initGlobalAlgorithmGetter(

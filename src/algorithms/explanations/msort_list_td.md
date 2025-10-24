@@ -1,53 +1,37 @@
-# Heap Sort
+# Merge Sort (top-down, for lists)
 
 ---
 
-Heapsort is a general purpose in-place sorting algorithm that has
-*<verbatim>O(n log n)</verbatim>* behavior in the worst case. It
-proceeds by first rearranging the input array so it is a *heap* (which has some
-ordering maintained; see below) then converting the heap into a sorted
-array.
+Note: this animation uses an array to represent lists. It was coded
+primarily as a prototype for a version that renders lists in a more
+intuitive way.
 
-## The Heap Data Structure
+Merge sort is a divide and conquer algorithm. It first splits the input
+linked list in half: the left and right (irrespective of the element
+values). It then recursively sorts these two shorter lists and merges the
+results to get a sorted complete list.  The base case for the recursion
+is lists of size one or zero.
 
-A heap is a complete binary tree represented by an array, with
-the root in *<verbatim>A[1]</verbatim>* and the children of
-*<verbatim>A[i]</verbatim>* being *<verbatim>A[2i]</verbatim>* and
-*<verbatim>A[2i+1]</verbatim>*. Each node is greater than or equal to
-its children (this is called the *heap condition*), thus the root is
-the maximum (heap sort uses a "max" heap; there are also "min" heaps
-where the ordering is reversed).  Note that there are no pointers etc -
-we can view the array as a tree so as to understand the ordering. In
-AIA, both views of this single data structure are displayed.
+Splitting the list in half requires traversing to the middle of the
+list (here we pass in the list length as a parameter; if the length is
+unknown it can be computed using a traversal of the whole list before this
+sorting code is called).  The main part of merge uses three pointers:
+one for each of the input lists and one for the end of the output list,
+so additional elements can be appended in constant time.  At each stage
+the minimum input list element is appended to the output list and the
+pointers for those two lists are advanced to the next elements. When one
+input list has been completely traversed, any additional elements in the
+other input list are linked onto to the end of the output list. In this
+coding, the output list is initialised to point to the minimum first
+element of the input lists.
 
-## Building a heap "bottom up"
+Versions of merge sort for lists are often the preferred sorting
+algorithms in declarative languages, where lists are used extensively.
+This algorithm can also be adapted to arrays (extra space and copying
+is needed for merge; the list version here just rearranges pointers).
+There are also non-recursive "bottom up" versions of merge sort. Because
+merge sort only does sequential scans of the input and output at each
+stage, it can also be adapted to sorting large quantities of data that
+do not fit into main memories. Historically, when data was primarily
+stored on magnetic tape, it was absolutely essential.
 
-The best way to build a heap from an unordered array is to first note that
-all the leaf nodes in the tree view are already heaps (they have no children
-so the heap condition is satisfied), and work up the tree (backwards
-through the array) to the root. Each step combines two existing heaps
-plus their parent node to form a new heap (some rearrangement may be
-needed; this is done by the *DownHeap* operation).
-
-## Sorting with a heap
-
-Sorting proceeds by repeating the following steps:
-
-- swap the largest item (the root) with the last item in the heap
-- remove this largest item from further consideration (it is no longer
-  considered part of the heap)
-- rearrange the remaining data items into heap order by performing
-  *DownHeap* on the new root (note the two children of the root are
-  heaps before this step)
-
-## The DownHeap operation
-
-*DownHeap* traverses down the tree, swapping the data in the node with
-the maximum child of the node.  It stops as soon as the data in the node
-is greater than or equal to the maximum child (or the node is a leaf).
-
-## Complexity
-
-The time complexity of *DownHeap* is *O(log n)*. Overall for Heapsort
-the worst case and nearly all other cases have time complexity *O(n log n)*.
-Space complexity is O(1).

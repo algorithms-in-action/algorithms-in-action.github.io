@@ -10,9 +10,10 @@ import React, { useState } from 'react';
 import { onCollapseChange } from '../algorithms/controllers/collapseChunkPlugin';
 import { onCollapseStateChange } from '../algorithms/controllers/transitiveClosureCollapseChunkPlugin';
 import { unionFindToggleRank } from '../algorithms/controllers/unionFindUnion';
-import { genRandNumList } from '../algorithms/parameters/helpers/ParamHelper';
+import { genRandNumList } from '../algorithms/parameters/helpers/InputBuilders';
+import algorithmMetadata, { getDefaultMode } from '../algorithms/masterList';
 
-const DEFAULT_ALGORITHM = 'heapSort';
+export const DEFAULT_ALGORITHM = 'heapSort';
 const DEFAULT_MODE = 'sort';
 // const DEFAULT_PARAM = DEFAULT_NODES; // maybe for other algorithms
 // import { DEFAULT_NODES } from '../algorithms/parameters/HSParam';
@@ -485,34 +486,27 @@ console.log(stopAt, playing, state);
   }),
 };
 
-export function dispatcher(state, setState) {
+export function dispatcher(setState) {
   return (action, params) => {
-    setState(action(state, params));
+    // Functional updater version of setState, previously
+    // calling two dispatches inside of one callback caused
+    // issues due to React batching and this form not being used.
+    // See more https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state
+    setState((prevState) => action(prevState, params));
   };
 }
 
 export function initialState() {
   const currentUrl = new URL(window.location.href);
-  const alg = currentUrl.searchParams.get('alg');
-  const mode = currentUrl.searchParams.get('mode');
+  let alg = currentUrl.searchParams.get('alg');
+  let mode = currentUrl.searchParams.get('mode');
 
-  let initialNodes = DEFAULT_NODES; // Fallback to default nodes if parsing fails or param is not valid
-
-  // Validate the algorithm and mode before proceeding
-  if (alg && mode && alg in algorithms && mode in algorithms[alg].pseudocode) {
-    return GlobalActions.LOAD_ALGORITHM(undefined, {
-      name: alg,
-      mode: mode,
-      initialNodes: initialNodes, // Use parsed or default parameters
-    });
-  }
-
-  // Fallback to default settings if parameters are incorrect or incomplete
+  if (!alg || !(alg in algorithmMetadata)) alg = DEFAULT_ALGORITHM;
+  if (!mode || !(mode in algorithmMetadata[alg].pseudocode)) mode = getDefaultMode(alg);
 
   return GlobalActions.LOAD_ALGORITHM(undefined, {
-    name: DEFAULT_ALGORITHM,
-    mode: DEFAULT_MODE,
-    initialNodes: initialNodes, // Ensure DEFAULT_PARAM is properly defined or imported
+    name: alg,
+    mode: mode,
   });
 }
 

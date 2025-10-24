@@ -459,7 +459,7 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo, newZoom } =
+    const { nodes, edges, isDirected, isWeighted, dimensions, text, functionInsertText, functionNode, functionBalance, rectangle, radius, tagInfo, newZoom, rectangles } =
       this.props.data;
     const {
       baseWidth,
@@ -616,6 +616,7 @@ class GraphRenderer extends Renderer {
                 visitedCount2,
                 visitedCount3,
                 visitedCount4,
+                color,
               } = edge;
               const sourceNode = this.props.data.findNode(source);
               const targetNode = this.props.data.findNode(target);
@@ -664,6 +665,10 @@ class GraphRenderer extends Renderer {
                 >
                   <path
                     d={pathSvg}
+                    style={{
+                      fill: color ? color : undefined,
+                      stroke: color ? color : undefined,
+                    }}
                     className={classes(
                       styles.line,
                       isDirected && styles.directed
@@ -711,15 +716,78 @@ class GraphRenderer extends Renderer {
             )}
           </g>
 
+          {/* Nested recursion rectangles */}
+          {rectangles.map((stack, i) => {
+            const hasEmpty = rectangles.length > 0 && 
+              rectangles[rectangles.length - 1].label === 'Empty';
+            if (!stack || !stack.rect) {
+              // Render the "Empty" rectangle
+              if (stack && stack.label === 'Empty' && i > 0) {
+                const parentStack = rectangles[i - 1];
+                if (parentStack && parentStack.rect) {
+                  const [pLeft, pTop, pRgt, pBtm] = parentStack.rect;
+                  return (
+                    <text
+                      key={`rec-rect-empty-${i}`}
+                      className={classes(styles.select_color)}
+                      fontSize={30}
+                      // Display the 'Empty' text roughly in the middle of the parent box.
+                      x={(pLeft + pRgt) / 2}
+                      y={(pTop + pBtm) / 2 + 10}
+                      textAnchor="middle"
+                      style={{ opacity: 0.8 }}
+                    >
+                      Empty
+                    </text>
+                  );
+                }
+              }
+              return null;
+            }
+            const [left, top, rgt, btm, text] = stack.rect;
+            let isInnerMost = i == rectangles.length - 1;
+            if (hasEmpty) {
+              // InnerMost is the parent rectangle of the "Empty" 
+              isInnerMost = i == rectangles.length - 2;
+            }
+            const textOpacity = isInnerMost ? 0.8 : 0.4;
+            const rectOpacity = isInnerMost ? 0.8 : 0.4;
+            return (
+              <g key={`rec-rect-${i}`}>
+                <text className={classes(styles.select_color)}
+                  fontSize={30} // font size
+                  x={left - 30 - (rectangles.length - 1 - i) * 10}    // font position
+                  y={top - 70 - (rectangles.length - 1 - i) * 10}
+                  style={{ opacity: textOpacity }} // font opacity
+                >
+                  {text}
+                </text>
+                <rect className={classes(
+                    styles.select_rect,
+                    styles && styles.backgroundStyle
+                  )}
+                  x={left - 50 - (rectangles.length - 1 - i) * 10} // x position 
+                  y={top - 60 - (rectangles.length - 1 - i) * 10} // y position 
+                  width={(rgt - left) + 100 + (rectangles.length - 1 - i) * 20} // width of the sub-rectangle 
+                  height={(btm - top) + 120 + (rectangles.length - 1 - i) * 20} // height of the sub-rectangle 
+                  style={{ opacity: rectOpacity }} // opacity
+                />
+              </g>
+            );
+          })}
+
           {/* node graph */}
           {nodes.map((node) => {
             const {
+              color,
               x,
               y,
               weight,
               height,
               Select_Circle_Count,
               AVL_TID,
+              upperLabel,
+              lowerLabel,
               visitedCount0,
               visitedCount,
               visitedCount1,
@@ -782,6 +850,9 @@ class GraphRenderer extends Renderer {
                 )}
 
                 <circle
+                  style={{
+                    fill: color ? color : undefined,
+                  }}
                   className={classes(
                     styles.circle,
                     style && style.backgroundStyle
@@ -812,6 +883,18 @@ class GraphRenderer extends Renderer {
                   )}
                 </text>
 
+                {/* labels for convex hull etc */}
+                <text className={styles.upper_label}>
+                  <tspan>
+                    {upperLabel != null ? upperLabel : ''}
+                  </tspan>
+                </text>
+                <text className={styles.lower_label}>
+                  <tspan>
+                    {upperLabel != null ? lowerLabel : ''}
+                  </tspan>
+                </text>
+
                 {isPointer && (
                   <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
                     {this.toString(pointerText)}
@@ -837,8 +920,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Name */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 250}
+            x={+ 0}
+            y={+ 350}
             textAnchor="middle">
             <tspan className={styles.pseudocode_function}>
               {this.props.data.functionName}
@@ -848,8 +931,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Node */}
           <text className={classes(styles.text)}
-            x={+400}
-            y={-200}
+            x={- 100}
+            y={+ 400}
             textAnchor="middle">
             {functionNode != null && (
               <tspan className={styles.pseudocode_function}>
@@ -867,8 +950,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Balance */}
           <text className={classes(styles.text)}
-            x={+650}
-            y={-200}
+            x={+ 150}
+            y={+ 400}
             textAnchor="middle">
 
             {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
@@ -890,8 +973,8 @@ class GraphRenderer extends Renderer {
 
           {/* AVL Tree ID */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 150}
+            x={+ 0}
+            y={+ 450}
             textAnchor="middle">
             {tagInfo}
           </text>

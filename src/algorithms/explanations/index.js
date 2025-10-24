@@ -29,3 +29,6 @@ export { default as msort_list_td} from './msort_list_td.md'
 export { default as gwrap} from './gwrap.md'
 export { default as insertionSortExp } from './insertionSortExp.md';
 export { default as selectionSortExp } from './selectionSortExp.md';
+export { default as convHullDC } from './convHullDC.md';
+export { default as grahamScan } from './grahamScan.md';
+export { default as hsortNewColors } from './hsortNewColors.md';

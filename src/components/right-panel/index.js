@@ -6,6 +6,7 @@ import Explanation from './Explanation'
 import Pseudocode from './Pseudocode'
 import ExtraInfo from './ExtraInfo'
 import Instruction from './Instructions'
+import { motion, AnimatePresence } from "framer-motion";
 
 function RightPanel({ fontSize, fontSizeIncrement }) {
   const buttons = [
@@ -51,10 +52,26 @@ function RightPanel({ fontSize, fontSizeIncrement }) {
     setState(val)
   }
   return (
-    <>
+    <div style={{display: "flex", height: "100%", width: "100%", flexDirection:"column", backgroundColor: "var(--right-text-bg)",}}>
       <HeaderButton value={buttons} onChange={getBtnState} />
-      {buttons[state].display}
-    </>
+      <AnimatePresence exitBeforeEnter>
+        <motion.div
+          key={state}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.1, ease: "easeInOut" }}
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "auto",
+          }}
+        >
+          {buttons[state].display}
+        </motion.div>
+      </AnimatePresence>
+    </div>
   )
 }
 

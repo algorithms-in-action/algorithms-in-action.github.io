@@ -1,29 +1,42 @@
-// Adapted from Quicksort - could rename a few things
-
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useContext } from 'react';
+// minimal mods from AVLTree - switched to BSTrec
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable max-len */
+/* eslint-disable no-console */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState, useContext, useEffect } from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { withStyles } from '@mui/styles';
-import { genRandNumList, quicksortPerfectPivotArray } from './helpers/ParamHelper';
+import { GlobalContext } from '../../context/GlobalState';
+import { URLContext } from '../../context/urlState';
+import { GlobalActions } from '../../context/actions';
 import ListParam from './helpers/ListParam';
+import SingleValueParam from './helpers/SingleValueParam';
 import '../../styles/Param.scss';
 
-import PropTypes from 'prop-types'; // Import this for URL Param
-import { withAlgorithmParams } from './helpers/urlHelpers' // Import this for URL Param
+import { singleNumberValidCheck } from './helpers/InputValidators';
+import { 
+  genUniqueRandNumList,
+  balanceBSTArray,
+  shuffleArray
+} from './helpers/InputBuilders';
 
-import { URLContext } from '../../context/urlState';
+import { errorParamMsg } from './helpers/ParamMsg';
 
+import PropTypes from 'prop-types';
+import { withAlgorithmParams } from './helpers/urlHelpers';
+import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
-const DEFAULT_ARRAY_GENERATOR = genRandNumList.bind(null, 12, 1, 99);
-const DEFAULT_ARR = DEFAULT_ARRAY_GENERATOR();
-const MERGE_SORT = 'Heap Sort';
-const MERGE_SORT_EXAMPLE = 'Please follow the example provided: 0,1,2,3,4';
+const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
+const DEFAULT_TARGET = '2';
+
+const INSERTION = 'insertion';
+const SEARCH = 'search';
+
 const UNCHECKED = {
   random: false,
-  sortedAsc: false,
-  // bestCase: false,
-  sortedDesc: false
+  sorted: false,
+  balanced: false,
 };
 
 const BlueRadio = withStyles({
@@ -34,143 +47,152 @@ const BlueRadio = withStyles({
     },
   },
   checked: {},
-  // eslint-disable-next-line react/jsx-props-no-spreading
-})((props) => <Radio {...props} />)
+})((props) => <Radio {...props} />);
 
-function MergesortParam({ list }) {
-  const [message, setMessage] = useState(null)
-
-  const [array, setArray] = useState(list || DEFAULT_ARR)
-  const { setNodes } = useContext(URLContext)
-
-  const [QSCase, setQSCase] = useState({
-    random: true,
-    sortedAsc: false,
-    // bestCase: false,
-    sortedDesc: false
-  });
+function BSTrecParam({ mode, list, value }) {
+  const { algorithm, dispatch } = useContext(GlobalContext);
+  const [message, setMessage] = useState(null);
+  const [localNodes, setLocalNodes] = useState(list || DEFAULT_NODES);
+  const { setNodes, setSearchValue } = useContext(URLContext);
+  const [bstCase, setBSTCase] = useState(UNCHECKED);
+  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
-    setNodes(array);
-  }, [array]);
+    setNodes(localNodes);
+    setSearchValue(localValue);
+    setBSTCase(UNCHECKED); // reset when nodes/values change
+  }, [localNodes, localValue, setNodes, setSearchValue]);
 
-  // XXX best case definitely not needed; could skip choice of cases
-  // function for choosing the type of input
   const handleChange = (e) => {
     switch (e.target.name) {
-      case 'sortedAsc':
-        setArray([...array].sort(function (a, b) {
-          return (+a) - (+b)
-        }));
-        break;
-      case 'sortedDesc':
-        setArray([...array].sort(function (a, b) {
-          return (+b) - (+a)
-        }));
-        break;
       case 'random':
-        setArray(DEFAULT_ARRAY_GENERATOR());
+        setLocalNodes(shuffleArray(localNodes));
         break;
-      case 'bestCase':
-        setArray(quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25))));
+      case 'sorted':
+        setLocalNodes([...localNodes].sort((a, b) => a - b));
+        break;
+      case 'balanced':
+        setLocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
         break;
       default:
-        break;
     }
+    setBSTCase({ ...UNCHECKED, [e.target.name]: true });
+  };
 
-    setQSCase({ ...UNCHECKED, [e.target.name]: true })
+  /**
+   * Custom search handler for BSTrec — checks tree is not empty first.
+   */
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const inputValue = e.target[0].value;
+    setLocalValue(inputValue);
 
-  }
+    const { valid, error } = singleNumberValidCheck(inputValue);
 
-  useEffect(
-    () => {
-      document.getElementById('startBtnGrp').click();
-    },
-    [QSCase],
-  );
+    if (valid) {
+      const target = parseInt(inputValue, 10);
+
+      if (
+        algorithm.hasOwnProperty('visualisers') &&
+        !algorithm.visualisers.graph.instance.isEmpty()
+      ) {
+        const visualiser = algorithm.chunker.visualisers;
+
+        dispatch(GlobalActions.RUN_ALGORITHM, {
+          name: 'BSTrec',
+          mode: 'search',
+          visualiser,
+          target,
+        });
+
+        setMessage(null);
+      } else {
+        setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR));
+      }
+    } else {
+      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
+    }
+  };
+
+  useEffect(() => {
+    document.getElementById('startBtnGrp').click();
+  }, [bstCase]);
 
   return (
     <>
       <div className="form">
+        {/* Insert input */}
         <ListParam
-          name="BSTRec"
-          buttonName="Reset"
-          mode="sort"
+          name="BSTrec"
+          buttonName="Insert"
+          mode="insertion"
           formClassName="formLeft"
-          DEFAULT_VAL={array}
-          SET_VAL={setArray}
-          REFRESH_FUNCTION={
-            (() => {
-              if (QSCase.sortedAsc) {
-                return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
-                    return (+a) - (+b)
-                  }));
-                }
-              }
-              else if (QSCase.sortedDesc) {
-                return () => {
-                  return (DEFAULT_ARRAY_GENERATOR().sort(function (a, b) {
-                    return (+b) - (+a)
-                  }));
-                }
-              }
-              else if (QSCase.bestCase) {
-                return () => quicksortPerfectPivotArray(Math.floor(Math.random() * 10), 25 + (Math.floor(Math.random() * 25)));
-              }
-            })()
-          }
-          ALGORITHM_NAME={MERGE_SORT}
-          EXAMPLE={MERGE_SORT_EXAMPLE}
+          DEFAULT_VAL={localNodes}
+          SET_VAL={setLocalNodes}
+          REFRESH_FUNCTION={() => genUniqueRandNumList(12, 1, 100)}
+          ALGORITHM_NAME={INSERTION}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
+          setMessage={setMessage}
+        />
+
+        {/* Search input */}
+        <SingleValueParam
+          name="BSTrec"
+          buttonName="Search"
+          mode="search"
+          formClassName="formRight"
+          DEFAULT_VAL={value || localValue}
+          ALGORITHM_NAME={SEARCH}
+          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
+          handleSubmit={handleSearch}
           setMessage={setMessage}
         />
       </div>
-      <span className="generalText">Choose input format: &nbsp;&nbsp;</span>
-      {/* create a checkbox for Random array elements */}
+
+      <span className="generalText">Re-order input: &nbsp;&nbsp;</span>
       <FormControlLabel
-        control={
+        control={(
           <BlueRadio
-            checked={QSCase.random}
+            checked={bstCase.random}
             onChange={handleChange}
             name="random"
           />
-        }
+        )}
         label="Random"
         className="checkbox"
       />
       <FormControlLabel
-        control={
+        control={(
           <BlueRadio
-            checked={QSCase.sortedAsc}
+            checked={bstCase.sorted}
             onChange={handleChange}
-            name="sortedAsc"
+            name="sorted"
           />
-        }
-        label="Sorted (ascending)"
+        )}
+        label="Sorted"
         className="checkbox"
       />
       <FormControlLabel
-        control={
+        control={(
           <BlueRadio
-            checked={QSCase.sortedDesc}
+            checked={bstCase.balanced}
             onChange={handleChange}
-            name="sortedDesc"
+            name="balanced"
           />
-        }
-        label="Sorted (descending)"
+        )}
+        label="Balanced"
         className="checkbox"
       />
-      {/* render success/error message */}
       {message}
     </>
-  )
+  );
 }
 
-// Define the prop types for URL Params
-MergesortParam.propTypes = {
+BSTrecParam.propTypes = {
   alg: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired
+  list: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
-export default withAlgorithmParams(MergesortParam); // Export with the wrapper for URL Params
+export default withAlgorithmParams(BSTrecParam);

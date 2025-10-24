@@ -4,37 +4,48 @@ export default parse(`
 
 \\Note{
 Gift wrapping/Jarvis algm for convex hull
-XXX probably needs more bookmarks
+XXX maybe change so we wrap counter-clockwise for consistency?
 
-Includes sketch of optional optimisation - ignore initially, maybe fill in
-later and have option selected like path compression in union find algm.
-
-Should be able to use graph package (disable edge input; maybe make
-nodes smaller); add/delete edges during algorithm execution.
-For hull/wrapper/"string", create extra temp node far away so it's invisible
-with normal zoom and move it around so its colinear with most recently added
-edge (at first step it will be far above the leftmost point)
+Includes sketch of optional heuristic for removing points if n >= 10
+XXX could have option selected like path compression in union find algm.
 \\Note}
 
 \\Code{
 Main
-giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B start
+giftWrap(P, n) // return convex hull of points P[1]...P[n] in a plane \\B start
 \\In{
-    if n <= 3
+    if n <= 3 \\B n<=3
     \\In{
-        return the set of all points // n < 3 could be considered an error \\B returnAll
+        return the set of all points \\B returnAll
+        \\Expl{ n < 3 could be considered an error, depending on how
+          flexible our definition of convex hull is.
+        \\Expl}
     \\In}
     hull <- Empty // Initialize hull to the empty set of points
-    minX <-  point with min. X value \\B minX
+    minX <- point with min. X value (optionally minY, maxX, maxY also) \\B minX
     \\Expl{ We could choose any point guaranteed to be on the convex
         hull. Here we use a point with the minimal X coordinate.  We
         scan through all points to find it. If there are multiple points
         with the minimal X coordinate we choose one with a minimal Y coordinate.
+        Other choices can potentially have subtle interractions with the
+        other code and potentially affect termination - see the MORE tab.
+        During this scan we can optionally also find the minimal Y point
+        and maximal X and Y points; here we do so if n >= 10. These
+        points are also on the convex hull.
     \\Expl}
-    p <- minX // initialize current point; "string" points left/up \\B initP
-    \\Expl{ In the animation we show a line from p; you can think
+    Optionally remove points inside polygon minX, maxY, maxX, minY \\Ref RemoveQuad
+    \\Expl{ If we know several points that are definitely on the
+        hull, any points strictly inside this polygon can (optionally)
+        be removed from consideration. This can speed up the rest of
+        the algorithm. Here we enable this option if n >= 10.
+    \\Expl}
+    p <- minX // current point + "string" initialization \\B initP
+    \\Expl{ We start with p being the (bottom) leftmost point. In the
+        animation we show a line from p; you can think
         of this as a string we use to wrap around the points to form the
-        convex hull.
+        convex hull. It starts stretched anywhere to the left of p and
+        will gradually be wrapped around the hull (here we wrap
+        clockwise; either direction works).
     \\Expl}
     do
     \\In{
@@ -47,34 +58,21 @@ giftWrap(P, n) // return convex hull of points P[0]...P[n-1] in a plane \\B star
         q <- next point in clockwise "string" rotation \\Ref NextPoint
         \\Expl{ Keeping tension on the string, we rotate it clockwise
           around all the points until it touches the next point, q.
-          Note: going from p to q to any other point x requires a clockwise
-          turn.
+          The animation here shows the string a little before it touches
+          q (which is highlighted).
+          Note: going from p to q to any other point x requires a
+          clockwise turn.
         \\Expl}
         p <- q \\B p<-q
+        \\Expl{ The animation here shows the string touching the node.
+        \\Expl}
     \\In} 
     while p != minX // stop when we get back to the first node \\B whileP
     return hull \\B returnHull
+    \\Expl{ The animation shows any points that were removed earlier.
+    \\Expl}
 \\In} 
 \\Code} 
-
-\\Note{ Alternative version of minX <-  point with min. X value
-    (should be able to put this note above but parser is rubbish)
-    Find point with min. X value (and optionally max X, min Y, max Y also)
-    \\Expl{ We could choose any point guaranteed to be on the convex
-        hull. Here we use a point with the minimal X coordinate.  We
-        scan through all points to find it. During
-        this scan we can optionally find other points guaranteed to be
-        on the hull; here we choose points with extreme X or Y
-        coordinates.
-        If there are multiple points with the same extreme X or Y coordinates
-        then the other coordinate is used to break the tie.
-    \\Expl}
-    Optionally remove points inside quadrilateral minX, maxY, maxX, minY \\Ref RemoveQuad
-    \\Expl{ If we know several points that are definitely on the
-        hull, any points strictly inside this polygon can be removed
-        from consideration. This can speed up the rest of the algorithm.
-    \\Expl}
-\\Note}
 
 \\Code{
 NextPoint
@@ -83,22 +81,29 @@ NextPoint
 clockwise than i.  If no such i exists then q is the least clockwise
 point after p.
 \\Expl}
-q <- (p + 1) mod n // initialise q to a point other than p \\B initQ
+q <- a point other than p // initialise q \\B initQ
 \\Expl{ Any point other than p will work.  Here we pick the next point
-  in the array (or 0 if p is the last point).
+  in the points array (or 1, if p is the last point).
 \\Expl}
 for i <- point in P \\B assignI
-\\Expl{ We loop over all points. We could ignore point p but it
-does no harm. The path p->p->q is considered straight. Geometric
-algorithms often have tricky cases such as this.  Another subtlety is
-the ordering of the points - see the "MORE" tab for details.
+\\Expl{ We loop over all points to find the least clockwise point from p.
+Here we skip points p and q to simplify the animation (the code works
+without this simplification).  Here we scan the points
+in order. If there are multiple points that have the same least
+clockwise direction from p the ordering of points can be significant
+- see the "MORE" tab for details. The animation stops at this line once
+more when there are no more points i to consider, and moves the "string"
+close to the next node q.
 \\Expl}
 \\Note{
 Better to have the following??
-for i <- 0 to n-1
+for i <- 1 to n
 \\Note}
 \\In{
     if p->i->q is a clockwise turn \\Ref piqClockwise
+    \\Expl{ Path p->p->q is not considered a turn.
+      Geometric algorithms often have tricky cases such as this.
+    \\Expl}
     \\In{
         q <- i \\B q<-i
         \\Expl{ i is less clockwise than q, so we update q.
@@ -120,21 +125,31 @@ if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0 \\B piqTest
 \\Code}
 
 \\Code{
-removeQuad
-XXX
-for i <- point in P
+RemoveQuad
+for k <- point in P // Optional loop \\B forkinP
+\\Expl{ We skip the points minX, maxY, minY and maxX.
+  Here we use this option if n >= 10.
+\\Expl}
 \\In{
-    if XXX
+    if k is inside the polygon formed by the min/max points \\Ref insidePoly
     \\In{
-       remove point i
+       remove point k // k can't be on the convex hull \\B removek
     \\In}
 \\In}
-if (i.y-p.y)*(q.x-i.x) - (i.x-p.x)*(q.y-i.y) > 0
-\\Expl{ See the "BACKGROUND" and "MORE" tabs for more details. Code in
-  geometric algorithms often has cryptic bits like this based on
-  mathematical results from geometry. For many operations, the most
-  intuitive coding involves division and is actually buggy because 
-  there can be cases where the divisor is zero.
+\\Code} 
+
+\\Code{
+insidePoly
+// Below, i and j refer to consecutive points
+// on a clockwise traversal of the polygon
+if i->j->k turns clockwise for each (i, j) pair \\B allClockwise
+\\Expl{ There are (up to) four (i, j) pairs: (minX, maxY), (maxY, maxX),
+  (maxX, minY) and (minY, minX); we skip pairs where i = j.
+  If k is clockwise (to the right of)
+  each of these, it must be inside all four edges of the polygon.
+  To test for clockwise turns we can use the cross product of vectors.
+  See the code for finding the next point in the convex hull and the
+  "BACKGROUND" and "MORE" tabs for more details.
 \\Expl}
 \\Code} 
 

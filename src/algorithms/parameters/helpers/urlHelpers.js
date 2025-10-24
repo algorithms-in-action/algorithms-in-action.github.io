@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import algorithms from '../../../algorithms';
+import algorithms from '../../../algorithms/masterList';
 
 // const DEFAULT_ALGORITHM = 'heapSort';
 // const DEFAULT_MODE = 'sort';
@@ -21,7 +21,7 @@ import algorithms from '../../../algorithms';
 const VALID_PARAM_NAMES = [
     'alg', 'mode', 'list', 'value', 'xyCoords', 'edgeWeights',
     'size', 'start', 'end', 'string', 'pattern', 'union',
-    'heuristic', 'min', 'max'
+    'heuristic', 'min', 'max', 'step', 'expand', 'weight', 'compress', 'smallTable'
 ];
 
 // Default values for each parameter
@@ -40,25 +40,14 @@ const DEFAULT_VALUES = {
     union: '',
     heuristic: '',
     min: '',
-    max: ''
+    max: '',
+    step: '0',
+    expand: '{}'
 };
 
 
 export function useUrlParams() {
-    const [search, setSearch] = useState(window.location.search);
-
-    useEffect(() => {
-        const handleUrlChange = () => {
-            setSearch(window.location.search);
-        };
-
-        window.addEventListener('popstate', handleUrlChange);
-        return () => {
-            window.removeEventListener('popstate', handleUrlChange);
-        };
-    }, []);
-
-    const urlParams = useMemo(() => new URLSearchParams(search), [search]);
+    const urlParams = new URLSearchParams(window.location.search)
     const params = {};
 
     // Filter and parse valid URL parameters
@@ -92,7 +81,7 @@ function extractValue(paramString, key) {
 export const withAlgorithmParams = (WrappedComponent) => {
     const WithAlgorithmParams = (props) => {
 
-        const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max } = useUrlParams();
+        const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max, weight, compress, smallTable } = useUrlParams();
 
         if (!alg || !(alg in algorithms)) {
             return <div>Invalid algorithm specified</div>;
@@ -118,6 +107,9 @@ export const withAlgorithmParams = (WrappedComponent) => {
             heuristic={heuristic}
             min={min}
             max={max}
+            weight={weight}
+            compress={compress}
+            smallTable={smallTable}
             {...props}
         />;
 

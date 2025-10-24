@@ -24,7 +24,7 @@
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {areExpanded} from './collapseChunkPlugin';
-import {colors} from '../../components/DataStructures/colors';
+import {ALGO_COLOR_PALLETE} from '../../components/DataStructures/colors';
 
 // currently colors for graphs (including trees) are still a mess; this
 // is kind of a stub for when they are fixed up.  The code involving
@@ -34,12 +34,13 @@ import {colors} from '../../components/DataStructures/colors';
 // is selected but it turns out that whenever anything is de-selected it
 // is part of a heap.
 const HSColors = {
-    CURRENT_A: colors.apple,
-    CHILD_A: colors.sky,
-    HEAP_A: colors.leaf,
-    CURRENT_T: 3,  // Red (globalColors.apple)
-    CHILD_T: 4,  // Blue (globalColors.sky)
-    HEAP_T: 1, // Green (globalColors.leaf)
+    CURRENT_A: ALGO_COLOR_PALLETE.apple,
+    CHILD_A: ALGO_COLOR_PALLETE.sky,
+    HEAP_A: ALGO_COLOR_PALLETE.leaf,
+    CURRENT_T: ALGO_COLOR_PALLETE.apple,
+    CHILD_T: ALGO_COLOR_PALLETE.sky,
+    HEAP_T: ALGO_COLOR_PALLETE.leaf,
+    SORTED: ALGO_COLOR_PALLETE.stone,
   }
 
 
@@ -108,21 +109,21 @@ export default {
 
     const highlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
-        vis.heap.colorNode(index + 1, HSColors.CURRENT_T);
-        vis.array.selectColor(index, colors.apple);
+        vis.heap.myColorNode(index + 1, HSColors.CURRENT_T);
+        vis.array.setColor(index, HSColors.CURRENT_T);
       } else {
-        vis.heap.colorNode(index + 1, HSColors.CHILD_T);
-        vis.array.selectColor(index, colors.sky);
+        vis.heap.myColorNode(index + 1, HSColors.CHILD_T);
+        vis.array.setColor(index, HSColors.CHILD_T);
       }
     };
 
     const unhighlight = (vis, index, primaryColor = true) => {
       if (primaryColor) {
-        vis.heap.colorNode(index + 1, HSColors.HEAP_T);
+        vis.heap.myColorNode(index + 1, HSColors.HEAP_T);
       } else {
-        vis.heap.colorNode(index + 1, HSColors.HEAP_T);
+        vis.heap.myColorNode(index + 1, HSColors.HEAP_T);
       }
-     vis.array.selectColor(index, HSColors.HEAP_T);
+     vis.array.setColor(index, HSColors.HEAP_T);
     };
 
     const swapAction = (b, n1, n2) => {
@@ -157,8 +158,8 @@ export default {
         vis.array.assignVariable('k', index1);
         if (index1 === first) { // done the first time we reach here
           for (let l = index1 + 1; l <= max; l++) { // color leaves
-            vis.heap.colorNode(l + 1, HSColors.HEAP_T);
-            vis.array.selectColor(l, HSColors.HEAP_T);
+            vis.heap.myColorNode(l + 1, HSColors.HEAP_T);
+            vis.array.setColor(l, HSColors.HEAP_T);
           }
         }
         if (index2 != null) {
@@ -267,10 +268,46 @@ export default {
 
       chunker.add(22, (vis, index) => {
         unhighlight(vis, index, false);
-        vis.array.sorted(index);
-        vis.heap.removeNodeColor(index + 1);
-        vis.heap.sorted(index + 1);
 
+        // Somehow this code removes an edge. To be more accurate
+        // it does not remove an edge it somehow sets its display 
+        // CSS property to "none" (confirmed in dev tools), 
+        // I could not trace how. Consequence is that, for now, 
+        // using the new colour API for heapsort
+        // means that edges are not removed for heap sort. Ideally
+        // a setEdgeVisible should be called, otherwise it is very unclear.
+        // Does the below code even indicate an edge is removed? No, it does not.
+        // vis.array.sorted(index);
+        // vis.heap.removeNodeColor(index + 1);
+        // vis.heap.sorted(index + 1);
+        /*
+            ... edges logic in renderer index.js
+            <g
+                  className={classes(
+                    styles.edge,
+                    targetNode.sorted && styles.sorted, // Apply sorted class to edge if node has sorted marker
+                    ...
+            >
+
+            ... Renderer.scss
+            .edge {
+              &.sorted {
+                .line {
+                  stroke-width: 0; // make line invisible
+                }
+              }
+            }
+          
+          it truly is astounding some of the decisions that have been made. Setting
+          sorted flag ON A NODE does more than just colour a node, it makes the edge(s) connected
+          to it invisible. I wonder what other little hidden behaviours (that take me an hour to track down) 
+          markers can do!
+
+          There should be a dedicated visible flag for edges, edges must be made invisible and not removed
+          from the DOM because the layoutTree logic depends on them.
+        */
+        vis.array.setColor(index, HSColors.SORTED);
+        vis.heap.myColorNode(index + 1, HSColors.SORTED);
         vis.array.assignVariable('n', index - 1);
       }, [n - 1]);
       n -= 1;
@@ -333,9 +370,8 @@ export default {
       vis.array.clearVariables();
       // vis.array.deselect(0);
       unhighlight(vis, 0, true);
-      vis.array.sorted(0);
-      vis.heap.removeNodeColor(1);
-      vis.heap.sorted(1);
+      vis.array.setColor(0, HSColors.SORTED);
+      vis.heap.myColorNode(1, HSColors.SORTED);
     });
     // for test
     return A;
