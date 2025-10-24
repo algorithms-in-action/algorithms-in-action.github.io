@@ -666,7 +666,7 @@ class GraphRenderer extends Renderer {
                   <path
                     d={pathSvg}
                     style={{
-                      fill: color ? color : undefined,
+                      fill: undefined,
                       stroke: color ? color : undefined,
                     }}
                     className={classes(
