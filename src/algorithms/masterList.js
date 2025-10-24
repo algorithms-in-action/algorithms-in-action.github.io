@@ -4,11 +4,11 @@
 /*
  Use node AddNewAlgorithm.js to have the entry, files and export lines
  created for you.
-  
+
  Map from algorithm ID -> metadata used across the app.
 
  Explaining an entry by example:
- 
+
   isort: {
     name: 'Insertion Sort',
     category: 'Sort',
@@ -67,11 +67,13 @@
 
 // DO NOT DELETE/MODIFY THIS COMMENT
 //_MASTER_LIST_START_
+
 const algorithmMetadata = {
+  // === OLD INSERTION SORT (legacy) ===
   isort: {
-    name: 'Insertion Sort',
+    name: 'Insertion Sort (Legacy)',
     category: 'Sort',
-    noDeploy: false,
+    noDeploy: true,
     keywords: ['O(N^2)', 'O(N)', 'adaptive', 'comparison', 'stable'],
     explanationKey: 'isort',
     paramKey: 'isort',
@@ -79,6 +81,34 @@ const algorithmMetadata = {
     extraInfoKey: 'isort',
     pseudocode: { sort: 'isort' },
     controller: { sort: 'isort' },
+  },
+
+  // === NEW INSERTION SORT ===
+  insertionSort: {
+    name: 'Insertion Sort',
+    category: 'Sort',
+    noDeploy: false,
+    keywords: ['O(N^2)', 'O(N)', 'stable', 'adaptive', 'comparison'],
+    explanationKey: 'insertionSortExp',
+    paramKey: 'insertionSortParam',
+    instructionsKey: 'insertionSortInstruction',
+    extraInfoKey: 'insertionSortInfo',
+    pseudocode: { sort: 'insertionSort' },
+    controller: { sort: 'insertionSort' },
+  },
+
+  // === NEW SELECTION SORT ===
+  selectionSort: {
+    name: 'Selection Sort',
+    category: 'Sort',
+    noDeploy: false,
+    keywords: ['O(N^2)', 'selection', 'in-place'],
+    explanationKey: 'selectionSortExp',
+    paramKey: 'selectionSortParam',
+    instructionsKey: 'selectionSortInstruction',
+    extraInfoKey: 'selectionSortInfo',
+    pseudocode: { sort: 'selectionSort' },
+    controller: { sort: 'selectionSort' },
   },
 
   heapSort: {
@@ -121,7 +151,7 @@ const algorithmMetadata = {
   radixSortMSD: {
     name: 'MSD Radix Sort',
     category: 'Sort',
-    keywords: ['O(N)', 'exchange', 'partition', 'divide and conquer', 'bits', 'most significant digit'],
+    keywords: ['O(N)', 'exchange', 'partition', 'divide and conquer', 'bits'],
     explanationKey: 'MSDRadixSortExp',
     paramKey: 'MSDRadixSortParam',
     instructionsKey: 'RadixSortInstruction',
@@ -133,7 +163,7 @@ const algorithmMetadata = {
   radixSortStraight: {
     name: 'Straight Radix Sort',
     category: 'Sort',
-    keywords: ['O(N)', 'distribution', 'counting', 'digits', 'LSD', 'least significant digit', 'stable'],
+    keywords: ['O(N)', 'distribution', 'counting', 'digits', 'stable'],
     explanationKey: 'StraightRadixSortExp',
     paramKey: 'StraightRadixSortParam',
     instructionsKey: 'RadixSortInstruction',
@@ -171,7 +201,7 @@ const algorithmMetadata = {
   msort_arr_nat: {
     name: 'Merge Sort (natural)',
     category: 'Sort',
-    keywords: ['O(NlogN)', 'O(N)', 'comparison', 'stable', 'adaptive'],
+    keywords: ['O(NlogN)', 'adaptive', 'stable'],
     noDeploy: false,
     explanationKey: 'msort_arr_nat',
     paramKey: 'msort_arr_nat',
@@ -184,7 +214,7 @@ const algorithmMetadata = {
   msort_list_td: {
     name: 'Merge Sort (for lists)',
     category: 'Sort',
-    keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable', 'top down'],
+    keywords: ['O(NlogN)', 'stable', 'top down'],
     noDeploy: false,
     explanationKey: 'msort_list_td',
     paramKey: 'msort_list_td',
@@ -195,9 +225,9 @@ const algorithmMetadata = {
   },
 
   msort_lista_td: {
-    name: 'Merge Sort (lists as arrays)',
+    name: 'Merge Sort (for linked lists)',
     category: 'Sort',
-    keywords: ['O(NlogN)', 'comparison', 'divide and conquer', 'stable'],
+    keywords: ['O(NlogN)', 'stable', 'top down'],
     noDeploy: false,
     explanationKey: 'msort_lista_td',
     paramKey: 'msort_lista_td',
@@ -443,6 +473,40 @@ const algorithmMetadata = {
     controller: { find: 'gwrap' },
   },
 
+  convHullDC: {
+    name: "Convex Hull (divide and conquer)",
+    category: "Geometric",
+    noDeploy: false,
+    keywords: [
+      "O(NlogN)"
+    ],
+    explanationKey: "convHullDC",
+    paramKey: "convHullDC",
+    instructionsKey: "convHullDC",
+    extraInfoKey: "convHullDC",
+    pseudocode: {
+      "find": "convHullDCFind"
+    },
+    controller: {
+      "find": "convHullDCFind"
+    }
+  },
+
+  grahamScan: {
+    name: "Graham Scan (convex hull)",
+    category: "Geometric",
+    noDeploy: false,
+    keywords: [
+      "O(NlogN)"
+    ],
+    controller: { "find": "grahamScan_find"},
+    pseudocode: { "find": "grahamScan_find"},
+    paramKey: "grahamScan",
+    explanationKey: "grahamScan",
+    extraInfoKey: "grahamScan",
+    instructionsKey: "grahamScan"
+  },
+
   unionFind: {
     name: 'Union Find',
     category: 'Set',
@@ -484,55 +548,21 @@ const algorithmMetadata = {
     controller: { search: 'horspoolStringSearch' },
   },
 
-  "convHullDC": {
-    "name": "Convex Hull (divide and conquer)",
-    "category": "Geometric",
-    "noDeploy": false,
-    "keywords": [
-      "O(NlogN)"
-    ],
-    "explanationKey": "convHullDC",
-    "paramKey": "convHullDC",
-    "instructionsKey": "convHullDC",
-    "extraInfoKey": "convHullDC",
-    "pseudocode": {
-      "find": "convHullDCFind"
-    },
-    "controller": {
-      "find": "convHullDCFind"
-    }
-  },
-
-  "grahamScan": {
-    "name": "Graham Scan (convex hull)",
-    "category": "Geometric",
-    "noDeploy": false,
-    "keywords": [
-      "O(NlogN)"
-    ],
-    "controller": { "find": "grahamScan_find"},
-    "pseudocode": { "find": "grahamScan_find"},
-    "paramKey": "grahamScan",
-    "explanationKey": "grahamScan",
-    "extraInfoKey": "grahamScan",
-    "instructionsKey": "grahamScan"
-  },
-
-	"hsortNewColors": {
-    "name": "Heap Sort Alternate Colour API",
-    "category": "Insert/Search",
-    "noDeploy": true,
-    "keywords": [],
-    "controller": {
+  hsortNewColors: {
+    name: "Heap Sort Alternate Colour API",
+    category: "Insert/Search",
+    noDeploy: true,
+    keywords: [],
+    controller: {
       "sort": "hsortNewColors"
     },
-    "pseudocode": {
+    pseudocode: {
       "sort": "hsortNewColors"
     },
-    "paramKey": "hsortNewColors",
-    "explanationKey": "hsortNewColors",
-    "extraInfoKey": "hsortNewColors",
-    "instructionsKey": "hsortNewColors"
+    paramKey: "hsortNewColors",
+    explanationKey: "hsortNewColors",
+    extraInfoKey: "hsortNewColors",
+    instructionsKey: "hsortNewColors"
   },
 };
 //_MASTER_LIST_END_
@@ -601,10 +631,9 @@ const generateAlgorithmList = (deployOnly = false) => {
 
 export default algorithmMetadata;
 export const DeployedAlgorithmCategoryList = generateAlgorithmCategoryList(true);
-export const AlgorithmCategoryList = generateAlgorithmCategoryList(); 
+export const AlgorithmCategoryList = generateAlgorithmCategoryList();
 export const AlgorithmList = generateAlgorithmList();
 export const AlgorithmNum = generateAlgorithmList().length;
 export const visibleAlgorithmMetadata = Object.fromEntries(
-  Object.entries(algorithmMetadata).filter(([, v]) => !v.noDeploy)
+  Object.entries(algorithmMetadata).filter((a) => !a[1].noDeploy)
 );
-
