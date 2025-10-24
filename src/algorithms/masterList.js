@@ -233,8 +233,14 @@ const algorithmMetadata = {
     paramKey: 'BSTrec',
     instructionsKey: 'BSTrec',
     extraInfoKey: 'BSTrec',
-    pseudocode: { sort: 'BSTrec' },
-    controller: { sort: 'BSTrec' },
+    pseudocode: { 
+      insertion: 'BSTrecInsertion',
+      search: 'AVLTreeSearch',
+    },
+    controller: { 
+      insertion: 'BSTrecInsertion',
+      search: 'AVLTreeSearch', 
+    },
   },
 
   AVLTree: {

@@ -757,7 +757,7 @@ class GraphRenderer extends Renderer {
                 <text className={classes(styles.select_color)}
                   fontSize={30} // font size
                   x={left - 30 - (rectangles.length - 1 - i) * 10}    // font position
-                  y={top - 60 - (rectangles.length - 1 - i) * 10}
+                  y={top - 70 - (rectangles.length - 1 - i) * 10}
                   style={{ opacity: textOpacity }} // font opacity
                 >
                   {text}
@@ -766,10 +766,10 @@ class GraphRenderer extends Renderer {
                     styles.select_rect,
                     styles && styles.backgroundStyle
                   )}
-                  x={left - 40 - (rectangles.length - 1 - i) * 10} // x position 
-                  y={top - 50 - (rectangles.length - 1 - i) * 10} // y position 
-                  width={(rgt - left) + 80 + (rectangles.length - 1 - i) * 20} // width of the sub-rectangle 
-                  height={(btm - top) + 100 + (rectangles.length - 1 - i) * 20} // height of the sub-rectangle 
+                  x={left - 50 - (rectangles.length - 1 - i) * 10} // x position 
+                  y={top - 60 - (rectangles.length - 1 - i) * 10} // y position 
+                  width={(rgt - left) + 100 + (rectangles.length - 1 - i) * 20} // width of the sub-rectangle 
+                  height={(btm - top) + 120 + (rectangles.length - 1 - i) * 20} // height of the sub-rectangle 
                   style={{ opacity: rectOpacity }} // opacity
                 />
               </g>
@@ -920,8 +920,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Name */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 250}
+            x={+ 0}
+            y={+ 350}
             textAnchor="middle">
             <tspan className={styles.pseudocode_function}>
               {this.props.data.functionName}
@@ -931,8 +931,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Node */}
           <text className={classes(styles.text)}
-            x={+400}
-            y={-200}
+            x={- 100}
+            y={+ 400}
             textAnchor="middle">
             {functionNode != null && (
               <tspan className={styles.pseudocode_function}>
@@ -950,8 +950,8 @@ class GraphRenderer extends Renderer {
 
           {/* Function Balance */}
           <text className={classes(styles.text)}
-            x={+650}
-            y={-200}
+            x={+ 150}
+            y={+ 400}
             textAnchor="middle">
 
             {functionBalance != null && (functionBalance < -1 || functionBalance > 1) ? (
@@ -973,8 +973,8 @@ class GraphRenderer extends Renderer {
 
           {/* AVL Tree ID */}
           <text className={classes(styles.text)}
-            x={+ 530}
-            y={- 150}
+            x={+ 0}
+            y={+ 450}
             textAnchor="middle">
             {tagInfo}
           </text>
