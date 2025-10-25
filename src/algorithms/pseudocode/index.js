@@ -33,11 +33,11 @@ export { default as linearSearch } from './HashingLinearSearch';
 export { default as doubleSearch }from './HashingDoubleSearch';
 export { default as chainingSearch} from './HashingChainingSearch';
 export { default as isort} from './isort';
-export { default as BSTrec} from './BSTrec';
+export { default as BSTrecInsertion } from './BSTrecInsertion';
 export { default as msort_list_td} from './msort_list_td';
 export { default as gwrap} from './gwrap';
+export { default as insertionSort } from './insertionSort';
+export { default as selectionSort } from './selectionSort';
 export { default as convHullDCFind } from './convHullDCFind.js';
 export { default as grahamScan_find } from './grahamScan_find.js';
-
 export { default as hsortNewColors } from './hsortNewColors.js';
-

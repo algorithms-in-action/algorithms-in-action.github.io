@@ -188,11 +188,11 @@ export const DFSrecInstruction = graphInstructions;
 export const HashingLPDHInstruction = hashingInstructions;
 export const HashingCHInstruction = hashingInstructions;
 export const isort = sortInstructions;
-export const BSTrec = sortInstructions;
+export const BSTrec = bstInstructions;
 export const msort_list_td = sortInstructions;
 export const gwrap = graphInstructions; // XXX refine this?
+export const insertionSortInstruction = sortInstructions;
+export const selectionSortInstruction = sortInstructions;
 export const convHullDC = graphInstructions;
 export const grahamScan = graphInstructions;
-
 export const hsortNewColors = sortInstructions;
-

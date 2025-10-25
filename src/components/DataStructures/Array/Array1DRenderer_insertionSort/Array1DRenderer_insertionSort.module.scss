@@ -1,4 +1,4 @@
-@use "../../common/stylesheet/index" as *;
+@import "../../common/stylesheet/index";
 
 .array_1d {
     flex-shrink: 0;
@@ -87,6 +87,24 @@
                 vertical-align: text-top;
                 min-height: 60px;
             }
+        }
+
+        .gapCell {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 4px;
+            margin-right: 4px;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        .gapLabel {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 4px;
+            margin-right: 4px;
+            box-shadow: none !important;
+            outline: none !important;
         }
 
         .col { // column (within a row, ie an array element)
@@ -209,8 +227,7 @@
         .stackElement {
             display: grid;
             grid-auto-flow: row;
-            height: 1.2em;
-            position: relative;
+            height: 0.6em;
             transition-duration: 0.1s;
             margin-bottom: m#{i}n(1vh, 1em);
 

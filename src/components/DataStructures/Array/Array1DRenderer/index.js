@@ -28,6 +28,7 @@ import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 // Add your algo to this if you want to use the float box/popper
 const ALGOS_USING_FLOAT_BOX = ["MSDRadixSort", "straightRadixSort"];
+const STACK_GAP_PX = -50;
 
 let modename;
 function switchmode(modetype = mode()) {
@@ -238,7 +239,7 @@ class Array1DRenderer extends Array2DRenderer {
                       className={styles.row}
                       key={i}
                       style={{
-                        minHeight: '50px',
+                        minHeight: '0px',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'start',
@@ -270,7 +271,7 @@ class Array1DRenderer extends Array2DRenderer {
               {// Quicksort + MSD radix sort stuff
                 stack && stack.length > 0 ? (
                   this.maxStackDepth = Math.max(this.maxStackDepth, stackDepth),
-                  stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth)
+                  stackRenderer(stack, data[0].length, stackDepth, this.maxStackDepth, STACK_GAP_PX)
                 ) : (
                   <div />
                 )}
@@ -331,51 +332,75 @@ function stackFrameColour(color_index) {
  * @param {*} stackDepth
  * @returns
  */
-function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
+function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth, stackGapPx = 0) {
   if (!stack) {
     return <div />;
   }
+  
+  // Find the boundary information of the last row (bottom stack frame)
+  let lastRowBoundaries = null;
+  if (stack.length > 0) {
+    const lastRow = stack[stack.length - 1];
+    lastRowBoundaries = lastRow.map(item => ({
+      isLeftBoundary: item.isLeftBoundary,
+      isRightBoundary: item.isRightBoundary
+    }));
+  }
+  
   let stackItems = [];
   for (let i = 0; i < stack.length; i += 1) {
+    const isLastRow = (i === stack.length - 1);
+    
     stackItems.push(
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {stack[i].map(({ base, extra }, index) =>
-        (
-          <div
-            className={styles.stackElement}
-            style={{
-              width: `calc(100%/${nodeCount})`,
-              textAlign: 'center',
-              color: 'gray',
-              backgroundColor: stackFrameColour(base),
-            }}
-          >
-            {/* 
-                Stack Number Rendering:
-                - This JSX code renders corresponding numbers under the stack visualisation in 1D arrays, e.g., QuickSort.
-                - The feature is currently disabled. To re-enable:
-                  1. Uncomment the following JSX.
-                  2. Uncomment the `displayStackNumber` function in this file.
-                */}
-
-            {/* {(() => {
-              if (displayStackNumber(val, index, stack[i])) {
-                return <p style={{ fontSize: '13px' }}>{index}</p>;
-              }
-              return '';
-            })()} */}
-            {extra.map((extraColor) => (
-              <div
-                className={styles.stackSubElement}
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  backgroundColor: stackFrameColour(extraColor),
-                }}
-              />
-            ))}
-          </div>
-        )
+      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        {stack[i].map(({ base, extra, value, isLeftBoundary, isRightBoundary }, index) => {
+          return (
+            <div
+              className={styles.stackElement}
+              style={{
+                width: `calc(100%/${nodeCount})`,
+                minWidth: `calc(100%/${nodeCount})`,
+                maxWidth: `calc(100%/${nodeCount})`,
+                textAlign: 'center',
+                color: 'gray',
+                backgroundColor: stackFrameColour(base),
+                boxSizing: 'border-box',
+                // Add boundary styles
+                borderLeft: isLeftBoundary ? '2px solid black' : 
+                           (!isLastRow && lastRowBoundaries && lastRowBoundaries[index] && lastRowBoundaries[index].isLeftBoundary ? 
+                            `2px solid ${stackFrameColour(base)}` : 'none'),
+                borderRight: isRightBoundary ? '2px solid black' : 
+                            (!isLastRow && lastRowBoundaries && lastRowBoundaries[index] && lastRowBoundaries[index].isRightBoundary ? 
+                             `2px solid ${stackFrameColour(base)}` : 'none'),
+              }}
+            >
+              {/* Display values */}
+              {value !== undefined && (
+                <span style={{ 
+                  fontSize: '10px', 
+                  color: 'white',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}>
+                  {value}
+                </span>
+              )}
+              
+              {extra.map((extraColor) => (
+                <div
+                  className={styles.stackSubElement}
+                  style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    backgroundColor: stackFrameColour(extraColor),
+                  }}
+                />
+              ))}
+            </div>
+          );
+        }
         )}
       </div>,
     );
@@ -399,7 +424,7 @@ function stackRenderer(stack, nodeCount, stackDepth, maxStackDepth) {
   */
 
   return (
-    <div className={styles.stack}>
+    <div className={styles.stack} style={{ marginTop: stackGapPx }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         <p>
           {stack.length > 0 && stackDepth !== undefined ? `Current stack depth: ${stackDepth}` : ''}

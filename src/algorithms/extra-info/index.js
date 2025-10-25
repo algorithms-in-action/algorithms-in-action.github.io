@@ -27,8 +27,8 @@ export { default as isort} from './isort.md'
 export { default as BSTrec} from './BSTrec.md'
 export { default as msort_list_td} from './msort_list_td.md'
 export { default as gwrap} from './gwrap.md'
+export { default as insertionSortInfo } from './insertionSortInfo.md';
+export { default as selectionSortInfo } from './selectionSortInfo.md';
 export { default as convHullDC } from './convHullDC.md';
 export { default as grahamScan } from './grahamScan.md';
-
 export { default as hsortNewColors } from './hsortNewColors.md';
-

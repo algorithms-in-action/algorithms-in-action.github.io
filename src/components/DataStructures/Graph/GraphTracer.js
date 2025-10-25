@@ -1019,6 +1019,13 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // Pop all recursion stack (rectangle) of current graph
+  popAllRectStack() {
+    while (this.rectangles.length) {
+      this.rectangles.pop(); 
+    }
+  }
+
    // Add a node to each rectangle that contains a given parent
   addNodeToRectStack(nodeId, parentId) {
     if (this.rectangles && this.rectangles.length) {
