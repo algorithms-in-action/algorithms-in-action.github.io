@@ -109,41 +109,6 @@ function hideR(vis) {
   applyPointerTags(vis);
 }
 
-/* ------------------------------------------------------------------------------------------
-   Pointer COLOR helpers (keep pointer coloring = table coloring)
-   These rely on LinkedListTracer extra methods:
-   - setFillVariantByIndex(index, variantName)
-   - colorChainByVariant(startIndex, variantName, Tails)
-   - clearAllFillVariants()
-   ------------------------------------------------------------------------------------------ */
-
-/** Color an entire chain in pointer view by following Tails[] from startIndex. */
-function colorPointerChain(vis, startIndex, variantName, Lists) {
-  if (!startIndex || startIndex === 'Null') return;
-  vis.list.colorChainByVariant(startIndex, variantName, Lists[2]);
-}
-
-/** Color the merged portion [M .. E] (inclusive) in pointer view as green. */
-function colorPointerMerged(vis, M, E, Lists) {
-  if (!M || M === 'Null') return;
-  const T = Lists[2];
-  for (let i = M; i !== 'Null'; i = T[i]) {
-    vis.list.setFillVariantByIndex(i, ptrVariant.merged);
-    if (i === E) break;
-  }
-}
-
-/** Temporarily mark two heads (L and R) under comparison as red. */
-function colorPointerCompareHeads(vis, Lidx, Ridx) {
-  if (Lidx && Lidx !== 'Null') vis.list.setFillVariantByIndex(Lidx, ptrVariant.cmp);
-  if (Ridx && Ridx !== 'Null') vis.list.setFillVariantByIndex(Ridx, ptrVariant.cmp);
-}
-
-/** Reset all pointer capsule fills back to gray (use when entering a new phase). */
-function resetPointerColors(vis) {
-  vis.list.clearAllFillVariants();
-}
-
 /* ---------------------------------------------------------------------------------------- */
 
 function assignMaybeNullVar(vis, variable_name, index) {
@@ -208,14 +173,15 @@ export function run_msort() {
         vis.array.set(Lists, 'msort_lista_td');
 
         if (cur_depth > 0) {
-          hideAllNodes(vis);
-          showList(vis, cur_L, Lists);
+          // (replaced) hide/show via LinkedListTracer APIs
+          vis.list.hideAll();
+          vis.list.showChain(cur_L, Lists[2]);
         } else {
           // initialize pointer view
           vis.list.set(entire_num_array, 'mergeSort list init');
 
           // --- NEW: make all nodes gray at start ---
-          vis.list.colorChainByVariant(1, ptrVariant.def, Lists[2]);
+          vis.list.colorChain(1, ptrVariant.def, Lists[2]);
         }
 
         // table: L label & color
@@ -229,9 +195,9 @@ export function run_msort() {
         // table coloring (L orange)
         colorList(vis, cur_L, runAColor, Lists);
 
-        // pointer: reset + color L orange
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
+        // pointer: reset + color L orange (via API)
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
 
         set_simple_stack(vis.array, c_stk);
       }, [[Indices, Heads, Tails], L, len, depth, simple_stack], depth);
@@ -268,36 +234,19 @@ export function run_msort() {
         applyPointerTags(vis);
 
         vis.list.updateConnections(Lists[2]);
-        showList(vis, cur_L, Lists);
-        showList(vis, cur_R, Lists);
+        // (replaced) show both chains via API
+        vis.list.showChain(cur_L, Lists[2]);
+        vis.list.showChain(cur_R, Lists[2]);
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
 
         // pointer: paint L orange, R blue
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+        vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
       }, [[Indices, Heads, Tails], L, Mid, R, simple_stack], depth);
 
       return { L, R, Mid };
-    }
-
-    function moveRightHalfBelow(vis, leftStart, rightStart, Lists) {
-      if (rightStart === 'Null') return;
-      const T = Lists[2];
-      const VERTICAL_GAP = 60;
-      const leftKey = vis.list.indexToKey.get(leftStart);
-      const firstLeftNode = vis.list.nodes.get(leftKey);
-      const startX = firstLeftNode ? firstLeftNode.pos.x : 0;
-      const startY = firstLeftNode ? firstLeftNode.pos.y + VERTICAL_GAP : VERTICAL_GAP;
-      let xOffset = 0;
-      for (let i = rightStart; i !== 'Null'; i = T[i]) {
-        const key = vis.list.indexToKey.get(i);
-        if (key) {
-          vis.list.moveNodeTo(key, startX + xOffset, startY);
-          xOffset += vis.list.layout.gap;
-        }
-      }
     }
 
     function performRecursiveSort(L, R, midNum, len, depth) {
@@ -314,12 +263,11 @@ export function run_msort() {
 
         colorList(vis, cur_L, runAColor, Lists);
 
-        // pointer: reset then keep L=orange
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-
-        moveRightHalfBelow(vis, cur_L, cur_R, Lists);
-        hideList(vis, cur_R, Lists);
+        // pointer: reset then keep L=orange; move R below & hide R chain
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+        vis.list.moveChainBelow(cur_L, cur_R, Lists[2]);
+        vis.list.hideChain(cur_R, Lists[2]);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       L = MergeSort(L, midNum, depth + 1);
@@ -337,11 +285,10 @@ export function run_msort() {
         applyPointerTags(vis);
 
         colorList(vis, cur_L, runAColor, Lists);
-        showList(vis, cur_L, Lists);
-
-        // pointer: reset then L=orange
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
+        // (replaced) show L chain and color it
+        vis.list.showChain(cur_L, Lists[2]);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       // ----- focus on right half -----
@@ -357,12 +304,12 @@ export function run_msort() {
         applyPointerTags(vis);
 
         colorList(vis, cur_R, runBColor, Lists);
-        hideList(vis, cur_L, Lists);
-        showList(vis, cur_R, Lists);
+        // (replaced) hide L chain, show R chain and color it
+        vis.list.hideChain(cur_L, Lists[2]);
+        vis.list.showChain(cur_R, Lists[2]);
 
-        // pointer: reset then R=blue
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       R = MergeSort(R, len - midNum, depth + 1);
@@ -381,39 +328,16 @@ export function run_msort() {
 
         colorList(vis, cur_L, runAColor, Lists);
         colorList(vis, cur_R, runBColor, Lists);
-        showList(vis, cur_L, Lists);
-        showList(vis, cur_R, Lists);
+        // (replaced) show both chains and color them
+        vis.list.showChain(cur_L, Lists[2]);
+        vis.list.showChain(cur_R, Lists[2]);
 
-        // pointer: both chains visible with their colors
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+        vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
       return { L, R };
-    }
-
-    // ----- pointer-show/hide helpers -----
-    function hideAllNodes(vis) {
-      vis.list.nodes.forEach((node, key) => {
-        vis.list.hideByKey(key);
-      });
-    }
-    function hideList(vis, startIndex, Lists) {
-      if (startIndex === 'Null') return;
-      const T = Lists[2];
-      for (let i = startIndex; i !== 'Null'; i = T[i]) {
-        const key = vis.list.indexToKey.get(i);
-        if (key) vis.list.hideByKey(key);
-      }
-    }
-    function showList(vis, startIndex, Lists) {
-      if (startIndex === 'Null') return;
-      const T = Lists[2];
-      for (let i = startIndex; i !== 'Null'; i = T[i]) {
-        const key = vis.list.indexToKey.get(i);
-        if (key) vis.list.showByKey(key);
-      }
     }
 
     // ----- merge: choose M -----
@@ -428,10 +352,10 @@ export function run_msort() {
         vis.array.select(1, cur_R, 1, cur_R, apColor);
 
         // pointer: keep chain colors + mark heads red
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-        colorPointerCompareHeads(vis, cur_L, cur_R);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+        vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
+        vis.list.highlightHeads(cur_L, cur_R);
 
         syncVarToArray(vis, 'L', cur_L);
         syncVarToArray(vis, 'R', cur_R);
@@ -446,9 +370,9 @@ export function run_msort() {
           applyPointerTags(vis);
 
           // pointer: L orange, R blue, M green
-          colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-          colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-          vis.list.setFillVariantByIndex(cur_M, ptrVariant.merged);
+          vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+          vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
+          vis.list.colorMerged(cur_M, cur_M, Lists[2]);
         }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
 
         L = Tails[L];
@@ -466,9 +390,9 @@ export function run_msort() {
           applyPointerTags(vis);
 
           // pointer: L orange, R blue, M green
-          colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-          colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-          vis.list.setFillVariantByIndex(cur_M, ptrVariant.merged);
+          vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+          vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
+          vis.list.colorMerged(cur_M, cur_M, Lists[2]);
         }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
 
         R = Tails[R];
@@ -503,16 +427,17 @@ export function run_msort() {
         vis.array.select(1, cur_M, 1, cur_M, sortColor);
         vis.array.select(2, cur_M, 2, cur_M, sortColor);
 
-        showList(vis, cur_L, Lists);
-        showList(vis, cur_R, Lists);
-        showList(vis, cur_M, Lists);
+        // show chains and update connections
+        vis.list.showChain(cur_L, Lists[2]);
+        vis.list.showChain(cur_R, Lists[2]);
+        vis.list.showChain(cur_M, Lists[2]);
         vis.list.updateConnections(Lists[2]);
 
         // pointer: L orange, R blue, merged [M..E] green
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-        colorPointerMerged(vis, cur_M, cur_E, Lists);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+        vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
+        vis.list.colorMerged(cur_M, cur_E, Lists[2]);
       }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
 
       while (L !== 'Null' && R !== 'Null') {
@@ -528,113 +453,40 @@ export function run_msort() {
 
           colorList(vis, cur_L, runAColor, Lists);
           colorList(vis, cur_R, runBColor, Lists);
-          colorMergedList(vis, cur_M, cur_E, sortColor, Lists);
+          // merged portion in table
+          const T = Lists[2];
+          for (let i = cur_M; i !== cur_E; i = T[i]) {
+            vis.array.select(1, i, 1, i, sortColor);
+            vis.array.select(2, i, 2, i, sortColor);
+          }
+          if (cur_E !== 'Null') {
+            vis.array.select(1, cur_E, 1, cur_E, sortColor);
+            vis.array.select(2, cur_E, 2, cur_E, sortColor);
+          }
           vis.list.updateConnections(Lists[2]);
 
           // pointer: L orange, R blue, merged [M..E] green
-          resetPointerColors(vis);
-          colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-          colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-          colorPointerMerged(vis, cur_M, cur_E, Lists);
+          vis.list.resetColors();
+          vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
+          vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
+          vis.list.colorMerged(cur_M, cur_E, Lists[2]);
         }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
 
-        chunker.add('findSmaller', (vis, Lists, cur_L, cur_R, c_stk) => {
-          // table: compare heads = red
-          vis.array.deselect(1, cur_L);
-          vis.array.select(1, cur_L, 1, cur_L, apColor);
-          vis.array.deselect(1, cur_R);
-          vis.array.select(1, cur_R, 1, cur_R, apColor);
-
-          // pointer: keep chains then mark the two heads red
-          colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-          colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-          colorPointerCompareHeads(vis, cur_L, cur_R);
-        }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
-
+        // merge step logic (no visual change needed here beyond next frame)
         if (Heads[L] <= Heads[R]) {
-          Tails[E] = L;  E = L;  L = Tails[L];
-          addMergeVisualization('popL', L, R, M, E, depth);
+          Tails[E] = L; E = L; L = Tails[L];
         } else {
-          Tails[E] = R;  E = R;  R = Tails[R];
-          addMergeVisualization('popR', L, R, M, E, depth);
+          Tails[E] = R; E = R; R = Tails[R];
         }
       }
 
       if (L === 'Null') {
         Tails[E] = R;
-        addFinalVisualization('appendR', M, depth);
       } else {
         Tails[E] = L;
-        addFinalVisualization('appendL', M, depth);
       }
 
       return M;
-    }
-
-    function colorMergedList(vis, cur_M, cur_E, color, Lists) {
-      const T = Lists[2];
-      for (let i = cur_M; i !== cur_E; i = T[i]) {
-        vis.array.select(1, i, 1, i, color);
-        vis.array.select(2, i, 2, i, color);
-      }
-      if (cur_E !== 'Null') {
-        vis.array.select(1, cur_E, 1, cur_E, color);
-        vis.array.select(2, cur_E, 2, cur_E, color);
-      }
-    }
-
-    function addMergeVisualization(stepName, L, R, M, E, depth) {
-      chunker.add(stepName, (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
-
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'R', cur_R);
-        syncVarToArray(vis, 'M', cur_M);
-        syncVarToArray(vis, 'E', cur_E);
-        applyPointerTags(vis);
-
-        colorList(vis, cur_L, runAColor, Lists);
-        colorList(vis, cur_R, runBColor, Lists);
-        colorMergedList(vis, cur_M, cur_E, sortColor, Lists);
-        vis.list.updateConnections(Lists[2]);
-
-        // pointer: L orange, R blue, merged [M..E] green
-        resetPointerColors(vis);
-        colorPointerChain(vis, cur_L, ptrVariant.runA, Lists);
-        colorPointerChain(vis, cur_R, ptrVariant.runB, Lists);
-        colorPointerMerged(vis, cur_M, cur_E, Lists);
-      }, [[Indices, Heads, Tails], L, R, M, E, simple_stack], depth);
-    }
-
-    function addFinalVisualization(stepName, M, depth) {
-      chunker.add(stepName, (vis, Lists, cur_M, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
-
-        // Only keep M in both views
-        syncVarToArray(vis, 'L', undefined);
-        syncVarToArray(vis, 'R', undefined);
-        syncVarToArray(vis, 'E', undefined);
-        syncVarToArray(vis, 'Mid', undefined);
-        syncVarToArray(vis, 'M', cur_M);
-        hideR(vis);
-        applyPointerTags(vis);
-
-        colorList(vis, cur_M, sortColor, Lists);
-        vis.list.updateConnections(Lists[2]);
-
-        // pointer: at least M is green
-        resetPointerColors(vis);
-        colorPointerMerged(vis, cur_M, cur_M, Lists);
-      }, [[Indices, Heads, Tails], M, simple_stack], depth);
-    }
-
-    function colorSingleNodePointer(vis, index, color) {
-      if (index === 'Null') return;
-      const map = { [apColor]: '2' }; // apColor -> selected2 (red outline)
-      const state = map[color] || '2';
-      vis.list.selectByIndex(index, state);
     }
 
     function MergeSort(L, len, depth) {
@@ -660,12 +512,13 @@ export function run_msort() {
           applyPointerTags(vis);
 
           colorList(vis, cur_M, sortColor, Lists);
-          repositionMergedList(vis, cur_M, Lists, cur_depth);
-          vis.list.updateConnections(Lists[2]);
 
-          // pointer: entire merged chain green
-          resetPointerColors(vis);
-          colorPointerChain(vis, cur_M, ptrVariant.merged, Lists);
+          // pointer: entire merged chain green + reposition nicely
+          vis.list.resetColors();
+          vis.list.colorChain(cur_M, ptrVariant.merged, Lists[2]);
+          vis.list.repositionMergedChain(cur_M, Lists[2]);
+
+          vis.list.updateConnections(Lists[2]);
         }, [[Indices, Heads, Tails], newL, mergedList, simple_stack, depth], depth);
 
         simple_stack.shift();
@@ -681,33 +534,13 @@ export function run_msort() {
           vis.array.select(2, cur_L, 2, cur_L, '1');
 
           // pointer: single element considered placed (green)
-          resetPointerColors(vis);
-          vis.list.setFillVariantByIndex(cur_L, ptrVariant.merged);
+          vis.list.resetColors();
+          vis.list.colorMerged(cur_L, cur_L, Tails);
         }, [A, L], depth);
 
         simple_stack.shift();
         return L;
       }
-    }
-
-    function repositionMergedList(vis, startIndex, Lists, depth) {
-      if (startIndex === 'Null') return;
-      const T = Lists[2];
-      const mergedNodes = [];
-      for (let i = startIndex; i !== 'Null'; i = T[i]) {
-        const key = vis.list.indexToKey.get(i);
-        if (key) mergedNodes.push({ index: i, key, node: vis.list.nodes.get(key) });
-      }
-      if (mergedNodes.length === 0) return;
-
-      const leftmostX = Math.min(...mergedNodes.map(n => n.node.pos.x));
-      const averageY = mergedNodes.reduce((s, n) => s + n.node.pos.y, 0) / mergedNodes.length;
-      const NODE_GAP = 65;
-
-      mergedNodes.forEach((item, position) => {
-        const newX = leftmostX + (position * NODE_GAP);
-        vis.list.moveNodeTo(item.key, newX, averageY);
-      });
     }
 
     // ---- main ----

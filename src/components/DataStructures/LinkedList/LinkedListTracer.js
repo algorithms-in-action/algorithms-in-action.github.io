@@ -403,6 +403,121 @@ class LinkedListTracer extends Tracer {
     n.sorted = false;
     super.set();
   }
+
+  // -----------------------------------------------------------------------------
+  // Linked List APIs
+  // -----------------------------------------------------------------------------
+  /**
+ * Reset all node color variants back to gray.
+ */
+  resetColors() {
+    this.clearAllFillVariants();
+  }
+
+  /**
+   * Color an entire linked list chain starting at `startIndex`
+   * using a variant name ('orange' | 'blue' | 'green' | 'red' | 'gray').
+   */
+  colorChain(startIndex, variant = 'gray', tailsArray = []) {
+    if (!startIndex || startIndex === 'Null') return;
+    this.colorChainByVariant(startIndex, variant, tailsArray);
+  }
+
+  /**
+   * Color a merged portion of the list from M to E (inclusive) in green.
+   */
+  colorMerged(M, E, tailsArray = []) {
+    if (!M || M === 'Null') return;
+    const T = tailsArray;
+    for (let i = M; i !== 'Null'; i = T[i]) {
+      this.setFillVariantByIndex(i, 'green');
+      if (i === E) break;
+    }
+  }
+
+  /**
+   * Highlight two comparison heads (L and R) in red while
+   * keeping their chains colored.
+   */
+  highlightHeads(Lidx, Ridx) {
+    if (Lidx && Lidx !== 'Null') this.setFillVariantByIndex(Lidx, 'red');
+    if (Ridx && Ridx !== 'Null') this.setFillVariantByIndex(Ridx, 'red');
+  }
+
+  /**
+   * Hide all nodes in the linked list visualization.
+   */
+  hideAll() {
+    for (const key of this.nodes.keys()) this.hideByKey(key);
+  }
+
+  /**
+   * Hide every node reachable from a starting index.
+   */
+  hideChain(startIndex, tailsArray = []) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) this.hideByKey(key);
+    }
+  }
+
+  /**
+   * Show every node reachable from a starting index.
+   */
+  showChain(startIndex, tailsArray = []) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) this.showByKey(key);
+    }
+  }
+
+  /**
+   * Move a chain (starting at rightStart) below another chain (leftStart).
+   * Used to visualize the recursive split of the list.
+   */
+  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 60) {
+    if (!rightStart || rightStart === 'Null') return;
+    const T = tailsArray;
+    const leftKey = this.indexToKey.get(leftStart);
+    const firstLeft = this.nodes.get(leftKey);
+    const startX = firstLeft ? firstLeft.pos.x : 0;
+    const startY = firstLeft ? firstLeft.pos.y + verticalGap : verticalGap;
+    let xOffset = 0;
+
+    for (let i = rightStart; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) {
+        this.moveNodeTo(key, startX + xOffset, startY);
+        xOffset += this.layout.gap;
+      }
+    }
+  }
+
+  /**
+   * Reposition all nodes in a merged chain horizontally with equal gaps,
+   * maintaining average vertical alignment.
+   */
+  repositionMergedChain(startIndex, tailsArray = [], gap = 65) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+    const merged = [];
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) merged.push({ key, node: this.nodes.get(key) });
+    }
+    if (!merged.length) return;
+
+    const leftmostX = Math.min(...merged.map(n => n.node.pos.x));
+    const avgY = merged.reduce((s, n) => s + n.node.pos.y, 0) / merged.length;
+
+    merged.forEach((item, idx) => {
+      this.moveNodeTo(item.key, leftmostX + idx * gap, avgY);
+    });
+  }
 }
 
 export default LinkedListTracer;
