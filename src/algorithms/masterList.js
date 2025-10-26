@@ -71,9 +71,9 @@
 const algorithmMetadata = {
   // === OLD INSERTION SORT (legacy) ===
   isort: {
-    name: 'Insertion Sort (Legacy)',
+    name: 'Insertion Sort (improved)',
     category: 'Sort',
-    noDeploy: true,
+    noDeploy: false,
     keywords: ['O(N^2)', 'O(N)', 'adaptive', 'comparison', 'stable'],
     explanationKey: 'isort',
     paramKey: 'isort',
