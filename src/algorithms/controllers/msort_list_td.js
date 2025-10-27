@@ -549,12 +549,19 @@ export function run_msort() {
 
     // Final: color all table cells as done
     let lastLine = (entire_num_array.length > 1 ? 'returnM' : 'returnL');
+
     chunker.add(lastLine, (vis, a) => {
       for (let i = 1; i <= entire_num_array.length; i++) {
         vis.array.select(1, i, 1, i, doneColor);
         vis.array.select(2, i, 2, i, doneColor);
       }
     }, [A], 1);
+
+    // color all pointer nodes as done
+    chunker.add(lastLine, (vis, Lists) => {
+      vis.list.resetColors();
+      vis.list.colorChain(1, ptrVariant.def, Lists[2]);
+    }, [[Indices, Heads, Tails]], 1);
 
     return msresult;
   }
