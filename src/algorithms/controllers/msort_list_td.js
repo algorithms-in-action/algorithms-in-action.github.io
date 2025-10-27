@@ -547,21 +547,16 @@ export function run_msort() {
     initializeListStructure();
     const msresult = MergeSort(1, entire_num_array.length, 0);
 
-    // Final: color all table cells as done
+    // Final: color all table cells and pointer nodes as done
     let lastLine = (entire_num_array.length > 1 ? 'returnM' : 'returnL');
 
     chunker.add(lastLine, (vis, a) => {
       for (let i = 1; i <= entire_num_array.length; i++) {
         vis.array.select(1, i, 1, i, doneColor);
         vis.array.select(2, i, 2, i, doneColor);
+        vis.list.resetColors();
       }
     }, [A], 1);
-
-    // color all pointer nodes as done
-    chunker.add(lastLine, (vis, Lists) => {
-      vis.list.resetColors();
-      vis.list.colorChain(1, ptrVariant.def, Lists[2]);
-    }, [[Indices, Heads, Tails]], 1);
 
     return msresult;
   }
