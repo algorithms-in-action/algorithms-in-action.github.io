@@ -30,7 +30,19 @@ let Tails;        // ['i.tail (next)', ...]
 let simple_stack; // call stack text
 
 // Target visibility table: which tag should be visible where (index or undefined)
+// NOTE: desiredTags is the single source of truth for tag positions across BOTH views.
 const desiredTags = { L: undefined, R: undefined, M: undefined, E: undefined, Mid: undefined };
+
+// ---- NEW: Linked-list-only tag control ----
+// We keep array tags for now, but LL tag assignment must work even if array is removed later.
+let __currentVis = null; // holds the latest vis object for applyPointerTags
+function setCurrentVis(vis) { __currentVis = vis; }
+
+// Pointer-only tag assign helper (independent of array). Safe to call alongside syncVarToArray.
+function setTag(name, idx) {
+  desiredTags[name] = (idx === 'Null' || idx === undefined) ? undefined : idx;
+  if (__currentVis) applyPointerTags(__currentVis);
+}
 
 const run = run_msort();
 
@@ -51,28 +63,34 @@ function isRecursionExpanded() {
 
 // Remove a tag from both views
 function removeTagEverywhere(vis, name) {
-  vis.array.assignVariable(name, 2, undefined);
-  vis.array.assignVariable(name + '=Null', 2, undefined);
+  // table side
+  //vis.array.assignVariable(name, 2, undefined);
+  //vis.array.assignVariable(name + '=Null', 2, undefined);
+  // pointer side
   vis.list.nodes.forEach(node => {
     node.variables = node.variables.filter(v => v !== name && v !== (name + '=Null'));
   });
 }
 
 // Sync tag position in the table; also update desiredTags for pointer stacked badges
-function syncVarToArray(vis, name, idx, { showEqualNull = false } = {}) {
+// IMPORTANT: We KEEP desiredTags update so that table-only calls still reflect in LL when
+// the pointer-only helper is not used. In this refactor we will call BOTH setTag() and
+// syncVVarToArray() so either system can be removed independently later.
+/* function syncVarToArray(vis, name, idx, { showEqualNull = false } = {}) {
   if (idx === 'Null' || idx === undefined) {
-    vis.array.assignVariable(name, 2, undefined);
+    //vis.array.assignVariable(name, 2, undefined);
     if (showEqualNull && idx === 'Null') {
-      vis.array.assignVariable(name + '=Null', 2, 0);
+      //vis.array.assignVariable(name + '=Null', 2, 0);
     } else {
-      vis.array.assignVariable(name + '=Null', 2, undefined);
+      //vis.array.assignVariable(name + '=Null', 2, undefined);
     }
   } else {
-    vis.array.assignVariable(name, 2, idx);
-    vis.array.assignVariable(name + '=Null', 2, undefined);
+    //vis.array.assignVariable(name, 2, idx);
+    //vis.array.assignVariable(name + '=Null', 2, undefined);
   }
+  // Keep desiredTags in sync so both systems agree (harmlessly redundant for now).
   desiredTags[name] = (idx === 'Null' || idx === undefined) ? undefined : idx;
-}
+} */
 
 // Write stacked badges in pointer view so multiple tags on the same node won't overlap
 function applyPointerTags(vis) {
@@ -109,26 +127,26 @@ function hideR(vis) {
   applyPointerTags(vis);
 }
 
-const set_simple_stack = (vis_array, c_stk) => {
-  if (isRecursionExpanded()) vis_array.setList(c_stk);
-};
+//const //set_simple_stack = (vis_array, c_stk) => {if (isRecursionExpanded()) vis_array.setList(c_stk);};
+
+const set_simple_stack = (vis_array, c_stk) => { /* array UI disabled */ };
 
 // Table coloring (follow Tails)
-function colorList(vis, startIndex, color, Lists) {
+/* function //colorList(vis, startIndex, color, Lists) {
   const T = Lists[2];
   for (let i = startIndex; i !== 'Null'; i = T[i]) {
-    vis.array.select(1, i, 1, i, color);
-    vis.array.select(2, i, 2, i, color);
+    //vis.array.select(1, i, 1, i, color);
+    //vis.array.select(2, i, 2, i, color);
   }
-}
+} */
 
 // ---------- Init both visualizers ----------
 export function initVisualisers() {
   return {
-    array: {
+    /* array: {
       instance: new Array2DTracer('array', null, 'Array representation of linked list (Expand all code to see full animation)'),
       order: 1,
-    },
+    }, */
     list: {
       instance: new LinkedListTracer('list', null, 'Pointer representation of linked list (Expand all code to see full animation)'),
       order: 0,
@@ -158,7 +176,8 @@ export function run_msort() {
       simple_stack.unshift('([' + Heads[L] + '..],' + len + ')');
 
       chunker.add('Main', (vis, Lists, cur_L, cur_len, cur_depth, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
+        setCurrentVis(vis); // keep vis available for tag rendering
+        //vis.array.set(Lists, 'msort_lista_td');
 
         if (cur_depth > 0) {
           // (replaced) hide/show via LinkedListTracer APIs
@@ -173,24 +192,30 @@ export function run_msort() {
         }
 
         // table: L label & color
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'R', undefined);
-        syncVarToArray(vis, 'M', undefined);
-        syncVarToArray(vis, 'E', undefined);
-        syncVarToArray(vis, 'Mid', undefined);
+        //syncVarToArray(vis, 'L', cur_L);
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'R', undefined);
+        setTag('R', undefined);
+        //syncVarToArray(vis, 'M', undefined);
+        setTag('M', undefined);
+        //syncVarToArray(vis, 'E', undefined);
+        setTag('E', undefined);
+        //syncVarToArray(vis, 'Mid', undefined);
+        setTag('Mid', undefined);
         applyPointerTags(vis);
 
         // table coloring (L orange)
-        colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
 
         // pointer: reset + color L orange (via API)
         vis.list.resetColors();
         vis.list.colorChain(cur_L, ptrVariant.runA, Lists[2]);
 
-        set_simple_stack(vis.array, c_stk);
+        //set_simple_stack(//vis.array, c_stk);
       }, [[Indices, Heads, Tails], L, len, depth, simple_stack], depth);
 
       chunker.add('len>1', (vis, Lists, cur_L, cur_len) => {
+        setCurrentVis(vis);
         // base-case check only
       }, [[Indices, Heads, Tails], L, len], depth);
     }
@@ -200,9 +225,10 @@ export function run_msort() {
       let Mid = L;
 
       chunker.add('Mid', (vis, Lists, cur_L, cur_Mid, c_stk) => {
-        syncVarToArray(vis, 'Mid', cur_Mid);
+        setCurrentVis(vis);
+        //syncVarToArray(vis, 'Mid', cur_Mid);
+        setTag('Mid', cur_Mid);
         applyPointerTags(vis);
-        vis.list.colorChain(cur_L, ptrVariant.def, Lists[2]);
       }, [[Indices, Heads, Tails], L, Mid, simple_stack], depth);
 
       for (let i = 1; i < midNum; i++) Mid = Tails[Mid];
@@ -211,23 +237,29 @@ export function run_msort() {
       Tails[Mid] = 'Null';
 
       chunker.add('tail(Mid)<-Null', (vis, Lists, cur_L, cur_Mid, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        setCurrentVis(vis);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
         // table tags & colors
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'Mid', cur_Mid);
-        syncVarToArray(vis, 'R', cur_R);
-        syncVarToArray(vis, 'M', undefined);
-        syncVarToArray(vis, 'E', undefined);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'Mid', cur_Mid); 
+        setTag('Mid', cur_Mid);
+        //syncVarToArray(vis, 'R', cur_R); 
+        setTag('R', cur_R);
+        //syncVarToArray(vis, 'M', undefined); 
+        setTag('M', undefined);
+        //syncVarToArray(vis, 'E', undefined); 
+        setTag('E', undefined);
         applyPointerTags(vis);
 
         vis.list.updateConnections(Lists[2]);
         // (replaced) show both chains via API
         vis.list.showChain(cur_L, Lists[2]);
         vis.list.showChain(cur_R, Lists[2]);
-        colorList(vis, cur_L, runAColor, Lists);
-        colorList(vis, cur_R, runBColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_R, runBColor, Lists);
 
         // pointer: paint L orange, R blue
         vis.list.resetColors();
@@ -241,16 +273,19 @@ export function run_msort() {
     function performRecursiveSort(L, R, midNum, len, depth) {
       // ----- focus on left half -----
       chunker.add('preSortL', (vis, Lists, cur_L, cur_R, c_stk) => {
-        syncVarToArray(vis, 'Mid', undefined);
+        setCurrentVis(vis);
+        //syncVarToArray(vis, 'Mid', undefined); 
+        setTag('Mid', undefined);
         hideR(vis);
 
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
-        syncVarToArray(vis, 'L', cur_L);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
         applyPointerTags(vis);
 
-        colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
 
         // pointer: reset then keep L=orange; move R below & hide R chain
         vis.list.resetColors();
@@ -263,17 +298,22 @@ export function run_msort() {
 
       // ----- left done -----
       chunker.add('sortL', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        setCurrentVis(vis);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
         hideR(vis);
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'Mid', undefined);
-        syncVarToArray(vis, 'M', undefined);
-        syncVarToArray(vis, 'E', undefined);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'Mid', undefined); 
+        setTag('Mid', undefined);
+        //syncVarToArray(vis, 'M', undefined); 
+        setTag('M', undefined);
+        //syncVarToArray(vis, 'E', undefined); 
+        setTag('E', undefined);
         applyPointerTags(vis);
 
-        colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
         // (replaced) show L chain and color it
         vis.list.showChain(cur_L, Lists[2]);
         vis.list.resetColors();
@@ -282,17 +322,23 @@ export function run_msort() {
 
       // ----- focus on right half -----
       chunker.add('preSortR', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        setCurrentVis(vis);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
-        syncVarToArray(vis, 'Mid', undefined);
-        syncVarToArray(vis, 'L', undefined);
-        syncVarToArray(vis, 'R', cur_R);
-        syncVarToArray(vis, 'M', undefined);
-        syncVarToArray(vis, 'E', undefined);
+        //syncVarToArray(vis, 'Mid', undefined); 
+        setTag('Mid', undefined);
+        //syncVarToArray(vis, 'L', undefined); 
+        setTag('L', undefined);
+        //syncVarToArray(vis, 'R', cur_R); 
+        setTag('R', cur_R);
+        //syncVarToArray(vis, 'M', undefined); 
+        setTag('M', undefined);
+        //syncVarToArray(vis, 'E', undefined); 
+        setTag('E', undefined);
         applyPointerTags(vis);
 
-        colorList(vis, cur_R, runBColor, Lists);
+        //colorList(vis, cur_R, runBColor, Lists);
         // (replaced) hide L chain, show R chain and color it
         vis.list.hideChain(cur_L, Lists[2]);
         vis.list.showChain(cur_R, Lists[2]);
@@ -305,18 +351,24 @@ export function run_msort() {
 
       // ----- right done -----
       chunker.add('sortR', (vis, Lists, cur_L, cur_R, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        setCurrentVis(vis);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'R', cur_R);
-        syncVarToArray(vis, 'Mid', undefined);
-        syncVarToArray(vis, 'M', undefined);
-        syncVarToArray(vis, 'E', undefined);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'R', cur_R); 
+        setTag('R', cur_R);
+        //syncVarToArray(vis, 'Mid', undefined); 
+        setTag('Mid', undefined);
+        //syncVarToArray(vis, 'M', undefined); 
+        setTag('M', undefined);
+        //syncVarToArray(vis, 'E', undefined); 
+        setTag('E', undefined);
         applyPointerTags(vis);
 
-        colorList(vis, cur_L, runAColor, Lists);
-        colorList(vis, cur_R, runBColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_R, runBColor, Lists);
         // (replaced) show both chains and color them
         vis.list.showChain(cur_L, Lists[2]);
         vis.list.showChain(cur_R, Lists[2]);
@@ -334,11 +386,12 @@ export function run_msort() {
       let M;
 
       chunker.add('compareHeads', (vis, Lists, cur_L, cur_R, c_stk) => {
+        setCurrentVis(vis);
         // table: mark heads red
-        vis.array.deselect(1, cur_L);
-        vis.array.select(1, cur_L, 1, cur_L, apColor);
-        vis.array.deselect(1, cur_R);
-        vis.array.select(1, cur_R, 1, cur_R, apColor);
+        //vis.array.deselect(1, cur_L);
+        //vis.array.select(1, cur_L, 1, cur_L, apColor);
+        //vis.array.deselect(1, cur_R);
+        //vis.array.select(1, cur_R, 1, cur_R, apColor);
 
         // pointer: keep chain colors + mark heads red
         vis.list.resetColors();
@@ -346,8 +399,10 @@ export function run_msort() {
         vis.list.colorChain(cur_R, ptrVariant.runB, Lists[2]);
         vis.list.highlightHeads(cur_L, cur_R);
 
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'R', cur_R);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'R', cur_R); 
+        setTag('R', cur_R);
         applyPointerTags(vis);
       }, [[Indices, Heads, Tails], L, R, simple_stack], depth);
 
@@ -355,7 +410,9 @@ export function run_msort() {
         M = L;
 
         chunker.add('M<-L', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
-          syncVarToArray(vis, 'M', cur_M);
+          setCurrentVis(vis);
+          //syncVarToArray(vis, 'M', cur_M); 
+          setTag('M', cur_M);
           applyPointerTags(vis);
 
           // pointer: L orange, R blue, M green
@@ -367,7 +424,9 @@ export function run_msort() {
         L = Tails[L];
 
         chunker.add('L<-tail(L)', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
-          syncVarToArray(vis, 'L', cur_L);
+          setCurrentVis(vis);
+          //syncVarToArray(vis, 'L', cur_L); 
+          setTag('L', cur_L);
           applyPointerTags(vis);
         }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
 
@@ -375,7 +434,9 @@ export function run_msort() {
         M = R;
 
         chunker.add('M<-R', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
-          syncVarToArray(vis, 'M', cur_M);
+          setCurrentVis(vis);
+          //syncVarToArray(vis, 'M', cur_M); 
+          setTag('M', cur_M);
           applyPointerTags(vis);
 
           // pointer: L orange, R blue, M green
@@ -387,7 +448,9 @@ export function run_msort() {
         R = Tails[R];
 
         chunker.add('R<-tail(R)', (vis, Lists, cur_L, cur_R, cur_M, c_stk) => {
-          syncVarToArray(vis, 'R', cur_R);
+          setCurrentVis(vis);
+          //syncVarToArray(vis, 'R', cur_R); 
+          setTag('R', cur_R);
           applyPointerTags(vis);
         }, [[Indices, Heads, Tails], L, R, M, simple_stack], depth);
       }
@@ -401,20 +464,25 @@ export function run_msort() {
 
       // seed E=M frame
       chunker.add('E', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-        vis.array.set(Lists, 'msort_lista_td');
-        set_simple_stack(vis.array, c_stk);
+        setCurrentVis(vis);
+        //vis.array.set(Lists, 'msort_lista_td');
+        //set_simple_stack(//vis.array, c_stk);
 
-        syncVarToArray(vis, 'L', cur_L);
-        syncVarToArray(vis, 'R', cur_R);
-        syncVarToArray(vis, 'M', cur_M);
-        syncVarToArray(vis, 'E', cur_E);
+        //syncVarToArray(vis, 'L', cur_L); 
+        setTag('L', cur_L);
+        //syncVarToArray(vis, 'R', cur_R); 
+        setTag('R', cur_R);
+        //syncVarToArray(vis, 'M', cur_M); 
+        setTag('M', cur_M);
+        //syncVarToArray(vis, 'E', cur_E); 
+        setTag('E', cur_E);
         applyPointerTags(vis);
 
-        colorList(vis, cur_L, runAColor, Lists);
-        colorList(vis, cur_R, runBColor, Lists);
+        //colorList(vis, cur_L, runAColor, Lists);
+        //colorList(vis, cur_R, runBColor, Lists);
 
-        vis.array.select(1, cur_M, 1, cur_M, sortColor);
-        vis.array.select(2, cur_M, 2, cur_M, sortColor);
+        //vis.array.select(1, cur_M, 1, cur_M, sortColor);
+        //vis.array.select(2, cur_M, 2, cur_M, sortColor);
 
         // show chains and update connections
         vis.list.showChain(cur_L, Lists[2]);
@@ -431,26 +499,31 @@ export function run_msort() {
 
       while (L !== 'Null' && R !== 'Null') {
         chunker.add('whileNotNull', (vis, Lists, cur_L, cur_R, cur_M, cur_E, c_stk) => {
-          vis.array.set(Lists, 'msort_lista_td');
-          set_simple_stack(vis.array, c_stk);
+          setCurrentVis(vis);
+          //vis.array.set(Lists, 'msort_lista_td');
+          //set_simple_stack(//vis.array, c_stk);
 
-          syncVarToArray(vis, 'L', cur_L);
-          syncVarToArray(vis, 'R', cur_R);
-          syncVarToArray(vis, 'M', cur_M);
-          syncVarToArray(vis, 'E', cur_E);
+          //syncVarToArray(vis, 'L', cur_L); 
+          setTag('L', cur_L);
+          //syncVarToArray(vis, 'R', cur_R); 
+          setTag('R', cur_R);
+          //syncVarToArray(vis, 'M', cur_M); 
+          setTag('M', cur_M);
+          //syncVarToArray(vis, 'E', cur_E); 
+          setTag('E', cur_E);
           applyPointerTags(vis);
 
-          colorList(vis, cur_L, runAColor, Lists);
-          colorList(vis, cur_R, runBColor, Lists);
+          //colorList(vis, cur_L, runAColor, Lists);
+          //colorList(vis, cur_R, runBColor, Lists);
           // merged portion in table
           const T = Lists[2];
           for (let i = cur_M; i !== cur_E; i = T[i]) {
-            vis.array.select(1, i, 1, i, sortColor);
-            vis.array.select(2, i, 2, i, sortColor);
+            //vis.array.select(1, i, 1, i, sortColor);
+            //vis.array.select(2, i, 2, i, sortColor);
           }
           if (cur_E !== 'Null') {
-            vis.array.select(1, cur_E, 1, cur_E, sortColor);
-            vis.array.select(2, cur_E, 2, cur_E, sortColor);
+            //vis.array.select(1, cur_E, 1, cur_E, sortColor);
+            //vis.array.select(2, cur_E, 2, cur_E, sortColor);
           }
           vis.list.updateConnections(Lists[2]);
 
@@ -489,18 +562,24 @@ export function run_msort() {
         const mergedList = mergeRemainingElements(remainingL, remainingR, M, depth);
 
         chunker.add('returnM', (vis, Lists, cur_L, cur_M, c_stk, cur_depth) => {
-          vis.array.set(Lists, 'msort_lista_td');
-          set_simple_stack(vis.array, c_stk);
+          setCurrentVis(vis);
+          //vis.array.set(Lists, 'msort_lista_td');
+          //set_simple_stack(//vis.array, c_stk);
 
-          syncVarToArray(vis, 'L', undefined);
-          syncVarToArray(vis, 'R', undefined);
-          syncVarToArray(vis, 'E', undefined);
-          syncVarToArray(vis, 'Mid', undefined);
-          syncVarToArray(vis, 'M', cur_M);
+          //syncVarToArray(vis, 'L', undefined); 
+          setTag('L', undefined);
+          //syncVarToArray(vis, 'R', undefined); 
+          setTag('R', undefined);
+          //syncVarToArray(vis, 'E', undefined); 
+          setTag('E', undefined);
+          //syncVarToArray(vis, 'Mid', undefined); 
+          setTag('Mid', undefined);
+          //syncVarToArray(vis, 'M', cur_M); 
+          setTag('M', cur_M);
           hideR(vis);
           applyPointerTags(vis);
 
-          colorList(vis, cur_M, sortColor, Lists);
+          //colorList(vis, cur_M, sortColor, Lists);
 
           // pointer: entire merged chain green + reposition nicely
           vis.list.resetColors();
@@ -514,13 +593,16 @@ export function run_msort() {
         return mergedList;
       } else {
         chunker.add('returnL', (vis, a, cur_L) => {
-          syncVarToArray(vis, 'Mid', undefined);
-          syncVarToArray(vis, 'R', undefined);
+          setCurrentVis(vis);
+          //syncVarToArray(vis, 'Mid', undefined); 
+          setTag('Mid', undefined);
+          //syncVarToArray(vis, 'R', undefined); 
+          setTag('R', undefined);
           hideR(vis);
           applyPointerTags(vis);
 
-          vis.array.select(1, cur_L, 1, cur_L, '1');
-          vis.array.select(2, cur_L, 2, cur_L, '1');
+          //vis.array.select(1, cur_L, 1, cur_L, '1');
+          //vis.array.select(2, cur_L, 2, cur_L, '1');
 
           // pointer: single element considered placed (green)
           vis.list.resetColors();
@@ -541,8 +623,8 @@ export function run_msort() {
 
     chunker.add(lastLine, (vis, a) => {
       for (let i = 1; i <= entire_num_array.length; i++) {
-        vis.array.select(1, i, 1, i, doneColor);
-        vis.array.select(2, i, 2, i, doneColor);
+        //vis.array.select(1, i, 1, i, doneColor);
+        //vis.array.select(2, i, 2, i, doneColor);
         vis.list.resetColors();
       }
     }, [A], 1);
