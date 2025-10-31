@@ -74,10 +74,9 @@ class LinkedListRenderer extends Array2DRenderer {
     const DOT_SIZE = 5;
     const H_GAP = 40;
 
-    const dotCenterX = n => n.pos.x + NODE_W / 2 - 30;
+    const dotCenterX = n => n.pos.x - 19;
     const dotCenterY = n => n.pos.y;
-    const SAFE_GAP = 6;
-    const targetX = to => to.pos.x - NODE_W / 2 - SAFE_GAP + 6;
+    const targetX = to => to.pos.x - 29;
     const targetY = to => to.pos.y;
 
     const maxX = (list.length ? Math.max(...list.map(n => n.pos.x)) : 0) + NODE_W;
