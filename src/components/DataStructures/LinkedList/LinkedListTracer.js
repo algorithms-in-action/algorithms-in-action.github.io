@@ -36,6 +36,15 @@ class LinkedListTracer extends Tracer {
     this.algo = undefined;
     this.listOfNumbers = '';
     this.indexToKey = new Map();
+
+    // tagName -> index (1-based)
+    this.desiredTags = {
+      L: undefined,
+      R: undefined,
+      M: undefined,
+      E: undefined,
+      Mid: undefined
+    };
   }
 
   // ------------------------------------------------
@@ -232,6 +241,73 @@ class LinkedListTracer extends Tracer {
     }
     super.set();
   }
+
+  // ------------------------------------------------
+  // Tag & badge assignment (pointer variables)
+  // ------------------------------------------------
+
+  // Assign or clear a tag
+  assignTag(tagName, index) {
+    this.desiredTags[tagName] =
+      (index === 'Null' || index === undefined) ? undefined : index;
+    this.applyTags();
+  }
+
+  // Remove a single tag everywhere
+  clearTag(tagName) {
+    this.desiredTags[tagName] = undefined;
+    this.applyTags();
+  }
+
+  // Remove ALL tags
+  clearAllTags() {
+    for (const key of Object.keys(this.desiredTags)) {
+      this.desiredTags[key] = undefined;
+    }
+    this.applyTags();
+  }
+
+  // Special helper: hide R (avoid tag residue)
+  hideTag(tagName = 'R') {
+    this.clearTag(tagName);
+  }
+
+  // Apply stacked tags to nodes
+  applyTags() {
+    const names = Object.keys(this.desiredTags);
+
+    // 1️⃣ Remove old stacked and simple name badges
+    for (const node of this.nodes.values()) {
+      node.variables = node.variables.filter(v => {
+        return !names.includes(v) && !v.includes('|');
+      });
+    }
+
+    // 2️⃣ Bucket: index -> [tag names]
+    const buckets = new Map();
+    names.forEach(name => {
+      const idx = this.desiredTags[name];
+      if (idx !== undefined && idx !== 'Null') {
+        if (!buckets.has(idx)) buckets.set(idx, []);
+        buckets.get(idx).push(name);
+      }
+    });
+
+    // 3️⃣ Write back stacked variables (badge)
+    for (const [idx, tags] of buckets.entries()) {
+      const key = this.indexToKey.get(idx);
+      if (!key) continue;
+      const n = this.nodes.get(key);
+      if (!n) continue;
+
+      const stacked = tags.join('|');
+      n.variables = n.variables.filter(v => !names.includes(v) && !v.includes('|'));
+      n.variables.push(stacked);
+    }
+
+    super.set();
+  }
+
 }
 
 export default LinkedListTracer;
