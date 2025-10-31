@@ -229,6 +229,7 @@ export function run_msort() {
         //syncVarToArray(vis, 'Mid', cur_Mid);
         setTag('Mid', cur_Mid);
         applyPointerTags(vis);
+        vis.list.resetColors();
       }, [[Indices, Heads, Tails], L, Mid, simple_stack], depth);
 
       for (let i = 1; i < midNum; i++) Mid = Tails[Mid];
