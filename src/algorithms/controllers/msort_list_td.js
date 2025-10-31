@@ -109,18 +109,6 @@ function hideR(vis) {
   applyPointerTags(vis);
 }
 
-/* ---------------------------------------------------------------------------------------- */
-
-function assignMaybeNullVar(vis, variable_name, index) {
-  vis.array.assignVariable(variable_name, 2, undefined);
-  vis.array.assignVariable(variable_name + '=Null', 2, undefined);
-  if (index === 'Null') {
-    vis.array.assignVariable(variable_name + '=Null', 2, 0);
-  } else {
-    vis.array.assignVariable(variable_name, 2, index);
-  }
-}
-
 const set_simple_stack = (vis_array, c_stk) => {
   if (isRecursionExpanded()) vis_array.setList(c_stk);
 };
@@ -214,6 +202,7 @@ export function run_msort() {
       chunker.add('Mid', (vis, Lists, cur_L, cur_Mid, c_stk) => {
         syncVarToArray(vis, 'Mid', cur_Mid);
         applyPointerTags(vis);
+        vis.list.colorChain(cur_L, ptrVariant.def, Lists[2]);
       }, [[Indices, Heads, Tails], L, Mid, simple_stack], depth);
 
       for (let i = 1; i < midNum; i++) Mid = Tails[Mid];
