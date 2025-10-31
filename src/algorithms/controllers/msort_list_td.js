@@ -5,7 +5,7 @@
 import { msort_lista_td } from '../explanations';
 import { colors } from '../../components/DataStructures/colors';
 import { areExpanded } from './collapseChunkPlugin';
-import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
+// import Array2DTracer from '../../components/DataStructures/Array/Array2DTracer';
 import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
 
 const apColor = colors.apple;    // Comparing elements (table red)
@@ -75,7 +75,7 @@ function removeTagEverywhere(vis, name) {
 // Sync tag position in the table; also update desiredTags for pointer stacked badges
 // IMPORTANT: We KEEP desiredTags update so that table-only calls still reflect in LL when
 // the pointer-only helper is not used. In this refactor we will call BOTH setTag() and
-// syncVVarToArray() so either system can be removed independently later.
+// syncVarToArray() so either system can be removed independently later.
 /* function syncVarToArray(vis, name, idx, { showEqualNull = false } = {}) {
   if (idx === 'Null' || idx === undefined) {
     //vis.array.assignVariable(name, 2, undefined);
