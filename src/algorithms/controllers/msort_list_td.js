@@ -16,7 +16,7 @@ const ptrVariant = {
 
 // New helper to simplify repeated color logic
 function colorRuns(vis, L, R, T) {
-  vis.list.resetColors();
+  vis.list.resetColors(ptrVariant.def);
   if (L && L !== 'Null') vis.list.colorChain(L, ptrVariant.runA, T);
   if (R && R !== 'Null') vis.list.colorChain(R, ptrVariant.runB, T);
 }
@@ -68,7 +68,7 @@ export function run_msort() {
         vis.list.assignTag('Mid', undefined);
 
         // pointer: reset + color L orange
-        vis.list.resetColors();
+        vis.list.resetColors(ptrVariant.def);
         vis.list.colorChain(cur_L, ptrVariant.runA, T);
       }, [Tails, L, len, depth], depth);
 
@@ -80,7 +80,7 @@ export function run_msort() {
 
       chunker.add('Mid', (vis, T, cur_L, cur_Mid) => {
         vis.list.assignTag('Mid', cur_Mid);
-        vis.list.resetColors();
+        vis.list.resetColors(ptrVariant.def);
       }, [Tails, L, Mid], depth);
 
       for (let i = 1; i < midNum; i++) Mid = Tails[Mid];
@@ -176,7 +176,7 @@ export function run_msort() {
         vis.list.assignTag('R', cur_R);
 
         colorRuns(vis, cur_L, cur_R, T);
-        vis.list.highlightHeads(cur_L, cur_R);
+        vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
       }, [Tails, L, R], depth);
 
       if (Heads[L] <= Heads[R]) {
@@ -186,7 +186,7 @@ export function run_msort() {
           vis.list.assignTag('M', cur_M);
 
           colorRuns(vis, cur_L, cur_R, T);
-          vis.list.colorMerged(cur_M, cur_M, T);
+          vis.list.colorMerged(cur_M, cur_M, ptrVariant.merged, T);
         }, [Tails, L, R, M], depth);
 
         L = Tails[L];
@@ -202,7 +202,7 @@ export function run_msort() {
           vis.list.assignTag('M', cur_M);
 
           colorRuns(vis, cur_L, cur_R, T);
-          vis.list.colorMerged(cur_M, cur_M, T);
+          vis.list.colorMerged(cur_M, cur_M, ptrVariant.merged, T);
         }, [Tails, L, R, M], depth);
 
         R = Tails[R];
@@ -232,7 +232,7 @@ export function run_msort() {
         vis.list.updateConnections(T);
 
         colorRuns(vis, cur_L, cur_R, T);
-        vis.list.colorMerged(cur_M, cur_E, T);
+        vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
       }, [Tails, L, R, M, E], depth);
 
       while (L !== 'Null' && R !== 'Null') {
@@ -245,7 +245,7 @@ export function run_msort() {
 
           vis.list.updateConnections(T);
           colorRuns(vis, cur_L, cur_R, T);
-          vis.list.colorMerged(cur_M, cur_E, T);
+          vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
         }, [Tails, L, R, M, E], depth);
 
         if (Heads[L] <= Heads[R]) {
@@ -286,7 +286,7 @@ export function run_msort() {
           vis.list.assignTag('Mid', undefined);
           vis.list.assignTag('M', cur_M);
 
-          vis.list.resetColors();
+          vis.list.resetColors(ptrVariant.def);
           vis.list.colorChain(cur_M, ptrVariant.merged, T);
 
           vis.list.repositionMergedChain(cur_M, T);
@@ -301,8 +301,8 @@ export function run_msort() {
           vis.list.assignTag('R', undefined);
           vis.list.hideTag('R');
 
-          vis.list.resetColors();
-          vis.list.colorMerged(cur_L, cur_L, Tails);
+          vis.list.resetColors(ptrVariant.def);
+          vis.list.colorMerged(cur_L, cur_L, ptrVariant.merged, Tails);
         }, [Tails, L], depth);
 
         return L;
@@ -316,7 +316,7 @@ export function run_msort() {
     // reset pointer colors once (array UI removed)
     const lastLine = (entire_num_array.length > 1 ? 'returnM' : 'returnL');
     chunker.add(lastLine, (vis) => {
-      vis.list.resetColors();
+      vis.list.resetColors(ptrVariant.def);
     }, [], 1);
 
     return msresult;

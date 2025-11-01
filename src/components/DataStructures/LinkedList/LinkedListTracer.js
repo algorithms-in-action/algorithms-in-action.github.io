@@ -94,9 +94,9 @@ class LinkedListTracer extends Tracer {
   // Coloring and merging visuals
   // ------------------------------------------------
 
-  resetColors(defaultVariant = 'gray') {
+  resetColors(variant) {
     for (const n of this.nodes.values()) {
-      n.fillVariant = defaultVariant;
+      n.fillVariant = variant;
     }
     super.set();
   }
@@ -113,29 +113,29 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
-  colorMerged(M, E, tailsArray) {
+  colorMerged(M, E, variant, tailsArray) {
     if (!M || M === 'Null') return;
     for (let i = M; i !== 'Null'; i = tailsArray[i]) {
       const key = this.indexToKey.get(i);
       if (!key) break;
       const node = this.nodes.get(key);
       if (!node) break;
-      node.fillVariant = 'green';
+      node.fillVariant = variant;
       if (i === E) break;
     }
     super.set();
   }
 
-  highlightHeads(L, R) {
+  highlightHeads(L, R, variant) {
     if (L && L !== 'Null') {
       const key = this.indexToKey.get(L);
       const node = this.nodes.get(key);
-      if (node) node.fillVariant = 'red';
+      if (node) node.fillVariant = variant;
     }
     if (R && R !== 'Null') {
       const key = this.indexToKey.get(R);
       const node = this.nodes.get(key);
-      if (node) node.fillVariant = 'red';
+      if (node) node.fillVariant = variant;
     }
     super.set();
   }
