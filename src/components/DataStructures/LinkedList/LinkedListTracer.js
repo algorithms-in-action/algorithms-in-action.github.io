@@ -93,52 +93,53 @@ class LinkedListTracer extends Tracer {
   // ------------------------------------------------
   // Coloring and merging visuals
   // ------------------------------------------------
-  setFillVariantByIndex(index, variant = 'gray') {
-    const key = this.indexToKey.get(index);
-    if (!key) return;
-    const n = this.nodes.get(key);
-    if (!n) return;
-    n.fillVariant = variant;
+
+  resetColors(defaultVariant = 'gray') {
+    for (const n of this.nodes.values()) {
+      n.fillVariant = defaultVariant;
+    }
     super.set();
   }
 
-  clearAllFillVariants() {
-    for (const n of this.nodes.values()) n.fillVariant = 'gray';
-    super.set();
-  }
-
-  colorChainByVariant(startIndex, variant, tailsArray) {
+  colorChain(startIndex, variant, tailsArray) {
     if (!startIndex || startIndex === 'Null') return;
     for (let i = startIndex; i !== 'Null'; i = tailsArray[i]) {
       const key = this.indexToKey.get(i);
       if (!key) break;
-      const n = this.nodes.get(key);
-      if (!n) break;
-      n.fillVariant = variant;
+      const node = this.nodes.get(key);
+      if (!node) break;
+      node.fillVariant = variant;
     }
     super.set();
   }
 
-  // Wrapper helpers matching pointer UI use
-  resetColors() { this.clearAllFillVariants(); }
-  colorChain(idx, variant, tailsArray) {
-    if (!idx || idx === 'Null') return;
-    this.colorChainByVariant(idx, variant, tailsArray);
-  }
-
   colorMerged(M, E, tailsArray) {
     if (!M || M === 'Null') return;
-    const T = tailsArray;
-    for (let i = M; i !== 'Null'; i = T[i]) {
-      this.setFillVariantByIndex(i, 'green');
+    for (let i = M; i !== 'Null'; i = tailsArray[i]) {
+      const key = this.indexToKey.get(i);
+      if (!key) break;
+      const node = this.nodes.get(key);
+      if (!node) break;
+      node.fillVariant = 'green';
       if (i === E) break;
     }
+    super.set();
   }
 
   highlightHeads(L, R) {
-    if (L && L !== 'Null') this.setFillVariantByIndex(L, 'red');
-    if (R && R !== 'Null') this.setFillVariantByIndex(R, 'red');
+    if (L && L !== 'Null') {
+      const key = this.indexToKey.get(L);
+      const node = this.nodes.get(key);
+      if (node) node.fillVariant = 'red';
+    }
+    if (R && R !== 'Null') {
+      const key = this.indexToKey.get(R);
+      const node = this.nodes.get(key);
+      if (node) node.fillVariant = 'red';
+    }
+    super.set();
   }
+
 
   // ------------------------------------------------
   // Visibility control
@@ -276,14 +277,14 @@ class LinkedListTracer extends Tracer {
   applyTags() {
     const names = Object.keys(this.desiredTags);
 
-    // 1️⃣ Remove old stacked and simple name badges
+    // Remove old stacked and simple name badges
     for (const node of this.nodes.values()) {
       node.variables = node.variables.filter(v => {
         return !names.includes(v) && !v.includes('|');
       });
     }
 
-    // 2️⃣ Bucket: index -> [tag names]
+    // Bucket: index -> [tag names]
     const buckets = new Map();
     names.forEach(name => {
       const idx = this.desiredTags[name];
@@ -293,7 +294,7 @@ class LinkedListTracer extends Tracer {
       }
     });
 
-    // 3️⃣ Write back stacked variables (badge)
+    // Write back stacked variables (badge)
     for (const [idx, tags] of buckets.entries()) {
       const key = this.indexToKey.get(idx);
       if (!key) continue;
