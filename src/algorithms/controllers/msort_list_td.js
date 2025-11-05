@@ -225,7 +225,7 @@ export function run_msort() {
         vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
       }, [Tails, L, R], depth);
 
-      if (Heads[L] <= Heads[R]) {
+      if (Heads[L] < Heads[R]) {
         M = L;
 
         chunker.add('M<-L', (vis, T, cur_L, cur_R, cur_M) => {
@@ -262,28 +262,27 @@ export function run_msort() {
     }
 
     function mergeRemainingElements(L, R, M, depth) {
+      // Merge the rest of L and R starting from M
       let E = M;
 
-      // seed E=M frame
+      // Bookmark: E <- M
       chunker.add('E', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
-
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('R', cur_R);
         vis.list.assignTag('M', cur_M);
         vis.list.assignTag('E', cur_E);
 
-        vis.list.showChain(cur_L, T);
-        vis.list.showChain(cur_R, T);
-        vis.list.showChain(cur_M, T);
         vis.list.updateConnections(T);
-
         colorRuns(vis, cur_L, cur_R, T);
         vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
       }, [Tails, L, R, M, E], depth);
 
-      while (L !== 'Null' && R !== 'Null') {
-        chunker.add('whileNotNull', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
 
+      // ---------- WHILE LOOP ----------
+      while (L !== 'Null' && R !== 'Null') {
+
+        // Bookmark: while L != Null && R != Null
+        chunker.add('whileNotNull', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
           vis.list.assignTag('L', cur_L);
           vis.list.assignTag('R', cur_R);
           vis.list.assignTag('M', cur_M);
@@ -291,23 +290,92 @@ export function run_msort() {
 
           vis.list.updateConnections(T);
           colorRuns(vis, cur_L, cur_R, T);
+          vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
           vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
         }, [Tails, L, R, M, E], depth);
 
+
+        // Bookmark: findSmaller
+        chunker.add('findSmaller', (vis, T, cur_L, cur_R) => {
+          vis.list.assignTag('L', cur_L);
+          vis.list.assignTag('R', cur_R);
+          vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
+        }, [Tails, L, R], depth);
+
+
         if (Heads[L] <= Heads[R]) {
-          Tails[E] = L; E = L; L = Tails[L];
+
+          // Bookmark: E.tail <- L, E <- L, L <- L.tail
+          Tails[E] = L;
+          E = L;
+          L = Tails[L];
+
+          chunker.add('popL', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+            vis.list.assignTag('L', cur_L);
+            vis.list.assignTag('R', cur_R);
+            vis.list.assignTag('M', cur_M);
+            vis.list.assignTag('E', cur_E);
+
+            vis.list.updateConnections(T);
+            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+            colorRuns(vis, cur_L, cur_R, T);
+          }, [Tails, L, R, M, E], depth);
+
         } else {
-          Tails[E] = R; E = R; R = Tails[R];
+
+          Tails[E] = R;
+          E = R;
+          R = Tails[R];
+
+          chunker.add('popR', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+            vis.list.assignTag('L', cur_L);
+            vis.list.assignTag('R', cur_R);
+            vis.list.assignTag('M', cur_M);
+            vis.list.assignTag('E', cur_E);
+
+            vis.list.updateConnections(T);
+            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+            colorRuns(vis, cur_L, cur_R, T);
+          }, [Tails, L, R, M, E], depth);
         }
       }
 
+
+      // ---------- APPEND REMAINDER ----------
       if (L === 'Null') {
+
         Tails[E] = R;
+        chunker.add('appendR', (vis, T, cur_E, cur_R) => {
+          vis.list.assignTag('E', cur_E);
+          vis.list.assignTag('R', cur_R);
+
+          vis.list.updateConnections(T);
+          vis.list.colorMerged(cur_E, cur_R, ptrVariant.merged, T);
+        }, [Tails, E, R], depth);
+
       } else {
+
         Tails[E] = L;
+        chunker.add('appendL', (vis, T, cur_E, cur_L) => {
+          vis.list.assignTag('E', cur_E);
+          vis.list.assignTag('L', cur_L);
+
+          vis.list.updateConnections(T);
+          vis.list.colorMerged(cur_E, cur_L, ptrVariant.merged, T);
+        }, [Tails, E, L], depth);
       }
 
+
+      // ---------- FINAL RETURN M STEP ----------
+      chunker.add('returnM', (vis, T, cur_M) => {
+        vis.list.assignTag('M', cur_M);
+        vis.list.resetColors(ptrVariant.def);
+        vis.list.colorChain(cur_M, ptrVariant.merged, T);
+        vis.list.updateConnections(T);
+      }, [Tails, M], depth);
+
       return M;
+
     }
 
     function MergeSort(L, len, depth) {
