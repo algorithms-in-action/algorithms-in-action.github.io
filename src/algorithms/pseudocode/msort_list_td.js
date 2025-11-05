@@ -38,7 +38,7 @@ Mergesort(L, len) \\B Main
 \\Code{
 split
     Mid <- mid point of L \\Ref scan
-    R <- Mid.tail    // R starts after Mid
+    R <- Mid.tail    // R starts after Mid \\B R<-tail(Mid)
     Mid.tail <- Null // truncate L after Mid \\B tail(Mid)<-Null
 \\Code}
 

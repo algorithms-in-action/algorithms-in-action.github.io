@@ -76,20 +76,45 @@ export function run_msort() {
     }
 
     function splitList(L, midNum, depth) {
+      // 1️⃣ Show Mid <- L (bookmark: Mid)
       let Mid = L;
-
       chunker.add('Mid', (vis, T, cur_L, cur_Mid) => {
+        vis.list.assignTag('L', cur_L);
         vis.list.assignTag('Mid', cur_Mid);
+        vis.list.assignTag('R', undefined);
+        vis.list.assignTag('M', undefined);
+        vis.list.assignTag('E', undefined);
+
+        vis.list.showChain(cur_L, T);
+        vis.list.updateConnections(T);
         vis.list.resetColors(ptrVariant.def);
+        vis.list.colorChain(cur_L, ptrVariant.runA, T);
       }, [Tails, L, Mid], depth);
 
-      for (let i = 1; i < midNum; i++) Mid = Tails[Mid];
+      // 2️⃣ Animate Mid walking through list: Mid <- Mid.tail (bookmark: MidNext)
+      for (let i = 1; i < midNum; i++) {
+        Mid = Tails[Mid];
 
+        chunker.add('MidNext', (vis, T, cur_L, cur_Mid) => {
+          vis.list.assignTag('L', cur_L);
+          vis.list.assignTag('Mid', cur_Mid);
+          vis.list.assignTag('R', undefined);
+          vis.list.assignTag('M', undefined);
+          vis.list.assignTag('E', undefined);
+
+          vis.list.showChain(cur_L, T);
+          vis.list.updateConnections(T);
+          vis.list.resetColors(ptrVariant.def);
+          vis.list.colorChain(cur_L, ptrVariant.runA, T);
+
+          // Optional visual emphasis:
+          vis.list.highlightHeads(cur_Mid, undefined, ptrVariant.cmp);
+        }, [Tails, L, Mid], depth);
+      }
+
+      // 3️⃣ Split step 1: R <- Mid.tail (bookmark: R<-tail(Mid))
       let R = Tails[Mid];
-      Tails[Mid] = 'Null';
-
-      chunker.add('tail(Mid)<-Null', (vis, T, cur_L, cur_Mid, cur_R) => {
-
+      chunker.add('R<-tail(Mid)', (vis, T, cur_L, cur_Mid, cur_R) => {
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('Mid', cur_Mid);
         vis.list.assignTag('R', cur_R);
@@ -98,13 +123,34 @@ export function run_msort() {
 
         vis.list.updateConnections(T);
         vis.list.showChain(cur_L, T);
-        vis.list.showChain(cur_R, T);
+        if (cur_R && cur_R !== 'Null') vis.list.showChain(cur_R, T);
 
-        colorRuns(vis, cur_L, cur_R, T);
+        vis.list.resetColors(ptrVariant.def);
+        if (cur_L && cur_L !== 'Null') vis.list.colorChain(cur_L, ptrVariant.runA, T);
+        if (cur_R && cur_R !== 'Null') vis.list.colorChain(cur_R, ptrVariant.runB, T);
+      }, [Tails, L, Mid, R], depth);
+
+      // 4️⃣ Split step 2: Mid.tail <- Null (bookmark: tail(Mid)<-Null)
+      Tails[Mid] = 'Null';
+      chunker.add('tail(Mid)<-Null', (vis, T, cur_L, cur_Mid, cur_R) => {
+        vis.list.assignTag('L', cur_L);
+        vis.list.assignTag('Mid', cur_Mid);
+        vis.list.assignTag('R', cur_R);
+        vis.list.assignTag('M', undefined);
+        vis.list.assignTag('E', undefined);
+
+        vis.list.updateConnections(T);
+        vis.list.showChain(cur_L, T);
+        if (cur_R && cur_R !== 'Null') vis.list.showChain(cur_R, T);
+
+        vis.list.resetColors(ptrVariant.def);
+        if (cur_L && cur_L !== 'Null') vis.list.colorChain(cur_L, ptrVariant.runA, T);
+        if (cur_R && cur_R !== 'Null') vis.list.colorChain(cur_R, ptrVariant.runB, T);
       }, [Tails, L, Mid, R], depth);
 
       return { L, R, Mid };
     }
+
 
     function performRecursiveSort(L, R, midNum, len, depth) {
 
