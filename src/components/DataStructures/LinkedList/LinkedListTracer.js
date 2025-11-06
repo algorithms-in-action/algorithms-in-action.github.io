@@ -153,48 +153,81 @@ class LinkedListTracer extends Tracer {
   // ------------------------------------------------
   // Coloring and merging visuals
   // ------------------------------------------------
-  resetColors(variant) {
+
+  // Generic two-chain coloring helper.
+  // Tracer visual only; colors are provided by caller (algorithm-level).
+  colorChains(L, R, tailsArray, leftColor = 'orange', rightColor = 'blue', defaultColor = 'gray') {
+    // Reset all nodes to default first
+      this.resetColors(defaultColor);
+
+    // Apply left chain color
+    if (L && L !== 'Null') {
+      this.colorChain(L, leftColor, tailsArray);
+    }
+
+    // Apply right chain color
+    if (R && R !== 'Null') {
+      this.colorChain(R, rightColor, tailsArray);
+    }
+  }
+
+  resetColors() {
     for (const n of this.nodes.values()) {
-      n.fillVariant = variant;
+      n.fillVariant = 'gray';
     }
     super.set();
   }
 
-  colorChain(startIndex, variant, tailsArray) {
+  colorChain(startIndex, varient, tailsArray) {
     if (!startIndex || startIndex === 'Null') return;
     for (let i = startIndex; i !== 'Null'; i = tailsArray[i]) {
       const key = this.indexToKey.get(i);
       if (!key) break;
       const node = this.nodes.get(key);
       if (!node) break;
-      node.fillVariant = variant;
+      node.fillVariant = varient;
     }
     super.set();
   }
 
-  colorMerged(M, E, variant, tailsArray) {
+  colorMerged(M, E, tailsArray) {
     if (!M || M === 'Null') return;
     for (let i = M; i !== 'Null'; i = tailsArray[i]) {
       const key = this.indexToKey.get(i);
       if (!key) break;
       const node = this.nodes.get(key);
       if (!node) break;
-      node.fillVariant = variant;
+      node.fillVariant = 'green';
       if (i === E) break;
     }
     super.set();
   }
 
-  highlightHeads(L, R, variant) {
+  highlightHeads(L, R) {
     if (L && L !== 'Null') {
       const key = this.indexToKey.get(L);
       const node = this.nodes.get(key);
-      if (node) node.fillVariant = variant;
+      if (node) node.fillVariant = 'red';
     }
     if (R && R !== 'Null') {
       const key = this.indexToKey.get(R);
       const node = this.nodes.get(key);
-      if (node) node.fillVariant = variant;
+      if (node) node.fillVariant = 'red';
+    }
+    super.set();
+  }
+
+  // Remove highlight by directly restoring head colors (no other recoloring)
+  unhighlightHeads(L, R) {
+    if (L && L !== 'Null') {
+      const kL = this.indexToKey.get(L);
+      const nL = this.nodes.get(kL);
+      if (nL) nL.fillVariant = 'orange'; // left head back to orange
+    }
+    if (R && R !== 'Null') {
+      const kR = this.indexToKey.get(R);
+      const nR = this.nodes.get(kR);
+      if (nR) nR.fillVariant = 'blue';   // right head back to blue
     }
     super.set();
   }

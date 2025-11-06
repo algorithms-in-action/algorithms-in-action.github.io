@@ -106,13 +106,6 @@ const ptrVariant = {
   def: 'gray',      // default
 };
 
-// New helper to simplify repeated color logic
-function colorRuns(vis, L, R, T) {
-  vis.list.resetColors(ptrVariant.def);
-  if (L && L !== 'Null') vis.list.colorChain(L, ptrVariant.runA, T);
-  if (R && R !== 'Null') vis.list.colorChain(R, ptrVariant.runB, T);
-}
-
 // Internal data arrays encoding the linked list structure (NOT UI, don't delete)
 let Heads;        // ['i.head (data)', ...]
 let Tails;        // ['i.tail (next)', ...]
@@ -160,7 +153,7 @@ export function run_msort() {
         vis.list.assignTag('Mid', undefined);
 
         // pointer: reset + color L orange
-        vis.list.resetColors(ptrVariant.def);
+        vis.list.resetColors();
         vis.list.colorChain(cur_L, ptrVariant.runA, T);
       }, [Tails, L, len, depth], depth);
 
@@ -179,7 +172,7 @@ export function run_msort() {
 
         vis.list.showChain(cur_L, T);
         vis.list.updateConnections(T);
-        vis.list.resetColors(ptrVariant.def);
+        vis.list.resetColors();
         vis.list.colorChain(cur_L, ptrVariant.runA, T);
       }, [Tails, L, Mid], depth);
 
@@ -196,7 +189,7 @@ export function run_msort() {
 
           vis.list.showChain(cur_L, T);
           vis.list.updateConnections(T);
-          vis.list.resetColors(ptrVariant.def);
+          vis.list.resetColors();
           vis.list.colorChain(cur_L, ptrVariant.runA, T);
 
           // Optional visual emphasis:
@@ -217,7 +210,7 @@ export function run_msort() {
         vis.list.showChain(cur_L, T);
         if (cur_R && cur_R !== 'Null') vis.list.showChain(cur_R, T);
 
-        vis.list.resetColors(ptrVariant.def);
+        vis.list.resetColors();
         if (cur_L && cur_L !== 'Null') vis.list.colorChain(cur_L, ptrVariant.runA, T);
         if (cur_R && cur_R !== 'Null') vis.list.colorChain(cur_R, ptrVariant.runB, T);
       }, [Tails, L, Mid, R], depth);
@@ -235,7 +228,7 @@ export function run_msort() {
         vis.list.showChain(cur_L, T);
         if (cur_R && cur_R !== 'Null') vis.list.showChain(cur_R, T);
 
-        vis.list.resetColors(ptrVariant.def);
+        vis.list.resetColors();
         if (cur_L && cur_L !== 'Null') vis.list.colorChain(cur_L, ptrVariant.runA, T);
         if (cur_R && cur_R !== 'Null') vis.list.colorChain(cur_R, ptrVariant.runB, T);
       }, [Tails, L, Mid, R], depth);
@@ -253,7 +246,7 @@ export function run_msort() {
         vis.list.assignTag('R', undefined);
         vis.list.assignTag('L', cur_L);
 
-        colorRuns(vis, cur_L, undefined, T);
+        vis.list.colorChains(cur_L, undefined, T);
 
         vis.list.moveChainBelow(cur_L, cur_R, T);
         vis.list.hideChain(cur_R, T);
@@ -270,7 +263,7 @@ export function run_msort() {
         vis.list.assignTag('E', undefined);
 
         vis.list.showChain(cur_L, T);
-        colorRuns(vis, cur_L, undefined, T);
+        vis.list.colorChains(cur_L, undefined, T);
       }, [Tails, L], depth);
 
       // ----- focus right -----
@@ -284,7 +277,7 @@ export function run_msort() {
 
         vis.list.hideChain(cur_L, T);
         vis.list.showChain(cur_R, T);
-        colorRuns(vis, undefined, cur_R, T);
+        vis.list.colorChains(undefined, cur_R, T);
       }, [Tails, L, R], depth);
 
       R = MergeSort(R, len - midNum, depth + 1);
@@ -299,7 +292,7 @@ export function run_msort() {
 
         vis.list.showChain(cur_L, T);
         vis.list.showChain(cur_R, T);
-        colorRuns(vis, cur_L, cur_R, T);
+        vis.list.colorChains(cur_L, cur_R, T);
       }, [Tails, L, R], depth);
 
       return { L, R };
@@ -313,8 +306,8 @@ export function run_msort() {
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('R', cur_R);
 
-        colorRuns(vis, cur_L, cur_R, T);
-        vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
+        vis.list.colorChains(cur_L, cur_R, T);
+        vis.list.highlightHeads(cur_L, cur_R);
       }, [Tails, L, R], depth);
 
       if (Heads[L] < Heads[R]) {
@@ -323,8 +316,8 @@ export function run_msort() {
         chunker.add('M<-L', (vis, T, cur_L, cur_R, cur_M) => {
           vis.list.assignTag('M', cur_M);
 
-          colorRuns(vis, cur_L, cur_R, T);
-          vis.list.colorMerged(cur_M, cur_M, ptrVariant.merged, T);
+          vis.list.colorChains(cur_L, cur_R, T);
+          vis.list.colorMerged(cur_M, cur_M, T);
         }, [Tails, L, R, M], depth);
 
         L = Tails[L];
@@ -339,8 +332,8 @@ export function run_msort() {
         chunker.add('M<-R', (vis, T, cur_L, cur_R, cur_M) => {
           vis.list.assignTag('M', cur_M);
 
-          colorRuns(vis, cur_L, cur_R, T);
-          vis.list.colorMerged(cur_M, cur_M, ptrVariant.merged, T);
+          vis.list.colorChains(cur_L, cur_R, T);
+          vis.list.colorMerged(cur_M, cur_M, T);
         }, [Tails, L, R, M], depth);
 
         R = Tails[R];
@@ -365,8 +358,8 @@ export function run_msort() {
         vis.list.assignTag('E', cur_E);
 
         vis.list.updateConnections(T);
-        colorRuns(vis, cur_L, cur_R, T);
-        vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+        vis.list.colorChains(cur_L, cur_R, T);
+        vis.list.colorMerged(cur_M, cur_E, T);
       }, [Tails, L, R, M, E], depth);
 
 
@@ -381,16 +374,16 @@ export function run_msort() {
           vis.list.assignTag('E', cur_E);
 
           vis.list.updateConnections(T);
-          colorRuns(vis, cur_L, cur_R, T);
-          vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
-          vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+          vis.list.colorChains(cur_L, cur_R, T);
+          vis.list.highlightHeads(cur_L, cur_R);
+          vis.list.colorMerged(cur_M, cur_E, T);
         }, [Tails, L, R, M, E], depth);
 
         // Bookmark: findSmaller
         chunker.add('findSmaller', (vis, T, cur_L, cur_R) => {
           vis.list.assignTag('L', cur_L);
           vis.list.assignTag('R', cur_R);
-          vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
+          vis.list.highlightHeads(cur_L, cur_R);
         }, [Tails, L, R], depth);
 
         if (Heads[L] <= Heads[R]) {
@@ -402,24 +395,22 @@ export function run_msort() {
             vis.list.assignTag('R', cur_R);
             vis.list.assignTag('M', cur_M);
             vis.list.assignTag('E', cur_E);
-
+            vis.list.unhighlightHeads(cur_L, cur_R);
             vis.list.updateConnections(T);
-            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
-            colorRuns(vis, cur_L, cur_R, T);
+            vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: E <- L
           E = L;
           chunker.add('E<-L', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
             vis.list.assignTag('E', cur_E);
-            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+            vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: L <- L.tail
           L = Tails[L];
           chunker.add('popL', (vis, T, cur_L) => {
             vis.list.assignTag('L', cur_L);
-            colorRuns(vis, cur_L, R, T);
           }, [Tails, L], depth);
 
 
@@ -431,24 +422,22 @@ export function run_msort() {
             vis.list.assignTag('R', cur_R);
             vis.list.assignTag('M', cur_M);
             vis.list.assignTag('E', cur_E);
-
+            vis.list.unhighlightHeads(cur_L, cur_R);
             vis.list.updateConnections(T);
-            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
-            colorRuns(vis, cur_L, cur_R, T);
+            vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: E <- R
           E = R;
           chunker.add('E<-R', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
             vis.list.assignTag('E', cur_E);
-            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+            vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: R <- R.tail
           R = Tails[R];
           chunker.add('popR', (vis, T, cur_R) => {
             vis.list.assignTag('R', cur_R);
-            colorRuns(vis, L, cur_R, T);
           }, [Tails, R], depth);
 
         }
@@ -464,7 +453,7 @@ export function run_msort() {
           vis.list.assignTag('R', cur_R);
 
           vis.list.updateConnections(T);
-          vis.list.colorMerged(cur_E, cur_R, ptrVariant.merged, T);
+          vis.list.colorMerged(cur_E, cur_R, T);
         }, [Tails, E, R], depth);
 
       } else {
@@ -475,7 +464,7 @@ export function run_msort() {
           vis.list.assignTag('L', cur_L);
 
           vis.list.updateConnections(T);
-          vis.list.colorMerged(cur_E, cur_L, ptrVariant.merged, T);
+          vis.list.colorMerged(cur_E, cur_L, T);
         }, [Tails, E, L], depth);
       }
 
@@ -483,7 +472,7 @@ export function run_msort() {
       // ---------- FINAL RETURN M STEP ----------
       chunker.add('returnM', (vis, T, cur_M) => {
         vis.list.assignTag('M', cur_M);
-        vis.list.resetColors(ptrVariant.def);
+        vis.list.resetColors();
         vis.list.colorChain(cur_M, ptrVariant.merged, T);
         vis.list.updateConnections(T);
       }, [Tails, M], depth);
@@ -514,7 +503,7 @@ export function run_msort() {
           vis.list.assignTag('Mid', undefined);
           vis.list.assignTag('M', cur_M);
 
-          vis.list.resetColors(ptrVariant.def);
+          vis.list.resetColors();
           vis.list.colorChain(cur_M, ptrVariant.merged, T);
 
           vis.list.repositionMergedChain(cur_M, T);
@@ -529,8 +518,8 @@ export function run_msort() {
           vis.list.assignTag('R', undefined);
           vis.list.assignTag('R', undefined);
 
-          vis.list.resetColors(ptrVariant.def);
-          vis.list.colorMerged(cur_L, cur_L, ptrVariant.merged, Tails);
+          vis.list.resetColors();
+          vis.list.colorMerged(cur_L, cur_L, Tails);
         }, [Tails, L], depth);
 
         return L;
@@ -544,7 +533,7 @@ export function run_msort() {
     // reset pointer colors once (array UI removed)
     const lastLine = (entire_num_array.length > 1 ? 'returnM' : 'returnL');
     chunker.add(lastLine, (vis) => {
-      vis.list.resetColors(ptrVariant.def);
+      vis.list.resetColors();
     }, [], 1);
 
     return msresult;
