@@ -250,7 +250,7 @@ export function run_msort() {
       chunker.add('preSortL', (vis, T, cur_L, cur_R) => {
 
         vis.list.assignTag('Mid', undefined);
-        vis.list.hideTag('R');
+        vis.list.assignTag('R', undefined);
         vis.list.assignTag('L', cur_L);
 
         colorRuns(vis, cur_L, undefined, T);
@@ -263,7 +263,7 @@ export function run_msort() {
 
       chunker.add('sortL', (vis, T, cur_L) => {
 
-        vis.list.hideTag('R');
+        vis.list.assignTag('R', undefined);
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('Mid', undefined);
         vis.list.assignTag('M', undefined);
@@ -527,7 +527,7 @@ export function run_msort() {
 
           vis.list.assignTag('Mid', undefined);
           vis.list.assignTag('R', undefined);
-          vis.list.hideTag('R');
+          vis.list.assignTag('R', undefined);
 
           vis.list.resetColors(ptrVariant.def);
           vis.list.colorMerged(cur_L, cur_L, ptrVariant.merged, Tails);

@@ -1,12 +1,72 @@
+/**
+ * Purpose:
+ *   Visual tracer for pointer-based linked list algorithms.
+ *   Supports dynamic node repositioning, highlighting, and pointer tags.
+ *
+ * Node Class:
+ *   Each list node is represented by a ListNode instance with:
+ *     - num (displayed value)
+ *     - nextKey (pointer to next visible node)
+ *     - fillVariant (color for visual state)
+ *     - pos (x,y position on canvas)
+ *     - variables (badges / stacked pointer labels)
+ *
+ * Index Mapping:
+ *   The algorithm uses 1-based integer indices for list structure (Tails array).
+ *   This tracer maps indices <-> visual node keys using indexToKey.
+ *
+ *   Example:
+ *     index 1 => key "n0_123456"
+ *     index 2 => key "n1_789012"
+ *
+ *   updateConnections() must be called after pointer updates to refresh edges.
+ *
+ * Tags:
+ *   assignTag(tagName, index)
+ *     - If index is undefined or 'Null', the tag is removed
+ *     - Otherwise tag is positioned on the node mapped from index
+ *     - Tags may stack (e.g. "L|E") if multiple point to same node
+ *
+ *   applyTags() centralizes rendering of all active tags
+ *   desiredTags stores the live association: tag -> list index
+ *
+ * Color Functions:
+ *   resetColors(variant)     — set every node to default (idle) color
+ *   colorChain(start, variant, Tails)
+ *       marks all nodes reachable from start index
+ *   colorMerged(M, E, variant, Tails)
+ *       marks only the merged portion of list during merge sort
+ *   highlightHeads(L, R, variant)
+ *       temporarily highlights one or two nodes under comparison
+ *
+ * Visibility Control:
+ *   hideChain(start, Tails)  — hide nodes in a pointer chain
+ *   showChain(start, Tails)  — show nodes in a pointer chain
+ *   hideAll() / showByKey() — global or selective control
+ *
+ * Node Positioning:
+ *   moveNodeTo(key, x, y)        — reposition single node
+ *   moveChainBelow(L, R, Tails)  — vertically separate right chain during recursion
+ *   repositionMergedChain(M, Tails)
+ *       layout merged output as a continuous chain
+ *
+ * Requirements for Algorithm Integration:
+ *   - After each pointer mutation in algorithm, call updateConnections(Tails)
+ *   - After any color or visibility change, call super.set() (handled internally)
+ *   - Tag updates must always use assignTag(tag, index) only
+ *
+ * Maintenance:
+ *   - assignTag(undefined) should always be used to clear tags
+ *
+ * Intended Usage:
+ *   Designed specifically for mergesort linked list animation,
+ *   but general enough for any singly-linked list visualization.
+ */
+
 import Tracer from '../common/Tracer.jsx';
 import LinkedListRenderer from "./LinkedListRenderer";
 import ListNode from "./ListNode";
 
-/**
- * LinkedListTracer (Pointer-only optimised)
- * Maintains linked list nodes + pointer connections.
- * Mutations call super.set() to trigger re-render.
- */
 class LinkedListTracer extends Tracer {
 
   // ------------------------------------------------
@@ -93,7 +153,6 @@ class LinkedListTracer extends Tracer {
   // ------------------------------------------------
   // Coloring and merging visuals
   // ------------------------------------------------
-
   resetColors(variant) {
     for (const n of this.nodes.values()) {
       n.fillVariant = variant;
@@ -139,7 +198,6 @@ class LinkedListTracer extends Tracer {
     }
     super.set();
   }
-
 
   // ------------------------------------------------
   // Visibility control
@@ -230,20 +288,6 @@ class LinkedListTracer extends Tracer {
   }
 
   // ------------------------------------------------
-  // Minimal variable tag assignment (index-based only)
-  // ------------------------------------------------
-  assignVariableByIndex(varName, index) {
-    for (const node of this.nodes.values()) {
-      node.variables = node.variables.filter(x => x !== varName);
-    }
-    if (index && index !== 'Null') {
-      const key = this.indexToKey.get(index);
-      if (key) this.nodes.get(key)?.variables.push(varName);
-    }
-    super.set();
-  }
-
-  // ------------------------------------------------
   // Tag & badge assignment (pointer variables)
   // ------------------------------------------------
 
@@ -252,25 +296,6 @@ class LinkedListTracer extends Tracer {
     this.desiredTags[tagName] =
       (index === 'Null' || index === undefined) ? undefined : index;
     this.applyTags();
-  }
-
-  // Remove a single tag everywhere
-  clearTag(tagName) {
-    this.desiredTags[tagName] = undefined;
-    this.applyTags();
-  }
-
-  // Remove ALL tags
-  clearAllTags() {
-    for (const key of Object.keys(this.desiredTags)) {
-      this.desiredTags[key] = undefined;
-    }
-    this.applyTags();
-  }
-
-  // Special helper: hide R (avoid tag residue)
-  hideTag(tagName = 'R') {
-    this.clearTag(tagName);
   }
 
   // Apply stacked tags to nodes
@@ -308,7 +333,6 @@ class LinkedListTracer extends Tracer {
 
     super.set();
   }
-
 }
 
 export default LinkedListTracer;
