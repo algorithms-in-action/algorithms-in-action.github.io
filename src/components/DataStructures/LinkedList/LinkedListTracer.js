@@ -15,10 +15,6 @@
  *   The algorithm uses 1-based integer indices for list structure (Tails array).
  *   This tracer maps indices <-> visual node keys using indexToKey.
  *
- *   Example:
- *     index 1 => key "n0_123456"
- *     index 2 => key "n1_789012"
- *
  *   updateConnections() must be called after pointer updates to refresh edges.
  *
  * Tags:
@@ -31,13 +27,19 @@
  *   desiredTags stores the live association: tag -> list index
  *
  * Color Functions:
- *   resetColors(variant)     — set every node to default (idle) color
+ *   resetColors()
+ *       reset all nodes to default gray
  *   colorChain(start, variant, Tails)
- *       marks all nodes reachable from start index
- *   colorMerged(M, E, variant, Tails)
+ *       marks all nodes reachable from start index with variant color
+ *       or split to colorLeft/colorRight if to hardcode colors inside
+ *   colorChains(L, R, Tails, leftColor, rightColor, defaultColor)
+ *       resets all to defaultColor first, then colors L-chain and R-chain
+ *   colorMerged(M, E, Tails)
  *       marks only the merged portion of list during merge sort
- *   highlightHeads(L, R, variant)
- *       temporarily highlights one or two nodes under comparison
+ *   highlightHeads(L, R)
+ *       temporarily highlights one or two nodes under comparison to red
+ *   unhighlightHeads(L, R)
+ *       restores head colors after highlight to their chain colors
  *
  * Visibility Control:
  *   hideChain(start, Tails)  — hide nodes in a pointer chain
@@ -53,12 +55,11 @@
  * Requirements for Algorithm Integration:
  *   - After each pointer mutation in algorithm, call updateConnections(Tails)
  *   - After any color or visibility change, call super.set() (handled internally)
- *   - Tag updates must always use assignTag(tag, index) only
+ *   - Tag updates must use assignTag(tag, index)
  *
  * Maintenance:
- *   - assignTag(undefined) should always be used to clear tags
+ *   - assignTag(undefined) should be used to clear tags
  *
- * Intended Usage:
  *   Designed specifically for mergesort linked list animation,
  *   but general enough for any singly-linked list visualization.
  */
