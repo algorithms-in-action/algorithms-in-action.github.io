@@ -135,7 +135,7 @@ export function run_msort() {
     }
 
     function setupInitialVisualization(L, len, depth) {
-      chunker.add('Main', (vis, T, cur_L, cur_len, cur_depth) => {
+      chunker.add('Main', (vis, T, cur_L, _cur_len, cur_depth) => {
 
         if (cur_depth > 0) {
           vis.list.hideAll();
@@ -322,7 +322,7 @@ export function run_msort() {
 
         L = Tails[L];
 
-        chunker.add('L<-tail(L)', (vis, T, cur_L, cur_R, cur_M) => {
+        chunker.add('L<-tail(L)', (vis, _T, cur_L, _cur_R, _cur_M) => {
           vis.list.assignTag('L', cur_L);
         }, [Tails, L, R, M], depth);
 
@@ -338,7 +338,7 @@ export function run_msort() {
 
         R = Tails[R];
 
-        chunker.add('R<-tail(R)', (vis, T, cur_L, cur_R, cur_M) => {
+        chunker.add('R<-tail(R)', (vis, _T, _cur_L, cur_R, _cur_M) => {
           vis.list.assignTag('R', cur_R);
         }, [Tails, L, R, M], depth);
       }
@@ -380,7 +380,7 @@ export function run_msort() {
         }, [Tails, L, R, M, E], depth);
 
         // Bookmark: findSmaller
-        chunker.add('findSmaller', (vis, T, cur_L, cur_R) => {
+        chunker.add('findSmaller', (vis, _T, cur_L, cur_R) => {
           vis.list.assignTag('L', cur_L);
           vis.list.assignTag('R', cur_R);
           vis.list.highlightHeads(cur_L, cur_R);
@@ -402,14 +402,14 @@ export function run_msort() {
 
           // Bookmark: E <- L
           E = L;
-          chunker.add('E<-L', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+          chunker.add('E<-L', (vis, T, _cur_L, _cur_R, cur_M, cur_E) => {
             vis.list.assignTag('E', cur_E);
             vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: L <- L.tail
           L = Tails[L];
-          chunker.add('popL', (vis, T, cur_L) => {
+          chunker.add('popL', (vis, _T, cur_L) => {
             vis.list.assignTag('L', cur_L);
           }, [Tails, L], depth);
 
@@ -429,14 +429,14 @@ export function run_msort() {
 
           // Bookmark: E <- R
           E = R;
-          chunker.add('E<-R', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+          chunker.add('E<-R', (vis, T, _cur_L, _cur_R, cur_M, cur_E) => {
             vis.list.assignTag('E', cur_E);
             vis.list.colorMerged(cur_M, cur_E, T);
           }, [Tails, L, R, M, E], depth);
 
           // Bookmark: R <- R.tail
           R = Tails[R];
-          chunker.add('popR', (vis, T, cur_R) => {
+          chunker.add('popR', (vis, _T, cur_R) => {
             vis.list.assignTag('R', cur_R);
           }, [Tails, R], depth);
 
@@ -495,7 +495,7 @@ export function run_msort() {
         const mergedList =
           mergeRemainingElements(remainingL, remainingR, M, depth);
 
-        chunker.add('returnM', (vis, T, cur_L, cur_M) => {
+        chunker.add('returnM', (vis, T, _cur_L, cur_M) => {
 
           vis.list.assignTag('L', undefined);
           vis.list.assignTag('R', undefined);
@@ -512,7 +512,7 @@ export function run_msort() {
 
         return mergedList;
       } else {
-        chunker.add('returnL', (vis, T, cur_L) => {
+        chunker.add('returnL', (vis, _T, cur_L) => {
 
           vis.list.assignTag('Mid', undefined);
           vis.list.assignTag('R', undefined);
