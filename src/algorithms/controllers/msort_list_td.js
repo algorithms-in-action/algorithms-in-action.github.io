@@ -1,6 +1,98 @@
-// Animation of merge sort for linked lists, top-down approach (POINTER-ONLY)
-// Visualizes pointer-based representation only. Array UI has been fully removed.
-// Shows recursive splitting, merging, and pointer manipulation during the sort process.
+/**
+ * Merge Sort Linked List Animation — Bookmark & Chunker Guide
+ * -----------------------------------------------------------
+ *
+ * This file implements the animated merge sort process for a linked list
+ * using a direct mapping between the algorithm pseudocode and chunked
+ * animation steps.
+ *
+ * Every chunker.add() call corresponds to a pseudocode "bookmark" label:
+ *   - \\B <BookmarkName>  in the pseudocode
+ *   - chunker.add('<BookmarkName>', ...) in this file
+ *
+ * Maintaining a 1:1 mapping ensures:
+ *   1) The animation always follows the exact published algorithm flow
+ *   2) The step navigation UI correctly aligns with algorithm theory
+ *
+ * -----------------------------------------------------------
+ * How to Add or Modify Animation Steps
+ * -----------------------------------------------------------
+ * 1. Open the pseudocode in: src/algorithms/pseudocode/msort_list_td.js
+ *    Search for \\B or \\Ref to find the canonical bookmark name.
+ *
+ * 2. Add (or update) a chunker.add() step in this file
+ *    The bookmark string must match exactly.
+ * 
+ * -----------------------------------------------------------
+ * Tags and Pointers Used
+ * -----------------------------------------------------------
+ * L   Remaining left sublist to merge
+ * R   Remaining right sublist to merge
+ * M   First element of the merged chain (head of result)
+ * E   Current end of merged chain (tail pointer)
+ *
+ * -----------------------------------------------------------
+ * Colors
+ * -----------------------------------------------------------
+ * runA   Orange = current L chain
+ * runB   Blue = current R chain
+ * merged Green = already merged portion (M..E)
+ * cmp    Red = elements under comparison (heads of L and R)
+ * def    Gray = default/idle color
+ *
+ * Important:
+ *   Do visual updates after pointer updates.
+ *   Call vis.list.updateConnections(T) after mutating Tails.
+ *
+ * -----------------------------------------------------------
+ * Bookmark → Visual Mapping
+ * -----------------------------------------------------------
+ * Bookmark              UI
+ * -----------------------------------------------------------
+ * Main                  Show full list initially
+ * len>1                 Check for recursion condition
+ * Mid                   Place Mid pointer at head (start scan)
+ * MidNext               Move Mid to its tail during split scan
+ * R<-tail(Mid)          Show R starting at Mid.tail
+ * tail(Mid)<-Null       Visually split list at Mid
+ *
+ * preSortL              Focus on L (hide right)
+ * sortL                 Show sorted result of left recursion
+ * preSortR              Focus on R (hide left)
+ * sortR                 Show sorted result of right recursion
+ *
+ * compareHeads          Highlight L.head and R.head for comparison
+ * M<-L                  Set merged head from L
+ * L<-tail(L)            Advance pointer L after selecting L.head
+ * M<-R                  Set merged head from R
+ * R<-tail(R)            Advance pointer R after selecting R.head
+ *
+ * E                     Initialize E = M
+ * whileNotNull          Loop while both lists still have elements
+ * findSmaller           Decide which list contributes next element
+ *
+ * E.tail<-L             Append L.head to merged chain
+ * E<-L                  Move E to follow appended element
+ * popL                  Advance L after append
+ *
+ * E.tail<-R             Append R.head to merged chain
+ * E<-R                  Move E to follow appended element
+ * popR                  Advance R after append
+ *
+ * appendR               Append remaining R when L is Null
+ * appendL               Append remaining L when R is Null
+ *
+ * returnM               Final merged list returned upward recursion
+ *
+ * -----------------------------------------------------------
+ * Notes
+ * -----------------------------------------------------------
+ * • Each mutation of (L, R, E, M, Tails) must be followed by a chunk.
+ * • Avoid adding chunks that do not exist in the pseudocode.
+ *
+ * If pseudocode changes, update the chunk order to match.
+ */
+
 
 import { msort_lista_td } from '../explanations';
 import LinkedListTracer from '../../components/DataStructures/LinkedList/LinkedListTracer';
@@ -294,7 +386,6 @@ export function run_msort() {
           vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
         }, [Tails, L, R, M, E], depth);
 
-
         // Bookmark: findSmaller
         chunker.add('findSmaller', (vis, T, cur_L, cur_R) => {
           vis.list.assignTag('L', cur_L);
@@ -302,15 +393,11 @@ export function run_msort() {
           vis.list.highlightHeads(cur_L, cur_R, ptrVariant.cmp);
         }, [Tails, L, R], depth);
 
-
         if (Heads[L] <= Heads[R]) {
-
           // Bookmark: E.tail <- L, E <- L, L <- L.tail
+          // Bookmark: E.tail <- L
           Tails[E] = L;
-          E = L;
-          L = Tails[L];
-
-          chunker.add('popL', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+          chunker.add('E.tail<-L', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
             vis.list.assignTag('L', cur_L);
             vis.list.assignTag('R', cur_R);
             vis.list.assignTag('M', cur_M);
@@ -320,14 +407,26 @@ export function run_msort() {
             vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
             colorRuns(vis, cur_L, cur_R, T);
           }, [Tails, L, R, M, E], depth);
+
+          // Bookmark: E <- L
+          E = L;
+          chunker.add('E<-L', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+            vis.list.assignTag('E', cur_E);
+            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+          }, [Tails, L, R, M, E], depth);
+
+          // Bookmark: L <- L.tail
+          L = Tails[L];
+          chunker.add('popL', (vis, T, cur_L) => {
+            vis.list.assignTag('L', cur_L);
+            colorRuns(vis, cur_L, R, T);
+          }, [Tails, L], depth);
+
 
         } else {
-
+          // Bookmark: E.tail <- R
           Tails[E] = R;
-          E = R;
-          R = Tails[R];
-
-          chunker.add('popR', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+          chunker.add('E.tail<-R', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
             vis.list.assignTag('L', cur_L);
             vis.list.assignTag('R', cur_R);
             vis.list.assignTag('M', cur_M);
@@ -337,6 +436,21 @@ export function run_msort() {
             vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
             colorRuns(vis, cur_L, cur_R, T);
           }, [Tails, L, R, M, E], depth);
+
+          // Bookmark: E <- R
+          E = R;
+          chunker.add('E<-R', (vis, T, cur_L, cur_R, cur_M, cur_E) => {
+            vis.list.assignTag('E', cur_E);
+            vis.list.colorMerged(cur_M, cur_E, ptrVariant.merged, T);
+          }, [Tails, L, R, M, E], depth);
+
+          // Bookmark: R <- R.tail
+          R = Tails[R];
+          chunker.add('popR', (vis, T, cur_R) => {
+            vis.list.assignTag('R', cur_R);
+            colorRuns(vis, L, cur_R, T);
+          }, [Tails, R], depth);
+
         }
       }
 
