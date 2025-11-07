@@ -82,6 +82,9 @@ class Array1DTracer extends Array2DTracer {
   }
 
   // Swaps two elements in 1D array
+  // XXX can be a bit glitchy with variables - see insertionSort version
+  // for experimentation
+  // Seems to trigger re-rendering after first assignment?
   swapElements(x, y) {
     const temp1 = { ...this.data[0][x], variables: this.data[0][y].variables };
     const temp2 = { ...this.data[0][y], variables: this.data[0][x].variables };

@@ -45,14 +45,19 @@ export default {
       BK.INIT,
       (vis, arr) => {
         vis.array.set(arr, 'insertion-sort');
-        vis.array.setStack?.([]);
-        vis.array.clearVariables?.();
+        // XXX attempted hacks: tweening for first element broken
+        // vis.array.setMotion(true);
+        // vis.array.assignVariable?.('', 0);
+        // vis.array.swapElements(0, 1);
+        // vis.array.setStack?.([]);
+        // vis.array.clearVariables?.();
 
         // if (N > 0) vis.array.selectColor(0, leftColor);
         for (let k = 0; k < N; k++) vis.array.selectColor(k, waitColor);
       },
       [A]
     );
+    // [A[0], A[1]] = [A[1], A[0]];
 
     for (let i = 1; i < N; i++) {
       const key = A[i];
@@ -99,11 +104,9 @@ export default {
         chunker.add(
           BK.WHILE,
           (vis, jVal) => {
+            vis.array.assignVariable?.('j', jVal+1);
             if (jVal >= 0) {
-              vis.array.assignVariable?.('j', jVal+1);
               vis.array.selectColor(jVal, focusColor);
-            } else { // XXX delete
-              vis.array.removeVariable?.('j');
             }
           },
           [j]
@@ -124,12 +127,7 @@ export default {
         chunker.add(
           BK.JDEC,
           (vis, jVal) => {
-            if (jVal >= 0) {
-              vis.array.assignVariable?.('j', jVal+1);
-              // vis.array.selectColor(jVal, focusColor);
-            } else { // XXX delete
-              vis.array.removeVariable?.('j');
-            }
+            vis.array.assignVariable?.('j', jVal+1);
           },
           [j]
         );
@@ -140,7 +138,7 @@ export default {
         BK.PLACE,
         (vis, tempIdx, targetIdx, upto, n) => {
           vis.array.swapElements(tempIdx, targetIdx);
-          vis.array.removeVariable?.('j');
+          vis.array.removeVariable?.('j'); // XXX ???
           // vis.array.assignVariable?.('key', targetIdx);
           for (let t = 0; t <= upto; t++) vis.array.selectColor(t, leftColor);
           for (let t = upto + 1; t < n; t++) vis.array.selectColor(t, waitColor);
