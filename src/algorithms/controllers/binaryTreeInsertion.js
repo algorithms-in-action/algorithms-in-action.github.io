@@ -5,10 +5,10 @@ import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 export default {
   initVisualisers() {
     return {
-      array: {
-        instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
-        order: 0,
-      },
+      // array: {
+        // instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
+        // order: 0,
+      // },
       graph: {
         instance: new GraphTracer('bst', null, 'Binary tree'),
         order: 1,
@@ -31,22 +31,44 @@ export default {
     tree[root] = {};
 
     // populate the ArrayTracer using nodes
-    chunker.add(
-      '1',
-      (vis, elements) => {
-        vis.array.set(elements);
-        // vis.array.select(0); // the index of root element is 0
-        // make a bit more room for tree
-        vis.graph.setSize(2.5);
-        vis.graph.setZoom(0.8);
-        vis.array.setZoom(0.9);
+    // chunker.add(
+      // '1',
+      // (vis, elements) => {
+        // vis.array.set(elements);
+        // // vis.array.select(0); // the index of root element is 0
+        // // make a bit more room for tree
+        // vis.graph.setSize(2.5);
+        // vis.graph.setZoom(0.8);
+        // vis.array.setZoom(0.9);
+      // },
+      // [nodes],
+    // );
+    // chunker.add('1', (vis) => {
+      // vis.array.select(0); // the index of root element is 0
+    // });
+    chunker.add(2, // XXX
+      (vis) => {
+        vis.graph.setFunctionName("Tree is Empty");
+        vis.graph.setSize(1.2); // XXX ??? needed?
+        vis.graph.setZoom(0.5);
       },
-      [nodes],
+      [],
     );
-    chunker.add('1', (vis) => {
-      vis.array.select(0); // the index of root element is 0
-    });
-    chunker.add(2);
+    chunker.add(2, // XXX
+      (vis, r) => {
+        vis.graph.setFunctionName("Inserting:");
+        vis.graph.setFunctionInsertText(` ${r} `);
+      },
+      [root],
+    );
+    chunker.add(2, // XXX more chunks needed
+      (vis, r) => {
+        vis.graph.addNode(r);
+        vis.graph.layoutBST(r, true);
+        vis.graph.select(r, null);
+      },
+      [root],
+    );
     chunker.add(
       3,
       (vis, r) => {
@@ -62,22 +84,26 @@ export default {
     chunker.add(7);
     chunker.add(8);
     for (let i = 1; i < nodes.length; i++) {
+
+      // BST_Insert() call
+      const element = nodes[i];
       chunker.add(
         2,
-        (vis, index, visited) => {
-          vis.array.deselect(index - 1);
-          vis.array.select(index);
+        (vis, index, visited, rr, k) => {
+          // vis.array.deselect(index - 1);
+          // vis.array.select(index);
           for (let j = 1; j < visited.length; j++) {
             vis.graph.leave(visited[j], visited[j - 1]);
           }
           if (nodes[index - 1] !== visited[visited.length - 1]) {
             vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
           }
+          vis.graph.setFunctionName("Inserting:");
+          vis.graph.setFunctionInsertText(` ${k} `);
         },
-        [i, visitedList],
+        [i, visitedList, root, element],
       );
       visitedList = [null];
-      const element = nodes[i];
       chunker.add(3);
       chunker.add(4);
       chunker.add(5);
@@ -145,7 +171,7 @@ export default {
     chunker.add(
       2,
       (vis, index, visited) => {
-        vis.array.deselect(index);
+        // vis.array.deselect(index);
         for (let j = 1; j < visited.length; j++) {
           vis.graph.leave(visited[j], visited[j - 1]);
         }
