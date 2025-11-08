@@ -146,10 +146,10 @@
     align-items: center;
     margin-top: 4px; // spacing from node
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 2px);
     left: 0;
     display: flex;
-    gap: 6px;
+    gap: 4px;
     pointer-events: none;
   }
 
@@ -198,37 +198,9 @@
   background: linear-gradient(90deg, #69c587 0 calc(100% - var(--cap-w)), #4ea46d calc(100% - var(--cap-w)));
 }
 
-/* Alternative gray variant (backup) */
-.variantGrayAlt .pill {
-  background: linear-gradient(90deg, #7a7a7a 0 calc(100% - var(--cap-w)), #5a5a5a calc(100% - var(--cap-w)));
-}
-
 /* ======================================================
    🔹 Node State Modifiers
    ====================================================== */
-
-/* Patched node: inner orange outline */
-.patched .pill {
-  box-shadow: 0 0 0 2px var(--peach) inset, 0 6px 16px rgba(0, 0, 0, .15);
-}
-
-/* Sorted node: inner gray outline */
-.sorted .pill {
-  box-shadow: 0 0 0 2px var(--stone) inset, 0 6px 16px rgba(0, 0, 0, .15);
-}
-
-/* Selection outlines (different colors for levels or groups) */
-.selected .pill { outline: 2px solid var(--sky); outline-offset: 2px; }
-.selected1 .pill { outline: 2px solid var(--leaf); outline-offset: 2px; }
-.selected2 .pill { outline: 2px solid var(--apple); outline-offset: 2px; }
-.selected3 .pill { outline: 2px solid var(--peach); outline-offset: 2px; }
-.selected4 .pill { outline: 2px solid var(--plum); outline-offset: 2px; }
-.selected5 .pill { outline: 2px solid var(--wood); outline-offset: 2px; }
-
-/* Faded node: semi-transparent */
-.faded {
-  opacity: .30;
-}
 
 /* Hidden node: fully transparent and slightly scaled down */
 .hidden {

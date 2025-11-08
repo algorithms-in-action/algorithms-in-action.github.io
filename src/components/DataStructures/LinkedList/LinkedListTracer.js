@@ -1,354 +1,280 @@
-// Fixed LinkedListTracer.js with connection update support
-
-import { cloneDeepWith } from 'lodash'
+/**
+ * Purpose:
+ *   Visual tracer for pointer-based linked list algorithms.
+ *   Supports dynamic node repositioning, highlighting, and pointer tags.
+ *
+ * Node Class:
+ *   Each list node is represented by a ListNode instance with:
+ *     - num (displayed value)
+ *     - nextKey (pointer to next visible node)
+ *     - fillVariant (color for visual state)
+ *     - pos (x,y position on canvas)
+ *     - variables (badges / stacked pointer labels)
+ *
+ * Index Mapping:
+ *   The algorithm uses 1-based integer indices for list structure (Tails array).
+ *   This tracer maps indices <-> visual node keys using indexToKey.
+ *
+ *   updateConnections() must be called after pointer updates to refresh edges.
+ *
+ * Tags:
+ *   assignTag(tagName, index)
+ *     - If index is undefined or 'Null', the tag is removed
+ *     - Otherwise tag is positioned on the node mapped from index
+ *     - Tags may stack (e.g. "L|E") if multiple point to same node
+ *
+ *   applyTags() centralizes rendering of all active tags
+ *   desiredTags stores the live association: tag -> list index
+ *
+ * Color Functions:
+ *   resetColors()
+ *       reset all nodes to default gray
+ *   colorChain(start, variant, Tails)
+ *       marks all nodes reachable from start index with variant color
+ *       or split to colorLeft/colorRight if to hardcode colors inside
+ *   colorChains(L, R, Tails, leftColor, rightColor, defaultColor)
+ *       resets all to defaultColor first, then colors L-chain and R-chain
+ *   colorMerged(M, E, Tails)
+ *       marks only the merged portion of list during merge sort
+ *   highlightHeads(L, R)
+ *       temporarily highlights one or two nodes under comparison to red
+ *   unhighlightHeads(L, R)
+ *       restores head colors after highlight to their chain colors
+ *
+ * Visibility Control:
+ *   hideChain(start, Tails)  — hide nodes in a pointer chain
+ *   showChain(start, Tails)  — show nodes in a pointer chain
+ *   hideAll() / showByKey() — global or selective control
+ *
+ * Node Positioning:
+ *   moveNodeTo(key, x, y)        — reposition single node
+ *   moveChainBelow(L, R, Tails)  — vertically separate right chain during recursion
+ *   repositionMergedChain(M, Tails)
+ *       layout merged output as a continuous chain
+ *
+ * Requirements for Algorithm Integration:
+ *   - After each pointer mutation in algorithm, call updateConnections(Tails)
+ *   - After any color or visibility change, call super.set() (handled internally)
+ *   - Tag updates must use assignTag(tag, index)
+ *
+ * Maintenance:
+ *   - assignTag(undefined) should be used to clear tags
+ *
+ *   Designed specifically for mergesort linked list animation,
+ *   but general enough for any singly-linked list visualization.
+ */
 
 import Tracer from '../common/Tracer.jsx';
 import LinkedListRenderer from "./LinkedListRenderer";
 import ListNode from "./ListNode";
 
-/**
- * LinkedListTracer
- * - Maintains a linked list model (nodes map + head/tail/next pointers).
- * - Exposes helper methods to mutate state (select, patch, fade, hide, etc.).
- * - Calls super.set() after any mutation to trigger a re-render.
- * - Renders via LinkedListRenderer.
- */
 class LinkedListTracer extends Tracer {
-  // Provide the renderer class used by this tracer
-  getRendererClass() { return LinkedListRenderer; }
 
-  // Initialize runtime state and default layout
-  init() {
-    super.init();
-    this.nodes = new Map();                  // key => ListNode
-    this.headKey = null;                     // key of head node
-    this.tailKey = null;                     // key of tail node
-    this.motionOn = true;                    // toggle motion animations
-    this.layout = { direction: 'horizontal', gap: 65, start: { x: 0, y: 0 } };
-    this.algo = undefined;                   // optional algorithm tag/name
-    this.listOfNumbers = '';                 // optional text snapshot
-    this.indexToKey = new Map();             // Map(1-based index => node key)
+  // ------------------------------------------------
+  // Constructor helpers
+  // ------------------------------------------------
+  getRendererClass() {
+    return LinkedListRenderer;
   }
 
-  /**
-   * Build the list from an array of values.
-   * Also fills indexToKey for 1-based indexing.
-   */
-  // Set up with index mapping
+  init() {
+    super.init();
+    this.nodes = new Map();
+    this.headKey = null;
+    this.tailKey = null;
+    this.motionOn = true;
+
+    this.layout = {
+      direction: 'horizontal',
+      gap: 65,
+      start: { x: 0, y: 0 },
+      nodeW: 50,
+      baselineY: 0,
+      rowWidth: 720,
+      rowGap: 36,
+    };
+
+    this.algo = undefined;
+    this.listOfNumbers = '';
+    this.indexToKey = new Map();
+
+    // tagName -> index (1-based)
+    this.desiredTags = {
+      L: undefined,
+      R: undefined,
+      M: undefined,
+      E: undefined,
+      Mid: undefined
+    };
+  }
+
+  // ------------------------------------------------
+  // Build linked list from numeric array
+  // ------------------------------------------------
   set(list = [], algo) {
     this.algo = algo;
     this.nodes.clear();
     this.indexToKey.clear();
-    let prevKey = null;
 
+    let prevKey = null;
     list.forEach((v, i) => {
-      const k = `n${i}_${Date.now()}`;       // unique-ish key
+      const k = `n${i}_${Date.now()}`;
       const node = new ListNode(v, k);
+
       node.pos.x = this.layout.start.x + i * this.layout.gap;
       node.pos.y = this.layout.start.y;
-      if (prevKey) {
-        this.nodes.get(prevKey).nextKey = k; // link previous to this
-      }
+
+      if (prevKey) this.nodes.get(prevKey).nextKey = k;
       this.nodes.set(k, node);
-      this.indexToKey.set(i + 1, k);         // 1-based index mapping
+      this.indexToKey.set(i + 1, k);
       prevKey = k;
     });
+
     this.headKey = list.length ? [...this.nodes.keys()][0] : null;
     this.tailKey = list.length ? [...this.nodes.keys()][list.length - 1] : null;
-
-    // if (this.headKey) this.nodes.get(this.headKey).variables.push('head');
-
-    super.set();                              // trigger render
+    super.set();
   }
 
-  /**
-   * Update next pointers using a "tailsArray":
-   * - tailsArray[index] gives the 1-based index of the next node
-   * - 'Null' or null means no next
-   */
-  // NEW: Update node connections based on Tails array
+  // ------------------------------------------------
+  // Update pointer connectivity using tails array
+  // ------------------------------------------------
   updateConnections(tailsArray) {
     for (const [index, key] of this.indexToKey.entries()) {
       const node = this.nodes.get(key);
-      if (node) {
-        const nextIndex = tailsArray[index];
-        if (nextIndex === 'Null' || nextIndex === null) {
-          node.nextKey = null;
-        } else {
-          const nextKey = this.indexToKey.get(nextIndex);
-          node.nextKey = nextKey || null;
-        }
-      }
+      if (!node) continue;
+      const nextIndex = tailsArray[index];
+      node.nextKey =
+        (nextIndex === 'Null' || nextIndex == null)
+          ? null
+          : this.indexToKey.get(nextIndex);
     }
     super.set();
   }
 
-  /**
-   * Update a node's value by its 1-based index.
-   */
-  // NEW: Update node value by index
-  updateValueByIndex(index, value) {
-    const key = this.indexToKey.get(index);
-    if (key) {
+  // ------------------------------------------------
+  // Coloring and merging visuals
+  // ------------------------------------------------
+
+  // Generic two-chain coloring helper.
+  // Tracer visual only; colors are provided by caller (algorithm-level).
+  colorChains(L, R, tailsArray, leftColor = 'orange', rightColor = 'blue', defaultColor = 'gray') {
+    // Reset all nodes to default first
+      this.resetColors(defaultColor);
+
+    // Apply left chain color
+    if (L && L !== 'Null') {
+      this.colorChain(L, leftColor, tailsArray);
+    }
+
+    // Apply right chain color
+    if (R && R !== 'Null') {
+      this.colorChain(R, rightColor, tailsArray);
+    }
+  }
+
+  resetColors() {
+    for (const n of this.nodes.values()) {
+      n.fillVariant = 'gray';
+    }
+    super.set();
+  }
+
+  colorChain(startIndex, varient, tailsArray) {
+    if (!startIndex || startIndex === 'Null') return;
+    for (let i = startIndex; i !== 'Null'; i = tailsArray[i]) {
+      const key = this.indexToKey.get(i);
+      if (!key) break;
       const node = this.nodes.get(key);
-      if (node) {
-        node.value = value;
-        super.set();
-      }
-    }
-  }
-
-  /**
-   * Assign a "variable" label to a node by 1-based index.
-   * Ensures the same varName exists on only one node at a time.
-   */
-  // NEW: Assign variable by array index
-  assignVariableByIndex(varName, index) {
-    // Remove the same variable from all nodes first
-    for (const node of this.nodes.values()) {
-      node.variables = node.variables.filter(x => x !== varName);
-    }
-
-    if (index && index !== 'Null') {
-      const key = this.indexToKey.get(index);
-      if (key) {
-        this.nodes.get(key)?.variables.push(varName);
-      }
+      if (!node) break;
+      node.fillVariant = varient;
     }
     super.set();
   }
 
-  /**
-   * Selection helpers using 1-based indices.
-   * color: '0' for default, or '1'..'5' for colored slots.
-   */
-  // NEW: Select by array index
-  selectByIndex(index, color = '0') {
-    const key = this.indexToKey.get(index);
-    if (key) this.selectByKey(key, color);
-  }
-
-  // NEW: Deselect by array index
-  deselectByIndex(index) {
-    const key = this.indexToKey.get(index);
-    if (key) this.deselectByKey(key);
-  }
-
-  // ---- Selection helpers by key ----
-  // Existing methods
-  selectByKey(k, c = '0') { this._mark(k, c, true); }
-  deselectByKey(k) { this._clearSelect(k); }
-
-  /**
-   * Mark node as "patched" (e.g., temporarily updated) and optionally set value.
-   * Increments patched counter to allow nested patching.
-   */
-  patchByKey(k, v = this.nodes.get(k)?.value) {
-    const n = this.nodes.get(k);
-    if (!n) return;
-    n.value = v;
-    n.patched++;
+  colorMerged(M, E, tailsArray) {
+    if (!M || M === 'Null') return;
+    for (let i = M; i !== 'Null'; i = tailsArray[i]) {
+      const key = this.indexToKey.get(i);
+      if (!key) break;
+      const node = this.nodes.get(key);
+      if (!node) break;
+      node.fillVariant = 'green';
+      if (i === E) break;
+    }
     super.set();
   }
 
-  /**
-   * Reverse one patch level (decrement patched), keep value in sync.
-   */
-  depatchByKey(k, v = this.nodes.get(k)?.value) {
-    const n = this.nodes.get(k);
-    if (!n) return;
-    n.patched = Math.max(0, n.patched - 1);
-    n.value = v;
+  highlightHeads(L, R) {
+    if (L && L !== 'Null') {
+      const key = this.indexToKey.get(L);
+      const node = this.nodes.get(key);
+      if (node) node.fillVariant = 'red';
+    }
+    if (R && R !== 'Null') {
+      const key = this.indexToKey.get(R);
+      const node = this.nodes.get(key);
+      if (node) node.fillVariant = 'red';
+    }
     super.set();
   }
 
-  // Visual emphasis helpers
-  fadeOutByKey(k) {
-    const n = this.nodes.get(k);
-    if (n) {
-      n.faded = true;
-      super.set();
+  // Remove highlight by directly restoring head colors (no other recoloring)
+  unhighlightHeads(L, R) {
+    if (L && L !== 'Null') {
+      const kL = this.indexToKey.get(L);
+      const nL = this.nodes.get(kL);
+      if (nL) nL.fillVariant = 'orange'; // left head back to orange
     }
+    if (R && R !== 'Null') {
+      const kR = this.indexToKey.get(R);
+      const nR = this.nodes.get(kR);
+      if (nR) nR.fillVariant = 'blue';   // right head back to blue
+    }
+    super.set();
   }
 
-  fadeInByKey(k) {
-    const n = this.nodes.get(k);
-    if (n) {
-      n.faded = false;
-      super.set();
-    }
+  // ------------------------------------------------
+  // Visibility control
+  // ------------------------------------------------
+  hideAll() {
+    for (const key of this.nodes.keys()) this.hideByKey(key);
   }
 
-  // Mark a node as sorted (e.g., final positioning)
-  sortedByKey(k) {
-    const n = this.nodes.get(k);
-    if (n) {
-      n.sorted = true;
-      super.set();
-    }
-  }
-
-  // Visibility toggles for a single node
   hideByKey(k) {
     const n = this.nodes.get(k);
-    if (n) {
-      n.hidden = true;
-      super.set();
-    }
+    if (!n) return;
+    n.hidden = true;
+    super.set();
   }
 
   showByKey(k) {
     const n = this.nodes.get(k);
-    if (n) {
-      n.hidden = false;
-      super.set();
+    if (!n) return;
+    n.hidden = false;
+    super.set();
+  }
+
+  hideChain(startIndex, tailsArray = []) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) this.hideByKey(key);
     }
   }
 
-  /**
-   * Hide an entire chain starting from startKey (following next pointers).
-   */
-  hideFromNode(startKey) {
-    let current = startKey;
-    while (current !== null && current !== 'Null') {
-      const node = this.nodes.get(current);
-      if (!node) break;
-      node.hidden = true;
-      current = node.nextKey;
+  showChain(startIndex, tailsArray = []) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) this.showByKey(key);
     }
-    super.set();
   }
 
-  /**
-   * Show an entire chain starting from startKey (following next pointers).
-   */
-  showFromNode(startKey) {
-    let current = startKey;
-    while (current !== null && current !== 'Null') {
-      const node = this.nodes.get(current);
-      if (!node) break;
-      node.hidden = false;
-      current = node.nextKey;
-    }
-    super.set();
-  }
-
-  // Batch visibility helpers
-  hideRange(keys) {
-    keys.forEach(k => {
-      const n = this.nodes.get(k);
-      if (n) n.hidden = true;
-    });
-    super.set();
-  }
-
-  showRange(keys) {
-    keys.forEach(k => {
-      const n = this.nodes.get(k);
-      if (n) n.hidden = false;
-    });
-    super.set();
-  }
-
-  /**
-   * Hide everything except the provided keys.
-   */
-  hideExcept(keepKeys) {
-    for (const [key, node] of this.nodes.entries()) {
-      node.hidden = !keepKeys.includes(key);
-    }
-    super.set();
-  }
-
-  /**
-   * Reset visibility and emphasis for all nodes.
-   */
-  showAll() {
-    for (const node of this.nodes.values()) {
-      node.hidden = false;
-      node.faded = false;
-    }
-    super.set();
-  }
-
-  // Batch emphasis toggles
-  fadeRange(keys) {
-    keys.forEach(k => {
-      const n = this.nodes.get(k);
-      if (n) n.faded = true;
-    });
-    super.set();
-  }
-
-  unfadeRange(keys) {
-    keys.forEach(k => {
-      const n = this.nodes.get(k);
-      if (n) n.faded = false;
-    });
-    super.set();
-  }
-
-  /**
-   * Assign a variable label to a specific node by key,
-   * ensuring uniqueness of that label across all nodes.
-   */
-  assignVariableAtKey(v, k) {
-    for (const node of this.nodes.values()) {
-      node.variables = node.variables.filter(x => x !== v);
-    }
-    if (k) this.nodes.get(k)?.variables.push(v);
-    super.set();
-  }
-
-  /**
-   * Remove all variable labels from all nodes.
-   */
-  clearVariables() {
-    for (const n of this.nodes.values()) n.variables = [];
-    super.set();
-  }
-
-  /**
-   * Insert a new node after a given node key.
-   * Positions the new node one gap to the right of the reference.
-   */
-  insertAfter(afterKey, value, newKey = `n_${Date.now()}`) {
-    const newNode = new ListNode(value, newKey);
-    const after = this.nodes.get(afterKey);
-    newNode.pos.x = (after?.pos.x ?? 0) + this.layout.gap;
-    newNode.pos.y = (after?.pos.y ?? 0);
-    newNode.nextKey = after?.nextKey ?? null;
-    if (after) after.nextKey = newKey;
-    if (this.tailKey === afterKey) this.tailKey = newKey;
-    this.nodes.set(newKey, newNode);
-    super.set();
-  }
-
-  /**
-   * Delete the node immediately after prevKey (if any).
-   */
-  deleteAfter(prevKey) {
-    const prev = this.nodes.get(prevKey);
-    if (!prev || !prev.nextKey) return;
-    const delKey = prev.nextKey;
-    const delNode = this.nodes.get(delKey);
-    prev.nextKey = delNode?.nextKey ?? null;
-    if (this.tailKey === delKey) this.tailKey = prevKey;
-    this.nodes.delete(delKey);
-    super.set();
-  }
-
-  /**
-   * Set a new head (by key). Does not change positions or next pointers.
-   */
-  rehead(newHeadKey) {
-    this.headKey = newHeadKey ?? null;
-    super.set();
-  }
-
-  /**
-   * Move a node to an absolute (x, y) position.
-   */
+  // ------------------------------------------------
+  // Node positioning (used by recursive split + merge visuals)
+  // ------------------------------------------------
   moveNodeTo(k, x, y) {
     const n = this.nodes.get(k);
     if (!n) return;
@@ -356,52 +282,89 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
-  // Toggle motion animations (does not trigger render by itself)
-  setMotion(b = true) {
-    this.motionOn = b;
-  }
+  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 60) {
+    if (!rightStart || rightStart === 'Null') return;
+    const T = tailsArray;
 
-  // Merge provided layout properties into current layout
-  setLayout(layout) {
-    this.layout = { ...this.layout, ...layout };
-    super.set();
-  }
+    const leftKey = this.indexToKey.get(leftStart);
+    const firstLeft = this.nodes.get(leftKey);
 
-  // Save a human-readable snapshot of the list values
-  setList(arr) {
-    this.listOfNumbers = arr ? arr.join(', ') : undefined;
-  }
+    const startX = firstLeft ? firstLeft.pos.x : 0;
+    const startY = firstLeft ? firstLeft.pos.y + verticalGap : verticalGap;
 
-  /**
-   * Internal selection marker:
-   * - c: '0' increments the generic selected counter
-   * - c: '1'..'5' toggles named selection flags (selected1..selected5)
-   * - on=false clears all selection flags
-   */
-  _mark(k, c, on) {
-    const n = this.nodes.get(k);
-    if (!n) return;
-    const color = Number(c);
-    if (on) {
-      if (color === 0) n.selected++;
-      else if (color >= 1 && color <= 5) n[`selected${color}`] = true;
-      else n.selected = 1;
-    } else {
-      n.selected = 0;
-      for (let i = 1; i <= 5; i++) n[`selected${i}`] = false;
+    let xOffset = 0;
+    for (let i = rightStart; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) {
+        this.moveNodeTo(key, startX + xOffset, startY);
+        xOffset += this.layout.gap;
+      }
     }
-    super.set();
   }
 
-  /**
-   * Clear all selection flags on a node and unset "sorted".
-   */
-  _clearSelect(k) {
-    const n = this.nodes.get(k);
-    if (!n) return;
-    n.selected = 0;
-    for (let i = 1; i <= 5; i++) n[`selected${i}`] = false;
-    n.sorted = false;
+  repositionMergedChain(startIndex, tailsArray = [], gap = 65) {
+    if (!startIndex || startIndex === 'Null') return;
+    const T = tailsArray;
+
+    const merged = [];
+    for (let i = startIndex; i !== 'Null'; i = T[i]) {
+      const key = this.indexToKey.get(i);
+      if (key) merged.push({ key, node: this.nodes.get(key) });
+    }
+    if (!merged.length) return;
+
+    const leftmostX = Math.min(...merged.map(n => n.node.pos.x));
+    const avgY = merged.reduce((s, n) => s + n.node.pos.y, 0) / merged.length;
+
+    merged.forEach((item, idx) => {
+      this.moveNodeTo(item.key, leftmostX + idx * gap, avgY);
+    });
+  }
+
+  // ------------------------------------------------
+  // Tag & badge assignment (pointer variables)
+  // ------------------------------------------------
+
+  // Assign or clear a tag
+  assignTag(tagName, index) {
+    this.desiredTags[tagName] =
+      (index === 'Null' || index === undefined) ? undefined : index;
+    this.applyTags();
+  }
+
+  // Apply stacked tags to nodes
+  applyTags() {
+    const names = Object.keys(this.desiredTags);
+
+    // Remove old stacked and simple name badges
+    for (const node of this.nodes.values()) {
+      node.variables = node.variables.filter(v => {
+        return !names.includes(v) && !v.includes('|');
+      });
+    }
+
+    // Bucket: index -> [tag names]
+    const buckets = new Map();
+    names.forEach(name => {
+      const idx = this.desiredTags[name];
+      if (idx !== undefined && idx !== 'Null') {
+        if (!buckets.has(idx)) buckets.set(idx, []);
+        buckets.get(idx).push(name);
+      }
+    });
+
+    // Write back stacked variables (badge)
+    for (const [idx, tags] of buckets.entries()) {
+      const key = this.indexToKey.get(idx);
+      if (!key) continue;
+      const n = this.nodes.get(key);
+      if (!n) continue;
+
+      const stacked = tags.join('|');
+      n.variables = n.variables.filter(v => !names.includes(v) && !v.includes('|'));
+      n.variables.push(stacked);
+    }
+
     super.set();
   }
 }
