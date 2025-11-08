@@ -28,7 +28,7 @@
 // coloring the nodes sufficient?
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import {colorsCH} from './convexHullColours';
+import {CHColors} from './convexHullColours';
 
 export default {
   initVisualisers() {
@@ -65,7 +65,7 @@ export default {
     // color nodes in points[min...max] - called inside chunker
     function colorNodes(vis, points, min, max, color) {
       for (let i = min; i <= max; i++) {
-        vis.graph.colorNode(points[i].id, color);
+        vis.graph.myColorNode(points[i].id, color);
       }
     }
 
@@ -146,7 +146,7 @@ export default {
          (vis, pl, pr) => {
            vis.graph.updateUpperLabel(pr, rStr);
            vis.graph.addEdge(pr, pl);
-           vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
+           vis.graph.myColorEdge(pr, pl, CHColors.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id], depth
       );
@@ -183,11 +183,11 @@ export default {
       chunker.add('upperWhile',
          (vis, pl, pr, pl1, pr1) => {
            // vis.graph.addEdge(pr, pl);
-           // vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
-           vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
+           // vis.graph.myColorEdge(pr, pl, CHColors.DCTANGENT_E);
+           vis.graph.myColorEdge(pr1, pr, CHColors.DCTANGENT_E);
            vis.graph.updateUpperLabel(pl1, nextlStr);
            vis.graph.updateUpperLabel(pr1, prevrStr);
-           vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
+           vis.graph.myColorEdge(pl, pl1, CHColors.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
       );
@@ -196,8 +196,8 @@ export default {
         if (orientation(HL[l], HR[r], HR[(r - 1 + HR.length) % HR.length]) > 0) {
           chunker.add('prev(r)->r->l',
              (vis, pl, pr, pr1) => {
-               vis.graph.colorEdge(pr1, pr, colorsCH.DCCLOCKWISE_E);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pr1, pr, CHColors.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCCLOCKWISE_E);
             },
            [HL[l].id, HR[r].id, HR[r1].id], depth
           );
@@ -212,17 +212,17 @@ export default {
                vis.graph.updateUpperLabel(pr, rStr);
                vis.graph.updateUpperLabel(pr1, prevrStr);
                vis.graph.addEdge(pr, pl);
-               vis.graph.removeEdgeColor(pr, pro);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
+               vis.graph.myColorEdge(pr, pro, undefined);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pr1, pr, CHColors.DCTANGENT_E);
             },
            [HL[l].id, HR[r].id, HR[r1].id, HR[rold].id], depth
           );
         } else {
           chunker.add('prev(r)->r->l',
              (vis, pl, pr, pr1) => {
-               vis.graph.colorEdge(pr1, pr, colorsCH.DCANTICLOCK_E);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pr1, pr, CHColors.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCANTICLOCK_E);
             },
            [HL[l].id, HR[r].id, HR[r1].id], depth
           );
@@ -230,10 +230,10 @@ export default {
         if (orientation(HR[r], HL[l], HL[(l + 1) % HL.length]) < 0) {
           chunker.add('r->l->next(l)',
              (vis, pl, pr, pl1, pr1, pro) => {
-               vis.graph.removeEdgeColor(pro, pr);
-               vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCCLOCKWISE_E);
-               vis.graph.colorEdge(pl, pl1, colorsCH.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pro, pr, undefined);
+               vis.graph.myColorEdge(pr1, pr, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pl, pl1, CHColors.DCCLOCKWISE_E);
             },
            [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id, HR[rold].id], depth
           );
@@ -248,18 +248,18 @@ export default {
                vis.graph.removeEdge(pr, plo);
                vis.graph.removeEdge(plo, pl);
                vis.graph.addEdge(pr, pl);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pl, pl1, CHColors.DCTANGENT_E);
             },
            [HL[l].id, HR[r].id, HL[l1].id, HL[lold].id], depth
           );
         } else {
           chunker.add('r->l->next(l)',
              (vis, pl, pr, pl1, pr1, pro) => {
-               vis.graph.removeEdgeColor(pro, pr);
-               vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pr, pl, colorsCH.DCANTICLOCK_E);
-               vis.graph.colorEdge(pl, pl1, colorsCH.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pro, pr, undefined);
+               vis.graph.myColorEdge(pr1, pr, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pr, pl, CHColors.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pl, pl1, CHColors.DCANTICLOCK_E);
             },
            [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id, HR[rold].id], depth
           );
@@ -270,10 +270,10 @@ export default {
              vis.graph.updateUpperLabel(pr, rStr);
              vis.graph.updateUpperLabel(pl1, nextlStr);
              vis.graph.updateUpperLabel(pr1, prevrStr);
-             vis.graph.removeEdgeColor(pl, plo);
-             vis.graph.colorEdge(pr1, pr, colorsCH.DCTANGENT_E);
-             vis.graph.colorEdge(pr, pl, colorsCH.DCTANGENT_E);
-             vis.graph.colorEdge(pl, pl1, colorsCH.DCTANGENT_E);
+             vis.graph.myColorEdge(pl, plo, undefined);
+             vis.graph.myColorEdge(pr1, pr, CHColors.DCTANGENT_E);
+             vis.graph.myColorEdge(pr, pl, CHColors.DCTANGENT_E);
+             vis.graph.myColorEdge(pl, pl1, CHColors.DCTANGENT_E);
           },
          [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id, HL[lold].id], depth
         );
@@ -284,9 +284,9 @@ export default {
            vis.graph.updateUpperLabel(pl1, '');
            vis.graph.updateUpperLabel(pr, uhrStr);
            vis.graph.updateUpperLabel(pr1, '');
-           vis.graph.removeEdgeColor(pr1, pr);
-           vis.graph.removeEdgeColor(pr, pl);
-           vis.graph.removeEdgeColor(pl, pl1);
+           vis.graph.myColorEdge(pr1, pr, undefined);
+           vis.graph.myColorEdge(pr, pl, undefined);
+           vis.graph.myColorEdge(pl, pl1, undefined);
         },
        [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
       );
@@ -316,7 +316,7 @@ export default {
          (vis, pl, pr) => {
            vis.graph.updateLowerLabel(pr, rStr);
            vis.graph.addEdge(pl, pr);
-           vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
+           vis.graph.myColorEdge(pl, pr, CHColors.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id], depth
       );
@@ -332,10 +332,10 @@ export default {
       r1id = HR[r1].id;
       chunker.add('lowerWhile',
          (vis, pl, pr, pl1, pr1) => {
-           vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
+           vis.graph.myColorEdge(pr, pr1, CHColors.DCTANGENT_E);
            vis.graph.updateLowerLabel(pl1, prevlStr);
            vis.graph.updateLowerLabel(pr1, nextrStr);
-           vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
+           vis.graph.myColorEdge(pl1, pl, CHColors.DCTANGENT_E);
         },
        [HL[l].id, HR[r].id, HL[l1].id, HR[r1].id], depth
       );
@@ -344,8 +344,8 @@ export default {
         if (orientation(HR[r], HL[l], HL[(l - 1 + HL.length) % HL.length]) > 0) {
           chunker.add('prev(l)->l->r',
              (vis, pl, pr, pl1) => {
-               vis.graph.colorEdge(pl1, pl, colorsCH.DCCLOCKWISE_E);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pl1, pl, CHColors.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCCLOCKWISE_E);
             },
            [HL[l].id, HR[r].id, HL[l1].id], depth
           );
@@ -365,9 +365,9 @@ export default {
                vis.graph.updateLowerLabel(pl, lStr);
                vis.graph.updateLowerLabel(pl1, prevlStr);
                vis.graph.addEdge(pl, pr);
-               vis.graph.removeEdgeColor(pl, plo);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
+               vis.graph.myColorEdge(pl, plo, undefined);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pl1, pl, CHColors.DCTANGENT_E);
             },
            [HL[l].id, HR[r].id, l1id, HL[lold].id], depth
           );
@@ -375,8 +375,8 @@ export default {
           l1id = HL[l1].id;
           chunker.add('prev(l)->l->r',
              (vis, pl, pr, pl1) => {
-               vis.graph.colorEdge(pl1, pl, colorsCH.DCANTICLOCK_E);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pl1, pl, CHColors.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCANTICLOCK_E);
             },
            [HL[l].id, HR[r].id, l1id], depth
           );
@@ -384,10 +384,10 @@ export default {
         if (orientation(HL[l], HR[r], HR[(r + 1) % HR.length]) < 0) {
           chunker.add('l->r->next(r)',
              (vis, pl, pr, pl1, pr1, plo) => {
-               vis.graph.removeEdgeColor(plo, pl);
-               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCCLOCKWISE_E);
-               vis.graph.colorEdge(pr, pr1, colorsCH.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(plo, pl, undefined);
+               vis.graph.myColorEdge(pl1, pl, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCCLOCKWISE_E);
+               vis.graph.myColorEdge(pr, pr1, CHColors.DCCLOCKWISE_E);
             },
            [HL[l].id, HR[r].id, l1id, HR[r1].id, HL[lold].id], depth
           );
@@ -414,8 +414,8 @@ export default {
                vis.graph.removeEdge(pl, pro);
                vis.graph.removeEdge(pro, pr);
                vis.graph.addEdge(pl, pr);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pr, pr1, CHColors.DCTANGENT_E);
             },
            [HL[l].id, HR[r].id, r1id, HR[rold].id], depth
           );
@@ -423,10 +423,10 @@ export default {
           r1id = HR[r1].id;
           chunker.add('l->r->next(r)',
              (vis, pl, pr, pl1, pr1, plo) => {
-               vis.graph.removeEdgeColor(plo, pl);
-               vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
-               vis.graph.colorEdge(pl, pr, colorsCH.DCANTICLOCK_E);
-               vis.graph.colorEdge(pr, pr1, colorsCH.DCANTICLOCK_E);
+               vis.graph.myColorEdge(plo, pl, undefined);
+               vis.graph.myColorEdge(pl1, pl, CHColors.DCTANGENT_E);
+               vis.graph.myColorEdge(pl, pr, CHColors.DCANTICLOCK_E);
+               vis.graph.myColorEdge(pr, pr1, CHColors.DCANTICLOCK_E);
             },
            [HL[l].id, HR[r].id, l1id, r1id, HL[lold].id], depth
           );
@@ -439,9 +439,9 @@ export default {
              vis.graph.updateLowerLabel(pr1, nextrStr);
              // vis.graph.removeEdgeColor(pr, pl);
              // vis.graph.removeEdgeColor(pro, pr);
-             vis.graph.colorEdge(pl1, pl, colorsCH.DCTANGENT_E);
-             vis.graph.colorEdge(pl, pr, colorsCH.DCTANGENT_E);
-             vis.graph.colorEdge(pr, pr1, colorsCH.DCTANGENT_E);
+             vis.graph.myColorEdge(pl1, pl, CHColors.DCTANGENT_E);
+             vis.graph.myColorEdge(pl, pr, CHColors.DCTANGENT_E);
+             vis.graph.myColorEdge(pr, pr1, CHColors.DCTANGENT_E);
           },
          [HL[l].id, HR[r].id, l1id, r1id, HL[lold].id], depth
         );
@@ -452,9 +452,9 @@ export default {
            vis.graph.updateLowerLabel(pl1, '');
            vis.graph.updateLowerLabel(pr, lhrStr);
            vis.graph.updateLowerLabel(pr1, '');
-           vis.graph.removeEdgeColor(pr, pr1);
-           vis.graph.removeEdgeColor(pl, pr);
-           vis.graph.removeEdgeColor(pl1, pl);
+           vis.graph.myColorEdge(pr, pr1, undefined);
+           vis.graph.myColorEdge(pl, pr, undefined);
+           vis.graph.myColorEdge(pl1, pl, undefined);
         },
        [HL[l].id, HR[r].id, l1id, r1id, HL[upperL].id, HR[upperR].id], depth
       );
@@ -490,8 +490,8 @@ export default {
     function colinChunks(p1, p2, p3, label3, str2, bookmark1, bookmark2, isUpper, depth) {
       chunker.add(bookmark1,
          (vis, p1, p2, p3) => {
-           vis.graph.colorEdge(p1, p2, colorsCH.DCCOLINEAR_E);
-           vis.graph.colorEdge(p2, p3, colorsCH.DCCOLINEAR_E);
+           vis.graph.myColorEdge(p1, p2, CHColors.DCCOLINEAR_E);
+           vis.graph.myColorEdge(p2, p3, CHColors.DCCOLINEAR_E);
         },
        [p1, p2, p3], depth
       );
@@ -538,11 +538,11 @@ export default {
         chunker.add('allColinear',
            (vis, pl, pr, pl1, pr1) => {
              // vis.graph.removeEdgeColor(pr, pr1);
-             vis.graph.colorNode(pl, colorsCH.DCHULL_N);
-             vis.graph.colorNode(pr, colorsCH.DCHULL_N);
-             vis.graph.colorNode(pl1, colorsCH.DCHULL_N);
-             vis.graph.colorNode(pr1, colorsCH.DCHULL_N);
-             vis.graph.colorEdge(pl, pr, colorsCH.HULL_E);
+             vis.graph.myColorNode(pl, CHColors.DCHULL_N);
+             vis.graph.myColorNode(pr, CHColors.DCHULL_N);
+             vis.graph.myColorNode(pl1, CHColors.DCHULL_N);
+             vis.graph.myColorNode(pr1, CHColors.DCHULL_N);
+             vis.graph.myColorEdge(pl, pr, CHColors.HULL_E);
           },
          [HL[ui].id, HR[uj].id, HL[inext].id, HR[jnext].id], depth
         );
@@ -554,8 +554,8 @@ export default {
              vis.graph.removeEdge(pl1, pl);
              vis.graph.removeEdge(pr, pl);
              vis.graph.removeEdge(pl, pr);
-             vis.graph.colorNode(pl, undefined);
-             vis.graph.colorNode(pr, undefined);
+             vis.graph.myColorNode(pl, undefined);
+             vis.graph.myColorNode(pr, undefined);
              vis.graph.addEdge(pl1, pr1);
              vis.graph.addEdge(pr1, pl1);
              vis.graph.updateUpperLabel(pl, '');
@@ -609,7 +609,7 @@ export default {
         hull.push(HL[i]);
         chunker.add('initH',
            (vis, cp, nv) => {
-             vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+             vis.graph.myColorNode(cp, CHColors.DCHULL_N);
                vis.graph.updateUpperLabel(cp, '');
                vis.graph.updateLowerLabel(cp, '');
           },
@@ -620,7 +620,7 @@ export default {
           hull.push(HL[i]);
           chunker.add('addUhl',
              (vis, cp) => {
-               vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+               vis.graph.myColorNode(cp, CHColors.DCHULL_N);
                vis.graph.updateLowerLabel(cp, '');
             },
            [HL[i].id], depth
@@ -632,7 +632,7 @@ export default {
         if (j !== jLast) { // not the last point added
           chunker.add('addUhr0',
              (vis, cp) => {
-               vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+               vis.graph.myColorNode(cp, CHColors.DCHULL_N);
                vis.graph.updateLowerLabel(cp, '');
             },
            [HR[j].id], depth
@@ -644,8 +644,8 @@ export default {
                vis.graph.updateUpperLabel(cp, '');
                for (let i = 0; i < nv; i++)
                  if (!h.some((p) => p.id === i))
-                   vis.graph.colorNode(i, undefined);
-               vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+                   vis.graph.myColorNode(i, undefined);
+               vis.graph.myColorNode(cp, CHColors.DCHULL_N);
             },
            [HR[j].id, hull, numVertices], depth
           );
@@ -657,7 +657,7 @@ export default {
             chunker.add('addUhr',
                (vis, cp) => {
                  vis.graph.updateUpperLabel(cp, '');
-                 vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+                 vis.graph.myColorNode(cp, CHColors.DCHULL_N);
               },
              [HR[j].id], depth
             );
@@ -667,8 +667,8 @@ export default {
                  vis.graph.updateUpperLabel(cp, '');
                  for (let i = 0; i < nv; i++)
                    if (!h.some((p) => p.id === i))
-                     vis.graph.colorNode(i, undefined);
-                 vis.graph.colorNode(cp, colorsCH.DCHULL_N);
+                     vis.graph.myColorNode(i, undefined);
+                 vis.graph.myColorNode(cp, CHColors.DCHULL_N);
               },
              [HR[j].id, hull, numVertices], depth
             );
@@ -689,7 +689,7 @@ export default {
     function convexHullDC(points, depth) {
       chunker.add('CHDC',
          (vis, pts) => {
-           colorNodes(vis, pts, 0, pts.length - 1, colorsCH.DCLEFT_N);
+           colorNodes(vis, pts, 0, pts.length - 1, CHColors.DCLEFT_N);
         },
        [points], depth
       );
@@ -701,7 +701,7 @@ export default {
         if (ccPoints.length === 1) {
           chunker.add('n<=3',
             (vis, pts) => {
-              colorNodes(vis, pts, 0, pts.length - 1, colorsCH.DCHULL_N);
+              colorNodes(vis, pts, 0, pts.length - 1, CHColors.DCHULL_N);
            },
            [ccPoints], depth
           );
@@ -712,7 +712,7 @@ export default {
                // XX curved edges - not ideal?? nothing better?
                vis.graph.addEdge(pts[0].id, pts[1].id);
                vis.graph.addEdge(pts[1].id, pts[0].id);
-               colorNodes(vis, pts, 0, pts.length - 1, colorsCH.DCHULL_N);
+               colorNodes(vis, pts, 0, pts.length - 1, CHColors.DCHULL_N);
             },
            [ccPoints], depth
           );
@@ -723,7 +723,7 @@ export default {
                vis.graph.addEdge(pts[0].id, pts[1].id);
                vis.graph.addEdge(pts[1].id, pts[2].id);
                vis.graph.addEdge(pts[2].id, pts[0].id);
-               colorNodes(vis, pts, 0, pts.length - 1, colorsCH.DCHULL_N);
+               colorNodes(vis, pts, 0, pts.length - 1, CHColors.DCHULL_N);
             },
            [ccPoints], depth
           );
@@ -745,7 +745,7 @@ export default {
       const mid = Math.floor(points.length / 2);
       chunker.add('mid',
          (vis, pts, m) => {
-           colorNodes(vis, pts, m, pts.length - 1, colorsCH.DCRIGHT_N);
+           colorNodes(vis, pts, m, pts.length - 1, CHColors.DCRIGHT_N);
         },
        [points, mid], depth
       );
@@ -759,7 +759,7 @@ export default {
       const leftHull = convexHullDC(points.slice(0, mid), depth + 1);
       chunker.add('recursiveL',
          (vis, pts, m) => {
-           colorNodes(vis, pts, m, pts.length - 1, colorsCH.DCRIGHT_N);
+           colorNodes(vis, pts, m, pts.length - 1, CHColors.DCRIGHT_N);
         },
        [points, mid], depth
       );
@@ -772,8 +772,8 @@ export default {
       const rightHull = convexHullDC(points.slice(mid), depth + 1);
       chunker.add('recursiveR',
          (vis, pts, m) => {
-           colorNodes(vis, pts, 0, m-1, colorsCH.DCLEFT_N);
-           colorNodes(vis, pts, m, pts.length - 1, colorsCH.DCRIGHT_N);
+           colorNodes(vis, pts, 0, m-1, CHColors.DCLEFT_N);
+           colorNodes(vis, pts, m, pts.length - 1, CHColors.DCRIGHT_N);
         },
        [points, mid], depth
       );

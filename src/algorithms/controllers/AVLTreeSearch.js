@@ -46,6 +46,8 @@ export default {
 
         chunker.add('AVL_Search(t, k)', (vis, c, p) => {
             vis.graph.setZoom(0.55);
+            // Remove all the recursion rectangles first
+            vis.graph.popAllRectStack();
             vis.graph.setFunctionInsertText("(t, " + target + ")");
             vis.graph.setFunctionName("AVL_Search");
             vis.graph.visit(c, p);

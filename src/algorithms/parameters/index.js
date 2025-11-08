@@ -30,8 +30,8 @@ export { default as isort} from './isort'
 export { default as BSTrec} from './BSTrec'
 export { default as msort_list_td} from './msort_list_td'
 export { default as gwrap} from './gwrap'
+export { default as insertionSortParam} from './insertionSortParam';
+export { default as selectionSortParam} from './selectionSortParam';
 export { default as convHullDC } from './convHullDC.js';
 export { default as grahamScan } from './grahamScan.js';
-
 export { default as hsortNewColors } from './hsortNewColors.js';
-

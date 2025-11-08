@@ -17,19 +17,13 @@ const highlightColor = colors.apple; // for i,j in partition,...
 // see stackFrameColour in Array1DRenderer/index.js to find corresponding function mapping to css
 const STACK_FRAME_COLOR = {
   No_color: 0,
-  In_progress_stackFrame: 1,
-  Current_stackFrame: 2,
-  Finished_stackFrame: 3,
-  I_color: 4, // not currently used
-  J_color: 5, // not currently used
-  P_color: 6, // pivot, left-over from quicksort
-  // Because MSD radix sort doesn't have a pivot splitting the two
-  // halves of a partition, it was hard to reconsruct recursion after
-  // the fact.  The solution here is to have a separate colour for the
-  // right part of each partition (when known)
-  In_progress_stackFrameR: 7,
-  Current_stackFrameR: 8,
-  Finished_stackFrameR: 9,
+  In_progress_stackFrame: 1,  // In progress (index 1)
+  Current_stackFrame: 2,       // Current (index 2)  
+  Finished_stackFrame: 3,      // Completed (index 3)
+  I_color: 4,  // Not used
+  J_color: 5,  // Not used
+  P_color: 6,  // Not used
+  // Removed In_progress_stackFrameR, Current_stackFrameR, Finished_stackFrameR
 };
 
 const VIS_VARIABLE_STRINGS = {
@@ -68,17 +62,27 @@ const MSD_BOOKMARKS = {
 // update stack frame left..right with new value(s)
 // If mid is defined and index >= mid use stateValR, otherwise stateVal
 // Stack frames are all [left, right, mid, depth],
-const FRAME_MID = 2;
-const FRAME_DEPTH = 3;
-const update_vis_with_stack_frame = (a, stack_frame, stateVal, stateValR) => {
-  let left, right, mid, depth;
-  [left, right, mid, depth] = stack_frame;
+// const FRAME_MID = 2;
+// const FRAME_DEPTH = 3;
+const update_vis_with_stack_frame = (a, stack_frame, stateVal, arrayValues) => {
+  let left, right, mid, depth, snapshot;
+  
+  // Check if the stack frame contains a snapshot (new format has 5 elements)
+  if (stack_frame.length === 5) {
+    [left, right, mid, depth, snapshot] = stack_frame;
+    arrayValues = snapshot;  // Use the snapshot from the stack frame
+  } else {
+    [left, right, mid, depth] = stack_frame;
+  }
 
   for (let k = left; k <= right; k += 1) {
-    // each element in the vis stack is a tuple:
-    // 0th index is for base color,
-    // 1th index is for pivot, i, j colors (not used here)
-    a[depth][k] = { base: (k >= mid? stateValR: stateVal), extra: [] };
+    a[depth][k] = { 
+      base: stateVal,
+      extra: [],
+      value: arrayValues ? arrayValues[k] : undefined,
+      isLeftBoundary: k === left,
+      isRightBoundary: k === right
+    };
   }
   return a;
 }
@@ -150,6 +154,7 @@ export default {
      */
     run(chunker, { nodes }) {
       let A = [...nodes]
+      const original_array = [...nodes];  
       let n = A.length
 
       // ----------------------------------------------------------------------------------------------------------------------------
@@ -245,7 +250,7 @@ export default {
         if (isRecursionExpanded()) {
           vis.array.setStackDepth(cur_real_stack.length);
           vis.array.setStack(
-            deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth)
+            deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, arr)
           );
         } else
           vis.array.setStack([]);
@@ -271,48 +276,52 @@ export default {
       };
 
 
-      function deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth) {
-        // return 2D array stack_vis containing color values corresponding to stack frame states and indexes in those stack frames
-        // for visualise this data
-
+      function deriveStack(cur_real_stack, cur_finished_stack_frames, cur_i, cur_j, cur_depth, arrayValues) {
         let stack_vis = [];
-
+        const displayValues = arrayValues || A;
+      
         for (let k = 0; k < max_depth_index + 1; k++) {
-          // for whatever reason fill() does not work here... JavaScript
           stack_vis.push(
             [...Array.from({ length: entire_num_array.length })].map(() => ({
               base: STACK_FRAME_COLOR.No_color,
               extra: [],
+              value: undefined,
+              isLeftBoundary: false,
+              isRightBoundary: false
             })),
           );
         }
-
+      
+        // Completed stack frames
         cur_finished_stack_frames.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.Finished_stackFrame,
-            STACK_FRAME_COLOR.Finished_stackFrameR,
+            STACK_FRAME_COLOR.Finished_stackFrame,  // Index 3
+            displayValues
           );
         });
-
+      
+        // In-progress stack frames
         cur_real_stack.forEach((stack_frame) => {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             stack_frame,
-            STACK_FRAME_COLOR.In_progress_stackFrame,
-            STACK_FRAME_COLOR.In_progress_stackFrameR,
+            STACK_FRAME_COLOR.In_progress_stackFrame,  // Index 1
+            displayValues
           );
         });
-
+      
+        // Current stack frame (topmost)
         if (cur_real_stack.length !== 0) {
           stack_vis = update_vis_with_stack_frame(
             stack_vis,
             cur_real_stack[cur_real_stack.length - 1],
-            STACK_FRAME_COLOR.Current_stackFrame,
-            STACK_FRAME_COLOR.Current_stackFrameR,
+            STACK_FRAME_COLOR.Current_stackFrame,  // Index 2
+            displayValues
           );
         }
+      
         return stack_vis;
       }
 
@@ -407,7 +416,7 @@ arr],
             // about to return i from partition.  We update the "mid" of
             // the partition on the stack here so it is displayed at the
             // last chunk of partition
-            real_stack[real_stack.length - 1][FRAME_MID] = i;
+            real_stack[real_stack.length - 1][2] = i; 
             partitionChunkerWrapper(MSD_BOOKMARKS.swap_condition)
           }
         }
@@ -419,7 +428,7 @@ arr],
       }
 
       const msdRadixSortRecursive = (arr, left, right, mask, depth) => {
-        real_stack.push([left, right, undefined, depth]);
+        real_stack.push([left, right, undefined, depth, [...arr]]); 
         max_depth_index = Math.max(max_depth_index, depth);
         // Base case: If the array has 1 or fewer elements or mask is less than 0, stop
         partitionChunker(MSD_BOOKMARKS.rec_function, undefined, undefined, undefined, undefined, left, right, depth, arr, mask)
@@ -571,7 +580,7 @@ arr],
             vis.array.setStack(deriveStack(real_stack, finished_stack_frames));
           } else
             vis.array.setStack([]);
-        }, [],
+        }, [A],
         0
       );
       return A;
