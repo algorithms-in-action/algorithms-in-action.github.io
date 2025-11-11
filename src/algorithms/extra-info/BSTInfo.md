@@ -25,3 +25,7 @@ Geeks for Geeks Link: [**Binary Search Tree**][G4GLink]
 The "balanced" input option is designed to produce a best possible
 ordering for building a binary search tree.  Can you figure out how it
 works? Can you design an algorithm to produce this ordering?
+
+How can the code be modified to allow duplicate keys? How does having
+duplicate keys impact on search (note that in general we have keys and
+values stored)?
