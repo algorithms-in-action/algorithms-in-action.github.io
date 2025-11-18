@@ -18,6 +18,14 @@ W3Schools Link: [**AVL Trees**][G4GLink]
 
 ## Exercises/Exploration
 
+Compare and contrast the AVL tree code with the recursive BST code.
+
+How can the code be modified to allow duplicate keys, in different tree
+nodes? Assume that for equal keys, we insert into the right subtree.
+Write search code that, given a key, returns the *list* of all nodes
+that contain the key. When we find a node containing the key, is it
+necessary to search the left subtree?
+
 With insertion of three distinct keys there are six orders in which the
 keys may appear.  How many different AVL trees are there with three
 given distinct keys? Explore how insertion takes place for the six

@@ -1,3 +1,7 @@
+// NOTE: NO LONGER USED
+// iterative BST search now uses the same code as AVLT search, in
+// AVLTreeSearch.js (for historical reasons)
+// XXX Best delete/rename file(s)
 import parse from '../../pseudocode/parse';
 
 export default parse(`

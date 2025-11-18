@@ -8,7 +8,7 @@ Main
   insertion, but without the height update and re-balancing steps on the
   way back up the recursion tree.
 \\Note}
-BST_Insert(t, k) // returns t with key k inserted \\B BST_Insert(t, k)
+BST_Insert(t, k) // returns t with key k inserted \\B Main
   \\In{
     if t = Empty \\B if t = Empty
     \\In{
@@ -26,20 +26,14 @@ BST_Insert(t, k) // returns t with key k inserted \\B BST_Insert(t, k)
         insert k into the left subtree of t \\Ref insertLeft
     \\In}
     else if k > t.key \\B else if k > root(t).key
+      \\Note{ XXX allow duplicate keys or not??? Avoid for now.
+      \\Note}
+      \\Expl{ Note: if k = t.key we ignore the insertion.
+      \\Expl}
     \\In{
         insert k into the right subtree of t \\Ref insertRight
     \\In}
-    else \\B else k = root(t).key
-    \\In{
-        return t // ignore duplicate key \\B return t, no change
-        \\Expl{  Key k is already in the tree and here we ignore duplicate keys.
-        \\Expl}
-    \\In}
     return t \\B return t
-    \\Expl{
-        Unlike an AVL tree, a standard BST does not perform height updates or
-        re-balancing. We simply return the pointer to the current subtree.
-    \\Expl}
   \\In}
 \\Code}
 

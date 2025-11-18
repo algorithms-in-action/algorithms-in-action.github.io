@@ -564,8 +564,17 @@ export function createTreeInsertionController(isAVL = false) {
             function insert(root, key, currIndex, parentNode = null, depth = 1) {
 
                 // visualise the basic information of the insertion
-                chunker.add(`${functionPrefix}_Insert(t, k)`,
+                chunker.add(`Main`,
                     (vis, k, d, index, r, p, rr) => {
+                        if (d === 1) {
+                            // remove any message about ignoring
+                            // duplicate keys
+                            // XXX nicer to have this in the last chunk,
+                            // along with removing rectangles in AVL
+                            // (but many chunks can be the last so we do
+                            // this for now)
+                            vis.graph.setText('');
+                        }
                         if (popAfterReturnFlag) {
                             vis.graph.popRectStack();
                             popAfterReturnFlag = false;
@@ -695,16 +704,17 @@ export function createTreeInsertionController(isAVL = false) {
 
                 } else {
                     // Key already exists in the tree
-                    chunker.add('else k = root(t).key',
+                    chunker.add('else if k > root(t).key',
                         (vis) => {
-                            vis.graph.clear(); // clear all highlighting
-                            popAfterReturnFlag = true;
+                            // vis.graph.clear(); // clear all highlighting
+                            vis.graph.setText('Duplicate key - insertion ignored');
+                            // popAfterReturnFlag = true;
                         },
                         [],
                         depth
                     );
-                    chunker.add('return t, no change', (vis) => null, [], depth);
-                    return root;
+                    // chunker.add('return t, no change', (vis) => null, [], depth);
+                    // return root;
                 }
 
                 // BST case: simply early return t
@@ -940,7 +950,7 @@ export function createTreeInsertionController(isAVL = false) {
 
             // initialise the first key insertion
             chunker.add(
-                `${functionPrefix}_Insert(t, k)`,
+                `Main`,
                 (vis, elements, k) => {
                     // Set initial function information
                     vis.graph.setFunctionName("Inserting:");
@@ -993,7 +1003,7 @@ export function createTreeInsertionController(isAVL = false) {
             }
 
             // finalise the visualisation
-            chunker.add(`${functionPrefix}_Insert(t, k)`,
+            chunker.add(`Main`,
                 vis => {
                     vis.graph.setFunctionInsertText();
                     vis.graph.setFunctionName("Complete");
