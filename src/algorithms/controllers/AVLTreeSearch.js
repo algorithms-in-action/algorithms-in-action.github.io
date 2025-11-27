@@ -40,6 +40,7 @@ export default {
         // get whole tree
         const tree = visualiser.graph.instance.getTree();
         let root = visualiser.graph.instance.getRoot();
+console.log(tree);
 
         let current = root;
         let parent = null;

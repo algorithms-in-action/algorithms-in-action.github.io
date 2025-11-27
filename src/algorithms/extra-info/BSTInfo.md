@@ -38,3 +38,15 @@ Write search code that, given a key, returns the *list* of all nodes
 that contain the key. When we find a node containing the key, is it
 necessary to search the left subtree?
 
+The code here traverses down the tree using two variables (the current
+subtree c and parent p) and the last key comparison is repeated.
+Re-write the code so the extra variable and comparison are avoided.
+What are the advantages and disadvantages of your coding compared to
+the AIA code?
+
+In a programming language that supports explicit pointers, you can have
+a version of insert that takes a key and a pointer to a tree (that is,
+a pointer to a pointer to a record), and inserts the key into the (pointed
+to) tree.  Try coding this iteratively and compare it to the AIA code.
+
+

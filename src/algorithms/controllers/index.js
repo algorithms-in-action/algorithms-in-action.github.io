@@ -32,6 +32,7 @@ export { default as HashingDelete } from './HashingDelete';
 export { default as HashingChainingInsertion} from './HashingChainingInsertion'
 export { default as isort} from './isort'
 export { default as BSTrecInsertion} from './BSTrecInsertion'
+export { default as BSTrecSearch} from './BSTrecSearch'
 export { default as msort_list_td} from './msort_list_td'
 export { default as gwrap} from './gwrap'
 export { default as insertionSort } from './insertionSort';

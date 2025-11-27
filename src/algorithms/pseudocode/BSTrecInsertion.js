@@ -18,12 +18,12 @@ BST_Insert(t, k) // returns t with key k inserted \\B Main
               This is the base case of the recursion.
       \\Expl}
     \\In}
-    if k < t.key \\B if k < root(t).key
+    if k < t.key \\B if k < t.key
     \\Expl{ The key in the root determines if we insert into the left or
           right subtree.
     \\Expl}
     \\In{
-        insert k into the left subtree of t \\Ref insertLeft
+        insert k into the left subtree of t \\Ref recurseLeft
     \\In}
     else if k > t.key \\B else if k > root(t).key
       \\Note{ XXX allow duplicate keys or not??? Avoid for now.
@@ -31,16 +31,16 @@ BST_Insert(t, k) // returns t with key k inserted \\B Main
       \\Expl{ Note: if k = t.key we ignore the insertion.
       \\Expl}
     \\In{
-        insert k into the right subtree of t \\Ref insertRight
+        insert k into the right subtree of t \\Ref recurseRight
     \\In}
     return t \\B return t
   \\In}
 \\Code}
 
 \\Code{
-insertLeft
+recurseLeft
 // *recursively* call insert with the left subtree \\B prepare for the left recursive call
-t.left <- BST_Insert(t.left, k) \\B left(t) <- BST_Insert(left(t), k)
+t.left <- BST_Insert(t.left, k) \\B recursiveCallLeft
 \\Expl{
 The (possibly empty) left subtree is replaced by the result of this recursive call.
 \\Expl}
@@ -48,9 +48,9 @@ The (possibly empty) left subtree is replaced by the result of this recursive ca
 
 
 \\Code{
-insertRight
+recurseRight
 // *recursively* call insert with the right subtree \\B prepare for the right recursive call
-t.right <- BST_Insert(t.right, k) \\B right(t) <- BST_Insert(right(t), k)
+t.right <- BST_Insert(t.right, k) \\B recursiveCallRight
 \\Expl{
 The (possibly empty) right subtree is replaced by the result of this recursive call.
 \\Expl}

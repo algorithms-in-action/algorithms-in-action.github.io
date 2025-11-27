@@ -49,12 +49,12 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B Main
               This is the base case of the recursion.
       \\Expl}
     \\In}
-    if k < t.key \\B if k < root(t).key
+    if k < t.key \\B if k < t.key
     \\Expl{ The key in the root determines if we insert into the left or
           right subtree.
     \\Expl}
     \\In{
-        insert k into the left subtree of t \\Ref insertLeft
+        insert k into the left subtree of t \\Ref recurseLeft
     \\In}
     else if k > t.key \\B else if k > root(t).key
       \\Note{ XXX allow duplicate keys or not??? Avoid for now.
@@ -62,7 +62,7 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B Main
       \\Expl{ Note: if k = t.key we ignore the insertion.
       \\Expl}
     \\In{
-        insert k into the right subtree of t \\Ref insertRight
+        insert k into the right subtree of t \\Ref recurseRight
     \\In}
 \\Note{ !*%#ing rubbish parser - right brace removed
     else \\B else k = root(t).key
@@ -87,14 +87,14 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B Main
 \\Code}
 
 \\Code{
-insertLeft
+recurseLeft
 \\Note{
 Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the left subtree \\B prepare for the left recursive call
-t.left <- AVLT_Insert(t.left, k) \\B left(t) <- AVLT_Insert(left(t), k)
+t.left <- AVLT_Insert(t.left, k) \\B recursiveCallLeft
 \\Expl{
 The (possibly empty) left subtree is replaced by the result of this recursive call.
 \\Expl}
@@ -102,14 +102,14 @@ The (possibly empty) left subtree is replaced by the result of this recursive ca
 
 
 \\Code{
-insertRight
+recurseRight
 \\Note{
 Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the right subtree \\B prepare for the right recursive call
-t.right <- AVLT_Insert(t.right, k) \\B right(t) <- AVLT_Insert(right(t), k)
+t.right <- AVLT_Insert(t.right, k) \\B recursiveCallRight
 \\Expl{
 The (possibly empty) right subtree is replaced by the result of this recursive call.
 \\Expl}

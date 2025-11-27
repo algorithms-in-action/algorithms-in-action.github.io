@@ -34,8 +34,7 @@ the left or right at each stage, depending on the comparison between the
 key in the node and the key to be inserted. When the edge of the tree is
 reached we add a new leaf containing the inserted key. In the recursive
 coding here we return the new tree and for recursive calls assign it to
-t.left or t.right (this is really only needed when the recursive call
-returns the single-node tree containing the newly inserted key). Note that
+t.left or t.right. Note that
 the pseudocode needs to be expanded to see the details of the recursion.
 
 ### Duplicate keys
