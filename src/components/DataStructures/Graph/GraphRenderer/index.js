@@ -744,14 +744,23 @@ class GraphRenderer extends Renderer {
               }
               return null;
             }
-            const [left, top, rgt, btm, text] = stack.rect;
+            let [left, top, rgt, btm, text] = stack.rect;
             let isInnerMost = i == rectangles.length - 1;
             if (hasEmpty) {
               // InnerMost is the parent rectangle of the "Empty" 
               isInnerMost = i == rectangles.length - 2;
+              // rectangle for Empty was a bit larger than for nodes
+              // causing things to move around - shrink it here to avoid
+              // that (not sure where/how size is computed - better to fix
+              // that?)
+              let shrinkEmptyRect = 10;
+              left = left + shrinkEmptyRect;
+              top = top + shrinkEmptyRect;
+              rgt = rgt - shrinkEmptyRect;
+              btm = btm - shrinkEmptyRect;
             }
-            const textOpacity = isInnerMost ? 0.8 : 0.4;
-            const rectOpacity = isInnerMost ? 0.8 : 0.4;
+            const textOpacity = isInnerMost ? 0.8 : 0.3;
+            const rectOpacity = isInnerMost ? 0.8 : 0.3;
             return (
               <g key={`rec-rect-${i}`}>
                 <text className={classes(styles.select_color)}

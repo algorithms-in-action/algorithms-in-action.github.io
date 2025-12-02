@@ -980,9 +980,6 @@ class GraphTracer extends Tracer {
       if (y_d > this.rectangle[3]) {
         this.rectangle[3] = y_d;
       }
-      if (this.functionName == `Rotaiton: `) {
-        this.rectangle[4] = this.functionInsertText;
-      }
     }
   }
 

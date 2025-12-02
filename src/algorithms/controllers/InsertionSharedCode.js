@@ -29,7 +29,6 @@ let isInsert = true;
 // checks if either recursive call is expanded
 function isRecursionExpanded() {
   let mode = (isInsert ? 'insertion' : 'search');
-console.log('isRecursionExpanded', mode);
   return areExpanded(['recurseLeft'], mode)
       || areExpanded(['recurseRight'], mode);
 }
@@ -593,7 +592,7 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
             }
             if (rr) {
                 // visit from root to root, to just highlight the current node, without highlighting the edge
-                vis.graph.visit(rr, rr);
+                // vis.graph.visit(rr, rr);
             }
             // print the function name and the key to be inserted
             if (isInsert)
@@ -606,7 +605,6 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
             if (isRecursionExpanded()) {
                 if (rr) {
                     let nodeIds = vis.graph.getSubtreeNodes(rr);
-console.log(nodeIds);
                     vis.graph.pushRectStack(nodeIds, `Depth ${d}`);
                 }
                 else {
@@ -685,9 +683,12 @@ console.log(nodeIds);
                 if (isAVL) {
                     vis.graph.updateHeight(r, 1);
                 }
-                if (p !== null) {
+                if (p !== null) { // not needed??
                     vis.graph.addEdge(p, r);
                     vis.graph.addNodeToRectStack(r, p);
+                    // now pause layout and remove edge (added again next chunk)
+                    vis.graph.setPauseLayout(true);
+                    vis.graph.removeEdge(p, r);
                 }
                 vis.graph.rectangle_size();
                 popAfterReturnFlag = true;
@@ -726,20 +727,23 @@ console.log(nodeIds);
         // restore the function information after the recursive call
         chunker.add(`recursiveCallLeft`,
             (vis, subtree, k, r) => {
-                // Search (unsuccessful): pop "Empty" rectangle
                 if (!subtree) {
+                    // Search (unsuccessful): pop "Empty" rectangle
                     vis.graph.popRectStack();
-                    vis.graph.setPauseLayout(false);
+                } else if (isInsert && subtree.key == k) {
+                    // Inserted into child: add edge
+                    vis.graph.addEdge(r.key, k);
                 }
-                // vis.graph.setFunctionName("Inserting:");
+                vis.graph.setPauseLayout(false);
                 vis.graph.setFunctionInsertText();
                 if (popAfterReturnFlag) {
                     vis.graph.popRectStack();
                     vis.graph.rectangle_size();
                     popAfterReturnFlag = false;
                 }
+                popAfterReturnFlag = true;
             },
-            [root.left, key, root ? `...${root.key}...` : "Empty"],
+            [root.left, key, root],
             depth);
             searchBookmark = `recursiveCallLeft`;
 
@@ -753,24 +757,27 @@ console.log(nodeIds);
         // restore the function information after the recursive call
         chunker.add(`recursiveCallRight`,
             (vis, subtree, k, r) => {
-                // Search (unsuccessful): pop "Empty" rectangle
                 if (!subtree) {
+                    // Search (unsuccessful): pop "Empty" rectangle
                     vis.graph.popRectStack();
-                    vis.graph.setPauseLayout(false);
+                } else if (isInsert && subtree.key == k) {
+                    // Inserted into child: add edge
+                    vis.graph.addEdge(r.key, k);
                 }
-                // vis.graph.setFunctionName("Inserting:");
+                vis.graph.setPauseLayout(false);
                 vis.graph.setFunctionInsertText();
                 if (popAfterReturnFlag) {
                     vis.graph.popRectStack();
                     vis.graph.rectangle_size();
                     popAfterReturnFlag = false;
                 }
+                popAfterReturnFlag = true;
             },
-            [root.right, key, root ? `...${root.key}...` : "Empty"],
+            [root.right, key, root],
             depth);
             searchBookmark = `recursiveCallRight`;
     } else {
-        // Key already exists in the tree
+        // Key already exists in the tree (insert)
         chunker.add('else if k > root(t).key',
             (vis) => {
                 // vis.graph.clear(); // clear all highlighting
@@ -784,18 +791,22 @@ console.log(nodeIds);
         // return root;
     }
 
-    // BST/Search case: simply early return retVal (plus clean up)
+    // BST Search case: just return XXX ?need clean up
+    // BST Insert case: chunk for return statement then return
+    // AVL Insert case: fall though to balance/rotations code
     let bookmark;
     if (isInsert) {
        bookmark = 'return t';
        retVal = root
     } else
-       bookmark = searchBookmark;
+       return retVal;
     if (!isAVL) {
+        // XXX only want this extra chunk for insert
+        // (may need to add contents to previous chunk
         chunker.add(bookmark,
             (vis, r, p) => {
-                vis.graph.resetVisitAndSelect(r, p);
-                popAfterReturnFlag = true;
+                // vis.graph.resetVisitAndSelect(r, p);
+                // popAfterReturnFlag = true;
             },
             [root.key, parentNode ? parentNode.key : null],
             depth
@@ -839,7 +850,6 @@ console.log(nodeIds);
         chunker.add('perform right rotation to re-balance t',
             (vis, r, b, rl, rll) => {
                 // show the rotation type and the node to be rotated
-                // vis.graph.setFunctionName(`balanceCase: `);
                 vis.graph.setFunctionInsertText(` balanceCase: LL`);
                 // vis.graph.clearSelect_Circle_Count();
                 // vis.graph.setSelect_Circle_Count(r);
@@ -878,8 +888,6 @@ console.log(nodeIds);
         chunker.add('perform left rotation to re-balance t',
             (vis, r, b, rr, rrr) => {
                 // show the rotation type and the node to be rotated
-                // vis.graph.setFunctionName(`balanceCase: `);
-                // vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                 vis.graph.setFunctionInsertText(` balanceCase: RR`);
                 vis.graph.setFunctionNode(`${r}`);
                 // vis.graph.clearSelect_Circle_Count();
@@ -917,8 +925,6 @@ console.log(nodeIds);
         chunker.add('perform left rotation on the left subtree',
             (vis, r, b, rl, rlr) => {
                 // show the rotation type and the node to be rotated
-                // vis.graph.setFunctionName(`balanceCase: `);
-                // vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                 vis.graph.setFunctionInsertText(` balanceCase: LR`);
                 // vis.graph.clearSelect_Circle_Count();
                 // vis.graph.setSelect_Circle_Count(r);
@@ -957,8 +963,6 @@ console.log(nodeIds);
         chunker.add('perform right rotation on the right subtree',
             (vis, r, b, rr, rrl) => {
                 // show the rotation type and the node to be rotated
-                // vis.graph.setFunctionName(`balanceCase: `);
-                // vis.graph.setFunctionName(`Inserting: ${key},    Rotation: `);
                 vis.graph.setFunctionInsertText(` balanceCase: RL`);
                 vis.graph.setFunctionNode(`${r}`);
                 // vis.graph.clearSelect_Circle_Count();
