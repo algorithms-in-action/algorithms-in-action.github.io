@@ -6,7 +6,8 @@
 
 export const BSTColors = {
     // P_N: ALGO_COLOR_PALLETE.peach, // newly inserted node
-    P_N: "var(--peach)", // newly inserted node
+    P_N: "var(--peach)", // node P (BST)
+    PATH_N: "var(--peach)", // path edges (BST)
     NEW_N: "var(--leaf)", // newly inserted node
     ROT_E: "var(--apple)", // rotated edge (AVL)
     ROT_N: "var(--apple)", // rotated nodes (AVL)
