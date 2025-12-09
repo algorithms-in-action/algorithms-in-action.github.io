@@ -1,10 +1,13 @@
+// Note: this code is used for simple binary search trees and also
+// AVL trees.
 import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Code{
 Main
-AVLT_Search(t, k)  // return subtree whose root has key k; or NotFound  \\B AVL_Search(t, k)
-\\Expl{ This is identical to simple binary search tree search.
+BST_Search(t, k)  // return subtree whose root has key k; or NotFound  \\B AVL_Search(t, k)
+\\Expl{ Note: this code is used for simple binary search trees and also
+AVL trees.
 \\Expl}
 \\In{
     while t not Empty   \\B while t not Empty

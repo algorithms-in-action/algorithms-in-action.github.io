@@ -35,13 +35,17 @@ export default {
     parent = current;
 
     while (ptr) {
-      chunker.add(2);
       if (current === item) {
-        chunker.add(2, (vis, c, p) => vis.graph.leave(c, p), [current, parent]);
-        chunker.add(3, (vis, c, p) => vis.graph.select(c, p), [current, parent]);
+        chunker.add(2,
+          (vis, c, p) => {
+            vis.graph.leave(c, p);
+            vis.graph.select(c, p);
+          }, [current, parent]);
+        chunker.add(3, (vis) => vis.graph.setText('Key found'));
         // for test
         return 'success';
       }
+      chunker.add(2);
 
       chunker.add(4);
       if (item < current) {
@@ -52,6 +56,8 @@ export default {
           ptr = tree[current];
           chunker.add(5, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
         } else {
+          chunker.add(5, (vis) => vis.graph.setText('t = Empty'));
+          chunker.add(1);
           break;
         }
       } else if (tree[current].right !== undefined) {
@@ -61,12 +67,15 @@ export default {
         ptr = tree[current];
         chunker.add(6, (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
       } else {
+        chunker.add(6, (vis) => vis.graph.setText('t = Empty'));
+        chunker.add(1);
         break;
       }
+      chunker.add(1);
     }
-    chunker.add(7);
+    // chunker.add(7);
     // for test
-    chunker.add(7, (vis) => vis.graph.setText('RESULT NOT FOUND'));
+    chunker.add(7, (vis) => vis.graph.setText('Key not found'));
     return 'fail';
   },
 };

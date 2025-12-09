@@ -3,81 +3,80 @@ import parse from '../../pseudocode/parse';
 export default parse(`
 \\Code{
     Main
-    BST_Build(keys)  // return the BST that results from inserting nodes
-                     // with keys 'keys', in the given order, into an
-                     // initially empty BST
-    t <- Empty \\B 1
-    for each k in keys \\B 2
-    \\In{
-        t <- BST_Insert(t, k) \\Ref Insert
-    \\In}
-\\Code}
-\\Code{
-    Insert
-    // Insert key k in BST t, maintaining the BST invariant
-    Create_Node() \\Ref NewNode
-
+    BST_Insert(k, t) // Insert key k in BST t \\B 1
     if t = Empty \\B 7
     \\In{
-        t <- n      // in this case, the result is a tree with just one node \\B 8
-        \\Expl{  If the tree is initially empty, the resulting BST is just
-                the new node, which has key k, and empty sub-trees.
+        return a single-node tree containing k \\B 8
+        \\Expl{ Memory is allocated for a new BST node and initialized with
+                key k and empty sub-trees. It is returned to replace
+                the previously empty tree.
         \\Expl}
     \\In}
     else
     \\In{
-      Locate the node p that should be the parent of the new node n. \\Ref Locate
+      Find parent node p that k will be inserted below \\Ref Locate
+      \\Expl{ We search down the tree going left or right depending on
+              key comparisons, until we can go no further (or we find k). Nodes left of
+              p have keys less than k and nodes right of p have keys
+              greater than k. If we find a node containing k we simply
+              ignore the insertion of k and return t (see the MORE tab).
+      \\Expl}
       if k < p.key  \\B 9
       \\Expl{  The new node n (whose key is k) will be a child of p. We just 
               need to decide whether it should be a left or a right child of p.
       \\Expl}
       \\In{
-          p.left <- n       // insert n as p's left child \\B 10
+          p.left <- new node containing k \\B 10
+          \\Expl{ A new BST node is allocated and initialized with
+                key k and empty sub-trees; this replaces the empty
+                left sub-tree of p.
+          \\Expl}
       \\In}
       else
       \\In{
-          p.right <- n      // insert n as p's right child  \\B 11
+          p.right <- new node containing k  \\B 11
+          \\Expl{ A new BST node is allocated and initialized with
+                key k and empty sub-trees; this replaces the empty
+                right sub-tree of p.
+          \\Expl}
       \\In}
     \\In}
+    return t \\B end
 \\Code}
-
-\\Code{
-    NewNode
-    n <- new Node     // create a new node to hold key k \\B 3
-    n.key <- k \\B 4
-    n.left <- Empty   // it will be a leaf, that is, \\B 5
-    n.right <- Empty  // it has empty subtrees \\B 6
-\\Code}
-  
 \\Code{
   Locate
-  c <- t            // c traverses the path from the root to the insertion point \\B 13
+  c <- t // c traverses from the root to the insertion point \\B 13
   
-  \\Expl{  c is going to follow a path down to where the new node is to 
-          be inserted. We start from the root (t).
+  \\Expl{ c is going to follow a path down to where the new node is to 
+          be inserted. We start from the root (t). In the last iteration
+          c "falls off" the tree and becomes an empty tree. However, p
+          trails one step behind.
   \\Expl}
   repeat
   \\In{
-      p <- c        // when the loop exits, p will be c's parent \\B 14
-      \\Expl{  Parent p and child c will move in lockstep, with p always 
-              trailing one step behind c.
+      p <- c // when c moves down, p will be c's parent \\B 14
+      \\Expl{ At the end of the loop p will be c's parent.  After we
+              exit the loop, p will be the parent where k is inserted.
       \\Expl}
       if k < c.key \\B 15
-      \\Expl{  The BST condition is that nodes with keys less than the current
+      \\Expl{ The BST condition is that nodes with keys less than the current
               node's key are to be found in the left subtree, and nodes whose
               keys are greater (or the same) are to be in the right subtree.
       \\Expl}
       \\In{
           c <- c.left \\B 16
       \\In}
-      else
+      else if k > c.key
       \\In{
           c <- c.right \\B 17
       \\In}
+      else return t // k is in t already - skip insertion \\B eq_key
+      \\Expl{ Here we ignore insertion of equal keys.  See the MORE tab.
+      \\Expl}
   \\In}
   until c = Empty \\B 18
-  \\Expl{  At the end of this loop, c has located the empty subtree where new
-          node n should be located, and p will be the parent of the new node.
+  \\Expl{ At the end of this loop, c has located the empty subtree where new
+          key k should be located, and p will be the parent of the new node.
   \\Expl}
 \\Code}
 `);

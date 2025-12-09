@@ -14,7 +14,6 @@
 /* eslint-disable-next-line max-classes-per-file */
 /* eslint-disable import/no-unresolved */
 import { node } from 'prop-types';
-import AVLTreeInsertion from '../../../algorithms/controllers/AVLTreeInsertion';
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
@@ -358,6 +357,12 @@ class GraphTracer extends Tracer {
     if (!node) return;
     const index = this.nodes.indexOf(node);
     this.nodes.splice(index, 1);
+    // also remove all edges or nasty subtle bugs that take forever to
+    // track down will bite you!
+    let edges = this.findLinkedEdges(id, false);
+    for (let i in edges) {
+      this.removeEdge(edges[i].source, edges[i].target); // repeated work here
+    }
     this.layout();
   }
 
@@ -975,9 +980,6 @@ class GraphTracer extends Tracer {
       if (y_d > this.rectangle[3]) {
         this.rectangle[3] = y_d;
       }
-      if (this.functionName == `Rotaiton: `) {
-        this.rectangle[4] = this.functionInsertText;
-      }
     }
   }
 
@@ -1208,6 +1210,8 @@ class GraphTracer extends Tracer {
   ////////////////////////AVL tree layout/////////////////////
   // Copied from BST version - probably should have just generalised it
   // or at least re-factor the code
+  // XXX actually, BST now seems to use this code - could delete
+  // original code?
   layoutAVL(root = 0, sorted = false) {
 
     //reflash the Node

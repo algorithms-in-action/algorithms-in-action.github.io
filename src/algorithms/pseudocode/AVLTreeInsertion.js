@@ -35,7 +35,7 @@ Main
   back up is sufficient - there is only one path back up to the root.
   The "current" node should certainly be highlighted in some way also.
 \\Note}
-AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
+AVLT_Insert(t, k) // returns t with key k inserted \\B Main
   \\In{
     if t = Empty \\B if t = Empty
     \\In{
@@ -49,27 +49,27 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
               This is the base case of the recursion.
       \\Expl}
     \\In}
-    if k < t.key \\B if k < root(t).key
+    if k < t.key \\B if k < t.key
     \\Expl{ The key in the root determines if we insert into the left or
           right subtree.
     \\Expl}
     \\In{
-        insert k into the left subtree of t \\Ref insertLeft
+        insert k into the left subtree of t \\Ref recurseLeft
     \\In}
     else if k > t.key \\B else if k > root(t).key
-      \\Note{ XXX allow duplicate keys or not???
-        Should be possible, but have to carefully review code to make sure its
-        correct. What does BST code do?
+      \\Note{ XXX allow duplicate keys or not??? Avoid for now.
       \\Note}
+      \\Expl{ Note: if k = t.key we ignore the insertion.
+      \\Expl}
     \\In{
-        insert k into the right subtree of t \\Ref insertRight
+        insert k into the right subtree of t \\Ref recurseRight
     \\In}
+\\Note{ !*%#ing rubbish parser - right brace removed
     else \\B else k = root(t).key
     \\In{
         return t // ignore duplicate key \\B return t, no change
-        \\Expl{  Key k is already in the tree and here we ignore duplicate keys.
-        \\Expl}
-    \\In}
+    \\In] XXX
+\\Note}
     Update the height of t \\B root(t).height = 1 + max(left(t).height, right(t).height)
     \\Expl{
         The tree height is one more than the maximum height of its children. It may
@@ -84,17 +84,18 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B AVLT_Insert(t, k)
       for diagrams etc explaining rotations.
     \\Expl}
   \\In}
+  // Done \\B Done
 \\Code}
 
 \\Code{
-insertLeft
+recurseLeft
 \\Note{
 Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the left subtree \\B prepare for the left recursive call
-t.left <- AVLT_Insert(t.left, k) \\B left(t) <- AVLT_Insert(left(t), k)
+t.left <- AVLT_Insert(t.left, k) \\B recursiveCallLeft
 \\Expl{
 The (possibly empty) left subtree is replaced by the result of this recursive call.
 \\Expl}
@@ -102,14 +103,14 @@ The (possibly empty) left subtree is replaced by the result of this recursive ca
 
 
 \\Code{
-insertRight
+recurseRight
 \\Note{
 Animation stops at this comment so user can prepare mentally for
 recursive call plus we need a chunk at this level of recursion just
 before the call so we can step back to it
 \\Note}
 // *recursively* call insert with the right subtree \\B prepare for the right recursive call
-t.right <- AVLT_Insert(t.right, k) \\B right(t) <- AVLT_Insert(right(t), k)
+t.right <- AVLT_Insert(t.right, k) \\B recursiveCallRight
 \\Expl{
 The (possibly empty) right subtree is replaced by the result of this recursive call.
 \\Expl}

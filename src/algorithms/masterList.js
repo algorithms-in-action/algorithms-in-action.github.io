@@ -247,11 +247,11 @@ const algorithmMetadata = {
     extraInfoKey: 'BSTInfo',
     pseudocode: {
       insertion: 'binaryTreeInsertion',
-      search: 'binaryTreeSearch',
+      search: 'AVLTreeSearch', // Note shared search code
     },
     controller: {
       insertion: 'binaryTreeInsertion',
-      search: 'binaryTreeSearch',
+      search: 'AVLTreeSearch', // Note shared search code
     },
   },
 
@@ -265,11 +265,11 @@ const algorithmMetadata = {
     extraInfoKey: 'BSTrec',
     pseudocode: { 
       insertion: 'BSTrecInsertion',
-      search: 'AVLTreeSearch',
+      search: 'BSTrecSearch',
     },
     controller: { 
       insertion: 'BSTrecInsertion',
-      search: 'AVLTreeSearch', 
+      search: 'BSTrecSearch', 
     },
   },
 

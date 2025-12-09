@@ -38,6 +38,14 @@ insertion code containing recursive calls, with code for height update
 and re-balancing added at the end. The new height is simply the maximum
 height of the two subtrees plus 1.
 
+### Duplicate keys
+
+The AIA code ignores insertion of keys that already exist in the tree.
+It is possible to support duplicate keys by inserting them into either
+the left or right subtree.  However, this does complicate search - we
+may want to search for one of the keys or all the keys.  An alternative
+is for nodes to contain a list of keys instead of a single key.
+
 ### Tree re-balancing 
 
 If the difference between the heights of the left and right subtrees is

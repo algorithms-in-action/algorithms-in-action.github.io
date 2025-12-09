@@ -43,12 +43,17 @@ export function initGlobalAlgorithmGetter(getter) {
 // like initGlobalAlgorithmGetter for the mode and add code in
 // src/context/GlobalState.js to call it.  Avoiding that for now - enough
 // merge conflicts etc already!
-export function areExpanded(blocks) {
+// XXX now changing mode doesn't change URL so this doesn't work for
+// search etc:(
+// XXX For now we pass it in as an argument from the controller (should
+// know algorithm and mode there) with default from URL
+export function areExpanded(blocks, mode = null) {
   const currentUrl = new URL(window.location.href);
-  const mode = currentUrl.searchParams.get('mode');
   const algorithm = getGlobalAlgorithm();
   const alg_name = algorithm.id.name;
   const { bookmark, pseudocode, collapse } = algorithm;
+  if (mode === null)
+      mode = currentUrl.searchParams.get('mode');
   return blocks.reduce((acc, curr) =>
     (acc && collapse[alg_name][mode][curr]), true);
 }
