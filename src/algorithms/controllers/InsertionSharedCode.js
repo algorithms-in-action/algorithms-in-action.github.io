@@ -23,6 +23,9 @@ import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { areExpanded } from './collapseChunkPlugin';
 
+// Moving to new color scheme (XXX may be leftovers from older scheme)
+import {BSTColors as colors} from './BSTColors';
+
 // Global flag for insert/search (set when controller init is run)
 let isInsert = true;
 
@@ -84,7 +87,7 @@ let popAfterReturnFlag = false;
 * @param {int} depth the recursive depth of this action
 * @returns {TreeNode} the new root node after the insertion
  */
-function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth = 1) {
+function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, depth = 1) {
     let retVal; // return value
 
     // Function to update the height of a node based on its children's heights (AVL only)
@@ -141,6 +144,7 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
         return pos1;
     }
     
+    // XXX better to rename this rightRotate...
     /**
      * Perform a Left-Left Case Rotation (LLCR) to balance the AVL tree
      * @param {AVLNode} root the root node of the AVL tree
@@ -680,6 +684,7 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
                 vis.graph.popRectStack();
                 vis.graph.setPauseLayout(false);
                 vis.graph.addNode(r, r);
+                vis.graph.myColorNode(r, colors.NEW_N);
                 if (isAVL) {
                     vis.graph.updateHeight(r, 1);
                 }
@@ -722,7 +727,7 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
         chunker.add('prepare for the left recursive call', (vis) => null, [], depth);
 
         // Recursively insert the key into the left subtree
-        retVal = insertOrSearch(chunker, root.left, key, currIndex, root, depth + 1);
+        retVal = insertOrSearchRec(chunker, root.left, key, currIndex, root, depth + 1);
 
         // restore the function information after the recursive call
         chunker.add(`recursiveCallLeft`,
@@ -752,7 +757,7 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
         chunker.add('prepare for the right recursive call', (vis) => null, [], depth);
 
         // Recursively insert the key into the right subtree
-        retVal = insertOrSearch(chunker, root.right, key, currIndex, root, depth + 1);
+        retVal = insertOrSearchRec(chunker, root.right, key, currIndex, root, depth + 1);
 
         // restore the function information after the recursive call
         chunker.add(`recursiveCallRight`,
@@ -1009,6 +1014,22 @@ function insertOrSearch(chunker, root, key, currIndex, parentNode = null, depth 
     }
     return root;
 }
+function insertOrSearch(chunker, root, key, currIndex) {
+    let r = insertOrSearchRec(chunker, root, key, currIndex, null, 1);
+    chunker.add('Done', (vis, k) => {
+        // vis.graph.setZoom(0.55);
+        // Remove all the recursion rectangles first
+        vis.graph.popAllRectStack();
+        if (isInsert) {
+            vis.graph.myColorNode(k, undefined);
+            vis.graph.setFunctionName(`Inserted: ${k}`);
+            vis.graph.setFunctionInsertText();
+        }
+        // vis.graph.setFunctionName(`Search: ${target}`);
+        // vis.graph.setFunctionInsertText();
+    }, [key], 1);
+    return r;
+} 
 
 
 // default is recursive BST insertion 
@@ -1043,7 +1064,7 @@ export function createTreeInsertionController(isAVLp = false) {
 
             // initial settings for the visualisation
             chunker.add(
-                'Initialise',
+                'Main',
                 (vis) => {
                     vis.graph.isWeighted = isAVL;
                     vis.graph.setFunctionName('Tree is Empty');
@@ -1057,6 +1078,10 @@ export function createTreeInsertionController(isAVLp = false) {
             );
 
             // initialise the first key insertion
+            // We now skip boxes etc even when recursion is expanded and
+            // don't highlight new node (otherwise an extra chunk is
+            // needed and there are already more than enough for such a
+            // conceptually simple case)
             chunker.add(
                 `Main`,
                 (vis, elements, k) => {
@@ -1064,6 +1089,7 @@ export function createTreeInsertionController(isAVLp = false) {
                     vis.graph.setFunctionName(`Insert: ${k}`);
                     vis.graph.setFunctionInsertText();
                     // initialise the tree with the first key with box
+/*
                     vis.graph.addNode(k, k);
                     if (isAVL) {
                         vis.graph.updateHeight(k, 1);
@@ -1078,6 +1104,7 @@ export function createTreeInsertionController(isAVLp = false) {
                     }
                     vis.graph.setPauseLayout(true);
                     vis.graph.removeNode(k);
+*/
                 },
                 [nodes, nodes[0], nodes[0].parentNode],
                 1
@@ -1089,14 +1116,25 @@ export function createTreeInsertionController(isAVLp = false) {
             // Insert the first key into the rectangle
             chunker.add('return n',
                 (vis, k) => {
-                    vis.graph.popRectStack();
-                    vis.graph.setPauseLayout(false);
+                    // vis.graph.popRectStack();
+                    // vis.graph.setPauseLayout(false);
                     vis.graph.addNode(k, k);
+                    // vis.graph.myColorNode(k, colors.NEW_N);
                     if (isAVL) {
                         vis.graph.updateHeight(k, 1);
                     }
-                    vis.graph.rectangle_size();
-                    popAfterReturnFlag = true;
+                    vis.graph.layoutAVL(k, true, false);
+                    // vis.graph.rectangle_size();
+                    // popAfterReturnFlag = true;
+                },
+                [nodes[0]],
+                1
+            );
+            chunker.add(
+                `Done`,
+                (vis, k) => {
+                    vis.graph.setFunctionName(`Inserted: ${k}`);
+                    vis.graph.setFunctionInsertText();
                 },
                 [nodes[0]],
                 1
@@ -1110,7 +1148,7 @@ export function createTreeInsertionController(isAVLp = false) {
             // (maybe we could start with the empty tree and get rid
             // of the code for the first node above)
             for (let i = 1; i < nodes.length; i++) {
-                globalRoot = insertOrSearch(chunker, globalRoot, nodes[i], i, null, 1);
+                globalRoot = insertOrSearch(chunker, globalRoot, nodes[i], i);
             }
             // finalise the visualisation
             chunker.add(`Main`,
@@ -1178,7 +1216,7 @@ export function createTreeSearchController(isAVLp = false) {
                 vis.graph.setFunctionName(`Search: ${target}`);
                 vis.graph.setFunctionInsertText();
             }, [current], 1);
-            let r = insertOrSearch(chunker, globalRoot, target, 0, null, 1);
+            let r = insertOrSearch(chunker, globalRoot, target, 0);
         }
     };
 }

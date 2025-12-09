@@ -35,6 +35,7 @@ BST_Insert(t, k) // returns t with key k inserted \\B Main
     \\In}
     return t \\B return t
   \\In}
+  // Done \\B Done
 \\Code}
 
 \\Code{

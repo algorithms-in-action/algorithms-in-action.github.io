@@ -84,6 +84,7 @@ AVLT_Insert(t, k) // returns t with key k inserted \\B Main
       for diagrams etc explaining rotations.
     \\Expl}
   \\In}
+  // Done \\B Done
 \\Code}
 
 \\Code{

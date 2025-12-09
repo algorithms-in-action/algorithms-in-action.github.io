@@ -6,9 +6,10 @@ export default parse(`
     BST_Insert(k, t) // Insert key k in BST t \\B 1
     if t = Empty \\B 7
     \\In{
-        t <- new node containing k \\B 8
-        \\Expl{ A new BST node is allocated and initialized with
-                key k and empty sub-trees; it replaces the empty tree.
+        return a single-node tree containing k \\B 8
+        \\Expl{ Memory is allocated for a new BST node and initialized with
+                key k and empty sub-trees. It is returned to replace
+                the previously empty tree.
         \\Expl}
     \\In}
     else

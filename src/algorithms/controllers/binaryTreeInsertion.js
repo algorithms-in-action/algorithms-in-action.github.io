@@ -70,27 +70,37 @@ export default {
       },
       [],
     );
+    chunker.add(1,
+      (vis, r) => {
+        vis.graph.setFunctionName("Insert:");
+        vis.graph.setFunctionInsertText(` ${r} `);
+      },
+      [root],
+    );
     chunker.add(7,
       (vis, r) => {
-        vis.graph.setFunctionName("Inserting:");
-        vis.graph.setFunctionInsertText(` ${r} `);
+        // vis.graph.setFunctionName("Insert:");
+        // vis.graph.setFunctionInsertText(` ${r} `);
       },
       [root],
     );
     chunker.add(8,
       (vis, r) => {
         vis.graph.addNode(r);
+        vis.graph.setFunctionName("Inserted:");
         vis.graph.layoutBST(r, true);
-        vis.graph.myColorNode(r, color_new);
+        // vis.graph.myColorNode(r, color_new);
       },
       [root],
     );
+/*
     chunker.add('end',
       (vis, r) => {
         vis.graph.myColorNode(r, undefined);
       },
       [root]
     );
+*/
     for (let i = 1; i < nodes.length; i++) {
 
       // BST_Insert() call
@@ -107,7 +117,7 @@ export default {
             vis.graph.deselect(nodes[index - 1], visited[visited.length - 1]);
           }
 */
-          vis.graph.setFunctionName("Inserting:");
+          vis.graph.setFunctionName("Insert:");
           vis.graph.setFunctionInsertText(` ${k} `);
         },
         [i, visitedList, root, element],
@@ -233,6 +243,7 @@ console.log(p, c);
       // deselect everything
       chunker.add('end',
         (vis, el, visited) => {
+          vis.graph.setFunctionName("Inserted:");
           for (let j = 1; j < visited.length; j++) {
             vis.graph.myColorEdge(visited[j-1], visited[j], undefined);
             vis.graph.myColorNode(visited[j], undefined);

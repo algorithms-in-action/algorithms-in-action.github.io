@@ -12,20 +12,14 @@ left and right subtrees (if they are not Empty) are called the *children*
 of the root node of t. Similarly, we refer to the *parent* of a node;
 the root node of the whole tree has no parent and other nodes have one
 parent. Typically t is represented as *a pointer to* a record and t.key
-etc are the fields of the record *pointed to* by t.  Binary search trees
+etc are the fields of the record *pointed to* by t (this notation is
+different from most programming languages that support explicit pointers).
+Binary search trees
 are *ordered*, so keys in the left subtree are smaller (or equal to)
 the key in the root and keys in the right subtree are greater (or equal
 to) the key in the root.  Normally there is additional data in each
 node as well as the key, disregarded in AIA because it doesn't affect
 the algorithms.
-
-## Search
-
-BST search traverses down the tree starting from the root. At each stage
-it compares the key we are searching for with the key in the node.  If
-they are equal the search stops sucessfully.  Otherwise we go to the left
-or right, depending on the comparison between the keys, and continue. If
-we reach an Empty subtree the search terminates unsucessfully.
 
 ## Insertion
 
@@ -34,8 +28,17 @@ to the left or right at each stage, depending on the comparison between
 the key in the node and the key to be inserted. When the edge of the tree
 is reached we add a new leaf containing the inserted key. In the
 iterative coding here we keep track of the current subtree, c, and also
-its parent, p. The traversal terminates when c becomes an Empty
+its parent, p (which is highlighted in the animation). The traversal
+terminates when c becomes an Empty
 subtree and the new node is then inserted as a child of p.
+
+## Search
+
+BST search traverses down the tree starting from the root. At each stage
+it compares the key we are searching for with the key in the node.  If
+they are equal the search stops sucessfully.  Otherwise we go to the left
+or right, depending on the comparison between the keys, and continue. If
+we reach an Empty subtree the search terminates unsucessfully.
 
 ### Duplicate keys
 
@@ -56,5 +59,4 @@ In the worst case it is *O(n)*, where each node has at most one child
 nodes have two children, the left and right subtrees of each node have
 very similar heights and the tree is *balanced*. The complexity is then
 *O(log n)*. This is also the average case complexity.
-
 
