@@ -14,7 +14,7 @@ import {
 // ../../components/DataStructures/colors
 
 const pivotColor = "var(--apple)";
-const focusColor = "var(--apple)";
+const focusColor = "var(--peach)";
 const leftColor  = "var(--leaf)";
 const waitColor  = "var(--sky)";
 const finalColor = "var(--stone)";
@@ -64,8 +64,8 @@ export default {
         } else {
           vis.array.set(arr, 'insertion-sort');
         }
-        for (let k = 0; k < N; k++)
-          vis.array.setColor(k, waitColor);
+        // for (let k = 0; k < N; k++)
+          // vis.array.setColor(k, waitColor);
       },
       [A, SPACER]
     );
@@ -84,7 +84,7 @@ export default {
         (vis, idx, n) => {
           vis.array.setColor(idx, pivotColor);
           for (let t = 0; t < idx; t++) vis.array.setColor(t, leftColor);
-          for (let t = idx + 1; t < n; t++) vis.array.setColor(t, waitColor);
+          // for (let t = idx + 1; t < n; t++) vis.array.setColor(t, waitColor);
           vis.array.assignVariable?.('i', idx);
         },
         [i, N]
@@ -152,7 +152,7 @@ export default {
           }
           vis.array.removeVariable?.('j');
           for (let t = 0; t <= upto; t++) vis.array.setColor(t, leftColor);
-          for (let t = upto + 1; t < n; t++) vis.array.setColor(t, waitColor);
+          // for (let t = upto + 1; t < n; t++) vis.array.setColor(t, waitColor);
         },
         [TEMP, place, i, N]
       );
