@@ -8,8 +8,9 @@
 // below, otherwise hooks into what happens when blocks are expanded or
 // contracted are not enabled.
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
-  'heapSort', 'msort_lista_td', 'msort_arr_bup',
-   'msort_arr_nat', 'msort_list_td', 'radixSortStraight', 'radixSortMSD', 'AVLTree', 'BSTrec'];
+  'heapSort', 'msort_lista_td', 'msort_arr_bup', 'msort_arr_nat',
+  'msort_list_td', 'radixSortStraight', 'radixSortMSD', 'AVLTree',
+  'BSTrec', 'isort'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and

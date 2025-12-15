@@ -53,16 +53,6 @@ class Array1DRenderer extends Array2DRenderer {
     this.toggleZoom(true);
 
     this.maxStackDepth = 0;
-    // XXX prototype stuff for insertion sort where we can have
-    // the array to sort then a gap then the tmp variable and do
-    // tweening for the moving of values around. Need to define
-    // setColumnGapAt here and in the controller use the last array
-    // element as tmp and set the previous element as the gap.
-    // Best change the color of the indexAfterGap also so it's the same
-    // as other variables.
-    this.columnGapAt = undefined; // set to a number for a gap in array
-    // this.columnGapAt = 10; // for testing
-    this.indexAfterGap = 'tmp';
   }
 
   // XXX "Warning: Each child in a list should have a unique "key" prop.
@@ -71,7 +61,7 @@ class Array1DRenderer extends Array2DRenderer {
 
     // listOfNumbers used for stack caption in msort_arr_td
     // eslint-disable-next-line
-    const { data, algo, stack, stackDepth, listOfNumbers } = this.props.data;
+    const { data, algo, stack, stackDepth, listOfNumbers, columnGapAt, indexAfterGap } = this.props.data;
 
     const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
 
@@ -153,7 +143,7 @@ class Array1DRenderer extends Array2DRenderer {
                           }}
                           /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                           className={classes(
-                            (j === this.columnGapAt ? styles.columnGap : styles.col),
+                            (j === columnGapAt ? styles.columnGap : styles.col),
                             // styles.col,
                             col.faded && styles.faded,
                             col.selected && styles.selected,
@@ -174,7 +164,7 @@ class Array1DRenderer extends Array2DRenderer {
                               col.style && col.style.textStyle,
                             )}
                           >
-                            {(j == this.columnGapAt ? ' '
+                            {(j == columnGapAt ? ' '
                               : this.toString(col.value))}
                           </motion.span>
                         { (ALGOS_USING_FLOAT_BOX.includes(algo) && (
@@ -217,8 +207,8 @@ class Array1DRenderer extends Array2DRenderer {
                   return (
                     <div className={classes(styles.col, styles.index)} key={i}>
                       <span className={styles.value}>
-                        {(i-1 == this.columnGapAt ? ' '
-                          : i-1 == this.columnGapAt+1 ?  this.indexAfterGap
+                        {(i-1 == columnGapAt ? ' '
+                          : i-1 == columnGapAt+1 ? indexAfterGap
                           : i
                         )}
                       </span>

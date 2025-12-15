@@ -1,13 +1,23 @@
+// insertion sort
+// Adapted from student version that used wrong pseudocode; some names
+// etc could be improved.
+
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-multi-spaces,indent,prefer-destructuring,brace-style */
-import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer_insertionSort';
-import { colors } from '../../components/DataStructures/colors';
+import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
+import {
+  areExpanded,
+} from './collapseChunkPlugin';
 
-const pivotColor = colors.apple;
-const focusColor = colors.apple;
-const leftColor  = colors.leaf;
-const waitColor  = colors.sky;
-const finalColor = colors.stone;
+// Moving to new color scheme
+// We use the color names directly rather than the trivial mapping here:
+// ../../components/DataStructures/colors
+
+const pivotColor = "var(--apple)";
+const focusColor = "var(--apple)";
+const leftColor  = "var(--leaf)";
+const waitColor  = "var(--sky)";
+const finalColor = "var(--stone)";
 
 const BK = {
   INIT: 1,
@@ -25,7 +35,7 @@ export default {
   initVisualisers() {
     return {
       array: {
-        instance: new ArrayTracer('array', null, 'Array view', {
+        instance: new ArrayTracer('array', null, 'Array A', {
           arrayItemMagnitudes: true,
         }),
         order: 0,
@@ -39,23 +49,25 @@ export default {
     const SPACER = N;
     const TEMP   = N + 1;
 
-    const A = [...nodes, null, null];
+    const A = [...nodes];
 
+    // If expanded, we have the input array then a gap then temp, so we
+    // can swap elements with temp using tweening, otherwise we just
+    // have the input array (and must avoid swaps with temp)
     chunker.add(
       BK.INIT,
-      (vis, arr) => {
-        vis.array.set(arr, 'insertion-sort');
-        // XXX attempted hacks: tweening for first element broken
-        // vis.array.setMotion(true);
-        // vis.array.assignVariable?.('', 0);
-        // vis.array.swapElements(0, 1);
-        // vis.array.setStack?.([]);
-        // vis.array.clearVariables?.();
-
-        // if (N > 0) vis.array.selectColor(0, leftColor);
-        for (let k = 0; k < N; k++) vis.array.selectColor(k, waitColor);
+      (vis, arr, s) => {
+        if (areExpanded(['Insert'])) {
+          vis.array.set([...arr, null, null], 'insertion-sort');
+          vis.array.columnGap(s);
+          vis.array.columnGapIndex('temp');
+        } else {
+          vis.array.set(arr, 'insertion-sort');
+        }
+        for (let k = 0; k < N; k++)
+          vis.array.setColor(k, waitColor);
       },
-      [A]
+      [A, SPACER]
     );
     // [A[0], A[1]] = [A[1], A[0]];
 
@@ -64,15 +76,15 @@ export default {
 
       // NOTE: current pseudocode has j one more than the j here (and
       // the original pseudocode), hence the use of jVal+1 in various
-      // spots and XXX possibly lingering jVal >= 0 tests
+      // spots
       let j = i - 1;
 
       chunker.add(
         BK.OUTER,
         (vis, idx, n) => {
-          vis.array.selectColor(idx, pivotColor);
-          for (let t = 0; t < idx; t++) vis.array.selectColor(t, leftColor);
-          for (let t = idx + 1; t < n; t++) vis.array.selectColor(t, waitColor);
+          vis.array.setColor(idx, pivotColor);
+          for (let t = 0; t < idx; t++) vis.array.setColor(t, leftColor);
+          for (let t = idx + 1; t < n; t++) vis.array.setColor(t, waitColor);
           vis.array.assignVariable?.('i', idx);
         },
         [i, N]
@@ -80,9 +92,11 @@ export default {
 
       chunker.add(
         BK.K2TEMP,
-        (vis, from, to) => {
-          vis.array.swapElements(from, to);
-          // vis.array.assignVariable?.('key', to);
+        (vis, i, ti) => {
+          if (areExpanded(['Insert'])) {
+            vis.array.swapElements(i, ti);
+          }
+          // do we need to assign temp to array.???[i] - no:)
         },
         [i, TEMP]
       );
@@ -90,11 +104,7 @@ export default {
       chunker.add(
         BK.JSET,
         (vis, jVal) => {
-          if (jVal >= 0) {
-            vis.array.assignVariable?.('j', jVal+1);
-          } else { // XXX delete
-            vis.array.removeVariable?.('j');
-          }
+          vis.array.assignVariable?.('j', jVal+1);
         },
         [j]
       );
@@ -106,7 +116,7 @@ export default {
           (vis, jVal) => {
             vis.array.assignVariable?.('j', jVal+1);
             if (jVal >= 0) {
-              vis.array.selectColor(jVal, focusColor);
+              vis.array.setColor(jVal, focusColor);
             }
           },
           [j]
@@ -117,7 +127,7 @@ export default {
           BK.SHIFT,
           (vis, l, r) => {
             vis.array.swapElements(l, r);
-            vis.array.selectColor(r, leftColor);
+            vis.array.setColor(r, leftColor);
           },
           [j, j + 1]
         );
@@ -137,11 +147,12 @@ export default {
       chunker.add(
         BK.PLACE,
         (vis, tempIdx, targetIdx, upto, n) => {
-          vis.array.swapElements(tempIdx, targetIdx);
-          vis.array.removeVariable?.('j'); // XXX ???
-          // vis.array.assignVariable?.('key', targetIdx);
-          for (let t = 0; t <= upto; t++) vis.array.selectColor(t, leftColor);
-          for (let t = upto + 1; t < n; t++) vis.array.selectColor(t, waitColor);
+          if (areExpanded(['Insert'])) {
+            vis.array.swapElements(tempIdx, targetIdx);
+          }
+          vis.array.removeVariable?.('j');
+          for (let t = 0; t <= upto; t++) vis.array.setColor(t, leftColor);
+          for (let t = upto + 1; t < n; t++) vis.array.setColor(t, waitColor);
         },
         [TEMP, place, i, N]
       );
@@ -149,28 +160,16 @@ export default {
       A[place] = key;
       A[TEMP]  = null;
       A[SPACER] = null;
-
-/*
-      chunker.add(
-        BK.WHILE,
-        (vis, upto, n) => {
-          for (let t = 0; t <= upto; t++) vis.array.selectColor(t, leftColor);
-          for (let t = upto + 1; t < n; t++) vis.array.selectColor(t, waitColor);
-        },
-        [i, N]
-      );
-*/
     }
 
     chunker.add(
       BK.FINISH,
       (vis, n) => {
         for (let i = 0; i < n; i++) {
-          vis.array.selectColor(i, finalColor);
+          vis.array.setColor(i, finalColor);
           vis.array.fadeIn?.(i);
         }
         vis.array.clearVariables?.();
-        vis.array.setStack?.([]);
       },
       [N]
     );

@@ -141,7 +141,9 @@ class Array2DTracer extends Tracer {
     this.algo = algo;
     this.kth = kth;
     this.motionOn = true; // whether to use animation
-    this.hideArrayAtIdx = null; // to hide array at given index
+    this.hideArrayAtIdx = null; // to hide array row at given index
+    this.columnGapAt = null; // to leave gap in 1D array at given index
+    this.indexAfterGap = ''; // used with columnGapAt (in isort)
     this.listOfNumbers = '';
     this.highlightRow = highlightRow;
     super.set();
@@ -551,11 +553,27 @@ class Array2DTracer extends Tracer {
   }
 
   /**
-   * Hides the array at the given index.
+   * Hides the array (row) at the given index.
    * @param {*} index the index of the array to hide.
    */
   hideArrayAtIndex(index) {
     this.hideArrayAtIdx = index;
+  }
+
+  /**
+   * Hides the 1D array (column/element) at the given index.
+   * @param {*} index the index of the array to hide.
+   */
+  columnGap(index) {
+    this.columnGapAt = index;
+  }
+
+  /**
+   * Index to display *one after* columnGapAt (if used)
+   * @param {*} index the index to display
+   */
+  columnGapIndex(index) {
+    this.indexAfterGap = index;
   }
 
   /**
