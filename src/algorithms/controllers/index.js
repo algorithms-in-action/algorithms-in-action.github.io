@@ -35,7 +35,6 @@ export { default as BSTrecInsertion} from './BSTrecInsertion'
 export { default as BSTrecSearch} from './BSTrecSearch'
 export { default as msort_list_td} from './msort_list_td'
 export { default as gwrap} from './gwrap'
-export { default as insertionSort } from './insertionSort';
 export { default as selectionSort } from './selectionSort';
 export { default as convHullDCFind } from './convHullDCFind.js';
 export { default as grahamScan_find } from './grahamScan_find.js';

@@ -83,20 +83,6 @@ const algorithmMetadata = {
     controller: { sort: 'isort' },
   },
 
-  // === INSERTION SORT (new) ===
-  insertionSort: {
-    name: 'Insertion Sort (initial student version)',
-    category: 'Sort',
-    noDeploy: true,
-    keywords: ['O(N^2)', 'O(N)', 'stable', 'adaptive', 'comparison'],
-    explanationKey: 'insertionSortExp',
-    paramKey: 'insertionSortParam',
-    instructionsKey: 'insertionSortInstruction',
-    extraInfoKey: 'insertionSortInfo',
-    pseudocode: { sort: 'insertionSort' },
-    controller: { sort: 'insertionSort' },
-  },
-
   // === NEW SELECTION SORT ===
   selectionSort: {
     name: 'Selection Sort',
