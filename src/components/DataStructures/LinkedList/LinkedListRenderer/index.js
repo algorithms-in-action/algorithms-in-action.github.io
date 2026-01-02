@@ -164,7 +164,7 @@ class LinkedListRenderer extends Array2DRenderer {
                 >
                   <div className={styles.pill}>
                     <span className={styles.value}>{n.value}</span>
-                    <span className={styles.value}><i className={styles.dot} /></span>
+                    <span className={styles.cap}><i className={styles.dot} /></span>
                   </div>
 
                   <div className={styles.vars}>
