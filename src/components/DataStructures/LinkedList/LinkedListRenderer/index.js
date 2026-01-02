@@ -100,15 +100,17 @@ class LinkedListRenderer extends Array2DRenderer {
     const containerWidth = this.props.width || 800;
     const { offX, offY } = this._getAutoOffset(bounds, safeBox, containerWidth);
 
-    const cameraTranslateX = (-this.centerX * 2) + offX - 100;
-    const cameraTranslateY = (-this.centerY * 2) + offY - 30;
+    // const cameraTranslateX = (-this.centerX * 2) + offX - 100;
+    // const cameraTranslateY = (-this.centerY * 2) + offY - 30;
+    const cameraTranslateX = -400; // XXX shift close to left of panel
+    const cameraTranslateY = 0;
 
     return (
       <div className={styles.container}>
         <div className={styles.stage}
           style={{
             transform: `translate(${cameraTranslateX}px,${cameraTranslateY}px) scale(${this.zoom})`,
-            transformOrigin: '0 0', width: maxX, height: maxY, position: 'relative'
+            // transformOrigin: '0 0', width: maxX, height: maxY, position: 'relative'
           }}
         >
           {/* Arrows */}
@@ -162,7 +164,7 @@ class LinkedListRenderer extends Array2DRenderer {
                 >
                   <div className={styles.pill}>
                     <span className={styles.value}>{n.value}</span>
-                    <span className={styles.cap}><i className={styles.dot} /></span>
+                    <span className={styles.value}><i className={styles.dot} /></span>
                   </div>
 
                   <div className={styles.vars}>

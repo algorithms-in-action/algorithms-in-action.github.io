@@ -3,6 +3,10 @@
  *   Visual tracer for pointer-based linked list algorithms.
  *   Supports dynamic node repositioning, highlighting, and pointer tags.
  *
+ * Original interface not great and very tied to top-down merge sort
+ * with not so good positioning of lists etc. Moving it in the right
+ * direction but still a way to go and there may be lefover junk XXX
+ *
  * Node Class:
  *   Each list node is represented by a ListNode instance with:
  *     - num (displayed value)
@@ -10,6 +14,7 @@
  *     - fillVariant (color for visual state)
  *     - pos (x,y position on canvas)
  *     - variables (badges / stacked pointer labels)
+ *       XXX want to move away from this to separate boxes and arrows
  *
  * Index Mapping:
  *   The algorithm uses 1-based integer indices for list structure (Tails array).
@@ -282,7 +287,7 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
-  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 60) {
+  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 90) {
     if (!rightStart || rightStart === 'Null') return;
     const T = tailsArray;
 
@@ -314,10 +319,11 @@ class LinkedListTracer extends Tracer {
     if (!merged.length) return;
 
     const leftmostX = Math.min(...merged.map(n => n.node.pos.x));
-    const avgY = merged.reduce((s, n) => s + n.node.pos.y, 0) / merged.length;
+    const topY = Math.min(...merged.map(n => n.node.pos.y));
+    // const avgY = merged.reduce((s, n) => s + n.node.pos.y, 0) / merged.length;
 
     merged.forEach((item, idx) => {
-      this.moveNodeTo(item.key, leftmostX + idx * gap, avgY);
+      this.moveNodeTo(item.key, leftmostX + idx * gap, topY);
     });
   }
 

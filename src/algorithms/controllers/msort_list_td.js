@@ -143,7 +143,7 @@ export function run_msort() {
         // Depth 0: show full original list (top-level call)
         // Deeper recursion: hide other sublists and focus only on this L-chain
         if (cur_depth > 0) {
-          vis.list.hideAll();
+          // vis.list.hideAll();
           vis.list.showChain(cur_L, T);
         } else {
           vis.list.set(entire_num_array, 'mergeSort list init');
@@ -246,8 +246,8 @@ export function run_msort() {
 
         vis.list.colorChains(cur_L, undefined, T);
 
-        vis.list.moveChainBelow(cur_L, cur_R, T);
-        vis.list.hideChain(cur_R, T);
+        // vis.list.moveChainBelow(cur_L, cur_R, T);
+        // vis.list.hideChain(cur_R, T);
       }, [Tails, L, R], depth);
 
       L = MergeSort(L, midNum, depth + 1);
@@ -271,7 +271,7 @@ export function run_msort() {
         vis.list.assignTag('M', undefined);
         vis.list.assignTag('E', undefined);
 
-        vis.list.hideChain(cur_L, T);
+        // vis.list.hideChain(cur_L, T);
         vis.list.showChain(cur_R, T);
 
         vis.list.colorChains(undefined, cur_R, T);
@@ -299,6 +299,7 @@ export function run_msort() {
       let M;
 
       chunker.add('compareHeads', (vis, T, cur_L, cur_R) => {
+        vis.list.moveChainBelow(cur_L, cur_R, T);
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('R', cur_R);
 
