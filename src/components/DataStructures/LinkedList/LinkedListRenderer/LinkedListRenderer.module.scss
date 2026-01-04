@@ -1,3 +1,6 @@
+// XXX need to redo colours etc in line with "new" global colour palette
+// scheme and general consistency with other animations
+
 @import "../../common/stylesheet/index";
 
 /* ======================================================
@@ -79,7 +82,7 @@
   // --cap-w: 18px;
   // --pill-radius: 8px;
   --cap-w: 24px;
-  --pill-radius: 0px;
+  --pill-radius: 0px; // want list vars to  look like tails
   --value-fs: 13px;
 
   /* Dot positioning and size */
@@ -163,7 +166,8 @@
     border-radius: 999px;
     padding: 2px 6px; 
     font-size: 12px;
-    color: #ddd;
+    // color: #ddd; // hard to see with dark scheme!
+    color: #888;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.15)); // subtle outline to improve legibility
   }
 }
@@ -176,8 +180,8 @@
 .variantGray .pill {
   background:
     linear-gradient(90deg,
-      #666 0 calc(100% - var(--cap-w)),
-      #555 calc(100% - var(--cap-w)));
+      #888 0 calc(100% - var(--cap-w)),
+      #777 calc(100% - var(--cap-w)));
 }
 
 /* Blue variant (used for right-side highlighting) */
