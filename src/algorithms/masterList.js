@@ -198,7 +198,7 @@ const algorithmMetadata = {
   },
 
   msort_list_td: {
-    name: 'Merge Sort (for lists)',
+    name: 'Merge Sort (top down, for lists)',
     category: 'Sort',
     keywords: ['O(NlogN)', 'stable', 'top down'],
     noDeploy: false,
@@ -211,10 +211,10 @@ const algorithmMetadata = {
   },
 
   msort_lista_td: {
-    name: 'Merge Sort (for linked lists)',
+    name: 'Merge Sort (lists using arrays)',
     category: 'Sort',
     keywords: ['O(NlogN)', 'stable', 'top down'],
-    noDeploy: false,
+    noDeploy: true,
     explanationKey: 'msort_lista_td',
     paramKey: 'msort_lista_td',
     instructionsKey: 'msort_lista_td',

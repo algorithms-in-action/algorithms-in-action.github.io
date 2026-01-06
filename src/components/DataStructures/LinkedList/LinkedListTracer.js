@@ -6,6 +6,7 @@
  * Original interface not great and very tied to top-down merge sort
  * with not so good positioning of lists etc. Moving it in the right
  * direction but still a way to go and there may be lefover junk XXX
+ * XXX colour stuff should be made similar to other code
  *
  * Node Class:
  *   Each list node is represented by a ListNode instance with:
@@ -18,6 +19,7 @@
  *
  * Index Mapping:
  *   The algorithm uses 1-based integer indices for list structure (Tails array).
+ * XXX not sure if this is the best idea - leftover from array prototype
  *   This tracer maps indices <-> visual node keys using indexToKey.
  *
  *   updateConnections() must be called after pointer updates to refresh edges.
@@ -37,6 +39,7 @@
  *   colorChain(start, variant, Tails)
  *       marks all nodes reachable from start index with variant color
  *       or split to colorLeft/colorRight if to hardcode colors inside
+ * XXX the rest of these are ver mergesort-specific
  *   colorChains(L, R, Tails, leftColor, rightColor, defaultColor)
  *       resets all to defaultColor first, then colors L-chain and R-chain
  *   colorMerged(M, E, Tails)
@@ -53,6 +56,7 @@
  *
  * Node Positioning:
  *   moveNodeTo(key, x, y)        — reposition single node
+ * XXX the rest of these are ver mergesort-specific
  *   moveChainBelow(L, R, Tails)  — vertically separate right chain during recursion
  *   repositionMergedChain(M, Tails)
  *       layout merged output as a continuous chain
@@ -92,7 +96,7 @@ class LinkedListTracer extends Tracer {
     this.layout = {
       direction: 'horizontal',
       gap: 65,
-      start: { x: 0, y: 0 },
+      start: { x: 20, y: 50 },
       nodeW: 50,
       baselineY: 0,
       rowWidth: 720,
@@ -100,6 +104,7 @@ class LinkedListTracer extends Tracer {
     };
 
     this.algo = undefined;
+    this.caption = '';
     this.listOfNumbers = '';
     this.indexToKey = new Map();
 
@@ -115,6 +120,8 @@ class LinkedListTracer extends Tracer {
 
   // ------------------------------------------------
   // Build linked list from numeric array
+  // XXX Only allows a single list (plus tail etc) - can't have separate
+  // lists, vars that are lists etc
   // ------------------------------------------------
   set(list = [], algo) {
     this.algo = algo;
@@ -138,6 +145,10 @@ class LinkedListTracer extends Tracer {
     this.headKey = list.length ? [...this.nodes.keys()][0] : null;
     this.tailKey = list.length ? [...this.nodes.keys()][list.length - 1] : null;
     super.set();
+  }
+
+  setCaption(caption = '') {
+    this.caption = caption;
   }
 
   // ------------------------------------------------
@@ -287,7 +298,7 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
-  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 90) {
+  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 120) {
     if (!rightStart || rightStart === 'Null') return;
     const T = tailsArray;
 

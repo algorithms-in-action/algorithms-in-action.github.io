@@ -25,7 +25,16 @@ Mergesort(L, len) \\B Main
         \\Note{ This should be animated in one step if not expanded
         \\Note}
         M <- Merge of L and R \\Ref Merge
+        \\Expl{ Note that in the animation of the merge operation we
+          move R to below L. This is just to clarify the display; no
+          list cells or data are actually copied/moved. Merge just
+          reassigns pointers.
+        \\Expl}
         return M \\B returnM
+        \\Expl{ Here the animation re-draws the list left to right.
+          This is just to clarify the display; no
+          list cells or data are actually copied/moved.
+        \\Expl}
     \\In}
     else
     \\In{

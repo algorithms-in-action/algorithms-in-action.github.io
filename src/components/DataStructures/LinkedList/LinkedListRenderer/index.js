@@ -179,6 +179,9 @@ class LinkedListRenderer extends Array2DRenderer {
             ))}
           </AnimateSharedLayout>
         </div>
+        <div className={styles.value /* XXX */} >
+            {this.props.data.caption}
+        </div>
       </div>
     );
   }

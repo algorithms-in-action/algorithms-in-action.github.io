@@ -118,7 +118,7 @@ let Tails;        // ['i.tail (next)', ...]
 export function initVisualisers() {
   return {
     list: {
-      instance: new LinkedListTracer('list', null, 'Pointer representation of linked list (Expand all code to see full animation)'),
+      instance: new LinkedListTracer('list', null, 'List(s)'),
       order: 0,
     },
   }
@@ -139,16 +139,19 @@ export function run_msort() {
     }
 
     function setupInitialVisualization(L, len, depth) {
-      chunker.add('Main', (vis, T, cur_L, _cur_len, cur_depth) => {
+      chunker.add('Main', (vis, T, cur_L, cur_len, cur_depth) => {
         // Depth 0: show full original list (top-level call)
         // Deeper recursion: hide other sublists and focus only on this L-chain
         if (cur_depth > 0) {
           // vis.list.hideAll();
-          vis.list.showChain(cur_L, T);
+          // vis.list.showChain(cur_L, T);
         } else {
           vis.list.set(entire_num_array, 'mergeSort list init');
-          vis.list.colorChain(1, ptrVariant.def, T);
+          // vis.list.colorChain(1, ptrVariant.runA, T);
         }
+        vis.list.colorChain(1, ptrVariant.runA, T);
+        // vis.list.showChain(cur_L, T);
+        vis.list.setCaption(`len = ${cur_len}`);
 
         // Just L tag is known at this point
         vis.list.assignTag('L', cur_L);
@@ -218,7 +221,7 @@ export function run_msort() {
       Tails[Mid] = 'Null';
       chunker.add('tail(Mid)<-Null', (vis, T, cur_L, cur_Mid, cur_R) => {
         vis.list.assignTag('L', cur_L);
-        vis.list.assignTag('Mid', cur_Mid);
+        vis.list.assignTag('Mid', undefined);
         vis.list.assignTag('R', cur_R);
         vis.list.assignTag('M', undefined);
         vis.list.assignTag('E', undefined);
@@ -252,34 +255,36 @@ export function run_msort() {
 
       L = MergeSort(L, midNum, depth + 1);
 
-      chunker.add('sortL', (vis, T, cur_L) => {
-        vis.list.assignTag('R', undefined);
+      chunker.add('sortL', (vis, T, cur_L, cur_R, cur_len) => {
+        vis.list.assignTag('R', cur_R);
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('Mid', undefined);
         vis.list.assignTag('M', undefined);
         vis.list.assignTag('E', undefined);
 
         vis.list.showChain(cur_L, T);
-        vis.list.colorChains(cur_L, undefined, T);
-      }, [Tails, L], depth);
+        vis.list.colorChains(cur_L, cur_R, T);
+        vis.list.setCaption(`len = ${cur_len}`);
+      }, [Tails, L, R, len], depth);
 
       // ----- focus right -----
       chunker.add('preSortR', (vis, T, cur_L, cur_R) => {
-        vis.list.assignTag('Mid', undefined);
-        vis.list.assignTag('L', undefined);
-        vis.list.assignTag('R', cur_R);
-        vis.list.assignTag('M', undefined);
-        vis.list.assignTag('E', undefined);
+        // vis.list.assignTag('Mid', undefined);
+        // vis.list.assignTag('L', undefined);
+        // vis.list.assignTag('R', cur_R);
+        // vis.list.assignTag('M', undefined);
+        // vis.list.assignTag('E', undefined);
 
         // vis.list.hideChain(cur_L, T);
-        vis.list.showChain(cur_R, T);
+        // vis.list.showChain(cur_R, T);
 
-        vis.list.colorChains(undefined, cur_R, T);
+        // vis.list.colorChains(undefined, cur_R, T);
       }, [Tails, L, R], depth);
 
       R = MergeSort(R, len - midNum, depth + 1);
 
-      chunker.add('sortR', (vis, T, cur_L, cur_R) => {
+      chunker.add('sortR', (vis, T, cur_L, cur_R, cur_len) => {
+        vis.list.setCaption(`len = ${cur_len}`);
         vis.list.assignTag('L', cur_L);
         vis.list.assignTag('R', cur_R);
         vis.list.assignTag('Mid', undefined);
@@ -290,7 +295,7 @@ export function run_msort() {
         vis.list.showChain(cur_R, T);
 
         vis.list.colorChains(cur_L, cur_R, T);
-      }, [Tails, L, R], depth);
+      }, [Tails, L, R, len], depth);
 
       return { L, R };
     }
@@ -448,21 +453,21 @@ export function run_msort() {
 
         Tails[E] = R;
         chunker.add('appendR', (vis, T, cur_E, cur_R) => {
-          vis.list.assignTag('E', cur_E);
-          vis.list.assignTag('R', cur_R);
-
+          vis.list.assignTag('E', undefined);
+          vis.list.assignTag('R', undefined);
           vis.list.updateConnections(T);
-          vis.list.colorMerged(cur_E, cur_R, T);
+          // vis.list.colorMerged(cur_E, cur_R, T);
+          vis.list.colorChain(cur_E, ptrVariant.merged, T);
         }, [Tails, E, R], depth);
 
       } else {
         Tails[E] = L;
         chunker.add('appendL', (vis, T, cur_E, cur_L) => {
-          vis.list.assignTag('E', cur_E);
-          vis.list.assignTag('L', cur_L);
-
+          vis.list.assignTag('E', undefined);
+          vis.list.assignTag('L', undefined);
           vis.list.updateConnections(T);
-          vis.list.colorMerged(cur_E, cur_L, T);
+          // vis.list.colorMerged(cur_E, cur_L, T);
+          vis.list.colorChain(cur_E, ptrVariant.merged, T);
         }, [Tails, E, L], depth);
       }
 
