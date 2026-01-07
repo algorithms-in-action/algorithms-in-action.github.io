@@ -13,18 +13,24 @@ the element values). It then recursively sorts these two shorter lists
 and merges the results to get a sorted complete list.  The base case
 for the recursion is lists of size one or zero.
 
-Splitting the list in half requires traversing to the middle of the list
-(here we pass in the list length as a parameter; if the length is unknown
+Splitting the list in half requires traversing to the middle of the list.
+Here we pass in the list length as a parameter. If the length is unknown
 it can be computed using a traversal of the whole list before this
-sorting code is called).  The main part of merge uses three pointers:
-one for each of the input lists and one for the end of the output list
-that is being constructed, so additional elements can be appended in
-constant time.  At each stage the minimum input list element is appended
-to the output list and the pointers for those two lists are advanced to
-the next elements. When one input list has been completely traversed,
-any additional elements in the other input list are linked onto to the
-end of the output list. In this coding, the output list (a fourth pointer)
-is initialised to point to the minimum first element of the input lists.
+sorting code is called.
+
+The merge operation rearranges pointers so all the list cells in the
+two input lists ***L*** and ***R*** are linked together, in order,
+to form a new list ***M***. The new list is constructed by repeatedly
+adding extra elements to the end, by assigning to the tail pointer in
+the last cell, which is pointed to by another variable, ***E***. During
+merge, the cells from ***M*** up to and including ***E*** are known to
+be sorted and ***L*** and ***R*** point to the next cells in the input
+lists, respectively - these haven't yet been added to ***M***. At each
+step, the head of ***L*** and ***R*** are compared.  The tail of ***E***
+is made to point to the minimum and ***E*** and the minimum of ***L***
+and ***R*** advance to the next cell. When all elements of one of the
+input lists have been added, the tail of ***E*** is made to point to
+the remaining part of the other input list.
 
 Versions of merge sort for lists are often the preferred sorting
 algorithms in declarative languages, where lists are used extensively.

@@ -56,7 +56,10 @@ scan
     Mid <- L \\B Mid
     \\Expl{ Start at first element of L
     \\Expl}
-    for i <- 1 to len/2 - 1 // while not at middle
+    for i <- 2 to len/2 // while not at middle
+    \\Expl{ For odd-length lists we round up, to be consistent with
+      the array version of top-down merge sort (either rounding is ok).
+    \\Expl}
     \\In{
         Mid <- Mid.tail \\B MidNext
         \\Expl{ Skip to next element

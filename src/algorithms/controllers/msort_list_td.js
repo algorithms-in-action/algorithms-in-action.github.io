@@ -1,4 +1,10 @@
 /**
+ * XXX getting this into shape gradually. Some comments below are out of
+ * date (eg, we don't hide lists).  Needs more work to apply colour
+ * scheme used elsewhere, pretty up a few things and improve how list
+ * variables are shown (plus the interface to the list tracer) - see
+ * list_interface file.
+ *
  * Merge Sort Linked List Animation — Bookmark & Chunker Guide
  * -----------------------------------------------------------
  *
@@ -478,7 +484,7 @@ export function run_msort() {
       setupInitialVisualization(L, len, depth);
 
       if (len > 1) {
-        let midNum = Math.floor(len / 2);
+        let midNum = Math.ceil(len / 2);
         const { L: newL, R, Mid } =
           splitList(L, midNum, depth);
         const { L: sortedL, R: sortedR } =
