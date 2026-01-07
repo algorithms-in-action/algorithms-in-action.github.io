@@ -164,7 +164,7 @@ class Array1DRenderer extends Array2DRenderer {
                               col.style && col.style.textStyle,
                             )}
                           >
-                            {(j == columnGapAt ? ' '
+                            {(j === columnGapAt ? ' '
                               : this.toString(col.value))}
                           </motion.span>
                         { (ALGOS_USING_FLOAT_BOX.includes(algo) && (
@@ -207,8 +207,8 @@ class Array1DRenderer extends Array2DRenderer {
                   return (
                     <div className={classes(styles.col, styles.index)} key={i}>
                       <span className={styles.value}>
-                        {(i-1 == columnGapAt ? ' '
-                          : i-1 == columnGapAt+1 ? indexAfterGap
+                        {(i-1 === columnGapAt ? ' '
+                          : i-2 === columnGapAt ? indexAfterGap
                           : i
                         )}
                       </span>

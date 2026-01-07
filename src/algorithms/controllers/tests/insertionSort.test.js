@@ -5,7 +5,7 @@
 
 /* eslint-disable no-undef */
 
-import insertionSort from '../insertionSort';
+import insertionSort from '../isort';
 
 // Simple stub for the chunker
 const chunker = {
