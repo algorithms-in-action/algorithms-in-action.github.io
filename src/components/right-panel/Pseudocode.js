@@ -52,6 +52,7 @@ function Pseudocode({ fontSize, fontSizeIncrement }) {
             dispatch(GlobalActions.COLLAPSE, {
               codeblockname: blockName,
               expandOrCollapase: shouldExpand,
+              blockMode: modeName,
             });
           }
         });

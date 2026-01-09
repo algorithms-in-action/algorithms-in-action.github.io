@@ -448,7 +448,15 @@ console.log(stopAt, playing, state);
     playing,
   }),
 
-  COLLAPSE: (state, { codeblockname, expandOrCollapase }) => {
+  // expand/collapse pseudocode block
+  // If expandOrCollapase is undefined we toggle expand/collapse in the
+  // current mode (we get this from a user mouse click on a block).
+  // Otherwise if the mode is undefined we use the current mode
+  // (we get this from the URL)
+  // Otherwise we set it to whatever is specified in the specified mode
+  // (we get this from the URL)
+  // XXX rename "Collapase" here/elswewhere
+  COLLAPSE: (state, { codeblockname, expandOrCollapase, blockMode }) => {
     // for (const k of Object.keys(state.pseudocode)) {
     // console.log(["COLLAPSE", k, state.collapse[state.id.name][state.id.mode][k]]);
     // }
@@ -457,10 +465,16 @@ console.log(stopAt, playing, state);
     if (expandOrCollapase === undefined) {
       result[state.id.name][state.id.mode][codeblockname] =
         !result[state.id.name][state.id.mode][codeblockname];
+    } else if (blockMode === undefined) {
+      if (expandOrCollapase) {
+        result[state.id.name][state.id.mode][codeblockname] = true; // expand
+      } else {
+        result[state.id.name][state.id.mode][codeblockname] = false; // collapse
+      }
     } else if (expandOrCollapase) {
-      result[state.id.name][state.id.mode][codeblockname] = true; // expand
+      result[state.id.name][blockMode][codeblockname] = true; // expand
     } else {
-      result[state.id.name][state.id.mode][codeblockname] = false; // collapse
+      result[state.id.name][blockMode][codeblockname] = false; // collapse
     }
 
     onCollapseChange(state.chunker); // generic plugin for expand/collapse
