@@ -1,4 +1,4 @@
-\Note{
+\\Note{
 Selection sort draft, with some help from ChatGPT. It's not too bad at
 producing pseudocode and comments.  More structuring is needed and care
 is needed (of course) - it gets some things wrong.
@@ -21,38 +21,39 @@ SelectionSort(array A)
         // Swap the smallest found with the element at position i
         if minIndex ≠ i then
             swap A[i] and A[minIndex]
-\Note}
+\\Note}
 
-\Code{
+\\Code{
 Main
-SelectionSort(A, n) // sort A[1]...A[n] in increasing order
-\In{
-    for i <- 1 to n - 1
-    \Expl{ At each iteration the elements A[1]...A[i-1] are
+SelectionSort(A, n) // sort A[1]...A[n] in increasing order \\B Main
+\\In{
+    for i <- 1 to n - 1 \\B For_i
+    \\Expl{ At each iteration the elements A[1]...A[i-1] are
         in their final position. They are the smallest i-1 elements, in
         sorted order. We stop at A[n-1] (at this point A[n] must be the
         largest element).
-    \Expl}
-    \In{
-        Swap A[i] with the minimum unsorted element \Ref NextEl
-        \Expl{ The elements up to A[i-1] are already sorted, in their
+    \\Expl}
+    \\In{
+        Swap A[i] with the minimum unsorted element \\Ref NextEl
+        \\Expl{ The elements up to A[i-1] are already sorted, in their
           final positions. This step extends the sorted region to A[i].
-        \Expl}
-    \In}
-\In} 
-\Code} 
+        \\Expl}
+    \\In}
+    Done \\B Done
+\\In} 
+\\Code} 
 
-\Code{
+\\Code{
 NextEl
-iMin <- i // initially assume A[i] is smallest
-\Expl{ iMin is set to the index of the smallest element of A[i]...A[n].
-  Initially we set it to i then scan the rest of A, updating iMin
+min <- i // initially assume A[i] is smallest \\B Init_min
+\\Expl{ min is set to the index of the smallest element of A[i]...A[n].
+  Initially we set it to i then scan the rest of A, updating min
   whenever we find a smaller element.
-\Expl}
-for j <- i + 1 to n // search A[i+1]...A[n] for smaller elements
-    \In{
-    if A[j] < A[iMin] // if we have found a smaller element
-        iMin <- j // update index of smallest
-    \In}
-Swap(A[i], A[iMin]) // Swap smallest into its correct position, A[i]
-\Code} 
+\\Expl}
+for j <- i + 1 to n // search A[i+1]...A[n] for smaller elements \\B For_j
+    \\In{
+    if A[j] < A[min] // if we have found a smaller element \\B IfA[j]<A[min]
+        min <- j // update index of smallest \\B min<-j
+    \\In}
+Swap(A[i], A[min]) // Swap smallest into its correct position, A[i] \\B Swap
+\\Code} 
