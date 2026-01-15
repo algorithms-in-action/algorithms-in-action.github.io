@@ -155,8 +155,11 @@ export function run_msort() {
           vis.list.set(entire_num_array, 'mergeSort list init');
           // vis.list.colorChain(1, ptrVariant.runA, T);
         }
-        vis.list.colorChain(1, ptrVariant.runA, T);
+        // XXX should colour list the cur_L colour and *remove* the
+        // colour from the previous cur_L, if any
         // vis.list.showChain(cur_L, T);
+        vis.list.resetColors();
+        vis.list.colorChain(cur_L, ptrVariant.runA, T);
         vis.list.setCaption(`len = ${cur_len}`);
 
         // Just L tag is known at this point
@@ -181,8 +184,8 @@ export function run_msort() {
         vis.list.showChain(cur_L, T);
         vis.list.updateConnections(T);
 
-        vis.list.resetColors();
-        vis.list.colorChain(cur_L, ptrVariant.runA, T);
+        // vis.list.resetColors();
+        // vis.list.colorChain(cur_L, ptrVariant.runA, T);
       }, [Tails, L, Mid], depth);
 
       // Mid walking through list: Mid <- Mid.tail (bookmark: MidNext)
