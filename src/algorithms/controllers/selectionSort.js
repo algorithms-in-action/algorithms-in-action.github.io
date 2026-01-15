@@ -47,25 +47,32 @@ export default {
                     vis.array.assignVariable('j', cur);
                 }, [j]);
 
-                chunker.add('IfA[j]<A[min]', (vis, cur) => {
-                    // vis.array.depatch(cur);
-                    // vis.array.removeVariable('j');
-                }, [j]);
                 if (A[j] < A[minIdx]) {
-                    chunker.add('min<-j', (vis, newMin, oldMin) => {
+                    chunker.add('IfA[j]<A[min]', (vis, cur, n) => {
+                    }, [j, n]);
+                    chunker.add('min<-j', (vis, newMin, oldMin, cur, n) => {
                         vis.array.assignVariable('min', newMin);
                         vis.array.selectColor(newMin, minColor);
                         vis.array.selectColor(oldMin, selColor);
-                    }, [j, minIdx]);
+                        if (cur === n - 1)
+                            vis.array.removeVariable('j');
+                    }, [j, minIdx, j, n]);
                     minIdx = j;
-                }
+                } else
+                    // XXX we make j disappear on the last iteration so
+                    // its not visible if the pseudocode is not expanded
+                    // - not ideal; could check if code is expanded
+                    // instead
+                    chunker.add('IfA[j]<A[min]', (vis, cur, n) => {
+                        if (cur === n - 1)
+                            vis.array.removeVariable('j');
+                    }, [j, n]);
             }
 
             // if (minIdx !== i) {
                 [A[i], A[minIdx]] = [A[minIdx], A[i]];
                 chunker.add('Swap', (vis, a, b) => {
                     vis.array.swapElements(a, b);
-                    vis.array.removeVariable('j');
                     vis.array.removeVariable('min');
                     vis.array.sorted(a);
                 }, [i, minIdx]);

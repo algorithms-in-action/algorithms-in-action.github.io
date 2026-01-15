@@ -21,16 +21,18 @@ Geeks for Geeks Link: [**Selection Sort**][G4GLink]
 ## Exercises/Exploration
 
 Compare Selection Sort with Insertion Sort.
+- They both have a sorted portion of the array at the left but how does this differ in the two algorithms?
 - Why does Selection Sort perform the same number of comparisons regardless of the initial order of elements?
 - Which algorithm performs fewer swaps, and why?
 - In what kinds of situations might this property make Selection Sort preferable?
 
 Try tracing Selection Sort on an array of size 6–8 that is already sorted.
 - How many comparisons are still made in total?
-- How many swaps actually occur?
+- How many swaps actually do aything?
 - What does this tell you about Selection Sort’s efficiency on nearly sorted arrays?
 
-Think about the stability of Selection Sort.
-- Why is Selection Sort not stable by default?
-- How could you modify it to make it stable (hint: use shifting instead of swapping)?
-- Can you think of real-world examples where stability in sorting would matter (e.g., sorting by secondary attributes)?
+Think about the stability of Selection Sort: why is it not stable?
+
+Selection sort normally selects the minumum at each stage and swaps it
+into the correct position at the left. Code a version that selects the
+*maximum* at each stage instead.

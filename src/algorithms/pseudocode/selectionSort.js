@@ -31,15 +31,22 @@ Main
 SelectionSort(A, n) // sort A[1]...A[n] in increasing order \\B Main
 \\In{
     for i <- 1 to n - 1 \\B For_i
-    \\Expl{ At each iteration the elements A[1]...A[i-1] are
+    \\Expl{ At each iteration the array elements A[1]...A[i-1] are
         in their final position. They are the smallest i-1 elements, in
         sorted order. We stop at A[n-1] (at this point A[n] must be the
         largest element).
     \\Expl}
     \\In{
-        Swap A[i] with the minimum unsorted element \\Ref NextEl
-        \\Expl{ The elements up to A[i-1] are already sorted, in their
-          final positions. This step extends the sorted region to A[i].
+        Find the next smallest item, A[min] \\Ref NextEl
+        \\Expl{ On the first iteration we find the smallest element in
+          the whole array. In general, the elements up to
+          A[i-1] are already sorted and
+          we scan through the other (unsorted) elements to find the
+          minimum and assign its index to min.
+        \\Expl}
+        Swap(A[i], A[min]) // Swap A[min] into its correct position, A[i] \\B Swap
+        \\Expl{ This extends the sorted region up to A[i]. If
+            i = min we can avoid this swap operation as it does nothing.
         \\Expl}
     \\In}
     Done \\B Done
@@ -48,19 +55,18 @@ SelectionSort(A, n) // sort A[1]...A[n] in increasing order \\B Main
 
 \\Code{
 NextEl
-min <- i // initially assume A[i] is smallest \\B Init_min
-\\Expl{ min is set to the index of the smallest element of A[i]...A[n].
+min <- i // min (so far) is leftmost unsorted element \\B Init_min
+\\Expl{ min will be set to the index of the smallest element of A[i]...A[n].
   Initially we set it to i then scan the rest of A, updating min
   whenever we find a smaller element.
 \\Expl}
 for j <- i + 1 to n // search A[i+1]...A[n] for smaller elements \\B For_j
     \\In{
-    if A[j] < A[min] // if we have found a smaller element \\B IfA[j]<A[min]
+    if A[j] < A[min] // if we find a smaller element \\B IfA[j]<A[min]
         \\In{
-        min <- j // update index of smallest \\B min<-j
+        min <- j // update min with the new index \\B min<-j
         \\In}
     \\In}
-Swap(A[i], A[min]) // Swap smallest into its correct position, A[i] \\B Swap
 \\Code} 
 `);
 
