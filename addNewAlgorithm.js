@@ -288,7 +288,7 @@ const verifyPreReqs = () => {
 
   if (!shell.which("git")) problems.push("Git is not installed or not on $PATH.");
 
-  const status = shell.exec("git status --porcelain", { silent: true })
+  const status = shell.exec("git status --porcelain -uno", { silent: true })
   if (status.length > 0) {
     console.error("Error: working tree is not clean. Please commit or stash your changes first.");
     process.exit(1);
