@@ -1,3 +1,9 @@
+// Working pseudocode with bookmark "1"
+// test_pseudocode.js can be replaced by other file to test pseudocode
+// display etc, as long as there is a bookmark "1" somewhere
+// The "algorithm" is hidden but available via the URL
+// .../animation/?alg=test_pseudocode&mode=sort
+
 import parse from '../../pseudocode/parse';
 
 export default parse(`
