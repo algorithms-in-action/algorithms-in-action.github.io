@@ -550,6 +550,26 @@ const algorithmMetadata = {
     extraInfoKey: "hsortNewColors",
     instructionsKey: "hsortNewColors"
   },
+
+	"test_pseudocode": {
+    "name": "Test Pseudocode Display",
+    "category": "Sort",
+    "noDeploy": true,
+    "keywords": [
+      "test,",
+      "internal"
+    ],
+    "controller": {
+      "sort": "test_pseudocode"
+    },
+    "pseudocode": {
+      "sort": "test_pseudocode"
+    },
+    "paramKey": "test_pseudocode",
+    "explanationKey": "test_pseudocode",
+    "extraInfoKey": "test_pseudocode",
+    "instructionsKey": "test_pseudocode"
+  },
 };
 //_MASTER_LIST_END_
 

@@ -34,3 +34,5 @@ export { default as selectionSortParam} from './selectionSortParam';
 export { default as convHullDC } from './convHullDC.js';
 export { default as grahamScan } from './grahamScan.js';
 export { default as hsortNewColors } from './hsortNewColors.js';
+export { default as test_pseudocode } from './test_pseudocode.js';
+

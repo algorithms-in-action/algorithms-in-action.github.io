@@ -31,3 +31,5 @@ export { default as selectionSortExp } from './selectionSortExp.md';
 export { default as convHullDC } from './convHullDC.md';
 export { default as grahamScan } from './grahamScan.md';
 export { default as hsortNewColors } from './hsortNewColors.md';
+export { default as test_pseudocode } from './test_pseudocode.md';
+
