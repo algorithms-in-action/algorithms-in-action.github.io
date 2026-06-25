@@ -197,3 +197,5 @@ export const grahamScan = graphInstructions;
 export const hsortNewColors = sortInstructions;
 export const test_pseudocode = sortInstructions;
 
+export const floydwarsh = graphInstructionsTC;
+

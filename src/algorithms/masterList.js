@@ -570,6 +570,32 @@ const algorithmMetadata = {
     "extraInfoKey": "test_pseudocode",
     "instructionsKey": "test_pseudocode"
   },
+
+	"floydwarsh": {
+    "name": "Floyd Warshall (all shortest paths)",
+    "category": "Graph",
+    "noDeploy": true,
+    "keywords": [
+      "directed",
+      "dynamic",
+      "programming",
+      "weighted",
+      "all-pairs",
+      "all",
+      "pairs",
+      "matrix"
+    ],
+    "controller": {
+      "tc": "floydwarsh"
+    },
+    "pseudocode": {
+      "tc": "floydwarsh"
+    },
+    "paramKey": "floydwarsh",
+    "explanationKey": "floydwarsh",
+    "extraInfoKey": "floydwarsh",
+    "instructionsKey": "floydwarsh"
+  },
 };
 //_MASTER_LIST_END_
 
