@@ -40,7 +40,7 @@ function TransitiveClosureParam({ mode, xyCoords, edgeWeights, size, start, end,
     <>
       {/* Matrix input */}
       <EuclideanMatrixParams
-        name="transitiveClosure"
+        name="floydwarsh"
         mode="tc"
         defaultSize={ size1 }
         defaultStart={ start1 }
