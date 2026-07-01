@@ -166,7 +166,7 @@ CopySmaller
 
 \\Code{
 CopyRest
-    if L == Null
+    if L = Null
     \\In{
         E.tail <- R // append extra R elements to M \\B appendR
     \\In}
