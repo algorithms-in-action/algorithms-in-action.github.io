@@ -94,7 +94,7 @@ export default parse(`
     UpdateNodes
         if m is in Nodes PQ and Length[n] + weight(n,m) < Length[m] \\B 11
         \\Expl{ The path from s to n to m is shorter than the current
-            shortest known path from s to m. If Length[m] == infinity
+            shortest known path from s to m. If Length[m] = infinity
             it will be replaced with a finite weight, implicitly moving
             m from the unseen nodes to the frontier.
         \\Expl} 
