@@ -4,7 +4,18 @@ export default parse(`
 
     
 \\Note{  REAL specification of Splay tree insertion and search
-XXX add deletion eventually
+
+XXX best keep insertion and search in same "mode" and adapt data input
+so 4,5,6,?5,7 inserts 4,5,6 then searches for 5 then inserts 7, etc
+XXX add deletion eventually, eg, 4,5,6,?5,7,-4 deletes 4 at end
+XXX Might be good to have option for default expansion also, and allow more
+collapsing with collapse all (eg, collapse delete completely when we are
+just inserting).
+
+Initial bookmark is Main because we are adapting from AVLTree
+
+Keep look and feel for recursion, rotation etc as similar to AVLTree as
+possible
 \\Note}
 
 \\Note{ Animation should be as consistent
@@ -12,7 +23,7 @@ as possible with BST/AVL trees
 \\Note}
 \\Code{
 Main
-ST_Insert(t, k) // insert key k into tree t; return result \\B insert
+ST_Insert(t, k) // insert key k into tree t; return result \\B Main
 \\In{
   if t = Empty
   \\In{

@@ -103,7 +103,7 @@ function AVLTParam({ mode, list, value }) {
         const visualiser = algorithm.chunker.visualisers;
 
         dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'AVLTree',
+          name: 'splaytree',
           mode: 'search',
           visualiser,
           target,
@@ -131,7 +131,7 @@ function AVLTParam({ mode, list, value }) {
       <div className="form">
         {/* Insert input */}
         <ListParam
-          name="AVLTree"
+          name="splaytree"
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
@@ -145,7 +145,7 @@ function AVLTParam({ mode, list, value }) {
 
         {/* Search input */}
         <SingleValueParam
-          name="AVLTree"
+          name="splaytree"
           buttonName="Search"
           mode="search"
           formClassName="formRight"

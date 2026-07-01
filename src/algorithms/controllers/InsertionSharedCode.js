@@ -1,5 +1,7 @@
 /**
  * This file contains insertion shared code for both BST and AVL trees.
+ * Will also contain splay tree code - currently just hacked so we can
+ * display splay tree pseudocode XXX FIX this.
  * It uses a flag to determine it's AVL insertion or BST insertion.
  * Also now used for recursive insertion to avoid duplicating the code
  * for visualising recursion; some naming may be misleading. NOTE that
@@ -38,6 +40,7 @@ function isRecursionExpanded() {
 
 let globalRoot;
 let isAVL = false; // flag for AVLT/BST (needed for height)
+let isSplay = false; // flag for AVLT/BST (needed for height)
 // Tree Node class
 class TreeNode {
 	constructor(key) {
@@ -1032,6 +1035,8 @@ function insertOrSearch(chunker, root, key, currIndex) {
 } 
 
 
+// XXX hacked to support splay trees (isSplay = true) - re-think
+// interface - arg currently true/false/'splay' which isn't great
 // default is recursive BST insertion 
 // If isAVL = true we have recursive AVLT insertion
 // If isInsert = true 
@@ -1041,7 +1046,8 @@ export function createTreeInsertionController(isAVLp = false) {
     return {
         // visualiser used only for insert
         initVisualisers({ visualiser }) {
-            isAVL = isAVLp;
+            isAVL = (isAVLp === true);
+            isSplay = (isAVLp === 'splay');
             return {
                 graph: {
                     // XXX specialise "Tree" label???
@@ -1076,6 +1082,9 @@ export function createTreeInsertionController(isAVLp = false) {
                 [],
                 1
             );
+            // We need at least one bookmark; splay trees NYI so we just
+            // return here but it allows pseudocode to be displayed
+            if (isSplay) return;
 
             // initialise the first key insertion
             // We now skip boxes etc even when recursion is expanded and

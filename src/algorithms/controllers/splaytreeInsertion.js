@@ -1,4 +1,4 @@
 import { createTreeInsertionController } from './InsertionSharedCode';
 
-// Export AVL controller (isAVL = true)
-export default createTreeInsertionController(true);
+// Export AVL controller (isAVLp = 'splay')
+export default createTreeInsertionController('splay');
