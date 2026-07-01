@@ -35,3 +35,5 @@ export { default as test_pseudocode } from './test_pseudocode.md';
 
 export { default as floydwarsh } from './floydwarsh.md';
 
+export { default as splaytree } from './splaytree.md';
+

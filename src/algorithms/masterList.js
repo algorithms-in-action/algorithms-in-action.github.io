@@ -596,6 +596,33 @@ const algorithmMetadata = {
     "extraInfoKey": "floydwarsh",
     "instructionsKey": "floydwarsh"
   },
+
+	"splaytree": {
+    "name": "Splay Tree",
+    "category": "Insert/Search",
+    "noDeploy": true,
+    "keywords": [
+      "BST",
+      "binary",
+      "search",
+      "tree",
+      "self-adjusting",
+      "rotation",
+      "amortised"
+    ],
+    "controller": {
+      "insertion": "splaytreeInsertion",
+      "search": "splaytreeSearch"
+    },
+    "pseudocode": {
+      "insertion": "splaytreeInsertion",
+      "search": "splaytreeSearch"
+    },
+    "paramKey": "splaytree",
+    "explanationKey": "splaytree",
+    "extraInfoKey": "splaytree",
+    "instructionsKey": "splaytree"
+  },
 };
 //_MASTER_LIST_END_
 

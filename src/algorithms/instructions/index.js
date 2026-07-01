@@ -199,3 +199,5 @@ export const test_pseudocode = sortInstructions;
 
 export const floydwarsh = graphInstructionsTC;
 
+export const splaytree = bstInstructions;
+
