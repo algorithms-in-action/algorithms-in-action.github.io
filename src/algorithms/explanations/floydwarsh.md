@@ -12,8 +12,8 @@ there is an edge, i.e., a one-step path, from node i to node j, and
 reachability matrix where A[i,j] = 1 means that there is a path from
 i to j, possibly with several intermediate steps between i and j. 
 
-The algorithm uses three nested loops that iterate over all the nodes
-but the order of the nesting is crucial for correctness. 
+The algorithm uses three nested loops that iterate over all the nodes. The algorithm
+seems simple, but the order of the nesting is crucial for correctness. 
 
 ## The logic is as follows.
 

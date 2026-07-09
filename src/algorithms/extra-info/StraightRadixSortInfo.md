@@ -26,7 +26,7 @@ Geeks for Geeks Links: [**(Straight/LSD) Radix Sort**][G4GLink] and
 In *counting sort*, temporary array **B** is filled by scanning array
 **A** from right to left. If it was scanned from left to right, array
 **B** would still end up sorted on the digit in question.  What would
-the affect be on the radix sorting if left to right scanning was used?
+the effect be on the radix sorting if left to right scanning was used?
 
 How is the run-time of Straight Radix Sort affected by the order of the
 data?

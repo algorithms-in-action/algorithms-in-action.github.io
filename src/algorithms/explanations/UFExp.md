@@ -5,7 +5,7 @@
 Union Find algorithms allow us to maintain and manipulate the partitioning
 of a set into (disjoint) subsets. There are two main operations supported:
 Union and Find. Union takes two subsets and merges them together to form
-a single subset.  Find takes and element and returns a representative
+a single subset.  Find takes an element and returns a representative
 element of the subset it occurs in. It must be the case that Find(n) =
 Find(m) if and only if n and m are in the same subset, but which element
 is returned is left to the implementation (this flexibility allows for
@@ -48,7 +48,10 @@ how much this aspect of the algorithm reduces tree height.
 
 The method of path compression used here is that whenever we are at a
 node, searching upwards to find the root of the tree, we change the parent
-of the node to be the (previous) grandparent.
+of the node to be the (previous) grandparent, thus simultaneously widening and 
+shortening the subtree rooted
+at the (previous) grandparent.
+
 
 ## Union by rank
 
@@ -58,3 +61,4 @@ tree a subtree of the taller tree. Here we maintain the *rank* of each
 tree, which is an approximation (an upper bound) on the height. Each
 tree starts with rank 1 and when two trees of equal rank are joined, the
 rank of the resulting tree is incremented.
+ 

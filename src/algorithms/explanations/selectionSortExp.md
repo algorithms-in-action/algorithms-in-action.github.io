@@ -17,5 +17,6 @@ a smaller element is found.
 Selection sort is simple but rather inefficient, with O(n<sup>2</sup>)
 time complexity, even in the best case. Also, it is not *stable*.
 One advantage is that has only O(n) swap operations, so less data is
-moved than in most sorting algorithms.
+moved than in most sorting algorithms, which is advantageous when the data
+items are large. And selection sort does not require significant extra space.
 
