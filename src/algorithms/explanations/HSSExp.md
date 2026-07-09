@@ -4,6 +4,8 @@ Horspool's algorithm uses a preprocessing of the pattern P to limit the number o
 As with the brute-force method, we can think of P as "sliding along" the text T. Horspool's method, however, matches the pattern P from right to left. 
 Its preprocessing generates a Shift Table which gives, for each character, the number of places to shift the pattern along, in case of a failed partial match. 
 The shift table has a value for every character in the alphabet, including characters that are not in pattern P, but could be in text T. The alphabet contains all characters that might possibly be in the text and pattern.
+Thus the pattern can actually jump over quite a bit of the text, to give sublinear behavior, particularly when the alphabet is large,
+and contains characters present in the text and not present in the pattern.  
 
 In this visualization, the alphabet contains all letters in the Roman alphabet (A-Z) plus the Space character.  Alphabets might be smaller, e.g. for DNA sequences the alphabet would be the four bases, or they might be larger, e.g. the characters found in English literature, which would include both upper and lower case letters, space, punctuation, numbers, etc.
 
@@ -19,4 +21,7 @@ If the failure was due to comparing 'y' against an 'a', a character
     we need to start another attempted match from the rightmost end of the pattern. Where a
     character appears repeatedly in the pattern, as 'l' does in the "wally"
     example, it is the last occurrence that counts, so in this example
-    the shift therefore will be 1, not 2.	 
+    the shift therefore will be 1, not 2.	
+
+Try the pattern "wally" with the texts "dcacxdldwally" and "dcacxdlwally" to see how the shift table works.	
+
