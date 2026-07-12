@@ -13,12 +13,12 @@ Here we give a rather more complex
 iterative version to illustrate how DFS is
 one of a related group of graph traversal algorithms that can be viewed as having a similar
 structure.
-Others of these algorithms work with weighted graphs (with positive weights
-for all edges), where the aim is to find the least cost path(s). Dijsktra's Shortest Path algorithm
+Some of these related algorithms work with weighted graphs and/or
+find the least cost path(s). Dijsktra's Shortest Path algorithm
 uses edge weights to find the least cost path between two nodes;  Prim's
 algorithm finds a minumum spanning tree of the graph (the least cost 
-set of edges that connects all nodes, if the graph is connected); whereas Depth First Search
-reports whether the searched-for item is found, and ignores edge weights.
+set of edges that connects all nodes, if the graph is connected).
+Depth First Search simply reports whether the searched-for item is found.
 
 These graph traversal algorithms can be used for both directed
 and undirected graphs; in AIA we use undirected graphs for simplicity.
