@@ -40,7 +40,6 @@ export { default as gwrap} from './gwrap';
 export { default as selectionSort } from './selectionSort';
 export { default as convHullDCFind } from './convHullDCFind.js';
 export { default as grahamScan_find } from './grahamScan_find.js';
-export { default as hsortNewColors } from './hsortNewColors.js';
 export { default as test_pseudocode } from './test_pseudocode.js';
 
 export { default as floydwarsh } from './floydwarsh.js';

@@ -534,24 +534,7 @@ const algorithmMetadata = {
     controller: { search: 'horspoolStringSearch' },
   },
 
-  hsortNewColors: {
-    name: "Heap Sort Alternate Colour API",
-    category: "Insert/Search",
-    noDeploy: true,
-    keywords: [],
-    controller: {
-      "sort": "hsortNewColors"
-    },
-    pseudocode: {
-      "sort": "hsortNewColors"
-    },
-    paramKey: "hsortNewColors",
-    explanationKey: "hsortNewColors",
-    extraInfoKey: "hsortNewColors",
-    instructionsKey: "hsortNewColors"
-  },
-
-	"test_pseudocode": {
+"test_pseudocode": {
     "name": "Test Pseudocode Display",
     "category": "Sort",
     "noDeploy": true,
@@ -571,7 +554,7 @@ const algorithmMetadata = {
     "instructionsKey": "test_pseudocode"
   },
 
-	"floydwarsh": {
+"floydwarsh": {
     "name": "Floyd Warshall (all shortest paths)",
     "category": "Graph",
     "noDeploy": true,
@@ -597,7 +580,7 @@ const algorithmMetadata = {
     "instructionsKey": "floydwarsh"
   },
 
-	"splaytree": {
+"splaytree": {
     "name": "Splay Tree",
     "category": "Insert/Search",
     "noDeploy": true,

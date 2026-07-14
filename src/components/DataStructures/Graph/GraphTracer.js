@@ -163,6 +163,7 @@ class GraphTracer extends Tracer {
     super.set();
   }
 
+  // deprecated interface
   /**
    * clear existing trace, if any
    * nodes and edges remain unchanged
@@ -722,34 +723,42 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // deprecated interface
   select(target, source) {
     this.selectOrDeselect(true, target, source);
   }
 
+  // deprecated interface
   styledSelect(style, target, source) {
     this.styledSelectOrDeselect(style, true, target, source);
   }
 
+  // deprecated interface
   styledDeselect(style, target, source) {
     this.styledSelectOrDeselect(style, false, target, source);
   }
 
+  // deprecated interface
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
   }
 
+  // deprecated interface
   visit1(target, source, colorIndex, weight) {
     this.visitOrLeave1(true, target, source, weight, colorIndex);
   }
 
+  // deprecated interface
   leave0(target, source, colorIndex = 1, weight) {
     this.visitOrLeave0(false, target, source, weight, colorIndex);
   }
 
+  // deprecated interface
   leave1(target, source, colorIndex = 1, weight) {
     this.visitOrLeave1(false, target, source, weight, colorIndex);
   }
 
+  // deprecated interface
   visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
     const edge = this.findEdge(source, target);
     const node = this.findNode(target);
@@ -794,6 +803,7 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // deprecated interface
   selectOrDeselect(select, target, source = null) {
     const edge = this.findEdge(source, target);
     if (edge) edge.selectedCount += select ? 1 : -1;
@@ -804,11 +814,13 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // deprecated interface
   sorted(target) {
     const node = this.findNode(target);
     node.sorted = true;
   }
 
+  // deprecated interface
   // style = { backgroundStyle: , textStyle: }
   styledSelectOrDeselect(style, select, target, source) {
     this.selectOrDeselect(select, target, source);
@@ -816,6 +828,7 @@ class GraphTracer extends Tracer {
     node.style = style;
   }
 
+  // deprecated interface
   resetSelect(target, source) {
     const edge = this.findEdge(source, target);
     if (edge) edge.selectedCount = 0;
@@ -851,6 +864,7 @@ class GraphTracer extends Tracer {
     this.istc = true;
   }
 
+  // deprecated interface
   // functions for coloring/decoloring edges and nodes
   // that are not painful to use
   colorEdge(source, target, colorIndex) {
@@ -874,6 +888,7 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // deprecated interface
   removeEdgeColor(source, target) {
     const edge = this.findEdge(source, target);
     if (!edge) return;  // Exit if edge is not found
@@ -884,6 +899,7 @@ class GraphTracer extends Tracer {
     edge.visitedCount4 = 0;
   }
 
+  // deprecated interface
   colorNode(node, colorIndex) {
     const _node = this.findNode(node);
     if (!_node) return;  // Exit if node is not found
@@ -900,6 +916,7 @@ class GraphTracer extends Tracer {
     }
   }
 
+  // deprecated interface
   removeNodeColor(node) {
     const _node = this.findNode(node);
     if (!_node) return;  // Exit if node is not found
@@ -1408,12 +1425,24 @@ class GraphTracer extends Tracer {
     return this.rotPos;
   }
 
+  // preferred interface for colors
+  setNodeColor(nodeId, color) {
+    this.myColorNode(nodeId, color);
+  }
+
+  // deprecated interface
   myColorNode(nodeId, color) {
     const node = this.findNode(nodeId);
     if (!node) return;
     node.color = color || undefined; // undefined removes the inline style
   }
 
+  // preferred interface for colors
+  setEdgeColor(source, target, color) {
+    this.myColorEdge(source, target, color);
+  }
+
+  // deprecated interface
   myColorEdge(source, target, color) {
     const edge = this.findEdge(source, target);
     if (!edge) return;

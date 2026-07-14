@@ -24,7 +24,7 @@
   */
 
 
-// AVL tree selction color
+// AVL (etc) tree selection color
 .select_rect {
   //fill: var(--graph-node-circle-fill);
   fill: none;
@@ -171,6 +171,8 @@
     // Need to fix controller code etc accordingly (eg
     // graphSearchColours.js) as this change will result in different
     // colors.
+    // XXX Now trying to move away from this selected* etc way of choosing
+    // colours - there is a color attribute
     &.selected {
       .circle {
         fill: var(--sky);
@@ -218,6 +220,8 @@
     // Need to fix controller code etc accordingly (eg
     // graphSearchColours.js) as this change will result in different
     // colors.
+    // XXX Now trying to move away from this selected* etc way of choosing
+    // colours - there is a color attribute
     &.visited {
       .circle {
         fill: var(--apple);
@@ -346,6 +350,8 @@
     // Need to fix controller code accordingly (eg
     // graphSearchColours.js) as this change will result in different
     // colors.
+    // XXX Now trying to move away from this selected* etc way of choosing
+    // colours - there is a color attribute
     &.selected {
       .line {
         stroke: var(--sky);
@@ -450,6 +456,9 @@
     // Need to fix controller code accordingly (eg
     // graphSearchColours.js) as this change will result in different
     // colors.
+    // XXX Now trying to move away from this selected* etc way of choosing
+    // colours - there is a color attribute (doesn't color the arrow head for
+    // some reason - would be nice to fix this XXX)
     &.visited {
       fill: var(--leaf);
     }

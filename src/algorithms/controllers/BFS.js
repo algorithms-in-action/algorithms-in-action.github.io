@@ -72,8 +72,8 @@ export default {
         vis.graph.weighted(false);
         vis.graph.moveNodeFn(moveNode);
         vis.graph.set(edgeArray, Array.from({ length: edgeValueMatrix.length }, (v, k) => (k + 1)), coordsArray);
-        // vis.graph.myColorEdge(0, 1, "purple");
-        // vis.graph.myColorEdge(1, 2, "yellow");
+        // vis.graph.setEdgeColor(0, 1, "purple");
+        // vis.graph.setEdgeColor(1, 2, "yellow");
       },
       [E, coords]
     );
@@ -128,7 +128,7 @@ export default {
           // select start node in blue
           vis.array.select(0, s + 1, 0, s + 1, colors.FRONTIER_A);
           vis.graph.colorNode(s, colors.FRONTIER_N);
-          // vis.graph.myColorNode(s, "red");
+          // vis.graph.setNodeColor(s, "red");
         },
         [[displayedNodes, displayedParent, displayedVisited], displayedQueue]
       );
@@ -180,16 +180,16 @@ export default {
             // and the last visited neighbor
             if ((c_n != null) && (c_lastNei != null)) {
               vis.graph.removeEdgeColor(c_n, c_lastNei);
-              //vis.graph.myColorEdge(c_n, c_lastNei, "grey");
+              //vis.graph.setEdgeColor(c_n, c_lastNei, "grey");
               if ((c_n != null) && (c_lastNei != null)) {
                 vis.graph.removeEdgeColor(c_n, c_lastNei);
-                //vis.graph.myColorEdge(c_n, c_lastNei, "grey");
+                //vis.graph.setEdgeColor(c_n, c_lastNei, "grey");
                 if (c_parent[c_lastNei] === c_n)
                   vis.graph.colorEdge(c_n, c_lastNei, colors.FRONTIER_E);
-                  //vis.graph.myColorEdge(c_n, c_lastNei, "purple");
+                  //vis.graph.setEdgeColor(c_n, c_lastNei, "purple");
                 else if (c_parent[c_n] === c_lastNei)
                   vis.graph.colorEdge(c_n, c_lastNei, colors.FINALISED_E);
-                  //vis.graph.myColorEdge(c_n, c_lastNei, "purple");
+                  //vis.graph.setEdgeColor(c_n, c_lastNei, "purple");
               }
             }
           },

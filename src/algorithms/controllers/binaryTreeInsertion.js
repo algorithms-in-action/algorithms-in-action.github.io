@@ -89,14 +89,14 @@ export default {
         vis.graph.addNode(r);
         vis.graph.setFunctionName("Inserted:");
         vis.graph.layoutBST(r, true);
-        // vis.graph.myColorNode(r, color_new);
+        // vis.graph.setNodeColor(r, color_new);
       },
       [root],
     );
 /*
     chunker.add('end',
       (vis, r) => {
-        vis.graph.myColorNode(r, undefined);
+        vis.graph.setNodeColor(r, undefined);
       },
       [root]
     );
@@ -128,7 +128,7 @@ export default {
       parent = root;
       chunker.add(13,
         (vis, c) => {
-          // vis.graph.myColorNode(c, color_c);
+          // vis.graph.setNodeColor(c, color_c);
           vis.graph.updateUpperLabel(c, 'c');
         },
         [root]
@@ -137,10 +137,9 @@ export default {
         visitedList.push(parent);
         chunker.add(14,
           (vis, c, p) => {
-            vis.graph.myColorNode(c, color_p);
-console.log(p, c);
+            vis.graph.setNodeColor(c, color_p);
             if (p !== null)
-              vis.graph.myColorNode(p, undefined);
+              vis.graph.setNodeColor(p, undefined);
           },
           [parent, prev]
         );
@@ -155,10 +154,10 @@ console.log(p, c);
             ptr = tree[parent];
             chunker.add(16,
               (vis, c, p) => {
-                // vis.graph.myColorNode(c, color_c);
+                // vis.graph.setNodeColor(c, color_c);
                 vis.graph.updateUpperLabel(p, '');
                 vis.graph.updateUpperLabel(c, 'c');
-                vis.graph.myColorEdge(p, c, color_p_c);
+                vis.graph.setEdgeColor(p, c, color_p_c);
               },
               [parent, prev]
             );
@@ -180,8 +179,8 @@ console.log(p, c);
                 vis.graph.addNode(e);
                 vis.graph.addEdge(p, e);
                 vis.graph.updateUpperLabel(p, '');
-                vis.graph.myColorNode(e, color_new);
-                vis.graph.myColorEdge(p, e, color_p_new);
+                vis.graph.setNodeColor(e, color_new);
+                vis.graph.setEdgeColor(p, e, color_p_new);
               },
               [element, parent],
             );
@@ -200,7 +199,7 @@ console.log(p, c);
               (vis, c, p) => {
                 vis.graph.updateUpperLabel(p, '');
                 vis.graph.updateUpperLabel(c, 'c');
-                vis.graph.myColorEdge(p, c, color_p_c);
+                vis.graph.setEdgeColor(p, c, color_p_c);
               },
               [parent, prev]
             );
@@ -222,8 +221,8 @@ console.log(p, c);
                 vis.graph.addNode(e);
                 vis.graph.addEdge(p, e);
                 vis.graph.updateUpperLabel(p, '');
-                vis.graph.myColorNode(e, color_new);
-                vis.graph.myColorEdge(p, e, color_p_new);
+                vis.graph.setNodeColor(e, color_new);
+                vis.graph.setEdgeColor(p, e, color_p_new);
               },
               [element, parent],
             );
@@ -245,8 +244,8 @@ console.log(p, c);
         (vis, el, visited) => {
           vis.graph.setFunctionName("Inserted:");
           for (let j = 1; j < visited.length; j++) {
-            vis.graph.myColorEdge(visited[j-1], visited[j], undefined);
-            vis.graph.myColorNode(visited[j], undefined);
+            vis.graph.setEdgeColor(visited[j-1], visited[j], undefined);
+            vis.graph.setNodeColor(visited[j], undefined);
           }
         },
         [element, visitedList],

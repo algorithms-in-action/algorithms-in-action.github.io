@@ -1,7 +1,10 @@
 /**
  * This file contains insertion shared code for both BST and AVL trees.
  * Will also contain splay tree code - currently just hacked so we can
- * display splay tree pseudocode XXX FIX this.
+ * display splay tree pseudocode XXX FIX this. Best refactor code if
+ * possible to avoid duplication of code (we want the animations to be
+ * as similar as possible).
+ * XXX might be good to clean up colour stuff a bit also
  * It uses a flag to determine it's AVL insertion or BST insertion.
  * Also now used for recursive insertion to avoid duplicating the code
  * for visualising recursion; some naming may be misleading. NOTE that
@@ -9,23 +12,25 @@
  * consistent!
  * 
  * The insertion algorithm is implemented using the following steps:
- * XXX revise this - NQR
- * 1. Create a new node with the key to be inserted.
- * 2. If the tree is empty, set the new node as the root of the tree.
- * 3. Compare the key to be inserted with the current node's key, 
+ * 1. If the tree is empty, create new node as the root of the tree and
+ *    return.
+ * 2. Compare the key to be inserted with the current node's key, 
  *    and recursively insert the key into the left or right subtree.
- * *4. BST: Return the root node.
- * 4. AVL: Update the height of the root node based on the heights of its children.
- * 5. Check the balance factor of the root node.
- * 6. If unbalanced, perform rotations to balance the tree.
- * 7. Return the root node of the tree.
+ * 3. BST: Return the root node DONE.
+ * 3. AVL: Update the height of the root node based on the heights of 
+ *    its children.
+ * 4. Check the balance factor of the root node and rebalance using
+ * rotation(s) if needed.
+ * 5. Return the root node.
  */ 
 
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import { areExpanded } from './collapseChunkPlugin';
 
-// Moving to new color scheme (XXX may be leftovers from older scheme)
+// Moving to new color scheme
+// XXX Currently code is a bit shit  due to previous use of older color
+// scheme interface - worth cleaning up
 import {BSTColors as colors} from './BSTColors';
 
 // Global flag for insert/search (set when controller init is run)
@@ -79,6 +84,52 @@ function treeFromFlatTree(root, flatTree) {
 // fagile (and the initial value of false may not be the initial value
 // when re-executing).
 let popAfterReturnFlag = false;
+
+// Previously this code used the old colour scheme and had things like
+// vis.graph.visit(rl,r) that coloured two nodes plus the edge between
+// them, and vis.graph.resetVisitAndSelect(t2, t6) that reset colours.
+// To make changing to the new colour interface easier we have
+// reproduced a similar interface for the old code.
+// XXX best rename now.
+// We need some global variables to keep track of what things have been
+// coloured - Boo, hiss   XXX would be good to clean this up
+let newNode,
+  rotNodes = [],
+  rotEdges = [];
+
+// n2 -> n1 is involved in rotation - colour nodes and edge
+// (leave newNode as is)
+let graph_visit = (graph, n1, n2) => {
+  if (n1 !== newNode) {
+    graph.setNodeColor(n1, colors.ROT_N);
+    rotNodes.push(n1);
+  }
+  if (n2 !== newNode) {
+    graph.setNodeColor(n2, colors.ROT_N);
+    rotNodes.push(n2);
+  }
+  graph.setEdgeColor(n2, n1, colors.ROT_E);
+  rotEdges.push([n2,n1]);
+};
+
+// reset colours set above
+let graph_reset = (graph, n1, n2) => {
+  if (n1 !== newNode) {
+    graph.setNodeColor(n1, undefined);
+  }
+  if (n2 !== newNode) {
+    graph.setNodeColor(n2, undefined);
+  }
+  graph.setEdgeColor(n2, n1, undefined);
+};
+
+// clears all the colouring set above
+let graph_clear = (graph) => {
+  rotNodes.forEach(n => {graph.setNodeColor(n, undefined);});
+  rotNodes = [];
+  rotEdges.forEach(n => {graph.setEdgeColor(n[0], n[1], undefined);});
+  rotEdges = [];
+};
 
 /**
  * Insert a key into the tree recursively
@@ -164,15 +215,15 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         // assign the root as t6 in the pseudocode
         chunker.add('rightRotate(t6)',
             (vis, r, rl, rll) => {
-                vis.graph.clear();
-                vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
+                // vis.graph.clearSelect_Circle_Count();
                 // show tid of t6 on the graph
                 vis.graph.updateTID(r, 't6');
     
                 // cancel highlighting of the edges (r->rl, rl->rll)
                 // they were highlighted when the case was detected
-                vis.graph.visit(rl,r);
-                vis.graph.findNode(r).visitedCount = 1;
+                graph_visit(vis.graph, rl,r);
+                // vis.graph.findNode(r).visitedCount = 1;
               
             }, [root.key, root.left.key, root.left.left ? root.left.left.key : null],
             depth
@@ -229,20 +280,17 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         // let t2's right child point to t6
         chunker.add('t2.right = t6',
             (vis, t6, t2, t4, p, rotate) => {
-                // if (rotate) vis.graph.visit(t2, p);
-                vis.graph.resetVisitAndSelect(t2, t6);
+                graph_reset(vis.graph, t2, t6);
                 vis.graph.removeEdge(t6, t2);
     
                 if (t4 !== null) {
                     vis.graph.removeEdge(t2, t4);
                 }
     
-                if (rotate) vis.graph.resetVisitAndSelect(t6, null);
+                if (rotate) graph_reset(vis.graph, t6, null);
     
                 vis.graph.addEdge(t2, t6);
-                vis.graph.visit(t6, t2);
-                vis.graph.findNode(t6).visitedCount = 1;
-                vis.graph.findNode(t2).visitedCount = 1;
+                graph_visit(vis.graph, t6, t2);
     
                 if (t4 !== null) vis.graph.removeEdge(t6, t4);
                 // set the new position of the node(s)
@@ -317,8 +365,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                     vis.graph.addEdge(p, t2);
                 }
     
-                vis.graph.clearSelect_Circle_Count();
-                vis.graph.clear();
+                // vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
               
                 vis.graph.setMoveRatio(3/6);
                 vis.graph.setPauseLayout(false);
@@ -350,13 +398,12 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         chunker.add('leftRotate(t2)',
             (vis, r, rr, rrr) => {
     
-                vis.graph.clear();
-                vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
+                // vis.graph.clearSelect_Circle_Count();
                 // show tid of t2 on the graph
                 vis.graph.updateTID(r, 't2');
     
-                vis.graph.visit(rr,r);
-                vis.graph.findNode(r).visitedCount = 1;
+                graph_visit(vis.graph, rr,r);
     
             }, [root.key, root.right.key, root.right.right ? root.right.right.key : null],
             depth
@@ -414,20 +461,18 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         chunker.add('t6.left = t2',
             (vis, t2, t6, t4, p, rotate) => {
                 // highlight the edge between t6 and t2
-                // if (rotate) vis.graph.visit(t2, p);
-                vis.graph.resetVisitAndSelect(t6, t2);
+                // if (rotate) graph_visit(vis.graph, t2, p);
+                graph_reset(vis.graph, t6, t2);
                 vis.graph.removeEdge(t2, t6);
     
                 if (t4 !== null) {
                     vis.graph.removeEdge(t6, t4);
                 }
     
-                if (rotate) vis.graph.resetVisitAndSelect(t2, null);
+                if (rotate) graph_reset(vis.graph, t2, null);
     
                 vis.graph.addEdge(t6, t2);
-                vis.graph.visit(t2, t6);
-                vis.graph.findNode(t6).visitedCount = 1;
-                vis.graph.findNode(t2).visitedCount = 1;
+                graph_visit(vis.graph, t2, t6);
                 // remove edge after layout to perform the middle step
                 if (t4 !== null) vis.graph.removeEdge(t2, t4);
                 // set the new position of the nodes
@@ -496,14 +541,13 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         // finalise the rotation
         chunker.add('return t6',
             (vis, g, p, t6, t2) => {
-                // vis.graph.clearTID();
                 vis.graph.updateTID(t6, 't6');
                 if (p !== null) {
                     vis.graph.removeEdge(p, t2);
                     vis.graph.addEdge(p, t6);
                 }
-                vis.graph.clearSelect_Circle_Count();
-                vis.graph.clear();
+                // vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
                 vis.graph.setMoveRatio(3/6);
                 vis.graph.setPauseLayout(false);
                 vis.graph.layoutAVL(g, true, false);
@@ -580,7 +624,9 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
     }
     
     
-
+    // init global fagl used for colouring
+    rotNodes = [];
+    rotEdges = [];
     // visualise the basic information of the insertion
     chunker.add(`Main`,
         (vis, k, d, index, r, p, rr) => {
@@ -599,7 +645,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             }
             if (rr) {
                 // visit from root to root, to just highlight the current node, without highlighting the edge
-                // vis.graph.visit(rr, rr);
+                // graph_visit(vis.graph, rr, rr);
             }
             // print the function name and the key to be inserted
             if (isInsert)
@@ -646,9 +692,6 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         chunker.add('return NotFound',
             (vis, r, p) => {
                 // Pop the "Empty" rectangle
-                // vis.graph.popRectStack();
-                // vis.graph.setPauseLayout(false);
-                // vis.graph.rectangle_size();
                 popAfterReturnFlag = true;
                 vis.graph.setText('Key not found');
             },
@@ -687,7 +730,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.popRectStack();
                 vis.graph.setPauseLayout(false);
                 vis.graph.addNode(r, r);
-                vis.graph.myColorNode(r, colors.NEW_N);
+                newNode = r;
+                vis.graph.setNodeColor(r, colors.NEW_N);
                 if (isAVL) {
                     vis.graph.updateHeight(r, 1);
                 }
@@ -700,8 +744,6 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 }
                 vis.graph.rectangle_size();
                 popAfterReturnFlag = true;
-                // vis.graph.select(r, p);
-                // vis.graph.resetVisitAndSelect(r, p);
             },
             [key, parentNode ? parentNode.key : null],
             depth
@@ -788,7 +830,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         // Key already exists in the tree (insert)
         chunker.add('else if k > root(t).key',
             (vis) => {
-                // vis.graph.clear(); // clear all highlighting
+                // graph_clear(vis.graph); // clear all highlighting
                 vis.graph.setText('Duplicate key - insertion ignored');
                 // popAfterReturnFlag = true;
             },
@@ -813,7 +855,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         // (may need to add contents to previous chunk
         chunker.add(bookmark,
             (vis, r, p) => {
-                // vis.graph.resetVisitAndSelect(r, p);
+                // graph_reset(vis.graph, r, p);
                 // popAfterReturnFlag = true;
             },
             [root.key, parentNode ? parentNode.key : null],
@@ -864,10 +906,9 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.setFunctionNode(`${r}`);
 
                 // highlight edges involved in the rotation case
-                vis.graph.clear();
-                vis.graph.findNode(r).visitedCount = 1;
-                vis.graph.visit(rl, r);
-                vis.graph.visit(rll, rl);
+                graph_clear(vis.graph);
+                graph_visit(vis.graph, rl, r);
+                graph_visit(vis.graph, rll, rl);
 
             },
             [root.key, balance, root.left.key, root.left.left ? root.left.left.key : null],
@@ -881,10 +922,10 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             vis.graph.setMoveRatio(1);
             vis.graph.updateHeight(r.key, r.height);
             vis.graph.setFunctionNode(null);
-            vis.graph.clearSelect_Circle_Count();
+            // vis.graph.clearSelect_Circle_Count();
             vis.graph.setFunctionBalance(null);
-            vis.graph.clearSelect_Circle_Count();
-            vis.graph.clear();
+            // vis.graph.clearSelect_Circle_Count();
+            graph_clear(vis.graph);
             vis.graph.setPauseLayout(false);
             vis.graph.layoutAVL(g, true, false);
             vis.graph.rectangle_size();
@@ -902,10 +943,9 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 // vis.graph.setSelect_Circle_Count(r);
 
                 // highlight edges involved in the rotation case
-                vis.graph.clear();
-                vis.graph.findNode(r).visitedCount = 1;
-                vis.graph.visit(rr, r);
-                vis.graph.visit(rrr, rr);
+                graph_clear(vis.graph);
+                graph_visit(vis.graph, rr, r);
+                graph_visit(vis.graph, rrr, rr);
             },
             [root.key, balance, root.right.key, root.right.right ? root.right.right.key : null],
             depth
@@ -920,8 +960,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             vis.graph.updateHeight(r.key, r.height);
             vis.graph.setFunctionNode(null);
             vis.graph.setFunctionBalance(null);
-            vis.graph.clearSelect_Circle_Count();
-            vis.graph.clear();
+            // vis.graph.clearSelect_Circle_Count();
+            graph_clear(vis.graph);
             vis.graph.setPauseLayout(false);
             vis.graph.layoutAVL(g, true, false);
             vis.graph.rectangle_size();
@@ -939,10 +979,9 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.setFunctionNode(`${r}`);
                 
                 // highlight edges involved in the rotation case
-                vis.graph.clear();
-                vis.graph.findNode(r).visitedCount = 1;
-                vis.graph.visit(rl, r);
-                vis.graph.visit(rlr, rl);
+                graph_clear(vis.graph);
+                graph_visit(vis.graph, rl, r);
+                graph_visit(vis.graph, rlr, rl);
             },
             [root.key, balance, root.left.key, root.left.right ? root.left.right.key : null],
             depth
@@ -956,8 +995,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.updateHeight(r.key, r.height);
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null);
-                vis.graph.clearSelect_Circle_Count();
-                vis.graph.clear();
+                // vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
                 vis.graph.setPauseLayout(false);
                 vis.graph.layoutAVL(g, true, false);
                 vis.graph.rectangle_size();
@@ -977,10 +1016,9 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 // vis.graph.setSelect_Circle_Count(r);
 
                 // highlight edges involved in the rotation case
-                vis.graph.clear();
-                vis.graph.findNode(r).visitedCount = 1;
-                vis.graph.visit(rr, r);
-                vis.graph.visit(rrl, rr);
+                graph_clear(vis.graph);
+                graph_visit(vis.graph, rr, r);
+                graph_visit(vis.graph, rrl, rr);
             },
             [root.key, balance, root.right.key, root.right.left ? root.right.left.key : null],
             depth
@@ -995,8 +1033,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.updateHeight(r.key, r.height);
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null);
-                vis.graph.clearSelect_Circle_Count();
-                vis.graph.clear();
+                // vis.graph.clearSelect_Circle_Count();
+                graph_clear(vis.graph);
                 vis.graph.setPauseLayout(false);
                 vis.graph.layoutAVL(g, true, false);
                 vis.graph.rectangle_size();
@@ -1008,7 +1046,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             (vis, r, p) => {
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null); // clear balance after return in switch case
-                vis.graph.resetVisitAndSelect(r, p); // clear all highlighting
+                graph_reset(vis.graph, r, p); // clear all highlighting
                 popAfterReturnFlag = true;
             },
             [root.key, parentNode ? parentNode.key : null],
@@ -1024,7 +1062,7 @@ function insertOrSearch(chunker, root, key, currIndex) {
         // Remove all the recursion rectangles first
         vis.graph.popAllRectStack();
         if (isInsert) {
-            vis.graph.myColorNode(k, undefined);
+            vis.graph.setNodeColor(k, undefined);
             vis.graph.setFunctionName(`Inserted: ${k}`);
             vis.graph.setFunctionInsertText();
         }
@@ -1125,16 +1163,11 @@ export function createTreeInsertionController(isAVLp = false) {
             // Insert the first key into the rectangle
             chunker.add('return n',
                 (vis, k) => {
-                    // vis.graph.popRectStack();
-                    // vis.graph.setPauseLayout(false);
                     vis.graph.addNode(k, k);
-                    // vis.graph.myColorNode(k, colors.NEW_N);
                     if (isAVL) {
                         vis.graph.updateHeight(k, 1);
                     }
                     vis.graph.layoutAVL(k, true, false);
-                    // vis.graph.rectangle_size();
-                    // popAfterReturnFlag = true;
                 },
                 [nodes[0]],
                 1
@@ -1167,7 +1200,7 @@ export function createTreeInsertionController(isAVLp = false) {
                     if (isAVL) {
                         vis.graph.setFunctionNode(null);
                         vis.graph.setFunctionBalance(null);
-                        vis.graph.clearSelect_Circle_Count();
+                        // vis.graph.clearSelect_Circle_Count();
                     }
                     vis.graph.clearRectangles();
                 },
@@ -1188,7 +1221,7 @@ export function createTreeSearchController(isAVLp = false) {
         initVisualisers({ visualiser }) {
             isAVL = isAVLp;
             // clear existing trace, if any
-            visualiser.graph.instance.clear();
+            graph_clear(visualiser.graph);
             return {
                 graph: {
                     instance: visualiser.graph.instance,
