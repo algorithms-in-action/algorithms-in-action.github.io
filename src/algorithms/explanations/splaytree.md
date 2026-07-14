@@ -1,13 +1,25 @@
-# AVL Trees
+# Splay Trees
 
-An AVL tree is a kind of **binary search tree** that is
-**self-balancing**.
 
-Unlike a basic binary search tree, which can exhibit *O(n)* worst case
-behavior for both search and insert, an AVL tree is always balanced, so
-the worst case *O(log n)*. The way balanced is maintained is quite
-complicated; we suggest experimenting with the examples at the end of
-this background.
+A Splay Tree is a self-adjusting binary search tree, first described in 1985 by Sleator and Tarjan.
+  The Splay Tree
+is not always balanced, like the AVL tree, but uses rotation operations to move each item that is 
+accessed closer to the root.  
+Therefore, while a Splay Tree is *not guaranteed* to give good performance for any *single* operation, 
+over a *series*
+of operations, frequently accessed items are close to the root, and readily accessed.  
+
+
+The worse case for Splay Trees over a *series* of operations 
+ has been shown to be bounded, using an *Amortized Analysis*, a technique pioneered by Tarjan.
+
+
+Like the Binary Search Tree and the AVL tree, a Splay Tree 
+
+Monday 6:30
+
+
+
 
 A **binary search tree (BST)** is either empty or else it is a root
 node containing a key and two subtrees, which are binary search trees.
