@@ -14,6 +14,31 @@
  * traversing down to the child nodes to find the target node.
  */
 
+// old colour interface used visit, select and leave; similar interface
+// reproduced here with new color interface
+import {BSTColors as colors} from './BSTColors';
+let visitn = (graph, c, p) => {
+  if (p !== undefined) {
+    graph.setNodeColor(p, colors.SPATH_N);
+    graph.setEdgeColor(p, c, colors.SPATH_E);
+  }
+  graph.setNodeColor(c, colors.SPATH_N);
+}
+
+// remove any highlighting etc from tree
+let uncolor = (graph, tree) => {
+  Object.keys(tree).forEach(p => {
+    let l = tree[p].left;
+    let r = tree[p].right;
+    let n = Number(p);
+    graph.setNodeColor(n, undefined);
+    if (l)
+      graph.setEdgeColor(n, l, undefined);
+    if (r)
+      graph.setEdgeColor(n, r, undefined);
+  })
+}
+
 export default {
     /**
          * For the search algorithm, we use the tree that is created in
@@ -41,19 +66,20 @@ export default {
         // get whole tree
         const tree = visualiser.graph.instance.getTree();
         let root = visualiser.graph.instance.getRoot();
-console.log(tree);
 
         let current = root;
         let parent = null;
 
-        chunker.add('AVL_Search(t, k)', (vis, c, p) => {
+        chunker.add('AVL_Search(t, k)', (vis, c, p, t) => {
             vis.graph.setZoom(0.55);
             // Remove all the recursion rectangles first
             vis.graph.popAllRectStack();
+            // remove any highlighting etc
             vis.graph.setFunctionInsertText("(t, " + target + ")");
             vis.graph.setFunctionName("BST_Search");
-            vis.graph.visit(c, p);
-        }, [current, parent]);
+            uncolor(vis.graph, t);
+            visitn(vis.graph, c, p);
+        }, [current, parent, tree]);
         if (!tree)
             chunker.add('while t not Empty');
 
@@ -68,24 +94,33 @@ console.log(tree);
                 break;
 
             let node = current;
-            chunker.add('if n.key = k');
-            if (node === target) {
+            if (node !== target) {
+                chunker.add('if n.key = k', (vis, c, p) => {
+                    vis.graph.setNodeColor(c, colors.NOT_EQ_N);
+                }, [node, parent]);
+            } else {
+                chunker.add('if n.key = k', (vis, c, p) => {
+                    vis.graph.setNodeColor(c, colors.FOUND_N);
+                }, [node, parent]);
                 chunker.add('return t', (vis, c, p) => {
-                    vis.graph.leave(c, p);
-                    vis.graph.select(c, p);
+                    // vis.graph.setNodeColor(c, colors.FOUND_N);
+                    // vis.graph.setEdgeColor(p, c, colors.FOUND_E);
                     vis.graph.setText('Key found');
                 }, [node, parent]);
                 return 'success';
             }
 
-            chunker.add('if n.key > k');
+            // chunker.add('if n.key > k');
+            chunker.add('if n.key > k', (vis, c, p) => {
+                vis.graph.setNodeColor(c, colors.PATH_N);
+            }, [node, parent]);
             if (target < node) {
                 parent = node;
                 current = tree[node].left;
                 ptr = tree[node];
                 if (current !== undefined) {
 
-                    chunker.add('t <- n.left', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+                    chunker.add('t <- n.left', (vis, c, p) => visitn(vis.graph, c, p), [current, parent]);
                 } else {
                     chunker.add('t <- n.left', (vis) => vis.graph.setText('t = Empty'));
                 }
@@ -95,7 +130,7 @@ console.log(tree);
                 ptr = tree[node];
                 // if current node has right child
                 if (current !== undefined) {
-                    chunker.add('t <- n.right', (vis, c, p) => vis.graph.visit(c, p), [current, parent]);
+                    chunker.add('t <- n.right', (vis, c, p) => visitn(vis.graph, c, p), [current, parent]);
                 } else {
                     chunker.add('t <- n.right', (vis) => vis.graph.setText('t = Empty'));
                 }

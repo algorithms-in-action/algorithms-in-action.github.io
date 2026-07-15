@@ -5,10 +5,17 @@
 // import {ALGO_COLOR_PALLETE} from '../../components/DataStructures/colors';
 
 export const BSTColors = {
+    // Insert stuff
     // P_N: ALGO_COLOR_PALLETE.peach, // newly inserted node
     P_N: "var(--peach)", // node P (BST)
     PATH_N: "var(--peach)", // path edges (BST)
     NEW_N: "var(--leaf)", // newly inserted node
     ROT_E: "var(--apple)", // rotated edge (AVL)
     ROT_N: "var(--apple)", // rotated nodes (AVL)
+    // Search stuff
+    SPATH_N: "var(--peach)",
+    SPATH_E: "var(--peach)",
+    FOUND_N: "var(--leaf)",
+    FOUND_E: "var(--leaf)",
+    NOT_EQ_N: "var(--apple)",
 }
