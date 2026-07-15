@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.6b1e9e43.css",
-    "main.js": "/static/js/main.73e68f2a.js",
+    "main.js": "/static/js/main.bd251eb8.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -56,10 +56,10 @@
     "static/media/BFSSExp.md": "/static/media/BFSSExp.59f0e4e68726bf2415a7.md",
     "static/media/QSM3Info.md": "/static/media/QSM3Info.c82d527bc5e82135217b.md",
     "static/media/UFInfo.md": "/static/media/UFInfo.0feb0f96d457730da1cc.md",
+    "static/media/AVLInfo.md": "/static/media/AVLInfo.0efd67c9f43e91acd3e1.md",
     "static/media/slack-new-logo.svg": "/static/media/slack-new-logo.044efd1bb71a81557b7b948bc341a6c5.svg",
     "static/media/font.svg": "/static/media/font.612d92cd6f10aa35f6d876e135850bfc.svg",
     "static/media/msort_arr_nat.md": "/static/media/msort_arr_nat.5d3a2b2f4cbce9d9185b.md",
-    "static/media/AVLInfo.md": "/static/media/AVLInfo.8ffe091b82c492051294.md",
     "static/media/StraightRadixSortInfo.md": "/static/media/StraightRadixSortInfo.df2716d24fe21cf620a2.md",
     "static/media/KRUSKALInfo.md": "/static/media/KRUSKALInfo.d4da675c825c4a5fa0b0.md",
     "static/media/QSInfo.md": "/static/media/QSInfo.9f61948cc26c2f01a095.md",
@@ -87,10 +87,10 @@
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
     "main.6b1e9e43.css.map": "/static/css/main.6b1e9e43.css.map",
-    "main.73e68f2a.js.map": "/static/js/main.73e68f2a.js.map"
+    "main.bd251eb8.js.map": "/static/js/main.bd251eb8.js.map"
   },
   "entrypoints": [
     "static/css/main.6b1e9e43.css",
-    "static/js/main.73e68f2a.js"
+    "static/js/main.bd251eb8.js"
   ]
 }
