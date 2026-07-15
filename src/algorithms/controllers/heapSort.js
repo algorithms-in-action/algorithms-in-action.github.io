@@ -1,44 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// XXXXX YOU ARE PROBABLY LOOKING FOR hsortNewColors.js, not this file
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Heapsort animation
 // 
 // It's worth looking at this code if you are planning to write any new
@@ -82,6 +41,7 @@ const HSColors = {
     CHILD_T: ALGO_COLOR_PALLETE.sky,
     HEAP_T: ALGO_COLOR_PALLETE.leaf,
     SORTED: ALGO_COLOR_PALLETE.stone,
+    INVIS: ALGO_COLOR_PALLETE.transparent,
   }
 
 
@@ -310,6 +270,7 @@ export default {
       chunker.add(22, (vis, index) => {
         unhighlight(vis, index, false);
 
+        // XXX below is out of date
         // Somehow this code removes an edge. To be more accurate
         // it does not remove an edge it somehow sets its display 
         // CSS property to "none" (confirmed in dev tools), 
@@ -349,9 +310,8 @@ export default {
         */
         vis.array.setColor(index, HSColors.SORTED);
         vis.heap.setNodeColor(index + 1, HSColors.SORTED);
-        // HACK to make edge (mostly) invisible
-        // XXX should be a better way?
-        vis.heap.setEdgeColor(Math.trunc((index+1)/2), index+1, "var(--transparent)");
+        // make edge invisible
+        vis.heap.setEdgeColor(Math.trunc((index+1)/2), index+1, HSColors.INVIS);
         vis.array.assignVariable('n', index - 1);
       }, [n - 1]);
       n -= 1;

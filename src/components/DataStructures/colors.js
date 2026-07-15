@@ -51,6 +51,8 @@ export const colors = {
 // If your algorithm requires more than 7 colours (not sure why you would need more) 
 // extend both this dictionary and the corresponding CSS variables in `global.scss`.
 export const ALGO_COLOR_PALLETE = {
+  // Generic colour names that may vary with global colour selection
+  // XXX might be good to also have faint versions of these
   sky: "var(--sky)",
   leaf: "var(--leaf)",
   apple: "var(--apple)",
@@ -58,5 +60,8 @@ export const ALGO_COLOR_PALLETE = {
   plum: "var(--plum)",
   wood: "var(--wood)",
   stone: "var(--stone)",
+  // Other useful things
+  transparent: "var(--transparent)",
+  uncolor: undefined, // color=undefined means default colour
 };
 

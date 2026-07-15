@@ -1,3 +1,5 @@
+// XXX NO LONGER USED
+// BST Search is done by the AVL Tree search
 export default {
   /**
    * For the search algorithm, we use the tree that is created in

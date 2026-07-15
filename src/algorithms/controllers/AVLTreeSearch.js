@@ -1,6 +1,7 @@
 /**
  * This file contains the AVL Tree Search algorithm,
  * alongside the visualisation code.
+ * NOTE: THIS CODE ALSO USED FOR BST SEARCH
  *
  * XXX needs a bunch more fixes. Best ignore height and balance, highlight
  * nodes at the right points (done), improve display of t if possible,...
@@ -50,7 +51,7 @@ console.log(tree);
             // Remove all the recursion rectangles first
             vis.graph.popAllRectStack();
             vis.graph.setFunctionInsertText("(t, " + target + ")");
-            vis.graph.setFunctionName("AVL_Search");
+            vis.graph.setFunctionName("BST_Search");
             vis.graph.visit(c, p);
         }, [current, parent]);
         if (!tree)
