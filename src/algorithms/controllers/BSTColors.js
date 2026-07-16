@@ -6,15 +6,17 @@
 
 export const BSTColors = {
     // Insert stuff
+    // (ALSO USED FOR RECURSIVE SEARCH)
     // P_N: ALGO_COLOR_PALLETE.peach, // newly inserted node
     P_N: "var(--peach)", // node P (BST)
-    PATH_N: "var(--peach)", // path edges (BST)
+    PATH_N: "var(--peach)", // path node (BST)
+    PATH_E: "var(--peach)", // path edges (BST)
     NEW_N: "var(--leaf)", // newly inserted node
     ROT_E: "var(--apple)", // rotated edge (AVL)
     ROT_N: "var(--apple)", // rotated nodes (AVL)
     // Search stuff
-    SPATH_N: "var(--peach)",
-    SPATH_E: "var(--peach)",
+    SPATH_N: "var(--peach)", // best = insert version
+    SPATH_E: "var(--peach)", // best = insert version
     FOUND_N: "var(--leaf)",
     FOUND_E: "var(--leaf)",
     NOT_EQ_N: "var(--apple)",
