@@ -1,15 +1,16 @@
 /**
- * This file contains insertion shared code for both BST and AVL trees.
+ * This file contains shared insertion code for both BST and AVL trees
+ * and also recursive BST search!
  * Will also contain splay tree code - currently just hacked so we can
  * display splay tree pseudocode XXX FIX this. Best refactor code if
  * possible to avoid duplication of code (we want the animations to be
- * as similar as possible).
- * XXX might be good to clean up colour stuff a bit also
+ * as similar as possible). Other cleaning up might be possible also -
+ * some is getter rather complex.
  * It uses a flag to determine it's AVL insertion or BST insertion.
- * Also now used for recursive insertion to avoid duplicating the code
+ * Also now used for recursive search to avoid duplicating the code
  * for visualising recursion; some naming may be misleading. NOTE that
  * naming of blocks and bookmarks in the three different files must be
- * consistent!
+ * consistent! (or four different files when we add Splay trees!)
  * 
  * The insertion algorithm is implemented using the following steps:
  * 1. If the tree is empty, create new node as the root of the tree and
@@ -32,6 +33,17 @@ import { areExpanded } from './collapseChunkPlugin';
 // XXX Currently code is a bit shit  due to previous use of older color
 // scheme interface - worth cleaning up
 import {BSTColors as colors} from './BSTColors';
+
+// remove any highlighting etc from tree XXX also in AVLTreeSearch.js
+let uncolor = (graph, root) => {
+  if (root) {
+    // console.log(root, root.key, root.left, root.right);
+    graph.setNodeColor(root.key, undefined);
+    uncolor(graph, root.left);
+    uncolor(graph, root.right);
+  }
+}
+
 
 // Global flag for insert/search (set when controller init is run)
 let isInsert = true;
@@ -641,11 +653,13 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             }
             if (popAfterReturnFlag) { // Not needed here???
                 vis.graph.popRectStack();
+                vis.graph.setNodeColor(rr, undefined);
                 popAfterReturnFlag = false;
             }
             if (rr) {
                 // visit from root to root, to just highlight the current node, without highlighting the edge
                 // graph_visit(vis.graph, rr, rr);
+                vis.graph.setNodeColor(rr, colors.PATH_N);
             }
             // print the function name and the key to be inserted
             if (isInsert)
@@ -685,10 +699,11 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         depth
     );
 
+    chunker.add('if t = Empty', (vis) => null, [], depth);
     // Search base cases:
     // if the tree is empty set message
     if (root === null && !isInsert) {
-        chunker.add('if t = Empty', (vis) => null, [], depth);
+        // chunker.add('if t = Empty', (vis) => null, [], depth);
         chunker.add('return NotFound',
             (vis, r, p) => {
                 // Pop the "Empty" rectangle
@@ -700,7 +715,11 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
         );
         return 'fail';
     } else if (!isInsert && root.key == key) {
-        chunker.add('if n.key = k', (vis) => null, [], depth);
+        chunker.add('if n.key = k',
+            (vis, k) => {
+                vis.graph.setNodeColor(k, colors.FOUND_N);
+            }
+            , [key], depth);
         chunker.add('return t',
             (vis, r, p) => {
                 popAfterReturnFlag = true;
@@ -718,7 +737,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
     // We pop the Empty rectangle but create a new one around the new
     // node (if it has a parent)
     if (root === null && isInsert) {
-        chunker.add('if t = Empty', (vis) => null, [], depth);
+        // chunker.add('if t = Empty', (vis) => null, [], depth);
 
         // Initialize the AVL tree with the first key
         let root = new TreeNode(key);
@@ -780,6 +799,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 if (!subtree) {
                     // Search (unsuccessful): pop "Empty" rectangle
                     vis.graph.popRectStack();
+                    vis.graph.setNodeColor(r.key, undefined);
                 } else if (isInsert && subtree.key == k) {
                     // Inserted into child: add edge
                     vis.graph.addEdge(r.key, k);
@@ -788,6 +808,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.setFunctionInsertText();
                 if (popAfterReturnFlag) {
                     vis.graph.popRectStack();
+                    if (subtree && subtree.key !== k)
+                        vis.graph.setNodeColor(subtree.key, undefined);
                     vis.graph.rectangle_size();
                     popAfterReturnFlag = false;
                 }
@@ -818,6 +840,8 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
                 vis.graph.setFunctionInsertText();
                 if (popAfterReturnFlag) {
                     vis.graph.popRectStack();
+                    if (subtree && subtree.key !== k)
+                        vis.graph.setNodeColor(subtree.key, undefined);
                     vis.graph.rectangle_size();
                     popAfterReturnFlag = false;
                 }
@@ -1046,7 +1070,7 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
             (vis, r, p) => {
                 vis.graph.setFunctionNode(null);
                 vis.graph.setFunctionBalance(null); // clear balance after return in switch case
-                graph_reset(vis.graph, r, p); // clear all highlighting
+                // graph_reset(vis.graph, r, p); // clear all highlighting
                 popAfterReturnFlag = true;
             },
             [root.key, parentNode ? parentNode.key : null],
@@ -1057,18 +1081,19 @@ function insertOrSearchRec(chunker, root, key, currIndex, parentNode = null, dep
 }
 function insertOrSearch(chunker, root, key, currIndex) {
     let r = insertOrSearchRec(chunker, root, key, currIndex, null, 1);
-    chunker.add('Done', (vis, k) => {
+    chunker.add('Done', (vis, k, r) => {
         // vis.graph.setZoom(0.55);
         // Remove all the recursion rectangles first
         vis.graph.popAllRectStack();
         if (isInsert) {
-            vis.graph.setNodeColor(k, undefined);
             vis.graph.setFunctionName(`Inserted: ${k}`);
             vis.graph.setFunctionInsertText();
         }
+        vis.graph.setNodeColor(k, undefined);
+        vis.graph.setNodeColor(r, undefined);
         // vis.graph.setFunctionName(`Search: ${target}`);
         // vis.graph.setFunctionInsertText();
-    }, [key], 1);
+    }, [key, root.key], 1);
     return r;
 } 
 
@@ -1212,7 +1237,9 @@ export function createTreeInsertionController(isAVLp = false) {
     };
 }
 
-// If isAVL = true we have recursive AVLT search (not used/tested?)
+// If isAVL = true we have recursive AVLT search (NOT USED/TESTED)
+// NOTE: we currently only use this code for BSTRec search
+// AVLT search uses iterative BST search
 export function createTreeSearchController(isAVLp = false) {
     // const treeType = isAVL ? 'AVL' : 'BST'; // no longer used
     // const functionPrefix = isAVL ? 'AVLT' : 'BST';
@@ -1250,14 +1277,15 @@ export function createTreeSearchController(isAVLp = false) {
             let current = rootKey;
             let parent = null;
 
-            chunker.add('Main', (vis, c) => {
+            chunker.add('Main', (vis, c, r) => {
                 // vis.graph.setZoom(0.55);
                 // Remove all the recursion rectangles first
                 vis.graph.popAllRectStack();
                 vis.graph.setPauseLayout(false);
                 vis.graph.setFunctionName(`Search: ${target}`);
                 vis.graph.setFunctionInsertText();
-            }, [current], 1);
+                uncolor(vis.graph, r);
+            }, [current, globalRoot], 1);
             let r = insertOrSearch(chunker, globalRoot, target, 0);
         }
     };
