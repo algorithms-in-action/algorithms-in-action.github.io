@@ -6,8 +6,8 @@
 A Splay Tree is a self-adjusting binary search tree. Items are inserted into the tree in binary 
 search tree order.  The newly inserted item is then *splayed* to the root, 
 using a defined sequence of rotation operations. Items that are 
-searched for are also *splayed* to the root. When a search is unsuccessful, the node nearest where the successful 
-search would have ended is *splayed*.
+searched for are also *splayed* to the root. When a search is unsuccessful, the node nearest 
+where the successful search would have ended is *splayed*.
 
 The Splay Tree is not strictly balanced, like the AVL tree, but the splay operations preserve the binary search 
 tree order and reduce the depth of the tree, at the same time that they move accessed items to the root. 
