@@ -4,13 +4,16 @@
 # Splay Trees
 
 A Splay Tree is a self-adjusting binary search tree. Items are inserted into the tree in binary 
-search tree order.  The newly inserted item is then *splayed* to the root, 
-using a defined sequence of rotation operations. Items that are 
-searched for are also *splayed* to the root. When a search is unsuccessful, the node nearest 
+search tree order.  The newly inserted item is then *splayed* (moved to
+the root), 
+using a defined sequence of *rotation* operations (the same as used in
+AVL trees; we strongly recommend reading the AIA AVL tree background
+before tackling Splay trees). Items that are 
+searched for are also *splayed*. When a search is unsuccessful, the node nearest 
 where the successful search would have ended is *splayed*.
 
 The Splay Tree is not strictly balanced, like the AVL tree, but the splay operations preserve the binary search 
-tree order and reduce the depth of the tree, at the same time that they move accessed items to the root. 
+tree order and can reduce the depth of an unbalanced tree, at the same time that they move accessed items to the root. 
 This provides efficient retrieval over a series of insertions and/or searches, without the AVL-tree overhead 
 of keeping track of the exact depth of subtrees.  
 
@@ -27,14 +30,15 @@ operation broadens the tree, making search paths shorter overall.
 
 ### Splay Tree Advantages:
 
-The splay tree is balanced over a series of operations, efficient for many applications, and 
+The splay tree is generally reasonably balanced over a series of operations, efficient for many applications, and 
 is simpler than either the AVL tree or the 2-3-4 tree, with a single type of node and no need to 
 keep an extra variable in each node for balancing purposes. 
 
 ### Splay Tree Disadvantages:
 
 Equal keys may end up in either subtree, so either duplicates cannot be allowed 
-or a method must be devised to accommodate equal keys.
+or a method must be devised to accommodate equal keys; the version here does not
+support duplicates.
 
 Additionally, any single operation may be costly, even though rare, so the 
 splay tree is not suitable for applications that require a guaranteed worst 
@@ -43,10 +47,54 @@ case bound for every operation, *e.g.* safety-critical systems.
 
  ## Splay Tree Implementation
 
-Splay trees can be implemented iteratively, in a top-down manner, or recursively, bottom up. 
-The version in AIA is recursive, bottom up.
+There are several strategies for implementing splay trees, related to
+when and how the path between the splayed node and the root is found. For
+some implementations there are two passes, one to insert/find a node then
+another to splay it, and other have a single pass. The path can be found
+"top down", starting at the root or "bottom up", starting at the node
+to be splayed (some implementations require "parent" pointers in nodes,
+missing out on one important advantage of splay trees). Another subtle
+point is that the tree is generally processed two levels at a time and
+if the path length is odd, a single level must be processed and this
+could be at either end of the path. Finally, the code can be iterative
+or recursive.
+
+### Splaying 
+
+Splaying is the key operation and the version in AIA is recursive. To
+splay a node the path is found as we (recursively) search down the tree
+for the node (going left or right depending on key comparisons, as is
+normal with a BST) and the rotations are done after we *return* from
+recursive calls, working our way back up the tree (similar to the way
+AVL trees are rebalanced after recursive calls to insert a node). The
+rotation operations are described below.  Recursion proceeds down the
+tree two levels at a time (unless only going down one level is possible).
+Splay is called with a key, and if the key exists in the tree the node
+containing the key will end up at the root. If the key is not in the
+tree, the node with the next larger (or next smaller) key will end up
+at the root.
+
+### Search
+
+Search for a key can be done by splaying with the key then simply checking
+if the root node contains the key.
+
+### Insertion
+
+Insertion of a key can be done by splaying with the key then (because
+there are no keys between the new key and the key in the root) the new
+key can be insert as a new root with minimal rearrangement of other nodes
+and pointers. One child of the new root node will be the old root node and
+the other child will be a child of the old root node that has been moved.
 
 
+XXXXXX
+
+### Rotations
+
+Explain single, mention we mostly to two at a time. Explain left-right
+- same as AVL.  Mention order of rotations for left-left (skip the
+  diagram)
 
 
 
