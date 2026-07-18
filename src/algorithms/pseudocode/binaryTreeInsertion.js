@@ -14,8 +14,9 @@ export default parse(`
     \\In}
     else
     \\In{
-      Find parent node p that k will be inserted below \\Ref Locate
-      \\Expl{ We search down the tree going left or right depending on
+      Find insertion point, p \\Ref Locate
+      \\Expl{ Node p will be the parent of the new node containing k.
+              We search down the tree going left or right depending on
               key comparisons, until we can go no further (or we find k). Nodes left of
               p have keys less than k and nodes right of p have keys
               greater than k. If we find a node containing k we simply
@@ -66,7 +67,7 @@ export default parse(`
       \\In{
           c <- c.left \\B 16
       \\In}
-      else if k > c.key
+      else if k > c.key \\B 16a
       \\In{
           c <- c.right \\B 17
       \\In}

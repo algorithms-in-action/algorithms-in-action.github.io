@@ -8,6 +8,7 @@
 // numbers on some node colors so we choose lighter colors here for now
 // XXX Best make search look more similar + check pseudocode etc
 // XXX added c, labels; p highlighted - OK?
+// XXX best highlight whole path, add p label
 
 /* eslint-disable no-plusplus */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
@@ -128,7 +129,7 @@ export default {
       parent = root;
       chunker.add(13,
         (vis, c) => {
-          // vis.graph.setNodeColor(c, color_c);
+          vis.graph.setNodeColor(c, color_p);
           vis.graph.updateUpperLabel(c, 'c');
         },
         [root]
@@ -138,8 +139,11 @@ export default {
         chunker.add(14,
           (vis, c, p) => {
             vis.graph.setNodeColor(c, color_p);
-            if (p !== null)
-              vis.graph.setNodeColor(p, undefined);
+            if (p)
+              vis.graph.updateUpperLabel(p, '');
+            vis.graph.updateUpperLabel(c, 'p,c');
+            // if (p !== null)
+              // vis.graph.setNodeColor(p, undefined); // XXX
           },
           [parent, prev]
         );
@@ -155,7 +159,7 @@ export default {
             chunker.add(16,
               (vis, c, p) => {
                 // vis.graph.setNodeColor(c, color_c);
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
                 vis.graph.updateUpperLabel(c, 'c');
                 vis.graph.setEdgeColor(p, c, color_p_c);
               },
@@ -165,7 +169,8 @@ export default {
           } else {
             chunker.add(16,
               (vis, p) => {
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
+                vis.graph.setText('Found insertion point')
               },
               [parent]
             );
@@ -178,9 +183,10 @@ export default {
               (vis, e, p) => {
                 vis.graph.addNode(e);
                 vis.graph.addEdge(p, e);
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
                 vis.graph.setNodeColor(e, color_new);
                 vis.graph.setEdgeColor(p, e, color_p_new);
+                vis.graph.setText('')
               },
               [element, parent],
             );
@@ -195,9 +201,10 @@ export default {
             prev = parent;
             parent = tree[parent].right;
             ptr = tree[parent];
+            chunker.add('16a');
             chunker.add(17,
               (vis, c, p) => {
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
                 vis.graph.updateUpperLabel(c, 'c');
                 vis.graph.setEdgeColor(p, c, color_p_c);
               },
@@ -205,9 +212,11 @@ export default {
             );
             chunker.add(18);
           } else {
+            chunker.add('16a');
             chunker.add(17,
               (vis, p) => {
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
+                vis.graph.setText('Found insertion point')
               },
               [parent]
             );
@@ -220,9 +229,10 @@ export default {
               (vis, e, p) => {
                 vis.graph.addNode(e);
                 vis.graph.addEdge(p, e);
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
                 vis.graph.setNodeColor(e, color_new);
                 vis.graph.setEdgeColor(p, e, color_p_new);
+                vis.graph.setText('')
               },
               [element, parent],
             );
@@ -232,7 +242,7 @@ export default {
         } else {
             chunker.add('eq_key',
               (vis, p) => {
-                vis.graph.updateUpperLabel(p, '');
+                vis.graph.updateUpperLabel(p, 'p');
               },
               [parent]
             );
@@ -246,6 +256,7 @@ export default {
           for (let j = 1; j < visited.length; j++) {
             vis.graph.setEdgeColor(visited[j-1], visited[j], undefined);
             vis.graph.setNodeColor(visited[j], undefined);
+            vis.graph.updateUpperLabel(visited[j], '');
           }
         },
         [element, visitedList],
