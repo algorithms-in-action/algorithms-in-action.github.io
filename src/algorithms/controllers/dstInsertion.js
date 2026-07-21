@@ -1,3 +1,9 @@
+// Digital search tree, initially a copy of simple iterative BST with a
+// hack to produce just one chunk
+// XXX Best to *share* code if possible to make sure animations look very
+// similar and make it easier to maintain (like AVL tree and recursive
+// BST)
+
 // simple iterative BST
 // Various modifications made to improve it and make it more similar
 // to other BST variants
@@ -71,6 +77,11 @@ export default {
       },
       [],
     );
+
+    // XXX hack so DST pseudocode can be displayed
+    // eslint-disable-next-line no-constant-condition
+    if (1) return tree; // "if" avoids unreachable code errors
+
     chunker.add(1,
       (vis, r) => {
         vis.graph.setFunctionName("Insert:");

@@ -84,7 +84,7 @@ function BSTParam({ mode, list, value }) {
       ) {
         const visualiser = algorithm.chunker.visualisers;
         dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'binarySearchTree',
+          name: 'dst',
           mode: 'search',
           visualiser,
           target,
@@ -106,7 +106,7 @@ function BSTParam({ mode, list, value }) {
     <>
       <div className="form">
         <ListParam
-          name="binarySearchTree"
+          name="dst"
           buttonName="Insert"
           mode="insertion"
           formClassName="formLeft"
@@ -118,7 +118,7 @@ function BSTParam({ mode, list, value }) {
           setMessage={setMessage}
         />
         <SingleValueParam
-          name="binarySearchTree"
+          name="dst"
           buttonName="Search"
           mode="search"
           formClassName="formRight"
