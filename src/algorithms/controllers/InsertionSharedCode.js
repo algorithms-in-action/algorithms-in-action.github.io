@@ -1,11 +1,17 @@
 /**
  * This file contains shared insertion code for both BST and AVL trees
  * and also recursive BST search!
- * Will also contain splay tree code - currently just hacked so we can
+ *
+ * May soon contain splay tree code - currently just hacked so we can
  * display splay tree pseudocode XXX FIX this. Best refactor code if
  * possible to avoid duplication of code (we want the animations to be
  * as similar as possible). Other cleaning up might be possible also -
- * some is getter rather complex.
+ * some is getter rather complex. Might be best to refactor a bit and
+ * have splay tree code in a separate file but use some common code.
+ * Splay tree recursion goes two tree levels at a time but uses the
+ * same rotation code and left-right/right-left cases are the same as
+ * AVL trees.
+ *
  * It uses a flag to determine it's AVL insertion or BST insertion.
  * Also now used for recursive search to avoid duplicating the code
  * for visualising recursion; some naming may be misleading. NOTE that
