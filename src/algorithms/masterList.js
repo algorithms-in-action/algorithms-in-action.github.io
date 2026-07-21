@@ -606,6 +606,29 @@ const algorithmMetadata = {
     "extraInfoKey": "splaytree",
     "instructionsKey": "splaytree"
   },
+
+	"dst": {
+    "name": "Digital Search Tree",
+    "category": "Insert/Search",
+    "noDeploy": true,
+    "keywords": [
+      "radix",
+      "binary",
+      "bit"
+    ],
+    "controller": {
+      "insertion": "dstInsertion",
+      "search": "dstSearch"
+    },
+    "pseudocode": {
+      "insertion": "dstInsertion",
+      "search": "dstSearch"
+    },
+    "paramKey": "dst",
+    "explanationKey": "dst",
+    "extraInfoKey": "dst",
+    "instructionsKey": "dst"
+  },
 };
 //_MASTER_LIST_END_
 

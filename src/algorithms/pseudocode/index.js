@@ -49,3 +49,7 @@ export { default as splaytreeInsertion } from './splaytreeInsertion.js';
 
 export { default as splaytreeSearch } from './splaytreeSearch.js';
 
+export { default as dstInsertion } from './dstInsertion.js';
+
+export { default as dstSearch } from './dstSearch.js';
+
