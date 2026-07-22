@@ -47,8 +47,8 @@ export const EXAMPLES = {
     HASHING_INSERT          : "TODO: Place holder example message",
     HASHING_TOO_LARGE       : "TODO: Add right amount of inputs whatever that is",
 
-    UF_FIND                 : "Please follow the example provided: 2. The single digit should be between 1 and 10.",
-    UF_UNION                : "Please follow the example provided: 5-7,8-5,9-8,3-9,5-2. All digits should be between 1 and 10, '-' should be used to separate the two digits, and ',' should be used to separate each union operation.",
+    UF_FIND                 : "Please follow the example provided: 2.  The single number should be between 1 and 10.",
+    UF_UNION                : "Please follow the example provided: 5-7,8-5,5,9-8,3. All numbers should be between 1 and 10, '-' should be used to separate the two numbers for union, and ',' should be used to separate each number/pair.",
 
     TTF_INSERTION           : "Duplicate-free list of non-negative integers please: 0,1,2,3,4",
 };

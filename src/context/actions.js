@@ -61,9 +61,12 @@ function ancestorBlocks(blockName, pseudocode) {
   return [blockName];
 }
 
-// Find the chunk number to step to next, dependent on what is collapsed etc
-// Coded added for recursive algorithms not tested - need to re-code
-// quicksort
+// Find the chunk number to step to next, dependent on what is collapsed etc.
+// Note: to skip over a (recursive) call the call should be in block that can
+// be collapsed and have an extra chunk before the call, eg a comment
+// indicating a (recursive) call is about to be done. If the next chunk is
+// this comment and the block is collapsed, findNext will skip any following
+// chunks with a greater recursionLevel.
 function findNext(chunks, chunkNum, pseudocode, collapse) {
   if (chunkNum >= chunks.length - 1) { // if at end, don't move
     return chunkNum;
@@ -83,7 +86,7 @@ function findNext(chunks, chunkNum, pseudocode, collapse) {
   // end of a recursive computation and but the code is collapsed, the
   // recursionLevel of that chunk will be greater, thats why we need to
   // get recursionLevel after chunkNum += 1 and make sure there is a
-  // chunk before we get into the next recursive cal
+  // chunk before we get into the next recursive call
   let callRecLevel = chunks[chunkNum].recursionLevel;
   // console.log(['findNext', chunkNum, bookmark, block, callRecLevel]);
   // find the outermost ancestor of 'block' where collapse===false

@@ -83,21 +83,35 @@ export default {
         for (const node of N_GRAPH.slice(1)) {
           vis.tree.addSelfLoop(node);
         }
-        vis.tree.setZoom(1.5);
+        vis.tree.setSize(1.8);  // more space for tree
+        vis.tree.setZoom(1.3);
       },
       [[N_ARRAY, parentArr, rankArr]]
     );
 
     // applying union operations
     for (let i = 0; i < unionOperations.length; i++) {
-      this.union(
-        chunker,
-        parentArr,
-        rankArr,
-        unionOperations[i][0],
-        unionOperations[i][1],
-        pathCompression
-      );
+      if (unionOperations[i].length == 2) { // pair -> union op
+        this.union(
+          chunker,
+          parentArr,
+          rankArr,
+          unionOperations[i][0],
+          unionOperations[i][1],
+          pathCompression
+        );
+      } else { // single number -> find op
+        unionFindFind.find(
+          chunker, 
+          parentArr, 
+          unionOperations[i][0], 
+          'n', 
+          null, 
+          pathCompression, 
+          'find',
+          0
+        );
+      }
     }
     return parentArr.slice(1);
   },
@@ -158,42 +172,48 @@ export default {
         vis.array.setMotion(false);
         vis.array.assignVariable('n', N_IDX, n);
         vis.array.assignVariable('m', N_IDX, m);
-        vis.array.showKth(`${n}, ${m}`);
+        vis.array.showKth(`Union(${n}, ${m})`);
       },
-      [n, m]
+      [n, m], 0
     );
 
     // finding representative of first node
+    chunker.add('preFind(n)');
     let root1 = unionFindFind.find(
       chunker,
       parentArr,
       n,
       'n',
       null,
-      pathCompression
+      pathCompression,
+      'union',
+      1
     );
 
     // finding representative of second node
+    chunker.add('preFind(m)');
     let root2 = unionFindFind.find(
       chunker,
       parentArr,
       m,
       'm',
       root1,
-      pathCompression
+      pathCompression,
+      'union',
+      1 // avoids highlighting find code if call collapsed
     );
 
     chunker.add(
       'if n == m',
       (vis, n, m, root1, root2) => {
-        vis.array.showKth(`${n}, ${m}`);
+        // vis.array.showKth(`Union(${n}, ${m})`); // not needed
 
         this.highlight(vis.array, N_IDX, root1, COLOUR_CODES.ORANGE);
         this.highlight(vis.array, N_IDX, root2, COLOUR_CODES.ORANGE);
         this.highlight(vis.tree, root1, root1, COLOUR_CODES.ORANGE);
         this.highlight(vis.tree, root2, root2, COLOUR_CODES.ORANGE);
       },
-      [n, m, root1, root2]
+      [n, m, root1, root2], 0
     );
 
     // if in same set, return

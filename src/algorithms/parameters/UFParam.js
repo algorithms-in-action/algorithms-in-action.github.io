@@ -19,7 +19,7 @@ import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 import { validateTextInput } from './helpers/InputValidators';
 
 const N_ARRAY = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '3-6'];
+const DEFAULT_UNION = ['1-2', '3-4', '2-4', '1-5', '6-8', '6', '3-6', '6'];
 const DEFAULT_FIND = '2';
 
 const ALGORITHM_NAME = 'Union Find';
@@ -133,7 +133,7 @@ function UFParam({ mode, union, value, compress }) {
       <div className="form">
         <ListParam
           name="unionFind"
-          buttonName="Union"
+          buttonName="Data"
           mode="union"
           formClassName="formLeft"
           DEFAULT_VAL={unions}
@@ -145,17 +145,6 @@ function UFParam({ mode, union, value, compress }) {
           setMessage={setMessage}
         />
 
-        <SingleValueParam
-          name="unionFind"
-          buttonName="Find"
-          mode="find"
-          formClassName="formRight"
-          DEFAULT_VAL={value || DEFAULT_FIND}
-          ALGORITHM_NAME={FIND}
-          EXAMPLE={FIND_EXAMPLE}
-          handleSubmit={handleFind}
-          setMessage={setMessage}
-        />
       </div>
 
       <span className="generalText">Path compression: &nbsp;&nbsp;</span>

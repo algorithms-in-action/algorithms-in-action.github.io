@@ -85,8 +85,8 @@ Shorten_path
 Main
 Union(n, m) // merge/union the subsets containing n and m, respectively \\B Union(n, m)
 \\In{
-    n <- Find(n) \\B n <- Find(n)
-    m <- Find(m) \\B m <- Find(m)
+    n <- root of tree containing n \\Ref Root_n
+    m <- root of tree containing m \\Ref Root_m
     if n = m // in same subset already - nothing to do \\B if n == m
         \\In{
         return \\B return
@@ -107,7 +107,35 @@ Union(n, m) // merge/union the subsets containing n and m, respectively \\B Unio
 \\Note{n changed to k in pseudocode to reduce confusion but bookmarks
 still use n
 \\Note}
-Find(k) // return the root of tree containing k \\Ref Find(n)
+Find(k) // return the root of tree containing k \\B Find(n)
+    \\In{
+        while k != parent[k]  // while we are not at the root \\B while n != parent[n]
+        \\In{
+            shorten path from k to root \\Ref Shorten_path
+            \\Expl{ There are several ways of shortening the path back to the
+                    root. The most obvious is to follow the path to the root
+                    then follow it again, making each element point to the
+                    root. The version here doesn't shorten the path as much
+                    but is simpler and overall it works e xtremely well.
+                    The animation allows path compression to be disabled so
+                    you can compare the relative heights of the trees produced.
+            \\Expl} 
+            k <- parent[k]  // go up the tree one step \\B n <- parent[n]
+        \\In}
+        return k // return root \\B return n
+    \\In} 
+\\Code}
+
+\\Code{
+Root_n
+    // call Find (may also compress path) \\B preFind(n)
+    n <- Find(n) \\B n <- Find(n)
+\\Code}
+
+\\Code{
+	Root_m
+    // call Find (may also compress path) \\B preFind(m)
+    m <- Find(m) \\B m <- Find(m)
 \\Code}
 
 \\Code{
@@ -125,25 +153,6 @@ Maybe_swap
 \\Note{n changed to k in pseudocode to reduce confusion but bookmarks
 still use n
 \\Note}
-\\Code{
-    Find(n)
-    \\In{
-        while k != parent[k]  // while we are not at the root \\B while n != parent[n]
-        \\In{
-            shorten path from k to root \\Ref Shorten_path
-            \\Expl{ There are several ways of shortening the path back to the
-                    root. The most obvious is to follow the path to the root
-                    then follow it again, making each element point to the
-                    root. The version here doesn't shorten the path as much
-                    but is simpler and overall it works e xtremely well.
-                    The animation allows path compression to be disabled so
-                    you can compare the relative heights of the trees produced.
-            \\Expl} 
-            k <- parent[k]  // go up the tree one step \\B n <- parent[n]
-        \\In}
-        return k // return root \\B return n
-    \\In} 
-    \\Code}
 
 \\Code{
     Adjust_rank

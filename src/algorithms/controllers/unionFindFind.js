@@ -45,7 +45,7 @@ export default {
         vis.tree.layout(); // needed for going to prev line since we redo from chunk 0
       }, [parentArray]); // passing nodes etc introduces highlighting
 
-    this.find(chunker, parentArray, value, 'n', null, pathCompression, mode);
+    this.find(chunker, parentArray, value, 'n', null, pathCompression, mode, 1);
 
   },
 
@@ -64,7 +64,7 @@ export default {
    * @param n The element to check.
    * @returns {boolean} True if not at root, false otherwise.
    */
-  notAtRoot(chunker, parentArr, n) {
+  notAtRoot(chunker, parentArr, n, depth) {
     // highlighting parent[n] for 'transition' state
     chunker.add(
       `while n != parent[n]`,
@@ -77,7 +77,7 @@ export default {
           COLOUR_CODES.ORANGE
         );
       },
-      [n]
+      [n], depth
     );
     return parentArr[n] != n;
   },
@@ -90,20 +90,28 @@ export default {
    * @param {boolean} pathCompression Whether to use path compression.
    * @returns {number} The root of the current node.
    */
-  find(chunker, parentArr, n, name, m, pathCompression, mode) {
+  find(chunker, parentArr, n, name, m, pathCompression, mode, depth) {
 
+    const nOrig = n;
     // highlighting the current n to find in tree and array
     chunker.add(
-      `while n != parent[n]`,
-      (vis, n) => {
+      `Find(n)`,
+      (vis, n, d) => {
         vis.array.setMotion(true); // turning on smooth transition
         unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.ORANGE);
         unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
+        vis.array.assignVariable(`k`, N_IDX, n);
+        if (d == 0) { // top level find op
+          vis.array.assignVariable(`n`, N_IDX, undefined);
+          vis.array.assignVariable(`m`, N_IDX, undefined);
+          vis.array.showKth(`Find(${n})`);
+        }
       },
-      [n]
+      [n, depth], depth
     );
+    chunker.add(`while n != parent[n]`, (vis) => {}, [], depth);
 
-    while (this.notAtRoot(chunker, parentArr, n)) {
+    while (this.notAtRoot(chunker, parentArr, n, depth)) {
       // highlighting for 'fail state'
       chunker.add(
         `while n != parent[n]`,
@@ -112,11 +120,11 @@ export default {
           unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.RED);
           unionFind.highlight(vis.tree, n, n, COLOUR_CODES.RED);
         },
-        [n]
+        [n], depth
       );
 
       if (pathCompression) {
-        this.shortenPath(chunker, parentArr, n);
+        this.shortenPath(chunker, parentArr, n, depth);
       }
 
       // updating the value of n
@@ -126,9 +134,11 @@ export default {
       chunker.add(
         `n <- parent[n]`,
         (vis, n, m, nPrev) => {
-          vis.array.assignVariable(`${name}`, N_IDX, n); // update 'n'
+          // vis.array.assignVariable(`${name}`, N_IDX, n); // update 'n'
+          vis.array.assignVariable(`k`, N_IDX, n); // update 'n'
           if (n !== m && m !== null)
             unionFind.highlight(vis.array, N_IDX, m, COLOUR_CODES.GREEN);
+          unionFind.unhighlight(vis.array, N_IDX, nPrev);
           unionFind.highlight(vis.array, N_IDX, n, COLOUR_CODES.ORANGE);
           unionFind.highlight(
             vis.array,
@@ -139,7 +149,7 @@ export default {
           unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
           unionFind.unhighlight(vis.tree, nPrev, nPrev);
         },
-        [n, m, nTempPrev]
+        [n, m, nTempPrev], depth
       );
     }
 
@@ -151,17 +161,34 @@ export default {
         unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.GREEN);
         unionFind.highlight(vis.tree, n, n, COLOUR_CODES.GREEN);
       },
-      [n]
+      [n], depth
     );
 
     // returning found 'n'
     chunker.add(
-      mode === 'find' ? 'return n' : `${name} <- Find(${name})`,
-      (vis, n) => {
+      'return n',
+      (vis, n, nO, d) => {
         unionFind.unhighlight(vis.array, PARENT_IDX, n);
+        vis.array.assignVariable(`k`, N_IDX, undefined);
+        if (d === 0) { // top level Find call
+          unionFind.unhighlight(vis.tree, n, n);
+          unionFind.unhighlight(vis.array, N_IDX, n);
+          vis.array.showKth(`Find(${nO}) = ${n}`);
+        }
       },
-      [n]
+      [n, nOrig, depth], depth
     );
+
+    if (mode !== 'find') {
+      // return to calling line
+      chunker.add(`${name} <- Find(${name})`,
+        (vis, n) => {
+          vis.array.assignVariable(`k`, N_IDX, undefined);
+          vis.array.assignVariable(`${name}`, N_IDX, n); // update n/m
+        },
+        [n], depth-1
+      );
+    }
 
     return n;
   },
@@ -171,7 +198,7 @@ export default {
    * @param {Array} parentArr The parent array.
    * @param n The element to shorten the path for.
    */
-  shortenPath(chunker, parentArr, n) {
+  shortenPath(chunker, parentArr, n, depth) {
     chunker.add(
       `parent[n] <- parent[parent[n]]`,
       (vis, n, parent, grandparent) => {
@@ -192,7 +219,7 @@ export default {
         unionFind.highlight(vis.tree, n, n, COLOUR_CODES.ORANGE);
         unionFind.highlight(vis.tree, parent, parent, COLOUR_CODES.ORANGE);
       },
-      [n, parentArr[n], parentArr[parentArr[n]]]
+      [n, parentArr[n], parentArr[parentArr[n]]], depth
     );
 
     chunker.add(
@@ -214,7 +241,7 @@ export default {
         );
         vis.tree.layout(); // needed for going to prev line since we redo from chunk 0
       },
-      [n, parentArr[n], parentArr[parentArr[n]]]
+      [n, parentArr[n], parentArr[parentArr[n]]], depth
     );
 
     // if grandparent is not the parent
@@ -231,9 +258,10 @@ export default {
           vis.tree.addEdge(grandparent, n);
           vis.tree.layout();
         },
-        [n, parentArr[n]]
+        [n, parentArr[n]], depth
       );
 
+      // XXX  BUG around here with highlighting left on i???
       chunker.add(
         `parent[n] <- parent[parent[n]]`,
         (vis, n, formerParent, newParent) => {
@@ -244,7 +272,7 @@ export default {
           unionFind.highlight(vis.array, PARENT_IDX, n, COLOUR_CODES.RED);
           unionFind.highlight(vis.tree, n, n, COLOUR_CODES.RED);
         },
-        [n, formerParent, parentArr[n]]
+        [n, formerParent, parentArr[n]], depth
       );
     }
     return parentArr[n];

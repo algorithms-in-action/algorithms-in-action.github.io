@@ -138,7 +138,10 @@ export function validateListInput(input) {
 }
 
 /**
+ * XXX should rename
  * Validate the text input within the DualValueParam component.
+ * Allows single values and pairs.
+ * Used for union/find
  * @param {string} value The text input.
  * @param {number[]} domain List of allowed integers.
  * @returns {{ valid: boolean, error: string|null }}
@@ -157,14 +160,20 @@ export function validateTextInput(value, domain) {
 
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i].split('-');
+    let aStr, bStr, a, b;
 
-    if (pair.length !== 2) {
+    if (pair.length == 2) {
+      [aStr, bStr] = pair;
+      a = Number(aStr);
+      b = Number(bStr);
+    } else if (pair.length == 1) {
+      [aStr] = pair;
+      bStr = aStr;
+      a = Number(aStr);
+      b = a;
+    } else {
       return { valid: false, error: ERRORS.GEN_TEXT_PAIR_FORMAT };
     }
-
-    const [aStr, bStr] = pair;
-    const a = Number(aStr);
-    const b = Number(bStr);
 
     if (isNaN(a) || isNaN(b)) {
       return { valid: false, error: ERRORS.GEN_ONLY_POSITIVE_INTEGERS };

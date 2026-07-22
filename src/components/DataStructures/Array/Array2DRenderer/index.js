@@ -409,6 +409,8 @@ class Array2DRenderer extends Renderer {
       )
     }
 
+    // XXX OMG! we really don't want captions to be hard coded for different
+    // algorithms like this!
     function createRender(render) {
       return (
         <table
@@ -425,7 +427,7 @@ class Array2DRenderer extends Renderer {
           )}
           {algo == 'unionFind' && ( // bottom centre caption for union find
             <caption kth-tag="unionFind" className={styles.bottom_caption}>
-              <span className={styles.pseudocode_function}>Union</span>({kth})
+              <span className={styles.pseudocode_function}>{kth}</span>
             </caption>
           )}
           {algo === 'DFS' && (
