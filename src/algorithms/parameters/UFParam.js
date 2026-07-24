@@ -133,7 +133,7 @@ function UFParam({ mode, union, value, compress }) {
       <div className="form">
         <ListParam
           name="unionFind"
-          buttonName="Data"
+          buttonName="Reset"
           mode="union"
           formClassName="formLeft"
           DEFAULT_VAL={unions}

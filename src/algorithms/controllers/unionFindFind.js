@@ -1,3 +1,9 @@
+// Note: no longer called directly because the union "mode" of UF now
+// also supports find, so the find mode has been disabled
+// However, the Insert code calls find, defined here (probably best to
+// completely remove the find mode and assiociated files and copy the
+// find definition into the Union code.
+
 import {
   N_ARRAY,
   COLOUR_CODES,
