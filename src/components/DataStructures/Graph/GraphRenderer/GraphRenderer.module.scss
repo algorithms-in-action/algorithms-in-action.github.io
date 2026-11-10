@@ -118,6 +118,18 @@
       text-anchor: left;
     }
 
+    .pointer {
+      fill: var(--graph-node-id-fill-selected);
+      stroke: var(--graph-node-circle-stroke);
+      stroke-width: 5px;
+      paint-order: stroke;
+      stroke-linejoin: round;
+      font-weight: bold;
+      font-size: 24px;
+      dominant-baseline: central;
+      text-anchor: start;
+    }
+
     .height {
       //--breath_color: var(--graph-node-height-fill);
       //animation: colorChange 1.5s 3; // anmation

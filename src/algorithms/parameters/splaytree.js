@@ -32,6 +32,7 @@ import { withAlgorithmParams } from './helpers/urlHelpers';
 
 import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 import SymbolListParam from './helpers/SymbolListParam';
+import { reorderSplayInput } from './helpers/treeInput';
 
 const DEFAULT_NODES = genUniqueRandSearchList(12, 1, 100);
 //const DEFAULT_TARGET = '2';
@@ -80,13 +81,13 @@ function SplayTreeParam({list}) {
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'random':
-        setlocalNodes(shuffleArray(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, shuffleArray));
         break;
       case 'sorted':
-        setlocalNodes(sortAndInterleaveSearches(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, sortAndInterleaveSearches));
         break;
       case 'balanced':
-        setlocalNodes(balancedAndInterleaveSearches(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, balancedAndInterleaveSearches));
         break;
       default:
     }
@@ -111,6 +112,8 @@ function SplayTreeParam({list}) {
 
           buttonName = "Insert, Search & Delete"
 
+          allowDelete
+
           mode = "operations"
 
           formClassName = "formLeft"
@@ -124,6 +127,7 @@ function SplayTreeParam({list}) {
           setMessage = {setMessage}
         />
       </div>
+      <p className="generalText">Use ?4 to search for 4 and !4 to delete 4. Use !-4 to delete negative four.</p>
       <span className="generalText">Re-order input: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={(

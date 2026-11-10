@@ -7,7 +7,7 @@ export default parse(`
 
 XXX best keep insertion and search in same "mode" and adapt data input
 so 4,5,6,?5,7 inserts 4,5,6 then searches for 5 then inserts 7, etc
-XXX add deletion eventually, eg, 4,5,6,?5,7,-4 deletes 4 at end
+Use !k to delete k, e.g., 4,5,6,?5,7,!4 deletes 4 at the end.
 XXX Might be good to have option for default expansion also, and allow more
 collapsing with collapse all (eg, collapse delete completely when we are
 just inserting).
@@ -232,16 +232,16 @@ DelSplay2
 
 \\Code{
 insert_right
-l,r <- t,t.right // left and right subtrees of new tree
-t.right <- Empty
-t <- new node with k and subtrees l and r
+l,r <- t,t.right // left and right subtrees of new tree \\B insert-right-save
+t.right <- Empty \\B insert-right-detach
+t <- new node with k and subtrees l and r \\B insert-right-create
 \\Code}
 
 \\Code{
 insert_left
-l,r <- t.left,t // left and right subtrees of new tree
-t.left <- Empty
-t <- new node with k and subtrees l and r
+l,r <- t.left,t // left and right subtrees of new tree \\B insert-left-save
+t.left <- Empty \\B insert-left-detach
+t <- new node with k and subtrees l and r \\B insert-left-create
 \\Code}
 
 \\Code{

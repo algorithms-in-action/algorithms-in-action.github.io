@@ -33,7 +33,7 @@ export default parse(`
               with 1 for the mask bit. If we find a node containing k we simply
               ignore the insertion of k and return t.
       \\Expl}
-      if mask bit of p.key = 0  \\B 9
+      if mask bit of k.key = 0  \\B 9
       \\Expl{  The new node n (whose key is k) will be a child of p. We just 
               need to decide whether it should be a left or a right child of p.
       \\Expl}
@@ -66,11 +66,19 @@ export default parse(`
   \\Expl}
   repeat
   \\In{
-      p <- c // when c moves down, p will be c's parent \\B 14
+      p,pmask <- c,mask // when c moves down, p will be c's parent \\B 14
       \\Expl{ At the end of the loop p will be c's parent.  After we
               exit the loop, p will be the parent where k is inserted.
+              We keep track of the mask for p so it can be used when the loop
+              exits.
       \\Expl}
-      if mask bit of c.key = 0 \\B 15
+      if k.key = c.key \\B 14a
+      \\In{
+        return t // k is in t already - skip insertion \\B eq_key
+        \\Expl{ We ignore insertion of equal keys.
+        \\Expl}
+      \\In}
+      else if mask bit of k.key = 0 \\B 15
       \\Expl{ The DST condition is that nodes with keys with 0 as the current
               bit are put in the left subtree and nodes with keys
               with 1 as the current bit are put in the right subtree.
@@ -78,15 +86,9 @@ export default parse(`
       \\In{
           c <- c.left \\B 16
       \\In}
-      else if mask bit of c.key = 1
+      else // mask bit of k.key = 1
       \\In{
           c <- c.right \\B 17
-      \\In}
-      else
-      \\In{
-        return t // k is in t already - skip insertion \\B eq_key
-        \\Expl{ We ignore insertion of equal keys.
-        \\Expl}
       \\In}
       mask <- next bit \\B update_b
       \\Expl{ Update mask to be the next less significant bit,
@@ -99,6 +101,9 @@ export default parse(`
   until c = Empty \\B 18
   \\Expl{ At the end of this loop, c has located the empty subtree where new
           key k should be located, and p will be the parent of the new node.
+  \\Expl}
+  mask <- pmask \\B restore_mask
+  \\Expl{ The mask will be used for insertion under p (one level above c).
   \\Expl}
 \\Code}
 `);

@@ -11,6 +11,7 @@ class Tracer {
       this.arrayItemMagnitudes = options.arrayItemMagnitudes;
       this.largestValue = options.largestValue;
       this.size = options.size;
+      this.overlay = options.overlay;
     }
     this.init();
     this.reset();

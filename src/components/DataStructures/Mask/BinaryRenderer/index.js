@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // renders integers as binary (by default), or other base, with optional
 // highlighting of some digits
 const BinaryRenderer = ({ header, data, maxBits, highlight, base = 2,
-emphasise = false }) => {
+emphasise = false, compact = false }) => {
   const binary = useCallback(() => {
     let binaryString = data.toString(base);
     if (binaryString.length < maxBits) {
@@ -30,7 +30,7 @@ emphasise = false }) => {
   else
     titleStyle = styles.title;
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${compact ? styles.compact : ''}`}>
       <div className={styles.outline}>
         {binary()}
       </div>
@@ -48,6 +48,7 @@ BinaryRenderer.propTypes = ({
   highlight: PropTypes.array,
   base: PropTypes.number,
   emphasise: PropTypes.boolean,
+  compact: PropTypes.bool,
 });
 
 export default BinaryRenderer;

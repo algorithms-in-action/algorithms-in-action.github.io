@@ -113,16 +113,26 @@ class Renderer extends React.Component {
       this.zoom = data.newZoom;
     }
     const zoomPref = true;
+    const overlayStyle = data.overlay ? {
+      position: 'absolute',
+      top: 12,
+      right: 12,
+      zIndex: 2,
+      flex: 'none',
+      paddingTop: 0,
+      pointerEvents: 'none',
+    } : {};
     return (
       <div
         className={classes(styles.renderer, className)}
         onMouseDown={zoomPref ? this.handleMouseDown : null}
         onWheel={zoomPref ? this.handleWheel : null}
         style={{
-          flex: size !== undefined ? size : 1
+          flex: size !== undefined ? size : 1,
+          ...overlayStyle,
         }}
       >
-        <Ellipsis className={styles.title}>{title}</Ellipsis>
+        {!data.overlay && <Ellipsis className={styles.title}>{title}</Ellipsis>}
         { this.renderData() }
       </div>
     );
@@ -130,4 +140,3 @@ class Renderer extends React.Component {
 }
 
 export default Renderer;
-

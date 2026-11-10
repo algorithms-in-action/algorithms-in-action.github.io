@@ -39,19 +39,17 @@ describe('sortAndInterleaveSearches', () => {
     jest.restoreAllMocks();
   });
 
-  test('sorts inserts while preserving search and delete order and the original input', () => {
+  test('sorts inserts while preserving search order and the original input', () => {
     const operations = ['10', '?10', '-2', '3', '?99'];
     const originalOperations = [...operations];
     jest.spyOn(Math, 'random').mockReturnValue(0);
 
     const result = sortAndInterleaveSearches(operations);
-    const isNotInsert = (op) => String(op).startsWith('?') || String(op).startsWith('-');
 
-
-    expect(result.filter((operation) => !isNotInsert(operation)))
-      .toEqual(['3', '10']);
-    expect(result.filter((isNotInsert)))
-      .toEqual(['?10', '-2', '?99']);
+    expect(result.filter((operation) => !String(operation).startsWith('?')))
+      .toEqual(['-2', '3', '10']);
+    expect(result.filter((operation) => String(operation).startsWith('?')))
+      .toEqual(['?10', '?99']);
     expect(operations).toEqual(originalOperations);
   });
 
@@ -79,27 +77,26 @@ describe('balancedAndInterleaveSearches', () => {
     jest.restoreAllMocks();
   });
 
-  test('balances inserts while preserving search and delete order and the original input', () => {
+  test('balances inserts while preserving search order and the original input', () => {
     const operations = ['10', '?10', '-2', '3', '?99'];
     const originalOperations = [...operations];
 
     jest.spyOn(Math, 'random').mockReturnValue(0);
 
     const result = balancedAndInterleaveSearches(operations);
-    const isNotInsert = (op) => String(op).startsWith('?') || String(op).startsWith('-');
 
     expect(result.filter(
-      (operation) => !isNotInsert(operation)
-    )).toEqual(['10', '3']);
+      (operation) => !String(operation).startsWith('?')
+    )).toEqual([3, -2, 10]);
 
     expect(result.filter(
-      isNotInsert
-    )).toEqual(['?10', '-2', '?99']);
+      (operation) => String(operation).startsWith('?')
+    )).toEqual(['?10', '?99']);
 
     expect(operations).toEqual(originalOperations);
   });
 
-  test('allows searches before the first insert and after the last insert', () => {
+  test('interleaves searches in their original order with balanced numeric inserts', () => {
     jest.spyOn(Math, 'random')
       .mockReturnValueOnce(0.9)
       .mockReturnValue(0);
@@ -108,7 +105,7 @@ describe('balancedAndInterleaveSearches', () => {
       3, '?3', 1, '?9', 2,
     ]);
 
-    expect(result).toEqual(['?3', 2, 1, 3, '?9']);
+    expect(result).toEqual([2, '?3', 1, '?9', 3]);
   });
 
   test('accepts a comma-separated operation string', () => {
@@ -116,6 +113,6 @@ describe('balancedAndInterleaveSearches', () => {
 
     expect(
       balancedAndInterleaveSearches('4,?4,1')
-    ).toEqual(['4', '1', '?4']);
+    ).toEqual([4, '?4', 1]);
   });
 });

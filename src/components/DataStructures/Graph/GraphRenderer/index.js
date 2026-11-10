@@ -905,7 +905,11 @@ class GraphRenderer extends Renderer {
                 </text>
 
                 {isPointer && (
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                  <text
+                    className={styles.pointer}
+                    x={nodeRadius + nodeWeightGap}
+                    y={-nodeRadius / 2}
+                  >
                     {this.toString(pointerText)}
                   </text>
                 )}

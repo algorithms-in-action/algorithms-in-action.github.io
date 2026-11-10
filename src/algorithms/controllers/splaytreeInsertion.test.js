@@ -2,6 +2,7 @@
 
 import SplayTreeInsertion from './splaytreeInsertion';
 import SplayTree from './splaytree';
+import { parseTreeInput } from '../parameters/helpers/treeInput';
 import { BSTColors as colors } from './BSTColors';
 import { initGlobalAlgorithmGetter } from './collapseChunkPlugin';
 import { initGlobalAlgotithmGetter } from './transitiveClosureCollapseChunkPlugin';
@@ -82,11 +83,12 @@ function renderTree(graph, root) {
   graph.layoutBST(root.key, true);
 }
 
-function getInsertionSnapshots(chunks) {
+function getInsertionReturns(chunks) {
   return chunks.filter(
     chunk => ['insert-return-empty', 'insert-return'].includes(chunk.bookmark)
       && chunk.args
-      && Array.isArray(chunk.args[0]),
+      && chunk.args[2]
+      && chunk.args[2].type === 'insertion',
   );
 }
 
@@ -186,7 +188,7 @@ describe('SplayTreeInsertion controller', () => {
     });
   });
 
-  it('registers one independent snapshot after every insertion', () => {
+  it('registers insertion stages followed by an independent return for each insertion', () => {
     const chunks = [];
 
     SplayTreeInsertion.run(
@@ -207,6 +209,9 @@ describe('SplayTreeInsertion controller', () => {
       'DoneSplay',
       'insert-splay-call',
       'insert-test-left',
+      'insert-left-save',
+      'insert-left-detach',
+      'insert-left-create',
       'insert-return',
       'Main',
       'pre-insert-splay',
@@ -224,14 +229,15 @@ describe('SplayTreeInsertion controller', () => {
       'DoneSplay',
       'insert-splay-call',
       'insert-test-right',
+      'insert-right-save',
+      'insert-right-detach',
+      'insert-right-create',
       'insert-return',
     ]);
 
-    const insertionSnapshots = getInsertionSnapshots(chunks);
+    const insertionReturns = getInsertionReturns(chunks);
 
-    expect(insertionSnapshots[0].args).toEqual([
-      [40],
-      [],
+    expect(insertionReturns[0].args).toEqual([
       40,
       40,
       {
@@ -242,9 +248,7 @@ describe('SplayTreeInsertion controller', () => {
         rootKey: null,
       },
     ]);
-    expect(insertionSnapshots[1].args).toEqual([
-      [20, 40],
-      [[20, 40]],
+    expect(insertionReturns[1].args).toEqual([
       20,
       20,
       {
@@ -255,9 +259,7 @@ describe('SplayTreeInsertion controller', () => {
         rootKey: 40,
       },
     ]);
-    expect(insertionSnapshots[2].args).toEqual([
-      [60, 40, 20],
-      [[60, 40], [40, 20]],
+    expect(insertionReturns[2].args).toEqual([
       60,
       60,
       {
@@ -399,56 +401,70 @@ describe('SplayTreeInsertion controller', () => {
     ]);
   });
 
-  it('replaces old edges when rendering the next snapshot', () => {
+  it.each([
+    { nodes: [40, 20, 30], side: 'left', left: 20, right: 40, detached: 20, oldRoot: 40 },
+    { nodes: [20, 40, 30], side: 'right', left: 20, right: 40, detached: 40, oldRoot: 20 },
+    { nodes: [40, 20], side: 'left', left: null, right: 40, detached: null, oldRoot: 40 },
+    { nodes: [20, 40], side: 'right', left: 20, right: null, detached: null, oldRoot: 20 },
+  ])('animates $side insertion stages for $nodes without rebuilding at return', ({ nodes, side, left, right, detached, oldRoot }) => {
     const chunks = [];
+    const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+    SplayTreeInsertion.run(createChunker(chunks), { nodes });
 
-    SplayTreeInsertion.run(
-      createChunker(chunks),
-      { nodes: [40, 20, 60] },
-    );
-
-    const graph = {
-      edges: [{ source: 20, target: 40 }],
-      addNode: jest.fn(),
-      addEdge: jest.fn(),
-      clearTID: jest.fn(),
-      removeEdge: jest.fn(),
-      directed: jest.fn(),
-      layoutBST: jest.fn(),
-      setFunctionInsertText: jest.fn(),
-      setFunctionName: jest.fn(),
-      setNodeColor: jest.fn(),
-      setPauseLayout: jest.fn(),
-    };
-    const insertionSnapshots = getInsertionSnapshots(chunks);
-    const thirdInsertionChunk = insertionSnapshots[2];
-
-    thirdInsertionChunk.callback(
-      { graph },
-      ...thirdInsertionChunk.args,
-    );
-
-    expect(graph.removeEdge).toHaveBeenCalledWith(20, 40);
-    expect(graph.addNode.mock.calls).toEqual([
-      [60, 60],
-      [40, 40],
-      [20, 20],
+    const finalEntry = chunks.map(chunk => chunk.bookmark).lastIndexOf('Main');
+    const saveIndex = chunks.findIndex((chunk, index) => index > finalEntry && chunk.bookmark === `insert-${side}-save`);
+    const stages = chunks.slice(saveIndex, saveIndex + 4);
+    expect(stages.map(chunk => chunk.bookmark)).toEqual([
+      `insert-${side}-save`, `insert-${side}-detach`, `insert-${side}-create`, 'insert-return',
     ]);
-    expect(graph.addEdge.mock.calls).toEqual([
-      [60, 40],
-      [40, 20],
-    ]);
-    expect(graph.setNodeColor.mock.calls).toEqual([
-      [60, undefined],
-      [40, undefined],
-      [20, undefined],
-      [60, colors.NEW_N],
-    ]);
-    expect(graph.setPauseLayout.mock.calls).toEqual([[true], [false]]);
-    expect(graph.clearTID).toHaveBeenCalled();
-    expect(graph.directed).toHaveBeenCalledWith(true);
-    expect(graph.layoutBST).toHaveBeenCalledWith(60, true);
-    expect(graph.setFunctionName).toHaveBeenCalledWith('Inserted: 60');
+    expect(stages.every(chunk => chunk.recursionLevel === 0)).toBe(true);
+
+    const play = ({ callback, args = [] }) => callback({ graph }, ...args);
+    chunks.slice(0, saveIndex).forEach(play);
+    const insertedKey = nodes[nodes.length - 1];
+    const originalTree = graph.getTree();
+    const positions = graph.nodes.map(({ id, x, y }) => ({ id, x, y }));
+    expect(graph.findNode(insertedKey)).toBeUndefined();
+
+    play(stages[0]);
+    expect(graph.getTree()).toEqual(originalTree);
+    if (left !== null) expect(graph.findNode(left).height).toBe('l');
+    if (right !== null) expect(graph.findNode(right).height).toBe('r');
+
+    const removeEdge = jest.spyOn(graph, 'removeEdge');
+    play(stages[1]);
+    if (detached !== null) {
+      expect(removeEdge).toHaveBeenCalledWith(oldRoot, detached);
+      expect(graph.findEdge(oldRoot, detached)).toBeUndefined();
+    } else {
+      expect(removeEdge).not.toHaveBeenCalled();
+    }
+    expect(graph.nodes.map(({ id, x, y }) => ({ id, x, y }))).toEqual(positions);
+    expect(graph.findNode(insertedKey)).toBeUndefined();
+
+    play(stages[2]);
+    const expectedTree = {};
+    nodes.forEach(key => { expectedTree[key] = {}; });
+    if (left !== null) expectedTree[insertedKey].left = left;
+    if (right !== null) expectedTree[insertedKey].right = right;
+    expect(graph.getTree()).toEqual(expectedTree);
+    expect(graph.getRoot()).toBe(insertedKey);
+    expect(graph.findNode(insertedKey).color).toBe(colors.NEW_N);
+    expect(graph.nodes.every(node => node.height === undefined)).toBe(true);
+
+    const addNode = jest.spyOn(graph, 'addNode');
+    const addEdge = jest.spyOn(graph, 'addEdge');
+    const layout = jest.spyOn(graph, 'layoutAVL');
+    removeEdge.mockClear();
+    const finalPositions = graph.nodes.map(({ id, x, y }) => ({ id, x, y }));
+    play(stages[3]);
+    expect(addNode).not.toHaveBeenCalled();
+    expect(addEdge).not.toHaveBeenCalled();
+    expect(removeEdge).not.toHaveBeenCalled();
+    expect(layout).not.toHaveBeenCalled();
+    expect(graph.getTree()).toEqual(expectedTree);
+    expect(graph.nodes.map(({ id, x, y }) => ({ id, x, y }))).toEqual(finalPositions);
+    expect(graph.functionName).toBe(`Inserted: ${insertedKey}`);
   });
 
   it('turns a rotation event into staged GraphTracer updates', () => {
@@ -502,7 +518,9 @@ describe('SplayTreeInsertion controller', () => {
       clearTID: jest.fn(),
       directed: jest.fn(),
       getRoot: jest.fn(() => 40),
-      layoutBST: jest.fn(),
+      layoutAVL: jest.fn(),
+      setMoveRatio: jest.fn(),
+      rectangle_size: jest.fn(),
       removeEdge: jest.fn(),
       setEdgeColor: jest.fn(),
       setFunctionInsertText: jest.fn(),
@@ -539,7 +557,8 @@ describe('SplayTreeInsertion controller', () => {
     expect(graph.setPauseLayout.mock.calls).toEqual([[true], [false]]);
     expect(graph.clearTID).toHaveBeenCalledTimes(1);
     expect(graph.directed).toHaveBeenCalledWith(true);
-    expect(graph.layoutBST).toHaveBeenCalledWith(40, true);
+    expect(graph.layoutAVL).toHaveBeenCalledWith(40, true);
+    expect(graph.setMoveRatio).toHaveBeenCalledWith(3 / 6);
     expect(graph.getRoot).not.toHaveBeenCalled();
     expect(graph.updateTID.mock.calls).toEqual([
       [20, 't2'],
@@ -843,7 +862,7 @@ describe('SplayTreeInsertion controller', () => {
     expect(graph.setFunctionInsertText.mock.calls).toEqual([[]]);
   });
 
-  it('describes nested Splay calls two tree levels at a time', () => {
+  it('maps actual Splay call entries to nested animation frames', () => {
     const root = {
       key: 100,
       left: {
@@ -858,7 +877,10 @@ describe('SplayTreeInsertion controller', () => {
       right: null,
     };
 
-    expect(getSplayRecursionFrames(root, 10)).toEqual([
+    const calls = [];
+    SplayTree.search(root, 10, null, event => calls.push(event));
+
+    expect(getSplayRecursionFrames(calls)).toEqual([
       {
         depth: 1,
         nodeKeys: [100, 50, 25, 10],
@@ -1333,7 +1355,7 @@ describe('SplayTreeInsertion controller', () => {
       expect(bookmarks).toContain('Del_splay2');
       expect(bookmarks).toContain('Del_use_temp');
       expect(bookmarks).toContain('Del_return4');
-      
+
       const delIdx = bookmarks.indexOf('Del');
       const splay1Idx = bookmarks.indexOf('Del_splay1', delIdx);
       const initTempIdx = bookmarks.indexOf('Del_init_temp', splay1Idx);
@@ -1351,4 +1373,80 @@ describe('SplayTreeInsertion controller', () => {
 
 
   });
+});
+
+it('checks deletion against a set and graph replay against controller at every operation boundary', () => {
+  let state = 123456;
+  const rand = n => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state % n; };
+  const ends = /^(insert-return.*|search-return.*|Del_return[1-4])$/;
+  for (let run = 0; run < 100; run++) {
+    const ops = Array.from({length: 40}, () => ({
+      type: ['insert','search','delete'][rand(3)], value: rand(13)
+    }));
+    const chunks = [];
+    const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+    const root = SplayTreeInsertion.run(createChunker(chunks), {operations: ops});
+    const set = new Set();
+    let i = 0;
+    for (const c of chunks) {
+      if (c.callback) c.callback({ graph }, ...(c.args || []));
+      if (!ends.test(c.bookmark)) continue;
+      const {type,value} = ops[i++];
+      if (type === 'insert') set.add(value);
+      if (type === 'delete') set.delete(value);
+      expect(graph.nodes.map(n => n.id).sort((a,b)=>a-b)).toEqual([...set].sort((a,b)=>a-b));
+      const expected = SplayTreeInsertion.run(createChunker(), {operations:ops.slice(0,i)});
+      if (expected) expect(graph.getRoot()).toBe(expected.key);
+      const edges = [];
+      const traverse = n => { if (!n) return; for (const child of [n.left,n.right]) if (child) {edges.push([n.key,child.key].join(':'));traverse(child);} };
+      traverse(expected);
+      expect(graph.edges.map(e => [e.source,e.target].join(':')).sort()).toEqual(edges.sort());
+    }
+    expect(i).toBe(ops.length);
+    expect(inOrder(root)).toEqual([...set].sort((a,b)=>a-b));
+  }
+});
+
+it.each([false,true])('deletion playback expanded=%s', expanded => {
+  const collapse = Object.fromEntries(Object.keys(splayPseudocode).map(block => [block, expanded]));
+  const operations = [...[1,2,3,4,5,6].map(value=>({type:'insert',value})), {type:'delete',value:3}];
+  let state = GlobalActions.RUN_ALGORITHM({collapse:{splaytree:{operations:collapse}}}, {
+    name:'splaytree',mode:'operations',visualiser:{},operations,
+  });
+  initGlobalAlgorithmGetter(()=>state);
+  initGlobalAlgotithmGetter(()=>state,()=>{});
+  const bookmarks=[];
+  const graph=()=>state.chunker.visualisers.graph.instance;
+  for(let i=0;i<1000 && state.bookmark!=='Del_return4';i++){
+    const previousIndex=state.chunker.currentChunk;
+    state=GlobalActions.NEXT_LINE(state,false);
+    if(state.chunker.currentChunk===previousIndex) break;
+    bookmarks.push(state.bookmark);
+  }
+  expect(bookmarks).toContain('Del_return4');
+  expect(graph().getRoot()).toBe(2);
+  expect(graph().nodes.map(n=>n.id).sort()).toEqual([1,2,4,5,6]);
+  const deletionSteps=bookmarks.slice(bookmarks.indexOf('Del'));
+  if (!expanded) expect(deletionSteps).toEqual(['Del_return4']);
+  else expect(deletionSteps.filter(s=>s==='splay-enter').length).toBeGreaterThanOrEqual(2);
+  const tree=graph().getTree();
+  state=GlobalActions.PREV_LINE(state,false);
+  state=GlobalActions.NEXT_LINE(state,false);
+  expect(graph().getTree()).toEqual(tree);
+});
+
+
+it('uses the signed Splay delete syntax through search, delete and continued insertion', () => {
+  const operations = parseTreeInput('-4,4,?-4,!-4,?-4,!4,4,?4', { allowDelete: true });
+  const chunks = [];
+  const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+  const root = SplayTreeInsertion.run(createChunker(chunks), { operations });
+  const results = [];
+  chunks.forEach(({ bookmark, callback, args = [] }) => {
+    if (callback) callback({ graph }, ...args);
+    if (/^(search-return|Del_return)/.test(bookmark)) results.push(graph.functionName);
+  });
+  expect(results).toEqual(['Found: -4', 'Deleted: -4', 'Not found: -4', 'Deleted: 4', 'Found: 4']);
+  expect(inOrder(root)).toEqual([4]);
+  expect(graph.nodes.map(node => node.id)).toEqual([4]);
 });

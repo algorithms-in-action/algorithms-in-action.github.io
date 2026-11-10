@@ -51,3 +51,4 @@ export { default as dstInsertion } from './dstInsertion.js';
 
 export { default as dstSearch } from './dstSearch.js';
 
+export { AVLTreeOperations, BSTOperations, BSTrecOperations } from './treeOperations';

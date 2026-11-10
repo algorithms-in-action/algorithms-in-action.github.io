@@ -17,7 +17,46 @@ class MaskRenderer extends Renderer {
   // display key in decimal, base 4 (optional) and binary plus
   // mask in binary; some (non-decimal) digits highlighted
   renderData() {
-    const { binaryData, maskData, maxBits, highlight, addBase4 } = this.props.data;
+    const {
+      binaryData,
+      maskData,
+      maxBits,
+      highlight,
+      addBase4,
+      overlay,
+    } = this.props.data;
+    if (overlay) {
+      const selectedBit = (binaryData & maskData) === 0 ? 0 : 1;
+      const direction = selectedBit === 0 ? 'LEFT' : 'RIGHT';
+      return (
+        <div className={styles.overlayContainer}>
+          <BinaryRenderer
+            header={"Current key"}
+            data={binaryData}
+            highlight={[]}
+            base={10}
+            compact={true}
+          />
+          <BinaryRenderer
+            header={"Binary"}
+            data={binaryData}
+            maxBits={maxBits}
+            highlight={highlight}
+            compact={true}
+          />
+          <BinaryRenderer
+            header={"Mask"}
+            data={maskData}
+            maxBits={maxBits}
+            highlight={highlight}
+            compact={true}
+          />
+          <div className={styles.decision}>
+            BIT {selectedBit} &rarr; {direction}
+          </div>
+        </div>
+      );
+    }
     let extra = <div/>;
     if (addBase4) {
        console.log([highlight,highlight.map((b) => Math.trunc(parseInt(b)/2))]);

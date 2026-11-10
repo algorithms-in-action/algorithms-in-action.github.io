@@ -4,6 +4,35 @@
     flex-direction: column;
 }
 
+.compact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 34px;
+    border-bottom: 1px solid var(--mid-header-font);
+
+    .outline {
+        order: 2;
+        justify-content: flex-start;
+        min-width: 0;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        font-family: monospace;
+    }
+
+    .title,
+    .emphTitle {
+        order: 1;
+        width: 92px;
+        padding-left: 10px;
+        color: var(--mid-header-font);
+        font-size: 12px;
+        text-align: left;
+        text-transform: uppercase;
+    }
+}
+
 .outline {
     display: flex;
     justify-content: center;

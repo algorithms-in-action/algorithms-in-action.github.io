@@ -19,16 +19,49 @@
 /* eslint-disable no-plusplus */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
 import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
+import MaskTracer from '../../components/DataStructures/Mask/MaskTracer';
 import {ALGO_COLOR_PALLETE} from '../../components/DataStructures/colors';
+import { createTidyTreeLayout } from './helpers/tidyTreeLayout';
 const color_c = ALGO_COLOR_PALLETE.sky;
 const color_p = ALGO_COLOR_PALLETE.peach;
 const color_new = ALGO_COLOR_PALLETE.leaf;
 const color_p_c = ALGO_COLOR_PALLETE.peach; // p->c edge
 const color_p_new = ALGO_COLOR_PALLETE.leaf; // p->new edge
 
+const buildFinalTree = (nodes, initialMask) => {
+  const finalTree = { [nodes[0]]: {} };
+
+  for (let i = 1; i < nodes.length; i++) {
+    const key = nodes[i];
+    let current = nodes[0];
+    let mask = initialMask;
+
+    while (current !== undefined) {
+      if (key === current) break;
+
+      const direction = (key & mask) === 0 ? 'left' : 'right';
+      const child = finalTree[current][direction];
+      if (child === undefined) {
+        finalTree[current][direction] = key;
+        finalTree[key] = {};
+        break;
+      }
+
+      current = child;
+      mask >>= 1;
+    }
+  }
+
+  return finalTree;
+};
+
 export default {
   initVisualisers() {
     return {
+      mask: {
+        instance: new MaskTracer('mask', null, 'Key + Mask', { overlay: true }),
+        order: 0,
+      },
       // array: {
         // instance: new Array1DTracer('array', null, 'Keys to insert', { arrayItemMagnitudes: true }),
         // order: 0,
@@ -53,6 +86,28 @@ export default {
     const tree = {};
     const root = nodes[0];
     tree[root] = {};
+    const maximumKey = Math.max(...nodes);
+    const maxBits = Math.floor(Math.log2(Math.max(maximumKey, 1))) + 1;
+    const initialMaskIndex = maxBits - 1;
+    const initialMask = 2 ** initialMaskIndex;
+    const finalTree = buildFinalTree(nodes, initialMask);
+    const positions = createTidyTreeLayout({
+      root,
+      getId: key => key,
+      getLeft: key => finalTree[key].left,
+      getRight: key => finalTree[key].right,
+      rootY: -260,
+    });
+
+    chunker.add(
+      'init_b',
+      (vis, bits, key, mask, maskIndex) => {
+        vis.mask.setMaxBits(bits);
+        vis.mask.setBinary(key);
+        vis.mask.setMask(mask, maskIndex);
+      },
+      [maxBits, root, initialMask, initialMaskIndex],
+    );
 
     // populate the ArrayTracer using nodes
     // chunker.add(
@@ -73,14 +128,10 @@ export default {
     chunker.add(1,
       (vis) => {
         vis.graph.setFunctionName("Tree is Empty");
-        vis.graph.setZoom(0.5);
+        vis.graph.setZoom(0.65);
       },
       [],
     );
-
-    // XXX hack so DST pseudocode can be displayed
-    // eslint-disable-next-line no-constant-condition
-    if (1) return tree; // "if" avoids unreachable code errors
 
     chunker.add(1,
       (vis, r) => {
@@ -97,13 +148,14 @@ export default {
       [root],
     );
     chunker.add(8,
-      (vis, r) => {
+      (vis, r, position) => {
+        vis.graph.setPauseLayout(true);
         vis.graph.addNode(r);
+        vis.graph.setNodePosition(r, position.x, position.y);
         vis.graph.setFunctionName("Inserted:");
-        vis.graph.layoutBST(r, true);
         // vis.graph.setNodeColor(r, color_new);
       },
-      [root],
+      [root, positions.get(root)],
     );
 /*
     chunker.add('end',
@@ -118,9 +170,10 @@ export default {
       // BST_Insert() call
       prev = null;
       const element = nodes[i];
+      let mask = initialMask;
       chunker.add(
         1,
-        (vis, index, visited, rr, k) => {
+        (vis, index, visited, rr, k, mask, maskIndex) => {
 /*
           for (let j = 1; j < visited.length; j++) {
             vis.graph.leave(visited[j], visited[j - 1]);
@@ -131,8 +184,10 @@ export default {
 */
           vis.graph.setFunctionName("Insert:");
           vis.graph.setFunctionInsertText(` ${k} `);
+          vis.mask.setBinary(k);
+          vis.mask.setMask(mask, maskIndex);
         },
-        [i, visitedList, root, element],
+        [i, visitedList, root, element, initialMask, initialMaskIndex],
       );
       visitedList = [null];
       chunker.add(7);
@@ -141,7 +196,7 @@ export default {
       chunker.add(13,
         (vis, c) => {
           vis.graph.setNodeColor(c, color_p);
-          vis.graph.updateUpperLabel(c, 'c');
+          vis.graph.setNodePointerText(c, 'c');
         },
         [root]
       );
@@ -150,16 +205,27 @@ export default {
         chunker.add(14,
           (vis, c, p) => {
             vis.graph.setNodeColor(c, color_p);
-            if (p)
-              vis.graph.updateUpperLabel(p, '');
-            vis.graph.updateUpperLabel(c, 'p,c');
+            if (p !== null)
+              vis.graph.setNodePointerText(p, '');
+            vis.graph.setNodePointerText(c, 'p,c');
             // if (p !== null)
               // vis.graph.setNodeColor(p, undefined); // XXX
           },
           [parent, prev]
         );
+
+        if (element === parent) {
+          chunker.add('eq_key',
+            (vis, p) => {
+              vis.graph.setNodePointerText(p, 'p');
+            },
+            [parent]
+          );
+          break;
+        }
+
         chunker.add(15);
-        if (element < parent) {
+        if ((element & mask) === 0) {
           // chunker.add(16);
           // chunker.add(18);
           if (tree[parent].left !== undefined) {
@@ -167,21 +233,29 @@ export default {
             prev = parent;
             parent = tree[parent].left;
             ptr = tree[parent];
+            mask >>= 1;
             chunker.add(16,
               (vis, c, p) => {
                 // vis.graph.setNodeColor(c, color_c);
-                vis.graph.updateUpperLabel(p, 'p');
-                vis.graph.updateUpperLabel(c, 'c');
+                vis.graph.setNodePointerText(p, 'p');
+                vis.graph.setNodePointerText(c, 'c');
                 vis.graph.setEdgeColor(p, c, color_p_c);
               },
               [parent, prev]
+            );
+            chunker.add(
+              'update_b',
+              (vis, nextMask) => {
+                vis.mask.setMask(nextMask, Math.log2(nextMask));
+              },
+              [mask],
             );
             chunker.add(18);
           } else {
             chunker.add(16,
               (vis, p) => {
-                vis.graph.updateUpperLabel(p, 'p');
-                vis.graph.setText('Found insertion point')
+                vis.graph.setNodePointerText(p, 'p');
+                vis.graph.setSelect_Circle_Count(p);
               },
               [parent]
             );
@@ -191,20 +265,20 @@ export default {
             tree[element] = {};
             chunker.add(
               10,
-              (vis, e, p) => {
+              (vis, e, p, position) => {
                 vis.graph.addNode(e);
-                vis.graph.addEdge(p, e);
-                vis.graph.updateUpperLabel(p, 'p');
+                vis.graph.setNodePosition(e, position.x, position.y);
+                vis.graph.addEdge(p, e, { direction: 'left' });
+                vis.graph.setNodePointerText(p, 'p');
                 vis.graph.setNodeColor(e, color_new);
                 vis.graph.setEdgeColor(p, e, color_p_new);
-                vis.graph.setText('')
               },
-              [element, parent],
+              [element, parent, positions.get(element)],
             );
             visitedList.push(element);
             break;
           }
-        } else if (element > parent) {
+        } else {
           // chunker.add(17);
           // chunker.add(18);
           if (tree[parent].right !== undefined) {
@@ -212,22 +286,28 @@ export default {
             prev = parent;
             parent = tree[parent].right;
             ptr = tree[parent];
-            chunker.add('16a');
+            mask >>= 1;
             chunker.add(17,
               (vis, c, p) => {
-                vis.graph.updateUpperLabel(p, 'p');
-                vis.graph.updateUpperLabel(c, 'c');
+                vis.graph.setNodePointerText(p, 'p');
+                vis.graph.setNodePointerText(c, 'c');
                 vis.graph.setEdgeColor(p, c, color_p_c);
               },
               [parent, prev]
             );
+            chunker.add(
+              'update_b',
+              (vis, nextMask) => {
+                vis.mask.setMask(nextMask, Math.log2(nextMask));
+              },
+              [mask],
+            );
             chunker.add(18);
           } else {
-            chunker.add('16a');
             chunker.add(17,
               (vis, p) => {
-                vis.graph.updateUpperLabel(p, 'p');
-                vis.graph.setText('Found insertion point')
+                vis.graph.setNodePointerText(p, 'p');
+                vis.graph.setSelect_Circle_Count(p);
               },
               [parent]
             );
@@ -237,27 +317,19 @@ export default {
             tree[element] = {};
             chunker.add(
               11,
-              (vis, e, p) => {
+              (vis, e, p, position) => {
                 vis.graph.addNode(e);
-                vis.graph.addEdge(p, e);
-                vis.graph.updateUpperLabel(p, 'p');
+                vis.graph.setNodePosition(e, position.x, position.y);
+                vis.graph.addEdge(p, e, { direction: 'right' });
+                vis.graph.setNodePointerText(p, 'p');
                 vis.graph.setNodeColor(e, color_new);
                 vis.graph.setEdgeColor(p, e, color_p_new);
-                vis.graph.setText('')
               },
-              [element, parent],
+              [element, parent, positions.get(element)],
             );
             visitedList.push(element);
             break;
           }
-        } else {
-            chunker.add('eq_key',
-              (vis, p) => {
-                vis.graph.updateUpperLabel(p, 'p');
-              },
-              [parent]
-            );
-          break;
         }
       }
       // deselect everything
@@ -267,8 +339,9 @@ export default {
           for (let j = 1; j < visited.length; j++) {
             vis.graph.setEdgeColor(visited[j-1], visited[j], undefined);
             vis.graph.setNodeColor(visited[j], undefined);
-            vis.graph.updateUpperLabel(visited[j], '');
+            vis.graph.setNodePointerText(visited[j], '');
           }
+          vis.graph.clearSelect_Circle_Count();
         },
         [element, visitedList],
       );
