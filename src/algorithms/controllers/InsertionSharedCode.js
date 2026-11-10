@@ -825,10 +825,10 @@ export function getSplayRecursionFrames(events) {
     return frames;
 }
 
-function isSplayDepthExpanded(operationType, recursionBlocks = [], mode = 'operations') {
+function isSplayDepthExpanded(operationType, recursionBlocks = [], mode = 'operations', deletionPhase = 1) {
     const operationBlock = operationType === 'search'
         ? 'search_splay'
-        : 'insert_splay';
+        : operationType === 'delete' ? `DelSplay${deletionPhase}` : 'insert_splay';
 
     return areExpanded([operationBlock, ...recursionBlocks], mode);
 }
@@ -844,11 +844,12 @@ function getSplayCaseLabel(splayCase, rotationCount) {
     return `Zig-Zag (${splayCase})`;
 }
 
-function addSplayDepthBox(graph, frame, operationType, rotationCount, recursionBlocks, mode) {
+function addSplayDepthBox(graph, frame, operationType, rotationCount, recursionBlocks, mode, deletionPhase) {
     if (!frame || !isSplayDepthExpanded(
         operationType,
         recursionBlocks,
         mode,
+        deletionPhase,
     )) return;
 
     pushTreeDepthBox(graph, frame.nodeKeys, frame.depth, true);
@@ -922,6 +923,7 @@ export function addSplayRotationChunk(
     renderedRootKey = null,
     includeCaseStep = true,
     mode = 'operations',
+    deletionPhase = 1,
 ) {
     const bookmarks = getRotationBookmarks(event.direction);
     const rotationName = `${event.direction === 'right' ? 'Right' : 'Left'} rotation: ${event.pivotKey}`;
@@ -1071,7 +1073,7 @@ export function addSplayRotationChunk(
             finishRotationLayout(graph, explicitRootKey === null ? graph.getRoot() : explicitRootKey);
             if (graph.rectangle_size) graph.rectangle_size();
             graph.setFunctionName(
-                isSplayDepthExpanded(operationType, [], mode)
+                isSplayDepthExpanded(operationType, [], mode, deletionPhase)
                     ? `${caseLabel} — ${rotationName}`
                     : rotationName,
             );
@@ -1125,7 +1127,7 @@ export function addSplayRotationChunks(
 // then the caller's assignment. Collapsed blocks use these levels to skip
 // the entire call, even though the Splay function itself is in Main.
 function addSplayCallChunks(
-    chunker, events, operationType, key, initialRootKey, mode,
+    chunker, events, operationType, key, initialRootKey, mode, deletionPhase = 1,
 ) {
     const callEntries = events.filter(event => event.type === 'call-enter');
     const callFrames = getSplayRecursionFrames(callEntries);
@@ -1164,7 +1166,7 @@ function addSplayCallChunks(
             showTreeOperation(graph, operationType, target);
             graph.setFunctionInsertText();
             if (currentFrame.nodeKeys.length > 0) {
-                addSplayDepthBox(graph, currentFrame, operationType, count, blocks, mode);
+                addSplayDepthBox(graph, currentFrame, operationType, count, blocks, mode, deletionPhase);
             }
         }, [frame, key, rotationCount, recursionBlocks], depth);
 
@@ -1195,15 +1197,116 @@ function addSplayCallChunks(
         rotationEvents.filter(event => event.depth === depth).forEach(event => {
             if (event.parentKey === null) renderedRootKey = event.newRootKey;
             addSplayRotationChunk(
-                chunker, event, operationType, rotationCount, renderedRootKey, false, mode,
+                chunker, event, operationType, rotationCount, renderedRootKey, false, mode, deletionPhase,
             );
         });
         chunker.add('DoneSplay', () => {}, [], depth);
     }
 
-    chunker.add(`pre-${operationType}-splay`, () => {}, [], 0);
+    const deleteBookmark = `Del_splay${deletionPhase}`;
+    chunker.add(operationType === 'delete' ? deleteBookmark : `pre-${operationType}-splay`, () => {}, [], 0);
     visitCall(0);
-    resumeCaller(`${operationType}-splay-call`, 0);
+    resumeCaller(operationType === 'delete' ? deleteBookmark : `${operationType}-splay-call`, 0);
+}
+
+function addSplayDeletionChunks(chunker, root, key, mode) {
+    const initialRootKey = root === null ? null : root.key;
+    const events = [];
+    const recordEvent = event => events.push(event);
+    const result = SplayTree.delete(root, key, recordEvent, recordEvent);
+    const firstBranch = events.findIndex(event => event.type === 'deletion');
+    const { action, rootKey, rightSubtreeKey } = events[firstBranch];
+    const addLabel = (bookmark, label) => {
+        chunker.add(bookmark, (vis, text) => {
+            vis.graph.setFunctionName(text);
+            vis.graph.setFunctionInsertText();
+        }, [label], 0);
+    };
+
+    if (action === 'empty-tree') {
+        addLabel('Del_t_Empty', `Delete: ${key} (tree is empty)`);
+        addLabel('Del_return1', 'Tree is empty — no node deleted');
+        return result;
+    }
+
+    addSplayCallChunks(chunker, events.slice(0, firstBranch), 'delete', key, initialRootKey, mode);
+    if (action === 'not-found') {
+        chunker.add('Del_not_found', (vis, accessedKey, searchedKey) => {
+            const graph = vis.graph;
+            clearTreeHighlights(graph);
+            graph.setNodeColor(accessedKey, colors.NOT_EQ_N || colors.PATH_N);
+            graph.setFunctionName(`Key ${searchedKey} not found — last accessed key ${accessedKey} at root`);
+        }, [rootKey, key], 0);
+        addLabel('Del_return2', `Key ${key} not found — no node deleted`);
+        return result;
+    }
+
+    if (action === 'left-empty') {
+        chunker.add('Del_left_empty', (vis, deletedKey) => {
+            clearTreeHighlights(vis.graph);
+            vis.graph.setNodeColor(deletedKey, colors.ROT_N);
+            vis.graph.setFunctionName('Left subtree is empty, promote right child');
+        }, [key], 0);
+        chunker.add('Del_return3', (vis, deletedKey, promotedKey) => {
+            const graph = vis.graph;
+            graph.setPauseLayout(true);
+            graph.removeNode(deletedKey);
+            graph.setPauseLayout(false);
+            if (promotedKey !== null) {
+                graph.layoutBST(promotedKey, true);
+                graph.setNodeColor(promotedKey, colors.NEW_N);
+            }
+            graph.setFunctionName(`Deleted: ${deletedKey}`);
+            graph.setFunctionInsertText();
+        }, [key, result === null ? null : result.key], 0);
+        return result;
+    }
+
+    const secondCallEvents = events.slice(firstBranch + 1, -1);
+    const leftRootKey = secondCallEvents.find(event => event.type === 'call-enter').rootKey;
+    chunker.add('Del_init_temp', (vis, deletedKey, rightKey) => {
+        const graph = vis.graph;
+        if (rightKey !== null) {
+            graph.setPauseLayout(true);
+            graph.removeEdge(deletedKey, rightKey);
+            graph.setPauseLayout(false);
+            if (graph.updateTID) graph.updateTID(rightKey, 'temp');
+        }
+        graph.setNodeColor(deletedKey, colors.ROT_N);
+        graph.setFunctionName(`Save right subtree of ${deletedKey} in temp`);
+        graph.setFunctionInsertText();
+    }, [key, rightSubtreeKey], 0);
+    chunker.add('Del_init_temp', (vis, deletedKey, leftKey) => {
+        const graph = vis.graph;
+        graph.setPauseLayout(true);
+        graph.removeNode(deletedKey);
+        graph.setPauseLayout(false);
+        graph.layoutBST(leftKey, true);
+    }, [key, leftRootKey], 0);
+    addSplayCallChunks(chunker, secondCallEvents, 'delete', key, leftRootKey, mode, 2);
+
+    chunker.add('Del_use_temp', (vis, newRootKey, rightKey) => {
+        const graph = vis.graph;
+        if (rightKey !== null) {
+            graph.setPauseLayout(true);
+            graph.addEdge(newRootKey, rightKey);
+            graph.setPauseLayout(false);
+        }
+        clearTreePointerLabels(graph);
+        graph.setFunctionName('t.right <- temp (attach saved right subtree)');
+        graph.setFunctionInsertText();
+    }, [result.key, rightSubtreeKey], 0);
+    chunker.add('Del_return4', (vis, newRootKey, deletedKey) => {
+        const graph = vis.graph;
+        trimTreeDepthBoxes(graph, 0);
+        clearTreePointerLabels(graph, true);
+        clearTreeHighlights(graph);
+        graph.directed(true);
+        graph.layoutBST(newRootKey, true);
+        graph.setFunctionName(`Deleted: ${deletedKey}`);
+        graph.setFunctionInsertText();
+    }, [result.key, key], 0);
+    return result;
 }
 
 function getSplayInsertionMessage(event) {
@@ -1458,14 +1561,14 @@ export function createTreeInsertionController(isAVLp = false) {
                         );
                     }
 
-                    if (type !== 'insert' && type !== 'search') {
+                    if (type !== 'insert' && type !== 'search' && type !== 'delete') {
                         throw new Error(
                             `Unknown Splay Tree operation: ${String(type)}`,
                         );
                     }
 
                     chunker.add(
-                        type === 'search' ? '1' : 'Main',
+                        type === 'search' ? '1' : type === 'delete' ? 'Del' : 'Main',
                         (vis, operationType, currentKey, initialize) => {
                             const graph = vis.graph;
                             if (initialize) {
@@ -1484,6 +1587,11 @@ export function createTreeInsertionController(isAVLp = false) {
                         [type, key, operationIndex === 0],
                         0,
                     );
+
+                    if (type === 'delete') {
+                        root = addSplayDeletionChunks(chunker, root, key, mode);
+                        return;
+                    }
 
                     if (type === 'search') {
                         const initialRootKey = root === null ? null : root.key;

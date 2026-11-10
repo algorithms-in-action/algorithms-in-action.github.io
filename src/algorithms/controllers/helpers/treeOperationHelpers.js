@@ -89,7 +89,7 @@ export function lowerRotatedPivot(graph, pivotKey) {
 }
 
 export function showTreeOperation(graph, operation, key) {
-    const label = operation === 'search' ? 'Search' : 'Insert';
+    const label = operation === 'search' ? 'Search' : operation === 'delete' ? 'Delete' : 'Insert';
 
     graph.setFunctionName(`${label}: ${key}`);
 }

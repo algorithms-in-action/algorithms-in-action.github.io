@@ -7,7 +7,7 @@ export default parse(`
 
 XXX best keep insertion and search in same "mode" and adapt data input
 so 4,5,6,?5,7 inserts 4,5,6 then searches for 5 then inserts 7, etc
-XXX add deletion eventually, eg, 4,5,6,?5,7,-4 deletes 4 at end
+Use !k to delete k, e.g., 4,5,6,?5,7,!4 deletes 4 at the end.
 XXX Might be good to have option for default expansion also, and allow more
 collapsing with collapse all (eg, collapse delete completely when we are
 just inserting).

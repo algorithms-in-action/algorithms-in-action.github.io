@@ -11,7 +11,7 @@ import { parseTreeInput } from './treeInput';
 
 function SymbolListParam({
   name, buttonName, mode, DEFAULT_VAL, SET_VAL, REFRESH_FUNCTION, ALGORITHM_NAME,
-  formClassName, handleSubmit, setMessage,
+  formClassName, handleSubmit, setMessage, allowDelete = false,
 }) {
   const { dispatch, disabled } = useParam(DEFAULT_VAL);
 
@@ -19,7 +19,7 @@ function SymbolListParam({
     event.preventDefault();
     let operations;
     try {
-      operations = parseTreeInput(event.currentTarget.elements[0].value);
+      operations = parseTreeInput(event.currentTarget.elements[0].value, { allowDelete });
     } catch (error) {
       setMessage(error.message);
       return;

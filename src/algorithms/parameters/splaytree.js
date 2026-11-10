@@ -32,6 +32,7 @@ import { withAlgorithmParams } from './helpers/urlHelpers';
 
 import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 import SymbolListParam from './helpers/SymbolListParam';
+import { reorderSplayInput } from './helpers/treeInput';
 
 const DEFAULT_NODES = genUniqueRandSearchList(12, 1, 100);
 //const DEFAULT_TARGET = '2';
@@ -61,7 +62,7 @@ const BlueRadio = withStyles({
 })((props) => <Radio {...props} />);
 
 /** NOTE: Mode and Value removed as component now only requires 
- * combined list input to run both insertion and search.
+ * combined list input to run insertion, search and deletion.
  */
 function SplayTreeParam({list}) {
   //const { algorithm, dispatch } = useContext(GlobalContext);
@@ -80,13 +81,13 @@ function SplayTreeParam({list}) {
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'random':
-        setlocalNodes(shuffleArray(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, shuffleArray));
         break;
       case 'sorted':
-        setlocalNodes(sortAndInterleaveSearches(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, sortAndInterleaveSearches));
         break;
       case 'balanced':
-        setlocalNodes(balancedAndInterleaveSearches(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, balancedAndInterleaveSearches));
         break;
       default:
     }
@@ -109,7 +110,9 @@ function SplayTreeParam({list}) {
         <SymbolListParam
           name = "splaytree"
 
-          buttonName = "Insert & Search"
+          buttonName = "Insert, Search & Delete"
+
+          allowDelete
 
           mode = "operations"
 
@@ -124,6 +127,7 @@ function SplayTreeParam({list}) {
           setMessage = {setMessage}
         />
       </div>
+      <p className="generalText">Use ?4 to search for 4 and !4 to delete 4. Use !-4 to delete negative four.</p>
       <span className="generalText">Re-order input: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={(

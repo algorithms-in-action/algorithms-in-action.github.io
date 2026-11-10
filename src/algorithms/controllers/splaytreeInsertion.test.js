@@ -2,6 +2,7 @@
 
 import SplayTreeInsertion from './splaytreeInsertion';
 import SplayTree from './splaytree';
+import { parseTreeInput } from '../parameters/helpers/treeInput';
 import { BSTColors as colors } from './BSTColors';
 import { initGlobalAlgorithmGetter } from './collapseChunkPlugin';
 import { initGlobalAlgotithmGetter } from './transitiveClosureCollapseChunkPlugin';
@@ -1282,9 +1283,170 @@ describe('SplayTreeInsertion controller', () => {
     it('rejects unknown operations', () => {
       expect(() => SplayTreeInsertion.run(createChunker(), {
         operations: [
-          { type: 'delete', value: 20 },
+          { type: 'unsupported', value: 20 },
         ],
-      })).toThrow('Unknown Splay Tree operation: delete');
+      })).toThrow('Unknown Splay Tree operation: unsupported');
     });
+
+    it('accepts delete operations and executes Del_return4 callback', () => {
+      const chunks = [];
+      const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+      const operations = [
+        { type: 'insert', value: 20 },
+        { type: 'insert', value: 10 },
+        { type: 'insert', value: 30 },
+        { type: 'delete', value: 20 },
+      ];
+      expect(() => SplayTreeInsertion.run(createChunker(chunks), { operations })).not.toThrow();
+      const return4Chunk = chunks.find(c => c.bookmark === 'Del_return4');
+      expect(return4Chunk).toBeDefined();
+      chunks.forEach(({ callback, args = [] }) => {
+        if (callback) {
+          callback({ graph }, ...args);
+        }
+      });
+      expect(graph.functionName).toBe('Deleted: 20');
+    });
+
+    it('executes a mixed sequence of insert, search, and delete operations', () => {
+      const chunks = [];
+      const graph = SplayTreeInsertion.initVisualisers({visualiser: {} }).graph.instance;
+      const operations = [
+        {type: 'insert', value: 10},
+        {type: 'insert', value: 5},
+        {type: 'search', value: 5},
+        {type: 'delete', value: 5},
+        {type: 'search', value: 5},
+      ];
+
+      const root = SplayTreeInsertion.run(createChunker(chunks), {operations});
+
+      expect(root.key).toBe(10);
+      expect(inOrder(root)).toEqual([10]);
+      expect(countNodes(root)).toBe(1);
+
+      const searchChunks = chunks.filter(c => c.bookmark === 'search-return-found' ||
+      c.bookmark === 'search-return-not-found');
+      expect(searchChunks).toHaveLength(2);
+      searchChunks[0].callback({graph}, ...searchChunks[0].args);
+      expect(graph.functionName).toBe('Found: 5');
+
+      expect(searchChunks[1].bookmark).toBe('search-return-not-found');
+      searchChunks[1].callback({graph}, ...searchChunks[1].args);
+      expect(graph.functionName).toBe('Not found: 5');
+    });
+
+    it('registers the complete chunk bookmark sequence for a two-subtree deletion',()=>{
+      const chunks= [];
+      const operations = [
+        {type: 'insert', value: 20},
+        {type: 'insert', value: 10},
+        {type: 'insert', value: 30},
+        {type: 'delete', value: 20},
+
+      ];
+
+      SplayTreeInsertion.run(createChunker(chunks), {operations});
+      const bookmarks = chunks.map(c=>c.bookmark);
+
+      expect(bookmarks).toContain('Del');
+      expect(bookmarks).toContain('Del_splay1');
+      expect(bookmarks).toContain('Del_init_temp');
+      expect(bookmarks).toContain('Del_splay2');
+      expect(bookmarks).toContain('Del_use_temp');
+      expect(bookmarks).toContain('Del_return4');
+
+      const delIdx = bookmarks.indexOf('Del');
+      const splay1Idx = bookmarks.indexOf('Del_splay1', delIdx);
+      const initTempIdx = bookmarks.indexOf('Del_init_temp', splay1Idx);
+      const splay2Idx = bookmarks.indexOf('Del_splay2', initTempIdx);
+      const useTempIdx = bookmarks.indexOf('Del_use_temp', splay2Idx);
+      const return4Idx = bookmarks.indexOf('Del_return4', useTempIdx);
+
+      expect(delIdx).toBeGreaterThanOrEqual(0);
+      expect(splay1Idx).toBeGreaterThan(delIdx);
+      expect(initTempIdx).toBeGreaterThan(splay1Idx);
+      expect(splay2Idx).toBeGreaterThan(initTempIdx);
+      expect(useTempIdx).toBeGreaterThan(splay2Idx);
+      expect(return4Idx).toBeGreaterThan(useTempIdx);
+    });
+
+
   });
+});
+
+it('checks deletion against a set and graph replay against controller at every operation boundary', () => {
+  let state = 123456;
+  const rand = n => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state % n; };
+  const ends = /^(insert-return.*|search-return.*|Del_return[1-4])$/;
+  for (let run = 0; run < 100; run++) {
+    const ops = Array.from({length: 40}, () => ({
+      type: ['insert','search','delete'][rand(3)], value: rand(13)
+    }));
+    const chunks = [];
+    const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+    const root = SplayTreeInsertion.run(createChunker(chunks), {operations: ops});
+    const set = new Set();
+    let i = 0;
+    for (const c of chunks) {
+      if (c.callback) c.callback({ graph }, ...(c.args || []));
+      if (!ends.test(c.bookmark)) continue;
+      const {type,value} = ops[i++];
+      if (type === 'insert') set.add(value);
+      if (type === 'delete') set.delete(value);
+      expect(graph.nodes.map(n => n.id).sort((a,b)=>a-b)).toEqual([...set].sort((a,b)=>a-b));
+      const expected = SplayTreeInsertion.run(createChunker(), {operations:ops.slice(0,i)});
+      if (expected) expect(graph.getRoot()).toBe(expected.key);
+      const edges = [];
+      const traverse = n => { if (!n) return; for (const child of [n.left,n.right]) if (child) {edges.push([n.key,child.key].join(':'));traverse(child);} };
+      traverse(expected);
+      expect(graph.edges.map(e => [e.source,e.target].join(':')).sort()).toEqual(edges.sort());
+    }
+    expect(i).toBe(ops.length);
+    expect(inOrder(root)).toEqual([...set].sort((a,b)=>a-b));
+  }
+});
+
+it.each([false,true])('deletion playback expanded=%s', expanded => {
+  const collapse = Object.fromEntries(Object.keys(splayPseudocode).map(block => [block, expanded]));
+  const operations = [...[1,2,3,4,5,6].map(value=>({type:'insert',value})), {type:'delete',value:3}];
+  let state = GlobalActions.RUN_ALGORITHM({collapse:{splaytree:{operations:collapse}}}, {
+    name:'splaytree',mode:'operations',visualiser:{},operations,
+  });
+  initGlobalAlgorithmGetter(()=>state);
+  initGlobalAlgotithmGetter(()=>state,()=>{});
+  const bookmarks=[];
+  const graph=()=>state.chunker.visualisers.graph.instance;
+  for(let i=0;i<1000 && state.bookmark!=='Del_return4';i++){
+    const previousIndex=state.chunker.currentChunk;
+    state=GlobalActions.NEXT_LINE(state,false);
+    if(state.chunker.currentChunk===previousIndex) break;
+    bookmarks.push(state.bookmark);
+  }
+  expect(bookmarks).toContain('Del_return4');
+  expect(graph().getRoot()).toBe(2);
+  expect(graph().nodes.map(n=>n.id).sort()).toEqual([1,2,4,5,6]);
+  const deletionSteps=bookmarks.slice(bookmarks.indexOf('Del'));
+  if (!expanded) expect(deletionSteps).toEqual(['Del_return4']);
+  else expect(deletionSteps.filter(s=>s==='splay-enter').length).toBeGreaterThanOrEqual(2);
+  const tree=graph().getTree();
+  state=GlobalActions.PREV_LINE(state,false);
+  state=GlobalActions.NEXT_LINE(state,false);
+  expect(graph().getTree()).toEqual(tree);
+});
+
+
+it('uses the signed Splay delete syntax through search, delete and continued insertion', () => {
+  const operations = parseTreeInput('-4,4,?-4,!-4,?-4,!4,4,?4', { allowDelete: true });
+  const chunks = [];
+  const graph = SplayTreeInsertion.initVisualisers({ visualiser: {} }).graph.instance;
+  const root = SplayTreeInsertion.run(createChunker(chunks), { operations });
+  const results = [];
+  chunks.forEach(({ bookmark, callback, args = [] }) => {
+    if (callback) callback({ graph }, ...args);
+    if (/^(search-return|Del_return)/.test(bookmark)) results.push(graph.functionName);
+  });
+  expect(results).toEqual(['Found: -4', 'Deleted: -4', 'Not found: -4', 'Deleted: 4', 'Found: 4']);
+  expect(inOrder(root)).toEqual([4]);
+  expect(graph.nodes.map(node => node.id)).toEqual([4]);
 });

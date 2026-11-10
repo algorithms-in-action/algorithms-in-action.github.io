@@ -277,7 +277,7 @@ describe('SplayTree.delete', () => {
 
     expect(result.key).toBe(40);
     expect(inOrder(result)).toEqual([20, 30, 40, 70]);
-    expect(events.map(event => event.direction)).toEqual(['left']);
+    expect(events.filter(event => event.type === 'rotation').map(event => event.direction)).toEqual(['left']);
   });
 });
 
@@ -751,4 +751,170 @@ describe('SplayTree call observer', () => {
     expect(JSON.stringify(calls)).toBe(recorded);
     expect(calls[0]).not.toHaveProperty('root');
   });
+});
+
+describe('SplayTree deletion branch events', () => {
+  it('returns null and reports empty-tree when deleting from an empty tree', () => {
+    const events = [];
+    const result = SplayTree.delete(null, 50, event => events.push(event));
+
+    expect(result).toBeNull();
+    expect(events).toEqual([{
+      type: 'deletion',
+      action: 'empty-tree',
+      bookmark: 'Del',
+      key: 50,
+      rootKey: null,
+    }]);
+  });
+
+  it('splays closest key to root and reports not-found when key does not exist', () => {
+    let root = SplayTree.insert(null, 20);
+    root = SplayTree.insert(root, 40);
+    const events = [];
+    const result = SplayTree.delete(root, 30, event => events.push(event));
+
+    expect(result.key).not.toBe(30);
+    expect(inOrder(result)).toEqual([20, 40]);
+
+    const deletionEvent = events.find(event => event.type === 'deletion');
+    expect(deletionEvent).toEqual({
+      type: 'deletion',
+      action: 'not-found',
+      bookmark: 'Del',
+      key: 30,
+      rootKey: result.key,
+    });
+  });
+
+  it('promotes right child and reports left-empty when deleting a root with no left child', () => {
+    const root = new Node(20);
+    root.right = new Node(30);
+    const events = [];
+    const result = SplayTree.delete(root, 20, event => events.push(event));
+
+    expect(result.key).toBe(30);
+    expect(result.left).toBeNull();
+    expect(inOrder(result)).toEqual([30]);
+
+    expect(events).toEqual([{
+      type: 'deletion',
+      action: 'left-empty',
+      bookmark: 'Del',
+      key: 20,
+      rootKey: 20,
+    }]);
+  });
+
+  it('removes single node when deleting only node in the tree', () => {
+    const root = new Node(10);
+    const events = [];
+    const result = SplayTree.delete(root, 10, event => events.push(event));
+
+    expect(result).toBeNull();
+    expect(events).toEqual([{
+      type: 'deletion',
+      action: 'left-empty',
+      bookmark: 'Del',
+      key: 10,
+      rootKey: 10,
+    }]);
+  });
+
+  it('splays, detaches right subtree, splays left subtree to max, and reattaches right subtree', () => {
+    const root = new Node(50);
+    root.left = new Node(30);
+    root.left.left = new Node(20);
+    root.left.right = new Node(40);
+    root.right = new Node(70);
+    root.right.left = new Node(60);
+    root.right.right = new Node(80);
+    // Tree for reference:
+    //         50
+    //       /    \
+    //      30     70
+    //     /  \   /  \
+    //    20  40 60  80
+
+    const events = [];
+    const result = SplayTree.delete(root, 50, event => events.push(event));
+
+    expect(result.key).toBe(40);
+    expect(inOrder(result)).toEqual([20, 30, 40, 60, 70, 80]);
+    expect(countNodes(result)).toBe(6);
+
+    const deletionEvent = events.filter(event => event.type === 'deletion');
+    expect(deletionEvent).toEqual([{
+      type: 'deletion',
+      action: 'detach-right',
+      bookmark: 'Del',
+      key: 50,
+      rootKey: 50,
+      rightSubtreeKey: 70,
+    },
+    {
+      type: 'deletion',
+      action: 'reattach-right',
+      bookmark: 'Del',
+      key: 50,
+      rootKey: 40,
+      rightSubtreeKey: 70,
+    },]);
+
+  });
+
+  it('splays target from deep in tree to root before deleting',() => {
+    let root = SplayTree.insert(null, 10);
+    root = SplayTree.insert(root, 20);
+    root = SplayTree.insert(root, 30);
+    const events = [];
+    const result = SplayTree.delete(root, 10, event => events.push(event));
+
+    expect(inOrder(result)).toEqual([20, 30]);
+    expect(countNodes(result)).toBe(2);
+
+    const rotationEvents = events.filter(event => event.type === 'rotation');
+    expect(rotationEvents).toHaveLength(2);
+  });
+
+
+  it('preserves BST invariant across sequential and random deletions', () => {
+    const keys = [50, 20, 80, 10, 30, 70, 90, 25, 35, 65, 75, 85, 95];
+    let root = null;
+    keys.forEach((key) => {
+      root = SplayTree.insert(root, key);
+    });
+
+    expect(inOrder(root)).toEqual([...keys].sort((a, b) => a - b));
+    expect(countNodes(root)).toBe(keys.length);
+
+    const toDelete = [20, 90, 50, 35, 80];
+    let remaining = [...keys];
+
+    toDelete.forEach(k => {
+      root = SplayTree.delete(root, k);
+      remaining = remaining.filter(x => x !== k)
+
+      const currentInOrder = inOrder(root);
+
+      expect(currentInOrder).toEqual([...remaining].sort((a, b) => a - b));
+      expect(countNodes(root)).toBe(remaining.length);
+
+      function verifyBST(node){
+        if(!node) return;
+        if(node.left) {
+          expect(node.left.key).toBeLessThan(node.key);
+          verifyBST(node.left);
+        }
+        if(node.right){
+          expect(node.right.key).toBeGreaterThan(node.key);
+          verifyBST(node.right);
+        }
+      }
+      verifyBST(root);
+    });
+    [...remaining].forEach(k => {root = SplayTree.delete(root, k)});
+    expect(root).toBeNull();
+  });
+
 });
