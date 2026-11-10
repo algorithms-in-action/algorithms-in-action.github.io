@@ -1,4 +1,4 @@
-# Merge Sort (top-down, for lists)
+# Merge Sort (bottom-up, for lists)
 
 ---
 
@@ -7,16 +7,29 @@ linked lists (there is also a similar algorithm for arrays). Linked lists
 (just called lists in many languages, particularly declarative languages)
 are either empty (generally a null pointer) or a pointer to a list cell
 containing a data item (the "head" of the list) and another list (the
-"tail" of the list, which points to the next cell). Top-down merge sort
-first splits the input list in half: the left and right (irrespective of
-the element values). It then recursively sorts these two shorter lists
-and merges the results to get a sorted complete list.  The base case
-for the recursion is lists of size one or zero.
+"tail" of the list, which points to the next cell). 
 
-Splitting the list in half requires traversing to the middle of the list.
-Here we pass in the list length as a parameter. If the length is unknown
-it can be computed using a traversal of the whole list before this
-sorting code is called.
+Rather than recursively splitting the input in half, as top-down merge
+sort does, the bottom-up version starts with trivially sorted lists of
+length one and repeatedly merges consecutive pairs of sorted lists to
+form sorted lists of twice the length.
+
+Here the input list ***L*** is first turned into ***LL***: 
+a list of single element lists, one for each
+element of ***L***. The algorithm then repeatedly scans through
+***LL***, replacing each consecutive pair of lists by the single sorted
+list formed by merging the pair. Each pass halves the number of lists in
+***LL*** (if there are an odd number of lists, the last one is left
+untouched and is merged in a later pass) and doubles their length, so
+after around log(n) passes ***LL*** contains a single sorted list with
+all the elements of ***L***, which is returned. No length parameter is
+needed, unlike the top-down version, though each pass traverses all the
+list cells.
+
+Throughout, the list cells of ***L*** are reused rather than copied:
+sorting proceeds by rearranging tail pointers, so data is never copied
+and no significant extra space is required (the original list ***L*** is
+destroyed in the process).
 
 The merge operation rearranges pointers so all the list cells in the
 two input lists ***L*** and ***R*** are linked together, in order,
@@ -34,10 +47,14 @@ the remaining part of the other input list.
 
 Versions of merge sort for lists are often the preferred sorting
 algorithms in declarative languages, where lists are used extensively.
-This algorithm can also be adapted to arrays (extra space and copying
-is needed for merge; the list version here just rearranges pointers).
-There are also non-recursive "bottom up" versions of merge sort. Because
-merge sort only does sequential scans of the input and output at each
+Because the bottom-up version avoids recursion, it is particularly
+simple to implement in languages without recursion, and it can easily be
+adapted to take advantage of partial sortedness of the input: instead of
+starting with lists of length one, natural merge sort starts with
+whatever sorted runs exist in the data. This algorithm can also be 
+adapted to arrays (extra space and copying is needed for merge; 
+the list version here just rearranges pointers). Because merge sort only 
+does sequential scans of the input and output at each
 stage, it can also be adapted to sorting large quantities of data that
 do not fit into main memories. Historically, when data was primarily
 stored on magnetic tape, it was absolutely essential.
