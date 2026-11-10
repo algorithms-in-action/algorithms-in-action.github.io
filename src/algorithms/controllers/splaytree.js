@@ -62,6 +62,19 @@ class SplayTree {
     }
   }
 
+  static reportDeletion(onEvent, action, key, rootKey, extra = {}) {
+    if (onEvent) {
+      onEvent({
+        type: 'deletion',
+        action,
+        bookmark: 'Del',
+        key,
+        rootKey,
+        ...extra,
+      });
+    }
+  }
+
   static rightRotate(root) {
     return rotateRight(root);
   }
@@ -318,24 +331,37 @@ class SplayTree {
 
   /**
    * Delete key from the tree and return the resulting root.
-   * If key is absent, splay still moves the closest accessed node to the
+   * If key is absent, splay still moves the last accessed node to the
    * root. When key is present, the maximum node in its left subtree becomes
    * the new root before the original right subtree is reattached.
    */
-  static delete(root, key, onEvent = null) {
-    if (root === null) return root;
+  static delete(root, key, onEvent = null, onCall = null) {
+    if (root === null){
+      SplayTree.reportDeletion(onEvent, 'empty-tree', key, null);
+      return root;
+    }
 
-    const splayedRoot = SplayTree.splay(root, key, onEvent);
+    const splayedRoot = SplayTree.splay(root, key, onEvent, null, 1, onCall);
 
-    if (splayedRoot.key !== key) return splayedRoot;
-    if (splayedRoot.left === null) return splayedRoot.right;
+    if (splayedRoot.key !== key) {
+      SplayTree.reportDeletion(onEvent, 'not-found', key, splayedRoot.key);
+      return splayedRoot;
+    }
+    if (splayedRoot.left === null) {
+      SplayTree.reportDeletion(onEvent, 'left-empty', key, splayedRoot.key);
+      return splayedRoot.right;
+    }
 
     const rightSubtree = splayedRoot.right;
-    const newRoot = SplayTree.splay(splayedRoot.left, key, onEvent);
+    SplayTree.reportDeletion(onEvent, 'detach-right', key, splayedRoot.key,
+      { rightSubtreeKey: rightSubtree ? rightSubtree.key : null});
+
+    const newRoot = SplayTree.splay(splayedRoot.left, key, onEvent, null, 1, onCall);
     newRoot.right = rightSubtree;
 
+    SplayTree.reportDeletion(onEvent, 'reattach-right', key, newRoot.key,
+      { rightSubtreeKey: rightSubtree ? rightSubtree.key : null});
     return newRoot;
   }
 }
-
 export default SplayTree;

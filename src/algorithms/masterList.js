@@ -232,10 +232,12 @@ const algorithmMetadata = {
     instructionsKey: 'BSTInstruction',
     extraInfoKey: 'BSTInfo',
     pseudocode: {
+      operations: 'BSTOperations',
       insertion: 'binaryTreeInsertion',
       search: 'AVLTreeSearch', // Note shared search code
     },
     controller: {
+      operations: 'BSTOperations',
       insertion: 'binaryTreeInsertion',
       search: 'AVLTreeSearch', // Note shared search code
     },
@@ -249,11 +251,13 @@ const algorithmMetadata = {
     paramKey: 'BSTrec',
     instructionsKey: 'BSTrec',
     extraInfoKey: 'BSTrec',
-    pseudocode: { 
+    pseudocode: {
+      operations: 'BSTrecOperations',
       insertion: 'BSTrecInsertion',
       search: 'BSTrecSearch',
     },
-    controller: { 
+    controller: {
+      operations: 'BSTrecOperations',
       insertion: 'BSTrecInsertion',
       search: 'BSTrecSearch', 
     },
@@ -268,10 +272,12 @@ const algorithmMetadata = {
     instructionsKey: 'AVLInstruction',
     extraInfoKey: 'AVLInfo',
     pseudocode: {
+      operations: 'AVLTreeOperations',
       insertion: 'AVLTreeInsertion',
       search: 'AVLTreeSearch',
     },
     controller: {
+      operations: 'AVLTreeOperations',
       insertion: 'AVLTreeInsertion',
       search: 'AVLTreeSearch',
     },

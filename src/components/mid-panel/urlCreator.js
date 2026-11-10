@@ -21,7 +21,14 @@ export function createUrl(baseUrl, category, context) {
        break;
  
      case 'Insert/Search':
-       url += `&list=${nodes}&value=${searchValue}&smallTable=${small}`;
+       if (['AVLTree', 'binarySearchTree', 'BSTrec'].includes(new URL(baseUrl).searchParams.get('alg'))) {
+         const combinedUrl = new URL(baseUrl);
+         combinedUrl.searchParams.set('mode', 'operations');
+         combinedUrl.searchParams.set('list', String(nodes));
+         url = combinedUrl.toString();
+       } else {
+         url += `&list=${nodes}&value=${searchValue}&smallTable=${small}`;
+       }
        break;
  
      case 'String Search':
@@ -43,4 +50,3 @@ export function createUrl(baseUrl, category, context) {
  
    return url;
  }
- 
