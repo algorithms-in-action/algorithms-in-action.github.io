@@ -587,7 +587,7 @@ const algorithmMetadata = {
   },
 
 "splaytree": {
-    "name": "Splay Tree",
+    "name": "Splay Tree (prototype)",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": [
@@ -616,7 +616,7 @@ const algorithmMetadata = {
   },
 
 	"dst": {
-    "name": "Digital Search Tree",
+    "name": "Digital Search Tree (prototype)",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": [
@@ -636,6 +636,53 @@ const algorithmMetadata = {
     "explanationKey": "dst",
     "extraInfoKey": "dst",
     "instructionsKey": "dst"
+  },
+
+	"msort_list_bup": {
+    "name": "Merge Sort (bottom up, for lists) (prototype)",
+    "category": "Sort",
+    "noDeploy": false,
+    "keywords": [
+      "sort",
+      "list",
+      "merge",
+      "stable"
+    ],
+    "controller": {
+      "sort": "msort_list_bup"
+    },
+    "pseudocode": {
+      "sort": "msort_list_bup"
+    },
+    "paramKey": "msort_list_bup",
+    "explanationKey": "msort_list_bup",
+    "extraInfoKey": "msort_list_bup",
+    "instructionsKey": "msort_list_bup"
+  },
+
+	"trie": {
+    "name": "Trie (prototype)",
+    "category": "Insert/Search",
+    "noDeploy": false,
+    "keywords": [
+      "tree",
+      "radix",
+      "m-way",
+      "digit",
+      "string"
+    ],
+    "controller": {
+      "insertion": "trieInsertion",
+      "search": "trieSearch"
+    },
+    "pseudocode": {
+      "insertion": "trieInsertion",
+      "search": "trieSearch"
+    },
+    "paramKey": "trie",
+    "explanationKey": "trie",
+    "extraInfoKey": "trie",
+    "instructionsKey": "trie"
   },
 };
 //_MASTER_LIST_END_

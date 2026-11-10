@@ -504,8 +504,12 @@ class GraphRenderer extends Renderer {
             refY="3"
             orient="auto"
           >
-            <path d="M0,0 L0,6 L6,3 L0,0" className={styles.arrow} />
+            <path
+              d="M0,0 L0,6 L6,3 L0,0"
+              fill="context-stroke"
+            />
           </marker>
+
           <marker
             id="markerArrowSelected"
             markerWidth="6"
@@ -516,9 +520,10 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.selected)}
+              fill="context-stroke"
             />
           </marker>
+
           <marker
             id="markerArrowVisited"
             markerWidth="6"
@@ -529,9 +534,10 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.visited)}
+              fill="context-stroke"
             />
           </marker>
+
           <marker
             id="markerArrowVisited1"
             markerWidth="6"
@@ -542,9 +548,10 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.visited1)}
+              fill="context-stroke"
             />
           </marker>
+
           <marker
             id="markerArrowVisited2"
             markerWidth="6"
@@ -555,9 +562,10 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.visited2)}
+              fill="context-stroke"
             />
           </marker>
+
           <marker
             id="markerArrowVisited3"
             markerWidth="6"
@@ -568,9 +576,10 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.visited3)}
+              fill="context-stroke"
             />
           </marker>
+
           <marker
             id="markerArrowVisited4"
             markerWidth="6"
@@ -581,7 +590,7 @@ class GraphRenderer extends Renderer {
           >
             <path
               d="M0,0 L0,6 L6,3 L0,0"
-              className={classes(styles.arrow, styles.visited4)}
+              fill="context-stroke"
             />
           </marker>
         </defs>

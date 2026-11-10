@@ -1,4 +1,4 @@
-// Not used: union mode supports find so fince mode has been disabled
+// Not used: union mode supports find so find mode has been disabled
 // (best delete it completely so we can remove this file)
 
 import parse from '../../pseudocode/parse';
