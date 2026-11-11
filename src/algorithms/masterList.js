@@ -620,7 +620,7 @@ const algorithmMetadata = {
     "instructionsKey": "trie"
   },
 	"dst": {
-    "name": "Digital Search Tree (prototype)",
+    "name": "Digital Search Tree",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": [
