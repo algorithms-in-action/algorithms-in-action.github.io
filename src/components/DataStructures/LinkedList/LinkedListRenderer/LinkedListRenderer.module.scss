@@ -7,9 +7,21 @@
    🔹 Container & Stage
    ====================================================== */
 
+
+.scrollWrapper {
+  position: static;
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+
 /* The outer container wrapping the visualization stage */
 .container {
   position: relative;      /* Allows absolutely positioned children */
+  width: 100%;             /* Follow the visualisation panel width */
+  min-width: 0;            /* Allow the container to shrink */
   overflow: visible;       /* Let arrows/nodes overflow */
   margin-top: 20px;        /* Add top spacing */
 }
@@ -24,10 +36,18 @@
 /* ======================================================
    🔹 Edges & Arrowheads
    ====================================================== */
+/*
+ * Arrow colour comes from styles/global.scss (--arrow-line),
+ * so shaft and head always match and
+ * both follow the algorithm theme picker in Settings and the
+ * light/dark toggle.  Do not reintroduce literals here: arrows are
+ * structural, and a saturated arrow reads as a second semantic channel
+ * competing with the node fills.
+ */
 .edges {
-  /* Base arrow line: red stroke with smooth opacity transition */
+  /* Base arrow shaft */
   .edge {
-    stroke: #ff3b3b;
+    stroke: var(--arrow-line);
     stroke-width: 3px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
@@ -35,9 +55,10 @@
     transition: opacity 0.45s ease;
   }
 
-  /* Active arrow (slightly darker red) */
+  /* Emphasised arrow.
+     not currently applied by the renderer */
   .edge--active {
-    stroke: #e53935;
+    stroke: var(--arrow-line);
   }
 
   /* Hidden edge: invisible and non-interactive */
@@ -46,23 +67,26 @@
     pointer-events: none;
   }
 
-  /* Faded edge: for deemphasized connections */
+  /* Faded edge: for deemphasized connections.
+     not currently applied by the renderer */
   .edge--faded {
-    opacity: 0.2;
+    opacity: var(--arrow-faded-opacity);
   }
 
-  /* Arrowhead fill color (solid dark grey) */
+  /* Arrowhead fill color */
   .arrowHead {
-    fill: #2e2e2e;
+    fill: var(--arrow-line);
+    // transition: fill 0.25s ease;
   }
 
   z-index: 3;             /* Render above nodes */
   position: absolute;     /* Overlay entire stage */
 }
 
-/* Circle at the start of each arrow */
+/* Circle at the start of each arrow.
+   not currently applied by the renderer */
 .edgeDot {
-  fill: #2e2e2e;
+  fill: var(--arrow-line);
 }
 
 /* ======================================================
@@ -146,21 +170,17 @@
 
   /* Label group shown below node (e.g., variable names) */
   .vars {
-    display: flex;
-    flex-direction: column; // stack vertically
-    align-items: center;
-    margin-top: 4px; // spacing from node
-    position: absolute;
-    top: calc(100% + 2px);
-    left: 0;
-    display: flex;
-    gap: 4px;
+    display: block;
+    position: static;
+    margin: 0;
     pointer-events: none;
   }
 
   /* Label style (currently transparent) */
   .varBadge {
-    margin-top: 2px;
+    position: absolute;
+    left: var(--label-x);
+    top: calc(100% + var(--label-gap));
     background: rgba(180, 180, 180, 0.18);
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 999px;
@@ -169,6 +189,32 @@
     // color: #ddd; // hard to see with dark scheme!
     color: #888;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.15)); // subtle outline to improve legibility
+    white-space: nowrap;
+  }
+
+
+  /* Label placement positioning */
+  --label-gap: 5px;
+  --ll-label-gap: 5px; /* space between the LL badge and its cell */
+
+  /* Shift from the node's left edge */
+  --label-x: calc(var(--node-w) - var(--cap-w) - 10px);
+
+
+  /* M / L / R / E labels on the upper row */
+  .varTopBadge {
+    top: auto;
+    bottom: calc(100% + var(--label-gap));
+  }
+
+  /* M / L / R / E labels on the lower row */
+  .varBottomBadge {
+    top: calc(100% + var(--label-gap));
+  }
+
+  .varRefBadge {
+    top: auto;
+    bottom: calc(100% + var(--label-gap));
   }
 }
 
@@ -176,32 +222,29 @@
    🔹 Node Color Variants
    ====================================================== */
 
-/* Default gray (lighter left, darker right) */
-.variantGray .pill {
-  background:
-    linear-gradient(90deg,
-      #888 0 calc(100% - var(--cap-w)),
-      #777 calc(100% - var(--cap-w)));
+/* Comparison highlighting; red in the default theme */
+.variantApple .pill {
+  background: var(--apple);
 }
 
-/* Blue variant (used for right-side highlighting) */
-.variantBlue .pill {
-  background: linear-gradient(90deg, #2f8cff 0 calc(100% - var(--cap-w)), #186ad6 calc(100% - var(--cap-w)));
+/* Left-side highlighting; orange in the default theme */
+.variantPeach .pill {
+  background: var(--peach);
 }
 
-/* Orange variant (used for left-side highlighting) */
-.variantOrange .pill {
-  background: linear-gradient(90deg, #ffb000 0 calc(100% - var(--cap-w)), #ff8a00 calc(100% - var(--cap-w)));
+/* Right-side highlighting; blue in the default theme */
+.variantSky .pill {
+  background: var(--sky);
 }
 
-/* Red variant (used for comparison highlighting) */
-.variantRed .pill {
-  background: linear-gradient(90deg, #ff4a4a 0 calc(100% - var(--cap-w)), #d12f2f calc(100% - var(--cap-w)));
+/* Sorted/Merged nodes; green in the default theme */
+.variantLeaf .pill {
+  background: var(--leaf);
 }
 
-/* Green variant (used for correctly sorted or placed nodes) */
-.variantGreen .pill {
-  background: linear-gradient(90deg, #69c587 0 calc(100% - var(--cap-w)), #4ea46d calc(100% - var(--cap-w)));
+/* Default color */
+.variantStone .pill {
+  background: var(--stone);
 }
 
 /* ======================================================

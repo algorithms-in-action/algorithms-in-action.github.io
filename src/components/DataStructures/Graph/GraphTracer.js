@@ -599,6 +599,7 @@ class GraphTracer extends Tracer {
       const [node] = this.nodes;
       node.x = middleX;
       node.y = middleY;
+      this.radius = null;
       return;
     }
 
@@ -617,6 +618,7 @@ class GraphTracer extends Tracer {
       }
     };
     recursiveAnalyze(root, 0);
+    this.dynamic_node(maxDepth);
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
@@ -1170,22 +1172,28 @@ class GraphTracer extends Tracer {
     * used in AVLtree
     * dynamicllay update the size of the node.
   */
-  dynamic_node() {
+  dynamic_node(treeDepth = null) {
 
     let max_height = 0;
     //let node_count = this.nodes.length;
-    for (const node of this.nodes) {
-      if (node.height > max_height) {
-        max_height = node.height;
+    if(treeDepth != null && treeDepth != undefined){
+      max_height = this.nodes.length === 0? 0: treeDepth+1;
+    }
+    else{
+      for (const node of this.nodes) {
+        if (node.height > max_height) {
+          max_height = node.height;
+        }
       }
     }
-    if (max_height > 3) {
-      let radius = 37 - (max_height - 3) * 8;
-      if (radius < 10) radius = 10;
-      this.radius = radius;
-    } else {
-      this.radius = null;
-    }
+      if (max_height > 3) {
+        let radius = 37 - (max_height - 3) * 8;
+          if (radius < 10) radius = 10;
+            this.radius = radius;
+      } 
+      else {
+        this.radius = null;
+      }
   }
 
   /*
@@ -1234,6 +1242,9 @@ class GraphTracer extends Tracer {
    */
   clearTID() {
     this.nodes.forEach(node => {
+      if (typeof node.height === 'string') {
+        node.height = undefined;
+      }
       node.AVL_TID = undefined;
     });
   }
@@ -1246,7 +1257,7 @@ class GraphTracer extends Tracer {
   layoutAVL(root = 0, sorted = false) {
 
     //reflash the Node
-    this.dynamic_node();
+
 
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
@@ -1258,6 +1269,7 @@ class GraphTracer extends Tracer {
       const [node] = this.nodes;
       node.x = middleX;
       node.y = middleY;
+      this.radius = null;
       return;
     }
 
@@ -1276,7 +1288,7 @@ class GraphTracer extends Tracer {
       }
     };
     recursiveAnalyze(root, 0);
-
+    this.dynamic_node(maxDepth);
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;

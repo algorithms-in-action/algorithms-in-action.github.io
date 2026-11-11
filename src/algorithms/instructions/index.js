@@ -162,7 +162,17 @@ const unionFindInstructions = [{
   ]
 }];
 
-export const BSTInstruction = bstInstructions;
+const combinedTreeInstructions = [{
+  title: 'Insert & Search',
+  content: [
+    'Enter comma-separated integers to insert and ?integer to search, for example 4,5,?4,6,?9.',
+    'Click Insert & Search or press Enter to run the sequence from an empty tree.',
+    'Random shuffles all operations. Sorted and Balanced reorder insertions and interleave searches; search results may change.',
+    PLAY_INSTRUCTIONS,
+  ],
+}];
+
+export const BSTInstruction = combinedTreeInstructions;
 export const HSInstruction = sortInstructions;
 export const QSInstruction = sortInstructions;
 export const msort_arr_td = sortInstructions;
@@ -178,7 +188,7 @@ export const BFSSInstruction = stringInstructions;
 export const HSSInstruction = stringInstructions;
 export const UFInstruction = unionFindInstructions;
 export const TTFInstruction = bstInstructions;
-export const AVLInstruction = bstInstructions;
+export const AVLInstruction = combinedTreeInstructions;
 export const DIJKInstruction = graphInstructions;
 export const ASTARInstruction = graphInstructions;
 export const BFSInstruction = graphInstructions;
@@ -187,7 +197,7 @@ export const DFSrecInstruction = graphInstructions;
 export const HashingLPDHInstruction = hashingInstructions;
 export const HashingCHInstruction = hashingInstructions;
 export const isort = sortInstructions;
-export const BSTrec = bstInstructions;
+export const BSTrec = combinedTreeInstructions;
 export const msort_list_td = sortInstructions;
 export const gwrap = graphInstructions; // XXX refine this?
 export const selectionSortInstruction = sortInstructions;

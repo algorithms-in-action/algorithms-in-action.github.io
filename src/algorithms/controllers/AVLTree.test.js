@@ -14,6 +14,11 @@ const chunker = {
 };
 
 describe('AVLTreeInsertion', () => {
+  beforeEach(() => {
+    // Match the application's lifecycle: initialization selects AVL mode.
+    AVLTreeInsertion.initVisualisers({ visualiser: {} });
+  });
+
   // Simple rotation: only envolves one rotate. 
   // The detailed test cases are as follows:
   it('[Simple] No rotation', () => {

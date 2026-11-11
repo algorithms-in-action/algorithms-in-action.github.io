@@ -214,15 +214,16 @@
             transition-duration: 0.1s;
             margin-bottom: m#{i}n(1vh, 1em);
 
-            // XXX should really have names for these (that may vary with
-            // different global color options)
+            // Stack frame colors are now defined via global colour palette (src/style/global.css)
+            // so Stack Visualisation for sorts now follow colour options in Setting, like main array colors
             --not-started-section: rgba(0, 0, 0, 0); // transparent
-            --in-progress-section: rgb(20, 20, 190);
-            --current-section: rgb(210, 30, 30);
-            --finished-section: rgb(100, 100, 100);
-            --in-progress-sectionR: rgb(0, 0, 255);
-            --current-sectionR: rgb(255, 0, 0);
-            --finished-sectionR: rgb(140, 140, 140);
+            --in-progress-section: var(--sky); // blue in default theme
+            --current-section: var(--apple); // red in default theme
+            --finished-section: var(--stone); // grey in default theme
+            // brighter variants, kept for compatibility
+            --in-progress-sectionR: var(--sky);
+            --current-sectionR: var(--apple);
+            --finished-sectionR: var(--stone);
             --in-progress-sectionOLD: rgb(169, 169, 169);
             --current-sectionOLD: var(--peach);
             --finished-sectionOLD: rgb(0, 0, 0);

@@ -17,9 +17,12 @@ import '../../styles/Param.scss';
 
 import { singleNumberValidCheck } from './helpers/InputValidators';
 import { 
+  genUniqueRandSearchList,
   genUniqueRandNumList,
   balanceBSTArray,
-  shuffleArray
+  shuffleArray,
+  sortAndInterleaveSearches,
+  balancedAndInterleaveSearches
 } from './helpers/InputBuilders';
 
 import { errorParamMsg } from './helpers/ParamMsg';
@@ -28,17 +31,23 @@ import PropTypes from 'prop-types'; // Import this for URL Param
 import { withAlgorithmParams } from './helpers/urlHelpers';
 
 import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
+import SymbolListParam from './helpers/SymbolListParam';
+import { reorderSplayInput } from './helpers/treeInput';
 
-const DEFAULT_NODES = genUniqueRandNumList(12, 1, 100);
-const DEFAULT_TARGET = '2';
+const DEFAULT_NODES = genUniqueRandSearchList(12, 1, 100);
+//const DEFAULT_TARGET = '2';
 
-const INSERTION = 'insertion';
-const SEARCH = 'search';
+const OPERATIONS = 'operations';
+//const INSERTION = 'insertion';
+//const SEARCH = 'search';
 
+/** NOTE: Balanced functionality temporarily removed until clarification is
+ * received on how to handle it with the new symbol list input.
+ */
 const UNCHECKED = {
   random: false,
   sorted: false,
-  balanced: false,
+  //balanced: false,
 };
 
 const BlueRadio = withStyles({
@@ -52,30 +61,33 @@ const BlueRadio = withStyles({
   // eslint-disable-next-line react/jsx-props-no-spreading
 })((props) => <Radio {...props} />);
 
-function AVLTParam({ mode, list, value }) {
-  const { algorithm, dispatch } = useContext(GlobalContext);
+/** NOTE: Mode and Value removed as component now only requires 
+ * combined list input to run insertion, search and deletion.
+ */
+function SplayTreeParam({list}) {
+  //const { algorithm, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
   const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const { setNodes } = useContext(URLContext);
   const [bstCase, setBSTCase] = useState(UNCHECKED);
-  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
+  //const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
     setNodes(localNodes);
-    setSearchValue(localValue);
+    //setSearchValue(localValue);
     setBSTCase(UNCHECKED); // uncheck when nodes/values change
-  }, [localNodes, localValue, setNodes, setSearchValue]);
+  }, [localNodes, setNodes]);
 
   const handleChange = (e) => {
     switch (e.target.name) {
       case 'random':
-        setlocalNodes(shuffleArray(localNodes));
+        setlocalNodes(reorderSplayInput(localNodes, shuffleArray));
         break;
       case 'sorted':
-        setlocalNodes([...localNodes].sort((a, b) => a - b));
+        setlocalNodes(reorderSplayInput(localNodes, sortAndInterleaveSearches));
         break;
       case 'balanced':
-        setlocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
+        setlocalNodes(reorderSplayInput(localNodes, balancedAndInterleaveSearches));
         break;
       default:
     }
@@ -84,44 +96,9 @@ function AVLTParam({ mode, list, value }) {
   };
 
   /**
-   * Custom search handler for AVLTree — checks tree is not empty first.
+   * Custom search handler for Splay Tree — checks tree is not empty first.
    */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const inputValue = e.target[0].value;
-    setLocalValue(inputValue);
-
-    const { valid, error } = singleNumberValidCheck(inputValue);
-
-    if (valid) {
-      const target = parseInt(inputValue, 10);
-
-      if (
-        algorithm.hasOwnProperty('visualisers') &&
-        !algorithm.visualisers.graph.instance.isEmpty()
-      ) {
-        const visualiser = algorithm.chunker.visualisers;
-
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'splaytree',
-          mode: 'search',
-          visualiser,
-          target,
-        });
-
-        setMessage(null);
-      } else {
-        // tree is empty
-        setMessage(
-          errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR),
-        );
-      }
-    } else {
-      // invalid number input
-      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
-    }
-  };
-
+  
   useEffect(() => {
     document.getElementById('startBtnGrp').click();
   }, [bstCase]);
@@ -129,33 +106,28 @@ function AVLTParam({ mode, list, value }) {
   return (
     <>
       <div className="form">
-        {/* Insert input */}
-        <ListParam
-          name="splaytree"
-          buttonName="Insert"
-          mode="insertion"
-          formClassName="formLeft"
-          DEFAULT_VAL={localNodes}
-          SET_VAL={setlocalNodes}
-          REFRESH_FUNCTION={(() => genUniqueRandNumList(12, 1, 100))}
-          ALGORITHM_NAME={INSERTION}
-          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
-          setMessage={setMessage}
-        />
+        {/* Symbol List input */}
+        <SymbolListParam
+          name = "splaytree"
 
-        {/* Search input */}
-        <SingleValueParam
-          name="splaytree"
-          buttonName="Search"
-          mode="search"
-          formClassName="formRight"
-          DEFAULT_VAL={value || localValue}
-          ALGORITHM_NAME={SEARCH}
-          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
-          handleSubmit={handleSearch}
-          setMessage={setMessage}
+          buttonName = "Insert, Search & Delete"
+
+          allowDelete
+
+          mode = "operations"
+
+          formClassName = "formLeft"
+          DEFAULT_VAL = {localNodes}
+          SET_VAL = {setlocalNodes}
+
+          REFRESH_FUNCTION = {() => genUniqueRandSearchList(12, 1, 100)}
+
+          ALGORITHM_NAME = {OPERATIONS}
+
+          setMessage = {setMessage}
         />
       </div>
+      <p className="generalText">Use ?4 to search for 4 and !4 to delete 4. Use !-4 to delete negative four.</p>
       <span className="generalText">Re-order input: &nbsp;&nbsp;</span>
       <FormControlLabel
         control={(
@@ -190,6 +162,7 @@ function AVLTParam({ mode, list, value }) {
         label="Balanced"
         className="checkbox"
       />
+      
       {/* render success/error message */}
       {message}
     </>
@@ -197,11 +170,12 @@ function AVLTParam({ mode, list, value }) {
 }
 
 // Define the prop types for URL Params
-AVLTParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+SplayTreeParam.propTypes = {
+  list: PropTypes.oneOfType([ PropTypes.string, PropTypes.array])
 };
 
-export default withAlgorithmParams(AVLTParam);
+SplayTreeParam.defaultProps = {
+  list: null
+};
+
+export default withAlgorithmParams(SplayTreeParam);
