@@ -83,7 +83,7 @@ export default {
         // order: 0,
       // },
       graph: {
-        instance: new GraphTracer('bst', null, 'Binary tree'),
+        instance: new GraphTracer('bst', null, 'Digital Search Tree'),
         order: 1,
       },
     };
@@ -108,7 +108,7 @@ export default {
     let visitedList = [null];
     const tree = {};
     let root;
-    const maximumKey = Math.max(...keys);
+    const maximumKey = Math.max(...insertKeys, 1);
     const maxBits = Math.floor(Math.log2(Math.max(maximumKey, 1))) + 1;
     const initialMaskIndex = maxBits - 1;
     const initialMask = 2 ** initialMaskIndex;
