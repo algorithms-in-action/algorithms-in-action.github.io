@@ -83,7 +83,7 @@ export default {
         // order: 0,
       // },
       graph: {
-        instance: new GraphTracer('bst', null, 'Binary tree'),
+        instance: new GraphTracer('bst', null, 'Digital Search Tree'),
         order: 1,
       },
     };
