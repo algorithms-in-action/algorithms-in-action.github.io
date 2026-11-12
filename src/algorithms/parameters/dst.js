@@ -9,21 +9,24 @@ import { withStyles } from '@mui/styles';
 import { GlobalContext } from '../../context/GlobalState';
 import { URLContext } from '../../context/urlState';
 import { GlobalActions } from '../../context/actions';
-import ListParam from './helpers/ListParam';
-import SingleValueParam from './helpers/SingleValueParam';
+import SymbolListParam from './helpers/SymbolListParam';
 import '../../styles/Param.scss';
-import { singleNumberValidCheck } from './helpers/InputValidators';
-import { genUniqueRandNumList, balanceBSTArray, shuffleArray } from './helpers/InputBuilders';
+import { binaryOperationListValidCheck } from './helpers/InputValidators';
+import {
+  genUniqueRandSearchList,
+  shuffleArray,
+  sortAndInterleaveSearches,
+  balancedAndInterleaveSearches,
+} from './helpers/InputBuilders';
 import { errorParamMsg } from './helpers/ParamMsg';
-import { ERRORS, EXAMPLES } from './helpers/ErrorExampleStrings';
 
 import PropTypes from 'prop-types';
 import { withAlgorithmParams } from './helpers/urlHelpers';
 
-const DEFAULT_NODES = genUniqueRandNumList(10, 1, 100);
-const DEFAULT_TARGET = '2';
-const INSERTION = 'insertion';
-const SEARCH = 'search';
+// e.g. 85,1,88,?67,67: a key is inserted, ?key searches for it
+const DEFAULT_NODES = genUniqueRandSearchList(10, 1, 100);
+const EXAMPLE = '5,7,?5,2';
+const OPERATIONS = 'operations';
 
 const UNCHECKED = {
   random: false,
@@ -41,19 +44,17 @@ const BlueRadio = withStyles({
   checked: {},
 })((props) => <Radio {...props} />);
 
-function BSTParam({ mode, list, value }) {
-  const { algorithm, dispatch } = useContext(GlobalContext);
+function BSTParam({ list }) {
+  const { dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState(null);
   const [localNodes, setlocalNodes] = useState(list || DEFAULT_NODES);
-  const { setNodes, setSearchValue } = useContext(URLContext);
+  const { setNodes } = useContext(URLContext);
   const [bstCase, setBSTCase] = useState(UNCHECKED);
-  const [localValue, setLocalValue] = useState(DEFAULT_TARGET);
 
   useEffect(() => {
     setNodes(localNodes);
-    setSearchValue(localValue);
     setBSTCase(UNCHECKED);
-  }, [localNodes, localValue, setNodes, setSearchValue]);
+  }, [localNodes, setNodes]);
 
   const handleChange = (e) => {
     switch (e.target.name) {
@@ -61,40 +62,25 @@ function BSTParam({ mode, list, value }) {
         setlocalNodes(shuffleArray(localNodes));
         break;
       case 'sorted':
-        setlocalNodes([...localNodes].sort((a, b) => a - b));
+        setlocalNodes(sortAndInterleaveSearches(localNodes));
         break;
       case 'balanced':
-        setlocalNodes(balanceBSTArray([...localNodes].sort((a, b) => a - b)));
+        setlocalNodes(balancedAndInterleaveSearches(localNodes));
         break;
       default:
     }
     setBSTCase({ ...UNCHECKED, [e.target.name]: true });
   };
 
-  const handleSearch = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const inputValue = e.target[0].value;
-    const { valid, error } = singleNumberValidCheck(inputValue);
-
+    const inputValue = e.target[0].value.replace(/\s+/g, '');
+    const { valid, error, operations } = binaryOperationListValidCheck(inputValue);
     if (valid) {
-      const target = parseInt(inputValue, 10);
-      if (
-        algorithm.hasOwnProperty('visualisers') &&
-        !algorithm.visualisers.graph.instance.isEmpty()
-      ) {
-        const visualiser = algorithm.chunker.visualisers;
-        dispatch(GlobalActions.RUN_ALGORITHM, {
-          name: 'dst',
-          mode: 'search',
-          visualiser,
-          target,
-        });
-        setMessage(null);
-      } else {
-        setMessage(errorParamMsg(ERRORS.GEN_EMPTY_TREE_ERROR));
-      }
+      dispatch(GlobalActions.RUN_ALGORITHM, { name: 'dst', mode: OPERATIONS, operations });
+      setMessage(null);
     } else {
-      setMessage(errorParamMsg(error, EXAMPLES.GEN_SINGLE_INT));
+      setMessage(errorParamMsg(error, EXAMPLE));
     }
   };
 
@@ -105,27 +91,16 @@ function BSTParam({ mode, list, value }) {
   return (
     <>
       <div className="form">
-        <ListParam
+        <SymbolListParam
           name="dst"
-          buttonName="Insert"
-          mode="insertion"
+          buttonName="Insert & Search"
+          mode={OPERATIONS}
           formClassName="formLeft"
           DEFAULT_VAL={localNodes}
           SET_VAL={setlocalNodes}
-          REFRESH_FUNCTION={(() => genUniqueRandNumList(10, 1, 100))}
-          ALGORITHM_NAME={INSERTION}
-          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
-          setMessage={setMessage}
-        />
-        <SingleValueParam
-          name="dst"
-          buttonName="Search"
-          mode="search"
-          formClassName="formRight"
-          DEFAULT_VAL={value || localValue}
-          ALGORITHM_NAME={SEARCH}
-          EXAMPLE={EXAMPLES.GEN_LIST_PARAM}
-          handleSubmit={handleSearch}
+          REFRESH_FUNCTION={() => genUniqueRandSearchList(10, 1, 100)}
+          ALGORITHM_NAME={OPERATIONS}
+          handleSubmit={handleSubmit}
           setMessage={setMessage}
         />
       </div>
@@ -151,10 +126,11 @@ function BSTParam({ mode, list, value }) {
 }
 
 BSTParam.propTypes = {
-  alg: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  list: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  list: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+};
+
+BSTParam.defaultProps = {
+  list: null,
 };
 
 export default withAlgorithmParams(BSTParam);

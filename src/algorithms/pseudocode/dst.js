@@ -1,0 +1,146 @@
+import parse from '../../pseudocode/parse';
+
+// Digital search tree (DST) insert & search, used by the "operations" mode:
+// input like 5,7,?5 inserts 5 and 7 then searches for 5.
+export default parse(`
+\\Code{
+    Main
+    DST_Insert(k, t) // Insert key k in DST t \\B 1
+    mask <- maximum bit used \\B init_b
+    \\Expl{ For this animation we choose mask as the most significant bit
+        used in the data; normally it would be based on the word size
+        used for integers. This bit of keys is used at the root of the tree
+        to determine if insertion is done to the left or right. The next
+        level of the tree uses the next (less significant) bit, and so on.
+    \\Expl}
+    if t = Empty \\B 7
+    \\In{
+        return a single-node tree containing k \\B 8
+        \\Expl{ Memory is allocated for a new DST node and initialized with
+                key k and empty sub-trees. It is returned to replace
+                the previously empty tree.
+        \\Expl}
+    \\In}
+    else
+    \\In{
+      Find insertion point, p (and update mask) \\Ref Locate
+      \\Expl{ Node p will be the parent of the new node containing k.
+              We search down the tree going left or right depending on
+              bits in the key, until we can go no further (or we find k).
+              At each step, mask is changed to the next (less significant)
+              bit.  Nodes left of
+              p have keys with 0 for the mask bit and nodes right of p have keys
+              with 1 for the mask bit. If we find a node containing k we simply
+              ignore the insertion of k and return t.
+      \\Expl}
+      if mask bit of k.key = 0  \\B 9
+      \\Expl{  The new node n (whose key is k) will be a child of p. We just 
+              need to decide whether it should be a left or a right child of p.
+      \\Expl}
+      \\In{
+          p.left <- new node containing k \\B 10
+          \\Expl{ A new DST node is allocated and initialized with
+                key k and empty sub-trees; this replaces the empty
+                left sub-tree of p.
+          \\Expl}
+      \\In}
+      else
+      \\In{
+          p.right <- new node containing k  \\B 11
+          \\Expl{ A new DST node is allocated and initialized with
+                key k and empty sub-trees; this replaces the empty
+                right sub-tree of p.
+          \\Expl}
+      \\In}
+    \\In}
+    return t \\B end
+//==============================================================
+DST_Search(t, k)    \\B DST_Search(t, k)
+\\Expl{ Return subtree whose root has key K; or NotFound
+\\Expl}
+\\In{
+    m ⟵ mask for most-significant bit   \\B set M
+    \\Expl{  m=1000...
+    \\Expl}
+    while t not Empty    \\B while t not Empty
+    \\In{
+        if t.key = k.key    \\B if t.key = k.key
+        \\Expl{  Need to compare entire key, bits only used for branching
+        \\Expl}
+        \\In{
+            return t   \\B return t
+            \\Expl{  We have found a node with the desired key k.
+            \\Expl}
+        \\In}
+        else    \\B key not equal
+        \\In{
+            if mask bit of k.key = 0   \\B if mask bit of k.key=0
+            \\In{
+            t <- t.left    \\B t <- t.left
+            \\In}
+            else
+            \\Expl{  Mask bit of k.key = 1
+            \\Expl}
+            \\In{
+                t <- t.right    \\B t <- t.right
+            \\In}
+            m <- m >> 1    \\B m <- m >> 1
+            \\Expl{  Advance the mask to the next bit (m=0100...)
+            \\Expl}
+        \\In}
+    \\In}
+    return NotFound   \\B return NotFound
+\\In}
+\\Code}
+\\Code{
+  Locate
+  c <- t // c traverses from the root to the insertion point \\B 13
+  
+  \\Expl{ c is going to follow a path down to where the new node is to 
+          be inserted. We start from the root (t). In the last iteration
+          c "falls off" the tree and becomes an empty tree. However, p
+          trails one step behind.
+  \\Expl}
+  repeat
+  \\In{
+      p,pmask <- c,mask // when c moves down, p will be c's parent \\B 14
+      \\Expl{ At the end of the loop p will be c's parent.  After we
+              exit the loop, p will be the parent where k is inserted.
+              We keep track of the mask for p so it can be used when the loop
+              exits.
+      \\Expl}
+      if k.key = c.key \\B 14a
+      \\In{
+        return t // k is in t already - skip insertion \\B eq_key
+        \\Expl{ We ignore insertion of equal keys.
+        \\Expl}
+      \\In}
+      else if mask bit of k.key = 0 \\B 15
+      \\Expl{ The DST condition is that nodes with keys with 0 as the current
+              bit are put in the left subtree and nodes with keys
+              with 1 as the current bit are put in the right subtree.
+      \\Expl}
+      \\In{
+          c <- c.left \\B 16
+      \\In}
+      else // mask bit of k.key = 1
+      \\In{
+          c <- c.right \\B 17
+      \\In}
+      mask <- next bit \\B update_b
+      \\Expl{ Update mask to be the next less significant bit,
+        which is mask/2.
+        Each level of the tree uses a different bit, from most
+        significant at the root, down to least significant at the
+        lowest possible level (where there can only be leaves). 
+      \\Expl}
+  \\In}
+  until c = Empty \\B 18
+  \\Expl{ At the end of this loop, c has located the empty subtree where new
+          key k should be located, and p will be the parent of the new node.
+  \\Expl}
+  mask <- pmask \\B restore_mask
+  \\Expl{ The mask will be used for insertion under p (one level above c).
+  \\Expl}
+\\Code}
+`);

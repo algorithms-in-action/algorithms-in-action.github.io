@@ -1,39 +1,41 @@
-// Note: this code is used for simple binary search trees and also
-// AVL trees.
+// Note: this code is used for DST search trees
 import parse from '../../pseudocode/parse';
 
 export default parse(`
 \\Code{
 Main
-BST_Search(t, k)  // return subtree whose root has key k; or NotFound  \\B AVL_Search(t, k)
-\\Expl{ Note: this code is used for simple binary search trees and also
-AVL trees.
+DST_Search(t, k)    \\B DST_Search(t, k)
+\\Expl{ Return subtree whose root has key K; or NotFound
 \\Expl}
 \\In{
-    while t not Empty   \\B while t not Empty
+    m ⟵ mask for most-significant bit   \\B set M
+    \\Expl{  m=1000...
+    \\Expl}
+    while t not Empty    \\B while t not Empty
     \\In{
-        \\Note{ Old code:
-            n = root(t)  \\B n = root(t)
-            Avoids confounding pointers and nodes  XXX not worth it???
-            now use t.key etc below; bookmarks not changed XXX
-        \\Note}
-        if t.key = k    \\B if n.key = k
+        if t.key = k.key    \\B if t.key = k.key
+        \\Expl{  Need to compare entire key, bits only used for branching
+        \\Expl}
         \\In{
-            return t    \\B return t
+            return t   \\B return t
             \\Expl{  We have found a node with the desired key k.
             \\Expl}
         \\In}
-        if k < t.key    \\B if n.key > k
-        \\Expl{  The BST condition is that nodes with keys less than the 
-                current node's key are to be found in the left subtree, and
-                nodes whose keys are greater are to be in the right subtree.
-        \\Expl}
+        else    \\B key not equal
         \\In{
-            t <- t.left   \\B t <- n.left
-        \\In}
-        else
-        \\In{
-            t <- t.right    \\B t <- n.right
+            if mask bit of k.key = 0   \\B if mask bit of k.key=0
+            \\In{
+            t <- t.left    \\B t <- t.left
+            \\In}
+            else
+            \\Expl{  Mask bit of k.key = 1
+            \\Expl}
+            \\In{
+                t <- t.right    \\B t <- t.right
+            \\In}
+            m <- m >> 1    \\B m <- m >> 1
+            \\Expl{  Advance the mask to the next bit (m=0100...)
+            \\Expl}
         \\In}
     \\In}
     return NotFound   \\B return NotFound

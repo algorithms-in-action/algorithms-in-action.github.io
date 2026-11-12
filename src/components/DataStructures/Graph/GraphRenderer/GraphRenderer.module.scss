@@ -37,6 +37,38 @@
   fill: var(--graph-select_color-fill);
 }
 
+// Opt-in trie presentation: keep other graph and tree modules unchanged.
+.graph.trie {
+  .edge .weight {
+    fill: var(--graph-node-id-fill);
+    font-size: 22px;
+    font-weight: 600;
+    dominant-baseline: middle;
+    stroke: var(--mid-anim-bg);
+    stroke-width: 7px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+  }
+
+  .node {
+    .pointer {
+      font-size: 21px;
+      stroke: var(--mid-anim-bg);
+      stroke-width: 6px;
+    }
+
+    .upper_label {
+      font-size: 18px;
+      transform: translateY(-43px);
+    }
+
+    &.terminal .circle {
+      stroke: var(--leaf);
+      stroke-width: 2px;
+    }
+  }
+}
+
 .graph {
   flex: 1;
 

@@ -24,8 +24,12 @@ class MaskRenderer extends Renderer {
       highlight,
       addBase4,
       overlay,
+      pointerStatus,
     } = this.props.data;
     if (overlay) {
+      // Trie and DST share this panel: group long keys into nibbles so
+      // they wrap the same way instead of overflowing.
+      const groupSize = maxBits > 12 ? 4 : 0;
       const selectedBit = (binaryData & maskData) === 0 ? 0 : 1;
       const direction = selectedBit === 0 ? 'LEFT' : 'RIGHT';
       return (
@@ -43,6 +47,7 @@ class MaskRenderer extends Renderer {
             maxBits={maxBits}
             highlight={highlight}
             compact={true}
+            groupSize={groupSize}
           />
           <BinaryRenderer
             header={"Mask"}
@@ -50,10 +55,16 @@ class MaskRenderer extends Renderer {
             maxBits={maxBits}
             highlight={highlight}
             compact={true}
+            groupSize={groupSize}
           />
           <div className={styles.decision}>
             BIT {selectedBit} &rarr; {direction}
           </div>
+          {pointerStatus != null && (
+            <div className={styles.pointerStatus} role="status" aria-live="polite">
+              {pointerStatus}
+            </div>
+          )}
         </div>
       );
     }

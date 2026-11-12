@@ -18,7 +18,7 @@
         margin: 0;
         border: 0;
         background: transparent;
-        font-family: monospace;
+        font-family: Menlo, "Liberation Mono", Courier, monospace;
     }
 
     .title,
@@ -51,6 +51,18 @@
     font-size: 12px;
     color: var(--mid-header-font);
     text-align: center;
+}
+
+.compact .grouped {
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 3px 7px;
+    padding: 7px 8px 7px 0;
+}
+
+.digitGroup {
+    display: inline-flex;
+    flex-shrink: 0;
 }
 
 // used to ephasise base 4/binary: whatever is the most important thing to

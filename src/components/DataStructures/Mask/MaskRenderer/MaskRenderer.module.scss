@@ -21,7 +21,18 @@
 .decision {
     padding: 7px 10px;
     color: var(--mid-header-font);
-    font-family: monospace;
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
     font-size: 13px;
+    text-align: center;
+}
+
+.pointerStatus {
+    box-sizing: border-box;
+    min-height: 36px;
+    padding: 8px 10px;
+    border-top: 1px solid var(--mid-header-font);
+    color: var(--mid-header-font);
+    font-size: 13px;
+    line-height: 19px;
     text-align: center;
 }

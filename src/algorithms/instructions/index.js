@@ -210,8 +210,10 @@ export const floydwarsh = graphInstructionsTC;
 export const splaytree = bstInstructions;
 
 export const dst = bstInstructions;
+export const trie = [bstInstructions[0]];
+
 
 export const msort_list_bup = sortInstructions;
 
-export const trie = bstInstructions;
+// export const trie = bstInstructions;
 

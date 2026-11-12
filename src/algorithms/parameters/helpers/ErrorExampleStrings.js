@@ -17,6 +17,8 @@ export const ERRORS = {
     GEN_ONLY_POSITIVE_NUMBERS_LIST : "Must be a comma-separated list of positive numbers only",
     GEN_ONLY_LOWERCASE             : "Only lowercase letters and spaces are allowed.",
     GEN_ONLY_POSITIVE_INTEGERS     : "Only positive integers are allowed.",
+    GEN_BINARY_KEY_RANGE           : "Keys must be whole numbers from 0 to 2147483647 (31 bits).",
+    GEN_BINARY_OPERATION_LIST      : "Must be a comma-separated list of whole numbers; put ? before a key to search for it (e.g. 5,7,?5).",
     GEN_MUST_HAVE_TREE_FIRST       : "Build a tree first by running some steps in insert mode.",
     GEN_MATRIX_NOT_SYMMETRIC       : "Matrix must be symmetric (m[i][j] = m[j][i]).",
     GEN_MATRIX_DIAGONAL_NOT_ZERO   : "Matrix diagonal entries must be zero.",
