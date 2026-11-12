@@ -45,6 +45,8 @@ export { default as test_pseudocode } from './test_pseudocode.js';
 
 export { default as floydwarsh } from './floydwarsh.js';
 
+export { default as splaytree } from './splaytree.js';
+
 export { default as splaytreeInsertion } from './splaytreeInsertion.js';
 
 export { default as splaytreeSearch } from './splaytreeSearch.js';
@@ -56,6 +58,7 @@ export { default as dstSearch } from './dstSearch.js';
 export { default as dst } from './dst.js';
 export { default as trie } from './trie.js';
 
+export { AVLTreeOperations, BSTOperations, BSTrecOperations } from './treeOperations';
 export { default as msort_list_bup } from './msort_list_bup.js';
 
 // export { default as trieSearch } from './trieSearch.js';

@@ -18,11 +18,11 @@
 // reproduced here with new color interface
 import {BSTColors as colors} from './BSTColors';
 let visitn = (graph, c, p) => {
-  if (p !== undefined) {
+  if (p !== undefined && p !== null) {
     graph.setNodeColor(p, colors.SPATH_N);
     graph.setEdgeColor(p, c, colors.SPATH_E);
   }
-  graph.setNodeColor(c, colors.SPATH_N);
+  if (c !== undefined && c !== null) graph.setNodeColor(c, colors.SPATH_N);
 }
 
 // remove any highlighting etc from tree
@@ -32,9 +32,9 @@ let uncolor = (graph, tree) => {
     let r = tree[p].right;
     let n = Number(p);
     graph.setNodeColor(n, undefined);
-    if (l)
+    if (l !== undefined && l !== null)
       graph.setEdgeColor(n, l, undefined);
-    if (r)
+    if (r !== undefined && r !== null)
       graph.setEdgeColor(n, r, undefined);
   })
 }
@@ -62,10 +62,10 @@ export default {
      * @param {object} visualiser
      * @param {number} target
      */
-    run(chunker, { visualiser, target }) {
+    run(chunker, { visualiser, target, tree: inputTree, root: inputRoot }) {
         // get whole tree
-        const tree = visualiser.graph.instance.getTree();
-        let root = visualiser.graph.instance.getRoot();
+        const tree = inputTree || visualiser.graph.instance.getTree();
+        const root = inputTree ? inputRoot : visualiser.graph.instance.getRoot();
 
         let current = root;
         let parent = null;
@@ -90,7 +90,7 @@ export default {
         while (true) {
             chunker.add('while t not Empty');
 
-            if (current === undefined || !ptr) // should use null
+            if (current === undefined || current === null || !ptr) // should use null
                 break;
 
             let node = current;

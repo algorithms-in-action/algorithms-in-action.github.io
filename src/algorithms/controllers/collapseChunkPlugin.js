@@ -10,7 +10,7 @@
 const importsThis = ['quickSort', 'quickSortM3', 'msort_arr_td',
   'heapSort', 'msort_lista_td', 'msort_arr_bup', 'msort_arr_nat',
   'msort_list_td', 'radixSortStraight', 'radixSortMSD', 'AVLTree',
-  'BSTrec', 'isort'];
+  'BSTrec', 'isort', 'splaytree'];
 
 // eslint-disable-next-line import/no-cycle
 // See also accompanying mods/hooks in src/context/GlobalState.js and
@@ -51,6 +51,7 @@ export function initGlobalAlgorithmGetter(getter) {
 export function areExpanded(blocks, mode = null) {
   const currentUrl = new URL(window.location.href);
   const algorithm = getGlobalAlgorithm();
+  if (!algorithm || !algorithm.id || !algorithm.collapse) return false;
   const alg_name = algorithm.id.name;
   const { bookmark, pseudocode, collapse } = algorithm;
   if (mode === null)
