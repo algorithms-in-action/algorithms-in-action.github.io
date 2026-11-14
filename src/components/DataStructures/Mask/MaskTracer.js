@@ -14,6 +14,11 @@ class MaskTracer extends Tracer {
     this.maskData = 0;
     this.highlight = [];
     this.addBase4 = false;
+    this.pointerStatus = null;
+  }
+
+  setPointerStatus(status) {
+    this.pointerStatus = status;
   }
 
   setAddBase4(b) {

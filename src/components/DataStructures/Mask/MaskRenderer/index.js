@@ -17,7 +17,57 @@ class MaskRenderer extends Renderer {
   // display key in decimal, base 4 (optional) and binary plus
   // mask in binary; some (non-decimal) digits highlighted
   renderData() {
-    const { binaryData, maskData, maxBits, highlight, addBase4 } = this.props.data;
+    const {
+      binaryData,
+      maskData,
+      maxBits,
+      highlight,
+      addBase4,
+      overlay,
+      pointerStatus,
+    } = this.props.data;
+    if (overlay) {
+      // Trie and DST share this panel: group long keys into nibbles so
+      // they wrap the same way instead of overflowing.
+      const groupSize = maxBits > 12 ? 4 : 0;
+      const selectedBit = (binaryData & maskData) === 0 ? 0 : 1;
+      const direction = selectedBit === 0 ? 'LEFT' : 'RIGHT';
+      return (
+        <div className={styles.overlayContainer}>
+          <BinaryRenderer
+            header={"Current key"}
+            data={binaryData}
+            highlight={[]}
+            base={10}
+            compact={true}
+          />
+          <BinaryRenderer
+            header={"Binary"}
+            data={binaryData}
+            maxBits={maxBits}
+            highlight={highlight}
+            compact={true}
+            groupSize={groupSize}
+          />
+          <BinaryRenderer
+            header={"Mask"}
+            data={maskData}
+            maxBits={maxBits}
+            highlight={highlight}
+            compact={true}
+            groupSize={groupSize}
+          />
+          <div className={styles.decision}>
+            BIT {selectedBit} &rarr; {direction}
+          </div>
+          {pointerStatus != null && (
+            <div className={styles.pointerStatus} role="status" aria-live="polite">
+              {pointerStatus}
+            </div>
+          )}
+        </div>
+      );
+    }
     let extra = <div/>;
     if (addBase4) {
        console.log([highlight,highlight.map((b) => Math.trunc(parseInt(b)/2))]);

@@ -12,7 +12,6 @@
 
 /* eslint-disable no-plusplus */
 import GraphTracer from '../../components/DataStructures/Graph/GraphTracer';
-import Array1DTracer from '../../components/DataStructures/Array/Array1DTracer';
 import {ALGO_COLOR_PALLETE} from '../../components/DataStructures/colors';
 const color_c = ALGO_COLOR_PALLETE.sky;
 const color_p = ALGO_COLOR_PALLETE.peach;
@@ -39,70 +38,32 @@ export default {
    * @param {object} chunker
    * @param {array} nodes array of numbers needs to be inserted
    */
-  run(chunker, { nodes }) {
+  run(chunker, { nodes, tree: initialTree, root: initialRoot }) {
     if (nodes.length === 0) return;
     let parent;
     let prev = null;
     let visitedList = [null];
-    const tree = {};
-    const root = nodes[0];
-    tree[root] = {};
-
-    // populate the ArrayTracer using nodes
-    // chunker.add(
-      // '1',
-      // (vis, elements) => {
-        // vis.array.set(elements);
-        // // vis.array.select(0); // the index of root element is 0
-        // // make a bit more room for tree
-        // vis.graph.setSize(2.5);
-        // vis.graph.setZoom(0.8);
-        // vis.array.setZoom(0.9);
-      // },
-      // [nodes],
-    // );
-    // chunker.add('1', (vis) => {
-      // vis.array.select(0); // the index of root element is 0
-    // });
-    chunker.add(1,
-      (vis) => {
-        vis.graph.setFunctionName("Tree is Empty");
+    const tree = initialTree || {};
+    const hasRoot = initialRoot !== undefined && initialRoot !== null;
+    const root = hasRoot ? initialRoot : nodes[0];
+    if (!hasRoot) {
+      tree[root] = {};
+      chunker.add(1, vis => {
+        vis.graph.setFunctionName('Tree is Empty');
         vis.graph.setZoom(0.5);
-      },
-      [],
-    );
-    chunker.add(1,
-      (vis, r) => {
-        vis.graph.setFunctionName("Insert:");
-        vis.graph.setFunctionInsertText(` ${r} `);
-      },
-      [root],
-    );
-    chunker.add(7,
-      (vis, r) => {
-        // vis.graph.setFunctionName("Insert:");
-        // vis.graph.setFunctionInsertText(` ${r} `);
-      },
-      [root],
-    );
-    chunker.add(8,
-      (vis, r) => {
-        vis.graph.addNode(r);
-        vis.graph.setFunctionName("Inserted:");
-        vis.graph.layoutBST(r, true);
-        // vis.graph.setNodeColor(r, color_new);
-      },
-      [root],
-    );
-/*
-    chunker.add('end',
-      (vis, r) => {
-        vis.graph.setNodeColor(r, undefined);
-      },
-      [root]
-    );
-*/
-    for (let i = 1; i < nodes.length; i++) {
+      });
+      chunker.add(1, (vis, key) => {
+        vis.graph.setFunctionName('Insert:');
+        vis.graph.setFunctionInsertText(` ${key} `);
+      }, [root]);
+      chunker.add(7);
+      chunker.add(8, (vis, key) => {
+        vis.graph.addNode(key);
+        vis.graph.setFunctionName('Inserted:');
+        vis.graph.layoutBST(key, true);
+      }, [root]);
+    }
+    for (let i = hasRoot ? 0 : 1; i < nodes.length; i++) {
 
       // BST_Insert() call
       prev = null;
@@ -139,7 +100,7 @@ export default {
         chunker.add(14,
           (vis, c, p) => {
             vis.graph.setNodeColor(c, color_p);
-            if (p)
+            if (p !== null && p !== undefined)
               vis.graph.updateUpperLabel(p, '');
             vis.graph.updateUpperLabel(c, 'p,c');
             // if (p !== null)

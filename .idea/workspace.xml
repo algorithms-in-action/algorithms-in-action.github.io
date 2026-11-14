@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="" />
+    <list default="true" id="d972e117-1f6a-4c65-83bd-0128f76b985f" name="Changes" comment="update tweening for line 46 (still need to be split)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/algorithms/controllers/msort_list_bup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/algorithms/controllers/msort_list_bup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListRenderer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DataStructures/LinkedList/LinkedListTracer.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,30 +18,123 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="2024_sem2" />
+        <entry key="$PROJECT_DIR$" value="2026_sem2" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Downvert11&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lingweit50/g51goats-algorithms-in-action.github.io&quot;,
+    &quot;accountId&quot;: &quot;52cce4e8-83be-41db-995a-e103aceac949&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="9.037443681891081E-29" />
+      <entry key="MS500" value="2.4639599403532407E-6" />
+      <entry key="S2" value="0.04723341612220694" />
+      <entry key="S5" value="0.4755754084241767" />
+      <entry key="S10" value="1.3048786359698743" />
+      <entry key="S30" value="3.6633966345297138" />
+      <entry key="S60" value="6.399060153702995" />
+      <entry key="M2" value="10.515627762453054" />
+      <entry key="M5" value="19.22821410597956" />
+      <entry key="M10" value="33.45699849929591" />
+      <entry key="M15" value="47.977403154119344" />
+      <entry key="M30" value="83.60737668153463" />
+      <entry key="H1" value="123.19206048545088" />
+      <entry key="H2" value="155.2994958246324" />
+      <entry key="H4" value="177.4373111982255" />
+      <entry key="D1" value="203.2503265613687" />
+      <entry key="W1" value="208.98843829662806" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.000000108937198" />
+      <entry key="MS500" value="1.0405304333545036" />
+      <entry key="S2" value="1.535965135626289" />
+      <entry key="S5" value="2.2770880509082465" />
+      <entry key="S10" value="3.1300892682857238" />
+      <entry key="S30" value="5.108657646475489" />
+      <entry key="S60" value="6.94678530086158" />
+      <entry key="M2" value="9.391165564605195" />
+      <entry key="M5" value="13.563872627667497" />
+      <entry key="M10" value="18.196511107433718" />
+      <entry key="M15" value="21.425323130229334" />
+      <entry key="M30" value="26.844295114783797" />
+      <entry key="H1" value="31.059001771436392" />
+      <entry key="H2" value="33.7628569759299" />
+      <entry key="H4" value="35.306827170739886" />
+      <entry key="D1" value="36.70667700776551" />
+      <entry key="W1" value="36.95781351415475" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="8.583515065235548E-6" />
+      <entry key="MS500" value="0.09870882388378852" />
+      <entry key="S2" value="0.839919665161626" />
+      <entry key="S5" value="2.164777675136805" />
+      <entry key="S10" value="3.9736548564334715" />
+      <entry key="S30" value="8.493589504018637" />
+      <entry key="S60" value="13.143942271716982" />
+      <entry key="M2" value="19.76182445050099" />
+      <entry key="M5" value="32.70421547724739" />
+      <entry key="M10" value="51.5926485862094" />
+      <entry key="M15" value="69.35339101938848" />
+      <entry key="M30" value="110.41864881012992" />
+      <entry key="H1" value="154.2309094929907" />
+      <entry key="H2" value="189.0510311665838" />
+      <entry key="H4" value="212.7381092428974" />
+      <entry key="D1" value="239.95594148708093" />
+      <entry key="W1" value="245.94609858862157" />
+    </decayedShown>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2lpNwMEtCXH3aoSNxw3UXU0mWtn" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dev",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "tweening__fix__1",
+    "javascript.preferred.runtime.type.id": "node",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Sunny/Desktop/IT Project"
+    "last_opened_file_path": "/Users/tp/Documents/Programming/JavaScript/g51goats-algorithms-in-action.github.io",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "terminal",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external"
   }
 }]]></component>
   <component name="RunManager">
@@ -54,6 +152,13 @@
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-WS-262.10968.77" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -62,7 +167,65 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1725873310585</updated>
+      <workItem from="1786520505245" duration="8058000" />
+      <workItem from="1790237772004" duration="616000" />
+      <workItem from="1791443078366" duration="345000" />
+      <workItem from="1791931834329" duration="213000" />
+      <workItem from="1792040968963" duration="4134000" />
     </task>
+    <task id="LOCAL-00001" summary="add color constants same as msort_arr_td.js to msort_list_td.js">
+      <option name="closed" value="true" />
+      <created>1786549572461</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1786549572461</updated>
+    </task>
+    <task id="LOCAL-00002" summary="replace ptrVariants with new color constants">
+      <option name="closed" value="true" />
+      <created>1786550261238</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1786550261238</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update variantClass to use global color denoted in renderer">
+      <option name="closed" value="true" />
+      <created>1786551004791</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1786551004791</updated>
+    </task>
+    <task id="LOCAL-00004" summary="rewrite hard-coded color in LinkedListTracer.js to take color params and use theme colors">
+      <option name="closed" value="true" />
+      <created>1786552109248</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1786552109248</updated>
+    </task>
+    <task id="LOCAL-00005" summary="update list of list arrow">
+      <option name="closed" value="true" />
+      <created>1791443278343</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1791443278343</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add color constants same as msort_arr_td.js to msort_list_td.js" />
+    <MESSAGE value="replace ptrVariants with new color constants" />
+    <MESSAGE value="update variantClass to use global color denoted in renderer" />
+    <MESSAGE value="rewrite hard-coded color in LinkedListTracer.js to take color params and use theme colors" />
+    <MESSAGE value="update list of list arrow" />
+    <MESSAGE value="update tweening for line 46 (still need to be split)" />
+    <option name="LAST_COMMIT_MESSAGE" value="update tweening for line 46 (still need to be split)" />
   </component>
 </project>

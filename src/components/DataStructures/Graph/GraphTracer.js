@@ -192,11 +192,11 @@ class GraphTracer extends Tracer {
   getTree() {
     const tree = {};
 
-    const setLeftOrRightChild = (t, parent, child) => {
-      if (parent < child) {
+    const setLeftOrRightChild = (t, parent, child, direction) => {
+      if (direction === 'right' || (direction === undefined && parent < child)) {
         // right child
         t[parent].right = child;
-      } else if (parent > child) {
+      } else if (direction === 'left' || (direction === undefined && parent > child)) {
         // left child
         t[parent].left = child;
       }
@@ -205,9 +205,9 @@ class GraphTracer extends Tracer {
     this.edges.forEach(obj => {
       if (!tree.hasOwnProperty(obj.source)) {
         tree[obj.source] = {};
-        setLeftOrRightChild(tree, obj.source, obj.target);
+        setLeftOrRightChild(tree, obj.source, obj.target, obj.direction);
       } else {
-        setLeftOrRightChild(tree, obj.source, obj.target);
+        setLeftOrRightChild(tree, obj.source, obj.target, obj.direction);
       }
       if (!tree.hasOwnProperty(obj.target)) {
         tree[obj.target] = {};
@@ -369,7 +369,12 @@ class GraphTracer extends Tracer {
 
   addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0, color=undefined) {
     if (this.findEdge(source, target)) return;
-    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1, color });
+    let direction;
+    if (weight !== null && typeof weight === 'object' && !Array.isArray(weight)) {
+      direction = weight.direction;
+      weight = weight.weight === undefined ? null : weight.weight;
+    }
+    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1, color, direction });
     this.layout();
   }
 
@@ -594,6 +599,7 @@ class GraphTracer extends Tracer {
       const [node] = this.nodes;
       node.x = middleX;
       node.y = middleY;
+      this.radius = null;
       return;
     }
 
@@ -612,6 +618,7 @@ class GraphTracer extends Tracer {
       }
     };
     recursiveAnalyze(root, 0);
+    this.dynamic_node(maxDepth);
 
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
@@ -627,13 +634,15 @@ class GraphTracer extends Tracer {
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
         if (marked[linkedNode.id]) continue;
-        if (linkedNode.id > node.id) {
+        const edge = this.findEdge(node.id, linkedNode.id, false);
+        const direction = edge && edge.source === node.id ? edge.direction : undefined;
+        if (direction === 'right' || (direction === undefined && linkedNode.id > node.id)) {
           if (node.id > this.root) {
             recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
           } else {
             recursivePosition(linkedNode, h + 1 / (v * v + 1), v + 1);
           }
-        } else if (linkedNode.id < node.id) {
+        } else if (direction === 'left' || (direction === undefined && linkedNode.id < node.id)) {
           if (node.id < this.root) {
             recursivePosition(linkedNode, h - 1 / (v * v + 1), v + 1);
           } else {
@@ -801,6 +810,13 @@ class GraphTracer extends Tracer {
     if (node2) {
       node2.pointerText = node2.pointerText.replace(tText, '');
     }
+  }
+
+  setNodePointerText(id, text = '') {
+    const node = this.findNode(id);
+    if (!node) return;
+    node.isPointer = text === '' ? 0 : 1;
+    node.pointerText = text;
   }
 
   // deprecated interface
@@ -1156,22 +1172,28 @@ class GraphTracer extends Tracer {
     * used in AVLtree
     * dynamicllay update the size of the node.
   */
-  dynamic_node() {
+  dynamic_node(treeDepth = null) {
 
     let max_height = 0;
     //let node_count = this.nodes.length;
-    for (const node of this.nodes) {
-      if (node.height > max_height) {
-        max_height = node.height;
+    if(treeDepth != null && treeDepth != undefined){
+      max_height = this.nodes.length === 0? 0: treeDepth+1;
+    }
+    else{
+      for (const node of this.nodes) {
+        if (node.height > max_height) {
+          max_height = node.height;
+        }
       }
     }
-    if (max_height > 3) {
-      let radius = 37 - (max_height - 3) * 8;
-      if (radius < 10) radius = 10;
-      this.radius = radius;
-    } else {
-      this.radius = null;
-    }
+      if (max_height > 3) {
+        let radius = 37 - (max_height - 3) * 8;
+          if (radius < 10) radius = 10;
+            this.radius = radius;
+      } 
+      else {
+        this.radius = null;
+      }
   }
 
   /*
@@ -1220,6 +1242,9 @@ class GraphTracer extends Tracer {
    */
   clearTID() {
     this.nodes.forEach(node => {
+      if (typeof node.height === 'string') {
+        node.height = undefined;
+      }
       node.AVL_TID = undefined;
     });
   }
@@ -1232,7 +1257,7 @@ class GraphTracer extends Tracer {
   layoutAVL(root = 0, sorted = false) {
 
     //reflash the Node
-    this.dynamic_node();
+
 
     this.root = root;
     this.callLayout = { method: this.layoutAVL, args: arguments };
@@ -1244,6 +1269,7 @@ class GraphTracer extends Tracer {
       const [node] = this.nodes;
       node.x = middleX;
       node.y = middleY;
+      this.radius = null;
       return;
     }
 
@@ -1262,7 +1288,7 @@ class GraphTracer extends Tracer {
       }
     };
     recursiveAnalyze(root, 0);
-
+    this.dynamic_node(maxDepth);
     // Calculates node's x and y.
     // adjust hGap to some function of node number later//
     const hGap = rect.width - 150;

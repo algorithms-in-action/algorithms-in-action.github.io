@@ -232,10 +232,12 @@ const algorithmMetadata = {
     instructionsKey: 'BSTInstruction',
     extraInfoKey: 'BSTInfo',
     pseudocode: {
+      operations: 'BSTOperations',
       insertion: 'binaryTreeInsertion',
       search: 'AVLTreeSearch', // Note shared search code
     },
     controller: {
+      operations: 'BSTOperations',
       insertion: 'binaryTreeInsertion',
       search: 'AVLTreeSearch', // Note shared search code
     },
@@ -249,11 +251,13 @@ const algorithmMetadata = {
     paramKey: 'BSTrec',
     instructionsKey: 'BSTrec',
     extraInfoKey: 'BSTrec',
-    pseudocode: { 
+    pseudocode: {
+      operations: 'BSTrecOperations',
       insertion: 'BSTrecInsertion',
       search: 'BSTrecSearch',
     },
-    controller: { 
+    controller: {
+      operations: 'BSTrecOperations',
       insertion: 'BSTrecInsertion',
       search: 'BSTrecSearch', 
     },
@@ -268,10 +272,12 @@ const algorithmMetadata = {
     instructionsKey: 'AVLInstruction',
     extraInfoKey: 'AVLInfo',
     pseudocode: {
+      operations: 'AVLTreeOperations',
       insertion: 'AVLTreeInsertion',
       search: 'AVLTreeSearch',
     },
     controller: {
+      operations: 'AVLTreeOperations',
       insertion: 'AVLTreeInsertion',
       search: 'AVLTreeSearch',
     },
@@ -594,10 +600,12 @@ const algorithmMetadata = {
       "amortised"
     ],
     "controller": {
+      "operations": "splaytreeInsertion",
       "insertion": "splaytreeInsertion",
       "search": "splaytreeSearch"
     },
     "pseudocode": {
+      "operations": "splaytree",
       "insertion": "splaytreeInsertion",
       "search": "splaytreeSearch"
     },
@@ -607,8 +615,20 @@ const algorithmMetadata = {
     "instructionsKey": "splaytree"
   },
 
+  "trie": {
+    "name": "Binary Trie",
+    "category": "Insert/Search",
+    "noDeploy": false,
+    "keywords": ["radix", "RST", "binary", "trie"],
+    "controller": { "operations": "trieInsertion", "insertion": "trieInsertion" },
+    "pseudocode": { "operations": "trie", "insertion": "trieInsertion" },
+    "paramKey": "trie",
+    "explanationKey": "trie",
+    "extraInfoKey": "trie",
+    "instructionsKey": "trie"
+  },
 	"dst": {
-    "name": "Digital Search Tree (prototype)",
+    "name": "Digital Search Tree",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": [
@@ -617,10 +637,12 @@ const algorithmMetadata = {
       "bit"
     ],
     "controller": {
+      "operations": "dstInsertion",
       "insertion": "dstInsertion",
       "search": "dstSearch"
     },
     "pseudocode": {
+      "operations": "dst",
       "insertion": "dstInsertion",
       "search": "dstSearch"
     },
@@ -651,7 +673,7 @@ const algorithmMetadata = {
     "extraInfoKey": "msort_list_bup",
     "instructionsKey": "msort_list_bup"
   },
-
+/*
 	"trie": {
     "name": "Trie (prototype)",
     "category": "Insert/Search",
@@ -676,6 +698,7 @@ const algorithmMetadata = {
     "extraInfoKey": "trie",
     "instructionsKey": "trie"
   },
+  */
 };
 //_MASTER_LIST_END_
 

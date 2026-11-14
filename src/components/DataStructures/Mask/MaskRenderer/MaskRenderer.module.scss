@@ -6,3 +6,33 @@
     flex-direction: row;
     gap: 18px;
 }
+
+.overlayContainer {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    overflow: hidden;
+    border: 1px solid var(--mid-header-font);
+    border-radius: 4px;
+    background: var(--mid-anim-bg);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 35%);
+}
+
+.decision {
+    padding: 7px 10px;
+    color: var(--mid-header-font);
+    font-family: Menlo, "Liberation Mono", Courier, monospace;
+    font-size: 13px;
+    text-align: center;
+}
+
+.pointerStatus {
+    box-sizing: border-box;
+    min-height: 36px;
+    padding: 8px 10px;
+    border-top: 1px solid var(--mid-header-font);
+    color: var(--mid-header-font);
+    font-size: 13px;
+    line-height: 19px;
+    text-align: center;
+}

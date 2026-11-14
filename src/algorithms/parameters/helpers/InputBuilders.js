@@ -37,6 +37,110 @@ export const genUniqueRandNumList = (num, min, max) => {
   return Array.from(set);
 };
 
+//generates unique lists and adds 2 successful searches and 1 unsuccessful search
+export const genUniqueRandSearchList = (num, min, max) => {
+  const NUMSUCCESSFULSEARCH = 2;
+
+  /*make random unique set and copy it, searches only added to result,
+    set holds only input nums to prevent a search to be selected by random
+    instead of a value*/
+  const set = genUniqueRandNumList(num,min,max);
+  const result = [...set];
+
+  //iterates twice for 2 successful searches
+  for (let i = 0; i < NUMSUCCESSFULSEARCH; i+=1){
+    //gets a random index from list and its key
+    const index = Math.floor(Math.random() * set.length);
+    const randKey = set[index];
+    const currIndex = result.indexOf(randKey);
+
+    /*makes random index to splice into guaranteed to be after original value
+      so search is guaranteed to be successful*/
+    const searchIndex = Math.floor(Math.random() * (result.length - currIndex)) + (currIndex + 1);
+    result.splice(searchIndex, 0, `?${randKey}`);
+  }
+
+  /*gets a random index and its key like successful searches but inserts
+    before original value, and since list is unique, is guaranteed to be unsuccessful
+    search*/
+
+  const failIndex = Math.floor(Math.random() * set.length);
+  const randFailKey = set[failIndex];
+  const currIndex = result.indexOf(randFailKey);
+  const searchFailIndex = Math.floor(Math.random() * (currIndex + 1));
+
+  result.splice(searchFailIndex, 0, `?${randFailKey}`);
+
+  //return modfied list with added search queries
+  return result;
+};
+
+/**
+ * Sort insert operations numerically, then randomly merge search operations
+ * back into the list without changing the searches' relative order.
+ */
+export const sortAndInterleaveSearches = (operations) => {
+  const operationList = Array.isArray(operations)
+    ? operations
+    : operations.split(',');
+  const insertions = operationList
+    .filter((operation) => !String(operation).startsWith('?'))
+    .sort((a, b) => Number(a) - Number(b));
+  const searches = operationList
+    .filter((operation) => String(operation).startsWith('?'));
+  const result = [];
+  let insertionIndex = 0;
+  let searchIndex = 0;
+
+  while (insertionIndex < insertions.length && searchIndex < searches.length) {
+    const insertionsRemaining = insertions.length - insertionIndex;
+    const searchesRemaining = searches.length - searchIndex;
+    const chooseInsertion = Math.random()
+      < insertionsRemaining / (insertionsRemaining + searchesRemaining);
+
+    if (chooseInsertion) {
+      result.push(insertions[insertionIndex]);
+      insertionIndex += 1;
+    } else {
+      result.push(searches[searchIndex]);
+      searchIndex += 1;
+    }
+  }
+
+  return result
+    .concat(insertions.slice(insertionIndex))
+    .concat(searches.slice(searchIndex));
+};
+
+export const balancedAndInterleaveSearches = (operations) => { 
+  const operationList = Array.isArray(operations) ? operations : operations.split(',');
+
+  // Balance insertions values only
+  const insertions = operationList.filter((operation) => !String(operation).startsWith('?')).map(Number).sort((a, b) => a - b);
+  // Filter out search values 
+  const searches = operationList.filter((operation) => String(operation).startsWith('?'))
+
+  const balancedInserts = balanceBSTArray(insertions); 
+  const res = [];
+
+  let insertIdx = 0;
+  let searchIdx = 0;
+
+  while( insertIdx < balancedInserts.length || searchIdx < searches.length){
+    if(insertIdx < balancedInserts.length){
+      res.push(balancedInserts[insertIdx]);
+      insertIdx += 1;
+    }
+    
+    if(searchIdx < searches.length){
+      res.push(searches[searchIdx]);
+      searchIdx += 1;
+    }
+  }
+
+  return res;
+}
+
 export const quicksortPerfectPivotArray = (minA, maxA) => {
   function idealOrder(min, max, v, step) {
     if (max <= min) {
