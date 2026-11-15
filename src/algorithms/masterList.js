@@ -616,7 +616,7 @@ const algorithmMetadata = {
   },
 
   "trie": {
-    "name": "Radix Search Trie",
+    "name": "Radix Search Trie (prototype)",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": ["radix", "RST", "binary", "base 4", "quaternary", "decimal", "trie"],
@@ -628,7 +628,7 @@ const algorithmMetadata = {
     "instructionsKey": "trie"
   },
 	"dst": {
-    "name": "Digital Search Tree",
+    "name": "Digital Search Tree (prototype)",
     "category": "Insert/Search",
     "noDeploy": false,
     "keywords": [
