@@ -62,3 +62,12 @@ describe('useUrlParams', () => {
         });
     });
 });
+
+describe('radix URL parameter', () => {
+    it('reads radix and defaults it to empty', () => {
+        setMockUrl('/?alg=trie&mode=operations&list=5,7&radix=4');
+        expect(renderHook(() => useUrlParams()).result.current).toMatchObject({ alg: 'trie', list: '5,7', radix: '4' });
+        setMockUrl('/?alg=trie&mode=operations');
+        expect(renderHook(() => useUrlParams()).result.current.radix).toBe('');
+    });
+});

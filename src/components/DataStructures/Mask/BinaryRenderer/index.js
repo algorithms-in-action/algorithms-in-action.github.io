@@ -53,7 +53,7 @@ BinaryRenderer.propTypes = ({
   maxBits: PropTypes.number,
   highlight: PropTypes.array,
   base: PropTypes.number,
-  emphasise: PropTypes.boolean,
+  emphasise: PropTypes.bool,
   compact: PropTypes.bool,
   groupSize: PropTypes.number,
 });

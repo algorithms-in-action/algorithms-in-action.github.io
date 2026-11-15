@@ -1,25 +1,25 @@
 import parse from '../../pseudocode/parse';
 
-// Binary trie insert & search, used by the "operations" mode:
+// Radix search trie insert & search (any base), used by the "operations" mode:
 // input like 5,7,?5 inserts 5 and 7 then searches for 5.
 export default parse(`
 \\Code{
 Main
-Trie_Insert(k, t) // Insert key k in trie t \\B 1
-for each digit in k // left to right scan of digits \\B 2
+Trie_Insert(k, t) // Insert key k in trie t \\B insert
+for each digit in k // left to right scan of digits \\B insert-digit
 \\In{
-    if no child of t for digit exists \\B 3
+    if no child of t for digit exists \\B insert-test-child
     \\In{
-        create child node for digit \\B 4
+        create child node for digit \\B insert-create-child
     \\In}
-    t <- child of t for digit \\B 5
+    t <- child of t for digit \\B insert-move
 \\In}
-mark t as an end node \\B 6
+mark t as an end node \\B insert-end
 //==============================================================
 Trie_Search(k, t) // Return the end node for key k or NotFound \\B search
 for each digit in k // left to right scan of digits \\B search-digit
 \\In{
-    if no child of t for digit exists \\B search-test-child
+    if no child of t for digit exists \\B search-test-child 
     \\In{
         return NotFound \\B search-no-child
         \\Expl{ No stored key starts with the digits scanned so far.

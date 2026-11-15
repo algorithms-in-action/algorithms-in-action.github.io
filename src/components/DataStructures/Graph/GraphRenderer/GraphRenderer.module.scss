@@ -45,7 +45,8 @@
     font-weight: 600;
     dominant-baseline: middle;
     stroke: var(--mid-anim-bg);
-    stroke-width: 7px;
+    stroke-width: 12px;
+    text-anchor: middle;
     stroke-linejoin: round;
     paint-order: stroke;
   }

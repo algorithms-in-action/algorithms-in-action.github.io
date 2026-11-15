@@ -21,7 +21,7 @@ import algorithms from '../../../algorithms/masterList';
 const VALID_PARAM_NAMES = [
     'alg', 'mode', 'list', 'value', 'xyCoords', 'edgeWeights',
     'size', 'start', 'end', 'string', 'pattern', 'union',
-    'heuristic', 'min', 'max', 'step', 'expand', 'weight', 'compress', 'smallTable'
+    'heuristic', 'min', 'max', 'step', 'expand', 'weight', 'compress', 'smallTable', 'radix'
 ];
 
 // Default values for each parameter
@@ -42,6 +42,7 @@ const DEFAULT_VALUES = {
     min: '',
     max: '',
     step: '0',
+    radix: '',
     expand: '{}'
 };
 
@@ -81,7 +82,7 @@ function extractValue(paramString, key) {
 export const withAlgorithmParams = (WrappedComponent) => {
     const WithAlgorithmParams = (props) => {
 
-        const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max, weight, compress, smallTable } = useUrlParams();
+        const { alg, mode, list, value, xyCoords, edgeWeights, size, start, end, string, pattern, union, heuristic, min, max, weight, compress, smallTable, radix } = useUrlParams();
 
         if (!alg || !(alg in algorithms)) {
             return <div>Invalid algorithm specified</div>;
@@ -110,6 +111,7 @@ export const withAlgorithmParams = (WrappedComponent) => {
             weight={weight}
             compress={compress}
             smallTable={smallTable}
+            radix={radix}
             {...props}
         />;
 

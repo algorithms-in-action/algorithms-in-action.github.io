@@ -489,6 +489,9 @@ class GraphRenderer extends Renderer {
     //   this.zoom = newZoom;
     //   this.refresh();
     // }
+    // Trie digit labels are drawn after every edge so a later edge
+    // cannot cover an earlier label.
+    const trieLabels = [];
 
     return (
       <svg
@@ -633,16 +636,14 @@ class GraphRenderer extends Renderer {
               if (!sourceNode || !targetNode) return undefined;
               const { x: sx, y: sy } = sourceNode;
               let { x: ex, y: ey } = targetNode;
-              const mx = (sx + ex) / 2;
-              const my = (sy + ey) / 2;
               const dx = ex - sx;
               const dy = ey - sy;
-              // Place digit labels perpendicular to, and outside, each branch.
-              // The layout helper positions nodes; label clearance is rendering.
-              const labelOffset = isTrie ? (dx < 0 ? -24 : 24) : 0;
-              const labelLength = Math.hypot(dx, dy) || 1;
-              const labelX = mx + labelOffset * dy / labelLength;
-              const labelY = my - labelOffset * dx / labelLength;
+              // Trie digit labels sit on their own edge, past the midpoint
+              // where sibling edges in a wide fan have spread apart; the
+              // halo in the stylesheet cuts the edges beneath them.
+              const labelT = isTrie ? 0.6 : 0.5;
+              const labelX = sx + dx * labelT;
+              const labelY = sy + dy * labelT;
               if (isDirected) {
                 let length = Math.sqrt(dx * dx + dy * dy);
                 if (length !== 0) {
@@ -664,21 +665,37 @@ class GraphRenderer extends Renderer {
                 pathSvg = `M${sx},${sy} L${ex},${ey}`;
               }
               // console.log(sx,sy,ex,ey,cx,cy);
+              const edgeClass = classes(
+                styles.edge,
+                targetNode.sorted && styles.sorted,
+                selectedCount && styles.selected,
+                !selectedCount && visitedCount && styles.visited,
+                visitedCount0 && styles.visited,
+                visitedCount1 && styles.visited1,
+                visitedCount2 && styles.visited2,
+                visitedCount3 && styles.visited3,
+                visitedCount4 && styles.visited4
+              );
+              const label = isWeighted && (
+                <g transform={`translate(${labelX},${labelY})`}>
+                  <text
+                    className={styles.weight}
+                    transform="rotate(0)"
+                    y={isTrie ? 0 : -edgeWeightGap}
+                  >
+                    {this.toString(weight)}
+                  </text>
+                </g>
+              );
+              if (isTrie && label) {
+                trieLabels.push(
+                  <g className={edgeClass} key={`${source}-${target}-label`}>
+                    {label}
+                  </g>
+                );
+              }
               return (
-                <g
-                  className={classes(
-                    styles.edge,
-                    targetNode.sorted && styles.sorted,
-                    selectedCount && styles.selected,
-                    !selectedCount && visitedCount && styles.visited,
-                    visitedCount0 && styles.visited,
-                    visitedCount1 && styles.visited1,
-                    visitedCount2 && styles.visited2,
-                    visitedCount3 && styles.visited3,
-                    visitedCount4 && styles.visited4
-                  )}
-                  key={`${source}-${target}`}
-                >
+                <g className={edgeClass} key={`${source}-${target}`}>
                   <path
                     d={pathSvg}
                     style={{
@@ -690,20 +707,11 @@ class GraphRenderer extends Renderer {
                       isDirected && styles.directed
                     )}
                   />
-                  {isWeighted && (
-                    <g transform={`translate(${labelX},${labelY})`}>
-                      <text
-                        className={styles.weight}
-                        transform="rotate(0)"
-                        y={isTrie ? 0 : -edgeWeightGap}
-                      >
-                        {this.toString(weight)}
-                      </text>
-                    </g>
-                  )}
+                  {!isTrie && label}
                 </g>
               );
             })}
+          {trieLabels}
 
           {/* Select rectangle */}
           <g>

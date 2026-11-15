@@ -25,13 +25,49 @@ class MaskRenderer extends Renderer {
       addBase4,
       overlay,
       pointerStatus,
+      radix = 2,
     } = this.props.data;
+    const status = pointerStatus != null && (
+      <div className={styles.pointerStatus} role="status" aria-live="polite">
+        {pointerStatus}
+      </div>
+    );
+    if (overlay && radix === 10) {
+      // Decimal trie: keys keep their own length, the mask is the place
+      // value of the highlighted digit.
+      const digit = Math.floor(binaryData / maskData) % 10;
+      return (
+        <div className={styles.overlayContainer}>
+          <BinaryRenderer
+            header={"Current key"}
+            data={binaryData}
+            highlight={highlight}
+            base={10}
+            compact={true}
+          />
+          <BinaryRenderer
+            header={"Place value"}
+            data={maskData}
+            highlight={highlight}
+            base={10}
+            compact={true}
+          />
+          <div className={styles.decision}>
+            DIGIT {digit} &rarr; CHILD {digit}
+          </div>
+          {status}
+        </div>
+      );
+    }
     if (overlay) {
       // Trie and DST share this panel: group long keys into nibbles so
       // they wrap the same way instead of overflowing.
       const groupSize = maxBits > 12 ? 4 : 0;
       const selectedBit = (binaryData & maskData) === 0 ? 0 : 1;
       const direction = selectedBit === 0 ? 'LEFT' : 'RIGHT';
+      // Base 4: digit i covers bits 2i+1 and 2i (avoid & past bit 30).
+      const digitIndex = Math.floor(Math.min(...highlight) / 2);
+      const selectedDigit = Math.floor(binaryData / 4 ** digitIndex) % 4;
       return (
         <div className={styles.overlayContainer}>
           <BinaryRenderer
@@ -41,6 +77,17 @@ class MaskRenderer extends Renderer {
             base={10}
             compact={true}
           />
+          {radix === 4 && (
+            <BinaryRenderer
+              header={"Base 4"}
+              data={binaryData}
+              maxBits={maxBits / 2}
+              highlight={[digitIndex]}
+              base={4}
+              compact={true}
+              groupSize={groupSize / 2}
+            />
+          )}
           <BinaryRenderer
             header={"Binary"}
             data={binaryData}
@@ -58,13 +105,11 @@ class MaskRenderer extends Renderer {
             groupSize={groupSize}
           />
           <div className={styles.decision}>
-            BIT {selectedBit} &rarr; {direction}
+            {radix === 4
+              ? <>DIGIT {selectedDigit} &rarr; BRANCH {selectedDigit}</>
+              : <>BIT {selectedBit} &rarr; {direction}</>}
           </div>
-          {pointerStatus != null && (
-            <div className={styles.pointerStatus} role="status" aria-live="polite">
-              {pointerStatus}
-            </div>
-          )}
+          {status}
         </div>
       );
     }

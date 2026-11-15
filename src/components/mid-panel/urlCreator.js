@@ -10,7 +10,8 @@ export function createUrl(baseUrl, category, context) {
      graphMin, 
      graphMax,
      compressed,
-     small
+     small,
+     radix
    } = context;
 
    let url = baseUrl;
@@ -21,6 +22,8 @@ export function createUrl(baseUrl, category, context) {
        break;
  
      case 'Insert/Search':
+       url += `&list=${nodes}&value=${searchValue}&smallTable=${small}`;
+       if (radix) url += `&radix=${radix}`;
        if (['AVLTree', 'binarySearchTree', 'BSTrec'].includes(new URL(baseUrl).searchParams.get('alg'))) {
          const combinedUrl = new URL(baseUrl);
          combinedUrl.searchParams.set('mode', 'operations');
