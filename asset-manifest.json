@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.6b1e9e43.css",
-    "main.js": "/static/js/main.55e4ad93.js",
+    "main.css": "/static/css/main.175ccdc9.css",
+    "main.js": "/static/js/main.3511b0b4.js",
     "static/media/joao.jpg": "/static/media/joao.9d1f22a652cd16703d23.jpg",
     "static/media/nir.png": "/static/media/nir.5be60648ae1b934ec154.png",
     "static/media/carina.jpg": "/static/media/carina.b1d280017e884786ef79.jpg",
@@ -31,6 +31,7 @@
     "static/media/BSTExp.md": "/static/media/BSTExp.64a2f3f101291ee35728.md",
     "static/media/dst.md": "/static/media/dst.0d2a534b104d9b630a7a.md",
     "static/media/DFSrecExp.md": "/static/media/DFSrecExp.ed45d767106bd707df80.md",
+    "static/media/msort_list_bup.md": "/static/media/msort_list_bup.fffafc7fbc914eb3cf9f.md",
     "static/media/BFSExp.md": "/static/media/BFSExp.d6ce725a2457712a76ce.md",
     "static/media/BSTrec.md": "/static/media/BSTrec.617405f684be3667f731.md",
     "static/media/TTFExp.md": "/static/media/TTFExp.f1a0022b9be2113fdc71.md",
@@ -39,11 +40,11 @@
     "static/media/grahamScan.md": "/static/media/grahamScan.55b7aae5578256a8bfa9.md",
     "static/media/convHullDC.md": "/static/media/convHullDC.b67537fab5a2b11aa636.md",
     "static/media/PRIM_oldExp.md": "/static/media/PRIM_oldExp.5f7835c100e05e1812d6.md",
-    "static/media/msort_list_td.md": "/static/media/msort_list_td.2b01e86df3ac098438c6.md",
+    "static/media/msort_list_td.md": "/static/media/msort_list_td.e5953f9078a97c2a65b9.md",
     "static/media/HSSExp.md": "/static/media/HSSExp.f8611e5c858ba0884fc9.md",
     "static/media/HSExp.md": "/static/media/HSExp.59bdc6756bce1e68907e.md",
     "static/media/test_pseudocode.md": "/static/media/test_pseudocode.6e9cabebf82cd75083f8.md",
-    "static/media/msort_arr_bup.md": "/static/media/msort_arr_bup.60139a905e947acc0b70.md",
+    "static/media/msort_arr_bup.md": "/static/media/msort_arr_bup.511c143eeb2bebe3d45b.md",
     "static/media/ASTInfo.md": "/static/media/ASTInfo.d307db15fb73fc440707.md",
     "static/media/KRUSKALExp.md": "/static/media/KRUSKALExp.ccd6fad00857f3adf471.md",
     "static/media/floydwarsh.md": "/static/media/floydwarsh.fb802e35b7c1de6feb50.md",
@@ -51,6 +52,7 @@
     "static/media/msort_lista_td.md": "/static/media/msort_lista_td.fbd6e0c97015d12f8f62.md",
     "static/media/DFSInfo.md": "/static/media/DFSInfo.17a56c1dd7c525027bf9.md",
     "static/media/BSTInfo.md": "/static/media/BSTInfo.0d2a534b104d9b630a7a.md",
+    "static/media/trie.md": "/static/media/trie.587022461e62cff7bb4b.md",
     "static/media/msort_arr_td.md": "/static/media/msort_arr_td.d4063776bce8b85c4ae5.md",
     "static/media/PRIMInfo.md": "/static/media/PRIMInfo.112841726d0197d637e7.md",
     "static/media/HSInfo.md": "/static/media/HSInfo.6e9cabebf82cd75083f8.md",
@@ -87,11 +89,11 @@
     "static/media/TCInfo.md": "/static/media/TCInfo.6eb03334bc8db61df29d.md",
     "static/media/wave.svg": "/static/media/wave.498b343ae547a16fb60020cd331533c3.svg",
     "static/media/circle.svg": "/static/media/circle.4a1161fdc48a5b390c545c7087db7d95.svg",
-    "main.6b1e9e43.css.map": "/static/css/main.6b1e9e43.css.map",
-    "main.55e4ad93.js.map": "/static/js/main.55e4ad93.js.map"
+    "main.175ccdc9.css.map": "/static/css/main.175ccdc9.css.map",
+    "main.3511b0b4.js.map": "/static/js/main.3511b0b4.js.map"
   },
   "entrypoints": [
-    "static/css/main.6b1e9e43.css",
-    "static/js/main.55e4ad93.js"
+    "static/css/main.175ccdc9.css",
+    "static/js/main.3511b0b4.js"
   ]
 }

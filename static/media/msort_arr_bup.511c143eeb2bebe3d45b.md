@@ -31,3 +31,4 @@ Compare and contrast the sequence of merge operations performed by
 bottom-up and natural merge sort when a) the input is reverse-sorted and
 b) the input is sorted.
 
+Compare the array and linked list versions of bottom up merge sort.

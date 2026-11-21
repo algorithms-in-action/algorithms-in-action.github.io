@@ -28,4 +28,3 @@ traversing is done for the whole sorting algorithm in the two versions?
 
 Compare and contrast the array and list versions of top-down merge sort.
 
-Code versions of bottom-up and natural merge sort for lists.
