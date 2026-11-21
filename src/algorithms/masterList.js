@@ -653,7 +653,7 @@ const algorithmMetadata = {
   },
 
 	"msort_list_bup": {
-    "name": "Merge Sort (bottom up, for lists) (prototype)",
+    "name": "Merge Sort (bottom up, for lists)",
     "category": "Sort",
     "noDeploy": false,
     "keywords": [

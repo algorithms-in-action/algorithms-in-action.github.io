@@ -198,7 +198,7 @@
   --ll-label-gap: 5px; /* space between the LL badge and its cell */
 
   /* Shift from the node's left edge */
-  --label-x: calc(var(--node-w) - var(--cap-w) - 10px);
+  --label-x: calc(var(--node-w) - var(--cap-w) - 20px);
 
 
   /* M / L / R / E labels on the upper row */

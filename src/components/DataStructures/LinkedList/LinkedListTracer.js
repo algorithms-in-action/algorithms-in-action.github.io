@@ -127,6 +127,11 @@ class LinkedListTracer extends Tracer {
     };
   }
 
+  // BUP merge sort has list lower so we can build LL above
+  moveStartDown(newY = 150) {
+    this.layout.start.y = newY;
+  }
+
   // ------------------------------------------------
   // Build linked list from numeric array
   // XXX Only allows a single list (plus tail etc) - can't have separate
@@ -473,7 +478,9 @@ class LinkedListTracer extends Tracer {
     super.set();
   }
 
-  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 120) {
+  // used inside merge operation in mergesorts so the two lists to merge
+  // are separated vertically
+  moveChainBelow(leftStart, rightStart, tailsArray = [], verticalGap = 105) {
     if (!rightStart || rightStart === 'Null') return;
     const T = tailsArray;
 

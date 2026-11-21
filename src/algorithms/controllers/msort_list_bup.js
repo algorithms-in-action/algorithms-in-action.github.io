@@ -164,6 +164,8 @@ export function run_msort() {
     function setupInitialVisualization(L, len, depth) {
       chunker.add('Main', (vis, T, cur_L, cur_len, cur_depth, cur_real_stack, cur_finished_stack_frames) => {
 
+        // data list is lower than top down - we add LL nodes above it
+        vis.list.moveStartDown();
         vis.list.set(entire_num_array, 'mergeSort list init');
 
         // XXX should colour list the cur_L colour and *remove* the
