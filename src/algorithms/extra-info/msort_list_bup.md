@@ -22,6 +22,8 @@ Geeks for Geeks Link: [**Merge Sort for linked lists**][G4GLink]
 
 ## Exercises/Exploration
 
+Compare the array and linked list versions of bottom up merge sort.
+
 Write code for natural merge sort for lists.
 
 Rather than have a list of lists, another way of implementing bottom up
